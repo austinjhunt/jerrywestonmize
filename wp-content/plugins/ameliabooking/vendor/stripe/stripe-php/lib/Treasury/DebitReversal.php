@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Treasury;
+namespace AmeliaVendor\Stripe\Treasury;
 
 /**
  * You can reverse some <a href="https://stripe.com/docs/api#received_debits">ReceivedDebits</a> depending on their network and source flow. Reversing a ReceivedDebit leads to the creation of a new object known as a DebitReversal.
@@ -14,16 +14,16 @@ namespace AmeliaStripe\Treasury;
  * @property string $currency Three-letter <a href="https://www.iso.org/iso-4217-currency-codes.html">ISO currency code</a>, in lowercase. Must be a <a href="https://stripe.com/docs/currencies">supported currency</a>.
  * @property null|string $financial_account The FinancialAccount to reverse funds from.
  * @property null|string $hosted_regulatory_receipt_url A <a href="https://stripe.com/docs/treasury/moving-money/regulatory-receipts">hosted transaction receipt</a> URL that is provided when money movement is considered regulated under Stripe's money transmission licenses.
- * @property null|(object{issuing_dispute: null|string}&\AmeliaStripe\StripeObject) $linked_flows Other flows linked to a DebitReversal.
+ * @property null|(object{issuing_dispute: null|string}&\AmeliaVendor\Stripe\StripeObject) $linked_flows Other flows linked to a DebitReversal.
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
- * @property \AmeliaStripe\StripeObject $metadata Set of <a href="https://stripe.com/docs/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+ * @property \AmeliaVendor\Stripe\StripeObject $metadata Set of <a href="https://stripe.com/docs/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
  * @property string $network The rails used to reverse the funds.
  * @property string $received_debit The ReceivedDebit being reversed.
  * @property string $status Status of the DebitReversal
- * @property (object{completed_at: null|int}&\AmeliaStripe\StripeObject) $status_transitions
+ * @property (object{completed_at: null|int}&\AmeliaVendor\Stripe\StripeObject) $status_transitions
  * @property null|string|Transaction $transaction The Transaction associated with this object.
  */
-class DebitReversal extends \AmeliaStripe\ApiResource
+class DebitReversal extends \AmeliaVendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'treasury.debit_reversal';
 
@@ -42,7 +42,7 @@ class DebitReversal extends \AmeliaStripe\ApiResource
      *
      * @return DebitReversal the created resource
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function create($params = null, $options = null)
     {
@@ -50,7 +50,7 @@ class DebitReversal extends \AmeliaStripe\ApiResource
         $url = static::classUrl();
 
         list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
-        $obj = \AmeliaStripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \AmeliaVendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
 
         return $obj;
@@ -62,15 +62,15 @@ class DebitReversal extends \AmeliaStripe\ApiResource
      * @param null|array{ending_before?: string, expand?: string[], financial_account: string, limit?: int, received_debit?: string, resolution?: string, starting_after?: string, status?: string} $params
      * @param null|array|string $opts
      *
-     * @return \AmeliaStripe\Collection<DebitReversal> of ApiResources
+     * @return \AmeliaVendor\Stripe\Collection<DebitReversal> of ApiResources
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
 
-        return static::_requestPage($url, \AmeliaStripe\Collection::class, $params, $opts);
+        return static::_requestPage($url, \AmeliaVendor\Stripe\Collection::class, $params, $opts);
     }
 
     /**
@@ -81,11 +81,11 @@ class DebitReversal extends \AmeliaStripe\ApiResource
      *
      * @return DebitReversal
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = \AmeliaStripe\Util\RequestOptions::parse($opts);
+        $opts = \AmeliaVendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
 

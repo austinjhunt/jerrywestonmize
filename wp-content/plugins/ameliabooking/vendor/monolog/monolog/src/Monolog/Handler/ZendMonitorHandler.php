@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Monolog\Handler;
+namespace AmeliaVendor\Monolog\Handler;
 
-use Monolog\Formatter\FormatterInterface;
-use Monolog\Formatter\NormalizerFormatter;
-use Monolog\Logger;
+use AmeliaVendor\Monolog\Formatter\FormatterInterface;
+use AmeliaVendor\Monolog\Formatter\NormalizerFormatter;
+use AmeliaVendor\Monolog\Logger;
 
 /**
  * Handler sending logs to Zend Monitor

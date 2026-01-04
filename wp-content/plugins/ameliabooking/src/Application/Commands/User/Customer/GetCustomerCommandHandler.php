@@ -26,7 +26,6 @@ class GetCustomerCommandHandler extends CommandHandler
      * @throws \Slim\Exception\ContainerValueNotFoundException
      * @throws AccessDeniedException
      * @throws InvalidArgumentException
-     * @throws \Interop\Container\Exception\ContainerException
      * @throws QueryExecutionException
      */
     public function handle(GetCustomerCommand $command)

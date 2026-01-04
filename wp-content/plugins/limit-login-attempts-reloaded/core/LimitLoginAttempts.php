@@ -245,6 +245,9 @@ class LimitLoginAttempts
 		}
 
 		// Load languages files via a later hook
+		// TODO: load_plugin_textdomain() is deprecated in WordPress 6.9+. WordPress now uses automatic JIT (Just-In-Time) translation loading.
+		// This function still works for backward compatibility, but should be removed in future versions.
+		// JIT translation loading automatically loads translation files when needed, so explicit load_plugin_textdomain() calls are no longer necessary.
 	    add_action('init', array( $this, 'load_plugin_textdomain_in_time' ) );
 
 		// Check if installed old plugin
@@ -318,9 +321,16 @@ class LimitLoginAttempts
 
 	/**
 	 * Later loading of translations load_plugin_textdomain
+	 * 
+	 * TODO: This method uses deprecated load_plugin_textdomain() function.
+	 * WordPress 6.9+ uses automatic JIT (Just-In-Time) translation loading, which means
+	 * translation files are loaded automatically when needed. This explicit call can be
+	 * removed in future versions. Ensure translation files are properly named and placed
+	 * in the languages directory for JIT loading to work correctly.
 	 */
 	public function load_plugin_textdomain_in_time()
 	{
+		// TODO: Remove load_plugin_textdomain() call - WordPress 6.9+ handles translations automatically via JIT loading
 		load_plugin_textdomain( 'limit-login-attempts-reloaded', false, plugin_basename( __DIR__ ) . '/../languages' );
 		Config::init_defaults();
 	}
@@ -1435,6 +1445,10 @@ class LimitLoginAttempts
 		include LLA_PLUGIN_DIR . 'views/emails/failed-login.php';
 		$email_body = ob_get_clean();
 
+		// get current url with the current page and the current query string
+		$current_url_label = preg_replace( '/^\/|\/$/', '', $_SERVER['REQUEST_URI'] );
+		$current_url = isset( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : get_site_url() . $_SERVER['REQUEST_URI'];
+
 		$placeholders = array(
 			'{name}'                => $admin_name,
 			'{domain}'              => $site_domain,
@@ -1448,6 +1462,8 @@ class LimitLoginAttempts
 			'{premium_url}'         => 'https://www.limitloginattempts.com/info.php?from=plugin-lockout-email&v=' . $plugin_data['Version'],
 			'{llar_url}'            => 'https://www.limitloginattempts.com/?from=plugin-lockout-email&v=' . $plugin_data['Version'],
 			'{unsubscribe_url}'     => admin_url( 'options-general.php?page=' . $this->_options_page_slug . '&tab=settings' ),
+			'{current_url}'         => $current_url,
+			'{current_url_label}'   => $current_url_label,
 		);
 
 		$email_body = str_replace(

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -18,7 +18,7 @@ class PaymentWooCommerceSettings
     private $enabled;
 
     /**
-     * @return int
+     * @return boolean
      */
     public function getEnabled()
     {

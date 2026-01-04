@@ -31,7 +31,8 @@ class AddLocationController extends Controller
         'pictureFullPath',
         'pictureThumbPath',
         'pin',
-        'translations'
+        'translations',
+        'countryPhoneIso'
     ];
 
     /**

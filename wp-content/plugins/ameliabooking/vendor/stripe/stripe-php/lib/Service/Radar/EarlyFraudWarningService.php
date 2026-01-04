@@ -2,24 +2,24 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Service\Radar;
+namespace AmeliaVendor\Stripe\Service\Radar;
 
 /**
- * @phpstan-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  *
- * @psalm-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ * @psalm-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  */
-class EarlyFraudWarningService extends \AmeliaStripe\Service\AbstractService
+class EarlyFraudWarningService extends \AmeliaVendor\Stripe\Service\AbstractService
 {
     /**
      * Returns a list of early fraud warnings.
      *
      * @param null|array{charge?: string, created?: array|int, ending_before?: string, expand?: string[], limit?: int, payment_intent?: string, starting_after?: string} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Collection<\AmeliaStripe\Radar\EarlyFraudWarning>
+     * @return \AmeliaVendor\Stripe\Collection<\AmeliaVendor\Stripe\Radar\EarlyFraudWarning>
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function all($params = null, $opts = null)
     {
@@ -35,11 +35,11 @@ class EarlyFraudWarningService extends \AmeliaStripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[]} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Radar\EarlyFraudWarning
+     * @return \AmeliaVendor\Stripe\Radar\EarlyFraudWarning
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function retrieve($id, $params = null, $opts = null)
     {

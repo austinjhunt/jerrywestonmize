@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Monolog\Handler;
+namespace AmeliaVendor\Monolog\Handler;
 
-use Monolog\Logger;
-use Monolog\Formatter\FormatterInterface;
+use AmeliaVendor\Monolog\Logger;
+use AmeliaVendor\Monolog\Formatter\FormatterInterface;
 
 /**
  * Handler to only pass log messages when a certain threshold of number of messages is reached.

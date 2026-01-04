@@ -1,8 +1,8 @@
 <?php
 
-namespace AmeliaStripe;
+namespace AmeliaVendor\Stripe;
 
-use AmeliaStripe\Util\CaseInsensitiveArray;
+use AmeliaVendor\Stripe\Util\CaseInsensitiveArray;
 
 /**
  * Class ApiResponse.

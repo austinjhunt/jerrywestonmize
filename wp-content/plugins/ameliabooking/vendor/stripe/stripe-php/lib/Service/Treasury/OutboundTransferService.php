@@ -2,24 +2,24 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Service\Treasury;
+namespace AmeliaVendor\Stripe\Service\Treasury;
 
 /**
- * @phpstan-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  *
- * @psalm-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ * @psalm-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  */
-class OutboundTransferService extends \AmeliaStripe\Service\AbstractService
+class OutboundTransferService extends \AmeliaVendor\Stripe\Service\AbstractService
 {
     /**
      * Returns a list of OutboundTransfers sent from the specified FinancialAccount.
      *
      * @param null|array{ending_before?: string, expand?: string[], financial_account: string, limit?: int, starting_after?: string, status?: string} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Collection<\AmeliaStripe\Treasury\OutboundTransfer>
+     * @return \AmeliaVendor\Stripe\Collection<\AmeliaVendor\Stripe\Treasury\OutboundTransfer>
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function all($params = null, $opts = null)
     {
@@ -31,11 +31,11 @@ class OutboundTransferService extends \AmeliaStripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[]} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Treasury\OutboundTransfer
+     * @return \AmeliaVendor\Stripe\Treasury\OutboundTransfer
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function cancel($id, $params = null, $opts = null)
     {
@@ -46,11 +46,11 @@ class OutboundTransferService extends \AmeliaStripe\Service\AbstractService
      * Creates an OutboundTransfer.
      *
      * @param null|array{amount: int, currency: string, description?: string, destination_payment_method?: string, destination_payment_method_data?: array{financial_account?: string, type: string}, destination_payment_method_options?: array{us_bank_account?: null|array{network?: string}}, expand?: string[], financial_account: string, metadata?: array<string, string>, statement_descriptor?: string} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Treasury\OutboundTransfer
+     * @return \AmeliaVendor\Stripe\Treasury\OutboundTransfer
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function create($params = null, $opts = null)
     {
@@ -64,11 +64,11 @@ class OutboundTransferService extends \AmeliaStripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[]} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Treasury\OutboundTransfer
+     * @return \AmeliaVendor\Stripe\Treasury\OutboundTransfer
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function retrieve($id, $params = null, $opts = null)
     {

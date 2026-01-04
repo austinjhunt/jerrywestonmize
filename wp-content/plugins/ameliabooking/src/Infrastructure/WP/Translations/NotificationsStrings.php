@@ -30,7 +30,7 @@ class NotificationsStrings
                 'sendTo'     => 'customer',
                 'subject'    => '%service_name% Appointment Approved',
                 'content'    =>
-                    'Dear <strong>%customer_full_name%</strong>,<br><br>You have successfully scheduled
+                'Dear <strong>%customer_full_name%</strong>,<br><br>You have successfully scheduled
                      <strong>%service_name%</strong> appointment with <strong>%employee_full_name%</strong>. We are 
                      waiting you at <strong>%location_address% </strong>on <strong>%appointment_date_time%</strong>.
                      <br><br>Thank you for choosing our company,<br><strong>%company_name%</strong>'
@@ -45,7 +45,7 @@ class NotificationsStrings
                 'sendTo'     => 'customer',
                 'subject'    => '%service_name% Appointment Pending',
                 'content'    =>
-                    'Dear <strong>%customer_full_name%</strong>,<br><br>The <strong>%service_name%</strong> appointment 
+                'Dear <strong>%customer_full_name%</strong>,<br><br>The <strong>%service_name%</strong> appointment 
                      with <strong>%employee_full_name%</strong> at <strong>%location_address%</strong>, scheduled for
                      <strong>%appointment_date_time%</strong> is waiting for a confirmation.<br><br>Thank you for 
                      choosing our company,<br><strong>%company_name%</strong>'
@@ -60,7 +60,7 @@ class NotificationsStrings
                 'sendTo'     => 'customer',
                 'subject'    => '%service_name% Appointment Rejected',
                 'content'    =>
-                    'Dear <strong>%customer_full_name%</strong>,<br><br>Your <strong>%service_name%</strong> 
+                'Dear <strong>%customer_full_name%</strong>,<br><br>Your <strong>%service_name%</strong> 
                      appointment, scheduled on <strong>%appointment_date_time%</strong> at <strong>%location_address%
                      </strong>has been rejected.<br><br>Thank you for choosing our company,
                      <br><strong>%company_name%</strong>'
@@ -75,7 +75,7 @@ class NotificationsStrings
                 'sendTo'     => 'customer',
                 'subject'    => '%service_name% Appointment Canceled',
                 'content'    =>
-                    'Dear <strong>%customer_full_name%</strong>,<br><br>Your <strong>%service_name%</strong> 
+                'Dear <strong>%customer_full_name%</strong>,<br><br>Your <strong>%service_name%</strong> 
                      appointment, scheduled on <strong>%appointment_date_time%</strong> at <strong>%location_address%
                      </strong>has been canceled.<br><br>Thank you for choosing our company,
                      <br><strong>%company_name%</strong>'
@@ -90,7 +90,7 @@ class NotificationsStrings
                 'sendTo'     => 'customer',
                 'subject'    => '%service_name% Appointment Rescheduled',
                 'content'    =>
-                    'Dear <strong>%customer_full_name%</strong>,<br><br>The details for your 
+                'Dear <strong>%customer_full_name%</strong>,<br><br>The details for your 
                      <strong>%service_name%</strong> appointment with <strong>%employee_full_name%</strong> at 
                      <strong>%location_name%</strong> has been changed. The appointment is now set for 
                      <strong>%appointment_date%</strong> at <strong>%appointment_start_time%</strong>.<br><br>
@@ -117,7 +117,7 @@ class NotificationsStrings
                 'sendTo'     => 'customer',
                 'subject'    => '%service_name% Appointment Reminder',
                 'content'    =>
-                    'Dear <strong>%customer_full_name%</strong>,<br><br>We would like to remind you that you have 
+                'Dear <strong>%customer_full_name%</strong>,<br><br>We would like to remind you that you have 
                      <strong>%service_name%</strong> appointment tomorrow at <strong>%appointment_start_time%</strong>.
                      We are waiting for you at <strong>%location_name%</strong>.<br><br>Thank you for 
                      choosing our company,<br><strong>%company_name%</strong>'
@@ -132,7 +132,7 @@ class NotificationsStrings
                 'sendTo'     => 'customer',
                 'subject'    => '%service_name% Appointment Follow Up',
                 'content'    =>
-                    'Dear <strong>%customer_full_name%</strong>,<br><br>Thank you once again for choosing our company. 
+                'Dear <strong>%customer_full_name%</strong>,<br><br>Thank you once again for choosing our company. 
                      We hope you were satisfied with your <strong>%service_name%</strong>.<br><br>We look forward to 
                      seeing you again soon,<br><strong>%company_name%</strong>'
             ],
@@ -146,7 +146,7 @@ class NotificationsStrings
                 'sendTo'     => 'customer',
                 'subject'    => 'Happy Birthday',
                 'content'    =>
-                    'Dear <strong>%customer_full_name%</strong>,<br><br>Happy birthday!<br>We wish you all the best.
+                'Dear <strong>%customer_full_name%</strong>,<br><br>Happy birthday!<br>We wish you all the best.
                     <br><br>Thank you for choosing our company,<br><strong>%company_name%</strong>'
             ]
         ];
@@ -171,7 +171,7 @@ class NotificationsStrings
                 'sendTo'     => 'provider',
                 'subject'    => '%service_name% Appointment Approved',
                 'content'    =>
-                    'Hi <strong>%employee_full_name%</strong>,<br><br>You have one confirmed 
+                'Hi <strong>%employee_full_name%</strong>,<br><br>You have one confirmed 
                      <strong>%service_name%</strong> appointment at <strong>%location_name%</strong> on 
                      <strong>%appointment_date%</strong> at <strong>%appointment_start_time%</strong>. The appointment 
                      is added to your schedule.<br><br>Thank you,<br><strong>%company_name%</strong>'
@@ -186,7 +186,7 @@ class NotificationsStrings
                 'sendTo'     => 'provider',
                 'subject'    => '%service_name% Appointment Pending',
                 'content'    =>
-                    'Hi <strong>%employee_full_name%</strong>,<br><br>You have new appointment 
+                'Hi <strong>%employee_full_name%</strong>,<br><br>You have new appointment 
                      in <strong>%service_name%</strong>. The appointment is waiting for a confirmation.<br><br>Thank 
                      you,<br><strong>%company_name%</strong>'
             ],
@@ -200,7 +200,7 @@ class NotificationsStrings
                 'sendTo'     => 'provider',
                 'subject'    => '%service_name% Appointment Rejected',
                 'content'    =>
-                    'Hi <strong>%employee_full_name%</strong>,<br><br>Your <strong>%service_name%</strong> appointment 
+                'Hi <strong>%employee_full_name%</strong>,<br><br>Your <strong>%service_name%</strong> appointment 
                      at <strong>%location_name%</strong>, scheduled for <strong>%appointment_date%</strong> at  
                      <strong>%appointment_start_time%</strong> has been rejected.
                      <br><br>Thank you,<br><strong>%company_name%</strong>'
@@ -215,7 +215,7 @@ class NotificationsStrings
                 'sendTo'     => 'provider',
                 'subject'    => '%service_name% Appointment Canceled',
                 'content'    =>
-                    'Hi <strong>%employee_full_name%</strong>,<br><br>Your <strong>%service_name%</strong> appointment,
+                'Hi <strong>%employee_full_name%</strong>,<br><br>Your <strong>%service_name%</strong> appointment,
                      scheduled on <strong>%appointment_date%</strong>, at <strong>%location_name%</strong> has been 
                      canceled.<br><br>Thank you,<br><strong>%company_name%</strong>'
             ],
@@ -229,7 +229,7 @@ class NotificationsStrings
                 'sendTo'     => 'provider',
                 'subject'    => '%service_name% Appointment Rescheduled',
                 'content'    =>
-                    'Hi <strong>%employee_full_name%</strong>,<br><br>The details for your 
+                'Hi <strong>%employee_full_name%</strong>,<br><br>The details for your 
                      <strong>%service_name%</strong> appointment at <strong>%location_name%</strong> has been changed. 
                      The appointment is now set for <strong>%appointment_date%</strong> at 
                      <strong>%appointment_start_time%</strong>.<br><br>Thank you,<br><strong>%company_name%</strong>'
@@ -255,7 +255,7 @@ class NotificationsStrings
                 'sendTo'     => 'provider',
                 'subject'    => '%service_name% Appointment Reminder',
                 'content'    =>
-                    'Dear <strong>%employee_full_name%</strong>,<br><br>We would like to remind you that you have 
+                'Dear <strong>%employee_full_name%</strong>,<br><br>We would like to remind you that you have 
                      <strong>%service_name%</strong> appointment tomorrow at <strong>%appointment_start_time%</strong>
                      at <strong>%location_name%</strong>.<br><br>Thank you, 
                      <br><strong>%company_name%</strong>'
@@ -281,7 +281,7 @@ class NotificationsStrings
                 'sendTo'     => 'customer',
                 'subject'    => 'NULL',
                 'content'    =>
-                    'Dear %customer_full_name%,
+                'Dear %customer_full_name%,
 
 You have successfully scheduled %service_name% appointment with %employee_full_name%. We are waiting for you at %location_address% on %appointment_date_time%.
 
@@ -298,10 +298,10 @@ Thank you for choosing our company,
                 'sendTo'     => 'customer',
                 'subject'    => 'NULL',
                 'content'    =>
-                    'Dear %customer_full_name%, 
-                    
+                'Dear %customer_full_name%, 
+
 The %service_name% appointment with %employee_full_name% at %location_address%, scheduled for %appointment_date_time% is waiting for a confirmation.
-                    
+
 Thank you for choosing our company,
 %company_name%'
             ],
@@ -315,10 +315,10 @@ Thank you for choosing our company,
                 'sendTo'     => 'customer',
                 'subject'    => 'NULL',
                 'content'    =>
-                    'Dear %customer_full_name%,
-                    
+                'Dear %customer_full_name%,
+
 Your %service_name% appointment, scheduled on %appointment_date_time% at %location_address% has been rejected.
-                    
+
 Thank you for choosing our company,
 %company_name%'
             ],
@@ -332,10 +332,10 @@ Thank you for choosing our company,
                 'sendTo'     => 'customer',
                 'subject'    => 'NULL',
                 'content'    =>
-                    'Dear %customer_full_name%,
-                    
+                'Dear %customer_full_name%,
+
 Your %service_name% appointment, scheduled on %appointment_date_time% at %location_address% has been canceled. 
-                    
+
 Thank you for choosing our company,
 %company_name%'
             ],
@@ -349,10 +349,10 @@ Thank you for choosing our company,
                 'sendTo'     => 'customer',
                 'subject'    => 'NULL',
                 'content'    =>
-                    'Dear %customer_full_name%,
-                    
+                'Dear %customer_full_name%,
+
 The details for your %service_name% appointment with %employee_full_name% at %location_name% has been changed. The appointment is now set for %appointment_date% at %appointment_start_time%.
-                    
+
 Thank you for choosing our company,
 %company_name%'
             ]
@@ -377,10 +377,10 @@ Thank you for choosing our company,
                 'sendTo'     => 'customer',
                 'subject'    => 'NULL',
                 'content'    =>
-                    'Dear %customer_full_name%,
-                    
+                'Dear %customer_full_name%,
+
 We would like to remind you that you have %service_name% appointment tomorrow at %appointment_start_time%. We are waiting for you at %location_name%.
-                    
+
 Thank you for choosing our company,
 %company_name%'
             ],
@@ -394,10 +394,10 @@ Thank you for choosing our company,
                 'sendTo'     => 'customer',
                 'subject'    => 'NULL',
                 'content'    =>
-                    'Dear %customer_full_name%,
-                    
+                'Dear %customer_full_name%,
+
 Thank you once again for choosing our company. We hope you were satisfied with your %service_name%.
-                     
+
 We look forward to seeing you again soon,
 %company_name%'
             ],
@@ -411,10 +411,10 @@ We look forward to seeing you again soon,
                 'sendTo'     => 'customer',
                 'subject'    => 'NULL',
                 'content'    =>
-                    'Dear %customer_full_name%,
-                    
+                'Dear %customer_full_name%,
+
 Happy birthday! We wish you all the best. 
-                    
+
 Thank you for choosing our company,
 %company_name%'
             ]
@@ -440,10 +440,10 @@ Thank you for choosing our company,
                 'sendTo'     => 'provider',
                 'subject'    => 'NULL',
                 'content'    =>
-                    'Hi %employee_full_name%,
-                    
+                'Hi %employee_full_name%,
+
 You have one confirmed %service_name% appointment at %location_name% on %appointment_date% at %appointment_start_time%. The appointment is added to your schedule.
-                    
+
 Thank you,
 %company_name%'
             ],
@@ -457,10 +457,10 @@ Thank you,
                 'sendTo'     => 'provider',
                 'subject'    => 'NULL',
                 'content'    =>
-                    'Hi %employee_full_name%,
-                    
+                'Hi %employee_full_name%,
+
 You have new appointment in %service_name%. The appointment is waiting for a confirmation.
-                    
+
 Thank you,
 %company_name%'
             ],
@@ -474,10 +474,10 @@ Thank you,
                 'sendTo'     => 'provider',
                 'subject'    => 'NULL',
                 'content'    =>
-                    'Hi %employee_full_name%,
-                    
+                'Hi %employee_full_name%,
+
 Your %service_name% appointment at %location_name%, scheduled for %appointment_date% at %appointment_start_time% has been rejected. 
-                    
+
 Thank you,
 %company_name%'
             ],
@@ -491,10 +491,10 @@ Thank you,
                 'sendTo'     => 'provider',
                 'subject'    => 'NULL',
                 'content'    =>
-                    'Hi %employee_full_name%,
-                    
+                'Hi %employee_full_name%,
+
 Your %service_name% appointment, scheduled on %appointment_date%, at %location_name% has been canceled.
-                    
+
 Thank you,
 %company_name%'
             ],
@@ -508,10 +508,10 @@ Thank you,
                 'sendTo'     => 'provider',
                 'subject'    => 'NULL',
                 'content'    =>
-                    'Hi %employee_full_name%,
-                    
+                'Hi %employee_full_name%,
+
 The details for your %service_name% appointment at %location_name% has been changed. The appointment is now set for %appointment_date% at %appointment_start_time%.
-                    
+
 Thank you,
 %company_name%'
             ]
@@ -536,10 +536,10 @@ Thank you,
                 'sendTo'     => 'provider',
                 'subject'    => 'NULL',
                 'content'    =>
-                    'Dear %employee_full_name%, 
-                    
+                'Dear %employee_full_name%, 
+
 We would like to remind you that you have %service_name% appointment tomorrow at %appointment_start_time% at %location_name%.
-                    
+
 Thank you, 
 %company_name%'
             ]
@@ -564,7 +564,7 @@ Thank you,
                 'sendTo'     => 'customer',
                 'subject'    => '%event_name% Event Booked',
                 'content'    =>
-                    'Dear <strong>%customer_full_name%</strong>,<br><br>You have successfully scheduled
+                'Dear <strong>%customer_full_name%</strong>,<br><br>You have successfully scheduled
                      <strong>%event_name%</strong> event. We are
                      waiting you at <strong>%event_location% </strong>on <strong>%event_start_date_time%</strong>.
                      <br><br>Thank you for choosing our company,<br><strong>%company_name%</strong>'
@@ -579,7 +579,7 @@ Thank you,
                 'sendTo'     => 'customer',
                 'subject'    => '%event_name% Event Canceled By Admin',
                 'content'    =>
-                    'Dear <strong>%customer_full_name%</strong>,<br><br>Your <strong>%event_name%</strong>
+                'Dear <strong>%customer_full_name%</strong>,<br><br>Your <strong>%event_name%</strong>
                      event, scheduled on <strong>%event_start_date_time%</strong> at <strong>%event_location%
                      </strong>has been canceled.<br><br>Thank you for choosing our company,
                      <br><strong>%company_name%</strong>'
@@ -594,7 +594,7 @@ Thank you,
                 'sendTo'     => 'customer',
                 'subject'    => '%event_name% Event Canceled By Attendee',
                 'content'    =>
-                    'Dear <strong>%customer_full_name%</strong>,<br><br>Your <strong>%event_name%</strong>
+                'Dear <strong>%customer_full_name%</strong>,<br><br>Your <strong>%event_name%</strong>
                      event, scheduled on <strong>%event_start_date_time%</strong> at <strong>%event_location%
                      </strong>has been canceled.<br><br>Thank you for choosing our company,
                      <br><strong>%company_name%</strong>'
@@ -609,7 +609,7 @@ Thank you,
                 'sendTo'     => 'customer',
                 'subject'    => '%event_name% Event Rescheduled',
                 'content'    =>
-                    'Dear <strong>%customer_full_name%</strong>,<br><br>The details for your
+                'Dear <strong>%customer_full_name%</strong>,<br><br>The details for your
                      <strong>%event_name%</strong> event at
                      <strong>%event_location%</strong> has been changed. The event is now set for
                      <strong>%event_start_date_time%</strong>.<br><br>
@@ -636,7 +636,7 @@ Thank you,
                 'sendTo'     => 'customer',
                 'subject'    => '%event_name% Event Reminder',
                 'content'    =>
-                    'Dear <strong>%customer_full_name%</strong>,<br><br>We would like to remind you that you have
+                'Dear <strong>%customer_full_name%</strong>,<br><br>We would like to remind you that you have
                      <strong>%event_name%</strong> event tomorrow at <strong>%event_start_date_time%</strong>.
                      We are waiting for you at <strong>%event_location%</strong>.<br><br>Thank you for
                      choosing our company,<br><strong>%company_name%</strong>'
@@ -651,7 +651,7 @@ Thank you,
                 'sendTo'     => 'customer',
                 'subject'    => '%event_name% Event Follow Up',
                 'content'    =>
-                    'Dear <strong>%customer_full_name%</strong>,<br><br>Thank you once again for choosing our company.
+                'Dear <strong>%customer_full_name%</strong>,<br><br>Thank you once again for choosing our company.
                      We hope you were satisfied with your <strong>%event_name%</strong>.<br><br>We look forward to
                      seeing you again soon,<br><strong>%company_name%</strong>'
             ]
@@ -676,7 +676,7 @@ Thank you,
                 'sendTo'     => 'provider',
                 'subject'    => '%event_name% Event Booked',
                 'content'    =>
-                    'Hi <strong>%employee_full_name%</strong>,<br><br>You have one confirmed
+                'Hi <strong>%employee_full_name%</strong>,<br><br>You have one confirmed
                      <strong>%event_name%</strong> Event at <strong>%event_location%</strong> on
                      <strong>%event_start_date_time%</strong>. The event
                      is added to your schedule.<br><br>Thank you,<br><strong>%company_name%</strong>'
@@ -691,7 +691,7 @@ Thank you,
                 'sendTo'     => 'provider',
                 'subject'    => '%event_name% Event Canceled By Admin',
                 'content'    =>
-                    'Hi <strong>%employee_full_name%</strong>,<br><br>Your <strong>%event_name%</strong> event
+                'Hi <strong>%employee_full_name%</strong>,<br><br>Your <strong>%event_name%</strong> event
                      at <strong>%event_location%</strong>, scheduled for <strong>%event_start_date_time%</strong>
                      has been canceled.<br><br>Thank you,<br><strong>%company_name%</strong>'
             ],
@@ -705,7 +705,7 @@ Thank you,
                 'sendTo'     => 'provider',
                 'subject'    => '%event_name% Event Canceled By Customer',
                 'content'    =>
-                    'Hi <strong>%employee_full_name%</strong>,<br><br>Your <strong>%event_name%</strong> event,
+                'Hi <strong>%employee_full_name%</strong>,<br><br>Your <strong>%event_name%</strong> event,
                      scheduled on <strong>%event_start_date_time%</strong>, at <strong>%event_location%</strong> has been
                      canceled.<br><br>Thank you,<br><strong>%company_name%</strong>'
             ],
@@ -719,7 +719,7 @@ Thank you,
                 'sendTo'     => 'provider',
                 'subject'    => '%event_name% Event Rescheduled',
                 'content'    =>
-                    'Hi <strong>%employee_full_name%</strong>,<br><br>The details for your
+                'Hi <strong>%employee_full_name%</strong>,<br><br>The details for your
                      <strong>%event_name%</strong> event at <strong>%event_location%</strong> has been changed.
                      The event is now set for <strong>%event_start_date_time%</strong>.
                      <br><br>Thank you,<br><strong>%company_name%</strong>'
@@ -745,7 +745,7 @@ Thank you,
                 'sendTo'     => 'provider',
                 'subject'    => '%event_name% Event Reminder',
                 'content'    =>
-                    'Dear <strong>%employee_full_name%</strong>,<br><br>We would like to remind you that you have 
+                'Dear <strong>%employee_full_name%</strong>,<br><br>We would like to remind you that you have 
                      <strong>%event_name%</strong> event at <strong>%event_start_date_time%</strong>
                      at <strong>%event_location%</strong>.<br><br>Thank you, 
                      <br><strong>%company_name%</strong>'
@@ -771,7 +771,7 @@ Thank you,
                 'sendTo'     => 'customer',
                 'subject'    => 'NULL',
                 'content'    =>
-                    'Dear %customer_full_name%,
+                'Dear %customer_full_name%,
 
 You have successfully scheduled %event_name% event. We are waiting for you at %event_location% on %event_start_date_time%.
 
@@ -788,7 +788,7 @@ Thank you for choosing our company,
                 'sendTo'     => 'customer',
                 'subject'    => 'NULL',
                 'content'    =>
-                    'Dear %customer_full_name%,
+                'Dear %customer_full_name%,
 
 Your %event_name% event, scheduled on %event_start_date_time% at %event_location% has been cancelled.
 
@@ -805,7 +805,7 @@ Thank you for choosing our company,
                 'sendTo'     => 'customer',
                 'subject'    => 'NULL',
                 'content'    =>
-                    'Dear %customer_full_name%,
+                'Dear %customer_full_name%,
 
 Your %event_name% event, scheduled on %event_start_date_time% at %event_location% has been cancelled.
 
@@ -822,7 +822,7 @@ Thank you for choosing our company,
                 'sendTo'     => 'customer',
                 'subject'    => 'NULL',
                 'content'    =>
-                    'Dear %customer_full_name%,
+                'Dear %customer_full_name%,
 
 The details for your %event_name% event at %event_location% has been changed. The event is now set for %event_start_date_time%.
 
@@ -850,10 +850,10 @@ Thank you for choosing our company,
                 'sendTo'     => 'customer',
                 'subject'    => 'NULL',
                 'content'    =>
-                    'Dear %customer_full_name%,
-                    
+                'Dear %customer_full_name%,
+
 We would like to remind you that you have %event_name% event at %event_start_date_time%. We are waiting for you at %event_location%.
-                    
+
 Thank you for choosing our company,
 %company_name%'
             ],
@@ -867,10 +867,10 @@ Thank you for choosing our company,
                 'sendTo'     => 'customer',
                 'subject'    => 'NULL',
                 'content'    =>
-                    'Dear %customer_full_name%,
-                    
+                'Dear %customer_full_name%,
+
 Thank you once again for choosing our company. We hope you were satisfied with your %event_name%.
-                     
+
 We look forward to seeing you again soon,
 %company_name%'
             ]
@@ -895,7 +895,7 @@ We look forward to seeing you again soon,
                 'sendTo'     => 'provider',
                 'subject'    => 'NULL',
                 'content'    =>
-                    'Hi %employee_full_name%,
+                'Hi %employee_full_name%,
 
 You have one confirmed %event_name% event at %event_location% on %event_start_date_time%. The event is added to your schedule.
 
@@ -912,7 +912,7 @@ Thank you,
                 'sendTo'     => 'provider',
                 'subject'    => 'NULL',
                 'content'    =>
-                    'Hi %employee_full_name%,
+                'Hi %employee_full_name%,
 
 Your %event_name% event at %event_location%, scheduled for %event_start_date_time% has been canceled by admin.
 
@@ -929,7 +929,7 @@ Thank you,
                 'sendTo'     => 'provider',
                 'subject'    => 'NULL',
                 'content'    =>
-                    'Hi %employee_full_name%,
+                'Hi %employee_full_name%,
 
 Your %event_name% event, scheduled on %event_start_date_time%, at %event_location% has been canceled.
 
@@ -946,7 +946,7 @@ Thank you,
                 'sendTo'     => 'provider',
                 'subject'    => 'NULL',
                 'content'    =>
-                    'Hi %employee_full_name%,
+                'Hi %employee_full_name%,
 
 The details for your %event_name% event at %event_location% has been changed. The event is now set for %event_start_date_time%.
 
@@ -974,7 +974,7 @@ Thank you,
                 'sendTo'     => 'provider',
                 'subject'    => 'NULL',
                 'content'    =>
-                    'Dear %employee_full_name%, 
+                'Dear %employee_full_name%, 
                     
 We would like to remind you that you have %event_name% event at %event_start_date_time% at %event_location%.
                     
@@ -1001,7 +1001,7 @@ Thank you,
             'sendTo'     => 'customer',
             'subject'    => 'Customer Panel Access',
             'content'    =>
-                'Dear <strong>%customer_full_name%</strong>,<br><br>You can access your profile on this <b><a href="%customer_panel_url%">link</a></b>.
+            'Dear <strong>%customer_full_name%</strong>,<br><br>You can access your profile on this <b><a href="%customer_panel_url%">link</a></b>.
                     <br><br>Thank you for choosing our company,<br><strong>%company_name%</strong>'
         ];
     }
@@ -1023,7 +1023,7 @@ Thank you,
             'sendTo'     => 'provider',
             'subject'    => 'Employee Panel Access',
             'content'    =>
-                'Dear <strong>%employee_full_name%</strong>,<br><br>You can access your profile and track your bookings on this <b><a href="%employee_panel_url%">link</a></b>.
+            'Dear <strong>%employee_full_name%</strong>,<br><br>You can access your profile and track your bookings on this <b><a href="%employee_panel_url%">link</a></b>.
                     <br><br>Best regards,<br><strong>%company_name%</strong>'
         ];
     }
@@ -1045,7 +1045,7 @@ Thank you,
             'sendTo'     => 'provider',
             'subject'    => 'Employee Panel Access',
             'content'    =>
-                'Dear <strong>%employee_full_name%</strong>,<br><br>You can access your profile and track your bookings on this <b><a href="%employee_panel_url%">link</a></b>.<br><br>Your login credentials:<br>Email: <b>%employee_email%</b><br>Password: <b>%employee_password%</b>
+            'Dear <strong>%employee_full_name%</strong>,<br><br>You can access your profile and track your bookings on this <b><a href="%employee_panel_url%">link</a></b>.<br><br>Your login credentials:<br>Email: <b>%employee_email%</b><br>Password: <b>%employee_password%</b>
                     <br><br>Best regards,<br><strong>%company_name%</strong>'
         ];
     }
@@ -1067,7 +1067,7 @@ Thank you,
             'sendTo'     => 'customer',
             'subject'    => 'Package %package_name% purchased',
             'content'    =>
-                'Dear <strong>%customer_full_name%</strong>,<br><br>You have successfully purchased
+            'Dear <strong>%customer_full_name%</strong>,<br><br>You have successfully purchased
                      <strong>%package_name%</strong>.
                      <br><br>Thank you for choosing our company,<br><strong>%company_name%</strong>'
         ];
@@ -1090,7 +1090,7 @@ Thank you,
             'sendTo'     => 'customer',
             'subject'    => 'Package %package_name% purchased',
             'content'    =>
-                'Dear %customer_full_name%,
+            'Dear %customer_full_name%,
 
 You have successfully purchased %package_name%.
 
@@ -1116,7 +1116,7 @@ Thank you for choosing our company,
             'sendTo'     => 'provider',
             'subject'    => 'Package %package_name% purchased',
             'content'    =>
-                'Hi <strong>%employee_full_name%</strong>,<br><br>
+            'Hi <strong>%employee_full_name%</strong>,<br><br>
                      Customer <strong>%customer_full_name%</strong> has purchased <strong>%package_name%</strong> package.<br><br>
                      Thank you,<br><strong>%company_name%</strong>'
         ];
@@ -1139,10 +1139,10 @@ Thank you for choosing our company,
             'sendTo'     => 'provider',
             'subject'    => 'Package %package_name% purchased',
             'content'    =>
-                'Hi %employee_full_name%,
+            'Hi %employee_full_name%,
 
 Customer %customer_full_name% has purchased %package_name% package.
-                     
+
 Thank you, %company_name%'
         ];
     }
@@ -1164,10 +1164,7 @@ Thank you, %company_name%'
             'sendTo'     => 'customer',
             'subject'    => 'Package %package_name% canceled',
             'content'    =>
-                'Dear <strong>%customer_full_name%</strong>, 
-                    The <strong>%package_name%</strong> that you have purchased has been canceled. 
-                    Thank you,
-                    <strong>%company_name%</strong>'
+            'Dear <strong>%customer_full_name%</strong>,<br><br>The <strong>%package_name%</strong> that you have purchased has been canceled.<br><br>Thank you,<br><strong>%company_name%</strong>'
         ];
     }
 
@@ -1188,8 +1185,10 @@ Thank you, %company_name%'
             'sendTo'     => 'customer',
             'subject'    => 'Package %package_name% canceled',
             'content'    =>
-                'Dear %customer_full_name%, 
+            'Dear %customer_full_name%,
+
 The %package_name% that you have purchased has been canceled. 
+
 Thank you,
 %company_name%'
         ];
@@ -1212,8 +1211,7 @@ Thank you,
             'sendTo'     => 'provider',
             'subject'    => 'Package %package_name% canceled',
             'content'    =>
-                'Dear <strong>%employee_full_name%</strong>,
-The <strong>%package_name%</strong> purchased by <strong>%customer_full_name%</strong> has been canceled.'
+            'Dear <strong>%employee_full_name%</strong>,<br><br>The <strong>%package_name%</strong> purchased by <strong>%customer_full_name%</strong> has been canceled.'
         ];
     }
 
@@ -1234,7 +1232,7 @@ The <strong>%package_name%</strong> purchased by <strong>%customer_full_name%</s
             'sendTo'     => 'customer',
             'subject'    => '%event_name% Waiting List joined',
             'content'    =>
-                'Dear <strong>%customer_full_name%</strong>,<br><br>You have successfully joined the Waiting List for the
+            'Dear <strong>%customer_full_name%</strong>,<br><br>You have successfully joined the Waiting List for the
                  <strong>%event_name%</strong> event at
                  <strong>%event_location%</strong> on
                  <strong>%event_start_date_time%</strong>.<br><br>
@@ -1259,7 +1257,7 @@ The <strong>%package_name%</strong> purchased by <strong>%customer_full_name%</s
             'sendTo'     => 'customer',
             'subject'    => '%service_name% Waiting List joined',
             'content'    =>
-                'Dear <strong>%customer_full_name%</strong>,<br><br>You have successfully joined the Waiting List for the
+            'Dear <strong>%customer_full_name%</strong>,<br><br>You have successfully joined the Waiting List for the
                  <strong>%service_name%</strong> service at
                  <strong>%location_address%</strong> on
                  <strong>%appointment_date_time%</strong>.<br><br>
@@ -1284,7 +1282,7 @@ The <strong>%package_name%</strong> purchased by <strong>%customer_full_name%</s
             'sendTo'     => 'provider',
             'subject'    => '%event_name% Waiting List joined',
             'content'    =>
-                'Hi <strong>%employee_full_name%</strong>,<br><br>A new attendee has been added to the waiting list for
+            'Hi <strong>%employee_full_name%</strong>,<br><br>A new attendee has been added to the waiting list for
                  <strong>%event_name%</strong> Event at
                  <strong>%event_location%</strong> on
                  <strong>%event_start_date_time%</strong>.<br><br>
@@ -1309,7 +1307,7 @@ The <strong>%package_name%</strong> purchased by <strong>%customer_full_name%</s
             'sendTo'     => 'provider',
             'subject'    => '%service_name% Waiting List joined',
             'content'    =>
-                'Hi <strong>%employee_full_name%</strong>,<br><br>A new attendee has been added to the waiting list for
+            'Hi <strong>%employee_full_name%</strong>,<br><br>A new attendee has been added to the waiting list for
                  <strong>%service_name%</strong> Service at
                  <strong>%location_address%</strong> on
                  <strong>%appointment_date_time%</strong>.<br><br>
@@ -1334,7 +1332,7 @@ The <strong>%package_name%</strong> purchased by <strong>%customer_full_name%</s
             'sendTo'     => 'customer',
             'subject'    => 'A Spot Just Opened Up for %service_name% ',
             'content'    =>
-                'Dear <strong>%customer_full_name%</strong>,<br><br> Good news! A spot has just become available for
+            'Dear <strong>%customer_full_name%</strong>,<br><br> Good news! A spot has just become available for
                  <strong>%service_name%</strong> on
                  <strong>%appointment_date_time%</strong>.<br><br>
                  You’re on the waiting list, and now is your chance to confirm your booking before it’s taken by someone else.<br><br>
@@ -1360,7 +1358,7 @@ The <strong>%package_name%</strong> purchased by <strong>%customer_full_name%</s
             'sendTo'     => 'customer',
             'subject'    => '%event_name% Waiting List joined',
             'content'    =>
-                'Dear %customer_full_name%,
+            'Dear %customer_full_name%,
                 
                 You have successfully joined the Waiting List for the %event_name% event at %event_location% on %event_start_date_time%.
                 Thank you for choosing our company,
@@ -1386,7 +1384,7 @@ The <strong>%package_name%</strong> purchased by <strong>%customer_full_name%</s
             'sendTo'     => 'customer',
             'subject'    => '%event_name% Waiting List joined',
             'content'    =>
-                'Dear %customer_full_name%,
+            'Dear %customer_full_name%,
                 
 You have successfully joined the Waiting List for the
 %service_name% service at %location_address% on %appointment_date_time%.
@@ -1413,7 +1411,7 @@ Thank you for choosing our company,
             'sendTo'     => 'customer',
             'subject'    => 'A Spot Just Opened Up for %service_name%',
             'content'    =>
-                'Dear %customer_full_name%,
+            'Dear %customer_full_name%,
 
 Good news! A spot has just become available for
 %service_name% on %appointment_date_time%.
@@ -1443,8 +1441,8 @@ Thank you for choosing our company,
             'sendTo'     => 'provider',
             'subject'    => '%event_name% Waiting List joined',
             'content'    =>
-                'Hi %employee_full_name%,
-                
+            'Hi %employee_full_name%,
+
 A new attendee has been added to the waiting list for %event_name% Event at %event_location% on %event_start_date_time%.
 
 Thank you,
@@ -1469,7 +1467,7 @@ Thank you,
             'sendTo'     => 'provider',
             'subject'    => '%service_name% Waiting List joined',
             'content'    =>
-                'Hi %employee_full_name%,
+            'Hi %employee_full_name%,
                 
 A new attendee has been added to the waiting list for %service_name% Service at %location_address% on %appointment_date_time%.
 
@@ -1495,7 +1493,8 @@ Thank you,
             'sendTo'     => 'provider',
             'subject'    => 'Package %package_name% canceled',
             'content'    =>
-                'Dear %employee_full_name%,
+            'Dear %employee_full_name%,
+
 The %package_name% purchased by %customer_full_name% has been canceled.'
         ];
     }
@@ -1517,7 +1516,7 @@ The %package_name% purchased by %customer_full_name% has been canceled.'
             'sendTo'     => 'provider',
             'subject'    => 'Cart Purchase',
             'content'    =>
-                '<p>Hi <strong>%employee_full_name%</strong>,</p><p><br></p><p>Customer <strong>%customer_full_name%</strong> has successfully scheduled several appointments. The details about bookings are shown below.</p><p><br></p><p>%cart_appointments_details%</p><p><br></p><p>Thank you,</p><p><strong>%company_name%</strong></p>'
+            '<p>Hi <strong>%employee_full_name%</strong>,</p><p><br></p><p>Customer <strong>%customer_full_name%</strong> has successfully scheduled several appointments. The details about bookings are shown below.</p><p><br></p><p>%cart_appointments_details%</p><p><br></p><p>Thank you,</p><p><strong>%company_name%</strong></p>'
         ];
     }
 
@@ -1538,11 +1537,12 @@ The %package_name% purchased by %customer_full_name% has been canceled.'
             'sendTo'     => 'provider',
             'subject'    => 'NULL',
             'content'    =>
-                'Hi %employee_full_name%,
+            'Hi %employee_full_name%,
 
 Customer %customer_full_name% has successfully scheduled several appointments.
-                     
-Thank you, %company_name%'
+
+Thank you,
+%company_name%'
         ];
     }
 
@@ -1563,7 +1563,7 @@ Thank you, %company_name%'
             'sendTo'     => 'customer',
             'subject'    => 'Cart Purchase',
             'content'    =>
-                '<p>Dear <strong>%customer_full_name%</strong>,</p><p><br></p><p>You have successfully purchased several appointments. The details about your bookings are shown below.</p><p><br></p><p>%cart_appointments_details%.</p><p><br></p><p>Thank you for choosing our company,</p><p><strong>%company_name%</strong></p>'
+            '<p>Dear <strong>%customer_full_name%</strong>,</p><p><br></p><p>You have successfully purchased several appointments. The details about your bookings are shown below.</p><p><br></p><p>%cart_appointments_details%.</p><p><br></p><p>Thank you for choosing our company,</p><p><strong>%company_name%</strong></p>'
         ];
     }
 
@@ -1584,7 +1584,7 @@ Thank you, %company_name%'
             'sendTo'     => 'customer',
             'subject'    => 'NULL',
             'content'    =>
-                'Dear %customer_full_name%,
+            'Dear %customer_full_name%,
 
 You have successfully scheduled several appointments.
 
@@ -1831,7 +1831,7 @@ Thank you for choosing our company,
                 'sendTo'     => 'customer',
                 'subject'    => '%service_name% Appointment Details Changed',
                 'content'    =>
-                    'Dear <strong>%customer_full_name%</strong>,<br><br>Details of the appointment on <strong>%appointment_date_time%</strong> have changed: <br>
+                'Dear <strong>%customer_full_name%</strong>,<br><br>Details of the appointment on <strong>%appointment_date_time%</strong> have changed: <br>
                         <ul>
                             <li>Employee: <strong>%employee_full_name%</strong></li>
                             <li>Location: <strong>%location_name%</strong></li>
@@ -1850,7 +1850,7 @@ Thank you for choosing our company,
                 'sendTo'     => 'provider',
                 'subject'    => '%service_name% Appointment Details Changed',
                 'content'    =>
-                    'Hi <strong>%employee_full_name%</strong>,<br><br>Details of the appointment on <strong>%appointment_date_time%</strong>  have changed:
+                'Hi <strong>%employee_full_name%</strong>,<br><br>Details of the appointment on <strong>%appointment_date_time%</strong>  have changed:
                        <br>
                         <ul>
                             <li>Customers: <strong>%customer_full_name%</strong></li>
@@ -1870,7 +1870,7 @@ Thank you for choosing our company,
                 'sendTo'     => 'customer',
                 'subject'    => '%service_name% Appointment Details Changed',
                 'content'    =>
-                    'Dear %customer_full_name%,
+                'Dear %customer_full_name%,
 
 Details of the appointment on %appointment_date_time% have changed:
     Employee: %employee_full_name%
@@ -1948,7 +1948,7 @@ Thank you,
                 'sendTo'     => 'customer',
                 'subject'    => '%event_name% Event Details Changed',
                 'content'    =>
-                    'Dear <strong>%customer_full_name%</strong>,<br><br>Details of the event on <strong>%event_start_date_time%</strong> have changed:
+                'Dear <strong>%customer_full_name%</strong>,<br><br>Details of the event on <strong>%event_start_date_time%</strong> have changed:
                     <ul>
                         <li>Organizer: <strong>%employee_full_name%</strong></li>
                         <li>Location: <strong>%location_name%</strong></li>
@@ -1966,7 +1966,7 @@ Thank you,
                 'sendTo'     => 'provider',
                 'subject'    => '%event_name% Event Details Changed',
                 'content'    =>
-                    'Hi <strong>%employee_full_name%</strong>,<br><br>Details of the event on <strong>%event_start_date_time%</strong> have changed:
+                'Hi <strong>%employee_full_name%</strong>,<br><br>Details of the event on <strong>%event_start_date_time%</strong> have changed:
                         <ul>
                             <li>Description: <strong>%event_description%</strong></li>
                             <li>Location: <strong>%location_name%</strong></li> 
@@ -1984,7 +1984,7 @@ Thank you,
                 'sendTo'     => 'customer',
                 'subject'    => '%event_name% Event Details Changed',
                 'content'    =>
-                    'Dear %customer_full_name%,
+                'Dear %customer_full_name%,
                     
 Details of the event on %event_start_date_time% have changed:
     Organizer: %employee_full_name
@@ -2059,7 +2059,7 @@ Thank you,
                 'sendTo'     => 'customer',
                 'subject'    => 'Booking Invoice',
                 'content'    =>
-                    'Dear <strong>%customer_full_name%</strong>,<br><br>Please find the attached invoice for your reference. If you have any questions, feel free to contact us.
+                'Dear <strong>%customer_full_name%</strong>,<br><br>Please find the attached invoice for your reference. If you have any questions, feel free to contact us.
                     <br><br>Thank you for choosing our company, <br>
                     <strong>%company_name%</strong>'
             ]
@@ -2083,7 +2083,7 @@ Thank you,
             'sendTo'     => 'customer',
             'subject'    => 'E-Ticket for %event_name%',
             'content'    =>
-                'Dear <strong>%customer_full_name%</strong>,<br><br>
+            'Dear <strong>%customer_full_name%</strong>,<br><br>
                  Thank you for registering for 
                  <strong>%event_name%</strong> on 
                  <strong>%event_start_date_time%</strong>.<br><br>

@@ -1,9 +1,9 @@
 <?php
 
-namespace AmeliaSabre\VObject\Property\ICalendar;
+namespace AmeliaVendor\Sabre\VObject\Property\ICalendar;
 
-use AmeliaSabre\VObject\DateTimeParser;
-use AmeliaSabre\VObject\Property;
+use AmeliaVendor\Sabre\VObject\DateTimeParser;
+use AmeliaVendor\Sabre\VObject\Property;
 
 /**
  * Duration property.

@@ -4,11 +4,11 @@
  * @link    https://github.com/dompdf/php-font-lib
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace FontLib\Table;
+namespace AmeliaVendor\FontLib\Table;
 
-use FontLib\TrueType\File;
-use FontLib\Font;
-use FontLib\BinaryStream;
+use AmeliaVendor\FontLib\TrueType\File;
+use AmeliaVendor\FontLib\Font;
+use AmeliaVendor\FontLib\BinaryStream;
 
 /**
  * Generic font table.

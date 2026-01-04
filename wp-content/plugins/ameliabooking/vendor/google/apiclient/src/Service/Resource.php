@@ -15,13 +15,13 @@
  * limitations under the License.
  */
 
-namespace AmeliaGoogle\Service;
+namespace AmeliaVendor\Google\Service;
 
-use AmeliaGoogle\Exception as GoogleException;
-use AmeliaGoogle\Http\MediaFileUpload;
-use AmeliaGoogle\Model;
-use AmeliaGoogle\Utils\UriTemplate;
-use AmeliaGuzzleHttp\Psr7\Request;
+use AmeliaVendor\Google\Exception as GoogleException;
+use AmeliaVendor\Google\Http\MediaFileUpload;
+use AmeliaVendor\Google\Model;
+use AmeliaVendor\Google\Utils\UriTemplate;
+use AmeliaVendor\GuzzleHttp\Psr7\Request;
 
 /**
  * Implements the actual methods/resources of the discovered Google API using magic function
@@ -45,10 +45,10 @@ class Resource
         'prettyPrint' => ['type' => 'string', 'location' => 'query'],
     ];
 
-    /** @var string $rootUrl */
-    private $rootUrl;
+    /** @var string $rootUrlTemplate */
+    private $rootUrlTemplate;
 
-    /** @var \AmeliaGoogle\Client $client */
+    /** @var \AmeliaVendor\Google\Client $client */
     private $client;
 
     /** @var string $serviceName */
@@ -65,7 +65,7 @@ class Resource
 
     public function __construct($service, $serviceName, $resourceName, $resource)
     {
-        $this->rootUrl = $service->rootUrl;
+        $this->rootUrlTemplate = $service->rootUrlTemplate ?? $service->rootUrl;
         $this->client = $service->getClient();
         $this->servicePath = $service->servicePath;
         $this->serviceName = $serviceName;
@@ -83,7 +83,7 @@ class Resource
      * @param array $arguments
      * @param class-string<T> $expectedClass - optional, the expected class name
      * @return mixed|T|ResponseInterface|RequestInterface
-     * @throws \AmeliaGoogle\Exception
+     * @throws \AmeliaVendor\Google\Exception
      */
     public function call($name, $arguments, $expectedClass = null)
     {
@@ -268,12 +268,14 @@ class Resource
             $requestUrl = $this->servicePath . $restPath;
         }
 
-        // code for leading slash
-        if ($this->rootUrl) {
-            if ('/' !== substr($this->rootUrl, -1) && '/' !== substr($requestUrl, 0, 1)) {
+        if ($this->rootUrlTemplate) {
+            // code for universe domain
+            $rootUrl = str_replace('UNIVERSE_DOMAIN', $this->client->getUniverseDomain(), $this->rootUrlTemplate);
+            // code for leading slash
+            if ('/' !== substr($rootUrl, -1) && '/' !== substr($requestUrl, 0, 1)) {
                 $requestUrl = '/' . $requestUrl;
             }
-            $requestUrl = $this->rootUrl . $requestUrl;
+            $requestUrl = $rootUrl . $requestUrl;
         }
         $uriTemplateVars = [];
         $queryVars = [];

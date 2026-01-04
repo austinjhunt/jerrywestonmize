@@ -2,7 +2,7 @@
 
 namespace AmeliaHttp\Client\Common;
 
-use AmeliaPsr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
 
 /**
  * Emulates an HTTP Client in an HTTP Async Client.

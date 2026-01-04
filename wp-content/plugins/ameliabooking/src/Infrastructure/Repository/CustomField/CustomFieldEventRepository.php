@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -25,7 +25,7 @@ class CustomFieldEventRepository extends AbstractRepository
      * @param int $customFieldId
      * @param int $eventId
      *
-     * @return bool
+     * @return int
      * @throws QueryExecutionException
      */
     public function add($customFieldId, $eventId)

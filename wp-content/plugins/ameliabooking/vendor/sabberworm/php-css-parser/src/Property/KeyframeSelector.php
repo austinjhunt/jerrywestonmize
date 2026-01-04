@@ -1,6 +1,6 @@
 <?php
 
-namespace Sabberworm\CSS\Property;
+namespace AmeliaVendor\Sabberworm\CSS\Property;
 
 class KeyframeSelector extends Selector
 {
@@ -9,7 +9,7 @@ class KeyframeSelector extends Selector
      *
      * @var string
      *
-     * @internal
+     * @internal since 8.5.2
      */
     const SELECTOR_VALIDATION_RX = '/
     ^(

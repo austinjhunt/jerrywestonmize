@@ -52,7 +52,6 @@ class AppointmentEventsListener implements ListenerInterface
      * @throws \AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException
-     * @throws \Interop\Container\Exception\ContainerException
      * @throws \Exception
      * @throws \Exception
      */

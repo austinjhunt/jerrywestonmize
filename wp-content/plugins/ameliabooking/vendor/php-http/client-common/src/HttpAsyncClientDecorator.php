@@ -3,7 +3,7 @@
 namespace AmeliaHttp\Client\Common;
 
 use AmeliaHttp\Client\HttpAsyncClient;
-use AmeliaPsr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
 
 /**
  * Decorates an HTTP Async Client.

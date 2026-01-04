@@ -1,6 +1,6 @@
 <?php
 
-namespace Masterminds\HTML5;
+namespace AmeliaVendor\Masterminds\HTML5;
 
 /**
  * Entity lookup tables.

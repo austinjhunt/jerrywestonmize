@@ -1,5 +1,9 @@
-$icomoon-font-family: "amelia-icons" !default;
-$icomoon-font-path: "icon-fonts/fonts/" !default;
+$icomoon-font-family: 'amelia-icons' !default;
+// NOTE: $icomoon-font-path is set dynamically in vite.config.js based on mode:
+// - Dev: http://localhost:3000/src/assets/scss/common/icon-fonts/fonts (full URL to Vite dev server)
+// - Prod: ./fonts (fonts are copied to public/assets/fonts/ during build)
+// The default below is a fallback for production builds.
+$icomoon-font-path: './fonts' !default;
 
 $am-icon-mobile: unquote('"\\e971"');
 $am-icon-bolt-lightning: unquote('"\\e96c"');
@@ -115,4 +119,3 @@ $am-icon-google: unquote('"\\e901"');
 $am-icon-apple: unquote('"\\e902"');
 $am-icon-yahoo: unquote('"\\e903"');
 $am-icon-no-show: unquote('"\\e970"');
-

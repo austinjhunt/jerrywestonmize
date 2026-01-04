@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace AmeliaStripe;
+namespace AmeliaVendor\Stripe;
 
 /**
  * PaymentMethod objects represent your customer's payment instruments.
@@ -74,13 +73,10 @@ namespace AmeliaStripe;
 class PaymentMethod extends ApiResource
 {
     const OBJECT_NAME = 'payment_method';
-
-    use ApiOperations\Update;
-
+    use \AmeliaVendor\Stripe\ApiOperations\Update;
     const ALLOW_REDISPLAY_ALWAYS = 'always';
     const ALLOW_REDISPLAY_LIMITED = 'limited';
     const ALLOW_REDISPLAY_UNSPECIFIED = 'unspecified';
-
     const TYPE_ACSS_DEBIT = 'acss_debit';
     const TYPE_AFFIRM = 'affirm';
     const TYPE_AFTERPAY_CLEARPAY = 'afterpay_clearpay';
@@ -130,7 +126,6 @@ class PaymentMethod extends ApiResource
     const TYPE_US_BANK_ACCOUNT = 'us_bank_account';
     const TYPE_WECHAT_PAY = 'wechat_pay';
     const TYPE_ZIP = 'zip';
-
     /**
      * Creates a PaymentMethod object. Read the <a
      * href="/docs/stripe-js/reference#stripe-create-payment-method">Stripe.js
@@ -153,14 +148,11 @@ class PaymentMethod extends ApiResource
     {
         self::_validateParams($params);
         $url = static::classUrl();
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
-        $obj = Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \AmeliaVendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
-
     /**
      * Returns a list of PaymentMethods for Treasury flows. If you want to list the
      * PaymentMethods attached to a Customer for payments, you should use the <a
@@ -177,10 +169,8 @@ class PaymentMethod extends ApiResource
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
-
         return static::_requestPage($url, Collection::class, $params, $opts);
     }
-
     /**
      * Retrieves a PaymentMethod object attached to the StripeAccount. To retrieve a
      * payment method attached to a Customer, you should use <a
@@ -196,13 +186,11 @@ class PaymentMethod extends ApiResource
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = Util\RequestOptions::parse($opts);
+        $opts = \AmeliaVendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
-
         return $instance;
     }
-
     /**
      * Updates a PaymentMethod object. A PaymentMethod must be attached a customer to
      * be updated.
@@ -219,14 +207,11 @@ class PaymentMethod extends ApiResource
     {
         self::_validateParams($params);
         $url = static::resourceUrl($id);
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $opts);
-        $obj = Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \AmeliaVendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
-
     /**
      * @param null|array $params
      * @param null|array|string $opts
@@ -240,10 +225,8 @@ class PaymentMethod extends ApiResource
         $url = $this->instanceUrl() . '/attach';
         list($response, $opts) = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
-
         return $this;
     }
-
     /**
      * @param null|array $params
      * @param null|array|string $opts
@@ -257,7 +240,6 @@ class PaymentMethod extends ApiResource
         $url = $this->instanceUrl() . '/detach';
         list($response, $opts) = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
-
         return $this;
     }
 }

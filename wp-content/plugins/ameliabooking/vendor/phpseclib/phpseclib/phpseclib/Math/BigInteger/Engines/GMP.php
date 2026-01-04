@@ -11,9 +11,9 @@
  * @link      http://pear.php.net/package/Math_BigInteger
  */
 
-namespace phpseclib3\Math\BigInteger\Engines;
+namespace AmeliaVendor\phpseclib3\Math\BigInteger\Engines;
 
-use phpseclib3\Exception\BadConfigurationException;
+use AmeliaVendor\phpseclib3\Exception\BadConfigurationException;
 
 /**
  * GMP Engine.
@@ -296,7 +296,10 @@ class GMP extends Engine
      */
     public function extendedGCD(GMP $n)
     {
-        extract(gmp_gcdext($this->value, $n->value));
+        $extended = gmp_gcdext($this->value, $n->value);
+        $g = $extended['g'];
+        $s = $extended['s'];
+        $t = $extended['t'];
 
         return [
             'gcd' => $this->normalize(new self($g)),

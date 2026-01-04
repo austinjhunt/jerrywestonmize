@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Climate;
+namespace AmeliaVendor\Stripe\Climate;
 
 /**
  * A supplier of carbon removal.
@@ -11,11 +11,11 @@ namespace AmeliaStripe\Climate;
  * @property string $object String representing the object’s type. Objects of the same type share the same value.
  * @property string $info_url Link to a webpage to learn more about the supplier.
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
- * @property ((object{city: null|string, country: string, latitude: null|float, longitude: null|float, region: null|string}&\AmeliaStripe\StripeObject))[] $locations The locations in which this supplier operates.
+ * @property ((object{city: null|string, country: string, latitude: null|float, longitude: null|float, region: null|string}&\AmeliaVendor\Stripe\StripeObject))[] $locations The locations in which this supplier operates.
  * @property string $name Name of this carbon removal supplier.
  * @property string $removal_pathway The scientific pathway used for carbon removal.
  */
-class Supplier extends \AmeliaStripe\ApiResource
+class Supplier extends \AmeliaVendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'climate.supplier';
 
@@ -29,15 +29,15 @@ class Supplier extends \AmeliaStripe\ApiResource
      * @param null|array{ending_before?: string, expand?: string[], limit?: int, starting_after?: string} $params
      * @param null|array|string $opts
      *
-     * @return \AmeliaStripe\Collection<Supplier> of ApiResources
+     * @return \AmeliaVendor\Stripe\Collection<Supplier> of ApiResources
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
 
-        return static::_requestPage($url, \AmeliaStripe\Collection::class, $params, $opts);
+        return static::_requestPage($url, \AmeliaVendor\Stripe\Collection::class, $params, $opts);
     }
 
     /**
@@ -48,11 +48,11 @@ class Supplier extends \AmeliaStripe\ApiResource
      *
      * @return Supplier
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = \AmeliaStripe\Util\RequestOptions::parse($opts);
+        $opts = \AmeliaVendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
 

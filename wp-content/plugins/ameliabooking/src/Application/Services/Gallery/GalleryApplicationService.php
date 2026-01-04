@@ -34,7 +34,6 @@ class GalleryApplicationService
      *
      * @throws \Slim\Exception\ContainerValueNotFoundException
      * @throws QueryExecutionException
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function manageGalleryForEntityAdd($entityGallery, $entityId)
     {
@@ -60,7 +59,6 @@ class GalleryApplicationService
      *
      * @throws \Slim\Exception\ContainerValueNotFoundException
      * @throws QueryExecutionException
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function manageGalleryForEntityUpdate($entityGallery, $entityId, $entityType)
     {
@@ -103,7 +101,6 @@ class GalleryApplicationService
      *
      * @throws \Slim\Exception\ContainerValueNotFoundException
      * @throws QueryExecutionException
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function manageGalleryForEntityDelete($entityGallery)
     {

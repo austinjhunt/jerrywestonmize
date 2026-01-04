@@ -4,13 +4,13 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace AmeliaDompdf\Renderer;
+namespace AmeliaVendor\Dompdf\Renderer;
 
-use AmeliaDompdf\Helpers;
-use AmeliaDompdf\Frame;
-use AmeliaDompdf\FrameDecorator\ListBullet as ListBulletFrameDecorator;
-use AmeliaDompdf\FrameDecorator\ListBulletImage;
-use AmeliaDompdf\Image\Cache;
+use AmeliaVendor\Dompdf\Helpers;
+use AmeliaVendor\Dompdf\Frame;
+use AmeliaVendor\Dompdf\FrameDecorator\ListBullet as ListBulletFrameDecorator;
+use AmeliaVendor\Dompdf\FrameDecorator\ListBulletImage;
+use AmeliaVendor\Dompdf\Image\Cache;
 
 /**
  * Renders list bullets
@@ -93,12 +93,12 @@ class ListBullet extends AbstractRenderer
 
             case "upper-alpha":
             case "upper-latin":
-                $text = chr((($n - 1) % 26) + ord('A'));
+                $text = strtoupper(Helpers::dec2base26($n));
                 break;
 
             case "lower-alpha":
             case "lower-latin":
-                $text = chr((($n - 1) % 26) + ord('a'));
+                $text = Helpers::dec2base26($n);
                 break;
 
             case "upper-roman":

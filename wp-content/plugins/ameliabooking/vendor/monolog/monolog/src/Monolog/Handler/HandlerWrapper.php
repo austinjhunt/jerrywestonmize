@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Monolog\Handler;
+namespace AmeliaVendor\Monolog\Handler;
 
-use Monolog\ResettableInterface;
-use Monolog\Formatter\FormatterInterface;
+use AmeliaVendor\Monolog\ResettableInterface;
+use AmeliaVendor\Monolog\Formatter\FormatterInterface;
 
 /**
  * This simple wrapper class can be used to extend handlers functionality.

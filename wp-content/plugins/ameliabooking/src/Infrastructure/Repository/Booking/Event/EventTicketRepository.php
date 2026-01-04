@@ -20,7 +20,7 @@ class EventTicketRepository extends AbstractRepository implements EventRepositor
     /**
      * @param EventTicket $entity
      *
-     * @return bool
+     * @return int
      * @throws QueryExecutionException
      */
     public function add($entity)

@@ -7,8 +7,8 @@
 
 namespace Slim;
 
-use AmeliaPsr\Http\Message\ResponseInterface;
-use AmeliaPsr\Http\Message\ServerRequestInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface;
 use Slim\Handlers\Error;
 use Slim\Handlers\NotAllowed;
 use Slim\Handlers\NotFound;
@@ -128,8 +128,8 @@ class DefaultServicesProvider
             /**
              * This service MUST return a callable that accepts three arguments:
              *
-             * 1. Instance of \AmeliaPsr\Http\Message\ServerRequestInterface
-             * 2. Instance of \AmeliaPsr\Http\Message\ResponseInterface
+             * 1. Instance of \AmeliaVendor\Psr\Http\Message\ServerRequestInterface
+             * 2. Instance of \AmeliaVendor\Psr\Http\Message\ResponseInterface
              * 3. Instance of \Exception
              *
              * The callable MUST return an instance of ResponseInterface.

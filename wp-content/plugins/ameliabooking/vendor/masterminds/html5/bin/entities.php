@@ -16,7 +16,7 @@ foreach ($json as $name => $obj) {
 }
 
 echo '<?php
-namespace Masterminds\\HTML5;
+namespace AmeliaVendor\\Masterminds\\HTML5;
 /** Entity lookup tables. This class is automatically generated. */
 class Entities {
   public static $byName = ';

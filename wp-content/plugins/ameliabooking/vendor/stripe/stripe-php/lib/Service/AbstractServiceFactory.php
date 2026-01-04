@@ -1,10 +1,10 @@
 <?php
 
-namespace AmeliaStripe\Service;
+namespace AmeliaVendor\Stripe\Service;
 
 /**
  * Abstract base class for all service factories used to expose service
- * instances through {@link \AmeliaStripe\StripeClient}.
+ * instances through {@link \Stripe\StripeClient}.
  *
  * Service factories serve two purposes:
  *
@@ -17,7 +17,7 @@ abstract class AbstractServiceFactory
     use ServiceNavigatorTrait;
 
     /**
-     * @param \AmeliaStripe\StripeClientInterface $client
+     * @param \AmeliaVendor\Stripe\StripeClientInterface $client
      */
     public function __construct($client)
     {

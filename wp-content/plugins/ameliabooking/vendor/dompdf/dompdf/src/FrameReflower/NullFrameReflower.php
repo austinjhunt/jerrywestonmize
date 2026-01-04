@@ -4,10 +4,10 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace AmeliaDompdf\FrameReflower;
+namespace AmeliaVendor\Dompdf\FrameReflower;
 
-use AmeliaDompdf\Frame;
-use AmeliaDompdf\FrameDecorator\Block as BlockFrameDecorator;
+use AmeliaVendor\Dompdf\Frame;
+use AmeliaVendor\Dompdf\FrameDecorator\Block as BlockFrameDecorator;
 
 /**
  * Dummy reflower
@@ -29,7 +29,7 @@ class NullFrameReflower extends AbstractFrameReflower
     /**
      * @param BlockFrameDecorator|null $block
      */
-    function reflow(BlockFrameDecorator $block = null)
+    function reflow(?BlockFrameDecorator $block = null)
     {
         return;
     }

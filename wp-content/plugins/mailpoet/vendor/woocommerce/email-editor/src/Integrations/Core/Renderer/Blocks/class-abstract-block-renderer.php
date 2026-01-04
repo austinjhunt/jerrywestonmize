@@ -4,6 +4,7 @@ namespace Automattic\WooCommerce\EmailEditor\Integrations\Core\Renderer\Blocks;
 if (!defined('ABSPATH')) exit;
 use Automattic\WooCommerce\EmailEditor\Engine\Renderer\ContentRenderer\Block_Renderer;
 use Automattic\WooCommerce\EmailEditor\Engine\Renderer\ContentRenderer\Rendering_Context;
+use Automattic\WooCommerce\EmailEditor\Integrations\Utils\Dom_Document_Helper;
 use Automattic\WooCommerce\EmailEditor\Integrations\Utils\Styles_Helper;
 use Automattic\WooCommerce\EmailEditor\Integrations\Utils\Table_Wrapper_Helper;
 use WP_Style_Engine;
@@ -13,6 +14,11 @@ abstract class Abstract_Block_Renderer implements Block_Renderer {
  }
  protected function compile_css( ...$styles ): string {
  return WP_Style_Engine::compile_css( array_merge( ...$styles ), '' );
+ }
+ protected function get_inner_content( string $block_content, string $tag_name = 'div' ): string {
+ $dom_helper = new Dom_Document_Helper( $block_content );
+ $element = $dom_helper->find_element( $tag_name );
+ return $element ? $dom_helper->get_element_inner_html( $element ) : $block_content;
  }
  protected function add_spacer( $content, $email_attrs ): string {
  $gap_style = WP_Style_Engine::compile_css( array_intersect_key( $email_attrs, array_flip( array( 'margin-top' ) ) ), '' ) ?? '';

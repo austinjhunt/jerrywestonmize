@@ -15,13 +15,13 @@
  * limitations under the License.
  */
 
-namespace AmeliaGoogle\Auth\Middleware;
+namespace AmeliaVendor\Google\Auth\Middleware;
 
-use AmeliaGuzzleHttp\Psr7\Query;
-use AmeliaPsr\Http\Message\RequestInterface;
+use AmeliaVendor\GuzzleHttp\Psr7\Query;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
 
 /**
- * SimpleMiddleware is a Guzzle Middleware that implements Google's Simple API
+ * SimpleMiddleware is a Guzzle Middleware that implements AmeliaVendor\Google's Simple API
  * access.
  *
  * Requests are accessed using the Simple API access developer key.
@@ -53,9 +53,9 @@ class SimpleMiddleware
     /**
      * Updates the request query with the developer key if auth is set to simple.
      *
-     *   use AmeliaGoogle\Auth\Middleware\SimpleMiddleware;
-     *   use AmeliaGuzzleHttp\Client;
-     *   use AmeliaGuzzleHttp\HandlerStack;
+     *   use AmeliaVendor\Google\Auth\Middleware\SimpleMiddleware;
+     *   use AmeliaVendor\GuzzleHttp\Client;
+     *   use AmeliaVendor\GuzzleHttp\HandlerStack;
      *
      *   $my_key = 'is not the same as yours';
      *   $middleware = new SimpleMiddleware(['key' => $my_key]);

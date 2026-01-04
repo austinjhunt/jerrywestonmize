@@ -4,8 +4,8 @@ namespace AmeliaHttp\Client\Curl;
 
 use AmeliaHttp\Client\Exception;
 use AmeliaHttp\Promise\Promise;
-use AmeliaPsr\Http\Message\RequestInterface;
-use AmeliaPsr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
 
 /**
  * Shared promises core.

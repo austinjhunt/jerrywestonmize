@@ -3,7 +3,7 @@
 namespace AmeliaHttp\Client\Common;
 
 use AmeliaHttp\Promise\Promise;
-use AmeliaPsr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
 
 /**
  * A plugin is a middleware to transform the request and/or the response.

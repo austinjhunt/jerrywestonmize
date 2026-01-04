@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -212,12 +212,9 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
         $packageCustomerServiceRepository = $this->container->get('domain.bookable.packageCustomerService.repository');
 
         /** @var Collection $packageCustomerServices */
-        $packageCustomerServices = $packageCustomerServiceRepository->getByCriteria(
-            [
-                'customerId' => $package['customer']['id'],
-                'packages'   => [$package['id']]
-            ]
-        );
+        $packageCustomerServices = !empty($package['packageCustomerId']) ? $packageCustomerServiceRepository->getByCriteria(
+            ['packageCustomerIds' => [$package['packageCustomerId']]]
+        ) : new Collection();
 
         $coupon = null;
 
@@ -283,13 +280,13 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
                     ) {
                         switch ($payment->getGateway()->getName()->getValue()) {
                             case 'onSite':
-                                $method = BackendStrings::getCommonStrings()['on_site'];
+                                $method = BackendStrings::get('on_site');
                                 break;
                             case 'wc':
-                                $method = BackendStrings::getSettingsStrings()['wc_name'];
+                                $method = BackendStrings::get('wc_name');
                                 break;
                             default:
-                                $method = BackendStrings::getSettingsStrings()[$payment->getGateway()->getName()->getValue()];
+                                $method = BackendStrings::get($payment->getGateway()->getName()->getValue());
                                 break;
                         }
 
@@ -372,13 +369,13 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
 
             $couponsUsed[] =
                 $coupon['code'] . ' ' . $break .
-                ($discountValue ? BackendStrings::getPaymentStrings()['discount_amount'] . ': ' .
+                ($discountValue ? BackendStrings::get('discount_amount') . ': ' .
                     $helperService->getFormattedPrice($discountValue) . ' ' . $break : '') .
-                ($deductionValue ? BackendStrings::getPaymentStrings()['deduction'] . ': ' .
+                ($deductionValue ? BackendStrings::get('deduction') . ': ' .
                     $helperService->getFormattedPrice($deductionValue) . ' ' . $break : '') .
-                ($startDate ? BackendStrings::getCommonStrings()['start_date'] . ': ' .
+                ($startDate ? BackendStrings::get('start_date') . ': ' .
                     $startDate . ' ' . $break : '') .
-                ($expirationDate ? BackendStrings::getPaymentStrings()['expiration_date'] . ': ' .
+                ($expirationDate ? BackendStrings::get('expiration_date') . ': ' .
                     $expirationDate : '');
         }
 

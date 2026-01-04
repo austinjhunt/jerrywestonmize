@@ -216,10 +216,14 @@ function ameliaPluginActionCallback (pluginActionUrl, pluginActionText) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-  let pluginLink = document.getElementById('deactivate-ameliabooking')
+  let pluginLink1 = document.getElementById('deactivate-ameliabooking');
+  let pluginLink2 = document.getElementById('deactivate-amelia');
 
-  if (typeof pluginLink !== 'undefined' &&
-    pluginLink &&
+  let pluginLink = typeof pluginLink1 !== 'undefined' && pluginLink1
+    ? pluginLink1
+    : (typeof pluginLink2 !== 'undefined' && pluginLink2 ? pluginLink2 : null);
+
+  if (pluginLink &&
     typeof wpAmeliaDeleteSettings !== 'undefined' &&
     typeof wpAmeliaNonce !== 'undefined' &&
     typeof wpAmeliaActionURL !== 'undefined' &&

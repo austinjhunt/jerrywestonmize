@@ -4,7 +4,7 @@
  * The interface definition for Rules to generate output.
  */
 
-namespace Masterminds\HTML5\Serializer;
+namespace AmeliaVendor\Masterminds\HTML5\Serializer;
 
 /**
  * To create a new rule set for writing output the RulesInterface needs to be implemented.

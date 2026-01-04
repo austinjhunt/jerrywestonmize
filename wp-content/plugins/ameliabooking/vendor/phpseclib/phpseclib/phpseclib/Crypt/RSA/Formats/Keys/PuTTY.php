@@ -11,11 +11,11 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-namespace phpseclib3\Crypt\RSA\Formats\Keys;
+namespace AmeliaVendor\phpseclib3\Crypt\RSA\Formats\Keys;
 
-use phpseclib3\Common\Functions\Strings;
-use phpseclib3\Crypt\Common\Formats\Keys\PuTTY as Progenitor;
-use phpseclib3\Math\BigInteger;
+use AmeliaVendor\phpseclib3\Common\Functions\Strings;
+use AmeliaVendor\phpseclib3\Crypt\Common\Formats\Keys\PuTTY as Progenitor;
+use AmeliaVendor\phpseclib3\Math\BigInteger;
 
 /**
  * PuTTY Formatted RSA Key Handler
@@ -29,7 +29,7 @@ abstract class PuTTY extends Progenitor
      *
      * @var string
      */
-    const PUBLIC_HANDLER = 'phpseclib3\Crypt\RSA\Formats\Keys\OpenSSH';
+    const PUBLIC_HANDLER = 'AmeliaVendor\phpseclib3\Crypt\RSA\Formats\Keys\OpenSSH';
 
     /**
      * Algorithm Identifier
@@ -56,7 +56,10 @@ abstract class PuTTY extends Progenitor
         if (!isset($components['private'])) {
             return $components;
         }
-        extract($components);
+        $type = $components['type'];
+        $comment = $components['comment'];
+        $public = $components['public'];
+        $private = $components['private'];
         unset($components['public'], $components['private']);
 
         $isPublicKey = false;

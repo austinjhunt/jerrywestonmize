@@ -28,16 +28,16 @@ class DIVI_StepBooking extends ET_Builder_Module
 
     public function init()
     {
-        $this->name = esc_html__(BackendStrings::getWordPressStrings()['step_booking_divi'], 'divi-divi_amelia');
+        $this->name = esc_html__(BackendStrings::get('step_booking_divi'), 'divi-divi_amelia');
 
-        $this->type['0']        = BackendStrings::getWordPressStrings()['show_all'];
-        $this->type['services'] = BackendStrings::getCommonStrings()['services'];
-        $this->type['packages'] = BackendStrings::getCommonStrings()['packages'];
+        $this->type['0']        = BackendStrings::get('show_all');
+        $this->type['services'] = BackendStrings::get('services');
+        $this->type['packages'] = BackendStrings::get('packages');
 
         // Initialize layout options
         $this->layout_options = [
-            '1' => BackendStrings::getCommonStrings()['layout_dropdown'],
-            '2' => BackendStrings::getCommonStrings()['layout_list']
+            '1' => BackendStrings::get('layout_dropdown'),
+            '2' => BackendStrings::get('layout_list')
         ];
 
         if (!is_admin()) {
@@ -45,14 +45,14 @@ class DIVI_StepBooking extends ET_Builder_Module
         }
 
         $this->trigger_types = [
-            'id' => BackendStrings::getWordPressStrings()['trigger_type_id'],
-            'class' => BackendStrings::getWordPressStrings()['trigger_type_class']
+            'id' => BackendStrings::get('trigger_type_id'),
+            'class' => BackendStrings::get('trigger_type_class')
         ];
 
         $data = GutenbergBlock::getEntitiesData()['data'];
         $this->showPackages = !empty($data['packages']);
 
-//        $this->categories['0'] = BackendStrings::getWordPressStrings()['show_all_categories'];
+//        $this->categories['0'] = BackendStrings::get('show_all_categories');
         foreach ($data['categories'] as $category) {
             $this->categories[$category['id']] = $category['name']. ' (id: ' . $category['id'] . ')';
         }
@@ -89,11 +89,11 @@ class DIVI_StepBooking extends ET_Builder_Module
     {
         $array = array(
             'booking_params' => array(
-                'label'           => esc_html__(BackendStrings::getWordPressStrings()['filter'], 'divi-divi_amelia'),
+                'label'           => esc_html__(BackendStrings::get('filter'), 'divi-divi_amelia'),
                 'type'            => 'yes_no_button',
                 'options' => array(
-                    'on'  => esc_html__(BackendStrings::getCommonStrings()['yes'], 'divi-divi_amelia'),
-                    'off' => esc_html__(BackendStrings::getCommonStrings()['no'], 'divi-divi_amelia'),
+                    'on'  => esc_html__(BackendStrings::get('yes'), 'divi-divi_amelia'),
+                    'off' => esc_html__(BackendStrings::get('no'), 'divi-divi_amelia'),
                 ),
                 'toggle_slug'     => 'main_content',
                 'option_category' => 'basic_option',
@@ -101,9 +101,9 @@ class DIVI_StepBooking extends ET_Builder_Module
         );
 
         $array['categories'] = array(
-            'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_category'], 'divi-divi_amelia'),
+            'label'           => esc_html__(BackendStrings::get('select_category'), 'divi-divi_amelia'),
             'type'            => 'amelia_multi_select',
-            'showAllText'     => BackendStrings::getWordPressStrings()['show_all_categories'],
+            'showAllText'     => BackendStrings::get('show_all_categories'),
             'options'         => $this->categories,
             'toggle_slug'     => 'main_content',
             'option_category' => 'basic_option',
@@ -113,10 +113,10 @@ class DIVI_StepBooking extends ET_Builder_Module
         );
 
         $array['services'] = array(
-            'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_service'], 'divi-divi_amelia'),
+            'label'           => esc_html__(BackendStrings::get('select_service'), 'divi-divi_amelia'),
             'type'            => 'amelia_multi_select',
             'toggle_slug'     => 'main_content',
-            'showAllText'     => BackendStrings::getWordPressStrings()['show_all_services'],
+            'showAllText'     => BackendStrings::get('show_all_services'),
             'options'         => $this->services,
             'option_category' => 'basic_option',
             'show_if'         => array(
@@ -125,11 +125,11 @@ class DIVI_StepBooking extends ET_Builder_Module
         );
 
         $array['employees'] = array(
-            'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_employee'], 'divi-divi_amelia'),
+            'label'           => esc_html__(BackendStrings::get('select_employee'), 'divi-divi_amelia'),
             'type'            => 'amelia_multi_select',
             'options'         => $this->employees,
             'toggle_slug'     => 'main_content',
-            'showAllText'     => BackendStrings::getWordPressStrings()['show_all_employees'],
+            'showAllText'     => BackendStrings::get('show_all_employees'),
             'option_category' => 'basic_option',
             'show_if'         => array(
                 'booking_params' => 'on',
@@ -137,10 +137,10 @@ class DIVI_StepBooking extends ET_Builder_Module
         );
 
         $array['locations'] = array(
-            'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_location'], 'divi-divi_amelia'),
+            'label'           => esc_html__(BackendStrings::get('select_location'), 'divi-divi_amelia'),
             'type'            => 'amelia_multi_select',
             'options'         => $this->locations,
-            'showAllText'     => BackendStrings::getWordPressStrings()['show_all_locations'],
+            'showAllText'     => BackendStrings::get('show_all_locations'),
             'toggle_slug'     => 'main_content',
             'option_category' => 'basic_option',
             'show_if'         => array(
@@ -151,19 +151,19 @@ class DIVI_StepBooking extends ET_Builder_Module
 
         if ($this->showPackages) {
             $array['packages'] = array(
-                'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_package'], 'divi-divi_amelia'),
+                'label'           => esc_html__(BackendStrings::get('select_package'), 'divi-divi_amelia'),
                 'type'            => 'amelia_multi_select',
                 'options'         => $this->packages,
                 'toggle_slug'     => 'main_content',
                 'option_category' => 'basic_option',
-                'showAllText'     => BackendStrings::getWordPressStrings()['show_all_packages'],
+                'showAllText'     => BackendStrings::get('show_all_packages'),
                 'show_if'         => array(
                     'booking_params' => 'on',
                 ),
             );
 
             $array['type'] = array(
-                'label'           => esc_html__(BackendStrings::getWordPressStrings()['show_all'], 'divi-divi_amelia'),
+                'label'           => esc_html__(BackendStrings::get('show_all'), 'divi-divi_amelia'),
                 'type'            => 'select',
                 'options'         => $this->type,
                 'toggle_slug'     => 'main_content',
@@ -174,7 +174,7 @@ class DIVI_StepBooking extends ET_Builder_Module
         }
 
         $array['layout'] = array(
-            'label'           => esc_html__(BackendStrings::getCommonStrings()['layout_select_label'], 'divi-divi_amelia'),
+            'label'           => esc_html__(BackendStrings::get('layout_select_label'), 'divi-divi_amelia'),
             'type'            => 'select',
             'options'         => $this->layout_options,
             'toggle_slug'     => 'main_content',
@@ -183,15 +183,15 @@ class DIVI_StepBooking extends ET_Builder_Module
         );
 
         $array['trigger'] = array(
-            'label'           => esc_html__(BackendStrings::getWordPressStrings()['manually_loading'], 'divi-divi_amelia'),
+            'label'           => esc_html__(BackendStrings::get('manually_loading'), 'divi-divi_amelia'),
             'type'            => 'text',
             'toggle_slug'     => 'main_content',
             'option_category' => 'basic_option',
-            'description'     => BackendStrings::getWordPressStrings()['manually_loading_description'],
+            'description'     => BackendStrings::get('manually_loading_description'),
         );
 
         $array['trigger_type'] = array(
-            'label'           => esc_html__(BackendStrings::getWordPressStrings()['trigger_type'], 'divi-divi_amelia'),
+            'label'           => esc_html__(BackendStrings::get('trigger_type'), 'divi-divi_amelia'),
             'type'            => 'select',
             'options'         => $this->trigger_types,
             'toggle_slug'     => 'main_content',
@@ -199,11 +199,11 @@ class DIVI_StepBooking extends ET_Builder_Module
         );
 
         $array['in_dialog'] = array(
-            'label'             => esc_html__(BackendStrings::getWordPressStrings()['in_dialog'], 'divi-divi_amelia'),
+            'label'             => esc_html__(BackendStrings::get('in_dialog'), 'divi-divi_amelia'),
             'type'              => 'yes_no_button',
             'options'           => array(
-                'on'  => esc_html__(BackendStrings::getCommonStrings()['yes'], 'divi-divi_amelia'),
-                'off' => esc_html__(BackendStrings::getCommonStrings()['no'], 'divi-divi_amelia'),
+                'on'  => esc_html__(BackendStrings::get('yes'), 'divi-divi_amelia'),
+                'off' => esc_html__(BackendStrings::get('no'), 'divi-divi_amelia'),
             ),
             'toggle_slug'     => 'main_content',
             'option_category' => 'basic_option',

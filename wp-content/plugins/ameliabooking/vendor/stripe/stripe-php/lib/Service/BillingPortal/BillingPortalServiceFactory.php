@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Service\BillingPortal;
+namespace AmeliaVendor\Stripe\Service\BillingPortal;
 
 /**
  * Service factory class for API resources in the BillingPortal namespace.
@@ -10,7 +10,7 @@ namespace AmeliaStripe\Service\BillingPortal;
  * @property ConfigurationService $configurations
  * @property SessionService $sessions
  */
-class BillingPortalServiceFactory extends \AmeliaStripe\Service\AbstractServiceFactory
+class BillingPortalServiceFactory extends \AmeliaVendor\Stripe\Service\AbstractServiceFactory
 {
     /**
      * @var array<string, string>

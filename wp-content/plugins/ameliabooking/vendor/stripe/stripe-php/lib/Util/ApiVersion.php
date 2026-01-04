@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Util;
+namespace AmeliaVendor\Stripe\Util;
 
 class ApiVersion
 {

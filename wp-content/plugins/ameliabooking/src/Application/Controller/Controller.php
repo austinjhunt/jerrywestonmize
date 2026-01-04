@@ -58,8 +58,7 @@ abstract class Controller
      * Base Controller constructor.
      *
      * @param Container $container
-     *
-     * @throws \Interop\Container\Exception\ContainerException
+     * @param bool $fromApi
      */
     public function __construct(Container $container, $fromApi = false)
     {
@@ -84,11 +83,10 @@ abstract class Controller
      *
      * @param CommandResult  $result
      *
-     * @return null
+     * @return void
      */
     protected function emitSuccessEvent(DomainEventBus $eventBus, CommandResult $result)
     {
-        return null;
     }
 
     /**
@@ -231,10 +229,11 @@ abstract class Controller
 
     /**
      * @param mixed $params
+     * @param array $keys
      */
-    protected function setArrayParams(&$params)
+    protected function setArrayParams(&$params, $keys = [])
     {
-        $names = [
+        $names = array_merge([
             'customers',
             'categories',
             'services',
@@ -245,11 +244,14 @@ abstract class Controller
             'locations',
             'locationIds',
             'events',
+            'tag',
             'dates',
             'types',
             'fields',
             'statuses',
-        ];
+            'stats',
+            'bookingTypes',
+        ], $keys);
 
         foreach ($names as $name) {
             if (!empty($params[$name])) {
@@ -262,7 +264,7 @@ abstract class Controller
                 $params['dates'][0] : DateTimeService::getNowDate();
         }
 
-        if (isset($params['dates'][1])) {
+        if (isset($params['dates'][1]) && $params['dates'][1]) {
             $params['dates'][1] = preg_match("/^\d{4}-\d{2}-\d{2}$/", $params['dates'][1]) ?
                 $params['dates'][1] : DateTimeService::getNowDate();
         }

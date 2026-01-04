@@ -7,7 +7,7 @@
 
 namespace Slim\Handlers;
 
-use AmeliaPsr\Http\Message\ServerRequestInterface;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface;
 
 abstract class AbstractHandler
 {

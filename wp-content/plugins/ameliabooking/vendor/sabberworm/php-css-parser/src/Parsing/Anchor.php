@@ -1,7 +1,10 @@
 <?php
 
-namespace Sabberworm\CSS\Parsing;
+namespace AmeliaVendor\Sabberworm\CSS\Parsing;
 
+/**
+ * @internal since 8.7.0
+ */
 class Anchor
 {
     /**
@@ -10,13 +13,13 @@ class Anchor
     private $iPosition;
 
     /**
-     * @var \Sabberworm\CSS\Parsing\ParserState
+     * @var \AmeliaVendor\Sabberworm\CSS\Parsing\ParserState
      */
     private $oParserState;
 
     /**
      * @param int $iPosition
-     * @param \Sabberworm\CSS\Parsing\ParserState $oParserState
+     * @param \AmeliaVendor\Sabberworm\CSS\Parsing\ParserState $oParserState
      */
     public function __construct($iPosition, ParserState $oParserState)
     {

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -35,7 +35,6 @@ class GetCustomersCommandHandler extends CommandHandler
      * @throws AccessDeniedException
      * @throws \AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException
-     * @throws \Interop\Container\Exception\ContainerException
      * @throws \Exception
      */
     public function handle(GetCustomersCommand $command)
@@ -84,47 +83,47 @@ class GetCustomersCommandHandler extends CommandHandler
             $row = [];
 
             if (in_array('firstName', $fields, true)) {
-                $row[BackendStrings::getUserStrings()['first_name']] = $customer['firstName'];
+                $row[BackendStrings::get('first_name')] = $customer['firstName'];
             }
 
             if (in_array('lastName', $fields, true)) {
-                $row[BackendStrings::getUserStrings()['last_name']] = $customer['lastName'];
+                $row[BackendStrings::get('last_name')] = $customer['lastName'];
             }
 
             if (in_array('email', $fields, true)) {
-                $row[BackendStrings::getUserStrings()['email']] = $customer['email'];
+                $row[BackendStrings::get('email')] = $customer['email'];
             }
 
             if (in_array('phone', $fields, true)) {
-                $row[BackendStrings::getCommonStrings()['phone']] = $customer['phone'];
+                $row[BackendStrings::get('phone')] = $customer['phone'];
             }
 
             if (in_array('gender', $fields, true)) {
-                $row[BackendStrings::getCustomerStrings()['gender']] = $customer['gender'];
+                $row[BackendStrings::get('gender')] = $customer['gender'];
             }
 
             if (in_array('birthday', $fields, true)) {
-                $row[BackendStrings::getCustomerStrings()['date_of_birth']] = $customer['birthday'] ?
+                $row[BackendStrings::get('date_of_birth')] = $customer['birthday'] ?
                     DateTimeService::getCustomDateTimeObject($customer['birthday'])
                         ->format($dateFormat) : null;
             }
 
             if (in_array('note', $fields, true)) {
-                $row[BackendStrings::getCustomerStrings()['customer_note']] = $customer['note'];
+                $row[BackendStrings::get('customer_note')] = $customer['note'];
             }
 
-            if (in_array('lastAppointment', $fields, true)) {
-                $row[BackendStrings::getCustomerStrings()['last_appointment']] =
-                    DateTimeService::getCustomDateTimeObject($customer['lastAppointment'])
+            if (in_array('lastBooking', $fields, true)) {
+                $row[BackendStrings::get('last_booking')] =
+                    DateTimeService::getCustomDateTimeObject($customer['lastBooking'])
                         ->format($dateFormat . ' ' . $timeFormat);
             }
 
-            if (in_array('totalAppointments', $fields, true)) {
-                $row[BackendStrings::getCustomerStrings()['total_appointments']] = $customer['totalAppointments'];
+            if (in_array('totalBookings', $fields, true)) {
+                $row[BackendStrings::get('total_bookings')] = $customer['totalBookings'];
             }
 
             if (in_array('pendingAppointments', $fields, true)) {
-                $row[BackendStrings::getCustomerStrings()['pending_appointments']] =
+                $row[BackendStrings::get('pending_appointments')] =
                     $customer['countPendingAppointments'];
             }
 

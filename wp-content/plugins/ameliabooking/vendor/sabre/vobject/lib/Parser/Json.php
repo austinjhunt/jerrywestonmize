@@ -1,14 +1,14 @@
 <?php
 
-namespace AmeliaSabre\VObject\Parser;
+namespace AmeliaVendor\Sabre\VObject\Parser;
 
-use AmeliaSabre\VObject\Component\VCalendar;
-use AmeliaSabre\VObject\Component\VCard;
-use AmeliaSabre\VObject\Document;
-use AmeliaSabre\VObject\EofException;
-use AmeliaSabre\VObject\ParseException;
-use AmeliaSabre\VObject\Property\FlatText;
-use AmeliaSabre\VObject\Property\Text;
+use AmeliaVendor\Sabre\VObject\Component\VCalendar;
+use AmeliaVendor\Sabre\VObject\Component\VCard;
+use AmeliaVendor\Sabre\VObject\Document;
+use AmeliaVendor\Sabre\VObject\EofException;
+use AmeliaVendor\Sabre\VObject\ParseException;
+use AmeliaVendor\Sabre\VObject\Property\FlatText;
+use AmeliaVendor\Sabre\VObject\Property\Text;
 
 /**
  * Json Parser.
@@ -46,7 +46,7 @@ class Json extends Parser
      * @param resource|string|array|null $input
      * @param int                        $options
      *
-     * @return \AmeliaSabre\VObject\Document
+     * @return \AmeliaVendor\Sabre\VObject\Document
      */
     public function parse($input = null, $options = 0)
     {
@@ -89,7 +89,7 @@ class Json extends Parser
     /**
      * Parses a component.
      *
-     * @return \AmeliaSabre\VObject\Component
+     * @return \AmeliaVendor\Sabre\VObject\Component
      */
     public function parseComponent(array $jComp)
     {
@@ -124,7 +124,7 @@ class Json extends Parser
     /**
      * Parses properties.
      *
-     * @return \AmeliaSabre\VObject\Property
+     * @return \AmeliaVendor\Sabre\VObject\Property
      */
     public function parseProperty(array $jProp)
     {

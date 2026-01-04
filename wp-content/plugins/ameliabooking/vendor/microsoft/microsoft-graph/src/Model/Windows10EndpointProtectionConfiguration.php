@@ -537,15 +537,15 @@ class Windows10EndpointProtectionConfiguration extends DeviceConfiguration
     * Gets the defenderExploitProtectionXml
     * Xml content containing information regarding exploit protection details.
     *
-    * @return \AmeliaGuzzleHttp\Psr7\Stream|null The defenderExploitProtectionXml
+    * @return \AmeliaVendor\GuzzleHttp\Psr7\Stream|null The defenderExploitProtectionXml
     */
     public function getDefenderExploitProtectionXml()
     {
         if (array_key_exists("defenderExploitProtectionXml", $this->_propDict)) {
-            if (is_a($this->_propDict["defenderExploitProtectionXml"], "\AmeliaGuzzleHttp\Psr7\Stream") || is_null($this->_propDict["defenderExploitProtectionXml"])) {
+            if (is_a($this->_propDict["defenderExploitProtectionXml"], "\AmeliaVendor\GuzzleHttp\Psr7\Stream") || is_null($this->_propDict["defenderExploitProtectionXml"])) {
                 return $this->_propDict["defenderExploitProtectionXml"];
             } else {
-                $this->_propDict["defenderExploitProtectionXml"] = \AmeliaGuzzleHttp\Psr7\Utils::streamFor($this->_propDict["defenderExploitProtectionXml"]);
+                $this->_propDict["defenderExploitProtectionXml"] = \AmeliaVendor\GuzzleHttp\Psr7\Utils::streamFor($this->_propDict["defenderExploitProtectionXml"]);
                 return $this->_propDict["defenderExploitProtectionXml"];
             }
         }
@@ -556,7 +556,7 @@ class Windows10EndpointProtectionConfiguration extends DeviceConfiguration
     * Sets the defenderExploitProtectionXml
     * Xml content containing information regarding exploit protection details.
     *
-    * @param \AmeliaGuzzleHttp\Psr7\Stream $val The defenderExploitProtectionXml
+    * @param \AmeliaVendor\GuzzleHttp\Psr7\Stream $val The defenderExploitProtectionXml
     *
     * @return Windows10EndpointProtectionConfiguration
     */

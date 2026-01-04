@@ -4,7 +4,7 @@ namespace AmeliaHttp\Message\Encoding;
 
 use AmeliaClue\StreamFilter as Filter;
 use AmeliaHttp\Message\Decorator\StreamDecorator;
-use AmeliaPsr\Http\Message\StreamInterface;
+use AmeliaVendor\Psr\Http\Message\StreamInterface;
 
 /**
  * A filtered stream has a filter for filtering output and a filter for filtering input made to a underlying stream.

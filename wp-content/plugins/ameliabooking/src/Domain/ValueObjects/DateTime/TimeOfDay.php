@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -16,13 +16,13 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
  */
 final class TimeOfDay
 {
-    /** @var bool */
+    /** @var string */
     private $value;
 
     /**
      * TimeOfDay constructor.
      *
-     * @param $value
+     * @param string $value
      *
      * @throws InvalidArgumentException
      */

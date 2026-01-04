@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -150,7 +150,7 @@ class UpdateCouponCommandHandler extends CommandHandler
 
         $couponRepository->beginTransaction();
 
-        if (!($couponId = $couponAS->update($oldCoupon, $newCoupon))) {
+        if (!($couponAS->update($oldCoupon, $newCoupon))) {
             $couponRepository->rollback();
 
             $result->setResult(CommandResult::RESULT_ERROR);

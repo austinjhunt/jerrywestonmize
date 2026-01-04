@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Monolog\Handler;
+namespace AmeliaVendor\Monolog\Handler;
 
-use Monolog\Logger;
-use Monolog\Utils;
-use Psr\Log\LogLevel;
+use AmeliaVendor\Monolog\Logger;
+use AmeliaVendor\Monolog\Utils;
+use AmeliaVendor\Psr\Log\LogLevel;
 
 /**
  * Sends notifications through the pushover api to mobile phones

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -26,7 +26,7 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
 
     public function get_title()
     {
-        return BackendStrings::getWordPressStrings()['catalog_booking_gutenberg_block']['title'];
+        return BackendStrings::get('catalog_booking_gutenberg_block')['title'];
     }
 
     public function get_icon()
@@ -48,21 +48,21 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
             'amelia_catalog_section',
             [
                 'label' => '<div class="amelia-elementor-content"><p class="amelia-elementor-content-title">'
-                    . BackendStrings::getWordPressStrings()['catalog_booking_gutenberg_block']['title']
+                    . BackendStrings::get('catalog_booking_gutenberg_block')['title']
                     . '</p><br><p class="amelia-elementor-content-p">'
-                    . BackendStrings::getWordPressStrings()['catalog_booking_gutenberg_block']['description']
+                    . BackendStrings::get('catalog_booking_gutenberg_block')['description']
                     . '</p>',
             ]
         );
 
         $options = [
-            'show_catalog' => BackendStrings::getWordPressStrings()['show_catalog'],
-            'show_category' => BackendStrings::getWordPressStrings()['show_categories'],
-            'show_service' => BackendStrings::getWordPressStrings()['show_services'],
+            'show_catalog' => BackendStrings::get('show_catalog'),
+            'show_category' => BackendStrings::get('show_categories'),
+            'show_service' => BackendStrings::get('show_services'),
         ];
 
         if ($controls_data['packages']) {
-            $options['show_package'] = BackendStrings::getWordPressStrings()['show_packages'];
+            $options['show_package'] = BackendStrings::get('show_packages');
         }
 
         if ($controls_data['categories'] && sizeof($controls_data['locations']) > 1) {
@@ -71,7 +71,7 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
         $this->add_control(
             'select_catalog',
             [
-                'label' => BackendStrings::getWordPressStrings()['select_catalog_view'],
+                'label' => BackendStrings::get('select_catalog_view'),
                 'type' => Controls_Manager::SELECT,
                 'label_block' => true,
                 'options' => $options,
@@ -82,7 +82,7 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
         $this->add_control(
             'select_category',
             [
-                'label' => BackendStrings::getWordPressStrings()['select_category'],
+                'label' => BackendStrings::get('select_category'),
                 'type' => Controls_Manager::SELECT2,
                 'multiple' => true,
                 'options' => $controls_data['categories'],
@@ -95,7 +95,7 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
             $this->add_control(
                 'select_service',
                 [
-                    'label' => BackendStrings::getWordPressStrings()['select_service'],
+                    'label' => BackendStrings::get('select_service'),
                     'type' => Controls_Manager::SELECT2,
                     'multiple' => true,
                     'options' => $controls_data['services'],
@@ -109,7 +109,7 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
             $this->add_control(
                 'select_package',
                 [
-                    'label' => BackendStrings::getWordPressStrings()['select_package'],
+                    'label' => BackendStrings::get('select_package'),
                     'type' => Controls_Manager::SELECT2,
                     'multiple' => true,
                     'options' => $controls_data['packages'],
@@ -122,22 +122,22 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
         $this->add_control(
             'preselect',
             [
-                'label' => BackendStrings::getWordPressStrings()['filter'],
+                'label' => BackendStrings::get('filter'),
                 'type' => Controls_Manager::SWITCHER,
                 'default' => false,
-                'label_on' => BackendStrings::getCommonStrings()['yes'],
-                'label_off' => BackendStrings::getCommonStrings()['no'],
+                'label_on' => BackendStrings::get('yes'),
+                'label_off' => BackendStrings::get('no'),
             ]
         );
 
         $this->add_control(
             'skip_categories',
             [
-                'label' => BackendStrings::getWordPressStrings()['skip_categories'],
+                'label' => BackendStrings::get('skip_categories'),
                 'type' => Controls_Manager::SWITCHER,
                 'default' => false,
-                'label_on' => BackendStrings::getCommonStrings()['yes'],
-                'label_off' => BackendStrings::getCommonStrings()['no'],
+                'label_on' => BackendStrings::get('yes'),
+                'label_off' => BackendStrings::get('no'),
                 'condition' => ['preselect' => 'yes'],
             ]
         );
@@ -146,7 +146,7 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
             $this->add_control(
                 'select_employee',
                 [
-                    'label' => BackendStrings::getWordPressStrings()['select_employee'],
+                    'label' => BackendStrings::get('select_employee'),
                     'type' => Controls_Manager::SELECT2,
                     'multiple' => true,
                     'options' => $controls_data['employees'],
@@ -159,7 +159,7 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
             $this->add_control(
                 'select_location',
                 [
-                    'label' => BackendStrings::getWordPressStrings()['select_location'],
+                    'label' => BackendStrings::get('select_location'),
                     'type' => Controls_Manager::SELECT2,
                     'multiple' => true,
                     'options' => $controls_data['locations'],
@@ -172,7 +172,7 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
             $this->add_control(
                 'select_show',
                 [
-                    'label' => BackendStrings::getWordPressStrings()['show_all'],
+                    'label' => BackendStrings::get('show_all'),
                     'type' => Controls_Manager::SELECT,
                     'options' => $controls_data['show'],
                     'condition' => ['preselect' => 'yes'],
@@ -184,20 +184,20 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
         $this->add_control(
             'load_manually',
             [
-                'label' => BackendStrings::getWordPressStrings()['manually_loading'],
+                'label' => BackendStrings::get('manually_loading'),
                 'label_block' => true,
                 'type' => Controls_Manager::TEXT,
                 'placeholder' => '',
-                'description' => BackendStrings::getWordPressStrings()['manually_loading_description'],
+                'description' => BackendStrings::get('manually_loading_description'),
             ]
         );
 
         $this->add_control(
             'trigger_type',
             [
-                'label' => BackendStrings::getWordPressStrings()['trigger_type'],
+                'label' => BackendStrings::get('trigger_type'),
                 'type' => Controls_Manager::SELECT,
-                'description' => BackendStrings::getWordPressStrings()['trigger_type_tooltip'],
+                'description' => BackendStrings::get('trigger_type_tooltip'),
                 'options' => $controls_data['trigger_types'],
                 'default' => 'id'
             ]
@@ -206,11 +206,11 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
         $this->add_control(
             'in_dialog',
             [
-                'label' => BackendStrings::getWordPressStrings()['in_dialog'],
+                'label' => BackendStrings::get('in_dialog'),
                 'type' => Controls_Manager::SWITCHER,
                 'default' => false,
-                'label_on' => BackendStrings::getCommonStrings()['yes'],
-                'label_off' => BackendStrings::getCommonStrings()['no'],
+                'label_on' => BackendStrings::get('yes'),
+                'label_off' => BackendStrings::get('no'),
             ]
         );
 
@@ -310,14 +310,14 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
         }
 
         $elementorData['show'] = $data['packages'] ? [
-            '' => BackendStrings::getWordPressStrings()['show_all'],
-            'services' => BackendStrings::getCommonStrings()['services'],
-            'packages' => BackendStrings::getCommonStrings()['packages']
+            '' => BackendStrings::get('show_all'),
+            'services' => BackendStrings::get('services'),
+            'packages' => BackendStrings::get('packages')
         ] : [];
 
         $elementorData['trigger_types'] = [
-            'id' => BackendStrings::getWordPressStrings()['trigger_type_id'],
-            'class' => BackendStrings::getWordPressStrings()['trigger_type_class']
+            'id' => BackendStrings::get('trigger_type_id'),
+            'class' => BackendStrings::get('trigger_type_class')
         ];
 
         return $elementorData;

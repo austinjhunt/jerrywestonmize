@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -25,17 +25,17 @@ class AmeliaEventsElementorWidget extends Widget_Base
 
     protected function register_controls()
     {
-        $isLite = !Licence\Licence::$premium;
+        $isLite = !Licence\Licence::isPremium();
 
         $this->start_controls_section(
             'amelia_events_section',
             [
                 'label' => '<div class="amelia-elementor-content-outdated"><p class="amelia-elementor-content-title">'
-                    . BackendStrings::getWordPressStrings()['events_gutenberg_block']['title']
+                    . BackendStrings::get('events_gutenberg_block')['title']
                     . '</p><br><p class="amelia-elementor-content-p">'
-                    . BackendStrings::getWordPressStrings()['events_gutenberg_block']['description']
+                    . BackendStrings::get('events_gutenberg_block')['description']
                     . '</p><br><p class="amelia-elementor-content-p amelia-elementor-content-p-outdated">'
-                    . BackendStrings::getWordPressStrings()['outdated_booking_gutenberg_block']
+                    . BackendStrings::get('outdated_booking_gutenberg_block')
                     . '</p>',
             ]
         );
@@ -44,11 +44,11 @@ class AmeliaEventsElementorWidget extends Widget_Base
             $this->add_control(
                 'selected_type',
                 [
-                    'label' => BackendStrings::getWordPressStrings()['show_event_view_type'],
+                    'label' => BackendStrings::get('show_event_view_type'),
                     'type' => Controls_Manager::SELECT,
                     'options' => [
-                        'list' => BackendStrings::getWordPressStrings()['show_event_view_list'],
-                        'calendar' => BackendStrings::getWordPressStrings()['show_event_view_calendar']
+                        'list' => BackendStrings::get('show_event_view_list'),
+                        'calendar' => BackendStrings::get('show_event_view_calendar')
                     ],
                     'default' => 'list',
                 ]
@@ -58,18 +58,18 @@ class AmeliaEventsElementorWidget extends Widget_Base
         $this->add_control(
             'preselect',
             [
-                'label' => BackendStrings::getWordPressStrings()['filter'],
+                'label' => BackendStrings::get('filter'),
                 'type' => Controls_Manager::SWITCHER,
                 'default' => false,
-                'label_on' => BackendStrings::getCommonStrings()['yes'],
-                'label_off' => BackendStrings::getCommonStrings()['no'],
+                'label_on' => BackendStrings::get('yes'),
+                'label_off' => BackendStrings::get('no'),
             ]
         );
 
         $this->add_control(
             'select_event',
             [
-                'label' => BackendStrings::getWordPressStrings()['select_event'],
+                'label' => BackendStrings::get('select_event'),
                 'type' => Controls_Manager::SELECT,
                 'options' => self::amelia_elementor_get_events(),
                 'condition' => ['preselect' => 'yes'],
@@ -80,7 +80,7 @@ class AmeliaEventsElementorWidget extends Widget_Base
         $this->add_control(
             'select_tag',
             [
-                'label' => BackendStrings::getWordPressStrings()['select_tag'],
+                'label' => BackendStrings::get('select_tag'),
                 'type' => Controls_Manager::SELECT,
                 'options' => self::amelia_elementor_get_tags(),
                 'condition' => ['preselect' => 'yes'],
@@ -95,20 +95,20 @@ class AmeliaEventsElementorWidget extends Widget_Base
                 'type' => Controls_Manager::SWITCHER,
                 'condition' => ['preselect' => 'yes'],
                 'default' => false,
-                'label_on' => BackendStrings::getCommonStrings()['yes'],
-                'label_off' => BackendStrings::getCommonStrings()['no'],
+                'label_on' => BackendStrings::get('yes'),
+                'label_off' => BackendStrings::get('no'),
             ]
         );
 
         $this->add_control(
             'load_manually',
             [
-                'label' => BackendStrings::getWordPressStrings()['manually_loading'],
+                'label' => BackendStrings::get('manually_loading'),
                 'label_block' => true,
                 'type' => Controls_Manager::TEXT,
                 'condition' => ['preselect' => 'yes'],
                 'placeholder' => '',
-                'description' => BackendStrings::getWordPressStrings()['manually_loading_description'],
+                'description' => BackendStrings::get('manually_loading_description'),
             ]
         );
 
@@ -145,8 +145,7 @@ class AmeliaEventsElementorWidget extends Widget_Base
 
         $returnEvents = [];
 
-        $returnEvents['0'] = BackendStrings::getWordPressStrings()['show_all_events'];
-
+        $returnEvents['0'] = BackendStrings::get('show_all_events');
         foreach ($events as $event) {
             $returnEvents[$event['id']] = $event['name'] . ' (id: ' . $event['id'] . ') - ' . $event['formattedPeriodStart'];
         }
@@ -160,7 +159,7 @@ class AmeliaEventsElementorWidget extends Widget_Base
 
         $returnTags = [];
 
-        $returnTags[''] = BackendStrings::getWordPressStrings()['show_all_tags'];
+        $returnTags[''] = BackendStrings::get('show_all_tags');
 
         foreach ($tags as $index => $tag) {
             $returnTags[$tag['name']] = $tag['name'];

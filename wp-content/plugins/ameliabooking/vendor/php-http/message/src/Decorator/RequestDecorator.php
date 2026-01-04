@@ -2,8 +2,8 @@
 
 namespace AmeliaHttp\Message\Decorator;
 
-use AmeliaPsr\Http\Message\RequestInterface;
-use AmeliaPsr\Http\Message\UriInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\UriInterface;
 
 /**
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>

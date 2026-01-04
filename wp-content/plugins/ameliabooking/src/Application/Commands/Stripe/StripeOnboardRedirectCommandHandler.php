@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -22,7 +22,7 @@ use AmeliaBooking\Domain\ValueObjects\String\Name;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Services\Payment\StripeService;
-use AmeliaStripe\Exception\ApiErrorException;
+use AmeliaVendor\Stripe\Exception\ApiErrorException;
 use Interop\Container\Exception\ContainerException;
 
 /**

@@ -8,7 +8,6 @@ use Automattic\WooCommerce\EmailEditor\Integrations\Utils\Table_Wrapper_Helper;
 use Automattic\WooCommerce\EmailEditor\Integrations\Utils\Styles_Helper;
 class Quote extends Abstract_Block_Renderer {
  protected function render_content( string $block_content, array $parsed_block, Rendering_Context $rendering_context ): string {
- $content = '';
  $dom_helper = new Dom_Document_Helper( $block_content );
  // Extract citation if present.
  $citation_content = '';
@@ -20,14 +19,9 @@ class Quote extends Abstract_Block_Renderer {
  $rendering_context
  );
  }
- // Process inner blocks for main content.
- $inner_blocks = $parsed_block['innerBlocks'] ?? array();
- foreach ( $inner_blocks as $block ) {
- $content .= render_block( $block );
- }
  return str_replace(
  array( '{quote_content}', '{citation_content}' ),
- array( $content, $citation_content ),
+ array( $this->get_inner_content( $block_content ), $citation_content ),
  $this->get_block_wrapper( $block_content, $parsed_block, $rendering_context )
  );
  }

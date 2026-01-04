@@ -9,11 +9,11 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-namespace phpseclib3\Crypt\DSA;
+namespace AmeliaVendor\phpseclib3\Crypt\DSA;
 
-use phpseclib3\Crypt\Common;
-use phpseclib3\Crypt\DSA;
-use phpseclib3\Crypt\DSA\Formats\Signature\ASN1 as ASN1Signature;
+use AmeliaVendor\phpseclib3\Crypt\Common;
+use AmeliaVendor\phpseclib3\Crypt\DSA;
+use AmeliaVendor\phpseclib3\Crypt\DSA\Formats\Signature\ASN1 as ASN1Signature;
 
 /**
  * DSA Public Key
@@ -40,7 +40,8 @@ final class PublicKey extends DSA implements Common\PublicKey
         if ($params === false || count($params) != 2) {
             return false;
         }
-        extract($params);
+        $r = $params['r'];
+        $s = $params['s'];
 
         if (self::$engines['OpenSSL'] && in_array($this->hash->getHash(), openssl_get_md_methods())) {
             $sig = $format != 'ASN1' ? ASN1Signature::save($r, $s) : $signature;

@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-namespace AmeliaGoogle\Auth;
+namespace AmeliaVendor\Google\Auth;
 
-use Psr\Cache\CacheItemPoolInterface;
+use AmeliaVendor\Psr\Cache\CacheItemPoolInterface;
 
 trait CacheTrait
 {

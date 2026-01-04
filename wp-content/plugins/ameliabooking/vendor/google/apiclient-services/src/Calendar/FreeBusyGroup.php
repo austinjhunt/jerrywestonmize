@@ -15,9 +15,9 @@
  * the License.
  */
 
-namespace AmeliaGoogle\Service\Calendar;
+namespace AmeliaVendor\Google\Service\Calendar;
 
-class FreeBusyGroup extends \AmeliaGoogle\Collection
+class FreeBusyGroup extends \AmeliaVendor\Google\Collection
 {
   protected $collection_key = 'errors';
   /**
@@ -58,4 +58,4 @@ class FreeBusyGroup extends \AmeliaGoogle\Collection
 }
 
 // Adding a class alias for backwards compatibility with the previous class name.
-class_alias(FreeBusyGroup::class, 'AmeliaGoogle_Service_Calendar_FreeBusyGroup');
+class_alias(FreeBusyGroup::class, 'Google_Service_Calendar_FreeBusyGroup');

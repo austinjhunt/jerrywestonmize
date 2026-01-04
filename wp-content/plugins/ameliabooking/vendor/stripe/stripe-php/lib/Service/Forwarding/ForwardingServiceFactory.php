@@ -2,14 +2,14 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Service\Forwarding;
+namespace AmeliaVendor\Stripe\Service\Forwarding;
 
 /**
  * Service factory class for API resources in the Forwarding namespace.
  *
  * @property RequestService $requests
  */
-class ForwardingServiceFactory extends \AmeliaStripe\Service\AbstractServiceFactory
+class ForwardingServiceFactory extends \AmeliaVendor\Stripe\Service\AbstractServiceFactory
 {
     /**
      * @var array<string, string>

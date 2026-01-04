@@ -1,8 +1,8 @@
 <?php
 
-namespace Psr\Log\Test;
+namespace AmeliaVendor\Psr\Log\Test;
 
-use Psr\Log\AbstractLogger;
+use AmeliaVendor\Psr\Log\AbstractLogger;
 
 /**
  * Used for testing purposes.

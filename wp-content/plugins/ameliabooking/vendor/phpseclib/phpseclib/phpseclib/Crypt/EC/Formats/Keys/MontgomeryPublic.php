@@ -11,12 +11,12 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-namespace phpseclib3\Crypt\EC\Formats\Keys;
+namespace AmeliaVendor\phpseclib3\Crypt\EC\Formats\Keys;
 
-use phpseclib3\Crypt\EC\BaseCurves\Montgomery as MontgomeryCurve;
-use phpseclib3\Crypt\EC\Curves\Curve25519;
-use phpseclib3\Crypt\EC\Curves\Curve448;
-use phpseclib3\Math\BigInteger;
+use AmeliaVendor\phpseclib3\Crypt\EC\BaseCurves\Montgomery as MontgomeryCurve;
+use AmeliaVendor\phpseclib3\Crypt\EC\Curves\Curve25519;
+use AmeliaVendor\phpseclib3\Crypt\EC\Curves\Curve448;
+use AmeliaVendor\phpseclib3\Math\BigInteger;
 
 /**
  * Montgomery Public Key Handler
@@ -61,7 +61,7 @@ abstract class MontgomeryPublic
      * Convert an EC public key to the appropriate format
      *
      * @param MontgomeryCurve $curve
-     * @param \phpseclib3\Math\Common\FiniteField\Integer[] $publicKey
+     * @param \AmeliaVendor\phpseclib3\Math\Common\FiniteField\Integer[] $publicKey
      * @return string
      */
     public static function savePublicKey(MontgomeryCurve $curve, array $publicKey)

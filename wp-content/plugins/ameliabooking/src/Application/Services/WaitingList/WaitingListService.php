@@ -2,6 +2,9 @@
 
 namespace AmeliaBooking\Application\Services\WaitingList;
 
+use AmeliaBooking\Application\Services\Notification\ApplicationNotificationService;
+use AmeliaBooking\Domain\Collection\Collection;
+use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
@@ -28,6 +31,39 @@ class WaitingListService
     public function __construct(Container $container)
     {
         $this->container = $container;
+    }
+
+    /**
+     * Notify waiting-list customers that a spot is available for the given appointment.
+     *
+     * Builds the waiting bookings collection from the appointment entity and
+     * dispatches notifications through all enabled channels.
+     *
+     * @param Appointment $appointment
+     *
+     * @throws ContainerException
+     * @throws ContainerValueNotFoundException
+     * @throws QueryExecutionException
+     */
+    public function sendAvailableSpotNotifications($appointment)
+    {
+        $waitingBookings = new Collection();
+
+        foreach ($appointment->getBookings()->getItems() as $booking) {
+            if ($booking->getStatus()->getValue() === BookingStatus::WAITING) {
+                $waitingBookings->addItem($booking);
+            }
+        }
+
+        if ($waitingBookings->length()) {
+            /** @var ApplicationNotificationService $applicationNotificationService */
+            $applicationNotificationService = $this->container->get('application.notification.service');
+
+            $applicationNotificationService->sendWaitingListAvailableSpotNotifications(
+                $appointment,
+                $waitingBookings
+            );
+        }
     }
 
     /**

@@ -1,8 +1,8 @@
 <?php
 
-namespace AmeliaSabre\VObject;
+namespace AmeliaVendor\Sabre\VObject;
 
-use AmeliaSabre\Xml;
+use AmeliaVendor\Sabre\Xml;
 
 /**
  * Component.
@@ -113,7 +113,7 @@ class Component extends Node
         } elseif (is_string($arguments[0])) {
             $newNode = call_user_func_array([$this->root, 'create'], $arguments);
         } else {
-            throw new \InvalidArgumentException('The first argument must either be a \\AmeliaSabre\\VObject\\Node or a string');
+            throw new \InvalidArgumentException('The first argument must either be a \\Sabre\\VObject\\Node or a string');
         }
 
         $name = $newNode->name;

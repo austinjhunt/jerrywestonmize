@@ -31,7 +31,8 @@ class WooCommerceProductsCommandHandler extends CommandHandler
         $products = WooCommerceService::getAllProducts(
             [
                 's'       => !empty($params['name']) ? $params['name'] : '',
-                'include' => !empty($params['id']) ? $params['id'] : null
+                'include' => !empty($params['id']) ? $params['id'] : null,
+                'posts_per_page' => !empty($params['limit']) ? $params['limit'] : -1,
             ]
         );
 

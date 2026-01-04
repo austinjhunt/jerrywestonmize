@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Billing;
+namespace AmeliaVendor\Stripe\Billing;
 
 /**
  * A billing alert is a resource that notifies you when a certain usage threshold on a meter is crossed. For example, you might create a billing alert to notify you when a certain user made 100 API requests.
@@ -13,9 +13,9 @@ namespace AmeliaStripe\Billing;
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
  * @property null|string $status Status of the alert. This can be active, inactive or archived.
  * @property string $title Title of the alert.
- * @property null|(object{filters: null|((object{customer: null|string|\AmeliaStripe\Customer, type: string}&\AmeliaStripe\StripeObject))[], gte: int, meter: Meter|string, recurrence: string}&\AmeliaStripe\StripeObject) $usage_threshold Encapsulates configuration of the alert to monitor usage on a specific <a href="https://stripe.com/docs/api/billing/meter">Billing Meter</a>.
+ * @property null|(object{filters: null|((object{customer: null|string|\AmeliaVendor\Stripe\Customer, type: string}&\AmeliaVendor\Stripe\StripeObject))[], gte: int, meter: Meter|string, recurrence: string}&\AmeliaVendor\Stripe\StripeObject) $usage_threshold Encapsulates configuration of the alert to monitor usage on a specific <a href="https://stripe.com/docs/api/billing/meter">Billing Meter</a>.
  */
-class Alert extends \AmeliaStripe\ApiResource
+class Alert extends \AmeliaVendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'billing.alert';
 
@@ -31,7 +31,7 @@ class Alert extends \AmeliaStripe\ApiResource
      *
      * @return Alert the created resource
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function create($params = null, $options = null)
     {
@@ -39,7 +39,7 @@ class Alert extends \AmeliaStripe\ApiResource
         $url = static::classUrl();
 
         list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
-        $obj = \AmeliaStripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \AmeliaVendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
 
         return $obj;
@@ -51,15 +51,15 @@ class Alert extends \AmeliaStripe\ApiResource
      * @param null|array{alert_type?: string, ending_before?: string, expand?: string[], limit?: int, meter?: string, starting_after?: string} $params
      * @param null|array|string $opts
      *
-     * @return \AmeliaStripe\Collection<Alert> of ApiResources
+     * @return \AmeliaVendor\Stripe\Collection<Alert> of ApiResources
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
 
-        return static::_requestPage($url, \AmeliaStripe\Collection::class, $params, $opts);
+        return static::_requestPage($url, \AmeliaVendor\Stripe\Collection::class, $params, $opts);
     }
 
     /**
@@ -70,11 +70,11 @@ class Alert extends \AmeliaStripe\ApiResource
      *
      * @return Alert
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = \AmeliaStripe\Util\RequestOptions::parse($opts);
+        $opts = \AmeliaVendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
 
@@ -87,7 +87,7 @@ class Alert extends \AmeliaStripe\ApiResource
      *
      * @return Alert the activated alert
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function activate($params = null, $opts = null)
     {
@@ -104,7 +104,7 @@ class Alert extends \AmeliaStripe\ApiResource
      *
      * @return Alert the archived alert
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function archive($params = null, $opts = null)
     {
@@ -121,7 +121,7 @@ class Alert extends \AmeliaStripe\ApiResource
      *
      * @return Alert the deactivated alert
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function deactivate($params = null, $opts = null)
     {

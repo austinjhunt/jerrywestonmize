@@ -11,10 +11,10 @@
  * @link      http://pear.php.net/package/Math_BigInteger
  */
 
-namespace phpseclib3\Math\BigInteger\Engines\PHP\Reductions;
+namespace AmeliaVendor\phpseclib3\Math\BigInteger\Engines\PHP\Reductions;
 
-use phpseclib3\Math\BigInteger\Engines\PHP;
-use phpseclib3\Math\BigInteger\Engines\PHP\Base;
+use AmeliaVendor\phpseclib3\Math\BigInteger\Engines\PHP;
+use AmeliaVendor\phpseclib3\Math\BigInteger\Engines\PHP\Base;
 
 /**
  * PHP Barrett Modular Exponentiation Engine
@@ -98,7 +98,9 @@ abstract class Barrett extends Base
                 'm1' => $m1 // m.length
             ];
         } else {
-            extract($cache[self::DATA][$key]);
+            $cacheValues = $cache[self::DATA][$key];
+            $u = $cacheValues['u'];
+            $m1 = $cacheValues['m1'];
         }
 
         $cutoff = $m_length + ($m_length >> 1);

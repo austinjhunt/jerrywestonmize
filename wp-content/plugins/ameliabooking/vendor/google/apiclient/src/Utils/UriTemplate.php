@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-namespace AmeliaGoogle\Utils;
+namespace AmeliaVendor\Google\Utils;
 
 /**
  * Implementation of levels 1-3 of the URI Template spec.

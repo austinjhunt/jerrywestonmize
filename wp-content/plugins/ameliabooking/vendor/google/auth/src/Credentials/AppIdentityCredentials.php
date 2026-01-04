@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-namespace AmeliaGoogle\Auth\Credentials;
+namespace AmeliaVendor\Google\Auth\Credentials;
 
 /*
  * The AppIdentityService class is automatically defined on App Engine,
@@ -23,9 +23,9 @@ namespace AmeliaGoogle\Auth\Credentials;
  * PHP fatal error in the App Engine environment.
  */
 use google\appengine\api\app_identity\AppIdentityService;
-use AmeliaGoogle\Auth\CredentialsLoader;
-use AmeliaGoogle\Auth\ProjectIdProviderInterface;
-use AmeliaGoogle\Auth\SignBlobInterface;
+use AmeliaVendor\Google\Auth\CredentialsLoader;
+use AmeliaVendor\Google\Auth\ProjectIdProviderInterface;
+use AmeliaVendor\Google\Auth\SignBlobInterface;
 
 /**
  * @deprecated
@@ -37,10 +37,10 @@ use AmeliaGoogle\Auth\SignBlobInterface;
  *
  * Example:
  * ```
- * use AmeliaGoogle\Auth\Credentials\AppIdentityCredentials;
- * use AmeliaGoogle\Auth\Middleware\AuthTokenMiddleware;
- * use AmeliaGuzzleHttp\Client;
- * use AmeliaGuzzleHttp\HandlerStack;
+ * use AmeliaVendor\Google\Auth\Credentials\AppIdentityCredentials;
+ * use AmeliaVendor\Google\Auth\Middleware\AuthTokenMiddleware;
+ * use AmeliaVendor\GuzzleHttp\Client;
+ * use AmeliaVendor\GuzzleHttp\HandlerStack;
  *
  * $gae = new AppIdentityCredentials('https://www.googleapis.com/auth/books');
  * $middleware = new AuthTokenMiddleware($gae);
@@ -114,7 +114,7 @@ class AppIdentityCredentials extends CredentialsLoader implements
      *
      * Fetches the auth tokens using the AppIdentityService if available.
      * As the AppIdentityService uses protobufs to fetch the access token,
-     * the AmeliaGuzzleHttp\ClientInterface instance passed in will not be used.
+     * the AmeliaVendor\GuzzleHttp\ClientInterface instance passed in will not be used.
      *
      * @param callable $httpHandler callback which delivers psr7 request
      * @return array<mixed> {
@@ -124,7 +124,7 @@ class AppIdentityCredentials extends CredentialsLoader implements
      *     @type string $expiration_time
      * }
      */
-    public function fetchAuthToken(callable $httpHandler = null)
+    public function fetchAuthToken(?callable $httpHandler = null)
     {
         try {
             $this->checkAppEngineContext();
@@ -164,7 +164,7 @@ class AppIdentityCredentials extends CredentialsLoader implements
      * @param callable $httpHandler Not used by this type.
      * @return string|null
      */
-    public function getProjectId(callable $httpHandler = null)
+    public function getProjectId(?callable $httpHandler = null)
     {
         try {
             $this->checkAppEngineContext();
@@ -185,7 +185,7 @@ class AppIdentityCredentials extends CredentialsLoader implements
      * @return string
      * @throws \Exception If AppEngine SDK or mock is not available.
      */
-    public function getClientName(callable $httpHandler = null)
+    public function getClientName(?callable $httpHandler = null)
     {
         $this->checkAppEngineContext();
 

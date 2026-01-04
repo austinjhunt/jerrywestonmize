@@ -15,9 +15,9 @@
  * the License.
  */
 
-namespace AmeliaGoogle\Service\Calendar;
+namespace AmeliaVendor\Google\Service\Calendar;
 
-class ConferenceSolutionKey extends \AmeliaGoogle\Model
+class ConferenceSolutionKey extends \AmeliaVendor\Google\Model
 {
   /**
    * @var string
@@ -41,4 +41,4 @@ class ConferenceSolutionKey extends \AmeliaGoogle\Model
 }
 
 // Adding a class alias for backwards compatibility with the previous class name.
-class_alias(ConferenceSolutionKey::class, 'AmeliaGoogle_Service_Calendar_ConferenceSolutionKey');
+class_alias(ConferenceSolutionKey::class, 'Google_Service_Calendar_ConferenceSolutionKey');

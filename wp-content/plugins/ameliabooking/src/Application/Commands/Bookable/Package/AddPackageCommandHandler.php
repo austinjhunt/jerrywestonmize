@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -85,7 +85,8 @@ class AddPackageCommandHandler extends CommandHandler
                 'maximumScheduled' => $bookable['maximumScheduled'],
                 'allowProviderSelection' => $bookable['allowProviderSelection'],
                 'providers'        => $bookable['providers'],
-                'locations'        => $bookable['locations']
+                'locations'        => $bookable['locations'],
+                'position'         => $bookable['position'],
             ];
         }
 
@@ -118,6 +119,7 @@ class AddPackageCommandHandler extends CommandHandler
                         'allowProviderSelection' => $data['allowProviderSelection'],
                         'providers'        => $data['providers'],
                         'locations'        => $data['locations'],
+                        'position'         => $data['position'],
                     ]
                 )
             );

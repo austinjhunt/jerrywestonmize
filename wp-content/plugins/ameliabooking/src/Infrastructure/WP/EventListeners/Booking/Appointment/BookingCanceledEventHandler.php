@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -11,6 +11,7 @@ use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\Integration\ApplicationIntegrationService;
 use AmeliaBooking\Application\Services\Notification\ApplicationNotificationService;
+use AmeliaBooking\Application\Services\WaitingList\WaitingListService;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Application\Services\Notification\EmailNotificationService;
@@ -84,23 +85,9 @@ class BookingCanceledEventHandler
                 ]
             );
 
-            // Handle waiting list: find waiting bookings and notify them + provider about available spot
-            /** @var ApplicationNotificationService $applicationNotificationService */
-            $applicationNotificationService = $container->get('application.notification.service');
-
-            $waitingBookings = new Collection();
-            foreach ($reservationObject->getBookings()->getItems() as $booking) {
-                if ($booking->getStatus()->getValue() === BookingStatus::WAITING) {
-                    $waitingBookings->addItem($booking);
-                }
-            }
-
-            if ($waitingBookings->length()) {
-                $applicationNotificationService->sendWaitingListAvailableSpotNotifications(
-                    $reservationObject,
-                    $waitingBookings
-                );
-            }
+            /** @var WaitingListService $waitingListService */
+            $waitingListService = $container->get('application.waitingList.service');
+            $waitingListService->sendAvailableSpotNotifications($reservationObject);
         }
 
         $booking = $commandResult->getData()[Entities::BOOKING];

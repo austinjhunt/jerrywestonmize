@@ -22,7 +22,7 @@ class OutlookCalendarRepository extends AbstractRepository
      * @param OutlookCalendar $outlookCalendar
      * @param int            $userId
      *
-     * @return string
+     * @return int
      * @throws QueryExecutionException
      */
     public function add($outlookCalendar, $userId)

@@ -3,7 +3,7 @@
  * Loads a string to be parsed.
  */
 
-namespace Masterminds\HTML5\Parser;
+namespace AmeliaVendor\Masterminds\HTML5\Parser;
 
 /*
  *

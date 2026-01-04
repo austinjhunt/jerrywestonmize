@@ -4,12 +4,12 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace AmeliaDompdf\FrameDecorator;
+namespace AmeliaVendor\Dompdf\FrameDecorator;
 
-use AmeliaDompdf\Dompdf;
-use AmeliaDompdf\Frame;
-use AmeliaDompdf\Helpers;
-use AmeliaDompdf\Image\Cache;
+use AmeliaVendor\Dompdf\Dompdf;
+use AmeliaVendor\Dompdf\Frame;
+use AmeliaVendor\Dompdf\Helpers;
+use AmeliaVendor\Dompdf\Image\Cache;
 
 /**
  * Decorates frames for image layout and rendering

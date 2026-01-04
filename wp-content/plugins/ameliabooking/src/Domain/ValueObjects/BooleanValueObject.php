@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -30,7 +30,7 @@ final class BooleanValueObject
     /**
      * Return the value from the value object
      *
-     * @return string
+     * @return boolean
      */
     public function getValue()
     {

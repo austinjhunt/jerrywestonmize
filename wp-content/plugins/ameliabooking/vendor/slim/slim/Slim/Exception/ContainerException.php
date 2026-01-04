@@ -7,7 +7,7 @@
 
 namespace Slim\Exception;
 
-use AmeliaPsr\Container\ContainerExceptionInterface;
+use AmeliaVendor\Psr\Container\ContainerExceptionInterface;
 use InvalidArgumentException;
 
 class ContainerException extends InvalidArgumentException implements ContainerExceptionInterface

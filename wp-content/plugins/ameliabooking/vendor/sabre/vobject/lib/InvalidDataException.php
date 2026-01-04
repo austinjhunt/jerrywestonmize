@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaSabre\VObject;
+namespace AmeliaVendor\Sabre\VObject;
 
 /**
  * This exception is thrown whenever an invalid value is found anywhere in a

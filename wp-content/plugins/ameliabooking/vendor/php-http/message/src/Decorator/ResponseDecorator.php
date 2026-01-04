@@ -2,7 +2,7 @@
 
 namespace AmeliaHttp\Message\Decorator;
 
-use AmeliaPsr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
 
 /**
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -71,7 +71,7 @@ class PackageCustomerDeletedEventHandler
                     'status'            => 'canceled',
                     'customer'          => $customer->toArray(),
                     'icsFiles'          => [],
-                    'packageCustomerId' => $commandResult->getData()['packageCustomer']['packageId'],
+                    'packageCustomerId' => $commandResult->getData()['packageCustomer']['id'],
                     'isRetry'           => null,
                     'recurring'         => array_merge(
                         $commandResult->getData()['appointments']['updatedAppointments'],

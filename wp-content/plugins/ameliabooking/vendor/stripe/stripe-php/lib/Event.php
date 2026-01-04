@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace AmeliaStripe;
+namespace AmeliaVendor\Stripe;
 
 /**
  * Events are our way of letting you know when something interesting happens in
@@ -54,7 +53,6 @@ namespace AmeliaStripe;
 class Event extends ApiResource
 {
     const OBJECT_NAME = 'event';
-
     const ACCOUNT_APPLICATION_AUTHORIZED = 'account.application.authorized';
     const ACCOUNT_APPLICATION_DEAUTHORIZED = 'account.application.deauthorized';
     const ACCOUNT_EXTERNAL_ACCOUNT_CREATED = 'account.external_account.created';
@@ -302,7 +300,6 @@ class Event extends ApiResource
     const TREASURY_RECEIVED_CREDIT_FAILED = 'treasury.received_credit.failed';
     const TREASURY_RECEIVED_CREDIT_SUCCEEDED = 'treasury.received_credit.succeeded';
     const TREASURY_RECEIVED_DEBIT_CREATED = 'treasury.received_debit.created';
-
     const TYPE_ACCOUNT_APPLICATION_AUTHORIZED = 'account.application.authorized';
     const TYPE_ACCOUNT_APPLICATION_DEAUTHORIZED = 'account.application.deauthorized';
     const TYPE_ACCOUNT_EXTERNAL_ACCOUNT_CREATED = 'account.external_account.created';
@@ -547,7 +544,6 @@ class Event extends ApiResource
     const TYPE_TREASURY_RECEIVED_CREDIT_FAILED = 'treasury.received_credit.failed';
     const TYPE_TREASURY_RECEIVED_CREDIT_SUCCEEDED = 'treasury.received_credit.succeeded';
     const TYPE_TREASURY_RECEIVED_DEBIT_CREATED = 'treasury.received_debit.created';
-
     /**
      * List events, going back up to 30 days. Each event data is rendered according to
      * Stripe API version at its creation time, specified in <a
@@ -565,10 +561,8 @@ class Event extends ApiResource
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
-
         return static::_requestPage($url, Collection::class, $params, $opts);
     }
-
     /**
      * Retrieves the details of an event if it was created in the last 30 days. Supply
      * the unique identifier of the event, which you might have received in a webhook.
@@ -582,10 +576,9 @@ class Event extends ApiResource
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = Util\RequestOptions::parse($opts);
+        $opts = \AmeliaVendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
-
         return $instance;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaStripe\ApiOperations;
+namespace AmeliaVendor\Stripe\ApiOperations;
 
 /**
  * Trait for creatable resources. Adds a `create()` static method to the class.
@@ -15,7 +15,7 @@ trait Create
      *
      * @return static the created resource
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function create($params = null, $options = null)
     {
@@ -23,7 +23,7 @@ trait Create
         $url = static::classUrl();
 
         list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
-        $obj = \AmeliaStripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \AmeliaVendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
 
         return $obj;

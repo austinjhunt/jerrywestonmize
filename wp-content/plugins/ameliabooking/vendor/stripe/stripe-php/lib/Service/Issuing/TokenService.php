@@ -2,24 +2,24 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Service\Issuing;
+namespace AmeliaVendor\Stripe\Service\Issuing;
 
 /**
- * @phpstan-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  *
- * @psalm-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ * @psalm-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  */
-class TokenService extends \AmeliaStripe\Service\AbstractService
+class TokenService extends \AmeliaVendor\Stripe\Service\AbstractService
 {
     /**
      * Lists all Issuing <code>Token</code> objects for a given card.
      *
      * @param null|array{card: string, created?: array|int, ending_before?: string, expand?: string[], limit?: int, starting_after?: string, status?: string} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Collection<\AmeliaStripe\Issuing\Token>
+     * @return \AmeliaVendor\Stripe\Collection<\AmeliaVendor\Stripe\Issuing\Token>
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function all($params = null, $opts = null)
     {
@@ -31,11 +31,11 @@ class TokenService extends \AmeliaStripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[]} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Issuing\Token
+     * @return \AmeliaVendor\Stripe\Issuing\Token
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function retrieve($id, $params = null, $opts = null)
     {
@@ -48,11 +48,11 @@ class TokenService extends \AmeliaStripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[], status: string} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Issuing\Token
+     * @return \AmeliaVendor\Stripe\Issuing\Token
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function update($id, $params = null, $opts = null)
     {

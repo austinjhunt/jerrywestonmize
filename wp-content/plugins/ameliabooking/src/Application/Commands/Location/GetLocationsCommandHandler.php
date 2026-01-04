@@ -8,7 +8,6 @@ use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Domain\Collection\AbstractCollection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Entities;
-use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Location\LocationRepository;
 
@@ -27,7 +26,6 @@ class GetLocationsCommandHandler extends CommandHandler
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      * @throws AccessDeniedException
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function handle(GetLocationsCommand $command)
     {
@@ -37,14 +35,14 @@ class GetLocationsCommandHandler extends CommandHandler
 
         $result = new CommandResult();
 
-        /** @var SettingsService $settingsService */
-        $settingsService = $this->container->get('domain.settings.service');
-        $itemsPerPage    = $settingsService->getSetting('general', 'itemsPerPage');
+        $params = $command->getField('params');
+
+        $itemsPerPage = !empty($params['limit']) ? $params['limit'] : 10;
 
         /** @var LocationRepository $locationRepository */
         $locationRepository = $this->getContainer()->get('domain.locations.repository');
 
-        $locations = $locationRepository->getFiltered($command->getField('params'), $itemsPerPage);
+        $locations = $locationRepository->getFiltered($params, $itemsPerPage);
 
         if (!$locations instanceof AbstractCollection) {
             $result->setResult(CommandResult::RESULT_ERROR);

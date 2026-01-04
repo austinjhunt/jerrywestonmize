@@ -2,12 +2,12 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Events;
+namespace AmeliaVendor\Stripe\Events;
 
 /**
- * @property \AmeliaStripe\EventData\V1BillingMeterNoMeterFoundEventData $data data associated with the event
+ * @property \AmeliaVendor\Stripe\EventData\V1BillingMeterNoMeterFoundEventData $data data associated with the event
  */
-class V1BillingMeterNoMeterFoundEvent extends \AmeliaStripe\V2\Event
+class V1BillingMeterNoMeterFoundEvent extends \AmeliaVendor\Stripe\V2\Event
 {
     const LOOKUP_TYPE = 'v1.billing.meter.no_meter_found';
 
@@ -15,7 +15,7 @@ class V1BillingMeterNoMeterFoundEvent extends \AmeliaStripe\V2\Event
     {
         $evt = parent::constructFrom($values, $opts, $apiMode);
         if (null !== $evt->data) {
-            $evt->data = \AmeliaStripe\EventData\V1BillingMeterNoMeterFoundEventData::constructFrom($evt->data, $opts, $apiMode);
+            $evt->data = \AmeliaVendor\Stripe\EventData\V1BillingMeterNoMeterFoundEventData::constructFrom($evt->data, $opts, $apiMode);
         }
 
         return $evt;

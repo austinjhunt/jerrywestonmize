@@ -20,7 +20,7 @@ class PeriodServiceRepository extends AbstractRepository
      * @param PeriodService $entity
      * @param int           $periodId
      *
-     * @return bool
+     * @return int
      * @throws QueryExecutionException
      */
     public function add($entity, $periodId)
@@ -54,7 +54,7 @@ class PeriodServiceRepository extends AbstractRepository
      * @param PeriodService $entity
      * @param int           $id
      *
-     * @return int
+     * @return void
      * @throws QueryExecutionException
      */
     public function update($entity, $id)
@@ -77,8 +77,6 @@ class PeriodServiceRepository extends AbstractRepository
             if (!$res) {
                 throw new QueryExecutionException('Unable to save data in ' . __CLASS__);
             }
-
-            return $res;
         } catch (\Exception $e) {
             throw new QueryExecutionException('Unable to save data in ' . __CLASS__, $e->getCode(), $e);
         }

@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaStripe\Util;
+namespace AmeliaVendor\Stripe\Util;
 
 /**
  * CaseInsensitiveArray is an array-like class that ignores case for keys.

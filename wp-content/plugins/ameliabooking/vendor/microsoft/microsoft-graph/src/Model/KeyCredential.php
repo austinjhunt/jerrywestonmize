@@ -28,15 +28,15 @@ class KeyCredential extends Entity
     * Gets the customKeyIdentifier
     * Custom key identifier
     *
-    * @return \AmeliaGuzzleHttp\Psr7\Stream|null The customKeyIdentifier
+    * @return \AmeliaVendor\GuzzleHttp\Psr7\Stream|null The customKeyIdentifier
     */
     public function getCustomKeyIdentifier()
     {
         if (array_key_exists("customKeyIdentifier", $this->_propDict)) {
-            if (is_a($this->_propDict["customKeyIdentifier"], "\AmeliaGuzzleHttp\Psr7\Stream") || is_null($this->_propDict["customKeyIdentifier"])) {
+            if (is_a($this->_propDict["customKeyIdentifier"], "\AmeliaVendor\GuzzleHttp\Psr7\Stream") || is_null($this->_propDict["customKeyIdentifier"])) {
                 return $this->_propDict["customKeyIdentifier"];
             } else {
-                $this->_propDict["customKeyIdentifier"] = \AmeliaGuzzleHttp\Psr7\Utils::streamFor($this->_propDict["customKeyIdentifier"]);
+                $this->_propDict["customKeyIdentifier"] = \AmeliaVendor\GuzzleHttp\Psr7\Utils::streamFor($this->_propDict["customKeyIdentifier"]);
                 return $this->_propDict["customKeyIdentifier"];
             }
         }
@@ -47,7 +47,7 @@ class KeyCredential extends Entity
     * Sets the customKeyIdentifier
     * Custom key identifier
     *
-    * @param \AmeliaGuzzleHttp\Psr7\Stream $val The value to assign to the customKeyIdentifier
+    * @param \AmeliaVendor\GuzzleHttp\Psr7\Stream $val The value to assign to the customKeyIdentifier
     *
     * @return KeyCredential The KeyCredential
     */
@@ -122,15 +122,15 @@ class KeyCredential extends Entity
     * Gets the key
     * The certificate's raw data in byte array converted to Base64 string. Returned only on $select for a single object, that is, GET applications/{applicationId}?$select=keyCredentials or GET servicePrincipals/{servicePrincipalId}?$select=keyCredentials; otherwise, it is always null.
     *
-    * @return \AmeliaGuzzleHttp\Psr7\Stream|null The key
+    * @return \AmeliaVendor\GuzzleHttp\Psr7\Stream|null The key
     */
     public function getKey()
     {
         if (array_key_exists("key", $this->_propDict)) {
-            if (is_a($this->_propDict["key"], "\AmeliaGuzzleHttp\Psr7\Stream") || is_null($this->_propDict["key"])) {
+            if (is_a($this->_propDict["key"], "\AmeliaVendor\GuzzleHttp\Psr7\Stream") || is_null($this->_propDict["key"])) {
                 return $this->_propDict["key"];
             } else {
-                $this->_propDict["key"] = \AmeliaGuzzleHttp\Psr7\Utils::streamFor($this->_propDict["key"]);
+                $this->_propDict["key"] = \AmeliaVendor\GuzzleHttp\Psr7\Utils::streamFor($this->_propDict["key"]);
                 return $this->_propDict["key"];
             }
         }
@@ -141,7 +141,7 @@ class KeyCredential extends Entity
     * Sets the key
     * The certificate's raw data in byte array converted to Base64 string. Returned only on $select for a single object, that is, GET applications/{applicationId}?$select=keyCredentials or GET servicePrincipals/{servicePrincipalId}?$select=keyCredentials; otherwise, it is always null.
     *
-    * @param \AmeliaGuzzleHttp\Psr7\Stream $val The value to assign to the key
+    * @param \AmeliaVendor\GuzzleHttp\Psr7\Stream $val The value to assign to the key
     *
     * @return KeyCredential The KeyCredential
     */

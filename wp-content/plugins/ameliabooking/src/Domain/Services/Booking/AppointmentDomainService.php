@@ -89,11 +89,8 @@ class AppointmentDomainService
             return BookingStatus::NO_SHOW;
         }
 
-        if (
-            $bookingsCount['waitingBookings'] === $totalBookings &&
-            ($bookingsCount['approvedBookings'] !== 0 || $bookingsCount['pendingBookings'] !== 0)
-        ) {
-            return BookingStatus::WAITING;
+        if ($bookingsCount['waitingBookings'] === $totalBookings) {
+            return BookingStatus::PENDING;
         }
 
         if ($bookingsCount['rejectedBookings'] === $totalBookings) {
@@ -125,7 +122,7 @@ class AppointmentDomainService
     public function getAppointmentStatusWhenChangingBookingStatus($service, $bookingsCount, $requestedStatus)
     {
         if ($bookingsCount['approvedBookings'] === 0 && $bookingsCount['pendingBookings'] === 0) {
-            return $requestedStatus;
+            return $requestedStatus === BookingStatus::WAITING ? BookingStatus::PENDING : $requestedStatus;
         }
 
         return $bookingsCount['approvedBookings'] >= $service->getMinCapacity()->getValue() ?

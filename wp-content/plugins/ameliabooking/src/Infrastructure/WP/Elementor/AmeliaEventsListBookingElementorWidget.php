@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -24,7 +24,7 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
 
     public function get_title()
     {
-        return BackendStrings::getWordPressStrings()['events_list_booking_gutenberg_block']['title'];
+        return BackendStrings::get('events_list_booking_gutenberg_block')['title'];
     }
 
     public function get_icon()
@@ -43,9 +43,9 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
             'amelia_events_section',
             [
                 'label' => '<div class="amelia-elementor-content"><p class="amelia-elementor-content-title">'
-                    . BackendStrings::getWordPressStrings()['events_list_booking_gutenberg_block']['title']
+                    . BackendStrings::get('events_list_booking_gutenberg_block')['title']
                     . '</p><br><p class="amelia-elementor-content-p">'
-                    . BackendStrings::getWordPressStrings()['events_list_booking_gutenberg_block']['description']
+                    . BackendStrings::get('events_list_booking_gutenberg_block')['description']
                     . '</p>',
             ]
         );
@@ -53,35 +53,35 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
         $this->add_control(
             'preselect',
             [
-                'label' => BackendStrings::getWordPressStrings()['filter'],
+                'label' => BackendStrings::get('filter'),
                 'type' => Controls_Manager::SWITCHER,
                 'default' => false,
-                'label_on' => BackendStrings::getCommonStrings()['yes'],
-                'label_off' => BackendStrings::getCommonStrings()['no'],
+                'label_on' => BackendStrings::get('yes'),
+                'label_off' => BackendStrings::get('no'),
             ]
         );
 
         $this->add_control(
             'select_event',
             [
-                'label' => BackendStrings::getWordPressStrings()['select_event'],
+                'label' => BackendStrings::get('select_event'),
                 'type' => Controls_Manager::SELECT2,
                 'multiple' => true,
                 'options' => self::amelia_elementor_get_events(),
                 'condition' => ['preselect' => 'yes'],
-                'placeholder' => BackendStrings::getWordPressStrings()['show_all_events']
+                'placeholder' => BackendStrings::get('show_all_events')
             ]
         );
 
         $this->add_control(
             'select_tag',
             [
-                'label' => BackendStrings::getWordPressStrings()['select_tag'],
+                'label' => BackendStrings::get('select_tag'),
                 'type' => Controls_Manager::SELECT2,
                 'multiple' => true,
                 'options' => self::amelia_elementor_get_tags(),
                 'condition' => ['preselect' => 'yes'],
-                'placeholder' => BackendStrings::getWordPressStrings()['show_all_tags']
+                'placeholder' => BackendStrings::get('show_all_tags')
             ]
         );
 
@@ -89,12 +89,12 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
         $this->add_control(
             'select_location',
             [
-                'label' => BackendStrings::getWordPressStrings()['select_location'],
+                'label' => BackendStrings::get('select_location'),
                 'type' => Controls_Manager::SELECT2,
                 'multiple' => true,
                 'options' => self::amelia_elementor_get_locations(),
                 'condition' => ['preselect' => 'yes'],
-                'placeholder' => BackendStrings::getWordPressStrings()['show_all_locations']
+                'placeholder' => BackendStrings::get('show_all_locations')
             ]
         );
 
@@ -105,33 +105,33 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
                 'type' => Controls_Manager::SWITCHER,
                 'condition' => ['preselect' => 'yes'],
                 'default' => false,
-                'label_on' => BackendStrings::getCommonStrings()['yes'],
-                'label_off' => BackendStrings::getCommonStrings()['no'],
+                'label_on' => BackendStrings::get('yes'),
+                'label_off' => BackendStrings::get('no'),
             ]
         );
 
         $this->add_control(
             'load_manually',
             [
-                'label' => BackendStrings::getWordPressStrings()['manually_loading'],
+                'label' => BackendStrings::get('manually_loading'),
                 'label_block' => true,
                 'type' => Controls_Manager::TEXT,
                 'condition' => ['preselect' => 'yes'],
                 'placeholder' => '',
-                'description' => BackendStrings::getWordPressStrings()['manually_loading_description'],
+                'description' => BackendStrings::get('manually_loading_description'),
             ]
         );
 
         $this->add_control(
             'trigger_type',
             [
-                'label' => BackendStrings::getWordPressStrings()['trigger_type'],
+                'label' => BackendStrings::get('trigger_type'),
                 'type' => Controls_Manager::SELECT,
                 'condition' => ['preselect' => 'yes'],
-                'description' => BackendStrings::getWordPressStrings()['trigger_type_tooltip'],
+                'description' => BackendStrings::get('trigger_type_tooltip'),
                 'options' => [
-                    'id' => BackendStrings::getWordPressStrings()['trigger_type_id'],
-                    'class' => BackendStrings::getWordPressStrings()['trigger_type_class']
+                    'id' => BackendStrings::get('trigger_type_id'),
+                    'class' => BackendStrings::get('trigger_type_class')
                 ],
                 'default' => 'id'
             ]
@@ -140,12 +140,12 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
         $this->add_control(
             'in_dialog',
             [
-                'label' => BackendStrings::getWordPressStrings()['in_dialog'],
+                'label' => BackendStrings::get('in_dialog'),
                 'type' => Controls_Manager::SWITCHER,
                 'condition' => ['preselect' => 'yes'],
                 'default' => false,
-                'label_on' => BackendStrings::getCommonStrings()['yes'],
-                'label_off' => BackendStrings::getCommonStrings()['no'],
+                'label_on' => BackendStrings::get('yes'),
+                'label_off' => BackendStrings::get('no'),
             ]
         );
 
@@ -203,7 +203,7 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
 
         $returnEvents = [];
 
-        $returnEvents['0'] = BackendStrings::getWordPressStrings()['show_all_events'];
+        $returnEvents['0'] = BackendStrings::get('show_all_events');
 
         foreach ($events as $event) {
             $returnEvents[$event['id']] = $event['name'] . ' (id: ' . $event['id'] . ') - ' . $event['formattedPeriodStart'];
@@ -218,7 +218,7 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
 
         $returnLocations = [];
 
-        $returnLocations['0'] = BackendStrings::getWordPressStrings()['show_all_locations'];
+        $returnLocations['0'] = BackendStrings::get('show_all_locations');
 
         foreach ($locations as $location) {
             $returnLocations[$location['id']] = $location['name'];

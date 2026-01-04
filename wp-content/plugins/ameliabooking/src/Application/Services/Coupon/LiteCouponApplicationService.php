@@ -16,7 +16,7 @@ class LiteCouponApplicationService extends AbstractCouponApplicationService
     /**
      * @param Coupon $coupon
      *
-     * @return boolean
+     * @return mixed
      *
      * @throws ContainerValueNotFoundException
      */

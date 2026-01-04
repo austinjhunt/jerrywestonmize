@@ -37,7 +37,7 @@ abstract class AbstractCouponApplicationService
     /**
      * @param Coupon $coupon
      *
-     * @return boolean
+     * @return int
      *
      * @throws ContainerValueNotFoundException
      * @throws QueryExecutionException

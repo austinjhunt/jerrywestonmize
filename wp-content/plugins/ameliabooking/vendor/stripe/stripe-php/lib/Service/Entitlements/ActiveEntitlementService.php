@@ -2,24 +2,24 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Service\Entitlements;
+namespace AmeliaVendor\Stripe\Service\Entitlements;
 
 /**
- * @phpstan-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  *
- * @psalm-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ * @psalm-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  */
-class ActiveEntitlementService extends \AmeliaStripe\Service\AbstractService
+class ActiveEntitlementService extends \AmeliaVendor\Stripe\Service\AbstractService
 {
     /**
      * Retrieve a list of active entitlements for a customer.
      *
      * @param null|array{customer: string, ending_before?: string, expand?: string[], limit?: int, starting_after?: string} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Collection<\AmeliaStripe\Entitlements\ActiveEntitlement>
+     * @return \AmeliaVendor\Stripe\Collection<\AmeliaVendor\Stripe\Entitlements\ActiveEntitlement>
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function all($params = null, $opts = null)
     {
@@ -31,11 +31,11 @@ class ActiveEntitlementService extends \AmeliaStripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[]} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Entitlements\ActiveEntitlement
+     * @return \AmeliaVendor\Stripe\Entitlements\ActiveEntitlement
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function retrieve($id, $params = null, $opts = null)
     {

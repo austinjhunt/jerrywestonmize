@@ -9,10 +9,10 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-namespace phpseclib3\Crypt\DH;
+namespace AmeliaVendor\phpseclib3\Crypt\DH;
 
-use phpseclib3\Crypt\Common;
-use phpseclib3\Crypt\DH;
+use AmeliaVendor\phpseclib3\Crypt\Common;
+use AmeliaVendor\phpseclib3\Crypt\DH;
 
 /**
  * DH Public Key
@@ -40,7 +40,7 @@ final class PublicKey extends DH
     /**
      * Returns the public key as a BigInteger
      *
-     * @return \phpseclib3\Math\BigInteger
+     * @return \AmeliaVendor\phpseclib3\Math\BigInteger
      */
     public function toBigInteger()
     {

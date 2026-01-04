@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Monolog\Handler\FingersCrossed;
+namespace AmeliaVendor\Monolog\Handler\FingersCrossed;
 
-use Monolog\Logger;
-use Psr\Log\LogLevel;
+use AmeliaVendor\Monolog\Logger;
+use AmeliaVendor\Psr\Log\LogLevel;
 
 /**
  * Error level based activation strategy.

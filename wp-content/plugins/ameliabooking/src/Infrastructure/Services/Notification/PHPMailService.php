@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -9,8 +9,8 @@ namespace AmeliaBooking\Infrastructure\Services\Notification;
 
 use AmeliaBooking\Domain\Services\Notification\AbstractMailService;
 use AmeliaBooking\Domain\Services\Notification\MailServiceInterface;
-use AmeliaPHPMailer\PHPMailer\Exception;
-use AmeliaPHPMailer\PHPMailer\PHPMailer;
+use AmeliaVendor\PHPMailer\PHPMailer\Exception;
+use AmeliaVendor\PHPMailer\PHPMailer\PHPMailer;
 
 /**
  * Class PHPMailService

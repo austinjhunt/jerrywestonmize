@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -12,11 +12,11 @@ use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Invoice\AbstractInvoiceApplicationService;
 use AmeliaBooking\Application\Services\Notification\EmailNotificationService;
-use AmeliaBooking\Application\Services\Payment\InvoiceApplicationService;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
+use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 
 /**
@@ -34,7 +34,6 @@ class GenerateInvoiceCommandHandler extends CommandHandler
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      * @throws AccessDeniedException
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function handle(GenerateInvoiceCommand $command)
     {
@@ -64,6 +63,15 @@ class GenerateInvoiceCommandHandler extends CommandHandler
             }
         }
 
+
+        /** @var SettingsService $settingsDS */
+        $settingsDS = $this->container->get('domain.settings.service');
+
+        if (!$settingsDS->isFeatureEnabled('invoices')) {
+            $result->setMessage('Invoices are not enabled.');
+            $result->setResult(CommandResult::RESULT_ERROR);
+            return $result;
+        }
 
         /** @var AbstractInvoiceApplicationService $invoiceService */
         $invoiceService = $this->container->get('application.invoice.service');

@@ -3,7 +3,7 @@
 namespace AmeliaHttp\Message\Encoding;
 
 use AmeliaClue\StreamFilter as Filter;
-use AmeliaPsr\Http\Message\StreamInterface;
+use AmeliaVendor\Psr\Http\Message\StreamInterface;
 
 /**
  * Stream for encoding to gzip format (RFC 1952).

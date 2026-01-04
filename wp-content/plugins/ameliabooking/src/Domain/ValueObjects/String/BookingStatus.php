@@ -24,7 +24,7 @@ final class BookingStatus
     /**
      * Status constructor.
      *
-     * @param int $status
+     * @param string $status
      */
     public function __construct($status)
     {

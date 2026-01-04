@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-namespace AmeliaGoogle\Auth\Cache;
+namespace AmeliaVendor\Google\Auth\Cache;
 
-use Psr\Cache\CacheItemInterface;
+use AmeliaVendor\Psr\Cache\CacheItemInterface;
 
 /**
  * A cache item.

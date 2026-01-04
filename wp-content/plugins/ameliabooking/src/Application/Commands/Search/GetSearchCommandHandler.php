@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -252,7 +252,7 @@ class GetSearchCommandHandler extends CommandHandler
             usort(
                 $resultData,
                 function ($service1, $service2) {
-                    return $service1['price'] > $service2['price'];
+                    return $service1['price'] <=> $service2['price'];
                 }
             );
 

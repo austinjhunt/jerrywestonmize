@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -33,8 +33,14 @@ class GetCouponsController extends Controller
 
         $params = (array)$request->getQueryParams();
 
+        $this->setArrayParams($params);
+
         if (isset($params['services'])) {
             $params['services'] = array_map('intval', $params['services']);
+        }
+
+        if (isset($params['packages'])) {
+            $params['packages'] = array_map('intval', $params['packages']);
         }
 
         $command->setField('params', $params);

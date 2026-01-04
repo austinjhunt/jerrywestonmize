@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Terminal;
+namespace AmeliaVendor\Stripe\Terminal;
 
 /**
  * A Connection Token is used by the Stripe Terminal SDK to connect to a reader.
@@ -13,7 +13,7 @@ namespace AmeliaStripe\Terminal;
  * @property null|string $location The id of the location that this connection token is scoped to. Note that location scoping only applies to internet-connected readers. For more details, see <a href="https://docs.stripe.com/terminal/fleet/locations-and-zones?dashboard-or-api=api#connection-tokens">the docs on scoping connection tokens</a>.
  * @property string $secret Your application should pass this token to the Stripe Terminal SDK.
  */
-class ConnectionToken extends \AmeliaStripe\ApiResource
+class ConnectionToken extends \AmeliaVendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'terminal.connection_token';
 
@@ -27,7 +27,7 @@ class ConnectionToken extends \AmeliaStripe\ApiResource
      *
      * @return ConnectionToken the created resource
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function create($params = null, $options = null)
     {
@@ -35,7 +35,7 @@ class ConnectionToken extends \AmeliaStripe\ApiResource
         $url = static::classUrl();
 
         list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
-        $obj = \AmeliaStripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \AmeliaVendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
 
         return $obj;

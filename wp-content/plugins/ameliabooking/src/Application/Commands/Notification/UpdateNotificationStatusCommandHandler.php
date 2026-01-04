@@ -33,7 +33,6 @@ class UpdateNotificationStatusCommandHandler extends CommandHandler
      * @throws InvalidArgumentException
      * @throws NotFoundException
      * @throws QueryExecutionException
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function handle(UpdateNotificationStatusCommand $command)
     {

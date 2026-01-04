@@ -8,7 +8,7 @@
 namespace Slim\Http;
 
 use InvalidArgumentException;
-use AmeliaPsr\Http\Message\StreamInterface;
+use AmeliaVendor\Psr\Http\Message\StreamInterface;
 use RuntimeException;
 
 /**

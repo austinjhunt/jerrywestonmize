@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -15,8 +15,10 @@ use AmeliaBooking\Domain\Factory\Booking\Event\EventFactory;
 use AmeliaBooking\Domain\Factory\Tax\TaxFactory;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Connection;
-use AmeliaBooking\Infrastructure\Repository\AbstractStatusRepository;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
+use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
+use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Bookable\PackagesTable;
+use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Bookable\ServicesTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking\EventsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Tax\TaxesToEntitiesTable;
 
@@ -25,7 +27,7 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Tax\TaxesToEntitiesTable;
  *
  * @package AmeliaBooking\Infrastructure\Repository\Tax
  */
-class TaxRepository extends AbstractStatusRepository
+class TaxRepository extends AbstractRepository
 {
     public const FACTORY = TaxFactory::class;
 
@@ -49,7 +51,7 @@ class TaxRepository extends AbstractStatusRepository
     /**
      * @param Tax $entity
      *
-     * @return string|false
+     * @return int
      * @throws QueryExecutionException
      */
     public function add($entity)
@@ -328,10 +330,10 @@ class TaxRepository extends AbstractStatusRepository
                 $params[$param] = $value;
             }
 
-            $where[] = "t.id IN (
+            $where[] = "(t.id IN (
                     SELECT taxId FROM {$this->taxesToEntitiesTable} 
                     WHERE entityId IN (" . implode(', ', $queryServices) . ") AND entityType = 'service'
-                )";
+                ) OR t.allServices = 1)";
         }
 
         if (!empty($criteria['extras'])) {
@@ -345,10 +347,10 @@ class TaxRepository extends AbstractStatusRepository
                 $params[$param] = $value;
             }
 
-            $where[] = "t.id IN (
+            $where[] = "(t.id IN (
                     SELECT taxId FROM {$this->taxesToEntitiesTable} 
                     WHERE entityId IN (" . implode(', ', $queryExtras) . ") AND entityType = 'extra'
-                )";
+                ) OR t.allExtras = 1)";
         }
 
         if (!empty($criteria['events'])) {
@@ -362,10 +364,10 @@ class TaxRepository extends AbstractStatusRepository
                 $params[$param] = $value;
             }
 
-            $where[] = "t.id IN (
+            $where[] = "(t.id IN (
                     SELECT taxId FROM {$this->taxesToEntitiesTable} 
                     WHERE entityId IN (" . implode(', ', $queryEvents) . ") AND entityType = 'event'
-                )";
+                ) OR t.allEvents = 1)";
         }
 
         if (!empty($criteria['packages'])) {
@@ -379,10 +381,10 @@ class TaxRepository extends AbstractStatusRepository
                 $params[$param] = $value;
             }
 
-            $where[] = "t.id IN (
+            $where[] = "(t.id IN (
                     SELECT taxId FROM {$this->taxesToEntitiesTable} 
                     WHERE entityId IN (" . implode(', ', $queryPackages) . ") AND entityType = 'package'
-                )";
+                ) OR t.allPackages = 1)";
         }
 
 
@@ -392,6 +394,11 @@ class TaxRepository extends AbstractStatusRepository
             !empty($criteria['page']) ? (int)$criteria['page'] : 0,
             (int)$itemsPerPage
         );
+
+        $order = "ORDER BY id";
+        if (!empty($criteria['sort'])) {
+            $order = "ORDER BY {$criteria['sort']['field']} {$criteria['sort']['order']}";
+        }
 
         try {
             $statement = $this->connection->prepare(
@@ -407,6 +414,7 @@ class TaxRepository extends AbstractStatusRepository
                     t.allExtras AS tax_allExtras
                 FROM {$this->table} t
                 {$where}
+                {$order}
                 {$limit}"
             );
 
@@ -449,10 +457,27 @@ class TaxRepository extends AbstractStatusRepository
                 $params[$param] = $value;
             }
 
-            $where[] = "t.id IN (
+            $where[] = "(t.id IN (
                 SELECT taxId FROM {$this->taxesToEntitiesTable} 
                 WHERE entityId IN (" . implode(', ', $queryServices) . ") AND entityType = 'service'
-            )";
+            ) OR t.allServices = 1)";
+        }
+
+        if (!empty($criteria['extras'])) {
+            $queryExtras = [];
+
+            foreach ($criteria['extras'] as $index => $value) {
+                $param = ':extra' . $index;
+
+                $queryExtras[] = $param;
+
+                $params[$param] = $value;
+            }
+
+            $where[] = "(t.id IN (
+                SELECT taxId FROM {$this->taxesToEntitiesTable} 
+                WHERE entityId IN (" . implode(', ', $queryExtras) . ") AND entityType = 'extra'
+            ) OR t.allExtras = 1)";
         }
 
         if (!empty($criteria['events'])) {
@@ -466,10 +491,10 @@ class TaxRepository extends AbstractStatusRepository
                 $params[$param] = $value;
             }
 
-            $where[] = "t.id IN (
+            $where[] = "(t.id IN (
                 SELECT taxId FROM {$this->taxesToEntitiesTable} 
                 WHERE entityId IN (" . implode(', ', $queryEvents) . ") AND entityType = 'event'
-            )";
+            ) OR t.allEvents = 1)";
         }
 
         if (!empty($criteria['packages'])) {
@@ -483,10 +508,10 @@ class TaxRepository extends AbstractStatusRepository
                 $params[$param] = $value;
             }
 
-            $where[] = "t.id IN (
+            $where[] = "(t.id IN (
                 SELECT taxId FROM {$this->taxesToEntitiesTable} 
                 WHERE entityId IN (" . implode(', ', $queryPackages) . ") AND entityType = 'package'
-            )";
+            ) OR t.allPackages = 1)";
         }
 
         $where = $where ? ' WHERE ' . implode(' AND ', $where) : '';

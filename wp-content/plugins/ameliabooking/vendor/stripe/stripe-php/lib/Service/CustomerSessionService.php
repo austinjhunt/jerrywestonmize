@@ -2,12 +2,12 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Service;
+namespace AmeliaVendor\Stripe\Service;
 
 /**
- * @phpstan-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  *
- * @psalm-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ * @psalm-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  */
 class CustomerSessionService extends AbstractService
 {
@@ -17,11 +17,11 @@ class CustomerSessionService extends AbstractService
      * customer resources.
      *
      * @param null|array{components: array{buy_button?: array{enabled: bool}, payment_element?: array{enabled: bool, features?: array{payment_method_allow_redisplay_filters?: string[], payment_method_redisplay?: string, payment_method_redisplay_limit?: int, payment_method_remove?: string, payment_method_save?: string, payment_method_save_usage?: string}}, pricing_table?: array{enabled: bool}}, customer: string, expand?: string[]} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\CustomerSession
+     * @return \AmeliaVendor\Stripe\CustomerSession
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function create($params = null, $opts = null)
     {

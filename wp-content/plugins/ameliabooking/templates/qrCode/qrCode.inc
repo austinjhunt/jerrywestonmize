@@ -81,7 +81,7 @@ $data = $qrDataItem;
       }
 
   </style>
-  <title><?php echo BackendStrings::getEventStrings()['e_ticket'] ?></title>
+  <title><?php echo BackendStrings::get('e_ticket') ?></title>
 </head>
 <body>
   <div class="am-ticket">
@@ -93,11 +93,11 @@ $data = $qrDataItem;
         <?php echo $data['eventName']; ?>
       </div>
       <div class="am-ticket__label">
-        <?php echo BackendStrings::getCommonStrings()['ticket_id'] ?>: <span class="am-ticket__value">#<?php echo $data['ticketManualCode'] ?></span>
+        <?php echo BackendStrings::get('ticket_id') ?>: <span class="am-ticket__value">#<?php echo $data['ticketManualCode'] ?></span>
       </div>
       <?php if (array_key_exists('eventTicketName', $data)) : ?>
         <div class="am-ticket__label">
-          <?php echo BackendStrings::getCommonStrings()['ticket_name'] ?>: <span class="am-ticket__value"><?php echo $data['eventTicketName'] ?></span>
+          <?php echo BackendStrings::get('ticket_name') ?>: <span class="am-ticket__value"><?php echo $data['eventTicketName'] ?></span>
         </div>
       <?php endif; ?>
       <div class="am-ticket__datetime">
@@ -109,10 +109,10 @@ $data = $qrDataItem;
       </div>
       <?php endif; ?>
       <div class="am-ticket__booking">
-        <?php echo BackendStrings::getCommonStrings()['booking_id'] ?>: <span>#<?php echo $data['bookingId'] ?></span>
+        <?php echo BackendStrings::get('booking_id') ?>: <span>#<?php echo $data['bookingId'] ?></span>
       </div>
       <div class="am-ticket__type">
-        <?php echo BackendStrings::getCommonStrings()['ticket_type'] ?>: <span><?php echo $data['type'] === 'ticket' ? BackendStrings::getCommonStrings()['single_ticket'] : BackendStrings::getCommonStrings()['group_ticket']; ?></span>
+        <?php echo BackendStrings::get('ticket_type') ?>: <span><?php echo $data['type'] === 'ticket' ? BackendStrings::get('single_ticket') : BackendStrings::get('group_ticket'); ?></span>
     </div>
   </div>
 

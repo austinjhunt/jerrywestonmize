@@ -6,7 +6,7 @@ use AmeliaHttp\Client\Exception;
 use AmeliaHttp\Client\HttpClient;
 use AmeliaHttp\Client\Common\Exception\BatchException;
 use Psr\Http\Client\ClientInterface;
-use AmeliaPsr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
 
 /**
  * BatchClient allow to sends multiple request and retrieve a Batch Result.

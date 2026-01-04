@@ -13,17 +13,17 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-namespace phpseclib3\System\SSH\Agent;
+namespace AmeliaVendor\phpseclib3\System\SSH\Agent;
 
-use phpseclib3\Common\Functions\Strings;
-use phpseclib3\Crypt\Common\PrivateKey;
-use phpseclib3\Crypt\Common\PublicKey;
-use phpseclib3\Crypt\DSA;
-use phpseclib3\Crypt\EC;
-use phpseclib3\Crypt\RSA;
-use phpseclib3\Exception\UnsupportedAlgorithmException;
-use phpseclib3\System\SSH\Agent;
-use phpseclib3\System\SSH\Common\Traits\ReadBytes;
+use AmeliaVendor\phpseclib3\Common\Functions\Strings;
+use AmeliaVendor\phpseclib3\Crypt\Common\PrivateKey;
+use AmeliaVendor\phpseclib3\Crypt\Common\PublicKey;
+use AmeliaVendor\phpseclib3\Crypt\DSA;
+use AmeliaVendor\phpseclib3\Crypt\EC;
+use AmeliaVendor\phpseclib3\Crypt\RSA;
+use AmeliaVendor\phpseclib3\Exception\UnsupportedAlgorithmException;
+use AmeliaVendor\phpseclib3\System\SSH\Agent;
+use AmeliaVendor\phpseclib3\System\SSH\Common\Traits\ReadBytes;
 
 /**
  * Pure-PHP ssh-agent client identity object

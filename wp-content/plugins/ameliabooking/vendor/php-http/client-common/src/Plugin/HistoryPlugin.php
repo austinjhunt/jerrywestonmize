@@ -4,8 +4,8 @@ namespace AmeliaHttp\Client\Common\Plugin;
 
 use AmeliaHttp\Client\Common\Plugin;
 use AmeliaHttp\Client\Exception;
-use AmeliaPsr\Http\Message\RequestInterface;
-use AmeliaPsr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
 
 /**
  * Record HTTP calls.

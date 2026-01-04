@@ -13,9 +13,9 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-namespace phpseclib3\Crypt\DSA\Formats\Keys;
+namespace AmeliaVendor\phpseclib3\Crypt\DSA\Formats\Keys;
 
-use phpseclib3\Math\BigInteger;
+use AmeliaVendor\phpseclib3\Math\BigInteger;
 
 /**
  * Raw DSA Key Handler

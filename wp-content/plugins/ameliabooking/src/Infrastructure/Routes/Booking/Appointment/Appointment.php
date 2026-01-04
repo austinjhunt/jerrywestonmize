@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See COPYING.md for license details.
  */
 
@@ -9,6 +9,7 @@ namespace AmeliaBooking\Infrastructure\Routes\Booking\Appointment;
 
 use AmeliaBooking\Application\Controller\Booking\Appointment\AddAppointmentController;
 use AmeliaBooking\Application\Controller\Booking\Appointment\DeleteAppointmentController;
+use AmeliaBooking\Application\Controller\Booking\Appointment\GetAppointmentBookingsController;
 use AmeliaBooking\Application\Controller\Booking\Appointment\GetAppointmentController;
 use AmeliaBooking\Application\Controller\Booking\Appointment\GetAppointmentsController;
 use AmeliaBooking\Application\Controller\Booking\Appointment\GetPackageAppointmentsController;
@@ -46,5 +47,7 @@ class Appointment
         $app->post('/appointments/time/{id:[0-9]+}', UpdateAppointmentTimeController::class);
 
         $app->get('/package/appointments', GetPackageAppointmentsController::class);
+
+        $app->get('/bookings/appointments', GetAppointmentBookingsController::class);
     }
 }

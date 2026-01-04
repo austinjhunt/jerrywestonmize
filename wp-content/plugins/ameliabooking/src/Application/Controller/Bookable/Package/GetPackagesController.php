@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -29,7 +29,12 @@ class GetPackagesController extends Controller
      */
     protected function instantiateCommand(Request $request, $args)
     {
-        $command     = new GetPackagesCommand($args);
+        $command = new GetPackagesCommand($args);
+        $params  = (array)$request->getQueryParams();
+
+        $this->setArrayParams($params);
+        $command->setField('params', $params);
+
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

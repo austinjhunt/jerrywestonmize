@@ -27,19 +27,19 @@
  * Do not edit the class manually.
  */
 
-namespace MailchimpMarketing\Api;
+namespace AmeliaVendor\MailchimpMarketing\Api;
 
-use AmeliaGuzzleHttp\Client;
-use AmeliaGuzzleHttp\ClientInterface;
-use AmeliaGuzzleHttp\Exception\RequestException;
-use AmeliaGuzzleHttp\Psr7\MultipartStream;
-use AmeliaGuzzleHttp\Psr7\Query;
-use AmeliaGuzzleHttp\Psr7\Request;
-use AmeliaGuzzleHttp\RequestOptions;
-use MailchimpMarketing\ApiException;
-use MailchimpMarketing\Configuration;
-use MailchimpMarketing\HeaderSelector;
-use MailchimpMarketing\ObjectSerializer;
+use AmeliaVendor\GuzzleHttp\Client;
+use AmeliaVendor\GuzzleHttp\ClientInterface;
+use AmeliaVendor\GuzzleHttp\Exception\RequestException;
+use AmeliaVendor\GuzzleHttp\Psr7\MultipartStream;
+use AmeliaVendor\GuzzleHttp\Psr7\Query;
+use AmeliaVendor\GuzzleHttp\Psr7\Request;
+use AmeliaVendor\GuzzleHttp\RequestOptions;
+use AmeliaVendor\MailchimpMarketing\ApiException;
+use AmeliaVendor\MailchimpMarketing\Configuration;
+use AmeliaVendor\MailchimpMarketing\HeaderSelector;
+use AmeliaVendor\MailchimpMarketing\ObjectSerializer;
 
 class TemplatesApi
 {
@@ -151,10 +151,10 @@ class TemplatesApi
 
             if($headers['Content-Type'] === 'application/json') {
                 if ($httpBody instanceof \stdClass) {
-                    $httpBody = \AmeliaGuzzleHttp\json_encode($httpBody);
+                    $httpBody = \AmeliaVendor\GuzzleHttp\json_encode($httpBody);
                 }
                 if (is_array($httpBody)) {
-                    $httpBody = \AmeliaGuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
+                    $httpBody = \AmeliaVendor\GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
         } elseif (count($formParams) > 0) {
@@ -169,7 +169,7 @@ class TemplatesApi
                 $httpBody = new MultipartStream($multipartContents);
 
             } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \AmeliaGuzzleHttp\json_encode($formParams);
+                $httpBody = \AmeliaVendor\GuzzleHttp\json_encode($formParams);
 
             } else {
                 $httpBody = Query::build($formParams);
@@ -340,10 +340,10 @@ class TemplatesApi
 
             if($headers['Content-Type'] === 'application/json') {
                 if ($httpBody instanceof \stdClass) {
-                    $httpBody = \AmeliaGuzzleHttp\json_encode($httpBody);
+                    $httpBody = \AmeliaVendor\GuzzleHttp\json_encode($httpBody);
                 }
                 if (is_array($httpBody)) {
-                    $httpBody = \AmeliaGuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
+                    $httpBody = \AmeliaVendor\GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
         } elseif (count($formParams) > 0) {
@@ -358,7 +358,7 @@ class TemplatesApi
                 $httpBody = new MultipartStream($multipartContents);
 
             } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \AmeliaGuzzleHttp\json_encode($formParams);
+                $httpBody = \AmeliaVendor\GuzzleHttp\json_encode($formParams);
 
             } else {
                 $httpBody = Query::build($formParams);
@@ -499,10 +499,10 @@ class TemplatesApi
 
             if($headers['Content-Type'] === 'application/json') {
                 if ($httpBody instanceof \stdClass) {
-                    $httpBody = \AmeliaGuzzleHttp\json_encode($httpBody);
+                    $httpBody = \AmeliaVendor\GuzzleHttp\json_encode($httpBody);
                 }
                 if (is_array($httpBody)) {
-                    $httpBody = \AmeliaGuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
+                    $httpBody = \AmeliaVendor\GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
         } elseif (count($formParams) > 0) {
@@ -517,7 +517,7 @@ class TemplatesApi
                 $httpBody = new MultipartStream($multipartContents);
 
             } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \AmeliaGuzzleHttp\json_encode($formParams);
+                $httpBody = \AmeliaVendor\GuzzleHttp\json_encode($formParams);
 
             } else {
                 $httpBody = Query::build($formParams);
@@ -658,10 +658,10 @@ class TemplatesApi
 
             if($headers['Content-Type'] === 'application/json') {
                 if ($httpBody instanceof \stdClass) {
-                    $httpBody = \AmeliaGuzzleHttp\json_encode($httpBody);
+                    $httpBody = \AmeliaVendor\GuzzleHttp\json_encode($httpBody);
                 }
                 if (is_array($httpBody)) {
-                    $httpBody = \AmeliaGuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
+                    $httpBody = \AmeliaVendor\GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
         } elseif (count($formParams) > 0) {
@@ -676,7 +676,7 @@ class TemplatesApi
                 $httpBody = new MultipartStream($multipartContents);
 
             } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \AmeliaGuzzleHttp\json_encode($formParams);
+                $httpBody = \AmeliaVendor\GuzzleHttp\json_encode($formParams);
 
             } else {
                 $httpBody = Query::build($formParams);
@@ -812,10 +812,10 @@ class TemplatesApi
 
             if($headers['Content-Type'] === 'application/json') {
                 if ($httpBody instanceof \stdClass) {
-                    $httpBody = \AmeliaGuzzleHttp\json_encode($httpBody);
+                    $httpBody = \AmeliaVendor\GuzzleHttp\json_encode($httpBody);
                 }
                 if (is_array($httpBody)) {
-                    $httpBody = \AmeliaGuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
+                    $httpBody = \AmeliaVendor\GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
         } elseif (count($formParams) > 0) {
@@ -830,7 +830,7 @@ class TemplatesApi
                 $httpBody = new MultipartStream($multipartContents);
 
             } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \AmeliaGuzzleHttp\json_encode($formParams);
+                $httpBody = \AmeliaVendor\GuzzleHttp\json_encode($formParams);
 
             } else {
                 $httpBody = Query::build($formParams);
@@ -952,10 +952,10 @@ class TemplatesApi
 
             if($headers['Content-Type'] === 'application/json') {
                 if ($httpBody instanceof \stdClass) {
-                    $httpBody = \AmeliaGuzzleHttp\json_encode($httpBody);
+                    $httpBody = \AmeliaVendor\GuzzleHttp\json_encode($httpBody);
                 }
                 if (is_array($httpBody)) {
-                    $httpBody = \AmeliaGuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
+                    $httpBody = \AmeliaVendor\GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
         } elseif (count($formParams) > 0) {
@@ -970,7 +970,7 @@ class TemplatesApi
                 $httpBody = new MultipartStream($multipartContents);
 
             } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \AmeliaGuzzleHttp\json_encode($formParams);
+                $httpBody = \AmeliaVendor\GuzzleHttp\json_encode($formParams);
 
             } else {
                 $httpBody = Query::build($formParams);

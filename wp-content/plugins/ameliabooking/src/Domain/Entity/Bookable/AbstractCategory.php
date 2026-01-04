@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -50,21 +50,12 @@ abstract class AbstractCategory
     /**
      * AbstractCategory constructor.
      *
-     * @param Status          $status
-     * @param Name            $name
-     * @param PositiveInteger $position
-     * @param Color           $color
+     * @param Name $name
      */
     public function __construct(
-        Status $status,
-        Name $name,
-        PositiveInteger $position,
-        Color $color
+        Name $name
     ) {
-        $this->status   = $status;
-        $this->name     = $name;
-        $this->position = $position;
-        $this->color    = $color;
+        $this->name = $name;
     }
 
     /**
@@ -202,10 +193,10 @@ abstract class AbstractCategory
     {
         return [
             'id'               => null !== $this->getId() ? $this->getId()->getValue() : null,
-            'status'           => $this->getStatus()->getValue(),
+            'status'           => $this->getStatus() ? $this->getStatus()->getValue() : null,
             'name'             => $this->getName()->getValue(),
             'serviceList'      => $this->getServiceList() ? $this->getServiceList()->toArray() : [],
-            'position'         => $this->getPosition()->getValue(),
+            'position'         => $this->getPosition() ? $this->getPosition()->getValue() : null,
             'translations'     => $this->getTranslations() ? $this->getTranslations()->getValue() : null,
             'color'            => null !== $this->getColor() ? $this->getColor()->getValue() : null,
             'pictureFullPath'  => null !== $this->getPicture() ? $this->getPicture()->getFullPath() : null,

@@ -5,10 +5,10 @@
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 
-namespace FontLib\TrueType;
+namespace AmeliaVendor\FontLib\TrueType;
 
 use Countable;
-use FontLib\BinaryStream;
+use AmeliaVendor\FontLib\BinaryStream;
 use Iterator;
 use OutOfBoundsException;
 

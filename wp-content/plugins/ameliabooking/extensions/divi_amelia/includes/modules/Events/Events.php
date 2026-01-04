@@ -23,14 +23,14 @@ class DIVI_Events extends ET_Builder_Module
 
     public function init()
     {
-        $this->name = esc_html__(BackendStrings::getWordPressStrings()['events_divi'], 'divi-divi_amelia');
+        $this->name = esc_html__(BackendStrings::get('events_divi'), 'divi-divi_amelia');
 
         $isLite = !Licence\Licence::$premium;
 
-        $this->type['list']     = BackendStrings::getWordPressStrings()['show_event_view_list'];
+        $this->type['list']     = BackendStrings::get('show_event_view_list');
 
         if (!$isLite) {
-            $this->type['calendar'] = BackendStrings::getWordPressStrings()['show_event_view_calendar'];
+            $this->type['calendar'] = BackendStrings::get('show_event_view_calendar');
         }
 
         if (!is_admin()) {
@@ -39,11 +39,11 @@ class DIVI_Events extends ET_Builder_Module
 
         $data = GutenbergBlock::getEntitiesData()['data'];
 
-        $this->events['0'] = BackendStrings::getWordPressStrings()['show_all_events'];
+        $this->events['0'] = BackendStrings::get('show_all_events');
         foreach ($data['events'] as $event) {
             $this->events[$event['id']] = $event['name'] . ' (id: ' . $event['id'] . ') - ' . $event['formattedPeriodStart'];
         }
-        $this->tags['0'] = BackendStrings::getWordPressStrings()['show_all_tags'];
+        $this->tags['0'] = BackendStrings::get('show_all_tags');
         foreach ($data['tags'] as $tag) {
             $this->tags[$tag['name']] = $tag['name'] . ' (id: ' . $tag['id'] . ')';
         }
@@ -68,7 +68,7 @@ class DIVI_Events extends ET_Builder_Module
 
         $typeArr = array(
             'type' => array(
-                'label'           => esc_html__(BackendStrings::getWordPressStrings()['show_event_view_type'], 'divi-divi_amelia'),
+                'label'           => esc_html__(BackendStrings::get('show_event_view_type'), 'divi-divi_amelia'),
                 'type'            => 'select',
                 'options'         => $this->type,
                 'default'         => array_keys($this->type)[0],
@@ -79,17 +79,17 @@ class DIVI_Events extends ET_Builder_Module
 
         $mainArr = array(
             'booking_params' => array(
-                'label'           => esc_html__(BackendStrings::getWordPressStrings()['filter'], 'divi-divi_amelia'),
+                'label'           => esc_html__(BackendStrings::get('filter'), 'divi-divi_amelia'),
                 'type'            => 'yes_no_button',
                 'options' => array(
-                    'on'  => esc_html__(BackendStrings::getCommonStrings()['yes'], 'divi-divi_amelia'),
-                    'off' => esc_html__(BackendStrings::getCommonStrings()['no'], 'divi-divi_amelia'),
+                    'on'  => esc_html__(BackendStrings::get('yes'), 'divi-divi_amelia'),
+                    'off' => esc_html__(BackendStrings::get('no'), 'divi-divi_amelia'),
                 ),
                 'toggle_slug'     => 'main_content',
                 'option_category' => 'basic_option',
             ),
             'events' => array(
-                'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_event'], 'divi-divi_amelia'),
+                'label'           => esc_html__(BackendStrings::get('select_event'), 'divi-divi_amelia'),
                 'type'            => 'select',
                 'options'         => $this->events,
                 'toggle_slug'     => 'main_content',
@@ -99,7 +99,7 @@ class DIVI_Events extends ET_Builder_Module
                 ),
             ),
             'tags' => array(
-                'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_tag'], 'divi-divi_amelia'),
+                'label'           => esc_html__(BackendStrings::get('select_tag'), 'divi-divi_amelia'),
                 'type'            => 'select',
                 'toggle_slug'     => 'main_content',
                 'options'         => $this->tags,
@@ -109,11 +109,11 @@ class DIVI_Events extends ET_Builder_Module
                 ),
             ),
             'recurring' => array(
-                'label'           => esc_html__(BackendStrings::getWordPressStrings()['recurring_event'], 'divi-divi_amelia'),
+                'label'           => esc_html__(BackendStrings::get('recurring_event'), 'divi-divi_amelia'),
                 'type'            => 'yes_no_button',
                 'options' => array(
-                    'on'  => esc_html__(BackendStrings::getCommonStrings()['yes'], 'divi-divi_amelia'),
-                    'off' => esc_html__(BackendStrings::getCommonStrings()['no'], 'divi-divi_amelia'),
+                    'on'  => esc_html__(BackendStrings::get('yes'), 'divi-divi_amelia'),
+                    'off' => esc_html__(BackendStrings::get('no'), 'divi-divi_amelia'),
                 ),
                 'toggle_slug'     => 'main_content',
                 'option_category' => 'basic_option',
@@ -122,11 +122,11 @@ class DIVI_Events extends ET_Builder_Module
                 ),
             ),
             'trigger' => array(
-                'label'           => esc_html__(BackendStrings::getWordPressStrings()['manually_loading'], 'divi-divi_amelia'),
+                'label'           => esc_html__(BackendStrings::get('manually_loading'), 'divi-divi_amelia'),
                 'type'            => 'text',
                 'toggle_slug'     => 'main_content',
                 'option_category' => 'basic_option',
-                'description'     => BackendStrings::getWordPressStrings()['manually_loading_description'],
+                'description'     => BackendStrings::get('manually_loading_description'),
             ),
         );
 

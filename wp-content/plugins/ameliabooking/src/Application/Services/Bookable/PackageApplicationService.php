@@ -546,13 +546,12 @@ class PackageApplicationService extends AbstractPackageApplicationService
             [
                 'packageCustomerIds' => !empty($params['packageCustomerIds']) ? $params['packageCustomerIds'] : [],
                 'purchased'          => !empty($params['purchased']) ? $params['purchased'] : [],
-                'customerId'         => !empty($params['customerId']) ? $params['customerId'] : null,
+                'customers'          => !empty($params['customers']) ? $params['customers'] : null,
                 'packages'           => !empty($params['packageId']) ? [$params['packageId']] : []
             ]
         );
 
         if (empty($params['managePackagePage'])) {
-
             /** @var PackageCustomerService $packageCustomerService */
             foreach ($packageCustomerServices->getItems() as $key => $packageCustomerService) {
                 /** @var Collection $payments */
@@ -605,6 +604,30 @@ class PackageApplicationService extends AbstractPackageApplicationService
     }
 
     /**
+     * @return Collection
+     *
+     * @throws QueryExecutionException
+     * @throws InvalidArgumentException
+     */
+    public function getPackages()
+    {
+        /** @var PackageRepository $packageRepository */
+        $packageRepository = $this->container->get('domain.bookable.package.repository');
+
+        /** @var Collection $packages */
+        $packages = $packageRepository->getAllIndexedById();
+
+        /** @var Package $package */
+        foreach ($packages->getItems() as $package) {
+            if ($package->getSettings() && json_decode($package->getSettings()->getValue(), true) === null) {
+                $package->setSettings(null);
+            }
+        }
+
+        return $packages;
+    }
+
+    /**
      * @return array
      *
      * @throws QueryExecutionException
@@ -641,6 +664,23 @@ class PackageApplicationService extends AbstractPackageApplicationService
         return $packagesArray;
     }
 
+    /**
+     * @throws ContainerValueNotFoundException
+     * @throws InvalidArgumentException
+     * @throws QueryExecutionException
+     */
+    public function hasApprovedPurchases(int $packageId): bool
+    {
+        /** @var PackageCustomerRepository $packageCustomerRepository */
+        $packageCustomerRepository = $this->container->get('domain.bookable.packageCustomer.repository');
+
+        $approvedPurchases = $packageCustomerRepository->getFilteredIds([
+            'packages' => [$packageId],
+            'status'   => [BookingStatus::APPROVED]
+        ]);
+
+        return !empty($approvedPurchases);
+    }
 
     /**
      * @param array $params
@@ -661,7 +701,7 @@ class PackageApplicationService extends AbstractPackageApplicationService
     /**
      * @param  array $package
      *
-     * @return array
+     * @return array|null
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      */
@@ -759,9 +799,13 @@ class PackageApplicationService extends AbstractPackageApplicationService
                                 $paymentsData[$paymentsIds[$key]]['bookingStart'] =
                                     $appointment->getBookingStart()->getValue()->format('Y-m-d H:i:s');
 
+                                // var_dump($appointment->getProvider());
                                 $paymentsData[$paymentsIds[$key]]['providers'][$appointment->getProvider()->getId()->getValue()] = [
                                     'id' => $appointment->getProvider()->getId()->getValue(),
+                                    'firstName' => $appointment->getProvider()->getFirstName()->getValue(),
+                                    'lastName' => $appointment->getProvider()->getLastName()->getValue(),
                                     'fullName' => $appointment->getProvider()->getFullName(),
+                                    'picture' => $appointment->getProvider()->getPicture() ? $appointment->getProvider()->getPicture()->getFullPath() : null,
                                     'email' => $appointment->getProvider()->getEmail()->getValue(),
                                 ];
                             }
@@ -964,11 +1008,17 @@ class PackageApplicationService extends AbstractPackageApplicationService
                         $packageCustomer->getBookingsCount()->getValue(),
                     'sharedPackageCustomerServices' => $sharedPackageCustomerServices,
                     'payments' => $packageCustomer->getPayments()->toArray(),
-                    'coupon' => $coupon ?: null,
+                    'coupon' => $coupon ? $coupon->toArray() : null,
                     'price'      => $packageCustomer->getPrice()->getValue(),
                     'tax'        => $packageCustomer->getTax()
                         ? json_decode($packageCustomer->getTax()->getValue(), true)
                         : null,
+                    'customer' => $packageCustomer->getCustomer() ? $packageCustomer->getCustomer()->toArray() : null,
+                    'package'  => [
+                        'name' => $packageCustomer->getPackage() && $packageCustomer->getPackage()->getName() ?
+                            $packageCustomer->getPackage()->getName()->getValue() :
+                            null
+                    ]
                 ];
             }
         }

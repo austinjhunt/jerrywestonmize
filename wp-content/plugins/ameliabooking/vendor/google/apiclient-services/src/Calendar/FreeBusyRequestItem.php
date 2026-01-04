@@ -15,9 +15,9 @@
  * the License.
  */
 
-namespace AmeliaGoogle\Service\Calendar;
+namespace AmeliaVendor\Google\Service\Calendar;
 
-class FreeBusyRequestItem extends \AmeliaGoogle\Model
+class FreeBusyRequestItem extends \AmeliaVendor\Google\Model
 {
   /**
    * @var string
@@ -41,4 +41,4 @@ class FreeBusyRequestItem extends \AmeliaGoogle\Model
 }
 
 // Adding a class alias for backwards compatibility with the previous class name.
-class_alias(FreeBusyRequestItem::class, 'AmeliaGoogle_Service_Calendar_FreeBusyRequestItem');
+class_alias(FreeBusyRequestItem::class, 'Google_Service_Calendar_FreeBusyRequestItem');

@@ -28,15 +28,15 @@ class IosCustomConfiguration extends DeviceConfiguration
     * Gets the payload
     * Payload. (UTF8 encoded byte array)
     *
-    * @return \AmeliaGuzzleHttp\Psr7\Stream|null The payload
+    * @return \AmeliaVendor\GuzzleHttp\Psr7\Stream|null The payload
     */
     public function getPayload()
     {
         if (array_key_exists("payload", $this->_propDict)) {
-            if (is_a($this->_propDict["payload"], "\AmeliaGuzzleHttp\Psr7\Stream") || is_null($this->_propDict["payload"])) {
+            if (is_a($this->_propDict["payload"], "\AmeliaVendor\GuzzleHttp\Psr7\Stream") || is_null($this->_propDict["payload"])) {
                 return $this->_propDict["payload"];
             } else {
-                $this->_propDict["payload"] = \AmeliaGuzzleHttp\Psr7\Utils::streamFor($this->_propDict["payload"]);
+                $this->_propDict["payload"] = \AmeliaVendor\GuzzleHttp\Psr7\Utils::streamFor($this->_propDict["payload"]);
                 return $this->_propDict["payload"];
             }
         }
@@ -47,7 +47,7 @@ class IosCustomConfiguration extends DeviceConfiguration
     * Sets the payload
     * Payload. (UTF8 encoded byte array)
     *
-    * @param \AmeliaGuzzleHttp\Psr7\Stream $val The payload
+    * @param \AmeliaVendor\GuzzleHttp\Psr7\Stream $val The payload
     *
     * @return IosCustomConfiguration
     */

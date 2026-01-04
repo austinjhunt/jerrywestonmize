@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AmeliaSabre\Xml;
+namespace AmeliaVendor\Sabre\Xml;
 
 /**
  * Context Stack.
@@ -27,7 +27,7 @@ trait ContextStackTrait
      * This is the element map. It contains a list of XML elements (in clark
      * notation) as keys and PHP class names as values.
      *
-     * The PHP class names must implement AmeliaSabre\Xml\Element.
+     * The PHP class names must implement Sabre\Xml\Element.
      *
      * Values may also be a callable. In that case the function will be called
      * directly.

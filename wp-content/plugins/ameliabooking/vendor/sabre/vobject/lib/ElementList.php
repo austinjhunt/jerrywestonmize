@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaSabre\VObject;
+namespace AmeliaVendor\Sabre\VObject;
 
 use ArrayIterator;
 use LogicException;

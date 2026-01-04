@@ -6,10 +6,9 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
-use AmeliaDompdf\Dompdf;
+use AmeliaVendor\Dompdf\Dompdf;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Writer\PngWriter;
-use Interop\Container\Exception\ContainerException;
 
 /**
  * Class QrCodeInfrastructureService
@@ -24,7 +23,6 @@ class QrCodeInfrastructureService extends AbstractQrCodeInfrastructureService
      * @throws InvalidArgumentException
      * @throws NotFoundException
      * @throws QueryExecutionException
-     * @throws ContainerException
      */
     public function generateQrCode($qrData)
     {

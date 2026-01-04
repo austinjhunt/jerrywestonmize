@@ -37,7 +37,6 @@ class AddCategoryCommandHandler extends CommandHandler
      * @throws AccessDeniedException
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function handle(AddCategoryCommand $command)
     {

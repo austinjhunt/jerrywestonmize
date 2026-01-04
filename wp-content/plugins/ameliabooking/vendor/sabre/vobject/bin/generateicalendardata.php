@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-use AmeliaSabre\VObject;
+use AmeliaVendor\Sabre\VObject;
 
 if ($argc < 2) {
     $cmd = $argv[0];

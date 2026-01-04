@@ -9,23 +9,23 @@
  * file that was distributed with this source code.
  */
 
-namespace Monolog\Handler;
+namespace AmeliaVendor\Monolog\Handler;
 
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\Manager;
 use MongoDB\Client;
-use Monolog\Logger;
-use Monolog\Formatter\FormatterInterface;
-use Monolog\Formatter\MongoDBFormatter;
+use AmeliaVendor\Monolog\Logger;
+use AmeliaVendor\Monolog\Formatter\FormatterInterface;
+use AmeliaVendor\Monolog\Formatter\MongoDBFormatter;
 
 /**
  * Logs to a MongoDB database.
  *
  * Usage example:
  *
- *   $log = new \Monolog\Logger('application');
+ *   $log = new \AmeliaVendor\Monolog\Logger('application');
  *   $client = new \MongoDB\Client('mongodb://localhost:27017');
- *   $mongodb = new \Monolog\Handler\MongoDBHandler($client, 'logs', 'prod');
+ *   $mongodb = new \AmeliaVendor\Monolog\Handler\MongoDBHandler($client, 'logs', 'prod');
  *   $log->pushHandler($mongodb);
  *
  * The above examples uses the MongoDB PHP library's client class; however, the

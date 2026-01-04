@@ -15,9 +15,9 @@
  * the License.
  */
 
-namespace AmeliaGoogle\Service\Calendar;
+namespace AmeliaVendor\Google\Service\Calendar;
 
-class FreeBusyResponse extends \AmeliaGoogle\Model
+class FreeBusyResponse extends \AmeliaVendor\Google\Model
 {
   protected $calendarsType = FreeBusyCalendar::class;
   protected $calendarsDataType = 'map';
@@ -109,4 +109,4 @@ class FreeBusyResponse extends \AmeliaGoogle\Model
 }
 
 // Adding a class alias for backwards compatibility with the previous class name.
-class_alias(FreeBusyResponse::class, 'AmeliaGoogle_Service_Calendar_FreeBusyResponse');
+class_alias(FreeBusyResponse::class, 'Google_Service_Calendar_FreeBusyResponse');

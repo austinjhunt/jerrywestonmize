@@ -4,9 +4,9 @@
  * @link    https://github.com/dompdf/php-font-lib
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace FontLib;
+namespace AmeliaVendor\FontLib;
 
-use FontLib\TrueType\File;
+use AmeliaVendor\FontLib\TrueType\File;
 
 /**
  * Font header container.

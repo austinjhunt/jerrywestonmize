@@ -34,7 +34,7 @@ class StarterAppleCalendarCalendarService extends AbstractAppleCalendarService
      */
     public function handleAppleCredentials($appleId, $appSpecificPassword)
     {
-        return false;
+        return true;
     }
 
     /**

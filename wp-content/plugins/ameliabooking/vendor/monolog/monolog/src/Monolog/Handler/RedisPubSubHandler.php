@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Monolog\Handler;
+namespace AmeliaVendor\Monolog\Handler;
 
-use Monolog\Formatter\LineFormatter;
-use Monolog\Formatter\FormatterInterface;
-use Monolog\Logger;
+use AmeliaVendor\Monolog\Formatter\LineFormatter;
+use AmeliaVendor\Monolog\Formatter\FormatterInterface;
+use AmeliaVendor\Monolog\Logger;
 
 /**
  * Sends the message to a Redis Pub/Sub channel using PUBLISH

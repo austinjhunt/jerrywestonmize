@@ -4,11 +4,11 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace AmeliaDompdf\Renderer;
+namespace AmeliaVendor\Dompdf\Renderer;
 
-use AmeliaDompdf\Exception;
-use AmeliaDompdf\Frame;
-use AmeliaDompdf\FrameDecorator\Table;
+use AmeliaVendor\Dompdf\Exception;
+use AmeliaVendor\Dompdf\Frame;
+use AmeliaVendor\Dompdf\FrameDecorator\Table;
 
 /**
  * Renders table cells

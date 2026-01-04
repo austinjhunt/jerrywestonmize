@@ -11,7 +11,7 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-namespace phpseclib3\File\ASN1\Maps;
+namespace AmeliaVendor\phpseclib3\File\ASN1\Maps;
 
 /**
  * MaskGenAglorithm

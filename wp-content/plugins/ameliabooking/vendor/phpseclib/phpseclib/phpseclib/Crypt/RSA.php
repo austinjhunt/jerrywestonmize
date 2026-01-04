@@ -51,15 +51,15 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-namespace phpseclib3\Crypt;
+namespace AmeliaVendor\phpseclib3\Crypt;
 
-use phpseclib3\Crypt\Common\AsymmetricKey;
-use phpseclib3\Crypt\RSA\Formats\Keys\PSS;
-use phpseclib3\Crypt\RSA\PrivateKey;
-use phpseclib3\Crypt\RSA\PublicKey;
-use phpseclib3\Exception\InconsistentSetupException;
-use phpseclib3\Exception\UnsupportedAlgorithmException;
-use phpseclib3\Math\BigInteger;
+use AmeliaVendor\phpseclib3\Crypt\Common\AsymmetricKey;
+use AmeliaVendor\phpseclib3\Crypt\RSA\Formats\Keys\PSS;
+use AmeliaVendor\phpseclib3\Crypt\RSA\PrivateKey;
+use AmeliaVendor\phpseclib3\Crypt\RSA\PublicKey;
+use AmeliaVendor\phpseclib3\Exception\InconsistentSetupException;
+use AmeliaVendor\phpseclib3\Exception\UnsupportedAlgorithmException;
+use AmeliaVendor\phpseclib3\Math\BigInteger;
 
 /**
  * Pure-PHP PKCS#1 compliant implementation of RSA.
@@ -357,10 +357,9 @@ abstract class RSA extends AsymmetricKey
                 if ($i != $num_primes) {
                     $primes[$i] = BigInteger::randomPrime($regSize);
                 } else {
-                    extract(BigInteger::minMaxBits($bits));
-                    /** @var BigInteger $min
-                     *  @var BigInteger $max
-                     */
+                    $minMax = BigInteger::minMaxBits($bits);
+                    $min = $minMax['min'];
+                    $max = $minMax['max'];
                     list($min) = $min->divide($n);
                     $min = $min->add(self::$one);
                     list($max) = $max->divide($n);

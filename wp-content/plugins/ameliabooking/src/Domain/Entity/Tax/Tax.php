@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -300,10 +300,10 @@ class Tax
             'type'           => $this->getType()->getValue(),
             'status'         => $this->getStatus()->getValue(),
             'excluded'       => $this->getExcluded() ? $this->getExcluded()->getValue() : null,
-            'allServices'    => $this->getAllServices() ? $this->getAllServices()->getValue() : [],
-            'allEvents'      => $this->getAllEvents() ? $this->getAllEvents()->getValue() : [],
-            'allPackages'    => $this->getAllPackages() ? $this->getAllPackages()->getValue() : [],
-            'allExtras'      => $this->getAllExtras() ? $this->getAllExtras()->getValue() : [],
+            'allServices'    => $this->getAllServices() ? $this->getAllServices()->getValue() : null,
+            'allEvents'      => $this->getAllEvents() ? $this->getAllEvents()->getValue() : null,
+            'allPackages'    => $this->getAllPackages() ? $this->getAllPackages()->getValue() : null,
+            'allExtras'      => $this->getAllExtras() ? $this->getAllExtras()->getValue() : null,
             'serviceList'    => $this->getServiceList() ? $this->getServiceList()->toArray() : [],
             'eventList'      => $this->getEventList() ? $this->getEventList()->toArray() : [],
             'packageList'    => $this->getPackageList() ? $this->getPackageList()->toArray() : [],

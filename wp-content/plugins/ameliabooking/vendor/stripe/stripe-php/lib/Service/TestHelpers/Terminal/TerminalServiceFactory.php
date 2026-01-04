@@ -2,14 +2,14 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Service\TestHelpers\Terminal;
+namespace AmeliaVendor\Stripe\Service\TestHelpers\Terminal;
 
 /**
  * Service factory class for API resources in the Terminal namespace.
  *
  * @property ReaderService $readers
  */
-class TerminalServiceFactory extends \AmeliaStripe\Service\AbstractServiceFactory
+class TerminalServiceFactory extends \AmeliaVendor\Stripe\Service\AbstractServiceFactory
 {
     /**
      * @var array<string, string>

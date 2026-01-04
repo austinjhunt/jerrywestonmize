@@ -1,6 +1,6 @@
 <?php
 
-namespace Masterminds\HTML5\Parser;
+namespace AmeliaVendor\Masterminds\HTML5\Parser;
 
 /*
 Portions based on code from html5lib files with the following copyright:
@@ -27,7 +27,7 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-use Masterminds\HTML5\Exception;
+use AmeliaVendor\Masterminds\HTML5\Exception;
 
 class UTF8Utils
 {

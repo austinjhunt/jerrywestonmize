@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -26,7 +26,7 @@ class AmeliaStepBookingElementorWidget extends Widget_Base
 
     public function get_title()
     {
-        return BackendStrings::getWordPressStrings()['step_booking_gutenberg_block']['title'];
+        return BackendStrings::get('step_booking_gutenberg_block')['title'];
     }
 
     public function get_icon()
@@ -48,9 +48,9 @@ class AmeliaStepBookingElementorWidget extends Widget_Base
             'amelia_booking_section',
             [
                 'label' => '<div class="amelia-elementor-content"><p class="amelia-elementor-content-title">'
-                    . BackendStrings::getWordPressStrings()['step_booking_gutenberg_block']['title']
+                    . BackendStrings::get('step_booking_gutenberg_block')['title']
                     . '</p><br><p class="amelia-elementor-content-p">'
-                    . BackendStrings::getWordPressStrings()['step_booking_gutenberg_block']['description']
+                    . BackendStrings::get('step_booking_gutenberg_block')['description']
                     . '</p>',
             ]
         );
@@ -58,11 +58,11 @@ class AmeliaStepBookingElementorWidget extends Widget_Base
         $this->add_control(
             'preselect',
             [
-                'label' => BackendStrings::getWordPressStrings()['filter'],
+                'label' => BackendStrings::get('filter'),
                 'type' => Controls_Manager::SWITCHER,
                 'default' => false,
-                'label_on' => BackendStrings::getCommonStrings()['yes'],
-                'label_off' => BackendStrings::getCommonStrings()['no'],
+                'label_on' => BackendStrings::get('yes'),
+                'label_off' => BackendStrings::get('no'),
             ]
         );
 
@@ -70,12 +70,12 @@ class AmeliaStepBookingElementorWidget extends Widget_Base
             $this->add_control(
                 'select_category',
                 [
-                    'label' => BackendStrings::getWordPressStrings()['select_category'],
+                    'label' => BackendStrings::get('select_category'),
                     'type' => Controls_Manager::SELECT2,
                     'multiple' => true,
                     'options' => $controls_data['categories'],
                     'condition' => ['preselect' => 'yes'],
-                    'placeholder' => BackendStrings::getWordPressStrings()['show_all_categories']
+                    'placeholder' => BackendStrings::get('show_all_categories')
                 ]
             );
         }
@@ -84,12 +84,12 @@ class AmeliaStepBookingElementorWidget extends Widget_Base
             $this->add_control(
                 'select_service',
                 [
-                    'label' => BackendStrings::getWordPressStrings()['select_service'],
+                    'label' => BackendStrings::get('select_service'),
                     'type' => Controls_Manager::SELECT2,
                     'multiple' => true,
                     'options' => $controls_data['services'],
                     'condition' => ['preselect' => 'yes'],
-                    'placeholder' => BackendStrings::getWordPressStrings()['show_all_services'],
+                    'placeholder' => BackendStrings::get('show_all_services'),
                 ]
             );
         }
@@ -98,12 +98,12 @@ class AmeliaStepBookingElementorWidget extends Widget_Base
             $this->add_control(
                 'select_employee',
                 [
-                    'label' => BackendStrings::getWordPressStrings()['select_employee'],
+                    'label' => BackendStrings::get('select_employee'),
                     'type' => Controls_Manager::SELECT2,
                     'multiple' => true,
                     'options' => $controls_data['employees'],
                     'condition' => ['preselect' => 'yes'],
-                    'placeholder' => BackendStrings::getWordPressStrings()['show_all_employees'],
+                    'placeholder' => BackendStrings::get('show_all_employees'),
                 ]
             );
         }
@@ -112,12 +112,12 @@ class AmeliaStepBookingElementorWidget extends Widget_Base
             $this->add_control(
                 'select_location',
                 [
-                    'label' => BackendStrings::getWordPressStrings()['select_location'],
+                    'label' => BackendStrings::get('select_location'),
                     'type' => Controls_Manager::SELECT2,
                     'multiple' => true,
                     'options' => $controls_data['locations'],
                     'condition' => ['preselect' => 'yes'],
-                    'placeholder' => BackendStrings::getWordPressStrings()['show_all_locations'],
+                    'placeholder' => BackendStrings::get('show_all_locations'),
                 ]
             );
         }
@@ -126,12 +126,12 @@ class AmeliaStepBookingElementorWidget extends Widget_Base
             $this->add_control(
                 'select_package',
                 [
-                    'label' => BackendStrings::getWordPressStrings()['select_package'],
+                    'label' => BackendStrings::get('select_package'),
                     'type' => Controls_Manager::SELECT2,
                     'multiple' => true,
                     'options' => $controls_data['packages'],
                     'condition' => ['preselect' => 'yes'],
-                    'placeholder' => BackendStrings::getWordPressStrings()['show_all_packages'],
+                    'placeholder' => BackendStrings::get('show_all_packages'),
                 ]
             );
         }
@@ -140,7 +140,7 @@ class AmeliaStepBookingElementorWidget extends Widget_Base
             $this->add_control(
                 'select_show',
                 [
-                    'label' => BackendStrings::getWordPressStrings()['show_all'],
+                    'label' => BackendStrings::get('show_all'),
                     'type' => Controls_Manager::SELECT,
                     'options' => $controls_data['show'],
                     'condition' => ['preselect' => 'yes'],
@@ -152,9 +152,9 @@ class AmeliaStepBookingElementorWidget extends Widget_Base
         $this->add_control(
             'layout',
             [
-                'label' => BackendStrings::getCommonStrings()['layout_select_label'],
+                'label' => BackendStrings::get('layout_select_label'),
                 'type' => Controls_Manager::SELECT,
-                'description' => BackendStrings::getCommonStrings()['layout_description'],
+                'description' => BackendStrings::get('layout_description'),
                 'options' => $controls_data['layout_options'],
                 'default' => '1',
             ]
@@ -163,20 +163,20 @@ class AmeliaStepBookingElementorWidget extends Widget_Base
         $this->add_control(
             'load_manually',
             [
-                'label' => BackendStrings::getWordPressStrings()['manually_loading'],
+                'label' => BackendStrings::get('manually_loading'),
                 'label_block' => true,
                 'type' => Controls_Manager::TEXT,
                 'placeholder' => '',
-                'description' => BackendStrings::getWordPressStrings()['manually_loading_description'],
+                'description' => BackendStrings::get('manually_loading_description'),
             ]
         );
 
         $this->add_control(
             'trigger_type',
             [
-                'label' => BackendStrings::getWordPressStrings()['trigger_type'],
+                'label' => BackendStrings::get('trigger_type'),
                 'type' => Controls_Manager::SELECT,
-                'description' => BackendStrings::getWordPressStrings()['trigger_type_tooltip'],
+                'description' => BackendStrings::get('trigger_type_tooltip'),
                 'options' => $controls_data['trigger_types'],
                 'default' => 'id'
             ]
@@ -185,11 +185,11 @@ class AmeliaStepBookingElementorWidget extends Widget_Base
         $this->add_control(
             'in_dialog',
             [
-                'label' => BackendStrings::getWordPressStrings()['in_dialog'],
+                'label' => BackendStrings::get('in_dialog'),
                 'type' => Controls_Manager::SWITCHER,
                 'default' => false,
-                'label_on' => BackendStrings::getCommonStrings()['yes'],
-                'label_off' => BackendStrings::getCommonStrings()['no'],
+                'label_on' => BackendStrings::get('yes'),
+                'label_off' => BackendStrings::get('no'),
             ]
         );
 
@@ -269,19 +269,19 @@ class AmeliaStepBookingElementorWidget extends Widget_Base
 
 
         $elementorData['show'] = $data['packages'] ? [
-            '' => BackendStrings::getWordPressStrings()['show_all'],
-            'services' => BackendStrings::getCommonStrings()['services'],
-            'packages' => BackendStrings::getCommonStrings()['packages']
+            '' => BackendStrings::get('show_all'),
+            'services' => BackendStrings::get('services'),
+            'packages' => BackendStrings::get('packages')
         ] : [];
 
         $elementorData['trigger_types'] = [
-            'id' => BackendStrings::getWordPressStrings()['trigger_type_id'],
-            'class' => BackendStrings::getWordPressStrings()['trigger_type_class']
+            'id' => BackendStrings::get('trigger_type_id'),
+            'class' => BackendStrings::get('trigger_type_class')
         ];
 
         $elementorData['layout_options'] = [
-            '1' => BackendStrings::getCommonStrings()['layout_dropdown'],
-            '2' => BackendStrings::getCommonStrings()['layout_list']
+            '1' => BackendStrings::get('layout_dropdown'),
+            '2' => BackendStrings::get('layout_list')
         ];
 
         return $elementorData;

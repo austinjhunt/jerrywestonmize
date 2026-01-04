@@ -5,14 +5,11 @@ namespace AmeliaBooking\Application\Commands\Square;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
+use AmeliaBooking\Application\Services\Validation\ValidationService;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
-use AmeliaBooking\Domain\Entity\Entities;
-use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
-use AmeliaBooking\Infrastructure\Services\Payment\CurrencyService;
-use AmeliaBooking\Infrastructure\Services\Payment\SquareService;
 use Interop\Container\Exception\ContainerException;
 
 /**
@@ -38,9 +35,14 @@ class SquareRefundWebhookCommandHandler extends CommandHandler
         /** @var PaymentRepository $paymentRepository */
         $paymentRepository = $this->container->get('domain.payment.repository');
 
+        $data = $command->getField('data');
+
+        if (!ValidationService::verifySignature(json_encode($data), 'middleware', $command->getField('signature'))) {
+            throw new AccessDeniedException('Signature mismatch.');
+        }
+
         $result = new CommandResult();
 
-        $data = $command->getField('data');
 
         if ($data && !empty($data['object']['refund']['payment_id'])) {
             $payments = $paymentRepository->getByEntityId($data['object']['refund']['payment_id'], 'transactionId');

@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace AmeliaStripe;
+namespace AmeliaVendor\Stripe;
 
 /**
  * Balance transactions represent funds moving through your Stripe account.
@@ -29,7 +28,6 @@ namespace AmeliaStripe;
 class BalanceTransaction extends ApiResource
 {
     const OBJECT_NAME = 'balance_transaction';
-
     const TYPE_ADJUSTMENT = 'adjustment';
     const TYPE_ADVANCE = 'advance';
     const TYPE_ADVANCE_FUNDING = 'advance_funding';
@@ -74,7 +72,6 @@ class BalanceTransaction extends ApiResource
     const TYPE_TRANSFER_CANCEL = 'transfer_cancel';
     const TYPE_TRANSFER_FAILURE = 'transfer_failure';
     const TYPE_TRANSFER_REFUND = 'transfer_refund';
-
     /**
      * Returns a list of transactions that have contributed to the Stripe account
      * balance (e.g., charges, transfers, and so forth). The transactions are returned
@@ -93,10 +90,8 @@ class BalanceTransaction extends ApiResource
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
-
         return static::_requestPage($url, Collection::class, $params, $opts);
     }
-
     /**
      * Retrieves the balance transaction with the given ID.
      *
@@ -112,10 +107,9 @@ class BalanceTransaction extends ApiResource
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = Util\RequestOptions::parse($opts);
+        $opts = \AmeliaVendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
-
         return $instance;
     }
 }

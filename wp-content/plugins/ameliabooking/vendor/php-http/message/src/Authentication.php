@@ -2,7 +2,7 @@
 
 namespace AmeliaHttp\Message;
 
-use AmeliaPsr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
 
 /**
  * Authenticate a PSR-7 Request.

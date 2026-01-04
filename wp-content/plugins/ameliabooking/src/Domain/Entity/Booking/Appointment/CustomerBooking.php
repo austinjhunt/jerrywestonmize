@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -370,7 +370,7 @@ class CustomerBooking extends AbstractCustomerBooking
     }
 
     /**
-     * @param Json $customFields
+     * @param Json|null $customFields
      */
     public function setCustomFields($customFields)
     {

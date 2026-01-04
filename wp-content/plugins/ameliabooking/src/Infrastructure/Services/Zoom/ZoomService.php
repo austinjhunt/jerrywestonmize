@@ -1,14 +1,14 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
 namespace AmeliaBooking\Infrastructure\Services\Zoom;
 
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
-use AmeliaFirebase\JWT\JWT;
+use AmeliaVendor\Firebase\JWT\JWT;
 
 /**
  * Class ZoomService
@@ -48,7 +48,7 @@ class ZoomService extends AbstractZoomService
      * @param string $clientId
      * @param string $clientSecret
      *
-     * @return string
+     * @return string|null
      */
     private function getAccessToken($accountId, $clientId, $clientSecret)
     {

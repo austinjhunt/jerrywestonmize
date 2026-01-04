@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaStripe\Exception\OAuth;
+namespace AmeliaVendor\Stripe\Exception\OAuth;
 
 /**
  * InvalidClientException is thrown when the client_id does not belong to you,

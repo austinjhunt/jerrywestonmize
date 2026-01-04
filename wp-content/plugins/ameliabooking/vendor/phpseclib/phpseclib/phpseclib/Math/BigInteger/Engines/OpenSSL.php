@@ -11,10 +11,10 @@
  * @link      http://pear.php.net/package/Math_BigInteger
  */
 
-namespace phpseclib3\Math\BigInteger\Engines;
+namespace AmeliaVendor\phpseclib3\Math\BigInteger\Engines;
 
-use phpseclib3\Crypt\RSA\Formats\Keys\PKCS8;
-use phpseclib3\Math\BigInteger;
+use AmeliaVendor\phpseclib3\Crypt\RSA\Formats\Keys\PKCS8;
+use AmeliaVendor\phpseclib3\Math\BigInteger;
 
 /**
  * OpenSSL Modular Exponentiation Engine

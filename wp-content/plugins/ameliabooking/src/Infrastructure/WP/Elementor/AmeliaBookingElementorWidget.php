@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -32,11 +32,11 @@ class AmeliaBookingElementorWidget extends Widget_Base
             'amelia_booking_section',
             [
                 'label' => '<div class="amelia-elementor-content-outdated"><p class="amelia-elementor-content-title">'
-                    . BackendStrings::getWordPressStrings()['booking_gutenberg_block']['title']
+                    . BackendStrings::get('booking_gutenberg_block')['title']
                     . '</p><br><p class="amelia-elementor-content-p">'
-                    . BackendStrings::getWordPressStrings()['booking_gutenberg_block']['description']
+                    . BackendStrings::get('booking_gutenberg_block')['description']
                     . '</p><br><p class="amelia-elementor-content-p amelia-elementor-content-p-outdated">'
-                    . BackendStrings::getWordPressStrings()['outdated_booking_gutenberg_block']
+                    . BackendStrings::get('outdated_booking_gutenberg_block')
                     . '</p>',
             ]
         );
@@ -44,18 +44,18 @@ class AmeliaBookingElementorWidget extends Widget_Base
         $this->add_control(
             'preselect',
             [
-                'label' => BackendStrings::getWordPressStrings()['filter'],
+                'label' => BackendStrings::get('filter'),
                 'type' => Controls_Manager::SWITCHER,
                 'default' => false,
-                'label_on' => BackendStrings::getCommonStrings()['yes'],
-                'label_off' => BackendStrings::getCommonStrings()['no'],
+                'label_on' => BackendStrings::get('yes'),
+                'label_off' => BackendStrings::get('no'),
             ]
         );
 
         $this->add_control(
             'select_category',
             [
-                'label' => BackendStrings::getWordPressStrings()['select_category'],
+                'label' => BackendStrings::get('select_category'),
                 'type' => Controls_Manager::SELECT,
                 'options' => $controls_data['categories'],
                 'condition' => ['preselect' => 'yes'],
@@ -66,7 +66,7 @@ class AmeliaBookingElementorWidget extends Widget_Base
         $this->add_control(
             'select_service',
             [
-                'label' => BackendStrings::getWordPressStrings()['select_service'],
+                'label' => BackendStrings::get('select_service'),
                 'type' => Controls_Manager::SELECT,
                 'options' => $controls_data['services'],
                 'condition' => ['preselect' => 'yes'],
@@ -77,7 +77,7 @@ class AmeliaBookingElementorWidget extends Widget_Base
         $this->add_control(
             'select_employee',
             [
-                'label' => BackendStrings::getWordPressStrings()['select_employee'],
+                'label' => BackendStrings::get('select_employee'),
                 'type' => Controls_Manager::SELECT,
                 'options' => $controls_data['employees'],
                 'condition' => ['preselect' => 'yes'],
@@ -88,7 +88,7 @@ class AmeliaBookingElementorWidget extends Widget_Base
         $this->add_control(
             'select_location',
             [
-                'label' => BackendStrings::getWordPressStrings()['select_location'],
+                'label' => BackendStrings::get('select_location'),
                 'type' => Controls_Manager::SELECT,
                 'options' => $controls_data['locations'],
                 'condition' => ['preselect' => 'yes'],
@@ -100,7 +100,7 @@ class AmeliaBookingElementorWidget extends Widget_Base
             $this->add_control(
                 'select_show',
                 [
-                    'label' => BackendStrings::getWordPressStrings()['show_all'],
+                    'label' => BackendStrings::get('show_all'),
                     'type' => Controls_Manager::SELECT,
                     'options' => $controls_data['show'],
                     'condition' => ['preselect' => 'yes'],
@@ -112,12 +112,12 @@ class AmeliaBookingElementorWidget extends Widget_Base
         $this->add_control(
             'load_manually',
             [
-                'label' => BackendStrings::getWordPressStrings()['manually_loading'],
+                'label' => BackendStrings::get('manually_loading'),
                 'label_block' => true,
                 'type' => Controls_Manager::TEXT,
                 'condition' => ['preselect' => 'yes'],
                 'placeholder' => '',
-                'description' => BackendStrings::getWordPressStrings()['manually_loading_description'],
+                'description' => BackendStrings::get('manually_loading_description'),
             ]
         );
 
@@ -153,14 +153,14 @@ class AmeliaBookingElementorWidget extends Widget_Base
         $elementorData = [];
 
         $elementorData['categories']    = [];
-        $elementorData['categories'][0] = BackendStrings::getWordPressStrings()['show_all_categories'];
+        $elementorData['categories'][0] = BackendStrings::get('show_all_categories');
 
         foreach ($data['categories'] as $category) {
             $elementorData['categories'][$category['id']] = $category['name'] . ' (id: ' . $category['id'] . ')';
         }
 
         $elementorData['services']    = [];
-        $elementorData['services'][0] = BackendStrings::getWordPressStrings()['show_all_services'];
+        $elementorData['services'][0] = BackendStrings::get('show_all_services');
 
         foreach ($data['servicesList'] as $service) {
             if ($service) {
@@ -169,23 +169,23 @@ class AmeliaBookingElementorWidget extends Widget_Base
         }
 
         $elementorData['employees']    = [];
-        $elementorData['employees'][0] = BackendStrings::getWordPressStrings()['show_all_employees'];
+        $elementorData['employees'][0] = BackendStrings::get('show_all_employees');
 
         foreach ($data['employees'] as $provider) {
             $elementorData['employees'][$provider['id']] = $provider['firstName'] . $provider['lastName'] . ' (id: ' . $provider['id'] . ')';
         }
 
         $elementorData['locations']    = [];
-        $elementorData['locations'][0] = BackendStrings::getWordPressStrings()['show_all_locations'];
+        $elementorData['locations'][0] = BackendStrings::get('show_all_locations');
 
         foreach ($data['locations'] as $location) {
             $elementorData['locations'][$location['id']] = $location['name'] . ' (id: ' . $location['id'] . ')';
         }
 
         $elementorData['show'] = $data['packages'] ? [
-            '' => BackendStrings::getWordPressStrings()['show_all'],
-            'services' => BackendStrings::getCommonStrings()['services'],
-            'packages' => BackendStrings::getCommonStrings()['packages']
+            '' => BackendStrings::get('show_all'),
+            'services' => BackendStrings::get('services'),
+            'packages' => BackendStrings::get('packages')
         ] : [];
 
         return $elementorData;

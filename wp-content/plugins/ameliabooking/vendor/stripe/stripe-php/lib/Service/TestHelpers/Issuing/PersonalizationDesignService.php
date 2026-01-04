@@ -2,14 +2,14 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Service\TestHelpers\Issuing;
+namespace AmeliaVendor\Stripe\Service\TestHelpers\Issuing;
 
 /**
- * @phpstan-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  *
- * @psalm-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ * @psalm-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  */
-class PersonalizationDesignService extends \AmeliaStripe\Service\AbstractService
+class PersonalizationDesignService extends \AmeliaVendor\Stripe\Service\AbstractService
 {
     /**
      * Updates the <code>status</code> of the specified testmode personalization design
@@ -17,11 +17,11 @@ class PersonalizationDesignService extends \AmeliaStripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[]} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Issuing\PersonalizationDesign
+     * @return \AmeliaVendor\Stripe\Issuing\PersonalizationDesign
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function activate($id, $params = null, $opts = null)
     {
@@ -34,11 +34,11 @@ class PersonalizationDesignService extends \AmeliaStripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[]} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Issuing\PersonalizationDesign
+     * @return \AmeliaVendor\Stripe\Issuing\PersonalizationDesign
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function deactivate($id, $params = null, $opts = null)
     {
@@ -51,11 +51,11 @@ class PersonalizationDesignService extends \AmeliaStripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[], rejection_reasons: array{card_logo?: string[], carrier_text?: string[]}} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Issuing\PersonalizationDesign
+     * @return \AmeliaVendor\Stripe\Issuing\PersonalizationDesign
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function reject($id, $params = null, $opts = null)
     {

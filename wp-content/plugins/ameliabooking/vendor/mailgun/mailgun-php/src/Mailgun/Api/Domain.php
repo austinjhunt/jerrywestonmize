@@ -21,7 +21,7 @@ use Mailgun\Model\Domain\ShowResponse;
 use Mailgun\Model\Domain\UpdateConnectionResponse;
 use Mailgun\Model\Domain\UpdateCredentialResponse;
 use Mailgun\Model\Domain\VerifyResponse;
-use AmeliaPsr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
 
 /**
  * {@link https://documentation.mailgun.com/api-domains.html}.

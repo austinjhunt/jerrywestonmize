@@ -11,7 +11,7 @@ use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
-use AmeliaDompdf\Dompdf;
+use AmeliaVendor\Dompdf\Dompdf;
 use Slim\Exception\ContainerException;
 
 /**
@@ -32,11 +32,17 @@ class InvoiceApplicationService extends AbstractInvoiceApplicationService
      * @throws NotFoundException
      * @throws QueryExecutionException
      * @throws ContainerException
-     * @throws \Interop\Container\Exception\ContainerException
      * @throws AccessDeniedException
      */
     public function generateInvoice($paymentId, $customerId = null, $format = null)
     {
+        /** @var SettingsService $settingsDS */
+        $settingsDS = $this->container->get('domain.settings.service');
+
+        if (!$settingsDS->isFeatureEnabled('invoices')) {
+            return [];
+        }
+
         /** @var PaymentRepository $paymentRepository */
         $paymentRepository = $this->container->get('domain.payment.repository');
         /** @var SettingsService $settingsService */
@@ -92,6 +98,23 @@ class InvoiceApplicationService extends AbstractInvoiceApplicationService
             $html = ob_get_clean();
 
             $dompdf = new Dompdf();
+
+            $locale = get_locale();
+            $localePrefix = substr($locale, 0, 2);
+            $isAsianFont = in_array($localePrefix, ['zh', 'th', 'ja', 'ko']);
+
+            if ($isAsianFont) {
+                $options = $dompdf->getOptions();
+                $options->set('isRemoteEnabled', true);
+                $options->set('isPhpEnabled', true);
+                $options->set('isFontSubsettingEnabled', true);
+                // Set a reasonable default that supports wide glyph coverage
+                $options->set('defaultFont', $isAsianFont ? 'Noto Sans' : 'DejaVu Sans');
+                $options->set('defaultMediaType', 'print');
+                $options->set('isCssFloatEnabled', true);
+
+                $dompdf->setOptions($options);
+            }
 
             $dompdf->setPaper('A4');
 

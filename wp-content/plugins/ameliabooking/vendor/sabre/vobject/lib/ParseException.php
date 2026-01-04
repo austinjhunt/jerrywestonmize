@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaSabre\VObject;
+namespace AmeliaVendor\Sabre\VObject;
 
 /**
  * Exception thrown by Reader if an invalid object was attempted to be parsed.

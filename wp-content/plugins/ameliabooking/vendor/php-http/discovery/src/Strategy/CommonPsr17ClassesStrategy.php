@@ -2,12 +2,12 @@
 
 namespace AmeliaHttp\Discovery\Strategy;
 
-use AmeliaPsr\Http\Message\RequestFactoryInterface;
-use AmeliaPsr\Http\Message\ResponseFactoryInterface;
-use AmeliaPsr\Http\Message\ServerRequestFactoryInterface;
-use AmeliaPsr\Http\Message\StreamFactoryInterface;
-use AmeliaPsr\Http\Message\UploadedFileFactoryInterface;
-use AmeliaPsr\Http\Message\UriFactoryInterface;
+use AmeliaVendor\Psr\Http\Message\RequestFactoryInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseFactoryInterface;
+use AmeliaVendor\Psr\Http\Message\ServerRequestFactoryInterface;
+use AmeliaVendor\Psr\Http\Message\StreamFactoryInterface;
+use AmeliaVendor\Psr\Http\Message\UploadedFileFactoryInterface;
+use AmeliaVendor\Psr\Http\Message\UriFactoryInterface;
 
 /**
  * @internal

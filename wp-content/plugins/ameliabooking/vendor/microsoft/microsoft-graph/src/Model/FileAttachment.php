@@ -28,15 +28,15 @@ class FileAttachment extends Attachment
     * Gets the contentBytes
     * The base64-encoded contents of the file.
     *
-    * @return \AmeliaGuzzleHttp\Psr7\Stream|null The contentBytes
+    * @return \AmeliaVendor\GuzzleHttp\Psr7\Stream|null The contentBytes
     */
     public function getContentBytes()
     {
         if (array_key_exists("contentBytes", $this->_propDict)) {
-            if (is_a($this->_propDict["contentBytes"], "\AmeliaGuzzleHttp\Psr7\Stream") || is_null($this->_propDict["contentBytes"])) {
+            if (is_a($this->_propDict["contentBytes"], "\AmeliaVendor\GuzzleHttp\Psr7\Stream") || is_null($this->_propDict["contentBytes"])) {
                 return $this->_propDict["contentBytes"];
             } else {
-                $this->_propDict["contentBytes"] = \AmeliaGuzzleHttp\Psr7\Utils::streamFor($this->_propDict["contentBytes"]);
+                $this->_propDict["contentBytes"] = \AmeliaVendor\GuzzleHttp\Psr7\Utils::streamFor($this->_propDict["contentBytes"]);
                 return $this->_propDict["contentBytes"];
             }
         }
@@ -47,7 +47,7 @@ class FileAttachment extends Attachment
     * Sets the contentBytes
     * The base64-encoded contents of the file.
     *
-    * @param \AmeliaGuzzleHttp\Psr7\Stream $val The contentBytes
+    * @param \AmeliaVendor\GuzzleHttp\Psr7\Stream $val The contentBytes
     *
     * @return FileAttachment
     */

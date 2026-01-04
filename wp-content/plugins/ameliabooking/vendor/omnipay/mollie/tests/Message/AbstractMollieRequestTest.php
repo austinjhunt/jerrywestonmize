@@ -2,7 +2,7 @@
 
 namespace Omnipay\Mollie\Test\Message;
 
-use AmeliaGuzzleHttp\Psr7\Request;
+use AmeliaVendor\GuzzleHttp\Psr7\Request;
 use Omnipay\Mollie\Gateway;
 use Omnipay\Mollie\Message\Request\CompleteOrderRequest;
 use Omnipay\Mollie\Message\Request\CompletePurchaseRequest;
@@ -28,7 +28,7 @@ class AbstractMollieRequestTest extends TestCase
         $request = $this->gateway->fetchIssuers();
         $request->send();
 
-        /** @var \AmeliaPsr\Http\Message\RequestInterface $httpRequest */
+        /** @var \AmeliaVendor\Psr\Http\Message\RequestInterface $httpRequest */
         $httpRequest = $this->getMockedRequests()[0];
 
         $versionString = 'Omnipay-Mollie/'.Gateway::GATEWAY_VERSION.' PHP/' . phpversion();
@@ -43,7 +43,7 @@ class AbstractMollieRequestTest extends TestCase
         $request = $this->gateway->fetchIssuers();
         $request->send();
 
-        /** @var \AmeliaPsr\Http\Message\RequestInterface $httpRequest */
+        /** @var \AmeliaVendor\Psr\Http\Message\RequestInterface $httpRequest */
         $httpRequest = $this->getMockedRequests()[0];
 
         $versionString = 'Omnipay-Mollie/'.Gateway::GATEWAY_VERSION.' PHP/' . phpversion() . ' Acme/6.84';
@@ -56,7 +56,7 @@ class AbstractMollieRequestTest extends TestCase
         $request = $this->gateway->fetchIssuers();
         $request->send();
 
-        /** @var \AmeliaPsr\Http\Message\RequestInterface $httpRequest */
+        /** @var \AmeliaVendor\Psr\Http\Message\RequestInterface $httpRequest */
         $httpRequest = $this->getMockedRequests()[0];
 
         $versionString = 'Omnipay-Mollie/'.Gateway::GATEWAY_VERSION.' PHP/' . phpversion() . ' Acme/6.84';

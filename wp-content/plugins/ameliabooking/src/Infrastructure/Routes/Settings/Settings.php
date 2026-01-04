@@ -1,13 +1,14 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See COPYING.md for license details.
  */
 
 namespace AmeliaBooking\Infrastructure\Routes\Settings;
 
 use AmeliaBooking\Application\Controller\Settings\GetSettingsController;
+use AmeliaBooking\Application\Controller\Settings\UpdateSettingsCategoriesController;
 use AmeliaBooking\Application\Controller\Settings\UpdateSettingsController;
 use Slim\App;
 
@@ -26,5 +27,7 @@ class Settings
         $app->get('/settings', GetSettingsController::class);
 
         $app->post('/settings', UpdateSettingsController::class);
+
+        $app->post('/settings/categories', UpdateSettingsCategoriesController::class);
     }
 }

@@ -103,7 +103,7 @@ class AddAppointmentCommandHandler extends CommandHandler
         }
 
         if ($userAS->isCustomer($user)) {
-            throw new AccessDeniedException('You are not allowed to update appointment');
+            throw new AccessDeniedException('You are not allowed to add appointment');
         }
 
         if ($userAS->isProvider($user) && !$settingsDS->getSetting('roles', 'allowWriteAppointments')) {

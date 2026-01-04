@@ -15,9 +15,9 @@
  * the License.
  */
 
-namespace AmeliaGoogle\Service\Calendar;
+namespace AmeliaVendor\Google\Service\Calendar;
 
-class EventWorkingLocationProperties extends \AmeliaGoogle\Model
+class EventWorkingLocationProperties extends \AmeliaVendor\Google\Model
 {
   protected $customLocationType = EventWorkingLocationPropertiesCustomLocation::class;
   protected $customLocationDataType = '';
@@ -91,4 +91,4 @@ class EventWorkingLocationProperties extends \AmeliaGoogle\Model
 }
 
 // Adding a class alias for backwards compatibility with the previous class name.
-class_alias(EventWorkingLocationProperties::class, 'AmeliaGoogle_Service_Calendar_EventWorkingLocationProperties');
+class_alias(EventWorkingLocationProperties::class, 'Google_Service_Calendar_EventWorkingLocationProperties');

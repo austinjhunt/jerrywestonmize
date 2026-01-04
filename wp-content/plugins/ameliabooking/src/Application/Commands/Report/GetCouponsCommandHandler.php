@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -36,7 +36,6 @@ class GetCouponsCommandHandler extends CommandHandler
      * @throws AccessDeniedException
      * @throws \AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function handle(GetCouponsCommand $command)
     {
@@ -134,37 +133,37 @@ class GetCouponsCommandHandler extends CommandHandler
             $row = [];
 
             if (in_array('code', $fields, true)) {
-                $row[BackendStrings::getFinanceStrings()['code']] = $coupon['code'];
+                $row[BackendStrings::get('code')] = $coupon['code'];
             }
 
             if (in_array('discount', $fields, true)) {
-                $row[BackendStrings::getCommonStrings()['discount']] = $coupon['discount'];
+                $row[BackendStrings::get('discount')] = $coupon['discount'];
             }
 
             if (in_array('deduction', $fields, true)) {
-                $row[BackendStrings::getPaymentStrings()['deduction']] = $coupon['deduction'];
+                $row[BackendStrings::get('deduction')] = $coupon['deduction'];
             }
 
             if (in_array('services', $fields, true)) {
-                $row[BackendStrings::getCommonStrings()['services']] =
+                $row[BackendStrings::get('services')] =
                     $coupon['serviceList'] ? $coupon['serviceList'][0]['name'] .
                         (sizeof($coupon['serviceList']) > 1 ?
                             ' & Other Services' : '') : '';
             }
 
             if (in_array('events', $fields, true)) {
-                $row[BackendStrings::getCommonStrings()['events']] =
+                $row[BackendStrings::get('events')] =
                     $coupon['eventList'] ? $coupon['eventList'][0]['name'] .
                         (sizeof($coupon['eventList']) > 1 ?
                             ' & Other Events' : '') : '';
             }
 
             if (in_array('limit', $fields, true)) {
-                $row[BackendStrings::getFinanceStrings()['limit']] = $coupon['limit'];
+                $row[BackendStrings::get('limit')] = $coupon['limit'];
             }
 
             if (in_array('used', $fields, true)) {
-                $row[BackendStrings::getFinanceStrings()['used']] = $coupon['used'];
+                $row[BackendStrings::get('used')] = $coupon['used'];
             }
 
             $row = apply_filters('amelia_before_csv_export_coupons', $row, $coupon);

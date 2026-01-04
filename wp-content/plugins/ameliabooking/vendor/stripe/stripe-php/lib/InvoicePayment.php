@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace AmeliaStripe;
+namespace AmeliaVendor\Stripe;
 
 /**
  * The invoice payment object.
@@ -23,7 +22,6 @@ namespace AmeliaStripe;
 class InvoicePayment extends ApiResource
 {
     const OBJECT_NAME = 'invoice_payment';
-
     /**
      * When retrieving an invoice, there is an includable payments property containing
      * the first handful of those items. There is also a URL where you can retrieve the
@@ -39,10 +37,8 @@ class InvoicePayment extends ApiResource
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
-
         return static::_requestPage($url, Collection::class, $params, $opts);
     }
-
     /**
      * Retrieves the invoice payment with the given ID.
      *
@@ -55,10 +51,9 @@ class InvoicePayment extends ApiResource
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = Util\RequestOptions::parse($opts);
+        $opts = \AmeliaVendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
-
         return $instance;
     }
 }

@@ -15,9 +15,9 @@
  * the License.
  */
 
-namespace AmeliaGoogle\Service\Calendar;
+namespace AmeliaVendor\Google\Service\Calendar;
 
-class AclRule extends \AmeliaGoogle\Model
+class AclRule extends \AmeliaVendor\Google\Model
 {
   /**
    * @var string
@@ -111,4 +111,4 @@ class AclRule extends \AmeliaGoogle\Model
 }
 
 // Adding a class alias for backwards compatibility with the previous class name.
-class_alias(AclRule::class, 'AmeliaGoogle_Service_Calendar_AclRule');
+class_alias(AclRule::class, 'Google_Service_Calendar_AclRule');

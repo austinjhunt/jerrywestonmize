@@ -112,7 +112,7 @@ class LiteFrontendStrings
             'enter_last_name_warning'      => __('Please enter last name', 'wpamelia'),
             'enter_phone_warning'          => __('Please enter phone number', 'wpamelia'),
             'enter_valid_email_warning'    => __('Please enter a valid email address', 'wpamelia'),
-            'enter_valid_phone_warning'    => __('Please enter a valid phone number', 'wpamelia'),
+            'enter_valid_phone_warning'    => __('Please enter a valid phone number.', 'wpamelia'), // Used in Redesign | Updated
             'event_info'                   => __('Event Info', 'wpamelia'),
             'finish_appointment'           => __('Finish', 'wpamelia'),
             'first_name_colon'             => __('First Name:', 'wpamelia'),

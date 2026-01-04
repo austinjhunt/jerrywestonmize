@@ -28,15 +28,15 @@ class SelfSignedCertificate extends Entity
     * Gets the customKeyIdentifier
     * Custom key identifier.
     *
-    * @return \AmeliaGuzzleHttp\Psr7\Stream|null The customKeyIdentifier
+    * @return \AmeliaVendor\GuzzleHttp\Psr7\Stream|null The customKeyIdentifier
     */
     public function getCustomKeyIdentifier()
     {
         if (array_key_exists("customKeyIdentifier", $this->_propDict)) {
-            if (is_a($this->_propDict["customKeyIdentifier"], "\AmeliaGuzzleHttp\Psr7\Stream") || is_null($this->_propDict["customKeyIdentifier"])) {
+            if (is_a($this->_propDict["customKeyIdentifier"], "\AmeliaVendor\GuzzleHttp\Psr7\Stream") || is_null($this->_propDict["customKeyIdentifier"])) {
                 return $this->_propDict["customKeyIdentifier"];
             } else {
-                $this->_propDict["customKeyIdentifier"] = \AmeliaGuzzleHttp\Psr7\Utils::streamFor($this->_propDict["customKeyIdentifier"]);
+                $this->_propDict["customKeyIdentifier"] = \AmeliaVendor\GuzzleHttp\Psr7\Utils::streamFor($this->_propDict["customKeyIdentifier"]);
                 return $this->_propDict["customKeyIdentifier"];
             }
         }
@@ -47,7 +47,7 @@ class SelfSignedCertificate extends Entity
     * Sets the customKeyIdentifier
     * Custom key identifier.
     *
-    * @param \AmeliaGuzzleHttp\Psr7\Stream $val The value to assign to the customKeyIdentifier
+    * @param \AmeliaVendor\GuzzleHttp\Psr7\Stream $val The value to assign to the customKeyIdentifier
     *
     * @return SelfSignedCertificate The SelfSignedCertificate
     */
@@ -122,15 +122,15 @@ class SelfSignedCertificate extends Entity
     * Gets the key
     * The value for the key credential. Should be a base-64 encoded value.
     *
-    * @return \AmeliaGuzzleHttp\Psr7\Stream|null The key
+    * @return \AmeliaVendor\GuzzleHttp\Psr7\Stream|null The key
     */
     public function getKey()
     {
         if (array_key_exists("key", $this->_propDict)) {
-            if (is_a($this->_propDict["key"], "\AmeliaGuzzleHttp\Psr7\Stream") || is_null($this->_propDict["key"])) {
+            if (is_a($this->_propDict["key"], "\AmeliaVendor\GuzzleHttp\Psr7\Stream") || is_null($this->_propDict["key"])) {
                 return $this->_propDict["key"];
             } else {
-                $this->_propDict["key"] = \AmeliaGuzzleHttp\Psr7\Utils::streamFor($this->_propDict["key"]);
+                $this->_propDict["key"] = \AmeliaVendor\GuzzleHttp\Psr7\Utils::streamFor($this->_propDict["key"]);
                 return $this->_propDict["key"];
             }
         }
@@ -141,7 +141,7 @@ class SelfSignedCertificate extends Entity
     * Sets the key
     * The value for the key credential. Should be a base-64 encoded value.
     *
-    * @param \AmeliaGuzzleHttp\Psr7\Stream $val The value to assign to the key
+    * @param \AmeliaVendor\GuzzleHttp\Psr7\Stream $val The value to assign to the key
     *
     * @return SelfSignedCertificate The SelfSignedCertificate
     */

@@ -1,5 +1,5 @@
 <?php
-namespace AmeliaFirebase\JWT;
+namespace AmeliaVendor\Firebase\JWT;
 
 interface JWTExceptionWithPayloadInterface
 {

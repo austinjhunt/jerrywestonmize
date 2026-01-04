@@ -69,7 +69,7 @@ class ProviderLocationRepository extends AbstractRepository
     /**
      * @param ProviderLocation $entity
      *
-     * @return int
+     * @return void
      * @throws QueryExecutionException
      */
     public function update($entity)
@@ -95,7 +95,5 @@ class ProviderLocationRepository extends AbstractRepository
         } catch (\Exception $e) {
             throw new QueryExecutionException('Unable to save data in ' . __CLASS__, $e->getCode(), $e);
         }
-
-        return $this->connection->lastInsertId();
     }
 }

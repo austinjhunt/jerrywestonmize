@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -32,7 +32,6 @@ class DeleteTaxCommandHandler extends CommandHandler
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      * @throws AccessDeniedException
-     * @throws \Interop\Container\Exception\ContainerException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException
      */
     public function handle(DeleteTaxCommand $command)

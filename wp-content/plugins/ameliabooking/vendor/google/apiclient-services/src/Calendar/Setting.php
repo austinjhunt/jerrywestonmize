@@ -15,9 +15,9 @@
  * the License.
  */
 
-namespace AmeliaGoogle\Service\Calendar;
+namespace AmeliaVendor\Google\Service\Calendar;
 
-class Setting extends \AmeliaGoogle\Model
+class Setting extends \AmeliaVendor\Google\Model
 {
   /**
    * @var string
@@ -95,4 +95,4 @@ class Setting extends \AmeliaGoogle\Model
 }
 
 // Adding a class alias for backwards compatibility with the previous class name.
-class_alias(Setting::class, 'AmeliaGoogle_Service_Calendar_Setting');
+class_alias(Setting::class, 'Google_Service_Calendar_Setting');

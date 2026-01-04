@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaSabre\VObject\Property\VCard;
+namespace AmeliaVendor\Sabre\VObject\Property\VCard;
 
 /**
  * DateTime property.

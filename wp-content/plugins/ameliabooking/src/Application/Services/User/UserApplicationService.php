@@ -29,13 +29,13 @@ use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepos
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
+use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarMiddlewareService;
 use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 use AmeliaBooking\Infrastructure\WP\UserService\CreateWPUser;
 use AmeliaBooking\Infrastructure\WP\UserService\UserService;
-use AmeliaFirebase\JWT\Key;
+use AmeliaVendor\Firebase\JWT\Key;
 use Exception;
-use AmeliaFirebase\JWT\JWT;
-use Interop\Container\Exception\ContainerException;
+use AmeliaVendor\Firebase\JWT\JWT;
 use Slim\Exception\ContainerValueNotFoundException;
 
 /**
@@ -84,8 +84,13 @@ class UserApplicationService
         /** @var PackageCustomerServiceRepository $packageCustomerServiceRepository */
         $packageCustomerServiceRepository = $this->container->get('domain.bookable.packageCustomerService.repository');
 
+        /** @var AbstractPackageApplicationService $packageApplicationService */
+        $packageApplicationService = $this->container->get('application.bookable.package');
+
         /** @var Collection $appointments */
         $appointments = new Collection();
+
+        $packagePurchases = [];
 
         switch ($user->getType()) {
             case (AbstractUser::USER_ROLE_PROVIDER):
@@ -104,6 +109,14 @@ class UserApplicationService
                 break;
             case (AbstractUser::USER_ROLE_CUSTOMER):
                 $appointments = $appointmentRepo->getFiltered(['customerId' => $userId]);
+
+                /** @var Collection $packageCustomerServices */
+                $packageCustomerServices = $packageCustomerServiceRepository->getByCriteria(['customers' => [$userId]]);
+
+                $packagePurchases = $packageApplicationService->getPackageUnusedBookingsCount(
+                    $packageCustomerServices,
+                    $appointments
+                );
 
                 break;
         }
@@ -125,19 +138,10 @@ class UserApplicationService
             }
         }
 
-        /** @var Collection $packageCustomerServices */
-        $packageCustomerServices = $packageCustomerServiceRepository->getByCriteria(['customerId' => $userId]);
-
-        /** @var AbstractPackageApplicationService $packageApplicationService */
-        $packageApplicationService = $this->container->get('application.bookable.package');
-
         return [
             'futureAppointments'  => $futureAppointments,
             'pastAppointments'    => $pastAppointments,
-            'packageAppointments' => $packageApplicationService->getPackageUnusedBookingsCount(
-                $packageCustomerServices,
-                $appointments
-            ),
+            'packageAppointments' => sizeof($packagePurchases)
         ];
     }
 
@@ -293,7 +297,7 @@ class UserApplicationService
         /** @var ProviderRepository $providerRepository */
         $providerRepository = $this->container->get('domain.users.providers.repository');
 
-
+        $provider = null;
         // If cabinet is for provider, return provider with services and schedule
         if ($cabinetType === AbstractUser::USER_ROLE_PROVIDER) {
             $password = $user->getPassword();
@@ -321,6 +325,11 @@ class UserApplicationService
         /** @var array $userArray */
         $userArray = $user->toArray();
 
+        // Set Time Zone to null if feature is disabled
+        if ($settingsService->isFeatureEnabled('timezones') === false) {
+            $userArray['timeZone'] = null;
+        }
+
         // Set activity if it is employee cabinet
         if ($cabinetType === AbstractUser::USER_ROLE_PROVIDER) {
             $companyDaysOff = $settingsService->getCategorySettings('daysOff');
@@ -342,16 +351,34 @@ class UserApplicationService
                 );
             } catch (\Exception $e) {
                 $providerRepository->updateErrorColumn($user->getId()->getValue(), $e->getMessage());
+
+                $userArray['outlookCalendar']['calendarList'] = [];
+                $userArray['outlookCalendar']['calendarId'] = null;
             }
 
-            try {
-                $userArray['googleCalendar']['calendarList'] = $googleCalendarService->listCalendarList($user);
+            $userArray['googleCalendar']['calendarList'] = [];
+            $userArray['googleCalendar']['calendarId'] = null;
 
-                $userArray['googleCalendar']['calendarId'] = $googleCalendarService->getProviderGoogleCalendarId(
-                    $user
-                );
-            } catch (\Exception $e) {
-                $providerRepository->updateErrorColumn($user->getId()->getValue(), $e->getMessage());
+            if ($settingsService->isFeatureEnabled('googleCalendar')) {
+                try {
+                    $googleCalendar = $settingsService->getCategorySettings('googleCalendar');
+
+                    if (!$googleCalendar['accessToken']) {
+                        $userArray['googleCalendar']['calendarList'] = $googleCalendarService->listCalendarList($user);
+                        $userArray['googleCalendar']['calendarId'] = $googleCalendarService->getProviderGoogleCalendarId($user);
+                    } else {
+                        /** @var AbstractGoogleCalendarMiddlewareService $googleCalendarMiddlewareService */
+                        $googleCalendarMiddlewareService = $this->container->get(
+                            'infrastructure.google.calendar.middleware.service'
+                        );
+                        $userArray['googleCalendar']['calendarList'] = $googleCalendarMiddlewareService->getCalendarList($userArray['googleCalendar']);
+                        $userArray['googleCalendar']['calendarId'] = $provider && $provider->getGoogleCalendar() ?
+                            $provider->getGoogleCalendar()->getCalendarId()->getValue() :
+                            null;
+                    }
+                } catch (\Exception $e) {
+                    $providerRepository->updateErrorColumn($user->getId()->getValue(), $e->getMessage());
+                }
             }
         }
 
@@ -406,10 +433,6 @@ class UserApplicationService
 
         /** @var array $jwtSettings */
         $jwtSettings = $settingsService->getSetting('roles', $jwtType);
-
-        if (!$jwtSettings['enabled']) {
-            throw new AccessDeniedException('You are not allowed to access this page.');
-        }
 
         $secretKey = $jwtSettings[$isUrlToken ? 'urlJwtSecret' : 'headerJwtSecret'];
         try {

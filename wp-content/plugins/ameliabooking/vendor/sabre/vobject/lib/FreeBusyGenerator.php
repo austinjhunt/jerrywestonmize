@@ -1,13 +1,13 @@
 <?php
 
-namespace AmeliaSabre\VObject;
+namespace AmeliaVendor\Sabre\VObject;
 
 use DateTimeImmutable;
 use DateTimeInterface;
 use DateTimeZone;
-use AmeliaSabre\VObject\Component\VCalendar;
-use AmeliaSabre\VObject\Recur\EventIterator;
-use AmeliaSabre\VObject\Recur\NoInstancesException;
+use AmeliaVendor\Sabre\VObject\Component\VCalendar;
+use AmeliaVendor\Sabre\VObject\Recur\EventIterator;
+use AmeliaVendor\Sabre\VObject\Recur\NoInstancesException;
 
 /**
  * This class helps with generating FREEBUSY reports based on existing sets of
@@ -145,7 +145,7 @@ class FreeBusyGenerator
             } elseif ($object instanceof Component) {
                 $this->objects[] = $object;
             } else {
-                throw new \InvalidArgumentException('You can only pass strings or \\AmeliaSabre\\VObject\\Component arguments to setObjects');
+                throw new \InvalidArgumentException('You can only pass strings or \\Sabre\\VObject\\Component arguments to setObjects');
             }
         }
     }

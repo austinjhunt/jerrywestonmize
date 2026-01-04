@@ -8,7 +8,7 @@
 namespace Slim\Http;
 
 use InvalidArgumentException;
-use AmeliaPsr\Http\Message\UriInterface;
+use AmeliaVendor\Psr\Http\Message\UriInterface;
 
 /**
  * Value object representing a URI.

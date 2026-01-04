@@ -11,9 +11,9 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-namespace phpseclib3\Crypt\Common\Traits;
+namespace AmeliaVendor\phpseclib3\Crypt\Common\Traits;
 
-use phpseclib3\Crypt\Hash;
+use AmeliaVendor\phpseclib3\Crypt\Hash;
 
 /**
  * Fingerprint Trait for Private Keys

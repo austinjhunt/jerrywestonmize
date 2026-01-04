@@ -25,7 +25,7 @@ final class CustomFieldType
     /**
      * Status constructor.
      *
-     * @param int $type
+     * @param string $type
      */
     public function __construct($type)
     {

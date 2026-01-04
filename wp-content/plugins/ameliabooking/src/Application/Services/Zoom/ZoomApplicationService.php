@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -53,13 +53,16 @@ class ZoomApplicationService extends AbstractZoomApplicationService
      *
      * @return void
      *
-     * @throws \Interop\Container\Exception\ContainerException
      * @throws \AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException
      */
     public function handleAppointmentMeeting($reservation, $commandSlug)
     {
+        if (!$this->isZoomEnabled()) {
+            return;
+        }
+
         try {
             $this->handleAppointmentMeetingAction($reservation, $commandSlug);
         } catch (\Exception $e) {
@@ -78,13 +81,16 @@ class ZoomApplicationService extends AbstractZoomApplicationService
      *
      * @return void
      *
-     * @throws \Interop\Container\Exception\ContainerException
      * @throws \AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException
      */
     public function handleEventMeeting($reservation, $periods, $commandSlug, $newZoomUser = null)
     {
+        if (!$this->isZoomEnabled()) {
+            return;
+        }
+
         try {
             $this->handleEventMeetingAction($reservation, $periods, $commandSlug, $newZoomUser);
         } catch (\Exception $e) {
@@ -102,7 +108,6 @@ class ZoomApplicationService extends AbstractZoomApplicationService
      *
      * @return void
      *
-     * @throws \Interop\Container\Exception\ContainerException
      * @throws \AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException
@@ -208,7 +213,6 @@ class ZoomApplicationService extends AbstractZoomApplicationService
      *
      * @return void
      *
-     * @throws \Interop\Container\Exception\ContainerException
      * @throws \AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException
@@ -302,7 +306,6 @@ class ZoomApplicationService extends AbstractZoomApplicationService
      *
      * @return void
      *
-     * @throws \Interop\Container\Exception\ContainerException
      * @throws \AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException
@@ -358,7 +361,6 @@ class ZoomApplicationService extends AbstractZoomApplicationService
      *
      * @return void
      *
-     * @throws \Interop\Container\Exception\ContainerException
      * @throws \AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException
      */
@@ -387,7 +389,6 @@ class ZoomApplicationService extends AbstractZoomApplicationService
      *
      * @return void
      *
-     * @throws \Interop\Container\Exception\ContainerException
      * @throws \AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException
      */
     private function getMeeting($reservation)
@@ -415,7 +416,6 @@ class ZoomApplicationService extends AbstractZoomApplicationService
      *
      * @return void
      *
-     * @throws \Interop\Container\Exception\ContainerException
      * @throws \AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException
@@ -486,7 +486,6 @@ class ZoomApplicationService extends AbstractZoomApplicationService
      *
      * @return void
      *
-     * @throws \Interop\Container\Exception\ContainerException
      * @throws \AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException
@@ -580,7 +579,6 @@ class ZoomApplicationService extends AbstractZoomApplicationService
      *
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException
-     * @throws \Interop\Container\Exception\ContainerException
      * @throws \Exception
      */
     private function getMeetingData($reservation, $type, $meetingStart, $meetingEnd, $duration)
@@ -620,5 +618,16 @@ class ZoomApplicationService extends AbstractZoomApplicationService
         }
 
         return $meetingData;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isZoomEnabled()
+    {
+        /** @var SettingsService $settingsService */
+        $settingsService = $this->container->get('domain.settings.service');
+
+        return $settingsService->isFeatureEnabled('zoom');
     }
 }

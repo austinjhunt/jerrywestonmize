@@ -1,16 +1,16 @@
 <?php
 
-namespace AmeliaGoogle\AuthHandler;
+namespace AmeliaVendor\Google\AuthHandler;
 
-use AmeliaGoogle\Auth\CredentialsLoader;
-use AmeliaGoogle\Auth\FetchAuthTokenCache;
-use AmeliaGoogle\Auth\HttpHandler\HttpHandlerFactory;
-use AmeliaGoogle\Auth\Middleware\AuthTokenMiddleware;
-use AmeliaGoogle\Auth\Middleware\ScopedAccessTokenMiddleware;
-use AmeliaGoogle\Auth\Middleware\SimpleMiddleware;
-use AmeliaGuzzleHttp\Client;
-use AmeliaGuzzleHttp\ClientInterface;
-use Psr\Cache\CacheItemPoolInterface;
+use AmeliaVendor\Google\Auth\CredentialsLoader;
+use AmeliaVendor\Google\Auth\FetchAuthTokenCache;
+use AmeliaVendor\Google\Auth\HttpHandler\HttpHandlerFactory;
+use AmeliaVendor\Google\Auth\Middleware\AuthTokenMiddleware;
+use AmeliaVendor\Google\Auth\Middleware\ScopedAccessTokenMiddleware;
+use AmeliaVendor\Google\Auth\Middleware\SimpleMiddleware;
+use AmeliaVendor\GuzzleHttp\Client;
+use AmeliaVendor\GuzzleHttp\ClientInterface;
+use AmeliaVendor\Psr\Cache\CacheItemPoolInterface;
 
 /**
  * This supports Guzzle 6
@@ -20,7 +20,7 @@ class Guzzle6AuthHandler
     protected $cache;
     protected $cacheConfig;
 
-    public function __construct(CacheItemPoolInterface $cache = null, array $cacheConfig = [])
+    public function __construct(?CacheItemPoolInterface $cache = null, array $cacheConfig = [])
     {
         $this->cache = $cache;
         $this->cacheConfig = $cacheConfig;
@@ -29,7 +29,7 @@ class Guzzle6AuthHandler
     public function attachCredentials(
         ClientInterface $http,
         CredentialsLoader $credentials,
-        callable $tokenCallback = null
+        ?callable $tokenCallback = null
     ) {
         // use the provided cache
         if ($this->cache) {
@@ -46,7 +46,7 @@ class Guzzle6AuthHandler
     public function attachCredentialsCache(
         ClientInterface $http,
         FetchAuthTokenCache $credentials,
-        callable $tokenCallback = null
+        ?callable $tokenCallback = null
     ) {
         // if we end up needing to make an HTTP request to retrieve credentials, we
         // can use our existing one, but we need to throw exceptions so the error

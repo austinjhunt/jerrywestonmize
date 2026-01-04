@@ -5,11 +5,11 @@
  * @license GNU LGPLv3+ http://www.gnu.org/copyleft/lesser.html
  */
 
-namespace Svg\Tag;
+namespace AmeliaVendor\Svg\Tag;
 
-use Svg\CssLength;
-use Svg\Document;
-use Svg\Style;
+use AmeliaVendor\Svg\CssLength;
+use AmeliaVendor\Svg\Document;
+use AmeliaVendor\Svg\Style;
 
 abstract class AbstractTag
 {

@@ -9,7 +9,7 @@ use AmeliaHttp\Client\HttpClient;
 use AmeliaHttp\Client\Promise\HttpFulfilledPromise;
 use AmeliaHttp\Client\Promise\HttpRejectedPromise;
 use Psr\Http\Client\ClientInterface;
-use AmeliaPsr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**

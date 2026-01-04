@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaSabre\VObject;
+namespace AmeliaVendor\Sabre\VObject;
 
 /**
  * Exception thrown by parser when the end of the stream has been reached,

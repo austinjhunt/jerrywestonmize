@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Reporting;
+namespace AmeliaVendor\Stripe\Reporting;
 
 /**
  * The Report Type resource corresponds to a particular type of report, such as
@@ -24,7 +24,7 @@ namespace AmeliaStripe\Reporting;
  * @property int $updated When this Report Type was latest updated. Measured in seconds since the Unix epoch.
  * @property int $version Version of the Report Type. Different versions report with the same ID will have the same purpose, but may take different run parameters or have different result schemas.
  */
-class ReportType extends \AmeliaStripe\ApiResource
+class ReportType extends \AmeliaVendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'reporting.report_type';
 
@@ -34,15 +34,15 @@ class ReportType extends \AmeliaStripe\ApiResource
      * @param null|array{expand?: string[]} $params
      * @param null|array|string $opts
      *
-     * @return \AmeliaStripe\Collection<ReportType> of ApiResources
+     * @return \AmeliaVendor\Stripe\Collection<ReportType> of ApiResources
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
 
-        return static::_requestPage($url, \AmeliaStripe\Collection::class, $params, $opts);
+        return static::_requestPage($url, \AmeliaVendor\Stripe\Collection::class, $params, $opts);
     }
 
     /**
@@ -54,11 +54,11 @@ class ReportType extends \AmeliaStripe\ApiResource
      *
      * @return ReportType
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = \AmeliaStripe\Util\RequestOptions::parse($opts);
+        $opts = \AmeliaVendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
 

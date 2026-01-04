@@ -206,6 +206,12 @@ function colibri_blog_posts_normal_item( $atts ) {
 	?>
 	<?php
 	$post_order = explode( ",", $atts['post_order'] );
+
+    $allowed_tags = array('h1', 'h2', 'h3', 'h4', 'h5', 'h6');
+    $title_type = $atts['title_type'];
+    if (!in_array($title_type, $allowed_tags)) {
+        $title_type = 'h2';
+    }
 	foreach ( $post_order as $key => $value ) {
 		switch ( $value ) {
 			case 'image':
@@ -252,8 +258,8 @@ function colibri_blog_posts_normal_item( $atts ) {
 				if ( $atts['show_title'] === 'true' ) : ?>
                     <div class="colibri_post_title">
                         <a href="<?php the_permalink(); ?>">
-                            <<?php echo tag_escape($atts['title_type']) ?>
-                            > <?php wp_kses_post(the_title()); ?>  </<?php echo tag_escape($atts['title_type']) ?>>
+                            <<?php echo $title_type; ?>
+                            > <?php wp_kses_post(the_title()); ?>  </<?php echo $title_type; ?>>
                         </a>
                     </div>
 				<?php endif; ?>

@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaGuzzleHttp\Exception;
+namespace AmeliaVendor\GuzzleHttp\Exception;
 
 final class InvalidArgumentException extends \InvalidArgumentException implements GuzzleException
 {

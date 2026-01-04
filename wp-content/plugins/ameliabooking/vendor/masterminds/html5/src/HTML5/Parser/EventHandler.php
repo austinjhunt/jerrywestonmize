@@ -1,6 +1,6 @@
 <?php
 
-namespace Masterminds\HTML5\Parser;
+namespace AmeliaVendor\Masterminds\HTML5\Parser;
 
 /**
  * Standard events for HTML5.

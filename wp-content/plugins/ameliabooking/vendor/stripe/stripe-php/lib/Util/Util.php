@@ -1,8 +1,8 @@
 <?php
 
-namespace AmeliaStripe\Util;
+namespace AmeliaVendor\Stripe\Util;
 
-use AmeliaStripe\StripeObject;
+use AmeliaVendor\Stripe\StripeObject;
 
 abstract class Util
 {
@@ -64,13 +64,13 @@ abstract class Util
                     if (\array_key_exists('type', $resp) && \array_key_exists($resp['type'], $eventTypes)) {
                         $class = $eventTypes[$resp['type']];
                     } else {
-                        $class = \AmeliaStripe\V2\Event::class;
+                        $class = \AmeliaVendor\Stripe\V2\Event::class;
                     }
                 }
             } elseif (\array_key_exists('data', $resp) && \array_key_exists('next_page_url', $resp)) {
                 // TODO: this is a horrible hack. The API needs
                 // to return something for `object` here.
-                $class = \AmeliaStripe\V2\Collection::class;
+                $class = \AmeliaVendor\Stripe\V2\Collection::class;
             } else {
                 $class = StripeObject::class;
             }
@@ -96,13 +96,13 @@ abstract class Util
         foreach ($properties as $key => $property) {
             if (\array_key_exists($property->getName(), $json)) {
                 if ('related_object' === $property->getName()) {
-                    $related_object = new \AmeliaStripe\RelatedObject();
+                    $related_object = new \AmeliaVendor\Stripe\RelatedObject();
                     $related_object->id = $json['related_object']['id'];
                     $related_object->url = $json['related_object']['url'];
                     $related_object->type = $json['related_object']['type'];
                     $property->setValue($instance, $related_object);
                 } elseif ('reason' === $property->getName()) {
-                    $reason = new \AmeliaStripe\Reason();
+                    $reason = new \AmeliaVendor\Stripe\Reason();
                     $reason->id = $json['reason']['id'];
                     $reason->idempotency_key = $json['reason']['idempotency_key'];
                     $property->setValue($instance, $reason);
@@ -189,7 +189,7 @@ abstract class Util
      */
     public static function objectsToIds($h)
     {
-        if ($h instanceof \AmeliaStripe\ApiResource) {
+        if ($h instanceof \AmeliaVendor\Stripe\ApiResource) {
             return $h->id;
         }
         if (static::isList($h)) {

@@ -45,7 +45,7 @@ class ContainerTest extends TestCase
     }
 
     /**
-     * @expectedException \AmeliaPsr\Container\NotFoundExceptionInterface
+     * @expectedException \AmeliaVendor\Psr\Container\NotFoundExceptionInterface
      * @expectedExceptionMessage Identifier "service" is not defined.
      */
     public function testGetThrowsExceptionIfServiceIsNotFound()

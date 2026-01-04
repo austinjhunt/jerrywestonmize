@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Monolog\Formatter;
+namespace AmeliaVendor\Monolog\Formatter;
 
-use Monolog\Logger;
+use AmeliaVendor\Monolog\Logger;
 
 /**
  * Serializes a log message according to Wildfire's header requirements

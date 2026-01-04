@@ -7,6 +7,7 @@ use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
+use AmeliaBooking\Infrastructure\Services\Mailchimp\AbstractMailchimpService;
 use Interop\Container\Exception\ContainerException;
 
 /**
@@ -42,6 +43,19 @@ class GetSettingsCommandHandler extends CommandHandler
             $settings['payments']['square']['phpVersion'] = phpversion();
         }
 
+        $mailchimpLists = [];
+        if ($settingsService->isFeatureEnabled('mailchimp') && !empty($settings['mailchimp']['accessToken'])) {
+            /** @var AbstractMailchimpService $mailchimpService */
+            $mailchimpService = $this->getContainer()->get('infrastructure.mailchimp.service');
+            $mailchimpLists = $mailchimpService->getLists();
+            if (!empty($mailchimpLists)) {
+                if (!$settings['mailchimp']['list']) {
+                    $settings['mailchimp']['list'] = $mailchimpLists[0]['id'];
+                    $settingsService->setCategorySettings('mailchimp', $settings['mailchimp']);
+                }
+            }
+        }
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved settings.');
 
@@ -51,7 +65,8 @@ class GetSettingsCommandHandler extends CommandHandler
 
         $result->setData(
             [
-                'settings' => $settings
+                'settings' => $settings,
+                'additionalData' => ['mailchimpLists' => $mailchimpLists]
             ]
         );
 

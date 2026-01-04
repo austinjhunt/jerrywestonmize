@@ -5,9 +5,9 @@
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 
-namespace FontLib\Table\Type;
-use FontLib\Table\Table;
-use FontLib\TrueType\File;
+namespace AmeliaVendor\FontLib\Table\Type;
+use AmeliaVendor\FontLib\Table\Table;
+use AmeliaVendor\FontLib\TrueType\File;
 
 /**
  * `post` font table.

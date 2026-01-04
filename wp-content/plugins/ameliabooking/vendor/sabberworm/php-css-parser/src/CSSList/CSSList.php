@@ -1,27 +1,30 @@
 <?php
 
-namespace Sabberworm\CSS\CSSList;
+namespace AmeliaVendor\Sabberworm\CSS\CSSList;
 
-use Sabberworm\CSS\Comment\Comment;
-use Sabberworm\CSS\Comment\Commentable;
-use Sabberworm\CSS\OutputFormat;
-use Sabberworm\CSS\Parsing\ParserState;
-use Sabberworm\CSS\Parsing\SourceException;
-use Sabberworm\CSS\Parsing\UnexpectedEOFException;
-use Sabberworm\CSS\Parsing\UnexpectedTokenException;
-use Sabberworm\CSS\Property\AtRule;
-use Sabberworm\CSS\Property\Charset;
-use Sabberworm\CSS\Property\CSSNamespace;
-use Sabberworm\CSS\Property\Import;
-use Sabberworm\CSS\Property\Selector;
-use Sabberworm\CSS\Renderable;
-use Sabberworm\CSS\RuleSet\AtRuleSet;
-use Sabberworm\CSS\RuleSet\DeclarationBlock;
-use Sabberworm\CSS\RuleSet\RuleSet;
-use Sabberworm\CSS\Settings;
-use Sabberworm\CSS\Value\CSSString;
-use Sabberworm\CSS\Value\URL;
-use Sabberworm\CSS\Value\Value;
+use AmeliaVendor\Sabberworm\CSS\Comment\Comment;
+use AmeliaVendor\Sabberworm\CSS\Comment\Commentable;
+use AmeliaVendor\Sabberworm\CSS\CSSElement;
+use AmeliaVendor\Sabberworm\CSS\OutputFormat;
+use AmeliaVendor\Sabberworm\CSS\Parsing\ParserState;
+use AmeliaVendor\Sabberworm\CSS\Parsing\SourceException;
+use AmeliaVendor\Sabberworm\CSS\Parsing\UnexpectedEOFException;
+use AmeliaVendor\Sabberworm\CSS\Parsing\UnexpectedTokenException;
+use AmeliaVendor\Sabberworm\CSS\Position\Position;
+use AmeliaVendor\Sabberworm\CSS\Position\Positionable;
+use AmeliaVendor\Sabberworm\CSS\Property\AtRule;
+use AmeliaVendor\Sabberworm\CSS\Property\Charset;
+use AmeliaVendor\Sabberworm\CSS\Property\CSSNamespace;
+use AmeliaVendor\Sabberworm\CSS\Property\Import;
+use AmeliaVendor\Sabberworm\CSS\Property\Selector;
+use AmeliaVendor\Sabberworm\CSS\Renderable;
+use AmeliaVendor\Sabberworm\CSS\RuleSet\AtRuleSet;
+use AmeliaVendor\Sabberworm\CSS\RuleSet\DeclarationBlock;
+use AmeliaVendor\Sabberworm\CSS\RuleSet\RuleSet;
+use AmeliaVendor\Sabberworm\CSS\Settings;
+use AmeliaVendor\Sabberworm\CSS\Value\CSSString;
+use AmeliaVendor\Sabberworm\CSS\Value\URL;
+use AmeliaVendor\Sabberworm\CSS\Value\Value;
 
 /**
  * This is the most generic container available. It can contain `DeclarationBlock`s (rule sets with a selector),
@@ -29,22 +32,23 @@ use Sabberworm\CSS\Value\Value;
  *
  * It can also contain `Import` and `Charset` objects stemming from at-rules.
  */
-abstract class CSSList implements Renderable, Commentable
+abstract class CSSList implements Commentable, CSSElement, Positionable
 {
+    use Position;
+
     /**
      * @var array<array-key, Comment>
+     *
+     * @internal since 8.8.0
      */
     protected $aComments;
 
     /**
      * @var array<int, RuleSet|CSSList|Import|Charset>
+     *
+     * @internal since 8.8.0
      */
     protected $aContents;
-
-    /**
-     * @var int
-     */
-    protected $iLineNo;
 
     /**
      * @param int $iLineNo
@@ -53,7 +57,7 @@ abstract class CSSList implements Renderable, Commentable
     {
         $this->aComments = [];
         $this->aContents = [];
-        $this->iLineNo = $iLineNo;
+        $this->setPosition($iLineNo);
     }
 
     /**
@@ -61,6 +65,8 @@ abstract class CSSList implements Renderable, Commentable
      *
      * @throws UnexpectedTokenException
      * @throws SourceException
+     *
+     * @internal since V8.8.0
      */
     public static function parseList(ParserState $oParserState, CSSList $oList)
     {
@@ -251,14 +257,6 @@ abstract class CSSList implements Renderable, Commentable
     }
 
     /**
-     * @return int
-     */
-    public function getLineNo()
-    {
-        return $this->iLineNo;
-    }
-
-    /**
      * Prepends an item to the list of contents.
      *
      * @param RuleSet|CSSList|Import|Charset $oItem
@@ -408,6 +406,8 @@ abstract class CSSList implements Renderable, Commentable
 
     /**
      * @return string
+     *
+     * @deprecated in V8.8.0, will be removed in V9.0.0. Use `render` instead.
      */
     public function __toString()
     {

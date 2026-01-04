@@ -12,7 +12,7 @@ namespace Mailgun;
 use AmeliaHttp\Discovery\MessageFactoryDiscovery;
 use AmeliaHttp\Message\MultipartStream\MultipartStreamBuilder;
 use AmeliaHttp\Message\RequestFactory;
-use AmeliaPsr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
 
 /**
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>

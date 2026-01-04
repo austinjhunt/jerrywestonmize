@@ -1,14 +1,15 @@
 <?php
 
-namespace Sabberworm\CSS\CSSList;
+namespace AmeliaVendor\Sabberworm\CSS\CSSList;
 
-use Sabberworm\CSS\Property\Selector;
-use Sabberworm\CSS\Rule\Rule;
-use Sabberworm\CSS\RuleSet\DeclarationBlock;
-use Sabberworm\CSS\RuleSet\RuleSet;
-use Sabberworm\CSS\Value\CSSFunction;
-use Sabberworm\CSS\Value\Value;
-use Sabberworm\CSS\Value\ValueList;
+use AmeliaVendor\Sabberworm\CSS\CSSElement;
+use AmeliaVendor\Sabberworm\CSS\Property\Selector;
+use AmeliaVendor\Sabberworm\CSS\Rule\Rule;
+use AmeliaVendor\Sabberworm\CSS\RuleSet\DeclarationBlock;
+use AmeliaVendor\Sabberworm\CSS\RuleSet\RuleSet;
+use AmeliaVendor\Sabberworm\CSS\Value\CSSFunction;
+use AmeliaVendor\Sabberworm\CSS\Value\Value;
+use AmeliaVendor\Sabberworm\CSS\Value\ValueList;
 
 /**
  * A `CSSBlockList` is a `CSSList` whose `DeclarationBlock`s are guaranteed to contain valid declaration blocks or
@@ -59,7 +60,53 @@ abstract class CSSBlockList extends CSSList
     }
 
     /**
-     * @param CSSList|Rule|RuleSet|Value $oElement
+     * Returns all `Value` objects found recursively in `Rule`s in the tree.
+     *
+     * @param CSSElement|string|null $element
+     *        This is the `CSSList` or `RuleSet` to start the search from (defaults to the whole document).
+     *        If a string is given, it is used as a rule name filter.
+     *        Passing a string for this parameter is deprecated in version 8.9.0, and will not work from v9.0;
+     *        use the following parameter to pass a rule name filter instead.
+     * @param string|bool|null $ruleSearchPatternOrSearchInFunctionArguments
+     *        This allows filtering rules by property name
+     *        (e.g. if "color" is passed, only `Value`s from `color` properties will be returned,
+     *        or if "font-" is provided, `Value`s from all font rules, like `font-size`, and including `font` itself,
+     *        will be returned).
+     *        If a Boolean is provided, it is treated as the `$searchInFunctionArguments` argument.
+     *        Passing a Boolean for this parameter is deprecated in version 8.9.0, and will not work from v9.0;
+     *        use the `$searchInFunctionArguments` parameter instead.
+     * @param bool $searchInFunctionArguments whether to also return Value objects used as Function arguments.
+     *
+     * @return array<int, Value>
+     *
+     * @see RuleSet->getRules()
+     */
+    public function getAllValues(
+        $element = null,
+        $ruleSearchPatternOrSearchInFunctionArguments = null,
+        $searchInFunctionArguments = false
+    ) {
+        if (\is_bool($ruleSearchPatternOrSearchInFunctionArguments)) {
+            $searchInFunctionArguments = $ruleSearchPatternOrSearchInFunctionArguments;
+            $searchString = null;
+        } else {
+            $searchString = $ruleSearchPatternOrSearchInFunctionArguments;
+        }
+
+        if ($element === null) {
+            $element = $this;
+        } elseif (\is_string($element)) {
+            $searchString = $element;
+            $element = $this;
+        }
+
+        $result = [];
+        $this->allValues($element, $result, $searchString, $searchInFunctionArguments);
+        return $result;
+    }
+
+    /**
+     * @param CSSElement|string $oElement
      * @param array<int, Value> $aResult
      * @param string|null $sSearchString
      * @param bool $bSearchInFunctionArguments

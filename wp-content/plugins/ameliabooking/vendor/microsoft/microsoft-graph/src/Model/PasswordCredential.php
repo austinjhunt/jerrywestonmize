@@ -28,15 +28,15 @@ class PasswordCredential extends Entity
     * Gets the customKeyIdentifier
     * Do not use.
     *
-    * @return \AmeliaGuzzleHttp\Psr7\Stream|null The customKeyIdentifier
+    * @return \AmeliaVendor\GuzzleHttp\Psr7\Stream|null The customKeyIdentifier
     */
     public function getCustomKeyIdentifier()
     {
         if (array_key_exists("customKeyIdentifier", $this->_propDict)) {
-            if (is_a($this->_propDict["customKeyIdentifier"], "\AmeliaGuzzleHttp\Psr7\Stream") || is_null($this->_propDict["customKeyIdentifier"])) {
+            if (is_a($this->_propDict["customKeyIdentifier"], "\AmeliaVendor\GuzzleHttp\Psr7\Stream") || is_null($this->_propDict["customKeyIdentifier"])) {
                 return $this->_propDict["customKeyIdentifier"];
             } else {
-                $this->_propDict["customKeyIdentifier"] = \AmeliaGuzzleHttp\Psr7\Utils::streamFor($this->_propDict["customKeyIdentifier"]);
+                $this->_propDict["customKeyIdentifier"] = \AmeliaVendor\GuzzleHttp\Psr7\Utils::streamFor($this->_propDict["customKeyIdentifier"]);
                 return $this->_propDict["customKeyIdentifier"];
             }
         }
@@ -47,7 +47,7 @@ class PasswordCredential extends Entity
     * Sets the customKeyIdentifier
     * Do not use.
     *
-    * @param \AmeliaGuzzleHttp\Psr7\Stream $val The value to assign to the customKeyIdentifier
+    * @param \AmeliaVendor\GuzzleHttp\Psr7\Stream $val The value to assign to the customKeyIdentifier
     *
     * @return PasswordCredential The PasswordCredential
     */

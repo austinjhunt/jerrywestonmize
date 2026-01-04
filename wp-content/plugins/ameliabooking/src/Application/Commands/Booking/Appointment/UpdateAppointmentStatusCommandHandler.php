@@ -18,7 +18,6 @@ use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\ValueObjects\BooleanValueObject;
-use AmeliaBooking\Domain\ValueObjects\DateTime\DateTimeValue;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
@@ -59,7 +58,8 @@ class UpdateAppointmentStatusCommandHandler extends CommandHandler
 
         if (!$command->getPermissionService()->currentUserCanWriteStatus(Entities::APPOINTMENTS)) {
             try {
-                $command->getUserApplicationService()->authorization(
+                /** @var AbstractUser $user */
+                $user = $command->getUserApplicationService()->authorization(
                     $command->getPage() === 'cabinet' ? $command->getToken() : null,
                     $command->getCabinetType()
                 );
@@ -73,6 +73,9 @@ class UpdateAppointmentStatusCommandHandler extends CommandHandler
 
                 return $result;
             }
+        } else {
+            /** @var AbstractUser $user */
+            $user = $this->container->get('logged.in.user');
         }
 
         $this->checkMandatoryFields($command);
@@ -96,27 +99,35 @@ class UpdateAppointmentStatusCommandHandler extends CommandHandler
         /** @var Appointment $appointment */
         $appointment = $appointmentRepo->getById($appointmentId);
 
+        if ($userAS->isCustomer($user)) {
+            /** @var CustomerBooking $booking */
+            foreach ($appointment->getBookings()->getItems() as $booking) {
+                if (
+                    $booking->getCustomerId()->getValue() !== $user->getId()->getValue() &&
+                    !$bookingAS->isBookingCanceledOrRejectedOrNoShow($booking->getStatus()->getValue())
+                ) {
+                    throw new AccessDeniedException('You are not allowed to update appointment');
+                }
+            }
+        }
+
         $oldStatus = $appointment->getStatus()->getValue();
 
         if (
             $bookingAS->isBookingApprovedOrPending($requestedStatus) &&
-            $bookingAS->isBookingCanceledOrRejectedOrNoShow($appointment->getStatus()->getValue())
+            $bookingAS->isBookingCanceledOrRejectedOrNoShow($appointment->getStatus()->getValue()) &&
+            !$appointmentAS->canBeBooked($appointment, $userAS->isCustomer($user), null, null)
         ) {
-            /** @var AbstractUser $user */
-            $user = $this->container->get('logged.in.user');
+            $result->setResult(CommandResult::RESULT_ERROR);
+            $result->setMessage(FrontendStrings::getCommonStrings()['time_slot_unavailable']);
+            $result->setData(
+                [
+                    'timeSlotUnavailable' => true,
+                    'status'              => $appointment->getStatus()->getValue()
+                ]
+            );
 
-            if (!$appointmentAS->canBeBooked($appointment, $userAS->isCustomer($user), null, null)) {
-                $result->setResult(CommandResult::RESULT_ERROR);
-                $result->setMessage(FrontendStrings::getCommonStrings()['time_slot_unavailable']);
-                $result->setData(
-                    [
-                        'timeSlotUnavailable' => true,
-                        'status'              => $appointment->getStatus()->getValue()
-                    ]
-                );
-
-                return $result;
-            }
+            return $result;
         }
 
         $oldAppointmentArray = $appointment->toArray();
@@ -148,7 +159,7 @@ class UpdateAppointmentStatusCommandHandler extends CommandHandler
                 )
             )
         ) {
-            $result->setResult(CommandResult::RESULT_SUCCESS);
+            $result->setResult(CommandResult::RESULT_ERROR);
             $result->setMessage('Appointment status not updated');
             $result->setData(
                 [
@@ -156,7 +167,7 @@ class UpdateAppointmentStatusCommandHandler extends CommandHandler
                     'bookingsWithChangedStatus' => [],
                     'status'                    => $appointment->getStatus()->getValue(),
                     'oldStatus'                 => $appointment->getStatus()->getValue(),
-                    'message'                   => BackendStrings::getEventStrings()['maximum_capacity_reached'],
+                    'message'                   => BackendStrings::get('maximum_capacity_reached'),
                     'maximumCapacityReached'    => true,
                 ]
             );
@@ -170,13 +181,7 @@ class UpdateAppointmentStatusCommandHandler extends CommandHandler
 
         do_action('amelia_before_appointment_status_updated', $appointment->toArray(), $requestedStatus);
 
-        $appointment->setBookingEnd(
-            new DateTimeValue(
-                DateTimeService::getCustomDateTimeObject(
-                    $appointment->getBookingStart()->getValue()->format('Y-m-d H:i:s')
-                )->modify('+' . $appointmentAS->getAppointmentLengthTime($appointment, $service) . ' second')
-            )
-        );
+        $appointmentAS->calculateAndSetAppointmentEnd($appointment, $service);
 
         $appointmentRepo->updateFieldById(
             $appointmentId,
@@ -187,8 +192,8 @@ class UpdateAppointmentStatusCommandHandler extends CommandHandler
         );
 
 
-        $bookingRepository->updateStatusByAppointmentId($appointmentId, $requestedStatus);
-        $appointmentRepo->updateStatusById($appointmentId, $requestedStatus);
+        $bookingRepository->updateFieldByColumn('status', $requestedStatus, 'appointmentId', $appointmentId);
+        $appointmentRepo->updateFieldById($appointmentId, $requestedStatus, 'status');
 
         $appointmentRepo->commit();
 
@@ -216,7 +221,7 @@ class UpdateAppointmentStatusCommandHandler extends CommandHandler
                 'status'                    => $requestedStatus,
                 'oldStatus'                 => $oldStatus,
                 'message'                   =>
-                    BackendStrings::getAppointmentStrings()['appointment_status_changed'] . strtolower(BackendStrings::getCommonStrings()[$requestedStatus])
+                    BackendStrings::get('appointment_status_changed') . strtolower(BackendStrings::get($requestedStatus))
             ]
         );
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See COPYING.md for license details.
  */
 
@@ -13,6 +13,7 @@ use AmeliaBooking\Application\Controller\CustomField\AddCustomFieldController;
 use AmeliaBooking\Application\Controller\CustomField\DeleteCustomFieldController;
 use AmeliaBooking\Application\Controller\CustomField\UpdateCustomFieldController;
 use AmeliaBooking\Application\Controller\CustomField\UpdateCustomFieldsPositionsController;
+use AmeliaBooking\Application\Controller\CustomField\BatchCustomFieldsController;
 use Slim\App;
 
 /**
@@ -38,5 +39,7 @@ class CustomField
         $app->post('/fields/{id:[0-9]+}', UpdateCustomFieldController::class);
 
         $app->post('/fields/positions', UpdateCustomFieldsPositionsController::class);
+
+        $app->post('/fields/batch', BatchCustomFieldsController::class);
     }
 }

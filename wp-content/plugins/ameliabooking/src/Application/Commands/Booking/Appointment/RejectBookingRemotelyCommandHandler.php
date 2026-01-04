@@ -48,7 +48,6 @@ class RejectBookingRemotelyCommandHandler extends CommandHandler
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      * @throws AccessDeniedException
-     * @throws \Interop\Container\Exception\ContainerException
      * @throws NotFoundException
      */
     public function handle(RejectBookingRemotelyCommand $command)
@@ -111,7 +110,7 @@ class RejectBookingRemotelyCommandHandler extends CommandHandler
                     [
                     'type'    => $type,
                     'status'  => $status,
-                    'message' => BackendStrings::getAppointmentStrings()['appointment_status_changed'] . strtolower(BackendStrings::getCommonStrings()[$status])
+                    'message' => BackendStrings::get('appointment_status_changed') . strtolower(BackendStrings::get($status))
                     ]
                 )
             );

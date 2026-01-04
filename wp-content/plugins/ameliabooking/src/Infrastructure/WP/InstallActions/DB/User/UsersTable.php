@@ -60,6 +60,7 @@ class UsersTable extends AbstractDatabaseTable
                   `timeZone` varchar({$name}) DEFAULT NULL,
                   `appleCalendarId` varchar({$name}) DEFAULT NULL,
                   `employeeAppleCalendar` TEXT NULL DEFAULT NULL,
+                  `googleCalendarId` varchar({$name}) DEFAULT NULL,
                   `badgeId` int(11) DEFAULT NULL,
                   `error` TEXT({$description}) DEFAULT NULL,
                   `show` TINYINT(1) DEFAULT 1,

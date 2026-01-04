@@ -15,15 +15,19 @@
  * limitations under the License.
  */
 
-namespace AmeliaGoogle;
+namespace AmeliaVendor\Google;
 
-use AmeliaGoogle\Http\Batch;
+use AmeliaVendor\Google\Http\Batch;
 use TypeError;
 
 class Service
 {
     public $batchPath;
+    /**
+     * Only used in getBatch
+     */
     public $rootUrl;
+    public $rootUrlTemplate;
     public $version;
     public $servicePath;
     public $serviceName;
@@ -38,7 +42,7 @@ class Service
         } elseif (is_array($clientOrConfig)) {
             $this->client = new Client($clientOrConfig ?: []);
         } else {
-            $errorMessage = 'constructor must be array or instance of AmeliaGoogle\Client';
+            $errorMessage = 'constructor must be array or instance of Google\Client';
             if (class_exists('TypeError')) {
                 throw new TypeError($errorMessage);
             }
@@ -47,8 +51,8 @@ class Service
     }
 
     /**
-   * Return the associated AmeliaGoogle\Client class.
-   * @return \AmeliaGoogle\Client
+   * Return the associated Google\Client class.
+   * @return \AmeliaVendor\Google\Client
    */
     public function getClient()
     {
@@ -65,7 +69,7 @@ class Service
         return new Batch(
             $this->client,
             false,
-            $this->rootUrl,
+            $this->rootUrlTemplate ?? $this->rootUrl,
             $this->batchPath
         );
     }

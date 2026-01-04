@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -182,7 +182,7 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
      * @param array $data
      * @param array $transfers
      *
-     * @return ApiResponse
+     * @return ApiResponse|null
      * @throws Exception
      */
     public function execute($data, &$transfers)
@@ -245,7 +245,7 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
      * @param PaymentLink $paymentLink
      * @param string $redirectUrl
      *
-     * @return ApiResponse
+     * @return ApiResponse|null
      * @throws Exception
      */
     public function updatePaymentLink($paymentLink, $redirectUrl, $paymentId)
@@ -439,7 +439,7 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
 
     /**
      *
-     * @return boolean
+     * @return boolean|null
      *
      * @throws Exception
      */

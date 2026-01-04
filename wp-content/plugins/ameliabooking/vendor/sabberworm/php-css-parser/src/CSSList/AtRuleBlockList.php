@@ -1,9 +1,9 @@
 <?php
 
-namespace Sabberworm\CSS\CSSList;
+namespace AmeliaVendor\Sabberworm\CSS\CSSList;
 
-use Sabberworm\CSS\OutputFormat;
-use Sabberworm\CSS\Property\AtRule;
+use AmeliaVendor\Sabberworm\CSS\OutputFormat;
+use AmeliaVendor\Sabberworm\CSS\Property\AtRule;
 
 /**
  * A `BlockList` constructed by an unknown at-rule. `@media` rules are rendered into `AtRuleBlockList` objects.
@@ -50,6 +50,8 @@ class AtRuleBlockList extends CSSBlockList implements AtRule
 
     /**
      * @return string
+     *
+     * @deprecated in V8.8.0, will be removed in V9.0.0. Use `render` instead.
      */
     public function __toString()
     {
@@ -57,9 +59,11 @@ class AtRuleBlockList extends CSSBlockList implements AtRule
     }
 
     /**
+     * @param OutputFormat|null $oOutputFormat
+     *
      * @return string
      */
-    public function render(OutputFormat $oOutputFormat)
+    public function render($oOutputFormat)
     {
         $sResult = $oOutputFormat->comments($this);
         $sResult .= $oOutputFormat->sBeforeAtRuleBlock;

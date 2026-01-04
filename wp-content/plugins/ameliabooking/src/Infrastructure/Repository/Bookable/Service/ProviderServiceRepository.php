@@ -78,7 +78,7 @@ class ProviderServiceRepository extends AbstractRepository
      * @param Service $entity
      * @param int     $id
      *
-     * @return int
+     * @return void
      * @throws QueryExecutionException
      */
     public function update($entity, $id)
@@ -114,8 +114,6 @@ class ProviderServiceRepository extends AbstractRepository
         } catch (\Exception $e) {
             throw new QueryExecutionException('Unable to save data in ' . __CLASS__, $e->getCode(), $e);
         }
-
-        return $this->connection->lastInsertId();
     }
 
     /**

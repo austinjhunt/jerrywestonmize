@@ -5,7 +5,7 @@
  * @license GNU LGPLv3+ http://www.gnu.org/copyleft/lesser.html
  */
 
-namespace Svg;
+namespace AmeliaVendor\Svg;
 
 class DefaultStyle extends Style
 {

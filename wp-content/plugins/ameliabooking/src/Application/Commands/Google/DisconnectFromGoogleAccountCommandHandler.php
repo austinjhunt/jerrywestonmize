@@ -82,7 +82,7 @@ class DisconnectFromGoogleAccountCommandHandler extends CommandHandler
             do_action('amelia_after_google_calendar_deleted', $googleCalendar, $command->getArg('id'));
 
             $result->setResult(CommandResult::RESULT_SUCCESS);
-            $result->setMessage('Google calendar successfully deleted.');
+            $result->setMessage('Google calendar successfully disconnected.');
         }
 
         return $result;

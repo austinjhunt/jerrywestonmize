@@ -11,14 +11,9 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
  */
 final class WholeNumber
 {
-    /**
-     * @var string
-     */
     private $integer;
 
     /**
-     * @param string $integer
-     *
      * @throws InvalidArgumentException
      */
     public function __construct($integer)

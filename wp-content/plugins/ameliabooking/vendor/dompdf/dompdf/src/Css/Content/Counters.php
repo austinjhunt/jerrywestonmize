@@ -1,5 +1,5 @@
 <?php
-namespace AmeliaDompdf\Css\Content;
+namespace AmeliaVendor\Dompdf\Css\Content;
 
 final class Counters extends ContentPart
 {

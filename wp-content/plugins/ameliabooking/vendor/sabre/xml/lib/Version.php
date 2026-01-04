@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AmeliaSabre\Xml;
+namespace AmeliaVendor\Sabre\Xml;
 
 /**
  * This class contains the version number for this package.

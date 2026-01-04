@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\FinancialConnections;
+namespace AmeliaVendor\Stripe\FinancialConnections;
 
 /**
  * A Transaction represents a real transaction that affects a Financial Connections Account balance.
@@ -15,12 +15,12 @@ namespace AmeliaStripe\FinancialConnections;
  * @property string $description The description of this transaction.
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
  * @property string $status The status of the transaction.
- * @property (object{posted_at: null|int, void_at: null|int}&\AmeliaStripe\StripeObject) $status_transitions
+ * @property (object{posted_at: null|int, void_at: null|int}&\AmeliaVendor\Stripe\StripeObject) $status_transitions
  * @property int $transacted_at Time at which the transaction was transacted. Measured in seconds since the Unix epoch.
  * @property string $transaction_refresh The token of the transaction refresh that last updated or created this transaction.
  * @property int $updated Time at which the object was last updated. Measured in seconds since the Unix epoch.
  */
-class Transaction extends \AmeliaStripe\ApiResource
+class Transaction extends \AmeliaVendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'financial_connections.transaction';
 
@@ -34,15 +34,15 @@ class Transaction extends \AmeliaStripe\ApiResource
      * @param null|array{account: string, ending_before?: string, expand?: string[], limit?: int, starting_after?: string, transacted_at?: array|int, transaction_refresh?: array{after: string}} $params
      * @param null|array|string $opts
      *
-     * @return \AmeliaStripe\Collection<Transaction> of ApiResources
+     * @return \AmeliaVendor\Stripe\Collection<Transaction> of ApiResources
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
 
-        return static::_requestPage($url, \AmeliaStripe\Collection::class, $params, $opts);
+        return static::_requestPage($url, \AmeliaVendor\Stripe\Collection::class, $params, $opts);
     }
 
     /**
@@ -53,11 +53,11 @@ class Transaction extends \AmeliaStripe\ApiResource
      *
      * @return Transaction
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = \AmeliaStripe\Util\RequestOptions::parse($opts);
+        $opts = \AmeliaVendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
 

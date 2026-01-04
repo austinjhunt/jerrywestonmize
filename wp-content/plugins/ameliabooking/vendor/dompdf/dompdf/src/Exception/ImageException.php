@@ -4,9 +4,9 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace AmeliaDompdf\Exception;
+namespace AmeliaVendor\Dompdf\Exception;
 
-use AmeliaDompdf\Exception;
+use AmeliaVendor\Dompdf\Exception;
 
 /**
  * Image exception thrown by DOMPDF

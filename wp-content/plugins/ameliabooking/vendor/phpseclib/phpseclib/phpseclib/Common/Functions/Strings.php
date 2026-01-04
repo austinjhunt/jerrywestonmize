@@ -11,13 +11,13 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-namespace phpseclib3\Common\Functions;
+namespace AmeliaVendor\phpseclib3\Common\Functions;
 
-use ParagonIE\ConstantTime\Base64;
-use ParagonIE\ConstantTime\Base64UrlSafe;
-use ParagonIE\ConstantTime\Hex;
-use phpseclib3\Math\BigInteger;
-use phpseclib3\Math\Common\FiniteField;
+use AmeliaVendor\ParagonIE\ConstantTime\Base64;
+use AmeliaVendor\ParagonIE\ConstantTime\Base64UrlSafe;
+use AmeliaVendor\ParagonIE\ConstantTime\Hex;
+use AmeliaVendor\phpseclib3\Math\BigInteger;
+use AmeliaVendor\phpseclib3\Math\Common\FiniteField;
 
 /**
  * Common String Functions
@@ -126,7 +126,9 @@ abstract class Strings
                     // 64-bit floats can be used to get larger numbers then 32-bit signed ints would allow
                     // for. sure, you're not gonna get the full precision of 64-bit numbers but just because
                     // you need > 32-bit precision doesn't mean you need the full 64-bit precision
-                    extract(unpack('Nupper/Nlower', self::shift($data, 8)));
+                    $unpacked = unpack('Nupper/Nlower', self::shift($data, 8));
+                    $upper = $unpacked['upper'];
+                    $lower = $unpacked['lower'];
                     $temp = $upper ? 4294967296 * $upper : 0;
                     $temp += $lower < 0 ? ($lower & 0x7FFFFFFFF) + 0x80000000 : $lower;
                     // $temp = hexdec(bin2hex(self::shift($data, 8)));

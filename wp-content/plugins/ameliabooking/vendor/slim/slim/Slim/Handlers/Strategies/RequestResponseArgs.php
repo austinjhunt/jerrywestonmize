@@ -7,8 +7,8 @@
 
 namespace Slim\Handlers\Strategies;
 
-use AmeliaPsr\Http\Message\ResponseInterface;
-use AmeliaPsr\Http\Message\ServerRequestInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface;
 use Slim\Interfaces\InvocationStrategyInterface;
 
 /**

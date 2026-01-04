@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Monolog\Handler;
+namespace AmeliaVendor\Monolog\Handler;
 
-use Monolog\Logger;
-use Monolog\Formatter\NormalizerFormatter;
-use Monolog\Formatter\FormatterInterface;
+use AmeliaVendor\Monolog\Logger;
+use AmeliaVendor\Monolog\Formatter\NormalizerFormatter;
+use AmeliaVendor\Monolog\Formatter\FormatterInterface;
 use Doctrine\CouchDB\CouchDBClient;
 
 /**

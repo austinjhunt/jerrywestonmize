@@ -17,7 +17,7 @@ class NotificationSMSHistoryRepository extends AbstractRepository
     /**
      * @param $data
      *
-     * @return bool
+     * @return int
      *
      * @throws QueryExecutionException
      * @throws \Exception
@@ -129,12 +129,12 @@ class NotificationSMSHistoryRepository extends AbstractRepository
     }
 
     /**
-     * @param int    $id
+     * @param int $id
      *
-     * @return array
+     * @return array|null
      * @throws QueryExecutionException
      */
-    public function getById($id)
+    public function getItemById($id)
     {
         try {
             $statement = $this->connection->prepare(

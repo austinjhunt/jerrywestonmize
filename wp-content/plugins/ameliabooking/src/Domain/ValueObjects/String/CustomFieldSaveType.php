@@ -20,7 +20,7 @@ final class CustomFieldSaveType
     /**
      * Status constructor.
      *
-     * @param int $saveType
+     * @param string $saveType
      */
     public function __construct($saveType)
     {

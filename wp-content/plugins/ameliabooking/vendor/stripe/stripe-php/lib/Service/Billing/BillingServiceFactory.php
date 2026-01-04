@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Service\Billing;
+namespace AmeliaVendor\Stripe\Service\Billing;
 
 /**
  * Service factory class for API resources in the Billing namespace.
@@ -15,7 +15,7 @@ namespace AmeliaStripe\Service\Billing;
  * @property MeterEventService $meterEvents
  * @property MeterService $meters
  */
-class BillingServiceFactory extends \AmeliaStripe\Service\AbstractServiceFactory
+class BillingServiceFactory extends \AmeliaVendor\Stripe\Service\AbstractServiceFactory
 {
     /**
      * @var array<string, string>

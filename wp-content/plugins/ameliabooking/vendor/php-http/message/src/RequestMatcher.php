@@ -2,7 +2,7 @@
 
 namespace AmeliaHttp\Message;
 
-use AmeliaPsr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
 
 /**
  * Match a request.

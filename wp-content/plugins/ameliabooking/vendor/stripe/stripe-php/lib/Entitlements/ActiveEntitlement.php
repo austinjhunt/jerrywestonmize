@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Entitlements;
+namespace AmeliaVendor\Stripe\Entitlements;
 
 /**
  * An active entitlement describes access to a feature for a customer.
@@ -13,7 +13,7 @@ namespace AmeliaStripe\Entitlements;
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
  * @property string $lookup_key A unique key you provide as your own system identifier. This may be up to 80 characters.
  */
-class ActiveEntitlement extends \AmeliaStripe\ApiResource
+class ActiveEntitlement extends \AmeliaVendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'entitlements.active_entitlement';
 
@@ -23,15 +23,15 @@ class ActiveEntitlement extends \AmeliaStripe\ApiResource
      * @param null|array{customer: string, ending_before?: string, expand?: string[], limit?: int, starting_after?: string} $params
      * @param null|array|string $opts
      *
-     * @return \AmeliaStripe\Collection<ActiveEntitlement> of ApiResources
+     * @return \AmeliaVendor\Stripe\Collection<ActiveEntitlement> of ApiResources
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
 
-        return static::_requestPage($url, \AmeliaStripe\Collection::class, $params, $opts);
+        return static::_requestPage($url, \AmeliaVendor\Stripe\Collection::class, $params, $opts);
     }
 
     /**
@@ -42,11 +42,11 @@ class ActiveEntitlement extends \AmeliaStripe\ApiResource
      *
      * @return ActiveEntitlement
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = \AmeliaStripe\Util\RequestOptions::parse($opts);
+        $opts = \AmeliaVendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
 

@@ -2,7 +2,7 @@
 
 namespace AmeliaHttp\Message\UriFactory;
 
-use AmeliaGuzzleHttp\Psr7;
+use AmeliaVendor\GuzzleHttp\Psr7;
 use AmeliaHttp\Message\UriFactory;
 
 /**
@@ -17,6 +17,6 @@ final class GuzzleUriFactory implements UriFactory
      */
     public function createUri($uri)
     {
-        return Psr7\uri_for($uri);
+        return Psr7\Utils::uriFor($uri);
     }
 }

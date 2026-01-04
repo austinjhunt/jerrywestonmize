@@ -29,14 +29,22 @@ class Send_Preview_Email {
  public function render_html( $post ): string {
  $subject = $post->post_title;
  $language = get_bloginfo( 'language' );
+ // Add filter to set preview context for block renderers.
+ add_filter( 'woocommerce_email_editor_rendering_email_context', array( $this, 'add_preview_context' ) );
  $rendered_data = $this->renderer->render(
  $post,
  $subject,
  __( 'Preview', 'woocommerce' ),
  $language
  );
- $rendered_data = apply_filters( 'woocommerce_email_editor_send_preview_email_rendered_data', $rendered_data );
+ // Remove filter after rendering.
+ remove_filter( 'woocommerce_email_editor_rendering_email_context', array( $this, 'add_preview_context' ) );
+ $rendered_data = apply_filters( 'woocommerce_email_editor_send_preview_email_rendered_data', $rendered_data, $post );
  return $this->set_personalize_content( $rendered_data['html'] );
+ }
+ public function add_preview_context( $email_context ): array {
+ $email_context['is_user_preview'] = true;
+ return $email_context;
  }
  public function set_personalize_content( string $content ): string {
  $current_user = wp_get_current_user();

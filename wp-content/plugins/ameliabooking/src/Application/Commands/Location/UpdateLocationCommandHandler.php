@@ -26,7 +26,6 @@ class UpdateLocationCommandHandler extends CommandHandler
     public $mandatoryFields = [
         'name',
         'address',
-        'phone',
         'latitude',
         'longitude'
     ];
@@ -39,7 +38,6 @@ class UpdateLocationCommandHandler extends CommandHandler
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      * @throws AccessDeniedException
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function handle(UpdateLocationCommand $command)
     {

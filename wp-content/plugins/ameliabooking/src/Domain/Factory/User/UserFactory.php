@@ -52,7 +52,7 @@ class UserFactory
      */
     public static function create($data)
     {
-        if (!isset($data['type']) || !$data['email']) {
+        if (!isset($data['type'])) {
             $data['type'] = 'customer';
         }
 
@@ -124,9 +124,9 @@ class UserFactory
                 }
 
                 $user = new Provider(
-                    new Name(trim($data['firstName'])),
-                    new Name(trim($data['lastName'])),
-                    new Email($data['email']),
+                    new Name(!empty($data['firstName']) ? trim($data['firstName']) : null),
+                    new Name(!empty($data['lastName']) ? trim($data['lastName']) : null),
+                    new Email(!empty($data['email']) ? $data['email'] : null),
                     new Phone(isset($data['phone']) ? $data['phone'] : null),
                     new Collection($weekDayList),
                     new Collection($serviceList),
@@ -187,6 +187,10 @@ class UserFactory
                     $user->setEmployeeAppleCalendar(AppleCalendarFactory::create($data['employeeAppleCalendar']));
                 }
 
+                if (!empty($data['googleCalendarId'])) {
+                    $user->setGoogleCalendarId(new Name($data['googleCalendarId']));
+                }
+
                 break;
             case 'manager':
                 $user = new Manager(
@@ -200,7 +204,7 @@ class UserFactory
                 $user = new Customer(
                     new Name(trim($data['firstName'])),
                     new Name(trim($data['lastName'])),
-                    new Email($data['email'] ?: null),
+                    new Email(!empty($data['email']) ? $data['email'] : null),
                     new Phone(!empty($data['phone']) ? $data['phone'] : null),
                     new Gender(!empty($data['gender']) ? strtolower($data['gender']) : null)
                 );
@@ -219,7 +223,11 @@ class UserFactory
                 }
 
                 if (!empty($data['customFields'])) {
-                    $user->setCustomFields(new Json($data['customFields']));
+                    if (is_string($data['customFields'])) {
+                        $user->setCustomFields(new Json($data['customFields']));
+                    } elseif (json_encode($data['customFields']) !== false) {
+                        $user->setCustomFields(new Json(json_encode($data['customFields'])));
+                    }
                 }
 
                 break;

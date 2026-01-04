@@ -56,15 +56,15 @@ class AlternativeSecurityId extends Entity
     * Gets the key
     * For internal use only
     *
-    * @return \AmeliaGuzzleHttp\Psr7\Stream|null The key
+    * @return \AmeliaVendor\GuzzleHttp\Psr7\Stream|null The key
     */
     public function getKey()
     {
         if (array_key_exists("key", $this->_propDict)) {
-            if (is_a($this->_propDict["key"], "\AmeliaGuzzleHttp\Psr7\Stream") || is_null($this->_propDict["key"])) {
+            if (is_a($this->_propDict["key"], "\AmeliaVendor\GuzzleHttp\Psr7\Stream") || is_null($this->_propDict["key"])) {
                 return $this->_propDict["key"];
             } else {
-                $this->_propDict["key"] = \AmeliaGuzzleHttp\Psr7\Utils::streamFor($this->_propDict["key"]);
+                $this->_propDict["key"] = \AmeliaVendor\GuzzleHttp\Psr7\Utils::streamFor($this->_propDict["key"]);
                 return $this->_propDict["key"];
             }
         }
@@ -75,7 +75,7 @@ class AlternativeSecurityId extends Entity
     * Sets the key
     * For internal use only
     *
-    * @param \AmeliaGuzzleHttp\Psr7\Stream $val The value to assign to the key
+    * @param \AmeliaVendor\GuzzleHttp\Psr7\Stream $val The value to assign to the key
     *
     * @return AlternativeSecurityId The AlternativeSecurityId
     */

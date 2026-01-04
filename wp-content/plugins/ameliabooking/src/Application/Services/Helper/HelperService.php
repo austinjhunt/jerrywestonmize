@@ -6,7 +6,9 @@ use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\LoginType;
 use AmeliaBooking\Infrastructure\Common\Container;
-use AmeliaFirebase\JWT\JWT;
+use AmeliaVendor\Firebase\JWT\JWT;
+use AmeliaVendor\phpseclib3\Crypt\PublicKeyLoader;
+use AmeliaVendor\phpseclib3\Crypt\RSA;
 use Interop\Container\Exception\ContainerException;
 use DateTime;
 use Exception;
@@ -227,7 +229,7 @@ class HelperService
      * @param string $entityTranslation
      * @param string $type
      *
-     * @return array
+     * @return array|null
      */
     public function getBookingTranslation($locale, $entityTranslation, $type)
     {

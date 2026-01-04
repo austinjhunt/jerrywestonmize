@@ -44,7 +44,7 @@ class CouponApplicationService extends AbstractCouponApplicationService
     /**
      * @param Coupon $coupon
      *
-     * @return boolean
+     * @return int
      *
      * @throws ContainerValueNotFoundException
      * @throws QueryExecutionException
@@ -274,14 +274,14 @@ class CouponApplicationService extends AbstractCouponApplicationService
                 /** @var PackageCustomerRepository $packageCustomerRepository */
                 $packageCustomerRepository = $this->container->get('domain.bookable.packageCustomer.repository');
 
-                $couponWithUsedPackage = $packageCustomerRepository->getByEntityId(
+                $packageCustomerRecords = $packageCustomerRepository->getByEntityId(
                     $coupon->getId()->getValue(),
                     'couponId'
                 );
 
                 $coupon->setUsed(
                     new WholeNumber(
-                        $coupon->getUsed()->getValue() + $couponWithUsedPackage->length()
+                        $coupon->getUsed()->getValue() + $packageCustomerRecords->length()
                     )
                 );
 
@@ -327,7 +327,7 @@ class CouponApplicationService extends AbstractCouponApplicationService
             $inspectCoupon &&
             (
                 $coupon->getStatus()->getValue() === 'hidden' ||
-                $coupon->getUsed()->getValue() >= $coupon->getLimit()->getValue()
+                $coupon->getUsed()->getValue() >= ($coupon->getLimit()->getValue() ?: ($coupon->getUsed()->getValue() + 1))
             )
         ) {
             throw new CouponInvalidException(FrontendStrings::getCommonStrings()['coupon_invalid']);
@@ -407,16 +407,15 @@ class CouponApplicationService extends AbstractCouponApplicationService
         /** @var PackageCustomerRepository $packageCustomerRepository */
         $packageCustomerRepository = $this->container->get('domain.bookable.packageCustomer.repository');
 
-        /** @var Collection $customerPackageReservations */
-        $customerPackageReservations = $packageCustomerRepository->getFiltered(
+        $customerPackageReservations = $packageCustomerRepository->getFilteredIds(
             [
-                'customerId'      => $userId,
-                'bookingStatus'   => BookingStatus::APPROVED,
-                'couponId'        => $couponId
+                'customers' => [$userId],
+                'status'    => [BookingStatus::APPROVED],
+                'couponId'  => $couponId
             ]
         );
 
-        return $customerAppointmentReservations->length() + sizeof($eventsIds) + $customerPackageReservations->length();
+        return $customerAppointmentReservations->length() + sizeof($eventsIds) + sizeof($customerPackageReservations);
     }
 
     /**
@@ -436,9 +435,9 @@ class CouponApplicationService extends AbstractCouponApplicationService
 
             $used = $userId ? $this->getCustomerCouponUsedCount($coupon->getId()->getValue(), $userId) : 0;
         } else {
-            $maxLimit = $coupon->getLimit()->getValue();
-
             $used = $coupon->getUsed()->getValue();
+
+            $maxLimit = $coupon->getLimit()->getValue() ?: ($used + 1);
         }
 
         return $maxLimit - $used;

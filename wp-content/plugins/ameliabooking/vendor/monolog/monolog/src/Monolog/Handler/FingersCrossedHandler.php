@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Monolog\Handler;
+namespace AmeliaVendor\Monolog\Handler;
 
-use Monolog\Handler\FingersCrossed\ErrorLevelActivationStrategy;
-use Monolog\Handler\FingersCrossed\ActivationStrategyInterface;
-use Monolog\Logger;
-use Monolog\ResettableInterface;
-use Monolog\Formatter\FormatterInterface;
-use Psr\Log\LogLevel;
+use AmeliaVendor\Monolog\Handler\FingersCrossed\ErrorLevelActivationStrategy;
+use AmeliaVendor\Monolog\Handler\FingersCrossed\ActivationStrategyInterface;
+use AmeliaVendor\Monolog\Logger;
+use AmeliaVendor\Monolog\ResettableInterface;
+use AmeliaVendor\Monolog\Formatter\FormatterInterface;
+use AmeliaVendor\Psr\Log\LogLevel;
 
 /**
  * Buffers all records until a certain level is reached

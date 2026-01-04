@@ -3,7 +3,7 @@
 namespace AmeliaHttp\Client;
 
 use AmeliaHttp\Promise\Promise;
-use AmeliaPsr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
 
 /**
  * Sends a PSR-7 Request in an asynchronous way by returning a Promise.

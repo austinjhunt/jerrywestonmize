@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See COPYING.md for license details.
  */
 
@@ -33,6 +33,8 @@ class Package
     public static function routes(App $app)
     {
         $app->get('/packages', GetPackagesController::class);
+
+        $app->get('/packages/{id:[0-9]+}', GetPackageController::class);
 
         $app->post('/packages', AddPackageController::class);
 

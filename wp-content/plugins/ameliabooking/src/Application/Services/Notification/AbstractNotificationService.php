@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -47,7 +47,7 @@ abstract class AbstractNotificationService
     /** @var string */
     protected $type;
 
-    /** @var array */
+    /** @var boolean */
     protected $sendNotifications = true;
 
     /** @var array */
@@ -154,9 +154,14 @@ abstract class AbstractNotificationService
         $notificationRepo = $this->container->get('domain.notification.repository');
         /** @var NotificationsToEntitiesRepository $notificationEntitiesRepo */
         $notificationEntitiesRepo = $this->container->get('domain.notificationEntities.repository');
+        /** @var SettingsService $settingsService */
+        $settingsService = $this->container->get('domain.settings.service');
+
+        // Check if custom notifications feature is enabled
+        $isCustomNotificationsEnabled = $settingsService->isFeatureEnabled('customNotifications');
 
         /** @var Collection $notifications */
-        $notifications = $notificationRepo->getByNameAndType($name, $type);
+        $notifications = $notificationRepo->getByNameAndType($name, $type, $isCustomNotificationsEnabled);
         /** @var Notification $notification */
         foreach ($notifications->getItems() as $notification) {
             if ($notification->getCustomName() !== null) {

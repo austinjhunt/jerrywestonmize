@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-namespace AmeliaGoogle\Task;
+namespace AmeliaVendor\Google\Task;
 
 /**
  * Interface for checking how many times a given task can be retried following

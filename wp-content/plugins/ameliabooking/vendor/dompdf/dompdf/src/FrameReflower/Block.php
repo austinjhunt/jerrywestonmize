@@ -4,15 +4,15 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace AmeliaDompdf\FrameReflower;
+namespace AmeliaVendor\Dompdf\FrameReflower;
 
-use AmeliaDompdf\FrameDecorator\AbstractFrameDecorator;
-use AmeliaDompdf\FrameDecorator\Block as BlockFrameDecorator;
-use AmeliaDompdf\FrameDecorator\TableCell as TableCellFrameDecorator;
-use AmeliaDompdf\FrameDecorator\Text as TextFrameDecorator;
-use AmeliaDompdf\Exception;
-use AmeliaDompdf\Css\Style;
-use AmeliaDompdf\Helpers;
+use AmeliaVendor\Dompdf\FrameDecorator\AbstractFrameDecorator;
+use AmeliaVendor\Dompdf\FrameDecorator\Block as BlockFrameDecorator;
+use AmeliaVendor\Dompdf\FrameDecorator\TableCell as TableCellFrameDecorator;
+use AmeliaVendor\Dompdf\FrameDecorator\Text as TextFrameDecorator;
+use AmeliaVendor\Dompdf\Exception;
+use AmeliaVendor\Dompdf\Css\Style;
+use AmeliaVendor\Dompdf\Helpers;
 
 /**
  * Reflows block frames
@@ -776,9 +776,9 @@ class Block extends AbstractFrameReflower
     }
 
     /**
-     * @param BlockFrameDecorator $block
+     * @param BlockFrameDecorator|null $block
      */
-    function reflow(BlockFrameDecorator $block = null)
+    function reflow(?BlockFrameDecorator $block = null)
     {
 
         // Check if a page break is forced

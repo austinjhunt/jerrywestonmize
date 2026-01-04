@@ -4,11 +4,11 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace AmeliaDompdf;
+namespace AmeliaVendor\Dompdf;
 
-use AmeliaDompdf\FrameDecorator\AbstractFrameDecorator;
-use AmeliaDompdf\FrameDecorator\Table as TableFrameDecorator;
-use AmeliaDompdf\FrameDecorator\TableCell as TableCellFrameDecorator;
+use AmeliaVendor\Dompdf\FrameDecorator\AbstractFrameDecorator;
+use AmeliaVendor\Dompdf\FrameDecorator\Table as TableFrameDecorator;
+use AmeliaVendor\Dompdf\FrameDecorator\TableCell as TableCellFrameDecorator;
 
 /**
  * Maps table cells to the table grid.
@@ -722,6 +722,12 @@ class Cellmap
                 continue;
             }
 
+            // Column calculation for fixed-layout tables should ony use the first row's cells
+            // https://www.w3.org/TR/CSS2/tables.html#fixed-table-layout
+            if ($this->_fixed_layout && !in_array(0, $frame_info["rows"], true)) {
+                continue;
+            }
+
             $node = $frame->get_node();
             $colspan = max((int) $node->getAttribute("colspan"), 1);
             $first_col = $frame_info["columns"][0];
@@ -766,7 +772,7 @@ class Cellmap
             if ($frame_min > $min && $colspan === 1) {
                 // The frame needs more space.  Expand each sub-column
                 // FIXME try to avoid putting this dummy value when table-layout:fixed
-                $inc = ($this->is_layout_fixed() ? 10e-10 : ($frame_min - $min));
+                $inc = ($this->_fixed_layout ? 10e-10 : ($frame_min - $min));
                 for ($c = 0; $c < $colspan; $c++) {
                     $col =& $this->get_column($first_col + $c);
                     $col["min-width"] += $inc;
@@ -775,7 +781,7 @@ class Cellmap
 
             if ($frame_max > $max) {
                 // FIXME try to avoid putting this dummy value when table-layout:fixed
-                $inc = ($this->is_layout_fixed() ? 10e-10 : ($frame_max - $max) / $colspan);
+                $inc = ($this->_fixed_layout ? 10e-10 : ($frame_max - $max) / $colspan);
                 for ($c = 0; $c < $colspan; $c++) {
                     $col =& $this->get_column($first_col + $c);
                     $col["max-width"] += $inc;

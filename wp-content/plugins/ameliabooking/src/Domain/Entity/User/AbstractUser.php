@@ -80,6 +80,9 @@ abstract class AbstractUser
     /** @var Name */
     private $appleCalendarId;
 
+    /** @var Name */
+    private $googleCalendarId;
+
     /**
      * AbstractUser constructor.
      *
@@ -378,9 +381,9 @@ abstract class AbstractUser
     }
 
     /**
-     * @param Json $customFields
+     * @param Json|null $customFields
      */
-    public function setCustomFields(Json $customFields)
+    public function setCustomFields($customFields)
     {
         $this->customFields = $customFields;
     }
@@ -400,6 +403,22 @@ abstract class AbstractUser
     public function setAppleCalendarId(Name $appleCalendarId)
     {
         $this->appleCalendarId = $appleCalendarId;
+    }
+
+    /**
+     * @return Name
+     */
+    public function getGoogleCalendarId()
+    {
+        return $this->googleCalendarId;
+    }
+
+    /**
+     * @param Name $googleCalendarId
+     */
+    public function setGoogleCalendarId(Name $googleCalendarId)
+    {
+        $this->googleCalendarId = $googleCalendarId;
     }
 
     /**
@@ -425,6 +444,7 @@ abstract class AbstractUser
             'translations'     => $this->getTranslations() ? $this->getTranslations()->getValue() : null,
             'customFields'     => $this->getCustomFields() ? $this->getCustomFields()->getValue() : null,
             'appleCalendarId'  => null !== $this->getAppleCalendarId() ? $this->getAppleCalendarId()->getValue() : null,
+            'googleCalendarId' => null !== $this->getGoogleCalendarId() ? $this->getGoogleCalendarId()->getValue() : null,
 //            'password'         => null !== $this->getPassword() ? $this->getPassword()->getValue() : null
         ];
     }

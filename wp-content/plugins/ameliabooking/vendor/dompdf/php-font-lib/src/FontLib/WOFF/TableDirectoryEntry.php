@@ -5,9 +5,9 @@
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 
-namespace FontLib\WOFF;
+namespace AmeliaVendor\FontLib\WOFF;
 
-use FontLib\Table\DirectoryEntry;
+use AmeliaVendor\FontLib\Table\DirectoryEntry;
 
 /**
  * WOFF font file table directory entry.

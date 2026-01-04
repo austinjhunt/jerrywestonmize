@@ -478,7 +478,7 @@ class XMLInvoiceService
         if ($data['leftToPay']) {
             $this->xml->addChild('PaymentTerms', null, $this->cac)->addChild(
                 'Note',
-                BackendStrings::getCustomizeStrings()['payment_method_colon'] . $invoiceData['invoice_method'],
+                BackendStrings::get('payment_method_colon') . $invoiceData['invoice_method'],
                 $this->cbc
             );
         }

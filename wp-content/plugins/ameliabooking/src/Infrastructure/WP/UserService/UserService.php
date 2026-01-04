@@ -30,7 +30,6 @@ class UserService
      *
      * @param Container $container
      *
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function __construct($container)
     {

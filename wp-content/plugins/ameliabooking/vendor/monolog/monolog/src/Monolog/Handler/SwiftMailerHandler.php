@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Monolog\Handler;
+namespace AmeliaVendor\Monolog\Handler;
 
-use Monolog\Logger;
-use Monolog\Utils;
-use Monolog\Formatter\FormatterInterface;
-use Monolog\Formatter\LineFormatter;
+use AmeliaVendor\Monolog\Logger;
+use AmeliaVendor\Monolog\Utils;
+use AmeliaVendor\Monolog\Formatter\FormatterInterface;
+use AmeliaVendor\Monolog\Formatter\LineFormatter;
 use Swift_Message;
 use Swift;
 

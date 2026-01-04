@@ -4,18 +4,18 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace AmeliaDompdf;
+namespace AmeliaVendor\Dompdf;
 
 use DOMDocument;
 use DOMNode;
-use AmeliaDompdf\Adapter\CPDF;
+use AmeliaVendor\Dompdf\Adapter\CPDF;
 use DOMXPath;
-use AmeliaDompdf\Frame\Factory;
-use AmeliaDompdf\Frame\FrameTree;
-use AmeliaDompdf\Image\Cache;
-use AmeliaDompdf\Css\Stylesheet;
-use AmeliaDompdf\Helpers;
-use Masterminds\HTML5;
+use AmeliaVendor\Dompdf\Frame\Factory;
+use AmeliaVendor\Dompdf\Frame\FrameTree;
+use AmeliaVendor\Dompdf\Image\Cache;
+use AmeliaVendor\Dompdf\Css\Stylesheet;
+use AmeliaVendor\Dompdf\Helpers;
+use AmeliaVendor\Masterminds\HTML5;
 
 /**
  * Dompdf - PHP5 HTML to PDF renderer
@@ -57,9 +57,9 @@ use Masterminds\HTML5;
  * Frame}s are rendered using an adapted {@link Cpdf} class, originally
  * written by Wayne Munro, http://www.ros.co.nz/pdf/.  (Some performance
  * related changes have been made to the original {@link Cpdf} class, and
- * the {@link AmeliaDompdf\Adapter\CPDF} class provides a simple, stateless interface to
+ * the {@link Dompdf\Adapter\CPDF} class provides a simple, stateless interface to
  * PDF generation.)  PDFLib support has now also been added, via the {@link
- * AmeliaDompdf\Adapter\PDFLib}.
+ * Dompdf\Adapter\PDFLib}.
  *
  *
  * @package dompdf
@@ -289,8 +289,10 @@ class Dompdf
             setlocale(LC_NUMERIC, "C");
         }
 
-        $this->pcreJit = @ini_get('pcre.jit');
-        @ini_set('pcre.jit', '0');
+        if (function_exists('ini_get') && function_exists('ini_set')) {
+            $this->pcreJit = @ini_get('pcre.jit');
+            @ini_set('pcre.jit', '0');
+        }
 
         $this->mbstringEncoding = mb_internal_encoding();
         mb_internal_encoding('UTF-8');
@@ -306,9 +308,11 @@ class Dompdf
             $this->systemLocale = null;
         }
 
-        if ($this->pcreJit !== null) {
-            @ini_set('pcre.jit', $this->pcreJit);
-            $this->pcreJit = null;
+        if (function_exists('ini_get') && function_exists('ini_set')) {
+            if ($this->pcreJit !== null) {
+                @ini_set('pcre.jit', $this->pcreJit);
+                $this->pcreJit = null;
+            }
         }
 
         if ($this->mbstringEncoding !== null) {
@@ -346,7 +350,7 @@ class Dompdf
             [$this->protocol, $this->baseHost, $this->basePath] = Helpers::explode_url($file);
         }
         $protocol = strtolower($this->protocol);
-        $uri = Helpers::build_url($this->protocol, $this->baseHost, $this->basePath, $file);
+        $uri = Helpers::build_url($this->protocol, $this->baseHost, $this->basePath, $file, $this->options->getChroot());
 
         $allowed_protocols = $this->options->getAllowedProtocols();
         if (!array_key_exists($protocol, $allowed_protocols)) {
@@ -613,7 +617,7 @@ class Dompdf
                         }
 
                         $url = $tag->getAttribute("href");
-                        $url = Helpers::build_url($this->protocol, $this->baseHost, $this->basePath, $url);
+                        $url = Helpers::build_url($this->protocol, $this->baseHost, $this->basePath, $url, $this->options->getChroot());
 
                         if ($url !== null) {
                             $this->css->load_css_file($url, Stylesheet::ORIG_AUTHOR);
@@ -758,7 +762,10 @@ class Dompdf
         $canvasHeight = $this->canvas->get_height();
         $size = $this->getPaperSize();
 
-        if ($canvasWidth !== $size[2] || $canvasHeight !== $size[3]) {
+        if (
+            \AmeliaVendor\Dompdf\Helpers::lengthEqual($canvasWidth, $size[2]) === false ||
+            \AmeliaVendor\Dompdf\Helpers::lengthEqual($canvasHeight, $size[3]) === false
+        ) {
             $this->canvas = CanvasFactory::get_instance($this, $this->paperSize, $this->paperOrientation);
             $this->fontMetrics->setCanvas($this->canvas);
         }
@@ -924,7 +931,7 @@ class Dompdf
      *
      * @param array $options options (see above)
      *
-     * @return string|null
+     * @return string
      */
     public function output($options = [])
     {
@@ -976,7 +983,9 @@ class Dompdf
      */
     public function set_option($key, $value)
     {
-        $this->options->set($key, $value);
+        $new_options = clone $this->options;
+        $new_options->set($key, $value);
+        $this->setOptions($new_options);
         return $this;
     }
 
@@ -987,7 +996,9 @@ class Dompdf
      */
     public function set_options(array $options)
     {
-        $this->options->set($options);
+        $new_options = clone $this->options;
+        $new_options->set($options);
+        $this->setOptions($new_options);
         return $this;
     }
 
@@ -1004,14 +1015,22 @@ class Dompdf
     /**
      * Sets the paper size & orientation
      *
-     * @param string|float[] $size 'letter', 'legal', 'A4', etc. {@link AmeliaDompdf\Adapter\CPDF::$PAPER_SIZES}
+     * @param string|float[] $size 'letter', 'legal', 'A4', etc. {@link Dompdf\Adapter\CPDF::$PAPER_SIZES}
      * @param string $orientation 'portrait' or 'landscape'
      * @return $this
      */
     public function setPaper($size, string $orientation = "portrait"): self
     {
+        $current_size = $this->getPaperSize();
         $this->paperSize = $size;
         $this->paperOrientation = $orientation;
+        $new_size = $this->getPaperSize();
+        if (
+            \AmeliaVendor\Dompdf\Helpers::lengthEqual($current_size[2], $new_size[2]) === false ||
+            \AmeliaVendor\Dompdf\Helpers::lengthEqual($current_size[3], $new_size[3]) === false
+        ) {
+            $this->canvas = CanvasFactory::get_instance($this, $this->paperSize, $this->paperOrientation);
+        }
         return $this;
     }
 
@@ -1280,6 +1299,10 @@ class Dompdf
     public function setCanvas(Canvas $canvas)
     {
         $this->canvas = $canvas;
+        $canvasWidth = $this->canvas->get_width();
+        $canvasHeight = $this->canvas->get_height();
+        $this->paperSize = [0, 0, $canvasWidth, $canvasHeight];
+        $this->paperOrientation = "portrait";
         return $this;
     }
 
@@ -1293,7 +1316,7 @@ class Dompdf
     }
 
     /**
-     * Return the underlying Canvas instance (e.g. AmeliaDompdf\Adapter\CPDF, AmeliaDompdf\Adapter\GD)
+     * Return the underlying Canvas instance (e.g. AmeliaVendor\Dompdf\Adapter\CPDF, AmeliaVendor\Dompdf\Adapter\GD)
      *
      * @return Canvas
      */
@@ -1370,10 +1393,19 @@ class Dompdf
         }
 
         $this->options = $options;
+
         $fontMetrics = $this->fontMetrics;
         if (isset($fontMetrics)) {
             $fontMetrics->setOptions($options);
         }
+
+        if (isset($this->canvas)) {
+            $this->canvas = CanvasFactory::get_instance($this, $this->paperSize, $this->paperOrientation);
+            if (isset($fontMetrics)) {
+                $this->fontMetrics = new FontMetrics($this->canvas, $this->options);
+            }
+        }
+
         return $this;
     }
 

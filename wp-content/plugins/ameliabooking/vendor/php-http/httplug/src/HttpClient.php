@@ -2,8 +2,8 @@
 
 namespace AmeliaHttp\Client;
 
-use AmeliaPsr\Http\Message\RequestInterface;
-use AmeliaPsr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
 
 /**
  * Sends a PSR-7 Request and returns a PSR-7 response.

@@ -19,7 +19,8 @@ class DisconnectFromSquareAccountController extends Controller
      * @var array
      */
     public $allowedFields = [
-        'data'
+        'data',
+        'signature'
     ];
 
 

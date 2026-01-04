@@ -15,16 +15,16 @@
  * limitations under the License.
  */
 
-namespace AmeliaGoogle\Http;
+namespace AmeliaVendor\Google\Http;
 
-use AmeliaGoogle\Auth\HttpHandler\HttpHandlerFactory;
-use AmeliaGoogle\Service\Exception as GoogleServiceException;
-use AmeliaGoogle\Task\Runner;
-use AmeliaGuzzleHttp\ClientInterface;
-use AmeliaGuzzleHttp\Exception\RequestException;
-use AmeliaGuzzleHttp\Psr7\Response;
-use AmeliaPsr\Http\Message\RequestInterface;
-use AmeliaPsr\Http\Message\ResponseInterface;
+use AmeliaVendor\Google\Auth\HttpHandler\HttpHandlerFactory;
+use AmeliaVendor\Google\Service\Exception as GoogleServiceException;
+use AmeliaVendor\Google\Task\Runner;
+use AmeliaVendor\GuzzleHttp\ClientInterface;
+use AmeliaVendor\GuzzleHttp\Exception\RequestException;
+use AmeliaVendor\GuzzleHttp\Psr7\Response;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
 
 /**
  * This class implements the RESTful transport of apiServiceRequest()'s
@@ -32,7 +32,7 @@ use AmeliaPsr\Http\Message\ResponseInterface;
 class REST
 {
     /**
-     * Executes a AmeliaPsr\Http\Message\RequestInterface and (if applicable) automatically retries
+     * Executes a AmeliaVendor\Psr\Http\Message\RequestInterface and (if applicable) automatically retries
      * when errors occur.
      *
      * @template T
@@ -42,7 +42,7 @@ class REST
      * @param array $config
      * @param array $retryMap
      * @return mixed|T|null
-     * @throws \AmeliaGoogle\Service\Exception on server side error (ie: not authenticated,
+     * @throws \AmeliaVendor\Google\Service\Exception on server side error (ie: not authenticated,
      *  invalid or malformed post body, invalid url)
      */
     public static function execute(
@@ -55,7 +55,7 @@ class REST
         $runner = new Runner(
             $config,
             sprintf('%s %s', $request->getMethod(), (string) $request->getUri()),
-            [get_class(), 'doExecute'],
+            [self::class, 'doExecute'],
             [$client, $request, $expectedClass]
         );
 
@@ -67,14 +67,14 @@ class REST
     }
 
     /**
-     * Executes a AmeliaPsr\Http\Message\RequestInterface
+     * Executes a AmeliaVendor\Psr\Http\Message\RequestInterface
      *
      * @template T
      * @param ClientInterface $client
      * @param RequestInterface $request
      * @param class-string<T>|false|null $expectedClass
      * @return mixed|T|null
-     * @throws \AmeliaGoogle\Service\Exception on server side error (ie: not authenticated,
+     * @throws \AmeliaVendor\Google\Service\Exception on server side error (ie: not authenticated,
      *  invalid or malformed post body, invalid url)
      */
     public static function doExecute(ClientInterface $client, RequestInterface $request, $expectedClass = null)
@@ -91,8 +91,8 @@ class REST
             $response = $e->getResponse();
             // specific checking for Guzzle 5: convert to PSR7 response
             if (
-                interface_exists('\AmeliaGuzzleHttp\Message\ResponseInterface')
-                && $response instanceof \AmeliaGuzzleHttp\Message\ResponseInterface
+                interface_exists('\AmeliaVendor\GuzzleHttp\Message\ResponseInterface')
+                && $response instanceof \AmeliaVendor\GuzzleHttp\Message\ResponseInterface
             ) {
                 $response = new Response(
                     $response->getStatusCode(),
@@ -116,11 +116,11 @@ class REST
      * @param ResponseInterface $response
      * @param class-string<T>|false|null $expectedClass
      * @return mixed|T|null
-     * @throws \AmeliaGoogle\Service\Exception
+     * @throws \AmeliaVendor\Google\Service\Exception
      */
     public static function decodeHttpResponse(
         ResponseInterface $response,
-        RequestInterface $request = null,
+        ?RequestInterface $request = null,
         $expectedClass = null
     ) {
         $code = $response->getStatusCode();
@@ -147,7 +147,7 @@ class REST
         return $response;
     }
 
-    private static function decodeBody(ResponseInterface $response, RequestInterface $request = null)
+    private static function decodeBody(ResponseInterface $response, ?RequestInterface $request = null)
     {
         if (self::isAltMedia($request)) {
             // don't decode the body, it's probably a really long string
@@ -157,7 +157,7 @@ class REST
         return (string) $response->getBody();
     }
 
-    private static function determineExpectedClass($expectedClass, RequestInterface $request = null)
+    private static function determineExpectedClass($expectedClass, ?RequestInterface $request = null)
     {
         // "false" is used to explicitly prevent an expected class from being returned
         if (false === $expectedClass) {
@@ -184,7 +184,7 @@ class REST
         return null;
     }
 
-    private static function isAltMedia(RequestInterface $request = null)
+    private static function isAltMedia(?RequestInterface $request = null)
     {
         if ($request && $qs = $request->getUri()->getQuery()) {
             parse_str($qs, $query);

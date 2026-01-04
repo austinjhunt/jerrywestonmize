@@ -1,10 +1,10 @@
 <?php
 
-namespace AmeliaSabre\VObject\Recur;
+namespace AmeliaVendor\Sabre\VObject\Recur;
 
 use DateTimeInterface;
 use Iterator;
-use AmeliaSabre\VObject\DateTimeParser;
+use AmeliaVendor\Sabre\VObject\DateTimeParser;
 
 /**
  * RRuleParser.

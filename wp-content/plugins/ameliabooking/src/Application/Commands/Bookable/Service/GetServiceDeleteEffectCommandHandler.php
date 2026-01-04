@@ -42,20 +42,17 @@ class GetServiceDeleteEffectCommandHandler extends CommandHandler
 
         $appointmentsCount = $bookableAS->getAppointmentsCountForServices([$command->getArg('id')]);
 
-        $message = '';
+        $messageKey = '';
+        $messageData = null;
 
         if ($appointmentsCount['futureAppointments'] > 0) {
-            $appointmentString = $appointmentsCount['futureAppointments'] === 1 ? 'appointment' : 'appointments';
-
-            $message = "Could not delete service. 
-            This service has {$appointmentsCount['futureAppointments']} {$appointmentString} in the future.";
+            $messageKey = 'red_delete_service_effect_future';
+            $messageData = ['count' => $appointmentsCount['futureAppointments']];
         } elseif ($appointmentsCount['packageAppointments']) {
-            $message = "This service is available for booking in purchased package.
-            Are you sure you want to delete this service?";
+            $messageKey = 'red_delete_service_effect_package';
         } elseif ($appointmentsCount['pastAppointments'] > 0) {
-            $appointmentString = $appointmentsCount['pastAppointments'] === 1 ? 'appointment' : 'appointments';
-
-            $message = "This service has {$appointmentsCount['pastAppointments']} {$appointmentString} in the past.";
+            $messageKey = 'red_delete_service_effect_past';
+            $messageData = ['count' => $appointmentsCount['pastAppointments']];
         }
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
@@ -63,7 +60,8 @@ class GetServiceDeleteEffectCommandHandler extends CommandHandler
         $result->setData(
             [
                 'valid'   => $appointmentsCount['futureAppointments'] ? false : true,
-                'message' => $message
+                'messageKey'  => $messageKey,
+                'messageData' => $messageData,
             ]
         );
 

@@ -11,14 +11,8 @@ use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
  */
 class Menu
 {
-    /** @var SettingsService $settingsService */
-    private $settingsService;
+    private SettingsService $settingsService;
 
-    /**
-     * Menu constructor.
-     *
-     * @param SettingsService $settingsService
-     */
     public function __construct(SettingsService $settingsService)
     {
         $this->settingsService = $settingsService;
@@ -34,126 +28,124 @@ class Menu
             'defaultPageOnBackend'
         );
 
-        $defaultPages = [
+        $menuItems = [
             [
                 'parentSlug' => 'amelia',
-                'pageTitle'  => 'Dashboard',
-                'menuTitle'  => BackendStrings::getDashboardStrings()['dashboard'],
+                'pageTitle'  => BackendStrings::get('dashboard'),
+                'menuTitle'  => BackendStrings::get('dashboard'),
                 'capability' => 'amelia_read_dashboard',
                 'menuSlug'   => 'wpamelia-dashboard',
             ],
             [
                 'parentSlug' => 'amelia',
-                'pageTitle'  => 'Calendar',
-                'menuTitle'  => BackendStrings::getCalendarStrings()['calendar'],
+                'pageTitle'  => BackendStrings::get('calendar'),
+                'menuTitle'  => BackendStrings::get('calendar'),
                 'capability' => 'amelia_read_calendar',
                 'menuSlug'   => 'wpamelia-calendar',
             ],
             [
                 'parentSlug' => 'amelia',
-                'pageTitle'  => 'Appointments',
-                'menuTitle'  => BackendStrings::getCommonStrings()['appointments'],
+                'pageTitle'  => BackendStrings::get('bookings'),
+                'menuTitle'  => BackendStrings::get('bookings'),
                 'capability' => 'amelia_read_appointments',
-                'menuSlug'   => 'wpamelia-appointments',
+                'menuSlug'   => 'wpamelia-bookings',
             ],
             [
                 'parentSlug' => 'amelia',
-                'pageTitle'  => 'Events',
-                'menuTitle'  => BackendStrings::getCommonStrings()['events'],
+                'pageTitle'  => BackendStrings::get('events'),
+                'menuTitle'  => BackendStrings::get('events'),
                 'capability' => 'amelia_read_events',
                 'menuSlug'   => 'wpamelia-events',
-            ]
+            ],
+            [
+                'parentSlug' => 'amelia',
+                'pageTitle'  => Licence::getLicence() === 'Lite'
+                    ? BackendStrings::get('employee')
+                    : BackendStrings::get('employees'),
+                'menuTitle'  => Licence::getLicence() === 'Lite'
+                    ? BackendStrings::get('employee')
+                    : BackendStrings::get('employees'),
+                'capability' => 'amelia_read_employees',
+                'menuSlug'   => 'wpamelia-employees',
+            ],
+            [
+                'parentSlug' => 'amelia',
+                'pageTitle'  => BackendStrings::get('red_catalog'),
+                'menuTitle'  => BackendStrings::get('red_catalog'),
+                'capability' => 'amelia_read_services',
+                'menuSlug'   => 'wpamelia-catalog',
+            ],
+            [
+                'parentSlug' => 'amelia',
+                'pageTitle'  => BackendStrings::get('locations'),
+                'menuTitle'  => BackendStrings::get('locations'),
+                'capability' => 'amelia_read_locations',
+                'menuSlug'   => 'wpamelia-locations',
+            ],
+            [
+                'parentSlug' => 'amelia',
+                'pageTitle'  => BackendStrings::get('customers'),
+                'menuTitle'  => BackendStrings::get('customers'),
+                'capability' => 'amelia_read_customers',
+                'menuSlug'   => 'wpamelia-customers',
+            ],
+            [
+                'parentSlug' => 'amelia',
+                'pageTitle'  => BackendStrings::get('finance'),
+                'menuTitle'  => BackendStrings::get('finance'),
+                'capability' => 'amelia_read_finance',
+                'menuSlug'   => 'wpamelia-finance',
+            ],
+            [
+                'parentSlug' => 'amelia',
+                'pageTitle'  => BackendStrings::get('red_notifications'),
+                'menuTitle'  => BackendStrings::get('red_notifications'),
+                'capability' => 'amelia_read_notifications',
+                'menuSlug'   => 'wpamelia-notifications',
+            ],
+            [
+                'parentSlug' => 'amelia',
+                'pageTitle'  => BackendStrings::get('customize'),
+                'menuTitle'  => BackendStrings::get('customize'),
+                'capability' => 'amelia_read_customize',
+                'menuSlug'   => 'wpamelia-customize',
+            ],
+            [
+                'parentSlug' => 'amelia',
+                'pageTitle'  => BackendStrings::get('red_features_integrations'),
+                'menuTitle'  => BackendStrings::get('red_features_integrations'),
+                'capability' => 'amelia_read_settings',
+                'menuSlug'   => 'wpamelia-features-integrations',
+            ],
+            [
+                'parentSlug' => 'amelia',
+                'pageTitle'  => BackendStrings::get('custom_fields_title'),
+                'menuTitle'  => BackendStrings::get('custom_fields_title'),
+                'capability' => 'amelia_read_custom_fields',
+                'menuSlug'   => 'wpamelia-customfields',
+            ],
+            [
+                'parentSlug' => 'amelia',
+                'pageTitle'  => BackendStrings::get('settings'),
+                'menuTitle'  => BackendStrings::get('settings'),
+                'capability' => 'amelia_read_settings',
+                'menuSlug'   => 'wpamelia-settings',
+            ],
+            [
+                'parentSlug' => 'amelia',
+                'pageTitle'  => BackendStrings::get('whats_new'),
+                'menuTitle'  => BackendStrings::get('whats_new'),
+                'capability' => 'amelia_read_whats_new',
+                'menuSlug'   => 'wpamelia-whats-new',
+            ],
         ];
 
-        $defaultPageKey = array_search($defaultPageOnBackend, array_column($defaultPages, 'pageTitle'), true);
-
-        $defaultPageElement = array_splice($defaultPages, $defaultPageKey, 1);
-
-        $menuItems = [
-                [
-                    'parentSlug' => 'amelia',
-                    'pageTitle'  => 'Services',
-                    'menuTitle'  => BackendStrings::getCommonStrings()['services'],
-                    'capability' => 'amelia_read_services',
-                    'menuSlug'   => 'wpamelia-services',
-                ],
-                [
-                    'parentSlug' => 'amelia',
-                    'pageTitle'  => 'Locations',
-                    'menuTitle'  => BackendStrings::getCommonStrings()['locations'],
-                    'capability' => 'amelia_read_locations',
-                    'menuSlug'   => 'wpamelia-locations',
-                ],
-                [
-                    'parentSlug' => 'amelia',
-                    'pageTitle'  => 'Customers',
-                    'menuTitle'  => BackendStrings::getCustomerStrings()['customers'],
-                    'capability' => 'amelia_read_customers',
-                    'menuSlug'   => 'wpamelia-customers',
-                ],
-                [
-                    'parentSlug' => 'amelia',
-                    'pageTitle'  => 'Finance',
-                    'menuTitle'  => BackendStrings::getPaymentStrings()['finance'],
-                    'capability' => 'amelia_read_finance',
-                    'menuSlug'   => 'wpamelia-finance',
-                ],
-                [
-                    'parentSlug' => 'amelia',
-                    'pageTitle'  => 'Notifications',
-                    'menuTitle'  => BackendStrings::getNotificationsStrings()['notifications'],
-                    'capability' => 'amelia_read_notifications',
-                    'menuSlug'   => 'wpamelia-notifications',
-                ],
-                [
-                    'parentSlug' => 'amelia',
-                    'pageTitle'  => 'Customize',
-                    'menuTitle'  => BackendStrings::getCustomizeStrings()['customize'],
-                    'capability' => 'amelia_read_customize',
-                    'menuSlug'   => 'wpamelia-customize',
-                ],
-                [
-                    'parentSlug' => 'amelia',
-                    'pageTitle'  => 'Customize New',
-                    'menuTitle'  => BackendStrings::getCustomizeStrings()['customize'] . ' New',
-                    'capability' => 'amelia_read_customize',
-                    'menuSlug'   => 'wpamelia-customize-new',
-                ],
-                [
-                    'parentSlug' => 'amelia',
-                    'pageTitle'  => 'Custom Fields',
-                    'menuTitle'  => BackendStrings::getCustomizeStrings()['custom_fields'],
-                    'capability' => 'amelia_read_customize',
-                    'menuSlug'   => 'wpamelia-cf',
-                ],
-                [
-                    'parentSlug' => 'amelia',
-                    'pageTitle'  => 'Settings',
-                    'menuTitle'  => BackendStrings::getSettingsStrings()['settings'],
-                    'capability' => 'amelia_read_settings',
-                    'menuSlug'   => 'wpamelia-settings',
-                ],
-                [
-                    'parentSlug' => 'amelia',
-                    'pageTitle'  => 'What\'s new',
-                    'menuTitle'  => BackendStrings::getCommonStrings()['whats_new'],
-                    'capability' => 'amelia_read_whats_new',
-                    'menuSlug'   => 'wpamelia-whats-new',
-                ],
-            ];
-
-        if ($liteMenuItem = Licence::getLiteMenuItem()) {
-            $menuItems[] = $liteMenuItem;
-        }
-
-        if ($employeesMenuItem = Licence::getEmployeesMenuItem()) {
-            array_unshift($menuItems, $employeesMenuItem);
-        }
+        $defaultPageKey = array_search($defaultPageOnBackend, array_column($menuItems, 'pageTitle'), true);
+        $defaultPagesElement = array_splice($menuItems, $defaultPageKey, 1);
 
         return array_merge(
-            $defaultPageElement,
-            $defaultPages,
-            $menuItems
+            $defaultPagesElement,
+            $menuItems,
         );
     }
 }

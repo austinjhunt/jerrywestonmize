@@ -26,7 +26,7 @@
 
 namespace Pimple\Exception;
 
-use AmeliaPsr\Container\ContainerExceptionInterface;
+use AmeliaVendor\Psr\Container\ContainerExceptionInterface;
 
 /**
  * A closure or invokable object was expected.

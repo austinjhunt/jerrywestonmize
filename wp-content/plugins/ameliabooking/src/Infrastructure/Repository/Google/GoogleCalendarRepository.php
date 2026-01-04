@@ -21,7 +21,7 @@ class GoogleCalendarRepository extends AbstractRepository
      * @param GoogleCalendar $googleCalendar
      * @param int            $userId
      *
-     * @return string
+     * @return int
      * @throws QueryExecutionException
      */
     public function add($googleCalendar, $userId)

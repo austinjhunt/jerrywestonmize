@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -14,9 +14,11 @@ use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Entities;
-use AmeliaBooking\Domain\Services\Settings\SettingsService;
+use AmeliaBooking\Domain\Entity\User\Provider;
+use AmeliaBooking\Domain\ValueObjects\String\Status;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ServiceRepository;
+use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
 
@@ -50,20 +52,24 @@ class GetServicesCommandHandler extends CommandHandler
         /** @var ServiceRepository $serviceRepository */
         $serviceRepository = $this->container->get('domain.bookable.service.repository');
 
-        /** @var SettingsService $settingsService */
-        $settingsService = $this->getContainer()->get('domain.settings.service');
+        /** @var ProviderRepository $providerRepository */
+        $providerRepository = $this->container->get('domain.users.providers.repository');
 
-        $generalSettings = $settingsService->getCategorySettings('general');
+        $params = $command->getField('params');
+
+        $itemsPerPage = !empty($params['limit']) ? $params['limit'] : 10;
 
         /** @var Collection $services */
         $services = $serviceRepository->getFiltered(
             array_merge(
-                $command->getField('params'),
+                $params,
                 [
-                    'sort' => $generalSettings['sortingServices']
+                    'sort' => !empty($command->getField('params')['sort'])
+                        ? $command->getField('params')['sort']
+                        : 'idAsc',
                 ]
             ),
-            $generalSettings['servicesPerPage']
+            $itemsPerPage
         );
 
         /** @var Service $service */
@@ -73,7 +79,38 @@ class GetServicesCommandHandler extends CommandHandler
             }
         }
 
+        /** @var Collection $allProviders */
+        $allProviders = $providerRepository->getByFieldValue('type', Entities::PROVIDER);
+
+        $providersServices = $providerRepository->getProvidersServices($services->keys());
+
         $servicesArray = $services->toArray();
+
+        // Get providers for each service
+        foreach ($servicesArray as &$serviceData) {
+            /** @var Collection $providers */
+            $providers = new Collection();
+
+            foreach ($providersServices as $providerId => $providerServices) {
+                if (!empty($providerServices[$serviceData['id']])) {
+                    /** @var Provider $provider */
+                    $provider = $allProviders->getItem($providerId);
+
+                    if ($provider->getStatus()->getValue() === Status::VISIBLE) {
+                        $providers->addItem($provider, $providerId);
+                    }
+                }
+            }
+
+            $serviceData['employees'] = array_map(function ($provider) {
+                return [
+                    'id' => $provider['id'],
+                    'firstName' => $provider['firstName'],
+                    'lastName' => $provider['lastName'],
+                    'picture' => $provider['pictureThumbPath'],
+                ];
+            }, $providers->toArray());
+        }
 
         $servicesArray = apply_filters('amelia_get_services_filter', $servicesArray);
 
@@ -84,8 +121,13 @@ class GetServicesCommandHandler extends CommandHandler
         $result->setData(
             [
                 Entities::SERVICES => $servicesArray,
-                'countFiltered'    => (int)$serviceRepository->getCount($command->getField('params')),
-                'countTotal'       => (int)$serviceRepository->getCount([]),
+                'countFiltered'             => (int)$serviceRepository->getCount($command->getField('params')),
+                'countTotalByCategory'   => (int)$serviceRepository->getCount([
+                    'categoryId' => !empty($command->getField('params')['categoryId'])
+                        ? $command->getField('params')['categoryId']
+                        : null,
+                ]),
+                'countTotal'                => (int)$serviceRepository->getCount([]),
             ]
         );
 

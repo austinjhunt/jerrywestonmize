@@ -34,355 +34,98 @@ class SubmenuPageHandler
      */
     public function render($page)
     {
-        if ($page !== 'wpamelia-customize-new') {
-            $this->renderOld($page);
-        } else {
-            $this->renderNew($page);
-        }
+
+        $this->renderRedesign($page);
     }
 
-    private function renderOld($page)
+    // TODO - Redesign: Finish & Refactor method
+    private function renderRedesign($page)
     {
-        // Enqueue Scripts
-        wp_enqueue_script(
-            'amelia_booking_scripts',
-            AMELIA_URL . 'public/js/backend/amelia-booking.js',
-            [],
-            AMELIA_VERSION
-        );
+        $testFlagFileExists = file_exists(AMELIA_PATH . '/test_mode.flag');
+        define('AMELIA_TEST', $testFlagFileExists);
 
-        if (
-            in_array(
-                $page,
-                [
-                'wpamelia-locations',
-                'wpamelia-settings',
-                'wpamelia-appointments',
-                'wpamelia-events',
-                'wpamelia-dashboard',
-                'wpamelia-calendar',
-                'wpamelia-services',
-                'wpamelia-customers'
-                ]
-            )
-        ) {
-            $gmapApiKey = $this->settingsService->getSetting('general', 'gMapApiKey');
+        $isTestEnv = defined('AMELIA_TEST') && AMELIA_TEST;
+        $isDev     = defined('AMELIA_DEV') && AMELIA_DEV && !$isTestEnv;
+        $scriptId  = $isDev ? 'amelia_dev_main_script' : 'amelia_prod_main_script';
 
-            if ($gmapApiKey) {
-                wp_enqueue_script(
-                    'google_maps_api',
-                    "https://maps.googleapis.com/maps/api/js?key={$gmapApiKey}&libraries=places&loading=async&callback=Function.prototype"
-                );
-            }
+        // Enqueue V3 scripts for customize page
+        if ($page === 'wpamelia-customize') {
+            $this->enqueueV3Scripts();
         }
 
-
-        if ($page === 'wpamelia-customers') {
+        if ($isDev) {
             wp_enqueue_script(
-                'papaparse',
-                "https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.1/papaparse.min.js"
+                'amelia_dev_vite_client',
+                'http://localhost:5173/@vite/client',
+                [],
+                null,
+                false
+            );
+
+            wp_enqueue_script(
+                $scriptId,
+                'http://localhost:5173/src/main.ts',
+                [],
+                null,
+                true
+            );
+        } else {
+            wp_enqueue_script(
+                $scriptId,
+                AMELIA_URL . 'redesign/dist/index.js',
+                [],
+                AMELIA_VERSION,
+                true
+            );
+
+            wp_enqueue_style(
+                'amelia_prod_main_style',
+                AMELIA_URL . 'redesign/dist/index.css',
+                [],
+                AMELIA_VERSION
             );
         }
 
-
-        if ($page === 'wpamelia-notifications') {
-            wp_enqueue_script('amelia_paddle', Licence::getPaddleUrl());
-        }
-
-        // Enqueue Styles
-        wp_enqueue_style(
-            'amelia_booking_styles',
-            AMELIA_URL . 'public/css/backend/amelia-booking.css',
-            [],
-            AMELIA_VERSION
-        );
-
         // WordPress enqueue
         wp_enqueue_media();
-
-        wp_localize_script(
-            'amelia_booking_scripts',
-            'wpAmeliaLanguages',
-            HelperService::getLanguages()
-        );
 
         $wcSettings = $this->settingsService->getSetting('payments', 'wc');
 
         if ($wcSettings['enabled'] && WooCommerceService::isEnabled()) {
             wp_localize_script(
-                'amelia_booking_scripts',
+                $scriptId,
                 'wpAmeliaWcProducts',
                 WooCommerceService::getInitialProducts()
             );
         }
 
-        // Strings Localization
-        switch ($page) {
-            case ('wpamelia-locations'):
-                wp_localize_script(
-                    'amelia_booking_scripts',
-                    'wpAmeliaLabels',
-                    array_merge(
-                        BackendStrings::getEntityFormStrings(),
-                        BackendStrings::getLocationStrings(),
-                        BackendStrings::getCommonStrings()
-                    )
-                );
-
-                break;
-            case ('wpamelia-services'):
-                wp_localize_script(
-                    'amelia_booking_scripts',
-                    'wpAmeliaLabels',
-                    array_merge(
-                        BackendStrings::getPaymentStrings(),
-                        BackendStrings::getSettingsStrings(),
-                        BackendStrings::getEntityFormStrings(),
-                        BackendStrings::getServiceStrings(),
-                        BackendStrings::getBookableStrings(),
-                        BackendStrings::getCommonStrings(),
-                        BackendStrings::getAppointmentStrings(),
-                        BackendStrings::getRecurringStrings(),
-                        BackendStrings::getCustomerStrings(),
-                        BackendStrings::getUserStrings()
-                    )
-                );
-
-                break;
-            case ('wpamelia-employees'):
-                wp_localize_script(
-                    'amelia_booking_scripts',
-                    'wpAmeliaLabels',
-                    array_merge(
-                        BackendStrings::getEntityFormStrings(),
-                        BackendStrings::getUserStrings(),
-                        BackendStrings::getEmployeeStrings(),
-                        BackendStrings::getStripeStrings(),
-                        BackendStrings::getCommonStrings(),
-                        BackendStrings::getScheduleStrings()
-                    )
-                );
-
-                break;
-            case ('wpamelia-customers'):
-                wp_localize_script(
-                    'amelia_booking_scripts',
-                    'wpAmeliaLabels',
-                    array_merge(
-                        BackendStrings::getEntityFormStrings(),
-                        BackendStrings::getUserStrings(),
-                        BackendStrings::getCustomerStrings(),
-                        BackendStrings::getCommonStrings(),
-                        BackendStrings::getScheduleStrings(),
-                        BackendStrings::getImportStrings(),
-                        BackendStrings::getCustomizeStrings()
-                    )
-                );
-
-                break;
-            case ('wpamelia-finance'):
-                wp_localize_script(
-                    'amelia_booking_scripts',
-                    'wpAmeliaLabels',
-                    array_merge(
-                        BackendStrings::getEntityFormStrings(),
-                        BackendStrings::getCommonStrings(),
-                        BackendStrings::getFinanceStrings(),
-                        BackendStrings::getPaymentStrings(),
-                        BackendStrings::getEventStrings()
-                    )
-                );
-
-                break;
-            case ('wpamelia-appointments'):
-                wp_localize_script(
-                    'amelia_booking_scripts',
-                    'wpAmeliaLabels',
-                    array_merge(
-                        BackendStrings::getNotificationsStrings(),
-                        BackendStrings::getEntityFormStrings(),
-                        BackendStrings::getCommonStrings(),
-                        BackendStrings::getUserStrings(),
-                        BackendStrings::getCustomerStrings(),
-                        BackendStrings::getAppointmentStrings(),
-                        BackendStrings::getPaymentStrings(),
-                        BackendStrings::getRecurringStrings(),
-                        BackendStrings::getSettingsStrings()
-                    )
-                );
-
-                break;
-
-            case ('wpamelia-events'):
-                wp_localize_script(
-                    'amelia_booking_scripts',
-                    'wpAmeliaLabels',
-                    array_merge(
-                        BackendStrings::getSettingsStrings(),
-                        BackendStrings::getEntityFormStrings(),
-                        BackendStrings::getCommonStrings(),
-                        BackendStrings::getUserStrings(),
-                        BackendStrings::getCustomerStrings(),
-                        BackendStrings::getAppointmentStrings(),
-                        BackendStrings::getEventStrings(),
-                        BackendStrings::getBookableStrings(),
-                        BackendStrings::getRecurringStrings()
-                    )
-                );
-
-                break;
-
-            case ('wpamelia-dashboard'):
-                wp_localize_script(
-                    'amelia_booking_scripts',
-                    'wpAmeliaLabels',
-                    array_merge(
-                        BackendStrings::getEntityFormStrings(),
-                        BackendStrings::getCommonStrings(),
-                        BackendStrings::getAppointmentStrings(),
-                        BackendStrings::getUserStrings(),
-                        BackendStrings::getCustomerStrings(),
-                        BackendStrings::getDashboardStrings(),
-                        BackendStrings::getPaymentStrings(),
-                        BackendStrings::getRecurringStrings(),
-                        BackendStrings::getNotificationsStrings(),
-                        BackendStrings::getSettingsStrings()
-                    )
-                );
-
-                break;
-            case ('wpamelia-calendar'):
-                wp_localize_script(
-                    'amelia_booking_scripts',
-                    'wpAmeliaLabels',
-                    array_merge(
-                        BackendStrings::getEntityFormStrings(),
-                        BackendStrings::getCommonStrings(),
-                        BackendStrings::getAppointmentStrings(),
-                        BackendStrings::getUserStrings(),
-                        BackendStrings::getCustomerStrings(),
-                        BackendStrings::getCalendarStrings(),
-                        BackendStrings::getPaymentStrings(),
-                        BackendStrings::getEventStrings(),
-                        BackendStrings::getBookableStrings(),
-                        BackendStrings::getRecurringStrings(),
-                        BackendStrings::getSettingsStrings()
-                    )
-                );
-
-                break;
-            case ('wpamelia-notifications'):
-                wp_localize_script(
-                    'amelia_booking_scripts',
-                    'wpAmeliaLabels',
-                    array_merge(
-                        BackendStrings::getCommonStrings(),
-                        BackendStrings::getPaymentStrings(),
-                        BackendStrings::getNotificationsStrings()
-                    )
-                );
-
-                break;
-
-            case ('wpamelia-smsnotifications'):
-                wp_localize_script(
-                    'amelia_booking_scripts',
-                    'wpAmeliaLabels',
-                    array_merge(
-                        BackendStrings::getCommonStrings(),
-                        BackendStrings::getNotificationsStrings()
-                    )
-                );
-
-                break;
-            case ('wpamelia-settings'):
-                wp_localize_script(
-                    'amelia_booking_scripts',
-                    'wpAmeliaLabels',
-                    array_merge(
-                        BackendStrings::getEntityFormStrings(),
-                        BackendStrings::getUserStrings(),
-                        BackendStrings::getEmployeeStrings(),
-                        BackendStrings::getStripeStrings(),
-                        BackendStrings::getFinanceStrings(),
-                        BackendStrings::getCommonStrings(),
-                        BackendStrings::getScheduleStrings(),
-                        BackendStrings::getSettingsStrings(),
-                        BackendStrings::getNotificationsStrings()
-                    )
-                );
-
-                break;
-            case ('wpamelia-customize'):
-                wp_localize_script(
-                    'amelia_booking_scripts',
-                    'wpAmeliaLabels',
-                    array_merge(
-                        BackendStrings::getCommonStrings(),
-                        BackendStrings::getCustomizeStrings()
-                    )
-                );
-
-                break;
-            case ('wpamelia-cf'):
-                wp_localize_script(
-                    'amelia_booking_scripts',
-                    'wpAmeliaLabels',
-                    array_merge(
-                        BackendStrings::getCommonStrings(),
-                        BackendStrings::getCustomizeStrings(),
-                        BackendStrings::getCustomerStrings()
-                    )
-                );
-
-                break;
-            case ('wpamelia-whats-new'):
-                wp_localize_script(
-                    'amelia_booking_scripts',
-                    'wpAmeliaLabels',
-                    array_merge(
-                        BackendStrings::getWhatsNewStrings(),
-                        BackendStrings::getNotificationsStrings(),
-                        BackendStrings::getRecurringStrings(),
-                        BackendStrings::getCommonStrings(),
-                        BackendStrings::getAppointmentStrings()
-                    )
-                );
-
-                break;
-            case ('wpamelia-lite-vs-premium'):
-                wp_localize_script(
-                    'amelia_booking_scripts',
-                    'wpAmeliaLabels',
-                    BackendStrings::getLiteVsPremiumStrings()
-                );
-
-                break;
-        }
-
         // Settings Localization
         wp_localize_script(
-            'amelia_booking_scripts',
+            $scriptId,
             'wpAmeliaSettings',
-            $this->settingsService->getFrontendSettings()
+            $this->settingsService->getBackendSettings()
         );
 
+        // Strings Localization
         wp_localize_script(
-            'amelia_booking_scripts',
-            'localeLanguage',
-            [AMELIA_LOCALE]
+            $scriptId,
+            'wpAmeliaLabels',
+            BackendStrings::getAllStrings(),
         );
 
-        wp_localize_script(
-            'amelia_booking_scripts',
-            'wpAmeliaTimeZone',
-            [DateTimeService::getTimeZone()->getName()]
-        );
+        // Paddle
+        if (in_array($page, ['wpamelia-notifications', 'wpamelia-settings'])) {
+            wp_enqueue_script('amelia_paddle', Licence::getPaddleUrl());
+        }
 
-        include AMELIA_PATH . '/view/backend/view.php';
+        // Include the generic page template
+        include AMELIA_PATH . '/view/backend/redesign/page.php';
     }
 
-    private function renderNew($page)
+    /**
+     * Enqueue V3 scripts for embedding in redesign app
+     */
+    private function enqueueV3Scripts()
     {
         $scriptId = AMELIA_DEV ? 'amelia_booking_scripts_dev_vite' : 'amelia_booking_script_index';
 
@@ -405,7 +148,7 @@ class SubmenuPageHandler
         } else {
             wp_enqueue_script(
                 $scriptId,
-                AMELIA_URL . 'v3/public/assets/admin.0ad45c47.js',
+                AMELIA_URL . 'v3/public/assets/admin.82c68771.js',
                 [],
                 AMELIA_VERSION,
                 true
@@ -435,17 +178,7 @@ class SubmenuPageHandler
         wp_localize_script(
             $scriptId,
             'wpAmeliaLabels',
-            array_merge(
-                BackendStrings::getCommonStrings(),
-                BackendStrings::getSettingsStrings(),
-                BackendStrings::getCustomizeStrings()
-            )
-        );
-
-        wp_localize_script(
-            $scriptId,
-            'localeLanguage',
-            [AMELIA_LOCALE]
+            BackendStrings::getAllStrings(),
         );
 
         wp_localize_script(
@@ -463,7 +196,5 @@ class SubmenuPageHandler
                 'wpAmeliaPluginAjaxURL'        => AMELIA_ACTION_URL
             ]
         );
-
-        include AMELIA_PATH . '/view/backend/view-new.php';
     }
 }

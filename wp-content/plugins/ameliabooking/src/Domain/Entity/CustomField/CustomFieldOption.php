@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -37,13 +37,11 @@ class CustomFieldOption
     /**
      * CustomFieldOption constructor.
      *
-     * @param Id           $customFieldId
      * @param Label        $label
      * @param IntegerValue $position
      */
-    public function __construct(Id $customFieldId, Label $label, IntegerValue $position)
+    public function __construct(Label $label, IntegerValue $position)
     {
-        $this->customFieldId = $customFieldId;
         $this->label         = $label;
         $this->position      = $position;
     }
@@ -135,7 +133,7 @@ class CustomFieldOption
     {
         return [
             'id'            => null !== $this->getId() ? $this->getId()->getValue() : null,
-            'customFieldId' => $this->getCustomFieldId()->getValue(),
+            'customFieldId' => $this->getCustomFieldId() ? $this->getCustomFieldId()->getValue() : null,
             'label'         => $this->getLabel()->getValue(),
             'position'      => $this->getPosition()->getValue(),
             'translations'  => $this->getTranslations() ? $this->getTranslations()->getValue() : null,

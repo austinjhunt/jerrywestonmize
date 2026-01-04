@@ -8,6 +8,9 @@ use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
+use AmeliaBooking\Domain\Entity\Booking\Event\CustomerBookingEventTicket;
+use AmeliaBooking\Domain\Entity\Booking\Event\Event;
+use AmeliaBooking\Domain\Entity\Booking\Event\EventTicket;
 use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Domain\Entity\Schedule\DayOff;
 use AmeliaBooking\Domain\Entity\Schedule\SpecialDay;
@@ -16,6 +19,7 @@ use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Domain\Factory\Schedule\PeriodFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\User\ProviderService;
+use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ServiceRepository;
@@ -49,54 +53,10 @@ class StatsService
     }
 
     /**
-     * @param $params
+     * @param array      $params
+     * @param Collection $services
+     * @param Collection $providers
      *
-     * @return array
-     * @throws ContainerValueNotFoundException
-     * @throws InvalidArgumentException
-     * @throws QueryExecutionException
-     */
-    public function getCustomersStats($params)
-    {
-        /** @var CustomerBookingRepository $bookingRepository */
-        $bookingRepository = $this->container->get('domain.booking.customerBooking.repository');
-
-        /** @var array $returningCustomers */
-        $returningCustomers = array_column($bookingRepository->getReturningCustomers($params), 'customerId');
-
-        /** @var array $bookings */
-        $bookings = array_column($bookingRepository->getFilteredDistinctCustomersIds($params), 'customerId');
-
-        // Calculate number of customers in past period.
-        // E.g. If in a date filter is selected current week, calculate it for past week.
-        $dateFrom = DateTimeService::getCustomDateTimeObject($params['dates'][0]);
-
-        $dateTo = DateTimeService::getCustomDateTimeObject($params['dates'][1]);
-
-        $diff = (int)$dateTo->diff($dateFrom)->format('%a') + 1;
-
-        $dateFrom->modify('-' . $diff . 'days');
-        $dateTo->modify('-' . $diff . 'days');
-
-        $paramsPast = ['dates' => [$dateFrom->format('Y-m-d H:i:s'), $dateTo->format('Y-m-d H:i:s')]];
-
-        $bookingsPast = array_column($bookingRepository->getFilteredDistinctCustomersIds($paramsPast), 'customerId');
-
-        $pastPeriodCount = count($bookingsPast);
-
-        $returningCount = count(array_intersect($returningCustomers, $bookings));
-
-        $newCount = count($bookings) - $returningCount;
-
-        return [
-            'newCustomersCount'        => $newCount,
-            'returningCustomersCount'  => $returningCount,
-            'totalPastPeriodCustomers' => $pastPeriodCount
-        ];
-    }
-
-    /**
-     * @param array $params
      * @return array
      * @throws QueryExecutionException
      * @throws ContainerValueNotFoundException
@@ -104,7 +64,7 @@ class StatsService
      * @throws Exception
      * @throws ContainerException
      */
-    public function getRangeStatisticsData($params)
+    public function getAppointmentsRangeStatisticsData($params, $services, $providers)
     {
         /** @var AppointmentRepository $appointmentRepository */
         $appointmentRepository = $this->container->get('domain.booking.appointment.repository');
@@ -179,18 +139,8 @@ class StatsService
             }
         }
 
-        /** @var ProviderRepository $providerRepository */
-        $providerRepository = $this->container->get('domain.users.providers.repository');
-        /** @var ServiceRepository $serviceRepository */
-        $serviceRepository = $this->container->get('domain.bookable.service.repository');
         /** @var ProviderService $providerService */
         $providerService = $this->container->get('domain.user.provider.service');
-
-        /** @var Collection $services */
-        $services = $serviceRepository->getAllArrayIndexedById();
-
-        /** @var Collection $providers */
-        $providers = $providerRepository->getWithSchedule(['dates' => $params['dates']]);
 
         /** @var Provider $provider */
         foreach ($providers->getItems() as $provider) {
@@ -275,7 +225,8 @@ class StatsService
 
                 $weekDaysData[$dayIndex][$providerId] = $providerApplicationService->getProviderScheduleIntervals(
                     $weekDay->getPeriodList(),
-                    $weekDay->getTimeOutList()
+                    $weekDay->getTimeOutList(),
+                    $provider
                 );
             }
 
@@ -295,14 +246,14 @@ class StatsService
                 foreach ($specialDaysPeriod as $date) {
                     if (array_key_exists($date->format('Y-m-d'), $stats)) {
                         $specialDayExist = true;
-                        continue;
                     }
                 }
 
                 if ($specialDayExist) {
                     $providerSpecialDaysIntervals = $providerApplicationService->getProviderScheduleIntervals(
                         $specialDay->getPeriodList(),
-                        new Collection()
+                        new Collection(),
+                        $provider
                     );
 
                     /** @var DateTime $date */
@@ -340,7 +291,8 @@ class StatsService
             if (!array_key_exists($date, $appointmentDatesData)) {
                 $appointmentDatesData[$date] = [
                     'providers' => [],
-                    'services' => []
+                    'services' => [],
+                    'customers' => [],
                 ];
             }
 
@@ -388,6 +340,12 @@ class StatsService
                             $payment->getAmount()->getValue();
                     }
                 }
+
+                if (empty($appointmentDatesData[$date]['customers'][$booking->getCustomerId()->getValue()])) {
+                    $appointmentDatesData[$date]['customers'][$booking->getCustomerId()->getValue()] = 0;
+                }
+
+                $appointmentDatesData[$date]['customers'][$booking->getCustomerId()->getValue()]++;
             }
         }
 
@@ -447,6 +405,10 @@ class StatsService
 
                     $stats[$dateKey]['services'][$serviceKey]['revenue'] = $appointmentStatsData['revenue'];
                 }
+
+                foreach ($appointmentDatesData[$dateKey]['customers'] as $customerKey => $count) {
+                    $stats[$dateKey]['customers'][$customerKey] = $count;
+                }
             }
 
             if (array_key_exists($dateKey, $packageDatesData)) {
@@ -460,6 +422,126 @@ class StatsService
                     $stats[$dateKey]['packages'][$packageKey]['revenue'] = $packageStatsData['revenue'];
 
                     $stats[$dateKey]['packages'][$packageKey]['intervals'] = [];
+                }
+            }
+        }
+
+        return $stats;
+    }
+
+    /**
+     * @param Collection $events
+     * @param string     $start
+     * @param string     $end
+     *
+     * @return array
+     * @throws QueryExecutionException
+     * @throws ContainerValueNotFoundException
+     * @throws InvalidArgumentException
+     * @throws Exception
+     * @throws ContainerException
+     */
+    public function getEventsRangeStatisticsData($events, $start, $end)
+    {
+        $stats = [];
+
+        $statsPeriod = new \DatePeriod(
+            DateTimeService::getCustomDateTimeObject($start),
+            new \DateInterval('P1D'),
+            DateTimeService::getCustomDateTimeObject($end)
+        );
+
+        /** @var DateTime $date */
+        foreach ($statsPeriod as $date) {
+            $stats[$date->format('Y-m-d')] = null;
+        }
+
+        /** @var Event $event */
+        foreach ($events->getItems() as $event) {
+            $periodDate = $event->getPeriods()->getItem(0)->getPeriodStart()->getValue()->format('Y-m-d');
+
+            if (array_key_exists($periodDate, $stats)) {
+                $eventId = $event->getId()->getValue();
+
+                $stats[$periodDate]['events'][$eventId] = [
+                    'spots'    => $event->getCustomPricing()->getValue()
+                        ? null
+                        : [
+                            'places'  => $event->getMaxCapacity()->getValue(),
+                            'count'   => 0,
+                            'revenue' => 0,
+                        ],
+                    'tickets'  => $event->getCustomPricing()->getValue()
+                        ? [
+                            'places' => 0,
+                            'items'  => [],
+                        ]
+                        : null,
+                    'bookings' => 0,
+                ];
+
+                if ($event->getCustomPricing()->getValue()) {
+                    if ($event->getMaxCustomCapacity() && $event->getMaxCustomCapacity()->getValue()) {
+                        $stats[$periodDate]['events'][$eventId]['tickets']['places'] =
+                            $event->getMaxCustomCapacity()->getValue();
+                    }
+
+                    /** @var EventTicket $ticket */
+                    foreach ($event->getCustomTickets()->getItems() as $ticket) {
+                        $stats[$periodDate]['events'][$eventId]['tickets']['items'][$ticket->getId()->getValue()] = [
+                            'places'  => $event->getMaxCustomCapacity() && $event->getMaxCustomCapacity()->getValue()
+                                ? 0
+                                : $ticket->getSpots()->getValue(),
+                            'count'   => 0,
+                            'revenue' => 0,
+                        ];
+                    }
+                }
+
+                /** @var CustomerBooking $booking */
+                foreach ($event->getBookings()->getItems() as $booking) {
+                    $stats[$periodDate]['events'][$eventId]['bookings']++;
+
+                    if (empty($stats[$periodDate]['customers'][$booking->getCustomerId()->getValue()])) {
+                        $stats[$periodDate]['customers'][$booking->getCustomerId()->getValue()] = 0;
+                    }
+
+                    $stats[$periodDate]['customers'][$booking->getCustomerId()->getValue()]++;
+
+                    if ($event->getCustomPricing()->getValue()) {
+                        /** @var CustomerBookingEventTicket $ticket */
+                        foreach ($booking->getTicketsBooking()->getItems() as $ticket) {
+                            $ticketId = $ticket->getEventTicketId()->getValue();
+
+                            if (
+                                $booking->getStatus()->getValue() === BookingStatus::APPROVED ||
+                                $booking->getStatus()->getValue() === BookingStatus::PENDING
+                            ) {
+                                $stats[$periodDate]['events'][$eventId]['tickets']['items'][$ticketId]['count'] +=
+                                    $ticket->getPersons()->getValue();
+                            }
+
+                            /** @var Payment $payment */
+                            foreach ($booking->getPayments()->getItems() as $payment) {
+                                $stats[$periodDate]['events'][$eventId]['tickets']['items'][$ticketId]['revenue'] +=
+                                    $payment->getAmount()->getValue();
+                            }
+                        }
+                    } else {
+                        if (
+                            $booking->getStatus()->getValue() === BookingStatus::APPROVED ||
+                            $booking->getStatus()->getValue() === BookingStatus::PENDING
+                        ) {
+                            $stats[$periodDate]['events'][$eventId]['spots']['count'] +=
+                                $booking->getPersons()->getValue();
+                        }
+
+                        /** @var Payment $payment */
+                        foreach ($booking->getPayments()->getItems() as $payment) {
+                            $stats[$periodDate]['events'][$eventId]['spots']['revenue'] +=
+                                $payment->getAmount()->getValue();
+                        }
+                    }
                 }
             }
         }
@@ -490,7 +572,7 @@ class StatsService
     /**
      * @param $providerId
      *
-     * @return bool
+     * @return void
      * @throws ContainerValueNotFoundException
      * @throws QueryExecutionException
      */
@@ -504,10 +586,10 @@ class StatsService
         if (!$providerRepository->addViewStats($providerId)) {
             $providerRepository->rollback();
 
-            return false;
+            return;
         }
 
-        return $providerRepository->commit();
+        $providerRepository->commit();
     }
 
     /**
@@ -533,7 +615,7 @@ class StatsService
     /**
      * @param $serviceId
      *
-     * @return bool
+     * @return void
      * @throws ContainerValueNotFoundException
      * @throws QueryExecutionException
      */
@@ -547,10 +629,10 @@ class StatsService
         if (!$serviceRepository->addViewStats($serviceId)) {
             $serviceRepository->rollback();
 
-            return false;
+            return;
         }
 
-        return $serviceRepository->commit();
+        $serviceRepository->commit();
     }
 
     /**
@@ -576,7 +658,7 @@ class StatsService
     /**
      * @param $locationId
      *
-     * @return bool
+     * @return void
      * @throws ContainerValueNotFoundException
      * @throws QueryExecutionException
      */
@@ -589,11 +671,9 @@ class StatsService
             if (!$locationRepository->addViewStats($locationId)) {
                 $locationRepository->rollback();
 
-                return false;
+                return;
             }
-            return $locationRepository->commit();
+            $locationRepository->commit();
         }
-
-        return false;
     }
 }

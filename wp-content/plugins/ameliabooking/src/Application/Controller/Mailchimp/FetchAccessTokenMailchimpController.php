@@ -21,7 +21,8 @@ class FetchAccessTokenMailchimpController extends Controller
      */
     public $allowedFields = [
         'access_token',
-        'error'
+        'error',
+        'signature',
     ];
 
     /**

@@ -28,15 +28,15 @@ class TeamworkHostedContent extends Entity
     * Gets the contentBytes
     * Write only. Bytes for the hosted content (such as images).
     *
-    * @return \AmeliaGuzzleHttp\Psr7\Stream|null The contentBytes
+    * @return \AmeliaVendor\GuzzleHttp\Psr7\Stream|null The contentBytes
     */
     public function getContentBytes()
     {
         if (array_key_exists("contentBytes", $this->_propDict)) {
-            if (is_a($this->_propDict["contentBytes"], "\AmeliaGuzzleHttp\Psr7\Stream") || is_null($this->_propDict["contentBytes"])) {
+            if (is_a($this->_propDict["contentBytes"], "\AmeliaVendor\GuzzleHttp\Psr7\Stream") || is_null($this->_propDict["contentBytes"])) {
                 return $this->_propDict["contentBytes"];
             } else {
-                $this->_propDict["contentBytes"] = \AmeliaGuzzleHttp\Psr7\Utils::streamFor($this->_propDict["contentBytes"]);
+                $this->_propDict["contentBytes"] = \AmeliaVendor\GuzzleHttp\Psr7\Utils::streamFor($this->_propDict["contentBytes"]);
                 return $this->_propDict["contentBytes"];
             }
         }
@@ -47,7 +47,7 @@ class TeamworkHostedContent extends Entity
     * Sets the contentBytes
     * Write only. Bytes for the hosted content (such as images).
     *
-    * @param \AmeliaGuzzleHttp\Psr7\Stream $val The contentBytes
+    * @param \AmeliaVendor\GuzzleHttp\Psr7\Stream $val The contentBytes
     *
     * @return TeamworkHostedContent
     */

@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe;
+namespace AmeliaVendor\Stripe;
 
 /**
  * Some payment methods have no required amount that a customer must send.

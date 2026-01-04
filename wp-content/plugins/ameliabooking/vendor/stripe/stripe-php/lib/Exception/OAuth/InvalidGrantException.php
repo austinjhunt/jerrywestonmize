@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaStripe\Exception\OAuth;
+namespace AmeliaVendor\Stripe\Exception\OAuth;
 
 /**
  * InvalidGrantException is thrown when a specified code doesn't exist, is

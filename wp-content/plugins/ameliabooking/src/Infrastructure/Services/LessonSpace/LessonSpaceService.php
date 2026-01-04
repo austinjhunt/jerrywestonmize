@@ -10,14 +10,11 @@ use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Booking\Event\Event;
 use AmeliaBooking\Domain\Entity\Booking\Event\EventPeriod;
 use AmeliaBooking\Domain\Entity\Entities;
-use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
-use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventPeriodsRepository;
-use Interop\Container\Exception\ContainerException;
 
 class LessonSpaceService extends AbstractLessonSpaceService
 {
@@ -31,10 +28,13 @@ class LessonSpaceService extends AbstractLessonSpaceService
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      * @throws NotFoundException
-     * @throws ContainerException
      */
     public function handle($appointment, $entity, $periods = null)
     {
+        if (!$this->isLessonSpaceEnabled()) {
+            return;
+        }
+
         /** @var AppointmentRepository $appointmentRepository */
         $appointmentRepository = $this->container->get("domain.booking.appointment.repository");
 
@@ -181,7 +181,7 @@ class LessonSpaceService extends AbstractLessonSpaceService
             $requestUrl  =
                 'https://api.thelessonspace.com/v2/organisations/' .
                 $companyId . '/spaces/?sort_by=new-old' .
-                ($searchTerm ? '&search=' . $searchTerm : '');
+                ($searchTerm ? '&search=' . urlencode($searchTerm) : '');
             $resultArray = $this->execute($apiKey, [], $requestUrl, 'GET');
             $allSpaces   = !empty($resultArray['results']) ? $resultArray['results'] : [];
 
@@ -295,5 +295,13 @@ class LessonSpaceService extends AbstractLessonSpaceService
         }
 
         return $inviteUrl ?: $resultArray['client_url'];
+    }
+
+    /**
+     * @return bool
+     */
+    private function isLessonSpaceEnabled()
+    {
+        return $this->settingsService->isFeatureEnabled('lessonSpace');
     }
 }

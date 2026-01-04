@@ -13,14 +13,14 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-namespace phpseclib3\Crypt\EC\Formats\Keys;
+namespace AmeliaVendor\phpseclib3\Crypt\EC\Formats\Keys;
 
-use phpseclib3\Common\Functions\Strings;
-use phpseclib3\Crypt\Common\Formats\Keys\OpenSSH as Progenitor;
-use phpseclib3\Crypt\EC\BaseCurves\Base as BaseCurve;
-use phpseclib3\Crypt\EC\Curves\Ed25519;
-use phpseclib3\Exception\UnsupportedCurveException;
-use phpseclib3\Math\BigInteger;
+use AmeliaVendor\phpseclib3\Common\Functions\Strings;
+use AmeliaVendor\phpseclib3\Crypt\Common\Formats\Keys\OpenSSH as Progenitor;
+use AmeliaVendor\phpseclib3\Crypt\EC\BaseCurves\Base as BaseCurve;
+use AmeliaVendor\phpseclib3\Crypt\EC\Curves\Ed25519;
+use AmeliaVendor\phpseclib3\Exception\UnsupportedCurveException;
+use AmeliaVendor\phpseclib3\Math\BigInteger;
 
 /**
  * OpenSSH Formatted EC Key Handler
@@ -86,7 +86,7 @@ abstract class OpenSSH extends Progenitor
             $qa = self::extractPoint($parsed['publicKey'], $curve);
         } else {
             list($curveName, $publicKey) = Strings::unpackSSH2('ss', $parsed['publicKey']);
-            $curveName = '\phpseclib3\Crypt\EC\Curves\\' . $curveName;
+            $curveName = '\AmeliaVendor\phpseclib3\Crypt\EC\Curves\\' . $curveName;
             $curve = new $curveName();
 
             $qa = self::extractPoint("\0" . $publicKey, $curve);
@@ -135,7 +135,7 @@ abstract class OpenSSH extends Progenitor
      * Convert an EC public key to the appropriate format
      *
      * @param BaseCurve $curve
-     * @param \phpseclib3\Math\Common\FiniteField\Integer[] $publicKey
+     * @param \AmeliaVendor\phpseclib3\Math\Common\FiniteField\Integer[] $publicKey
      * @param array $options optional
      * @return string
      */
@@ -173,7 +173,7 @@ abstract class OpenSSH extends Progenitor
      *
      * @param BigInteger $privateKey
      * @param Ed25519 $curve
-     * @param \phpseclib3\Math\Common\FiniteField\Integer[] $publicKey
+     * @param \AmeliaVendor\phpseclib3\Math\Common\FiniteField\Integer[] $publicKey
      * @param string $secret optional
      * @param string $password optional
      * @param array $options optional

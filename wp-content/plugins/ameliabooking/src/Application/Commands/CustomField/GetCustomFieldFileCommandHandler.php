@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -39,7 +39,6 @@ class GetCustomFieldFileCommandHandler extends CommandHandler
      * @throws \Slim\Exception\ContainerValueNotFoundException
      * @throws AccessDeniedException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException
-     * @throws \Interop\Container\Exception\ContainerException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException
      * @throws \AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException
      */
@@ -175,15 +174,17 @@ class GetCustomFieldFileCommandHandler extends CommandHandler
 
         $fileInfo = $customFields[$command->getArg('id')]['value'][$command->getArg('index')];
 
+        $content = file_get_contents(
+            $customFieldService->getUploadsPath() . $command->getArg('bookingId') . '_' . $fileInfo['fileName']
+        );
+
         $result->setFile(
             [
             'name'     => $fileInfo['name'],
             'type'     => $allowedUploadedFileExtensions[
                 '.' . strtolower(pathinfo($fileInfo['fileName'], PATHINFO_EXTENSION))
             ],
-            'content'  => file_get_contents(
-                $customFieldService->getUploadsPath() . $command->getArg('bookingId') . '_' . $fileInfo['fileName']
-            ),
+            'content'  => $content,
             'size'     => filesize(
                 $customFieldService->getUploadsPath() . $command->getArg('bookingId') . '_' . $fileInfo['fileName']
             )

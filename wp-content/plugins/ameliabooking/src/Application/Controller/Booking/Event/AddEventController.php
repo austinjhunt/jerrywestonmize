@@ -41,6 +41,8 @@ class AddEventController extends Controller
         'gallery',
         'color',
         'show',
+        'pictureFullPath',
+        'pictureThumbPath',
         'locationId',
         'settings',
         'customLocation',

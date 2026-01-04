@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaSabre\VObject\Recur;
+namespace AmeliaVendor\Sabre\VObject\Recur;
 
 use Exception;
 

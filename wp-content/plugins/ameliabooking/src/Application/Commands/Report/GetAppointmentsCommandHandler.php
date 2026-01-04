@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -41,7 +41,6 @@ class GetAppointmentsCommandHandler extends CommandHandler
      * @throws AccessDeniedException
      * @throws \AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function handle(GetAppointmentsCommand $command)
     {
@@ -113,12 +112,23 @@ class GetAppointmentsCommandHandler extends CommandHandler
                             /** @var CustomField $item **/
                             $item = $allCustomFields->keyExists($cfId) ? $allCustomFields->getItem($cfId) : null;
                             if ($item) {
-                                $customFields[$cfId] = $item->getLabel()->getValue();
+                                $customFields[$cfId] = ['label' => $item->getLabel()->getValue(), 'id' => $item->getId()->getValue()];
                             }
                         }
                     }
                 }
             }
+        }
+
+        if (!empty($customFields)) {
+            $allCustomFields = array_column($allCustomFields->toArray(), null, 'id');
+
+            usort(
+                $customFields,
+                function ($a, $b) use ($allCustomFields) {
+                    return $allCustomFields[$a['id']]['position'] - $allCustomFields[$b['id']]['position'];
+                }
+            );
         }
 
         $extras = [];
@@ -163,7 +173,7 @@ class GetAppointmentsCommandHandler extends CommandHandler
 
             foreach ((array)$numberOfPersonsData[AbstractUser::USER_ROLE_PROVIDER] as $key => $value) {
                 if ($value) {
-                    $numberOfPersons[] = BackendStrings::getCommonStrings()[$key] . ': ' . $value;
+                    $numberOfPersons[] = BackendStrings::get($key) . ': ' . $value;
                 }
             }
 
@@ -207,10 +217,10 @@ class GetAppointmentsCommandHandler extends CommandHandler
                                 }
                             }
                         }
-                        if (!empty($rowCF[$customFieldLabel])) {
-                            $rowCF[$customFieldLabel] .= ', ' . $value;
+                        if (!empty($rowCF[$customFieldLabel['label']])) {
+                            $rowCF[$customFieldLabel['label']] .= ', ' . $value;
                         } else {
-                            $rowCF[$customFieldLabel] = $value;
+                            $rowCF[$customFieldLabel['label']] = $value;
                         }
                     }
 
@@ -224,11 +234,11 @@ class GetAppointmentsCommandHandler extends CommandHandler
                 }
 
                 if (in_array('extras', $params['fields'], true)) {
-                    $rowExtras[LiteBackendStrings::getCommonStrings()['extras']] =  implode('|', $extraInfo);
+                    $rowExtras[LiteBackendStrings::get('extras')] =  implode('|', $extraInfo);
                 }
 
                 if (in_array('customers', $params['fields'], true)) {
-                    $row[BackendStrings::getCustomerStrings()['customers']] = implode(', ', $customers);
+                    $row[BackendStrings::get('customers')] = implode(', ', $customers);
                 }
 
                 $this->getRowData($params, $row, $appointment, $dateFormat, $timeFormat, $numberOfPersons);
@@ -245,7 +255,7 @@ class GetAppointmentsCommandHandler extends CommandHandler
                 $rows[] = $mergedRow;
             } else {
                 foreach ((array)$appointment['bookings'] as $booking) {
-                    $row[BackendStrings::getAppointmentStrings()['appointment_id']] = $appointment['id'];
+                    $row[BackendStrings::get('appointment_id')] = $appointment['id'];
                     if (in_array('customers', $params['fields'], true)) {
                         $infoJson = json_decode($booking['info'], true);
 
@@ -253,9 +263,9 @@ class GetAppointmentsCommandHandler extends CommandHandler
 
                         $phone = $booking['customer']['phone'] ?: '';
 
-                        $row[BackendStrings::getAppointmentStrings()['customer_name']]  = $customerInfo['firstName'] . ' ' . $customerInfo['lastName'];
-                        $row[BackendStrings::getAppointmentStrings()['customer_email']] = $booking['customer']['email'];
-                        $row[BackendStrings::getAppointmentStrings()['customer_phone']] = $customerInfo['phone'] ? $customerInfo['phone'] : $phone;
+                        $row[BackendStrings::get('customer_name')]  = $customerInfo['firstName'] . ' ' . $customerInfo['lastName'];
+                        $row[BackendStrings::get('customer_email')] = $booking['customer']['email'];
+                        $row[BackendStrings::get('customer_phone')] = $customerInfo['phone'] ? $customerInfo['phone'] : $phone;
                     }
 
                     $this->getRowData($params, $row, $appointment, $dateFormat, $timeFormat, $numberOfPersons, $booking);
@@ -282,7 +292,7 @@ class GetAppointmentsCommandHandler extends CommandHandler
                                     }
                                 }
                             }
-                            $row[$customFieldLabel] = $value;
+                            $row[$customFieldLabel['label']] = $value;
                         }
                     }
 
@@ -292,7 +302,7 @@ class GetAppointmentsCommandHandler extends CommandHandler
                             $extraInfo[] = $extras[$extra['extraId']]['name'] . ' x ' . $extra['quantity'];
                         }
 
-                        $row[LiteBackendStrings::getCommonStrings()['extras']] =  implode(', ', $extraInfo);
+                        $row[LiteBackendStrings::get('extras')] =  implode(', ', $extraInfo);
                     }
 
                     $row = apply_filters('amelia_before_csv_export_appointments', $row, $appointment, $params['separate'], $booking);
@@ -310,32 +320,31 @@ class GetAppointmentsCommandHandler extends CommandHandler
     }
 
     /**
-     * @throws \Interop\Container\Exception\ContainerException
      */
     private function getRowData($params, &$row, $appointment, $dateFormat, $timeFormat, $numberOfPersons, $booking = null)
     {
         if (in_array('employee', $params['fields'], true)) {
-            $row[BackendStrings::getCommonStrings()['employee']] =
+            $row[BackendStrings::get('employee')] =
                 $appointment['provider']['firstName'] . ' ' . $appointment['provider']['lastName'];
         }
 
         if (in_array('service', $params['fields'], true)) {
-            $row[BackendStrings::getCommonStrings()['service']] = $appointment['service']['name'];
+            $row[BackendStrings::get('service')] = $appointment['service']['name'];
         }
 
         if (in_array('location', $params['fields'], true)) {
-            $row[BackendStrings::getCommonStrings()['location']] = !empty($appointment['location']) ?
+            $row[BackendStrings::get('location')] = !empty($appointment['location']) ?
                 (!empty($appointment['location']['address']) ? $appointment['location']['address'] : $appointment['location']['name']) : '';
         }
 
         if (in_array('startTime', $params['fields'], true)) {
-            $row[BackendStrings::getAppointmentStrings()['start_time']] =
+            $row[BackendStrings::get('start_time')] =
                 DateTimeService::getCustomDateTimeObject($appointment['bookingStart'])
                     ->format($dateFormat . ' ' . $timeFormat);
         }
 
         if (in_array('endTime', $params['fields'], true)) {
-            $row[BackendStrings::getAppointmentStrings()['end_time']] =
+            $row[BackendStrings::get('end_time')] =
                 DateTimeService::getCustomDateTimeObject($appointment['bookingEnd'])
                     ->format($dateFormat . ' ' . $timeFormat);
         }
@@ -345,7 +354,7 @@ class GetAppointmentsCommandHandler extends CommandHandler
 
         if (in_array('duration', $params['fields'], true)) {
             if ($booking) {
-                $row[LiteBackendStrings::getCommonStrings()['duration']] =
+                $row[LiteBackendStrings::get('duration')] =
                     $helperService->secondsToNiceDuration(!empty($booking['duration']) ? $booking['duration'] : $appointment['service']['duration']);
             } else {
                 $durations = [];
@@ -353,38 +362,38 @@ class GetAppointmentsCommandHandler extends CommandHandler
                     $durations[] =
                         $helperService->secondsToNiceDuration(!empty($booking2['duration']) ? $booking2['duration'] : $appointment['service']['duration']);
                 }
-                $row[LiteBackendStrings::getCommonStrings()['duration']] = count(array_unique($durations)) === 1 ? $durations[0] : implode(', ', $durations);
+                $row[LiteBackendStrings::get('duration')] = count(array_unique($durations)) === 1 ? $durations[0] : implode(', ', $durations);
             }
         }
 
         if (in_array('price', $params['fields'], true)) {
             if ($booking) {
                 if ($booking['packageCustomerService']) {
-                    $row[BackendStrings::getAppointmentStrings()['price']] = BackendStrings::getAppointmentStrings()['package_deal'];
+                    $row[BackendStrings::get('price')] = BackendStrings::get('package_deal');
                 } else {
-                    $row[BackendStrings::getAppointmentStrings()['price']] = $helperService->getFormattedPrice($this->getBookingPrice($booking));
+                    $row[BackendStrings::get('price')] = $helperService->getFormattedPrice($this->getBookingPrice($booking));
                 }
             } else {
                 $price       = 0;
                 $packageText = '';
                 foreach ($appointment['bookings'] as $booking2) {
                     if ($booking2['packageCustomerService']) {
-                        $packageText = BackendStrings::getAppointmentStrings()['package_deal'];
+                        $packageText = BackendStrings::get('package_deal');
                     } else {
                         $price += $this->getBookingPrice($booking2);
                     }
                 }
                 if ($price > 0) {
                     if ($packageText) {
-                        $row[BackendStrings::getAppointmentStrings()['price']] = $helperService->getFormattedPrice($price) . ' + ' . $packageText;
+                        $row[BackendStrings::get('price')] = $helperService->getFormattedPrice($price) . ' + ' . $packageText;
                     } else {
-                        $row[BackendStrings::getAppointmentStrings()['price']] = $helperService->getFormattedPrice($price);
+                        $row[BackendStrings::get('price')] = $helperService->getFormattedPrice($price);
                     }
                 } else {
                     if ($packageText) {
-                        $row[BackendStrings::getAppointmentStrings()['price']] = $packageText;
+                        $row[BackendStrings::get('price')] = $packageText;
                     } else {
-                        $row[BackendStrings::getAppointmentStrings()['price']] = 0;
+                        $row[BackendStrings::get('price')] = 0;
                     }
                 }
             }
@@ -392,7 +401,7 @@ class GetAppointmentsCommandHandler extends CommandHandler
 
         if (in_array('paymentAmount', $params['fields'], true)) {
             if ($booking) {
-                $row[BackendStrings::getCommonStrings()['payment_amount']] = !empty($booking['payments']) ?
+                $row[BackendStrings::get('payment_amount')] = !empty($booking['payments']) ?
                     $helperService->getFormattedPrice(array_sum(array_column($booking['payments'], 'amount'))) : '';
             } else {
                 $amounts = [];
@@ -400,7 +409,7 @@ class GetAppointmentsCommandHandler extends CommandHandler
                     $amounts[] = !empty($booking2['payments']) ?
                         $helperService->getFormattedPrice(array_sum(array_column($booking2['payments'], 'amount'))) : '';
                 }
-                $row[BackendStrings::getCommonStrings()['payment_amount']] = implode(', ', $amounts);
+                $row[BackendStrings::get('payment_amount')] = implode(', ', $amounts);
             }
         }
 
@@ -410,17 +419,17 @@ class GetAppointmentsCommandHandler extends CommandHandler
             if ($booking) {
                 $status = $booking['payments'] && count($booking['payments']) > 0 ?
                     $paymentAS->getFullStatus($booking, Entities::APPOINTMENT) : 'pending';
-                $row[BackendStrings::getCommonStrings()['payment_status']] =
-                    $status === 'partiallyPaid' ? BackendStrings::getCommonStrings()['partially_paid'] : BackendStrings::getCommonStrings()[$status];
+                $row[BackendStrings::get('payment_status')] =
+                    $status === 'partiallyPaid' ? BackendStrings::get('partially_paid') : BackendStrings::get($status);
             } else {
                 $statuses = [];
                 foreach ($appointment['bookings'] as $booking2) {
                     $status     = $booking2['payments'] && count($booking2['payments']) > 0 ?
                         $paymentAS->getFullStatus($booking2, Entities::APPOINTMENT) : 'pending';
                     $statuses[] =
-                        $status === 'partiallyPaid' ? BackendStrings::getCommonStrings()['partially_paid'] : BackendStrings::getCommonStrings()[$status];
+                        $status === 'partiallyPaid' ? BackendStrings::get('partially_paid') : BackendStrings::get($status);
                 }
-                $row[BackendStrings::getCommonStrings()['payment_status']] = implode(', ', $statuses);
+                $row[BackendStrings::get('payment_status')] = implode(', ', $statuses);
             }
         }
 
@@ -432,12 +441,12 @@ class GetAppointmentsCommandHandler extends CommandHandler
                         if ($method === 'wc') {
                             $method = 'wc_name';
                         }
-                        return !$method || $method === 'onSite' ? BackendStrings::getCommonStrings()['on_site'] : BackendStrings::getSettingsStrings()[$method];
+                        return !$method || $method === 'onSite' ? BackendStrings::get('on_site') : BackendStrings::get($method);
                     },
                     $booking['payments']
                 );
 
-                $row[BackendStrings::getCommonStrings()['payment_method']] =
+                $row[BackendStrings::get('payment_method')] =
                     count(array_unique($methodsUsed)) === 1 ? $methodsUsed[0] : implode(', ', $methodsUsed);
             } else {
                 $methods = [];
@@ -449,14 +458,14 @@ class GetAppointmentsCommandHandler extends CommandHandler
                                 $method = 'wc_name';
                             }
                             return !$method || $method === 'onSite' ?
-                                BackendStrings::getCommonStrings()['on_site'] :
-                                BackendStrings::getSettingsStrings()[$method];
+                                BackendStrings::get('on_site') :
+                                BackendStrings::get($method);
                         },
                         $booking2['payments']
                     );
                     $methods[]   = count(array_unique($methodsUsed)) === 1 ? $methodsUsed[0] : implode('/', $methodsUsed);
                 }
-                $row[BackendStrings::getCommonStrings()['payment_method']] = implode(', ', $methods);
+                $row[BackendStrings::get('payment_method')] = implode(', ', $methods);
             }
         }
 
@@ -464,7 +473,7 @@ class GetAppointmentsCommandHandler extends CommandHandler
             if ($booking) {
                 $wcOrderId = $booking['payments'] && count($booking['payments']) > 0 ?
                     implode(', ', array_column($booking['payments'], 'wcOrderId')) : '';
-                $row[BackendStrings::getCommonStrings()['wc_order_id_export']] = $wcOrderId;
+                $row[BackendStrings::get('wc_order_id_export')] = $wcOrderId;
             } else {
                 $wcOrderIds = [];
                 foreach ($appointment['bookings'] as $bookingWc) {
@@ -472,38 +481,38 @@ class GetAppointmentsCommandHandler extends CommandHandler
                         implode('/', array_column($bookingWc['payments'], 'wcOrderId')) : '';
                     $wcOrderIds[] = $wcOrderId;
                 }
-                $row[BackendStrings::getCommonStrings()['wc_order_id_export']] = implode(', ', $wcOrderIds);
+                $row[BackendStrings::get('wc_order_id_export')] = implode(', ', $wcOrderIds);
             }
         }
 
         if (in_array('note', $params['fields'], true)) {
-            $row[BackendStrings::getCommonStrings()['note']] = $appointment['internalNotes'];
+            $row[BackendStrings::get('note')] = $appointment['internalNotes'];
         }
 
         if (in_array('status', $params['fields'], true)) {
             if ($booking) {
-                $row[BackendStrings::getCommonStrings()['status']] =
-                    ucfirst(BackendStrings::getCommonStrings()[$booking['status']]);
+                $row[BackendStrings::get('status')] =
+                    ucfirst(BackendStrings::get($booking['status']));
             } else {
-                $row[BackendStrings::getCommonStrings()['status']] =
-                    ucfirst(BackendStrings::getCommonStrings()[$appointment['status']]);
+                $row[BackendStrings::get('status')] =
+                    ucfirst(BackendStrings::get($appointment['status']));
             }
         }
 
         if (in_array('persons', $params['fields'], true)) {
-            $row[BackendStrings::getNotificationsStrings()['ph_booking_number_of_persons']] =
+            $row[BackendStrings::get('ph_booking_number_of_persons')] =
                 implode(', ', $numberOfPersons);
         }
 
         if (in_array('couponCode', $params['fields'], true)) {
             if ($booking) {
-                $row[BackendStrings::getCommonStrings()['coupon_code']] = ($booking['coupon'] ? $booking['coupon']['code'] : '');
+                $row[BackendStrings::get('coupon_code')] = ($booking['coupon'] ? $booking['coupon']['code'] : '');
             } else {
                 $couponCodes = [];
                 foreach ($appointment['bookings'] as $booking2) {
                     $couponCodes[] = ($booking2['coupon'] ? $booking2['coupon']['code'] : '');
                 }
-                $row[BackendStrings::getCommonStrings()['coupon_code']] = implode(', ', $couponCodes);
+                $row[BackendStrings::get('coupon_code')] = implode(', ', $couponCodes);
             }
         }
     }

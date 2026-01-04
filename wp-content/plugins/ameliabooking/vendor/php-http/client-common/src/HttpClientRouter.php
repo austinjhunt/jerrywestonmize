@@ -7,7 +7,7 @@ use AmeliaHttp\Client\HttpAsyncClient;
 use AmeliaHttp\Client\HttpClient;
 use AmeliaHttp\Message\RequestMatcher;
 use Psr\Http\Client\ClientInterface;
-use AmeliaPsr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
 
 /**
  * Route a request to a specific client in the stack based using a RequestMatcher.

@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Service\FinancialConnections;
+namespace AmeliaVendor\Stripe\Service\FinancialConnections;
 
 /**
  * Service factory class for API resources in the FinancialConnections namespace.
@@ -11,7 +11,7 @@ namespace AmeliaStripe\Service\FinancialConnections;
  * @property SessionService $sessions
  * @property TransactionService $transactions
  */
-class FinancialConnectionsServiceFactory extends \AmeliaStripe\Service\AbstractServiceFactory
+class FinancialConnectionsServiceFactory extends \AmeliaVendor\Stripe\Service\AbstractServiceFactory
 {
     /**
      * @var array<string, string>

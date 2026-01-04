@@ -181,15 +181,15 @@ class OnlineMeeting extends Entity
     * Gets the attendeeReport
     * The content stream of the attendee report of a Microsoft Teams live event. Read-only.
     *
-    * @return \AmeliaGuzzleHttp\Psr7\Stream|null The attendeeReport
+    * @return \AmeliaVendor\GuzzleHttp\Psr7\Stream|null The attendeeReport
     */
     public function getAttendeeReport()
     {
         if (array_key_exists("attendeeReport", $this->_propDict)) {
-            if (is_a($this->_propDict["attendeeReport"], "\AmeliaGuzzleHttp\Psr7\Stream") || is_null($this->_propDict["attendeeReport"])) {
+            if (is_a($this->_propDict["attendeeReport"], "\AmeliaVendor\GuzzleHttp\Psr7\Stream") || is_null($this->_propDict["attendeeReport"])) {
                 return $this->_propDict["attendeeReport"];
             } else {
-                $this->_propDict["attendeeReport"] = \AmeliaGuzzleHttp\Psr7\Utils::streamFor($this->_propDict["attendeeReport"]);
+                $this->_propDict["attendeeReport"] = \AmeliaVendor\GuzzleHttp\Psr7\Utils::streamFor($this->_propDict["attendeeReport"]);
                 return $this->_propDict["attendeeReport"];
             }
         }
@@ -200,7 +200,7 @@ class OnlineMeeting extends Entity
     * Sets the attendeeReport
     * The content stream of the attendee report of a Microsoft Teams live event. Read-only.
     *
-    * @param \AmeliaGuzzleHttp\Psr7\Stream $val The attendeeReport
+    * @param \AmeliaVendor\GuzzleHttp\Psr7\Stream $val The attendeeReport
     *
     * @return OnlineMeeting
     */

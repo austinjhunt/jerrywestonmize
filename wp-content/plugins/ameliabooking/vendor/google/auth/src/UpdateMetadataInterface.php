@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-namespace AmeliaGoogle\Auth;
+namespace AmeliaVendor\Google\Auth;
 
 /**
  * Describes a Credentials object which supports updating request metadata
@@ -36,6 +36,6 @@ interface UpdateMetadataInterface
     public function updateMetadata(
         $metadata,
         $authUri = null,
-        callable $httpHandler = null
+        ?callable $httpHandler = null
     );
 }

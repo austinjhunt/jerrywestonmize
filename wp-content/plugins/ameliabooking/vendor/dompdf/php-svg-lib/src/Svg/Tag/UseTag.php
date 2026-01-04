@@ -5,7 +5,7 @@
  * @license GNU LGPLv3+ http://www.gnu.org/copyleft/lesser.html
  */
 
-namespace Svg\Tag;
+namespace AmeliaVendor\Svg\Tag;
 
 class UseTag extends AbstractTag
 {

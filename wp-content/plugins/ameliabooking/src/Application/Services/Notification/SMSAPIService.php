@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -13,7 +13,7 @@ use AmeliaBooking\Domain\ValueObjects\String\NotificationSendTo;
 use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
-use AmeliaPHPMailer\PHPMailer\Exception;
+use AmeliaVendor\PHPMailer\PHPMailer\Exception;
 use Interop\Container\Exception\ContainerException;
 
 /**
@@ -146,7 +146,8 @@ class SMSAPIService
     {
         $route = 'auth/password/forgot';
 
-        $data['redirectUrl'] = AMELIA_PAGE_URL . 'wpamelia-notifications&notificationTab=sms';
+        // TODO: Redesign - Remove "redesign" from the URL
+        $data['redirectUrl'] = AMELIA_PAGE_URL . 'wpamelia-notifications&activeTab=sms';
 
         return $this->sendRequest($route, false, $data);
     }
@@ -283,7 +284,8 @@ class SMSAPIService
     {
         $route = '/payment/checkout';
 
-        $data['redirectUrl'] = AMELIA_PAGE_URL . 'wpamelia-notifications&notificationTab=sms';
+        // TODO: Redesign - Remove "redesign" from the URL
+        $data['redirectUrl'] = AMELIA_PAGE_URL . 'wpamelia-notifications&activeTab=sms';
 
         return $this->sendRequest($route, true, $data);
     }

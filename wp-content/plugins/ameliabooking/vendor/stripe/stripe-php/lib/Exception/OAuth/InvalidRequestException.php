@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaStripe\Exception\OAuth;
+namespace AmeliaVendor\Stripe\Exception\OAuth;
 
 /**
  * InvalidRequestException is thrown when a code, refresh token, or grant

@@ -32,12 +32,21 @@ class Product_Button extends Abstract_Product_Block_Renderer {
  if ( ! $product ) {
  return '';
  }
+ // Check if this is a cart-contents collection to customize button text and link.
+ $collection = $parsed_block['context']['collection'] ?? '';
+ $is_cart_contents = 'woocommerce/product-collection/cart-contents' === $collection;
+ if ( $is_cart_contents ) {
+ // For cart contents, link to cart page instead of product page.
+ $button_text = __( 'Finish checkout', 'woocommerce' );
+ $button_url = wc_get_cart_url();
+ } else {
  $button_text = $product->add_to_cart_text() ? $product->add_to_cart_text() : __( 'Add to cart', 'woocommerce' );
  if ( $product->is_type( 'external' ) && $product instanceof \WC_Product_External ) {
  $external_url = $product->get_product_url();
  $button_url = $external_url ? $external_url : $product->get_permalink();
  } else {
  $button_url = $product->get_permalink();
+ }
  }
  $block_attributes = array_replace_recursive(
  array(

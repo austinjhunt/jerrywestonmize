@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -110,8 +110,9 @@ class BookingEditedEventHandler
             }
 
             if (
-                !empty($paymentId) && $booking['status'] === BookingStatus::APPROVED
-                && $settingsService->getSetting('notifications', 'sendInvoice')
+                !empty($paymentId) && $booking['status'] === BookingStatus::APPROVED &&
+                $settingsService->isFeatureEnabled('invoices') &&
+                $settingsService->getSetting('notifications', 'sendInvoice')
             ) {
                 $sendInvoice = true;
             }

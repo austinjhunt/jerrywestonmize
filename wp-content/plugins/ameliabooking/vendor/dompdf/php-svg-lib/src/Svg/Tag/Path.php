@@ -5,9 +5,9 @@
  * @license GNU LGPLv3+ http://www.gnu.org/copyleft/lesser.html
  */
 
-namespace Svg\Tag;
+namespace AmeliaVendor\Svg\Tag;
 
-use Svg\Surface\SurfaceInterface;
+use AmeliaVendor\Svg\Surface\SurfaceInterface;
 
 class Path extends Shape
 {

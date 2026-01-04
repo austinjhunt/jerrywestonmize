@@ -32,16 +32,8 @@ class DataModifier extends \AmeliaBooking\Infrastructure\Licence\Starter\DataMod
      */
     public static function modifySettings(&$settings)
     {
-        if ($settings && isset($settings['payments'])) {
-            $settings['payments']['cart'] = false;
-        }
-
         if ($settings && isset($settings['payments']['stripe']['connect'])) {
             $settings['payments']['stripe']['connect']['enabled'] = false;
-        }
-
-        if ($settings && isset($settings['notifications'])) {
-            $settings['notifications']['whatsAppEnabled'] = false;
         }
     }
 
@@ -68,6 +60,7 @@ class DataModifier extends \AmeliaBooking\Infrastructure\Licence\Starter\DataMod
                     [
                     ':zoomUserId'       => isset($data['zoomUserId']) ? $data['zoomUserId'] : null,
                     ':appleCalendarId'  => isset($data['appleCalendarId']) ? $data['appleCalendarId'] : null,
+                    ':googleCalendarId' => isset($data['googleCalendarId']) ? $data['googleCalendarId'] : null,
                     ':translations'     => isset($data['translations']) ? $data['translations'] : null,
                     ':timeZone'         => isset($data['timeZone']) ? $data['timeZone'] : null,
                     ':badgeId'          => isset($data['badgeId']) ? $data['badgeId'] : null,
@@ -77,6 +70,7 @@ class DataModifier extends \AmeliaBooking\Infrastructure\Licence\Starter\DataMod
                 $starterData['columns'] .
                 '`zoomUserId`,
                 `appleCalendarId`,
+                `googleCalendarId`,
                 `translations`,
                 `timeZone`,
                 `badgeId`,',
@@ -84,6 +78,7 @@ class DataModifier extends \AmeliaBooking\Infrastructure\Licence\Starter\DataMod
                 $starterData['placeholders'] .
                 ':zoomUserId,
                 :appleCalendarId,
+                :googleCalendarId,
                 :translations,
                 :timeZone,
                 :badgeId,',
@@ -91,6 +86,7 @@ class DataModifier extends \AmeliaBooking\Infrastructure\Licence\Starter\DataMod
                 $starterData['columnsPlaceholders'] .
                 '`zoomUserId` = :zoomUserId,
                 `appleCalendarId` = :appleCalendarId,
+                `googleCalendarId` = :googleCalendarId,
                 `translations` = :translations,
                 `timeZone` = :timeZone,
                 `badgeId` = :badgeId,',

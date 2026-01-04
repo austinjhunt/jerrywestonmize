@@ -2,23 +2,23 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\FinancialConnections;
+namespace AmeliaVendor\Stripe\FinancialConnections;
 
 /**
  * A Financial Connections Session is the secure way to programmatically launch the client-side Stripe.js modal that lets your users link their accounts.
  *
  * @property string $id Unique identifier for the object.
  * @property string $object String representing the object's type. Objects of the same type share the same value.
- * @property null|(object{account?: string|\AmeliaStripe\Account, customer?: string|\AmeliaStripe\Customer, type: string}&\AmeliaStripe\StripeObject) $account_holder The account holder for whom accounts are collected in this session.
- * @property \AmeliaStripe\Collection<Account> $accounts The accounts that were collected as part of this Session.
+ * @property null|(object{account?: string|\AmeliaVendor\Stripe\Account, customer?: string|\AmeliaVendor\Stripe\Customer, type: string}&\AmeliaVendor\Stripe\StripeObject) $account_holder The account holder for whom accounts are collected in this session.
+ * @property \AmeliaVendor\Stripe\Collection<Account> $accounts The accounts that were collected as part of this Session.
  * @property string $client_secret A value that will be passed to the client to launch the authentication flow.
- * @property null|(object{account_subcategories: null|string[], countries: null|string[]}&\AmeliaStripe\StripeObject) $filters
+ * @property null|(object{account_subcategories: null|string[], countries: null|string[]}&\AmeliaVendor\Stripe\StripeObject) $filters
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
  * @property string[] $permissions Permissions requested for accounts collected during this session.
  * @property null|string[] $prefetch Data features requested to be retrieved upon account creation.
  * @property null|string $return_url For webview integrations only. Upon completing OAuth login in the native browser, the user will be redirected to this URL to return to your app.
  */
-class Session extends \AmeliaStripe\ApiResource
+class Session extends \AmeliaVendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'financial_connections.session';
 
@@ -32,7 +32,7 @@ class Session extends \AmeliaStripe\ApiResource
      *
      * @return Session the created resource
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function create($params = null, $options = null)
     {
@@ -40,7 +40,7 @@ class Session extends \AmeliaStripe\ApiResource
         $url = static::classUrl();
 
         list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
-        $obj = \AmeliaStripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \AmeliaVendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
 
         return $obj;
@@ -54,11 +54,11 @@ class Session extends \AmeliaStripe\ApiResource
      *
      * @return Session
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = \AmeliaStripe\Util\RequestOptions::parse($opts);
+        $opts = \AmeliaVendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
 

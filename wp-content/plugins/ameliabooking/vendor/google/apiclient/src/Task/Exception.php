@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-namespace AmeliaGoogle\Task;
+namespace AmeliaVendor\Google\Task;
 
-use AmeliaGoogle\Exception as GoogleException;
+use AmeliaVendor\Google\Exception as GoogleException;
 
 class Exception extends GoogleException
 {

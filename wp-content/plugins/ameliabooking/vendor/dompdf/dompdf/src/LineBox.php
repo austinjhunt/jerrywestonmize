@@ -4,14 +4,14 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace AmeliaDompdf;
+namespace AmeliaVendor\Dompdf;
 
-use AmeliaDompdf\FrameDecorator\AbstractFrameDecorator;
-use AmeliaDompdf\FrameDecorator\Block;
-use AmeliaDompdf\FrameDecorator\ListBullet;
-use AmeliaDompdf\FrameDecorator\Page;
-use AmeliaDompdf\FrameReflower\Text as TextFrameReflower;
-use AmeliaDompdf\Positioner\Inline as InlinePositioner;
+use AmeliaVendor\Dompdf\FrameDecorator\AbstractFrameDecorator;
+use AmeliaVendor\Dompdf\FrameDecorator\Block;
+use AmeliaVendor\Dompdf\FrameDecorator\ListBullet;
+use AmeliaVendor\Dompdf\FrameDecorator\Page;
+use AmeliaVendor\Dompdf\FrameReflower\Text as TextFrameReflower;
+use AmeliaVendor\Dompdf\Positioner\Inline as InlinePositioner;
 use Iterator;
 
 /**

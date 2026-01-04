@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Service\Issuing;
+namespace AmeliaVendor\Stripe\Service\Issuing;
 
 /**
  * Service factory class for API resources in the Issuing namespace.
@@ -16,7 +16,7 @@ namespace AmeliaStripe\Service\Issuing;
  * @property TokenService $tokens
  * @property TransactionService $transactions
  */
-class IssuingServiceFactory extends \AmeliaStripe\Service\AbstractServiceFactory
+class IssuingServiceFactory extends \AmeliaVendor\Stripe\Service\AbstractServiceFactory
 {
     /**
      * @var array<string, string>

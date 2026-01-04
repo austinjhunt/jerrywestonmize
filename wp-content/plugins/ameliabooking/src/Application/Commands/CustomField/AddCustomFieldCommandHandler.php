@@ -6,13 +6,18 @@ use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
+use AmeliaBooking\Domain\Entity\Booking\Event\Event;
 use AmeliaBooking\Domain\Entity\CustomField\CustomField;
+use AmeliaBooking\Domain\Entity\CustomField\CustomFieldOption;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Factory\CustomField\CustomFieldFactory;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
+use AmeliaBooking\Infrastructure\Repository\CustomField\CustomFieldEventRepository;
+use AmeliaBooking\Infrastructure\Repository\CustomField\CustomFieldOptionRepository;
 use AmeliaBooking\Infrastructure\Repository\CustomField\CustomFieldRepository;
 use AmeliaBooking\Infrastructure\Repository\CustomField\CustomFieldServiceRepository;
+use Interop\Container\Exception\ContainerException;
 
 /**
  * Class AddCustomFieldCommandHandler
@@ -27,7 +32,6 @@ class AddCustomFieldCommandHandler extends CommandHandler
      * @return CommandResult
      * @throws AccessDeniedException
      * @throws \AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException
-     * @throws \Interop\Container\Exception\ContainerException
      * @throws QueryExecutionException
      */
     public function handle(AddCustomFieldCommand $command)
@@ -66,7 +70,9 @@ class AddCustomFieldCommandHandler extends CommandHandler
 
             $customField->setId(new Id($customFieldId));
 
-            $this->handleCustomFieldServices($customField);
+            $this->addCustomFieldServices($customField);
+            $this->addCustomFieldEvents($customField);
+            $this->addCustomFieldOptions($customField);
         } catch (QueryExecutionException $e) {
             $customFieldRepository->rollback();
             throw $e;
@@ -91,9 +97,8 @@ class AddCustomFieldCommandHandler extends CommandHandler
      * @param CustomField $customField
      *
      * @throws QueryExecutionException
-     * @throws \Interop\Container\Exception\ContainerException
      */
-    private function handleCustomFieldServices($customField)
+    private function addCustomFieldServices($customField)
     {
         /** @var CustomFieldServiceRepository $customFieldServiceRepository */
         $customFieldServiceRepository = $this->container->get('domain.customFieldService.repository');
@@ -101,6 +106,42 @@ class AddCustomFieldCommandHandler extends CommandHandler
         /** @var Service $service */
         foreach ($customField->getServices()->getItems() as $service) {
             $customFieldServiceRepository->add($customField->getId()->getValue(), $service->getId()->getValue());
+        }
+    }
+
+    /**
+     * @param CustomField $customField
+     *
+     * @throws QueryExecutionException
+     * @throws \Interop\Container\Exception\ContainerException
+     */
+    private function addCustomFieldEvents($customField)
+    {
+        /** @var CustomFieldEventRepository $customFieldEventRepository */
+        $customFieldEventRepository = $this->container->get('domain.customFieldEvent.repository');
+        /** @var Event $event */
+        foreach ($customField->getEvents()->getItems() as $event) {
+            $customFieldEventRepository->add($customField->getId()->getValue(), $event->getId()->getValue());
+        }
+    }
+
+    /**
+     * @param CustomField $customField
+     *
+     * @throws QueryExecutionException
+     * @throws \Interop\Container\Exception\ContainerException
+     */
+    private function addCustomFieldOptions($customField)
+    {
+        /** @var CustomFieldOptionRepository $customFieldOptionRepository */
+        $customFieldOptionRepository = $this->container->get('domain.customFieldOption.repository');
+
+
+        /** @var CustomFieldOption $option */
+        foreach ($customField->getOptions()->getItems() as $option) {
+            $option->setCustomFieldId(new Id($customField->getId()->getValue()));
+            $optionId = $customFieldOptionRepository->add($option);
+            $option->setId(new Id($optionId));
         }
     }
 }

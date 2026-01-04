@@ -3,8 +3,8 @@
 namespace AmeliaHttp\Message\Formatter;
 
 use AmeliaHttp\Message\Formatter;
-use AmeliaPsr\Http\Message\RequestInterface;
-use AmeliaPsr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
 
 /**
  * Normalize a request or a response into a string or an array.

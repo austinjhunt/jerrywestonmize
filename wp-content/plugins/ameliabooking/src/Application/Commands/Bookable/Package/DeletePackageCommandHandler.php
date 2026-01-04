@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -11,6 +11,7 @@ use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Bookable\BookableApplicationService;
+use AmeliaBooking\Application\Services\Bookable\PackageApplicationService;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Package;
 use AmeliaBooking\Domain\Entity\Entities;
@@ -51,6 +52,17 @@ class DeletePackageCommandHandler extends CommandHandler
 
         /** @var PackageRepository $packageRepository */
         $packageRepository = $this->container->get('domain.bookable.package.repository');
+
+        /** @var PackageApplicationService $packageAS */
+        $packageAS = $this->container->get('application.bookable.package');
+
+        if ($packageAS->hasApprovedPurchases($command->getArg('id'))) {
+            $result->setResult(CommandResult::RESULT_CONFLICT);
+            $result->setMessage('Could not delete package.');
+            $result->setData([]);
+
+            return $result;
+        }
 
         /** @var Package $package */
         $package = $packageRepository->getById($command->getArg('id'));

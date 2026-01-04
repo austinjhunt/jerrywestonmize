@@ -17,8 +17,6 @@ final class FloatValue
     private $float;
 
     /**
-     * Name constructor.
-     *
      * @param string $float
      *
      * @throws InvalidArgumentException

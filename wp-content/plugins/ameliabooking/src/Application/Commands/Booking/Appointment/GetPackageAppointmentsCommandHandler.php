@@ -9,19 +9,19 @@ use AmeliaBooking\Application\Services\Bookable\AbstractPackageApplicationServic
 use AmeliaBooking\Application\Services\Booking\AppointmentApplicationService;
 use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
+use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Entities;
+use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageCustomerRepository;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ServiceRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
-use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Bookable\PackagesCustomersTable;
-use Interop\Container\Exception\ContainerException;
 
 /**
  * Class GetPackageAppointmentsCommandHandler
@@ -38,7 +38,6 @@ class GetPackageAppointmentsCommandHandler extends CommandHandler
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      * @throws AccessDeniedException
-     * @throws ContainerException
      */
     public function handle(GetPackageAppointmentsCommand $command)
     {
@@ -62,30 +61,33 @@ class GetPackageAppointmentsCommandHandler extends CommandHandler
         /** @var AppointmentApplicationService $appointmentAS */
         $appointmentAS = $this->container->get('application.booking.appointment.service');
 
-        $params = $command->getField('params');
-
-        $itemsPerPageBackEnd = $settingsDS->getSetting('general', 'itemsPerPageBackEnd');
-
-        if (!empty($params['dates'])) {
-            !empty($params['dates'][0]) ? $params['dates'][0] .= ' 00:00:00' : null;
-            !empty($params['dates'][1]) ? $params['dates'][1] .= ' 23:59:59' : null;
-        }
-
-        if (!empty($params['search'])) {
-            $result->setResult(CommandResult::RESULT_SUCCESS);
-            $result->setMessage('Successfully retrieved appointments');
+        try {
+            /** @var AbstractUser $user */
+            $user = $command->getUserApplicationService()->authorization(null, $command->getCabinetType());
+        } catch (AuthorizationException $e) {
+            $result->setResult(CommandResult::RESULT_ERROR);
             $result->setData(
                 [
-                    Entities::APPOINTMENTS     => [],
-                    'availablePackageBookings' => [],
-                    'occupied'                 => [],
-                    'total'                    => 0,
-                    'totalApproved'            => 0,
-                    'totalPending'             => 0,
+                    'reauthorize' => true
                 ]
             );
 
             return $result;
+        }
+
+        $params = $command->getField('params');
+
+        if ($user && $user->getType() === Entities::PROVIDER) {
+            $params['providers'] = [$user->getId()->getValue()];
+        }
+
+        if ($user && $user->getType() === Entities::CUSTOMER) {
+            $params['customers'] = [$user->getId()->getValue()];
+        }
+
+        if (!empty($params['dates'])) {
+            !empty($params['dates'][0]) ? $params['dates'][0] .= ' 00:00:00' : null;
+            !empty($params['dates'][1]) ? $params['dates'][1] .= ' 23:59:59' : null;
         }
 
         $availablePackageBookings = [];
@@ -96,34 +98,36 @@ class GetPackageAppointmentsCommandHandler extends CommandHandler
 
         $totalPackagePurchases = 0;
 
-        $customerId = isset($params['customerId']) ? $params['customerId'] : null;
+        $customers = isset($params['customerId']) ? [$params['customerId']] : [];
 
         if (!empty($params['packageStatus']) || !empty($params['page']) || !empty($params['bookingsCount'])) {
-            $packageCustomerIds = $packageCustomerRepository->getIds(
+            $packageCustomerIds = $packageCustomerRepository->getFilteredIds(
                 [
-                    'purchased'     => !empty($params['dates']) ? $params['dates'] : [],
-                    'packages'      => !empty($params['packageId']) ? [$params['packageId']] : [],
-                    'itemsPerPage'  => $itemsPerPageBackEnd,
-                    'page'          => !empty($params['page']) ? $params['page'] : null,
-                    'packageStatus' => !empty($params['packageStatus']) ? $params['packageStatus'] : null,
-                    'customerId'    => $customerId,
-                ]
+                    'dates'     => !empty($params['dates']) ? $params['dates'] : [],
+                    'packages'  => !empty($params['packageId']) ? [$params['packageId']] : [],
+                    'page'      => !empty($params['page']) ? $params['page'] : null,
+                    'status'    => !empty($params['packageStatus']) ? $params['packageStatus'] : null,
+                    'customers' => $customers,
+                ],
+                $settingsDS->getSetting('general', 'itemsPerPage')
             );
 
-            $noResultsManagePackagesFilters = empty($packageCustomerIds);
+            $noResultsManagePackagesFilters = !$packageCustomerIds;
 
-            $totalPackagePurchases = $packageCustomerRepository->getPackagePurchasedCount(
+            $totalPackagePurchases = sizeof($packageCustomerRepository->getFilteredIds(
                 [
-                    'packageCustomerIds' => !empty($packageCustomerIds) ? $packageCustomerIds : [],
+                    'packageCustomerIds' => $packageCustomerIds ?: [],
                     'purchased'          => !empty($params['dates']) ? $params['dates'] : [],
                     'packages'           => !empty($params['packageId']) ? [$params['packageId']] : [],
                     'packageStatus'      => !empty($params['packageStatus']) ? $params['packageStatus'] : null,
-                    'customerId'         => $customerId
+                    'customers'          => $customers
                 ]
-            );
+            ));
         }
 
-        /** @var Collection $appointments */
+        /**
+         * @var Collection $appointments
+         */
         $appointments = new Collection();
 
         if (isset($params['customerId'])) {
@@ -132,7 +136,7 @@ class GetPackageAppointmentsCommandHandler extends CommandHandler
 
         $customersNoShowCountIds = [];
 
-        $noShowTagEnabled = $settingsDS->getSetting('roles', 'enableNoShowTag');
+        $noShowTagEnabled = $settingsDS->isFeatureEnabled('noShowTag');
 
         if (!$noResultsManagePackagesFilters) {
             $availablePackageBookings = $packageAS->getPackageAvailability(
@@ -140,7 +144,7 @@ class GetPackageAppointmentsCommandHandler extends CommandHandler
                 [
                     'packageCustomerIds' => !empty($packageCustomerIds) ? $packageCustomerIds : [],
                     'purchased'          => !empty($params['dates']) ? $params['dates'] : [],
-                    'customerId'         => $customerId,
+                    'customers'          => $customers,
                     'packageId'          => !empty($params['packageId']) ? (int)$params['packageId'] : null,
                     'managePackagePage'  => true
                 ]
@@ -244,7 +248,7 @@ class GetPackageAppointmentsCommandHandler extends CommandHandler
                     'packageCustomerIds' => !empty($packageCustomerIds) ? $packageCustomerIds : [],
                     'packages'           => [$params['packageId']],
                     'purchased'          => !empty($params['dates']) ? $params['dates'] : [],
-                    'customerId'         => $customerId
+                    'customers'          => $customers
                 ]
             );
         }
@@ -264,7 +268,7 @@ class GetPackageAppointmentsCommandHandler extends CommandHandler
         $result->setData(
             [
                 Entities::APPOINTMENTS     =>
-                    !empty($params['asArray']) && filter_var($params['asArray'], FILTER_VALIDATE_BOOLEAN) ? $appointments->toArray() : $groupedAppointments,
+                !empty($params['asArray']) && filter_var($params['asArray'], FILTER_VALIDATE_BOOLEAN) ? $appointments->toArray() : $groupedAppointments,
                 'availablePackageBookings' => $availablePackageBookings,
                 'emptyPackageBookings'     => !empty($emptyBookedPackages) ? $emptyBookedPackages->toArray() : [],
                 'occupied'                 => $occupiedTimes,

@@ -19,12 +19,6 @@ final class FeeType
      * @var string
      */
     private $status;
-
-    /**
-     * Status constructor.
-     *
-     * @param int $status
-     */
     public function __construct($status)
     {
         $this->status = $status;

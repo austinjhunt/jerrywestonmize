@@ -5,16 +5,16 @@
  * @license GNU LGPLv3+ http://www.gnu.org/copyleft/lesser.html
  */
 
-namespace Svg\Surface;
+namespace AmeliaVendor\Svg\Surface;
 
-use Svg\Document;
-use Svg\Style;
+use AmeliaVendor\Svg\Document;
+use AmeliaVendor\Svg\Style;
 
 class SurfaceCpdf implements SurfaceInterface
 {
     const DEBUG = false;
 
-    /** @var \Svg\Surface\CPdf */
+    /** @var \AmeliaVendor\Svg\Surface\CPdf */
     private $canvas;
 
     private $width;
@@ -32,7 +32,7 @@ class SurfaceCpdf implements SurfaceInterface
         $h = $dimensions["height"];
 
         if (!$canvas) {
-            $canvas = new \Svg\Surface\CPdf(array(0, 0, $w, $h));
+            $canvas = new \AmeliaVendor\Svg\Surface\CPdf(array(0, 0, $w, $h));
             $refl = new \ReflectionClass($canvas);
             $canvas->fontcache = realpath(dirname($refl->getFileName()) . "/../../fonts/")."/";
         }

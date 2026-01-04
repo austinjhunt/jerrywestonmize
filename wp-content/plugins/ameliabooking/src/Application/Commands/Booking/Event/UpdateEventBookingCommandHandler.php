@@ -219,7 +219,6 @@ class UpdateEventBookingCommandHandler extends CommandHandler
         }
 
 
-
         $customerBookingRepository->update($customerBooking->getId()->getValue(), $customerBooking);
 
         /** @var Payment $payment */
@@ -266,6 +265,11 @@ class UpdateEventBookingCommandHandler extends CommandHandler
             }
         }
 
+
+        $eventArray = $event->toArray();
+        $event->getBookings()->addItem($customerBooking, (int)$command->getField('id'), true);
+        $eventInfo = $eventAS->getEventInfo($event);
+
         do_action('amelia_after_event_booking_updated', $customerBooking->toArray(), $bookingData);
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
@@ -273,7 +277,7 @@ class UpdateEventBookingCommandHandler extends CommandHandler
         $result->setData(
             [
                 'type'                     => Entities::EVENT,
-                Entities::EVENT            => $event->toArray(),
+                Entities::EVENT            => $eventArray,
                 Entities::BOOKING          => $customerBooking->toArray(),
                 'appointmentStatusChanged' => false,
                 'bookingStatusChanged'     => $isBookingStatusChanged,
@@ -281,7 +285,8 @@ class UpdateEventBookingCommandHandler extends CommandHandler
                     $customerBooking->getPayments()->length() > 0 ?
                         $customerBooking->getPayments()->getItem($customerBooking->getPayments()->keys()[0])->getId()->getValue() :
                         null,
-                'createPaymentLinks'       => $command->getField('createPaymentLinks')
+                'createPaymentLinks'       => $command->getField('createPaymentLinks'),
+                'newEventStatus'           => $eventInfo['status']
             ]
         );
 

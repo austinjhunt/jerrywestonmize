@@ -18,7 +18,7 @@ class IntervalService
     {
         $timeParts = explode(':', $time);
 
-        return (int)$timeParts[0] * 60 * 60 + (int)$timeParts[1] * 60 + (int)$timeParts[2];
+        return (int)$timeParts[0] * 60 * 60 + (int)$timeParts[1] * 60 + (!empty($timeParts[2]) ? (int)$timeParts[2] : 0);
     }
 
     /**

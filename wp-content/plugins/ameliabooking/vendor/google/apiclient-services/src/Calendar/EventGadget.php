@@ -15,9 +15,9 @@
  * the License.
  */
 
-namespace AmeliaGoogle\Service\Calendar;
+namespace AmeliaVendor\Google\Service\Calendar;
 
-class EventGadget extends \AmeliaGoogle\Model
+class EventGadget extends \AmeliaVendor\Google\Model
 {
   /**
    * @var string
@@ -167,4 +167,4 @@ class EventGadget extends \AmeliaGoogle\Model
 }
 
 // Adding a class alias for backwards compatibility with the previous class name.
-class_alias(EventGadget::class, 'AmeliaGoogle_Service_Calendar_EventGadget');
+class_alias(EventGadget::class, 'Google_Service_Calendar_EventGadget');

@@ -2,7 +2,7 @@
 
 namespace AmeliaHttp\Client\Common\Plugin;
 
-use AmeliaPsr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
 
 /**
  * A plugin that helps you migrate from php-http/client-common 1.x to 2.x. This

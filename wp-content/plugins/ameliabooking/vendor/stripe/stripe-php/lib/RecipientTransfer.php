@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaStripe;
+namespace AmeliaVendor\Stripe;
 
 /**
  * Class RecipientTransfer.
@@ -20,7 +20,7 @@ namespace AmeliaStripe;
  * @property string $failure_code
  * @property string $failure_message
  * @property bool $livemode
- * @property StripeObject $metadata
+ * @property \StripeObject $metadata
  * @property string $method
  * @property string $recipient
  * @property Collection $reversals

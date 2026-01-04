@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -32,7 +32,6 @@ class GetPaymentsCommandHandler extends CommandHandler
      * @throws AccessDeniedException
      * @throws \AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function handle(GetPaymentsCommand $command)
     {
@@ -69,36 +68,36 @@ class GetPaymentsCommandHandler extends CommandHandler
             $row = [];
 
             if (in_array('service', $params['fields'], true)) {
-                $row[BackendStrings::getCommonStrings()['service']] = $payment['name'];
+                $row[BackendStrings::get('service')] = $payment['name'];
             }
 
             if (in_array('bookingStart', $params['fields'], true)) {
-                $row[BackendStrings::getAppointmentStrings()['start_time']] =
+                $row[BackendStrings::get('start_time')] =
                     DateTimeService::getCustomDateTimeObject($payment['bookingStart'])
                         ->format($dateFormat . ' ' . $timeFormat);
             }
 
             if (in_array('customer', $params['fields'], true)) {
-                $row[BackendStrings::getCommonStrings()['customer']] =
+                $row[BackendStrings::get('customer')] =
                     $payment['customerFirstName'] . ' ' . $payment['customerLastName'];
             }
 
             if (in_array('customerEmail', $params['fields'], true)) {
-                $row[BackendStrings::getFinanceStrings()['customer_email']] = $payment['customerEmail'];
+                $row[BackendStrings::get('customer_email')] = $payment['customerEmail'];
             }
 
             if (in_array('employee', $params['fields'], true)) {
-                $row[BackendStrings::getCommonStrings()['employee']] =
+                $row[BackendStrings::get('employee')] =
                     implode(', ', array_column($payment['providers'], 'fullName'));
             }
 
             if (in_array('employeeEmail', $params['fields'], true)) {
-                $row[BackendStrings::getFinanceStrings()['employee_email']] =
+                $row[BackendStrings::get('employee_email')] =
                     implode(', ', array_column($payment['providers'], 'email'));
             }
 
             if (in_array('location', $params['fields'], true)) {
-                $row[BackendStrings::getCommonStrings()['location']] =
+                $row[BackendStrings::get('location')] =
                     isset($payment['location']) ?
                         (!empty($payment['location']['location_address']) ?
                             $payment['location']['location_address'] :
@@ -106,27 +105,27 @@ class GetPaymentsCommandHandler extends CommandHandler
             }
 
             if (in_array('amount', $params['fields'], true)) {
-                $row[BackendStrings::getFinanceStrings()['amount']] =
+                $row[BackendStrings::get('amount')] =
                     $payment['amount'] . (!empty($payment['secondaryPayments']) ?
                         ', ' . implode(', ', array_column($payment['secondaryPayments'], 'amount')) :
                         '');
             }
 
             if (in_array('type', $params['fields'], true)) {
-                $row[BackendStrings::getFinanceStrings()['method']] =
+                $row[BackendStrings::get('method')] =
                     $payment['gateway'] . (!empty($payment['secondaryPayments']) ?
                         ', ' . implode(', ', array_column($payment['secondaryPayments'], 'gateway')) :
                         '');
             }
 
             if (in_array('status', $params['fields'], true)) {
-                $row[BackendStrings::getCommonStrings()['status']] =
-                    BackendStrings::getFinanceStrings()[$payment['status']]
+                $row[BackendStrings::get('status')] =
+                    BackendStrings::get($payment['status'])
                     . (!empty($payment['secondaryPayments']) ? ', ' . implode(
                         ', ',
                         array_map(
                             function ($val) {
-                                return BackendStrings::getFinanceStrings()[$val['status']];
+                                return BackendStrings::get($val['status']);
                             },
                             $payment['secondaryPayments']
                         )
@@ -134,7 +133,7 @@ class GetPaymentsCommandHandler extends CommandHandler
             }
 
             if (in_array('paymentDate', $params['fields'], true)) {
-                $row[BackendStrings::getFinanceStrings()['payment_date']] =
+                $row[BackendStrings::get('payment_date')] =
                     DateTimeService::getCustomDateTimeObject($payment['dateTime'])
                         ->format($dateFormat . ' ' . $timeFormat)
                     . (!empty($payment['secondaryPayments']) ? ', ' . implode(
@@ -151,17 +150,17 @@ class GetPaymentsCommandHandler extends CommandHandler
 
             if (in_array('wcOrderId', $params['fields'], true)) {
                 $secondaryOrderIds = !empty($payment['secondaryPayments']) ? array_filter(array_column($payment['secondaryPayments'], 'wcOrderId')) : null;
-                $row[BackendStrings::getCommonStrings()['wc_order_id_export']] =
+                $row[BackendStrings::get('wc_order_id_export')] =
                     $payment['wcOrderId'] . (!empty($secondaryOrderIds) ? ', ' . implode(', ', $secondaryOrderIds) : '');
             }
 
             if (in_array('couponCode', $params['fields'], true)) {
-                $row[BackendStrings::getCommonStrings()['coupon_code']] = ($payment['coupon'] ? $payment['coupon']['code'] : '');
+                $row[BackendStrings::get('coupon_code')] = ($payment['coupon'] ? $payment['coupon']['code'] : '');
             }
 
 
             if (in_array('paymentCreated', $params['fields'], true)) {
-                $row[BackendStrings::getFinanceStrings()['payment_created']] =
+                $row[BackendStrings::get('payment_created')] =
                     DateTimeService::getCustomDateTimeObject($payment['created'])
                         ->format($dateFormat . ' ' . $timeFormat)
                     . (!empty($payment['secondaryPayments']) ? ', ' . implode(

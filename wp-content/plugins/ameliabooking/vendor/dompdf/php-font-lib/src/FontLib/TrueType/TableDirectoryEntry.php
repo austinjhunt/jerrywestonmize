@@ -5,9 +5,9 @@
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 
-namespace FontLib\TrueType;
+namespace AmeliaVendor\FontLib\TrueType;
 
-use FontLib\Table\DirectoryEntry;
+use AmeliaVendor\FontLib\Table\DirectoryEntry;
 
 /**
  * TrueType table directory entry.

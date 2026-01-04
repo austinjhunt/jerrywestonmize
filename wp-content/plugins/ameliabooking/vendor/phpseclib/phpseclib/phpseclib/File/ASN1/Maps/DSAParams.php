@@ -11,9 +11,9 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-namespace phpseclib3\File\ASN1\Maps;
+namespace AmeliaVendor\phpseclib3\File\ASN1\Maps;
 
-use phpseclib3\File\ASN1;
+use AmeliaVendor\phpseclib3\File\ASN1;
 
 /**
  * DSAParams

@@ -4,6 +4,7 @@ namespace AmeliaBooking\Application\Services\CustomField;
 
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
+use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Booking\Event\Event;
 use AmeliaBooking\Domain\Entity\CustomField\CustomField;
 use Interop\Container\Exception\ContainerException;
@@ -93,5 +94,18 @@ class StarterCustomFieldApplicationService extends AbstractCustomFieldApplicatio
     public function getAll()
     {
         return new Collection();
+    }
+
+    /**
+     * @param CustomerBooking $booking
+     * @param array $customFields
+     * @param Collection $allCustomFields
+     *
+     * @return array
+     * @throws ContainerException
+     */
+    public function reformatCustomField($booking, $customFields, $allCustomFields)
+    {
+        return [];
     }
 }

@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Treasury;
+namespace AmeliaVendor\Stripe\Treasury;
 
 /**
  * Use <a href="https://docs.stripe.com/docs/treasury/moving-money/financial-accounts/out-of/outbound-transfers">OutboundTransfers</a> to transfer funds from a <a href="https://stripe.com/docs/api#financial_accounts">FinancialAccount</a> to a PaymentMethod belonging to the same entity. To send funds to a different party, use <a href="https://stripe.com/docs/api#outbound_payments">OutboundPayments</a> instead. You can send funds over ACH rails or through a domestic wire transfer to a user's own external bank account.
@@ -19,20 +19,20 @@ namespace AmeliaStripe\Treasury;
  * @property string $currency Three-letter <a href="https://www.iso.org/iso-4217-currency-codes.html">ISO currency code</a>, in lowercase. Must be a <a href="https://stripe.com/docs/currencies">supported currency</a>.
  * @property null|string $description An arbitrary string attached to the object. Often useful for displaying to users.
  * @property null|string $destination_payment_method The PaymentMethod used as the payment instrument for an OutboundTransfer.
- * @property (object{billing_details: (object{address: (object{city: null|string, country: null|string, line1: null|string, line2: null|string, postal_code: null|string, state: null|string}&\AmeliaStripe\StripeObject), email: null|string, name: null|string}&\AmeliaStripe\StripeObject), financial_account?: (object{id: string, network: string}&\AmeliaStripe\StripeObject), type: string, us_bank_account?: (object{account_holder_type: null|string, account_type: null|string, bank_name: null|string, fingerprint: null|string, last4: null|string, mandate?: string|\AmeliaStripe\Mandate, network: string, routing_number: null|string}&\AmeliaStripe\StripeObject)}&\AmeliaStripe\StripeObject) $destination_payment_method_details
+ * @property (object{billing_details: (object{address: (object{city: null|string, country: null|string, line1: null|string, line2: null|string, postal_code: null|string, state: null|string}&\AmeliaVendor\Stripe\StripeObject), email: null|string, name: null|string}&\AmeliaVendor\Stripe\StripeObject), financial_account?: (object{id: string, network: string}&\AmeliaVendor\Stripe\StripeObject), type: string, us_bank_account?: (object{account_holder_type: null|string, account_type: null|string, bank_name: null|string, fingerprint: null|string, last4: null|string, mandate?: string|\AmeliaVendor\Stripe\Mandate, network: string, routing_number: null|string}&\AmeliaVendor\Stripe\StripeObject)}&\AmeliaVendor\Stripe\StripeObject) $destination_payment_method_details
  * @property int $expected_arrival_date The date when funds are expected to arrive in the destination account.
  * @property string $financial_account The FinancialAccount that funds were pulled from.
  * @property null|string $hosted_regulatory_receipt_url A <a href="https://stripe.com/docs/treasury/moving-money/regulatory-receipts">hosted transaction receipt</a> URL that is provided when money movement is considered regulated under Stripe's money transmission licenses.
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
- * @property \AmeliaStripe\StripeObject $metadata Set of <a href="https://stripe.com/docs/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
- * @property null|(object{code: string, transaction: string|Transaction}&\AmeliaStripe\StripeObject) $returned_details Details about a returned OutboundTransfer. Only set when the status is <code>returned</code>.
+ * @property \AmeliaVendor\Stripe\StripeObject $metadata Set of <a href="https://stripe.com/docs/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+ * @property null|(object{code: string, transaction: string|Transaction}&\AmeliaVendor\Stripe\StripeObject) $returned_details Details about a returned OutboundTransfer. Only set when the status is <code>returned</code>.
  * @property string $statement_descriptor Information about the OutboundTransfer to be sent to the recipient account.
  * @property string $status Current status of the OutboundTransfer: <code>processing</code>, <code>failed</code>, <code>canceled</code>, <code>posted</code>, <code>returned</code>. An OutboundTransfer is <code>processing</code> if it has been created and is pending. The status changes to <code>posted</code> once the OutboundTransfer has been &quot;confirmed&quot; and funds have left the account, or to <code>failed</code> or <code>canceled</code>. If an OutboundTransfer fails to arrive at its destination, its status will change to <code>returned</code>.
- * @property (object{canceled_at: null|int, failed_at: null|int, posted_at: null|int, returned_at: null|int}&\AmeliaStripe\StripeObject) $status_transitions
- * @property null|(object{ach?: (object{trace_id: string}&\AmeliaStripe\StripeObject), type: string, us_domestic_wire?: (object{chips: null|string, imad: null|string, omad: null|string}&\AmeliaStripe\StripeObject)}&\AmeliaStripe\StripeObject) $tracking_details Details about network-specific tracking information if available.
+ * @property (object{canceled_at: null|int, failed_at: null|int, posted_at: null|int, returned_at: null|int}&\AmeliaVendor\Stripe\StripeObject) $status_transitions
+ * @property null|(object{ach?: (object{trace_id: string}&\AmeliaVendor\Stripe\StripeObject), type: string, us_domestic_wire?: (object{chips: null|string, imad: null|string, omad: null|string}&\AmeliaVendor\Stripe\StripeObject)}&\AmeliaVendor\Stripe\StripeObject) $tracking_details Details about network-specific tracking information if available.
  * @property string|Transaction $transaction The Transaction associated with this object.
  */
-class OutboundTransfer extends \AmeliaStripe\ApiResource
+class OutboundTransfer extends \AmeliaVendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'treasury.outbound_transfer';
 
@@ -50,7 +50,7 @@ class OutboundTransfer extends \AmeliaStripe\ApiResource
      *
      * @return OutboundTransfer the created resource
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function create($params = null, $options = null)
     {
@@ -58,7 +58,7 @@ class OutboundTransfer extends \AmeliaStripe\ApiResource
         $url = static::classUrl();
 
         list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
-        $obj = \AmeliaStripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \AmeliaVendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
 
         return $obj;
@@ -70,15 +70,15 @@ class OutboundTransfer extends \AmeliaStripe\ApiResource
      * @param null|array{ending_before?: string, expand?: string[], financial_account: string, limit?: int, starting_after?: string, status?: string} $params
      * @param null|array|string $opts
      *
-     * @return \AmeliaStripe\Collection<OutboundTransfer> of ApiResources
+     * @return \AmeliaVendor\Stripe\Collection<OutboundTransfer> of ApiResources
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
 
-        return static::_requestPage($url, \AmeliaStripe\Collection::class, $params, $opts);
+        return static::_requestPage($url, \AmeliaVendor\Stripe\Collection::class, $params, $opts);
     }
 
     /**
@@ -91,11 +91,11 @@ class OutboundTransfer extends \AmeliaStripe\ApiResource
      *
      * @return OutboundTransfer
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = \AmeliaStripe\Util\RequestOptions::parse($opts);
+        $opts = \AmeliaVendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
 
@@ -108,7 +108,7 @@ class OutboundTransfer extends \AmeliaStripe\ApiResource
      *
      * @return OutboundTransfer the canceled outbound transfer
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function cancel($params = null, $opts = null)
     {

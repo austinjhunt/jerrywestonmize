@@ -36,8 +36,7 @@ class UpdateEventCommandHandler extends CommandHandler
     public $mandatoryFields = [
         'id',
         'name',
-        'periods',
-        'applyGlobally'
+        'periods'
     ];
 
     /**

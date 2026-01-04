@@ -1,13 +1,13 @@
 <?php
 
-namespace AmeliaSabre\VObject\Property\ICalendar;
+namespace AmeliaVendor\Sabre\VObject\Property\ICalendar;
 
 use DateTimeInterface;
 use DateTimeZone;
-use AmeliaSabre\VObject\DateTimeParser;
-use AmeliaSabre\VObject\InvalidDataException;
-use AmeliaSabre\VObject\Property;
-use AmeliaSabre\VObject\TimeZoneUtil;
+use AmeliaVendor\Sabre\VObject\DateTimeParser;
+use AmeliaVendor\Sabre\VObject\InvalidDataException;
+use AmeliaVendor\Sabre\VObject\Property;
+use AmeliaVendor\Sabre\VObject\TimeZoneUtil;
 
 /**
  * DateTime property.

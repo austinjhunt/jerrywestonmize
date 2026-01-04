@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -102,7 +102,9 @@ class BookingAddedEventHandler
 
         $invoice = null;
         if (
-            $paymentId && $settingsService->getSetting('notifications', 'sendInvoice') &&
+            $paymentId &&
+            $settingsService->isFeatureEnabled('invoices') &&
+            $settingsService->getSetting('notifications', 'sendInvoice') &&
             (empty($booking) || $booking['status'] !== BookingStatus::WAITING)
         ) {
             $invoice = $invoiceService->generateInvoice($paymentId);
@@ -359,7 +361,7 @@ class BookingAddedEventHandler
         }
 
         if (
-            $settingsService->getSetting('appointments', 'qrCodeEvents')['enabled'] === true &&
+            $settingsService->isFeatureEnabled('eTickets') &&
             $appointmentStatusChanged !== true &&
             $type === Entities::EVENT &&
             !empty($booking['payments'][0]) &&

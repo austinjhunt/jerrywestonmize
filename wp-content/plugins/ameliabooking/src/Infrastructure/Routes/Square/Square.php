@@ -1,16 +1,16 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See COPYING.md for license details.
  */
 
 namespace AmeliaBooking\Infrastructure\Routes\Square;
 
 use AmeliaBooking\Application\Controller\Square\DisconnectFromSquareAccountController;
+use AmeliaBooking\Application\Controller\Square\DisconnectFromSquareAccountDirectlyController;
 use AmeliaBooking\Application\Controller\Square\FetchAccessTokenSquareController;
 use AmeliaBooking\Application\Controller\Square\GetSquareAuthURLController;
-use AmeliaBooking\Application\Controller\Square\SquarePaymentController;
 use AmeliaBooking\Application\Controller\Square\SquarePaymentNotifyController;
 use AmeliaBooking\Application\Controller\Square\SquareRefundWebhookController;
 use Slim\App;
@@ -33,11 +33,8 @@ class Square
 
         $app->post('/square/disconnect', DisconnectFromSquareAccountController::class);
 
+        $app->post('/square/disconnect/direct', DisconnectFromSquareAccountDirectlyController::class);
+
         $app->post('/square/refund', SquareRefundWebhookController::class);
-
-
-        $app->post('/payment/square', SquarePaymentController::class);
-
-        $app->get('/payment/square/notify', SquarePaymentNotifyController::class);
     }
 }

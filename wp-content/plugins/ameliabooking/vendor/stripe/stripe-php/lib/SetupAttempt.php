@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe;
+namespace AmeliaVendor\Stripe;
 
 /**
  * A SetupAttempt describes one attempted confirmation of a SetupIntent,

@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Service\Reporting;
+namespace AmeliaVendor\Stripe\Service\Reporting;
 
 /**
  * Service factory class for API resources in the Reporting namespace.
@@ -10,7 +10,7 @@ namespace AmeliaStripe\Service\Reporting;
  * @property ReportRunService $reportRuns
  * @property ReportTypeService $reportTypes
  */
-class ReportingServiceFactory extends \AmeliaStripe\Service\AbstractServiceFactory
+class ReportingServiceFactory extends \AmeliaVendor\Stripe\Service\AbstractServiceFactory
 {
     /**
      * @var array<string, string>

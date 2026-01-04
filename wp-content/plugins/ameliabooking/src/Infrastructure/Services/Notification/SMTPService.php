@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -10,7 +10,7 @@ namespace AmeliaBooking\Infrastructure\Services\Notification;
 use AmeliaBooking\Domain\Services\Notification\AbstractMailService;
 use AmeliaBooking\Domain\Services\Notification\MailServiceInterface;
 use Exception;
-use AmeliaPHPMailer\PHPMailer\PHPMailer;
+use AmeliaVendor\PHPMailer\PHPMailer\PHPMailer;
 
 /**
  * Class SMTPService
@@ -20,7 +20,7 @@ class SMTPService extends AbstractMailService implements MailServiceInterface
     /** @var string */
     private $host;
 
-    /** @var string */
+    /** @var int */
     private $port;
 
     /** @var string */
@@ -38,7 +38,7 @@ class SMTPService extends AbstractMailService implements MailServiceInterface
      * @param        $from
      * @param        $fromName
      * @param string $host
-     * @param string $port
+     * @param int    $port
      * @param string $secure
      * @param string $username
      * @param string $password

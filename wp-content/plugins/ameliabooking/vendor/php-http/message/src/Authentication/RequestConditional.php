@@ -4,7 +4,7 @@ namespace AmeliaHttp\Message\Authentication;
 
 use AmeliaHttp\Message\Authentication;
 use AmeliaHttp\Message\RequestMatcher;
-use AmeliaPsr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
 
 /**
  * Authenticate a PSR-7 Request if the request is matching the given request matcher.

@@ -9,7 +9,7 @@ final class Capacity
     public const MIN = 1;
     public const MAX = 10;
     /**
-     * @var string
+     * @var int
      */
     private $capacity;
 

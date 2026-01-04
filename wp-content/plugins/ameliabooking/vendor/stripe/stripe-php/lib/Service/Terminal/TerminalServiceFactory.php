@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Service\Terminal;
+namespace AmeliaVendor\Stripe\Service\Terminal;
 
 /**
  * Service factory class for API resources in the Terminal namespace.
@@ -12,7 +12,7 @@ namespace AmeliaStripe\Service\Terminal;
  * @property LocationService $locations
  * @property ReaderService $readers
  */
-class TerminalServiceFactory extends \AmeliaStripe\Service\AbstractServiceFactory
+class TerminalServiceFactory extends \AmeliaVendor\Stripe\Service\AbstractServiceFactory
 {
     /**
      * @var array<string, string>

@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Monolog\Handler;
+namespace AmeliaVendor\Monolog\Handler;
 
-use Monolog\Logger;
-use Monolog\Utils;
+use AmeliaVendor\Monolog\Logger;
+use AmeliaVendor\Monolog\Utils;
 
 /**
  * IFTTTHandler uses cURL to trigger IFTTT Maker actions

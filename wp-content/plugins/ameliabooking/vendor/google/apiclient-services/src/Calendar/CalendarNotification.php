@@ -15,9 +15,9 @@
  * the License.
  */
 
-namespace AmeliaGoogle\Service\Calendar;
+namespace AmeliaVendor\Google\Service\Calendar;
 
-class CalendarNotification extends \AmeliaGoogle\Model
+class CalendarNotification extends \AmeliaVendor\Google\Model
 {
   /**
    * @var string
@@ -59,4 +59,4 @@ class CalendarNotification extends \AmeliaGoogle\Model
 }
 
 // Adding a class alias for backwards compatibility with the previous class name.
-class_alias(CalendarNotification::class, 'AmeliaGoogle_Service_Calendar_CalendarNotification');
+class_alias(CalendarNotification::class, 'Google_Service_Calendar_CalendarNotification');

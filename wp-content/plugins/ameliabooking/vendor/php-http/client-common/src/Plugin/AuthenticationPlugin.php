@@ -4,7 +4,7 @@ namespace AmeliaHttp\Client\Common\Plugin;
 
 use AmeliaHttp\Client\Common\Plugin;
 use AmeliaHttp\Message\Authentication;
-use AmeliaPsr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
 
 /**
  * Send an authenticated request.

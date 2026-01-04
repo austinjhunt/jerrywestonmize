@@ -28,7 +28,7 @@ namespace Pimple\Psr11;
 
 use Pimple\Container as PimpleContainer;
 use Pimple\Exception\UnknownIdentifierException;
-use AmeliaPsr\Container\ContainerInterface;
+use AmeliaVendor\Psr\Container\ContainerInterface;
 
 /**
  * Pimple PSR-11 service locator.

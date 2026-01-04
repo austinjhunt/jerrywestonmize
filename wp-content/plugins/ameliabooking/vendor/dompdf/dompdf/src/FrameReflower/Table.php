@@ -4,11 +4,11 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace AmeliaDompdf\FrameReflower;
+namespace AmeliaVendor\Dompdf\FrameReflower;
 
-use AmeliaDompdf\FrameDecorator\Block as BlockFrameDecorator;
-use AmeliaDompdf\FrameDecorator\Table as TableFrameDecorator;
-use AmeliaDompdf\Helpers;
+use AmeliaVendor\Dompdf\FrameDecorator\Block as BlockFrameDecorator;
+use AmeliaVendor\Dompdf\FrameDecorator\Table as TableFrameDecorator;
+use AmeliaVendor\Dompdf\Helpers;
 
 /**
  * Reflows tables
@@ -296,7 +296,7 @@ class Table extends AbstractFrameReflower
     /**
      * @param BlockFrameDecorator|null $block
      */
-    function reflow(BlockFrameDecorator $block = null)
+    function reflow(?BlockFrameDecorator $block = null)
     {
         /** @var TableFrameDecorator */
         $frame = $this->_frame;

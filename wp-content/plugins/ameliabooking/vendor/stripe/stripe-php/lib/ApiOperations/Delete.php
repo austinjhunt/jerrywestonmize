@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaStripe\ApiOperations;
+namespace AmeliaVendor\Stripe\ApiOperations;
 
 /**
  * Trait for deletable resources. Adds a `delete()` method to the class.
@@ -15,7 +15,7 @@ trait Delete
      *
      * @return static the deleted resource
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function delete($params = null, $opts = null)
     {

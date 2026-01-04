@@ -10,7 +10,6 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingEditedEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Event\EventAddedEventHandler;
 use AmeliaBooking\Infrastructure\WP\Integrations\ThriveAutomator\ThriveAutomatorService;
-use Interop\Container\Exception\ContainerException;
 use League\Event\EventInterface;
 
 /**
@@ -27,7 +26,6 @@ class EventListener extends \AmeliaBooking\Infrastructure\Licence\Starter\EventL
      * @throws InvalidArgumentException
      * @throws NotFoundException
      * @throws QueryExecutionException
-     * @throws ContainerException
      */
     public static function handleEventListeners(Container $container, EventInterface $event, $param = null)
     {

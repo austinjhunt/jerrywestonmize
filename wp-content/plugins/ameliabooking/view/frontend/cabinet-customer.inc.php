@@ -24,38 +24,22 @@
   );
 </script>
 
-<?php if (empty($atts['version']) || esc_js($atts['version']) === '1') { ?>
-    <script>
-      var lazyBookingEntitiesIds = (typeof lazyBookingEntitiesIds === 'undefined') ? [] : lazyBookingEntitiesIds;
-      if (bookingEntitiesIds[bookingEntitiesIds.length - 1].trigger !== '') {
-        lazyBookingEntitiesIds.push(bookingEntitiesIds.pop());
-      }
-    </script>
+<script>
+  var ameliaShortcodeData = (typeof ameliaShortcodeData === 'undefined') ? [] : ameliaShortcodeData;
+  ameliaShortcodeData = [...ameliaShortcodeData, ...bookingEntitiesIds];
+  var ameliaShortcodeDataTriggered = (typeof ameliaShortcodeDataTriggered === 'undefined') ? [] : ameliaShortcodeDataTriggered;
+  if (ameliaShortcodeData[ameliaShortcodeData.length - 1].trigger !== '') {
+    if (ameliaShortcodeDataTriggered.filter(a => a.counter === ameliaShortcodeData[ameliaShortcodeData.length - 1].counter).length === 0) {
+      ameliaShortcodeDataTriggered.push(ameliaShortcodeData.pop());
+    } else {
+      ameliaShortcodeData.pop()
+    }
+  }
+</script>
 
-    <div
-        id="amelia-app-booking<?php echo esc_attr($atts['counter']); ?>"
-        class="amelia-cabinet amelia-frontend amelia-app-booking<?php echo $atts['trigger'] !== '' ? ' amelia-skip-load amelia-skip-load-' . esc_attr($atts['counter']) : ''; ?>"
-    >
-        <cabinet :cabinet-type="'customer'"></cabinet>
-    </div>
-<?php } else { ?>
-    <script>
-      var ameliaShortcodeData = (typeof ameliaShortcodeData === 'undefined') ? [] : ameliaShortcodeData;
-      ameliaShortcodeData = [...ameliaShortcodeData, ...bookingEntitiesIds];
-      var ameliaShortcodeDataTriggered = (typeof ameliaShortcodeDataTriggered === 'undefined') ? [] : ameliaShortcodeDataTriggered;
-      if (ameliaShortcodeData[ameliaShortcodeData.length - 1].trigger !== '') {
-        if (ameliaShortcodeDataTriggered.filter(a => a.counter === ameliaShortcodeData[ameliaShortcodeData.length - 1].counter).length === 0) {
-          ameliaShortcodeDataTriggered.push(ameliaShortcodeData.pop());
-        } else {
-          ameliaShortcodeData.pop()
-        }
-      }
-    </script>
-
-    <div
-        id="amelia-v2-booking-<?php echo esc_attr($atts['counter']); ?>"
-        class="amelia-v2-booking <?php echo $atts['trigger'] !== '' ? ' amelia-skip-load amelia-skip-load-' . $atts['counter'] : ''; ?>"
-    >
-        <customer-panel-wrapper></customer-panel-wrapper>
-    </div>
-<?php } ?>
+<div
+    id="amelia-v2-booking-<?php echo esc_attr($atts['counter']); ?>"
+    class="amelia-v2-booking <?php echo $atts['trigger'] !== '' ? ' amelia-skip-load amelia-skip-load-' . $atts['counter'] : ''; ?>"
+>
+    <customer-panel-wrapper></customer-panel-wrapper>
+</div>

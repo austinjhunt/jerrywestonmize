@@ -1,12 +1,12 @@
 <?php
 
-namespace AmeliaStripe\Exception\OAuth;
+namespace AmeliaVendor\Stripe\Exception\OAuth;
 
 /**
  * Implements properties and methods common to all (non-SPL) Stripe OAuth
  * exceptions.
  */
-abstract class OAuthErrorException extends \AmeliaStripe\Exception\ApiErrorException
+abstract class OAuthErrorException extends \AmeliaVendor\Stripe\Exception\ApiErrorException
 {
     protected function constructErrorObject()
     {
@@ -14,6 +14,6 @@ abstract class OAuthErrorException extends \AmeliaStripe\Exception\ApiErrorExcep
             return null;
         }
 
-        return \AmeliaStripe\OAuthErrorObject::constructFrom($this->jsonBody);
+        return \AmeliaVendor\Stripe\OAuthErrorObject::constructFrom($this->jsonBody);
     }
 }

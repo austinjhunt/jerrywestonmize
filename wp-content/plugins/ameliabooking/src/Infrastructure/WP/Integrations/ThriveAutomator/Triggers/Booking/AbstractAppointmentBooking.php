@@ -69,7 +69,7 @@ abstract class AbstractAppointmentBooking extends Trigger
 
     public static function get_image()
     {
-        return AMELIA_URL . 'public/img/amelia-logo-symbol.svg';
+        return AMELIA_URL . 'public/img/amelia-logo-admin-icon.svg';
     }
 
     public function process_params($params = [])

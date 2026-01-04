@@ -15,9 +15,9 @@
  * the License.
  */
 
-namespace AmeliaGoogle\Service\Calendar;
+namespace AmeliaVendor\Google\Service\Calendar;
 
-class EventFocusTimeProperties extends \AmeliaGoogle\Model
+class EventFocusTimeProperties extends \AmeliaVendor\Google\Model
 {
   /**
    * @var string
@@ -77,4 +77,4 @@ class EventFocusTimeProperties extends \AmeliaGoogle\Model
 }
 
 // Adding a class alias for backwards compatibility with the previous class name.
-class_alias(EventFocusTimeProperties::class, 'AmeliaGoogle_Service_Calendar_EventFocusTimeProperties');
+class_alias(EventFocusTimeProperties::class, 'Google_Service_Calendar_EventFocusTimeProperties');

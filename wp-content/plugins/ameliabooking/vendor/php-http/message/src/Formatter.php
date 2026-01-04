@@ -2,8 +2,8 @@
 
 namespace AmeliaHttp\Message;
 
-use AmeliaPsr\Http\Message\RequestInterface;
-use AmeliaPsr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
 
 /**
  * Formats a request and/or a response as a string.

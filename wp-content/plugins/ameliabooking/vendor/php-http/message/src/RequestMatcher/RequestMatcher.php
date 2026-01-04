@@ -3,7 +3,7 @@
 namespace AmeliaHttp\Message\RequestMatcher;
 
 use AmeliaHttp\Message\RequestMatcher as RequestMatcherInterface;
-use AmeliaPsr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
 
 /**
  * A port of the Symfony RequestMatcher for PSR-7.

@@ -24,7 +24,6 @@ class GetWPUsersCommandHandler extends CommandHandler
      * @throws AccessDeniedException
      * @throws InvalidArgumentException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function handle(GetWPUsersCommand $command)
     {

@@ -5,6 +5,7 @@ namespace AmeliaBooking\Application\Services\CustomField;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\ForbiddenFileUploadException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
+use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Booking\Event\Event;
 use AmeliaBooking\Domain\Entity\CustomField\CustomField;
 use AmeliaBooking\Infrastructure\Common\Container;
@@ -109,4 +110,14 @@ abstract class AbstractCustomFieldApplicationService
      * @throws QueryExecutionException
      */
     abstract public function getAll();
+
+    /**
+     * @param CustomerBooking $booking
+     * @param array $customFields
+     * @param Collection $allCustomFields
+     *
+     * @return array
+     * @throws ContainerException
+     */
+    abstract public function reformatCustomField($booking, $customFields, $allCustomFields);
 }

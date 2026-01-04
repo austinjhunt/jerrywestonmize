@@ -10,6 +10,7 @@ use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Event\Event;
 use AmeliaBooking\Domain\Entity\Entities;
+use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
 use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
@@ -39,7 +40,6 @@ class UpdateEventStatusCommandHandler extends CommandHandler
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      * @throws AccessDeniedException
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function handle(UpdateEventStatusCommand $command)
     {
@@ -67,9 +67,12 @@ class UpdateEventStatusCommandHandler extends CommandHandler
         do_action('amelia_before_event_status_updated', $event ? $event->toArray() : null, $requestedStatus, $command->getField('applyGlobally'));
 
         try {
+            $events = new Collection();
+            $events->addItem($event, $event->getId()->getValue());
+
             /** @var Collection $updatedEvents */
             $updatedEvents = $eventApplicationService->updateStatus(
-                $event,
+                $events,
                 $requestedStatus,
                 $command->getField('applyGlobally')
             );
@@ -87,7 +90,7 @@ class UpdateEventStatusCommandHandler extends CommandHandler
         $result->setData(
             [
             'status'         => $requestedStatus,
-            'message'        => BackendStrings::getEventStrings()['event_status_changed'] . $requestedStatus,
+            'message'        => BackendStrings::get('event_status_changed') . $requestedStatus,
             Entities::EVENTS => $updatedEvents->toArray(),
             ]
         );

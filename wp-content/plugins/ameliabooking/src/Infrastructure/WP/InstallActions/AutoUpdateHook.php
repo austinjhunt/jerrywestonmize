@@ -99,16 +99,13 @@ class AutoUpdateHook
         /** @var bool $activated */
         $activated = $settingsService->getSetting('activation', 'active');
 
-        /** @var array $settingsStrings */
-        $settingsStrings = BackendStrings::getSettingsStrings();
-
         /** @var string $url */
         $url = AMELIA_SITE_URL . '/wp-admin/admin.php?page=wpamelia-settings&activeSetting=activation';
 
-        $redirect = '<a href="' . $url . '" target="_blank">' . $settingsStrings['settings_lower'] . '</a>';
+        $redirect = '<a href="' . $url . '" target="_blank">' . BackendStrings::get('settings_lower') . '</a>';
 
         if (!$activated) {
-            echo sprintf(' ' . $settingsStrings['plugin_not_activated'], $redirect);
+            echo sprintf(' ' . BackendStrings::get('plugin_not_activated'), $redirect);
         }
     }
 
@@ -120,22 +117,17 @@ class AutoUpdateHook
      * @param WP_Upgrader $updater
      *
      * @return WP_Error|string|bool
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public static function addMessageOnUpdate($reply, $package, $updater)
     {
-        /** @var array $settingsStrings */
-        $settingsStrings = BackendStrings::getSettingsStrings();
-
         $url = AMELIA_SITE_URL . '/wp-admin/admin.php?page=wpamelia-settings&activeSetting=activation';
 
-        $redirect = '<a href="' . $url . '" target="_blank">' . $settingsStrings['settings_lower'] . '</a>';
+        $redirect = '<a href="' . $url . '" target="_blank">' . BackendStrings::get('settings_lower') . '</a>';
 
         if (!$package) {
             return new WP_Error(
                 'amelia_not_activated',
-                sprintf(' ' . $settingsStrings['plugin_not_activated'], $redirect)
+                sprintf(' ' . BackendStrings::get('plugin_not_activated'), $redirect)
             );
         }
 

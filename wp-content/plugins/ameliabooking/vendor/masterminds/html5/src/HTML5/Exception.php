@@ -1,6 +1,6 @@
 <?php
 
-namespace Masterminds\HTML5;
+namespace AmeliaVendor\Masterminds\HTML5;
 
 /**
  * The base exception for the HTML5 project.

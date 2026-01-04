@@ -8,7 +8,7 @@
 namespace Slim\Interfaces;
 
 use InvalidArgumentException;
-use AmeliaPsr\Http\Message\ServerRequestInterface;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 
 interface RouterInterface

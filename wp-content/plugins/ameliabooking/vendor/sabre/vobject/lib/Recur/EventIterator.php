@@ -1,14 +1,14 @@
 <?php
 
-namespace AmeliaSabre\VObject\Recur;
+namespace AmeliaVendor\Sabre\VObject\Recur;
 
 use DateTimeImmutable;
 use DateTimeInterface;
 use DateTimeZone;
 use InvalidArgumentException;
-use AmeliaSabre\VObject\Component;
-use AmeliaSabre\VObject\Component\VEvent;
-use AmeliaSabre\VObject\Settings;
+use AmeliaVendor\Sabre\VObject\Component;
+use AmeliaVendor\Sabre\VObject\Component\VEvent;
+use AmeliaVendor\Sabre\VObject\Settings;
 
 /**
  * This class is used to determine new for a recurring event, when the next

@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaSabre\VObject\Property\ICalendar;
+namespace AmeliaVendor\Sabre\VObject\Property\ICalendar;
 
 /**
  * DateTime property.

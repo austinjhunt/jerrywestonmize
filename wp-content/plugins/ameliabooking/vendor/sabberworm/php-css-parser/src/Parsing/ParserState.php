@@ -1,16 +1,19 @@
 <?php
 
-namespace Sabberworm\CSS\Parsing;
+namespace AmeliaVendor\Sabberworm\CSS\Parsing;
 
-use Sabberworm\CSS\Comment\Comment;
-use Sabberworm\CSS\Settings;
+use AmeliaVendor\Sabberworm\CSS\Comment\Comment;
+use AmeliaVendor\Sabberworm\CSS\Settings;
 
+/**
+ * @internal since 8.7.0
+ */
 class ParserState
 {
     /**
      * @var null
      *
-     * @internal
+     * @internal since 8.5.2
      */
     const EOF = null;
 
@@ -115,7 +118,7 @@ class ParserState
     }
 
     /**
-     * @return \Sabberworm\CSS\Parsing\Anchor
+     * @return \AmeliaVendor\Sabberworm\CSS\Parsing\Anchor
      */
     public function anchor()
     {
@@ -138,6 +141,8 @@ class ParserState
      * @return string
      *
      * @throws UnexpectedTokenException
+     *
+     * @internal since V8.8.0
      */
     public function parseIdentifier($bIgnoreCase = true)
     {
@@ -169,6 +174,8 @@ class ParserState
      *
      * @throws UnexpectedEOFException
      * @throws UnexpectedTokenException
+     *
+     * @internal since V8.8.0
      */
     public function parseCharacter($bIsForIdentifier)
     {

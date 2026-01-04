@@ -5,10 +5,10 @@
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 
-namespace FontLib\Table\Type;
+namespace AmeliaVendor\FontLib\Table\Type;
 
-use FontLib\Table\Table;
-use FontLib\Font;
+use AmeliaVendor\FontLib\Table\Table;
+use AmeliaVendor\FontLib\Font;
 
 /**
  * `name` font table.

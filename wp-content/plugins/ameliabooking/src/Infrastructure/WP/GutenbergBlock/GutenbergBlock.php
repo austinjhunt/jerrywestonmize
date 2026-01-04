@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -58,6 +58,24 @@ class GutenbergBlock
                     );
                 }
             }
+        }
+    }
+
+    /**
+     * Enqueue shared Amelia block icon script
+     */
+    public static function enqueueSharedIcon()
+    {
+        static $enqueued = false;
+
+        if (!$enqueued) {
+            wp_enqueue_script(
+                'amelia_block_icon',
+                AMELIA_URL . 'public/js/gutenberg/amelia-block-icon.js',
+                array('wp-element'),
+                AMELIA_VERSION
+            );
+            $enqueued = true;
         }
     }
 

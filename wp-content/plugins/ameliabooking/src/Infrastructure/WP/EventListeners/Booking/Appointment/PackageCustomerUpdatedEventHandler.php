@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -75,10 +75,14 @@ class PackageCustomerUpdatedEventHandler
         /** @var PackageRepository $packageRepository */
         $packageRepository = $container->get('domain.bookable.package.repository');
 
+        $params = $commandResult->getData();
+
+        $packageCustomerId = !empty($params['packageCustomerId']) ? $params['packageCustomerId'] : null;
+
         /** @var Collection $packageCustomerServices */
         $packageCustomerServices = $packageCustomerServiceRepository->getByCriteria(
             [
-                'packagesCustomers' => [$commandResult->getData()['packageCustomerId']]
+                'packagesCustomers' => [$packageCustomerId]
             ]
         );
 
@@ -102,7 +106,7 @@ class PackageCustomerUpdatedEventHandler
             /** @var Collection $appointments */
             $appointments = $appointmentRepository->getFiltered(
                 [
-                    'packageCustomerId' => $commandResult->getData()['packageCustomerId']
+                    'packageCustomerId' => $packageCustomerId
                 ]
             );
 
@@ -140,7 +144,7 @@ class PackageCustomerUpdatedEventHandler
                             'purchased' : $commandResult->getData()['status'],
                         'customer'          => $customer->toArray(),
                         'icsFiles'          => [],
-                        'packageCustomerId' => $commandResult->getData()['packageCustomerId'],
+                        'packageCustomerId' => $packageCustomerId,
                         'isRetry'           => null,
                         'recurring'         => $packageReservationData
                     ]

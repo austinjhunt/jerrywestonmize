@@ -4,6 +4,8 @@ namespace AmeliaBooking\Application\Commands\Notification;
 
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
+use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
+use AmeliaBooking\Application\Services\Validation\ValidationService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Notification\NotificationSMSHistoryRepository;
 
@@ -19,7 +21,7 @@ class UpdateSMSNotificationHistoryCommandHandler extends CommandHandler
      *
      * @return CommandResult
      * @throws QueryExecutionException
-     * @throws \Interop\Container\Exception\ContainerException
+     * @throws AccessDeniedException
      */
     public function handle(UpdateSMSNotificationHistoryCommand $command)
     {
@@ -34,6 +36,10 @@ class UpdateSMSNotificationHistoryCommandHandler extends CommandHandler
             'logId'    => $command->getField('logId'),
             'dateTime' => $command->getField('dateTime')
         ];
+
+        if (!ValidationService::verifySignature(json_encode($updateData), 'smsApi', $command->getField('signature'))) {
+            throw new AccessDeniedException('Signature mismatch.');
+        }
 
         $updateData = apply_filters('amelia_before_sms_notification_history_updated_filter', $updateData, $command->getArg('id'));
 

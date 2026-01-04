@@ -15,20 +15,20 @@
  * limitations under the License.
  */
 
-namespace AmeliaGoogle\Auth;
+namespace AmeliaVendor\Google\Auth;
 
 use DomainException;
-use AmeliaGoogle\Auth\Credentials\AppIdentityCredentials;
-use AmeliaGoogle\Auth\Credentials\GCECredentials;
-use AmeliaGoogle\Auth\Credentials\ServiceAccountCredentials;
-use AmeliaGoogle\Auth\HttpHandler\HttpClientCache;
-use AmeliaGoogle\Auth\HttpHandler\HttpHandlerFactory;
-use AmeliaGoogle\Auth\Middleware\AuthTokenMiddleware;
-use AmeliaGoogle\Auth\Middleware\ProxyAuthTokenMiddleware;
-use AmeliaGoogle\Auth\Subscriber\AuthTokenSubscriber;
-use AmeliaGuzzleHttp\Client;
+use AmeliaVendor\Google\Auth\Credentials\AppIdentityCredentials;
+use AmeliaVendor\Google\Auth\Credentials\GCECredentials;
+use AmeliaVendor\Google\Auth\Credentials\ServiceAccountCredentials;
+use AmeliaVendor\Google\Auth\HttpHandler\HttpClientCache;
+use AmeliaVendor\Google\Auth\HttpHandler\HttpHandlerFactory;
+use AmeliaVendor\Google\Auth\Middleware\AuthTokenMiddleware;
+use AmeliaVendor\Google\Auth\Middleware\ProxyAuthTokenMiddleware;
+use AmeliaVendor\Google\Auth\Subscriber\AuthTokenSubscriber;
+use AmeliaVendor\GuzzleHttp\Client;
 use InvalidArgumentException;
-use Psr\Cache\CacheItemPoolInterface;
+use AmeliaVendor\Psr\Cache\CacheItemPoolInterface;
 
 /**
  * ApplicationDefaultCredentials obtains the default credentials for
@@ -45,12 +45,12 @@ use Psr\Cache\CacheItemPoolInterface;
  * - #getSubscriber returns an AuthTokenSubscriber built from the credentials object
  * - #getMiddleware returns an AuthTokenMiddleware built from the credentials object
  *
- * This allows it to be used as follows with AmeliaGuzzleHttp\Client:
+ * This allows it to be used as follows with AmeliaVendor\GuzzleHttp\Client:
  *
  * ```
- * use AmeliaGoogle\Auth\ApplicationDefaultCredentials;
- * use AmeliaGuzzleHttp\Client;
- * use AmeliaGuzzleHttp\HandlerStack;
+ * use AmeliaVendor\Google\Auth\ApplicationDefaultCredentials;
+ * use AmeliaVendor\GuzzleHttp\Client;
+ * use AmeliaVendor\GuzzleHttp\HandlerStack;
  *
  * $middleware = ApplicationDefaultCredentials::getMiddleware(
  *     'https://www.googleapis.com/auth/taskqueue'
@@ -89,9 +89,9 @@ class ApplicationDefaultCredentials
      */
     public static function getSubscriber(// @phpstan-ignore-line
         $scope = null,
-        callable $httpHandler = null,
-        array $cacheConfig = null,
-        CacheItemPoolInterface $cache = null
+        ?callable $httpHandler = null,
+        ?array $cacheConfig = null,
+        ?CacheItemPoolInterface $cache = null
     ) {
         $creds = self::getCredentials($scope, $httpHandler, $cacheConfig, $cache);
 
@@ -119,9 +119,9 @@ class ApplicationDefaultCredentials
      */
     public static function getMiddleware(
         $scope = null,
-        callable $httpHandler = null,
-        array $cacheConfig = null,
-        CacheItemPoolInterface $cache = null,
+        ?callable $httpHandler = null,
+        ?array $cacheConfig = null,
+        ?CacheItemPoolInterface $cache = null,
         $quotaProject = null
     ) {
         $creds = self::getCredentials($scope, $httpHandler, $cacheConfig, $cache, $quotaProject);
@@ -144,17 +144,20 @@ class ApplicationDefaultCredentials
      * @param string|string[] $defaultScope The default scope to use if no
      *   user-defined scopes exist, expressed either as an Array or as a
      *   space-delimited string.
+     * @param string $universeDomain Specifies a universe domain to use for the
+     *   calling client library
      *
      * @return FetchAuthTokenInterface
      * @throws DomainException if no implementation can be obtained.
      */
     public static function getCredentials(
         $scope = null,
-        callable $httpHandler = null,
-        array $cacheConfig = null,
-        CacheItemPoolInterface $cache = null,
+        ?callable $httpHandler = null,
+        ?array $cacheConfig = null,
+        ?CacheItemPoolInterface $cache = null,
         $quotaProject = null,
-        $defaultScope = null
+        $defaultScope = null,
+        ?string $universeDomain = null
     ) {
         $creds = null;
         $jsonKey = CredentialsLoader::fromEnv()
@@ -170,9 +173,17 @@ class ApplicationDefaultCredentials
             $httpHandler = HttpHandlerFactory::build($client);
         }
 
+        if (is_null($quotaProject)) {
+            // if a quota project isn't specified, try to get one from the env var
+            $quotaProject = CredentialsLoader::quotaProjectFromEnv();
+        }
+
         if (!is_null($jsonKey)) {
             if ($quotaProject) {
                 $jsonKey['quota_project_id'] = $quotaProject;
+            }
+            if ($universeDomain) {
+                $jsonKey['universe_domain'] = $universeDomain;
             }
             $creds = CredentialsLoader::makeCredentials(
                 $scope,
@@ -182,7 +193,7 @@ class ApplicationDefaultCredentials
         } elseif (AppIdentityCredentials::onAppEngine() && !GCECredentials::onAppEngineFlexible()) {
             $creds = new AppIdentityCredentials($anyScope);
         } elseif (self::onGce($httpHandler, $cacheConfig, $cache)) {
-            $creds = new GCECredentials(null, $anyScope, null, $quotaProject);
+            $creds = new GCECredentials(null, $anyScope, null, $quotaProject, null, $universeDomain);
             $creds->setIsOnGce(true); // save the credentials a trip to the metadata server
         }
 
@@ -213,9 +224,9 @@ class ApplicationDefaultCredentials
      */
     public static function getIdTokenMiddleware(
         $targetAudience,
-        callable $httpHandler = null,
-        array $cacheConfig = null,
-        CacheItemPoolInterface $cache = null
+        ?callable $httpHandler = null,
+        ?array $cacheConfig = null,
+        ?CacheItemPoolInterface $cache = null
     ) {
         $creds = self::getIdTokenCredentials($targetAudience, $httpHandler, $cacheConfig, $cache);
 
@@ -240,9 +251,9 @@ class ApplicationDefaultCredentials
      */
     public static function getProxyIdTokenMiddleware(
         $targetAudience,
-        callable $httpHandler = null,
-        array $cacheConfig = null,
-        CacheItemPoolInterface $cache = null
+        ?callable $httpHandler = null,
+        ?array $cacheConfig = null,
+        ?CacheItemPoolInterface $cache = null
     ) {
         $creds = self::getIdTokenCredentials($targetAudience, $httpHandler, $cacheConfig, $cache);
 
@@ -265,9 +276,9 @@ class ApplicationDefaultCredentials
      */
     public static function getIdTokenCredentials(
         $targetAudience,
-        callable $httpHandler = null,
-        array $cacheConfig = null,
-        CacheItemPoolInterface $cache = null
+        ?callable $httpHandler = null,
+        ?array $cacheConfig = null,
+        ?CacheItemPoolInterface $cache = null
     ) {
         $creds = null;
         $jsonKey = CredentialsLoader::fromEnv()
@@ -329,9 +340,9 @@ class ApplicationDefaultCredentials
      * @return bool
      */
     private static function onGce(
-        callable $httpHandler = null,
-        array $cacheConfig = null,
-        CacheItemPoolInterface $cache = null
+        ?callable $httpHandler = null,
+        ?array $cacheConfig = null,
+        ?CacheItemPoolInterface $cache = null
     ) {
         $gceCacheConfig = [];
         foreach (['lifetime', 'prefix'] as $key) {

@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaStripe\Exception;
+namespace AmeliaVendor\Stripe\Exception;
 
 /**
  * SignatureVerificationException is thrown when the signature verification for

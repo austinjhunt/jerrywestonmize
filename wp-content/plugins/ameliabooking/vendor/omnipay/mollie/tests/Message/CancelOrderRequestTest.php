@@ -6,7 +6,7 @@ use Omnipay\Common\Http\ClientInterface;
 use Omnipay\Mollie\Message\Request\CancelOrderRequest;
 use Omnipay\Mollie\Message\Response\CancelOrderResponse;
 use Omnipay\Tests\TestCase;
-use AmeliaPsr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
 
 final class CancelOrderRequestTest extends TestCase
 {

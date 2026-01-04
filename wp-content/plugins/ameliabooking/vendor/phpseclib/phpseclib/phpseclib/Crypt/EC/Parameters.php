@@ -9,9 +9,9 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-namespace phpseclib3\Crypt\EC;
+namespace AmeliaVendor\phpseclib3\Crypt\EC;
 
-use phpseclib3\Crypt\EC;
+use AmeliaVendor\phpseclib3\Crypt\EC;
 
 /**
  * EC Parameters

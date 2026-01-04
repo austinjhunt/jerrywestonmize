@@ -7,8 +7,8 @@
 
 namespace Slim;
 
-use AmeliaPsr\Http\Message\ResponseInterface;
-use AmeliaPsr\Http\Message\ServerRequestInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 use UnexpectedValueException;
 
@@ -48,7 +48,7 @@ trait MiddlewareAwareTrait
      * @return static
      *
      * @throws RuntimeException         If middleware is added while the stack is dequeuing
-     * @throws UnexpectedValueException If the middleware doesn't return a AmeliaPsr\Http\Message\ResponseInterface
+     * @throws UnexpectedValueException If the middleware doesn't return a AmeliaVendor\Psr\Http\Message\ResponseInterface
      */
     protected function addMiddleware(callable $callable)
     {
@@ -70,7 +70,7 @@ trait MiddlewareAwareTrait
             $result = call_user_func($callable, $request, $response, $next);
             if ($result instanceof ResponseInterface === false) {
                 throw new UnexpectedValueException(
-                    'Middleware must return instance of \AmeliaPsr\Http\Message\ResponseInterface'
+                    'Middleware must return instance of \AmeliaVendor\Psr\Http\Message\ResponseInterface'
                 );
             }
 

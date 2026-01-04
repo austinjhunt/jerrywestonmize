@@ -1,8 +1,8 @@
 <?php
 
-namespace AmeliaSabre\VObject\Property\ICalendar;
+namespace AmeliaVendor\Sabre\VObject\Property\ICalendar;
 
-use AmeliaSabre\VObject\Property\Text;
+use AmeliaVendor\Sabre\VObject\Property\Text;
 
 /**
  * CalAddress property.

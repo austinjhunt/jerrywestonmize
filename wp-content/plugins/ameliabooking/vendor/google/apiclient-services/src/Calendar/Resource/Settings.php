@@ -15,21 +15,21 @@
  * the License.
  */
 
-namespace AmeliaGoogle\Service\Calendar\Resource;
+namespace AmeliaVendor\Google\Service\Calendar\Resource;
 
-use AmeliaGoogle\Service\Calendar\Channel;
-use AmeliaGoogle\Service\Calendar\Setting;
-use AmeliaGoogle\Service\Calendar\Settings as SettingsModel;
+use AmeliaVendor\Google\Service\Calendar\Channel;
+use AmeliaVendor\Google\Service\Calendar\Setting;
+use AmeliaVendor\Google\Service\Calendar\Settings as SettingsModel;
 
 /**
  * The "settings" collection of methods.
  * Typical usage is:
  *  <code>
- *   $calendarService = new AmeliaGoogle\Service\Calendar(...);
+ *   $calendarService = new \AmeliaVendor\Google\Service\Calendar(...);
  *   $settings = $calendarService->settings;
  *  </code>
  */
-class Settings extends \AmeliaGoogle\Service\Resource
+class Settings extends \AmeliaVendor\Google\Service\Resource
 {
   /**
    * Returns a single user setting. (settings.get)
@@ -37,7 +37,7 @@ class Settings extends \AmeliaGoogle\Service\Resource
    * @param string $setting The id of the user setting.
    * @param array $optParams Optional parameters.
    * @return Setting
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function get($setting, $optParams = [])
   {
@@ -63,7 +63,7 @@ class Settings extends \AmeliaGoogle\Service\Resource
    * synchronization without any syncToken. Learn more about incremental
    * synchronization. Optional. The default is to return all entries.
    * @return SettingsModel
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function listSettings($optParams = [])
   {
@@ -90,7 +90,7 @@ class Settings extends \AmeliaGoogle\Service\Resource
    * synchronization without any syncToken. Learn more about incremental
    * synchronization. Optional. The default is to return all entries.
    * @return Channel
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function watch(Channel $postBody, $optParams = [])
   {
@@ -101,4 +101,4 @@ class Settings extends \AmeliaGoogle\Service\Resource
 }
 
 // Adding a class alias for backwards compatibility with the previous class name.
-class_alias(Settings::class, 'AmeliaGoogle_Service_Calendar_Resource_Settings');
+class_alias(Settings::class, 'Google_Service_Calendar_Resource_Settings');

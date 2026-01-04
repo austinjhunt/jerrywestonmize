@@ -31,7 +31,7 @@ use AmeliaBooking\Infrastructure\Services\Payment\RazorpayService;
 use AmeliaBooking\Infrastructure\Services\Payment\BarionService;
 use AmeliaBooking\Infrastructure\Services\Payment\SquareService;
 use AmeliaBooking\Infrastructure\Services\Payment\StripeService;
-use Interop\Container\Exception\ContainerException;
+use Slim\Exception\ContainerException;
 
 /**
  * Class PaymentCallbackCommandHandler
@@ -93,7 +93,7 @@ class PaymentCallbackCommandHandler extends CommandHandler
             $redirectLink         = !empty($command->getField('fromPanel')) ? $customerPanelUrl : $redirectLink;
 
             $changeBookingStatus =
-                $paymentLinksSettings && $paymentLinksSettings['changeBookingStatus'] !== null ? $paymentLinksSettings['changeBookingStatus'] :
+                $paymentLinksSettings && !empty($paymentLinksSettings['changeBookingStatus']) ? $paymentLinksSettings['changeBookingStatus'] :
                 $settingsDS->getSetting('payments', 'paymentLinks')['changeBookingStatus'];
 
 
@@ -246,7 +246,7 @@ class PaymentCallbackCommandHandler extends CommandHandler
                         }
 
                         if (
-                            $settingsDS->getSetting('appointments', 'qrCodeEvents')['enabled'] === true &&
+                            $settingsDS->isFeatureEnabled('eTickets') &&
                             $payment->getEntity()->getValue() === Entities::EVENT
                         ) {
                             /** @var ApplicationNotificationService $applicationNotificationService */

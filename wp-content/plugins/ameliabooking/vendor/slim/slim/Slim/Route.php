@@ -9,8 +9,8 @@ namespace Slim;
 
 use Closure;
 use InvalidArgumentException;
-use AmeliaPsr\Http\Message\ResponseInterface;
-use AmeliaPsr\Http\Message\ServerRequestInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface;
 use Slim\Handlers\Strategies\RequestResponse;
 use Slim\Interfaces\InvocationStrategyInterface;
 use Slim\Interfaces\RouteInterface;

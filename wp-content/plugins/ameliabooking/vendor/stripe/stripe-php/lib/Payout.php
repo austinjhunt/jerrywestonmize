@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace AmeliaStripe;
+namespace AmeliaVendor\Stripe;
 
 /**
  * A <code>Payout</code> object is created when you receive funds from Stripe, or when you
@@ -44,25 +43,19 @@ namespace AmeliaStripe;
 class Payout extends ApiResource
 {
     const OBJECT_NAME = 'payout';
-
-    use ApiOperations\Update;
-
+    use \AmeliaVendor\Stripe\ApiOperations\Update;
     const METHOD_INSTANT = 'instant';
     const METHOD_STANDARD = 'standard';
-
     const RECONCILIATION_STATUS_COMPLETED = 'completed';
     const RECONCILIATION_STATUS_IN_PROGRESS = 'in_progress';
     const RECONCILIATION_STATUS_NOT_APPLICABLE = 'not_applicable';
-
     const STATUS_CANCELED = 'canceled';
     const STATUS_FAILED = 'failed';
     const STATUS_IN_TRANSIT = 'in_transit';
     const STATUS_PAID = 'paid';
     const STATUS_PENDING = 'pending';
-
     const TYPE_BANK_ACCOUNT = 'bank_account';
     const TYPE_CARD = 'card';
-
     /**
      * To send funds to your own bank account, create a new payout object. Your <a
      * href="#balance">Stripe balance</a> must cover the payout amount. If it doesn’t,
@@ -87,14 +80,11 @@ class Payout extends ApiResource
     {
         self::_validateParams($params);
         $url = static::classUrl();
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
-        $obj = Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \AmeliaVendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
-
     /**
      * Returns a list of existing payouts sent to third-party bank accounts or payouts
      * that Stripe sent to you. The payouts return in sorted order, with the most
@@ -110,10 +100,8 @@ class Payout extends ApiResource
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
-
         return static::_requestPage($url, Collection::class, $params, $opts);
     }
-
     /**
      * Retrieves the details of an existing payout. Supply the unique payout ID from
      * either a payout creation request or the payout list. Stripe returns the
@@ -128,13 +116,11 @@ class Payout extends ApiResource
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = Util\RequestOptions::parse($opts);
+        $opts = \AmeliaVendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
-
         return $instance;
     }
-
     /**
      * Updates the specified payout by setting the values of the parameters you pass.
      * We don’t change parameters that you don’t provide. This request only accepts the
@@ -152,14 +138,11 @@ class Payout extends ApiResource
     {
         self::_validateParams($params);
         $url = static::resourceUrl($id);
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $opts);
-        $obj = Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \AmeliaVendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
-
     const FAILURE_ACCOUNT_CLOSED = 'account_closed';
     const FAILURE_ACCOUNT_FROZEN = 'account_frozen';
     const FAILURE_BANK_ACCOUNT_RESTRICTED = 'bank_account_restricted';
@@ -175,7 +158,6 @@ class Payout extends ApiResource
     const FAILURE_INVALID_CURRENCY = 'invalid_currency';
     const FAILURE_NO_ACCOUNT = 'no_account';
     const FAILURE_UNSUPPORTED_CARD = 'unsupported_card';
-
     /**
      * @param null|array $params
      * @param null|array|string $opts
@@ -189,10 +171,8 @@ class Payout extends ApiResource
         $url = $this->instanceUrl() . '/cancel';
         list($response, $opts) = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
-
         return $this;
     }
-
     /**
      * @param null|array $params
      * @param null|array|string $opts
@@ -206,7 +186,6 @@ class Payout extends ApiResource
         $url = $this->instanceUrl() . '/reverse';
         list($response, $opts) = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
-
         return $this;
     }
 }

@@ -2,17 +2,17 @@
 
 namespace Omnipay\Common\Http;
 
-use function AmeliaGuzzleHttp\Psr7\str;
+use function AmeliaVendor\GuzzleHttp\Psr7\str;
 use AmeliaHttp\Client\HttpClient;
 use AmeliaHttp\Discovery\HttpClientDiscovery;
 use AmeliaHttp\Discovery\MessageFactoryDiscovery;
 use AmeliaHttp\Message\RequestFactory;
 use Omnipay\Common\Http\Exception\NetworkException;
 use Omnipay\Common\Http\Exception\RequestException;
-use AmeliaPsr\Http\Message\RequestInterface;
-use AmeliaPsr\Http\Message\ResponseInterface;
-use AmeliaPsr\Http\Message\StreamInterface;
-use AmeliaPsr\Http\Message\UriInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\StreamInterface;
+use AmeliaVendor\Psr\Http\Message\UriInterface;
 
 class Client implements ClientInterface
 {

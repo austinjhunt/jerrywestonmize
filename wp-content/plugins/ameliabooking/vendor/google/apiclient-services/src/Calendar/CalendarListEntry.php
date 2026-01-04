@@ -15,9 +15,9 @@
  * the License.
  */
 
-namespace AmeliaGoogle\Service\Calendar;
+namespace AmeliaVendor\Google\Service\Calendar;
 
-class CalendarListEntry extends \AmeliaGoogle\Collection
+class CalendarListEntry extends \AmeliaVendor\Google\Collection
 {
   protected $collection_key = 'defaultReminders';
   /**
@@ -360,4 +360,4 @@ class CalendarListEntry extends \AmeliaGoogle\Collection
 }
 
 // Adding a class alias for backwards compatibility with the previous class name.
-class_alias(CalendarListEntry::class, 'AmeliaGoogle_Service_Calendar_CalendarListEntry');
+class_alias(CalendarListEntry::class, 'Google_Service_Calendar_CalendarListEntry');

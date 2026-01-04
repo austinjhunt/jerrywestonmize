@@ -22,22 +22,22 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-namespace phpseclib3\File;
+namespace AmeliaVendor\phpseclib3\File;
 
-use phpseclib3\Common\Functions\Strings;
-use phpseclib3\Crypt\Common\PrivateKey;
-use phpseclib3\Crypt\Common\PublicKey;
-use phpseclib3\Crypt\DSA;
-use phpseclib3\Crypt\EC;
-use phpseclib3\Crypt\Hash;
-use phpseclib3\Crypt\PublicKeyLoader;
-use phpseclib3\Crypt\Random;
-use phpseclib3\Crypt\RSA;
-use phpseclib3\Crypt\RSA\Formats\Keys\PSS;
-use phpseclib3\Exception\UnsupportedAlgorithmException;
-use phpseclib3\File\ASN1\Element;
-use phpseclib3\File\ASN1\Maps;
-use phpseclib3\Math\BigInteger;
+use AmeliaVendor\phpseclib3\Common\Functions\Strings;
+use AmeliaVendor\phpseclib3\Crypt\Common\PrivateKey;
+use AmeliaVendor\phpseclib3\Crypt\Common\PublicKey;
+use AmeliaVendor\phpseclib3\Crypt\DSA;
+use AmeliaVendor\phpseclib3\Crypt\EC;
+use AmeliaVendor\phpseclib3\Crypt\Hash;
+use AmeliaVendor\phpseclib3\Crypt\PublicKeyLoader;
+use AmeliaVendor\phpseclib3\Crypt\Random;
+use AmeliaVendor\phpseclib3\Crypt\RSA;
+use AmeliaVendor\phpseclib3\Crypt\RSA\Formats\Keys\PSS;
+use AmeliaVendor\phpseclib3\Exception\UnsupportedAlgorithmException;
+use AmeliaVendor\phpseclib3\File\ASN1\Element;
+use AmeliaVendor\phpseclib3\File\ASN1\Maps;
+use AmeliaVendor\phpseclib3\Math\BigInteger;
 
 /**
  * Pure-PHP X.509 Parser
@@ -57,37 +57,37 @@ class X509
     /**
      * Return internal array representation
      *
-     * @see \phpseclib3\File\X509::getDN()
+     * @see \AmeliaVendor\phpseclib3\File\X509::getDN()
      */
     const DN_ARRAY = 0;
     /**
      * Return string
      *
-     * @see \phpseclib3\File\X509::getDN()
+     * @see \AmeliaVendor\phpseclib3\File\X509::getDN()
      */
     const DN_STRING = 1;
     /**
      * Return ASN.1 name string
      *
-     * @see \phpseclib3\File\X509::getDN()
+     * @see \AmeliaVendor\phpseclib3\File\X509::getDN()
      */
     const DN_ASN1 = 2;
     /**
      * Return OpenSSL compatible array
      *
-     * @see \phpseclib3\File\X509::getDN()
+     * @see \AmeliaVendor\phpseclib3\File\X509::getDN()
      */
     const DN_OPENSSL = 3;
     /**
      * Return canonical ASN.1 RDNs string
      *
-     * @see \phpseclib3\File\X509::getDN()
+     * @see \AmeliaVendor\phpseclib3\File\X509::getDN()
      */
     const DN_CANON = 4;
     /**
      * Return name hash for file indexing
      *
-     * @see \phpseclib3\File\X509::getDN()
+     * @see \AmeliaVendor\phpseclib3\File\X509::getDN()
      */
     const DN_HASH = 5;
 
@@ -96,25 +96,25 @@ class X509
      *
      * ie. a base64-encoded PEM with a header and a footer
      *
-     * @see \phpseclib3\File\X509::saveX509()
-     * @see \phpseclib3\File\X509::saveCSR()
-     * @see \phpseclib3\File\X509::saveCRL()
+     * @see \AmeliaVendor\phpseclib3\File\X509::saveX509()
+     * @see \AmeliaVendor\phpseclib3\File\X509::saveCSR()
+     * @see \AmeliaVendor\phpseclib3\File\X509::saveCRL()
      */
     const FORMAT_PEM = 0;
     /**
      * Save as DER
      *
-     * @see \phpseclib3\File\X509::saveX509()
-     * @see \phpseclib3\File\X509::saveCSR()
-     * @see \phpseclib3\File\X509::saveCRL()
+     * @see \AmeliaVendor\phpseclib3\File\X509::saveX509()
+     * @see \AmeliaVendor\phpseclib3\File\X509::saveCSR()
+     * @see \AmeliaVendor\phpseclib3\File\X509::saveCRL()
      */
     const FORMAT_DER = 1;
     /**
      * Save as a SPKAC
      *
-     * @see \phpseclib3\File\X509::saveX509()
-     * @see \phpseclib3\File\X509::saveCSR()
-     * @see \phpseclib3\File\X509::saveCRL()
+     * @see \AmeliaVendor\phpseclib3\File\X509::saveX509()
+     * @see \AmeliaVendor\phpseclib3\File\X509::saveCSR()
+     * @see \AmeliaVendor\phpseclib3\File\X509::saveCRL()
      *
      * Only works on CSRs. Not currently supported.
      */
@@ -124,9 +124,9 @@ class X509
      *
      * Used only by the load*() functions
      *
-     * @see \phpseclib3\File\X509::saveX509()
-     * @see \phpseclib3\File\X509::saveCSR()
-     * @see \phpseclib3\File\X509::saveCRL()
+     * @see \AmeliaVendor\phpseclib3\File\X509::saveX509()
+     * @see \AmeliaVendor\phpseclib3\File\X509::saveCSR()
+     * @see \AmeliaVendor\phpseclib3\File\X509::saveCRL()
      */
     const FORMAT_AUTO_DETECT = 3;
 
@@ -537,7 +537,7 @@ class X509
         }
 
         /* in the case of policyQualifiers/qualifier, the type has to be \phpseclib3\File\ASN1::TYPE_IA5_STRING.
-           \phpseclib3\File\ASN1::TYPE_PRINTABLE_STRING will cause OpenSSL's X.509 parser to spit out random
+           \AmeliaVendor\phpseclib3\File\ASN1::TYPE_PRINTABLE_STRING will cause OpenSSL's X.509 parser to spit out random
            characters.
          */
         $filters['policyQualifiers']['qualifier']
@@ -626,7 +626,9 @@ class X509
         $extensions = &$this->subArray($root, $path, !empty($this->extensionValues));
 
         foreach ($this->extensionValues as $id => $data) {
-            extract($data);
+            $critical = $data['critical'];
+            $replace = $data['replace'];
+            $value = $data['value'];
             $newext = [
                 'extnId' => $id,
                 'extnValue' => $value,
@@ -1858,7 +1860,7 @@ class X509
                 $dn = $this->getDN(self::DN_CANON, $dn);
                 $hash = new Hash('sha1');
                 $hash = $hash->hash($dn);
-                extract(unpack('Vhash', $hash));
+                $hash = unpack('Vhash', $hash)['hash'];
                 return strtolower(Strings::bin2hex(pack('N', $hash)));
         }
 
@@ -2654,7 +2656,7 @@ class X509
         $altName = [];
 
         if (isset($subject->domains) && count($subject->domains)) {
-            $altName = array_map(['\phpseclib3\File\X509', 'dnsName'], $subject->domains);
+            $altName = array_map(['\AmeliaVendor\phpseclib3\File\X509', 'dnsName'], $subject->domains);
         }
 
         if (isset($subject->ipAddresses) && count($subject->ipAddresses)) {
@@ -3677,7 +3679,7 @@ class X509
                     return $this->computeKeyIdentifier($key->currentCert, $method);
                 }
                 return false;
-            default: // Should be a key object (i.e.: \phpseclib3\Crypt\RSA).
+            default: // Should be a key object (i.e.: \AmeliaVendor\phpseclib3\Crypt\RSA).
                 $key = $key->getPublicKey();
                 break;
         }

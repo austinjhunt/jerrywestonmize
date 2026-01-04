@@ -15,26 +15,26 @@
  * the License.
  */
 
-namespace AmeliaGoogle\Service\Calendar\Resource;
+namespace AmeliaVendor\Google\Service\Calendar\Resource;
 
-use AmeliaGoogle\Service\Calendar\Channel;
+use AmeliaVendor\Google\Service\Calendar\Channel;
 
 /**
  * The "channels" collection of methods.
  * Typical usage is:
  *  <code>
- *   $calendarService = new AmeliaGoogle\Service\Calendar(...);
+ *   $calendarService = new \AmeliaVendor\Google\Service\Calendar(...);
  *   $channels = $calendarService->channels;
  *  </code>
  */
-class Channels extends \AmeliaGoogle\Service\Resource
+class Channels extends \AmeliaVendor\Google\Service\Resource
 {
   /**
    * Stop watching resources through this channel (channels.stop)
    *
    * @param Channel $postBody
    * @param array $optParams Optional parameters.
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function stop(Channel $postBody, $optParams = [])
   {
@@ -45,4 +45,4 @@ class Channels extends \AmeliaGoogle\Service\Resource
 }
 
 // Adding a class alias for backwards compatibility with the previous class name.
-class_alias(Channels::class, 'AmeliaGoogle_Service_Calendar_Resource_Channels');
+class_alias(Channels::class, 'Google_Service_Calendar_Resource_Channels');

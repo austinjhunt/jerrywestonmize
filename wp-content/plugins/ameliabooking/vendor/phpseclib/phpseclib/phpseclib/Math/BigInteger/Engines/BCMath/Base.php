@@ -11,9 +11,9 @@
  * @link      http://pear.php.net/package/Math_BigInteger
  */
 
-namespace phpseclib3\Math\BigInteger\Engines\BCMath;
+namespace AmeliaVendor\phpseclib3\Math\BigInteger\Engines\BCMath;
 
-use phpseclib3\Math\BigInteger\Engines\BCMath;
+use AmeliaVendor\phpseclib3\Math\BigInteger\Engines\BCMath;
 
 /**
  * Sliding Window Exponentiation Engine
@@ -91,7 +91,7 @@ abstract class Base extends BCMath
      */
     protected static function multiplyReduce($x, $y, $n, $class)
     {
-        return static::reduce(bcmul($x, $y), $n);
+        return static::reduce(bcmul($x, $y, 0), $n);
     }
 
     /**
@@ -105,6 +105,6 @@ abstract class Base extends BCMath
      */
     protected static function squareReduce($x, $n, $class)
     {
-        return static::reduce(bcmul($x, $x), $n);
+        return static::reduce(bcmul($x, $x, 0), $n);
     }
 }

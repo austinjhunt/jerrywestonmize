@@ -4,19 +4,19 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace AmeliaDompdf\Adapter;
+namespace AmeliaVendor\Dompdf\Adapter;
 
-use AmeliaDompdf\Canvas;
-use AmeliaDompdf\Dompdf;
-use AmeliaDompdf\Exception;
-use AmeliaDompdf\FontMetrics;
-use AmeliaDompdf\Helpers;
-use AmeliaDompdf\Image\Cache;
+use AmeliaVendor\Dompdf\Canvas;
+use AmeliaVendor\Dompdf\Dompdf;
+use AmeliaVendor\Dompdf\Exception;
+use AmeliaVendor\Dompdf\FontMetrics;
+use AmeliaVendor\Dompdf\Helpers;
+use AmeliaVendor\Dompdf\Image\Cache;
 
 /**
  * PDF rendering interface
  *
- * AmeliaDompdf\Adapter\PDFLib provides a simple, stateless interface to the one
+ * Dompdf\Adapter\PDFLib provides a simple, stateless interface to the one
  * provided by PDFLib.
  *
  * Unless otherwise mentioned, all dimensions are in points (1/72 in).
@@ -36,7 +36,7 @@ class PDFLib implements Canvas
      *
      * @var array
      */
-    public static $PAPER_SIZES = []; // Set to AmeliaDompdf\Adapter\CPDF::$PAPER_SIZES below.
+    public static $PAPER_SIZES = []; // Set to Dompdf\Adapter\CPDF::$PAPER_SIZES below.
 
     /**
      * Whether to create PDFs in memory or on disk
@@ -78,7 +78,7 @@ class PDFLib implements Canvas
     ];
 
     /**
-     * @var \AmeliaDompdf\Dompdf
+     * @var \AmeliaVendor\Dompdf\Dompdf
      */
     protected $_dompdf;
 
@@ -242,14 +242,25 @@ class PDFLib implements Canvas
         $this->_pdf->set_info("Date", date("Y-m-d"));
         date_default_timezone_set($tz);
 
+        $doc_options = "";
+
+        if ($options->isPdfAEnabled()) {
+            $doc_options = "pdfa=PDF/A-3b autoxmp";
+        }
+
         if (self::$IN_MEMORY) {
-            $this->_pdf->begin_document("", "");
+            $this->_pdf->begin_document("", $doc_options);
         } else {
             $tmp_dir = $options->getTempDir();
             $tmp_name = @tempnam($tmp_dir, "libdompdf_pdf_");
             @unlink($tmp_name);
             $this->_file = "$tmp_name.pdf";
-            $this->_pdf->begin_document($this->_file, "");
+            $this->_pdf->begin_document($this->_file, $doc_options);
+        }
+
+        if ($options->isPdfAEnabled()) {
+            $iccProfilePath = $options->getRootDir() . '/lib/res/sRGB2014.icc';
+            $this->_pdf->load_iccprofile($iccProfilePath, "usage=outputintent");
         }
 
         $this->_pdf->begin_page_ext($this->_width, $this->_height, "");
@@ -1089,7 +1100,9 @@ class PDFLib implements Canvas
                 $filename = "$tmp_name.png";
 
                 imagepng($im, $filename);
-                imagedestroy($im);
+                if (PHP_MAJOR_VERSION < 8) {
+                    imagedestroy($im);
+                }
             } else {
                 $filename = null;
             }
@@ -1256,7 +1269,7 @@ class PDFLib implements Canvas
         $delta = $word_spacing * $num_spaces;
 
         if ($letter_spacing) {
-            $num_chars = mb_strlen($text);
+            $num_chars = mb_strlen($text, "UTF-8");
             $delta += $num_chars * $letter_spacing;
         }
 
@@ -1398,7 +1411,6 @@ class PDFLib implements Canvas
             $size = filesize($this->_file);
         }
 
-        header("Cache-Control: private");
         header("Content-Type: application/pdf");
         header("Content-Length: " . $size);
 

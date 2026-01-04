@@ -15,14 +15,14 @@
  * limitations under the License.
  */
 
-namespace AmeliaGoogle\Http;
+namespace AmeliaVendor\Google\Http;
 
-use AmeliaGoogle\Client;
-use AmeliaGoogle\Exception as GoogleException;
-use AmeliaGuzzleHttp\Psr7;
-use AmeliaGuzzleHttp\Psr7\Request;
-use AmeliaGuzzleHttp\Psr7\Uri;
-use AmeliaPsr\Http\Message\RequestInterface;
+use AmeliaVendor\Google\Client;
+use AmeliaVendor\Google\Exception as GoogleException;
+use AmeliaVendor\GuzzleHttp\Psr7;
+use AmeliaVendor\GuzzleHttp\Psr7\Request;
+use AmeliaVendor\GuzzleHttp\Psr7\Uri;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
 
 /**
  * Manage large file uploads, which may be media but can be any type

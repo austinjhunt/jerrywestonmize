@@ -19,7 +19,7 @@
  * FITNESS FOR A PARTICULAR PURPOSE.
  */
 
-namespace AmeliaPHPMailer\PHPMailer;
+namespace AmeliaVendor\PHPMailer\PHPMailer;
 
 /**
  * PHPMailer - PHP email creation and transport class.
@@ -423,7 +423,7 @@ class PHPMailer
      *
      * @see SMTP::$Debugoutput
      *
-     * @var string|callable|\Psr\Log\LoggerInterface
+     * @var string|callable|\AmeliaVendor\Psr\Log\LoggerInterface
      */
     public $Debugoutput = 'echo';
 
@@ -895,7 +895,7 @@ class PHPMailer
             return;
         }
         //Is this a PSR-3 logger?
-        if ($this->Debugoutput instanceof \Psr\Log\LoggerInterface) {
+        if ($this->Debugoutput instanceof \AmeliaVendor\Psr\Log\LoggerInterface) {
             $this->Debugoutput->debug($str);
 
             return;
@@ -2003,7 +2003,7 @@ class PHPMailer
      *
      * @see PHPMailer::setSMTPInstance() to use a different class.
      *
-     * @uses \AmeliaPHPMailer\AmeliaPHPMailer\SMTP
+     * @uses \AmeliaVendor\PHPMailer\PHPMailer\SMTP
      *
      * @param string $header The message headers
      * @param string $body   The message body
@@ -2093,7 +2093,7 @@ class PHPMailer
      *
      * @throws Exception
      *
-     * @uses \AmeliaPHPMailer\AmeliaPHPMailer\SMTP
+     * @uses \AmeliaVendor\PHPMailer\PHPMailer\SMTP
      *
      * @return bool
      */

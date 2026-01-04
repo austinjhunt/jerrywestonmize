@@ -1,6 +1,8 @@
 <?php
 
-namespace AmeliaPsr\Http\Message;
+declare(strict_types=1);
+
+namespace AmeliaVendor\Psr\Http\Message;
 
 /**
  * Value object representing a file uploaded through an HTTP request.
@@ -62,7 +64,7 @@ interface UploadedFileInterface
      * @throws \RuntimeException on any error during the move operation, or on
      *     the second or subsequent call to the method.
      */
-    public function moveTo($targetPath);
+    public function moveTo(string $targetPath);
     
     /**
      * Retrieve the file size.

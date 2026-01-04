@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -31,23 +31,27 @@ class GetPackagesCommandHandler extends CommandHandler
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      * @throws AccessDeniedException
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function handle(GetPackagesCommand $command)
     {
-        if (!$command->getPermissionService()->currentUserCanRead(Entities::SERVICES)) {
+        if (!$command->getPermissionService()->currentUserCanRead(Entities::PACKAGES)) {
             throw new AccessDeniedException('You are not allowed to read packages.');
         }
 
         $result = new CommandResult();
+
+        $params = $command->getField('params');
+
+        if (empty($params['sort'])) {
+            $params['sort'] = 'id';
+        }
 
         $this->checkMandatoryFields($command);
 
         /** @var PackageRepository $packageRepository */
         $packageRepository = $this->container->get('domain.bookable.package.repository');
 
-        /** @var Collection $packages */
-        $packages = $packageRepository->getAll();
+        $packages = $packageRepository->getByCriteria($params);
 
         $packagesArray = $packages->toArray();
 
@@ -59,7 +63,9 @@ class GetPackagesCommandHandler extends CommandHandler
         $result->setMessage('Successfully retrieved packages.');
         $result->setData(
             [
-                Entities::PACKAGES => $packagesArray
+                Entities::PACKAGES => $packagesArray,
+                'totalCount' => (int)$packageRepository->getCount([]),
+                'filteredCount' => (int)$packageRepository->getCount($params),
             ]
         );
 

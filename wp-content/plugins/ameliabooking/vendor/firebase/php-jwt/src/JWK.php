@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaFirebase\JWT;
+namespace AmeliaVendor\Firebase\JWT;
 
 use DomainException;
 use InvalidArgumentException;
@@ -285,7 +285,7 @@ class JWK
 
     /**
      * Encodes a value into a DER object.
-     * Also defined in AmeliaFirebase\JWT\JWT
+     * Also defined in Firebase\JWT\JWT
      *
      * @param   int     $type DER tag
      * @param   string  $value the value to encode

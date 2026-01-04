@@ -39,7 +39,6 @@ class PermissionsService
      *
      * @throws \Slim\Exception\ContainerValueNotFoundException
      * @throws \InvalidArgumentException
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function __construct(Container $container, PermissionsCheckerInterface $permissionsChecker)
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaStripe\Util;
+namespace AmeliaVendor\Stripe\Util;
 
 /**
  * Describes a logger instance.

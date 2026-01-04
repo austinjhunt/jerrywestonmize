@@ -2,7 +2,7 @@
 
 namespace AmeliaHttp\Client\Common;
 
-use AmeliaPsr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
 
 /**
  * A client that helps you migrate from php-http/httplug 1.x to 2.x. This

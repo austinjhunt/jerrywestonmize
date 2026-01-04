@@ -152,15 +152,15 @@ class MobileAppContentFile extends Entity
     * Gets the manifest
     * The manifest information.
     *
-    * @return \AmeliaGuzzleHttp\Psr7\Stream|null The manifest
+    * @return \AmeliaVendor\GuzzleHttp\Psr7\Stream|null The manifest
     */
     public function getManifest()
     {
         if (array_key_exists("manifest", $this->_propDict)) {
-            if (is_a($this->_propDict["manifest"], "\AmeliaGuzzleHttp\Psr7\Stream") || is_null($this->_propDict["manifest"])) {
+            if (is_a($this->_propDict["manifest"], "\AmeliaVendor\GuzzleHttp\Psr7\Stream") || is_null($this->_propDict["manifest"])) {
                 return $this->_propDict["manifest"];
             } else {
-                $this->_propDict["manifest"] = \AmeliaGuzzleHttp\Psr7\Utils::streamFor($this->_propDict["manifest"]);
+                $this->_propDict["manifest"] = \AmeliaVendor\GuzzleHttp\Psr7\Utils::streamFor($this->_propDict["manifest"]);
                 return $this->_propDict["manifest"];
             }
         }
@@ -171,7 +171,7 @@ class MobileAppContentFile extends Entity
     * Sets the manifest
     * The manifest information.
     *
-    * @param \AmeliaGuzzleHttp\Psr7\Stream $val The manifest
+    * @param \AmeliaVendor\GuzzleHttp\Psr7\Stream $val The manifest
     *
     * @return MobileAppContentFile
     */

@@ -27,11 +27,11 @@ class DIVI_Catalog extends ET_Builder_Module
 
     public function init()
     {
-        $this->name = esc_html__(BackendStrings::getWordPressStrings()['catalog_divi'], 'divi-divi_amelia');
+        $this->name = esc_html__(BackendStrings::get('catalog_divi'), 'divi-divi_amelia');
 
-        $this->type['0']        = BackendStrings::getWordPressStrings()['show_all'];
-        $this->type['services'] = BackendStrings::getCommonStrings()['services'];
-        $this->type['packages'] = BackendStrings::getCommonStrings()['packages'];
+        $this->type['0']        = BackendStrings::get('show_all');
+        $this->type['services'] = BackendStrings::get('services');
+        $this->type['packages'] = BackendStrings::get('packages');
 
 
         if (!is_admin()) {
@@ -42,36 +42,36 @@ class DIVI_Catalog extends ET_Builder_Module
 
         $this->showPackages = !empty($data['packages']);
 
-        $this->catalog['0']        = BackendStrings::getWordPressStrings()['show_catalog'];
-        $this->catalog['category'] = BackendStrings::getWordPressStrings()['show_category'];
-        $this->catalog['service']  = BackendStrings::getWordPressStrings()['show_service'];
+        $this->catalog['0']        = BackendStrings::get('show_catalog');
+        $this->catalog['category'] = BackendStrings::get('show_category');
+        $this->catalog['service']  = BackendStrings::get('show_service');
         if ($this->showPackages) {
-            $this->catalog['package'] = BackendStrings::getWordPressStrings()['show_package'];
+            $this->catalog['package'] = BackendStrings::get('show_package');
         }
         
 
-        $this->categories['0'] = BackendStrings::getWordPressStrings()['choose_category'];
+        $this->categories['0'] = BackendStrings::get('choose_category');
         foreach ($data['categories'] as $category) {
             $this->categories[$category['id']] = $category['name'] . ' (id: ' . $category['id'] . ')';
         }
 
-        $this->services['0'] = BackendStrings::getWordPressStrings()['choose_service'];
+        $this->services['0'] = BackendStrings::get('choose_service');
         foreach ($data['servicesList'] as $service) {
             if ($service) {
                 $this->services[$service['id']] = $service['name']. ' (id: ' . $service['id'] . ')';
             }
         }
 
-        $this->packages['0'] = BackendStrings::getWordPressStrings()['choose_package'];
+        $this->packages['0'] = BackendStrings::get('choose_package');
         foreach ($data['packages'] as $package) {
             $this->packages[$package['id']] = $package['name']. ' (id: ' . $package['id'] . ')';
         }
 
-        $this->employees['0'] = BackendStrings::getWordPressStrings()['show_all_employees'];
+        $this->employees['0'] = BackendStrings::get('show_all_employees');
         foreach ($data['employees'] as $employee) {
             $this->employees[$employee['id']] = $employee['firstName'] . ' ' . $employee['lastName'] . ' (id: ' . $employee['id'] . ')';
         }
-        $this->locations['0'] = BackendStrings::getWordPressStrings()['show_all_locations'];
+        $this->locations['0'] = BackendStrings::get('show_all_locations');
         foreach ($data['locations'] as $location) {
             $this->locations[$location['id']] = $location['name'] . ' (id: ' . $location['id'] . ')';
         }
@@ -94,14 +94,14 @@ class DIVI_Catalog extends ET_Builder_Module
     {
         $array = array(
             'catalog' => array(
-                'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_catalog_view'], 'divi-divi_amelia'),
+                'label'           => esc_html__(BackendStrings::get('select_catalog_view'), 'divi-divi_amelia'),
                 'type'            => 'select',
                 'options'         => $this->catalog,
                 'toggle_slug'     => 'main_content',
                 'option_category' => 'basic_option',
             ),
             'categories' => array(
-                'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_category'], 'divi-divi_amelia'),
+                'label'           => esc_html__(BackendStrings::get('select_category'), 'divi-divi_amelia'),
                 'type'            => 'select',
                 'options'         => $this->categories,
                 'toggle_slug'     => 'main_content',
@@ -111,7 +111,7 @@ class DIVI_Catalog extends ET_Builder_Module
                 ),
             ),
             'services' => array(
-                'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_service'], 'divi-divi_amelia'),
+                'label'           => esc_html__(BackendStrings::get('select_service'), 'divi-divi_amelia'),
                 'type'            => 'select',
                 'options'         => $this->services,
                 'toggle_slug'     => 'main_content',
@@ -121,7 +121,7 @@ class DIVI_Catalog extends ET_Builder_Module
                 ),
             ),
             'packages' => array(
-                'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_package'], 'divi-divi_amelia'),
+                'label'           => esc_html__(BackendStrings::get('select_package'), 'divi-divi_amelia'),
                 'type'            => 'select',
                 'options'         => $this->packages,
                 'toggle_slug'     => 'main_content',
@@ -131,17 +131,17 @@ class DIVI_Catalog extends ET_Builder_Module
                 ),
             ),
             'booking_params' => array(
-                'label'           => esc_html__(BackendStrings::getWordPressStrings()['filter'], 'divi-divi_amelia'),
+                'label'           => esc_html__(BackendStrings::get('filter'), 'divi-divi_amelia'),
                 'type'            => 'yes_no_button',
                 'options' => array(
-                    'on'  => esc_html__(BackendStrings::getCommonStrings()['yes'], 'divi-divi_amelia'),
-                    'off' => esc_html__(BackendStrings::getCommonStrings()['no'], 'divi-divi_amelia'),
+                    'on'  => esc_html__(BackendStrings::get('yes'), 'divi-divi_amelia'),
+                    'off' => esc_html__(BackendStrings::get('no'), 'divi-divi_amelia'),
                 ),
                 'toggle_slug'     => 'main_content',
                 'option_category' => 'basic_option',
             ),
             'employees' => array(
-                'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_employee'], 'divi-divi_amelia'),
+                'label'           => esc_html__(BackendStrings::get('select_employee'), 'divi-divi_amelia'),
                 'type'            => 'select',
                 'options'         => $this->employees,
                 'toggle_slug'     => 'main_content',
@@ -151,7 +151,7 @@ class DIVI_Catalog extends ET_Builder_Module
                 ),
             ),
             'locations' => array(
-                'label'           => esc_html__(BackendStrings::getWordPressStrings()['select_location'], 'divi-divi_amelia'),
+                'label'           => esc_html__(BackendStrings::get('select_location'), 'divi-divi_amelia'),
                 'type'            => 'select',
                 'options'         => $this->locations,
                 'toggle_slug'     => 'main_content',
@@ -164,7 +164,7 @@ class DIVI_Catalog extends ET_Builder_Module
 
         if ($this->showPackages) {
             $array['type'] = array(
-                'label'           => esc_html__(BackendStrings::getWordPressStrings()['show_all'], 'divi-divi_amelia'),
+                'label'           => esc_html__(BackendStrings::get('show_all'), 'divi-divi_amelia'),
                 'type'            => 'select',
                 'options'         => $this->type,
                 'toggle_slug'     => 'main_content',
@@ -175,11 +175,11 @@ class DIVI_Catalog extends ET_Builder_Module
         }
 
         $array['trigger'] = array(
-            'label'           => esc_html__(BackendStrings::getWordPressStrings()['manually_loading'], 'divi-divi_amelia'),
+            'label'           => esc_html__(BackendStrings::get('manually_loading'), 'divi-divi_amelia'),
             'type'            => 'text',
             'toggle_slug'     => 'main_content',
             'option_category' => 'basic_option',
-            'description'     => BackendStrings::getWordPressStrings()['manually_loading_description'],
+            'description'     => BackendStrings::get('manually_loading_description'),
         );
 
         return $array;

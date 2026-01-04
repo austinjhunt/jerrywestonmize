@@ -40,7 +40,7 @@ class TaxEntityRepository extends AbstractEntityRepository
      * @param Tax                            $tax
      * @param AbstractBookable|AbstractExtra $entity
      *
-     * @return bool
+     * @return int
      * @throws QueryExecutionException
      */
     public function add($tax, $entity)

@@ -15,9 +15,9 @@
  * the License.
  */
 
-namespace AmeliaGoogle\Service\Calendar;
+namespace AmeliaVendor\Google\Service\Calendar;
 
-class ConferenceProperties extends \AmeliaGoogle\Collection
+class ConferenceProperties extends \AmeliaVendor\Google\Collection
 {
   protected $collection_key = 'allowedConferenceSolutionTypes';
   /**
@@ -42,4 +42,4 @@ class ConferenceProperties extends \AmeliaGoogle\Collection
 }
 
 // Adding a class alias for backwards compatibility with the previous class name.
-class_alias(ConferenceProperties::class, 'AmeliaGoogle_Service_Calendar_ConferenceProperties');
+class_alias(ConferenceProperties::class, 'Google_Service_Calendar_ConferenceProperties');

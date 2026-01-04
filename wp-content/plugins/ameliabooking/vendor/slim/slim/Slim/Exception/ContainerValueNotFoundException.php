@@ -7,7 +7,7 @@
 
 namespace Slim\Exception;
 
-use AmeliaPsr\Container\NotFoundExceptionInterface;
+use AmeliaVendor\Psr\Container\NotFoundExceptionInterface;
 use RuntimeException;
 
 class ContainerValueNotFoundException extends RuntimeException implements NotFoundExceptionInterface

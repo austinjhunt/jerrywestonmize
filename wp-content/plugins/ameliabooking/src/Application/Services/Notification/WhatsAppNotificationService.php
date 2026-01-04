@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -17,7 +17,6 @@ use AmeliaBooking\Domain\Entity\Notification\NotificationLog;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Entity\User\Customer;
 use AmeliaBooking\Domain\Entity\User\Provider;
-use AmeliaBooking\Domain\Repository\User\UserRepositoryInterface;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\String\NotificationStatus;
@@ -27,7 +26,7 @@ use AmeliaBooking\Infrastructure\Repository\Notification\NotificationLogReposito
 use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 use Exception;
-use Interop\Container\Exception\ContainerException;
+use Psr\Container\ContainerExceptionInterface;
 use Slim\Exception\ContainerValueNotFoundException;
 
 /**
@@ -45,8 +44,12 @@ class WhatsAppNotificationService extends AbstractWhatsAppNotificationService
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
 
+        if (!$settingsService->isFeatureEnabled('whatsapp')) {
+            return false;
+        }
+
         $notificationsSettings = $settingsService->getCategorySettings('notifications');
-        return !empty($notificationsSettings['whatsAppEnabled']) && !empty($notificationsSettings['whatsAppPhoneID']) &&
+        return !empty($notificationsSettings['whatsAppPhoneID']) &&
             !empty($notificationsSettings['whatsAppAccessToken']) && !empty($notificationsSettings['whatsAppBusinessID']);
     }
 
@@ -107,15 +110,15 @@ class WhatsAppNotificationService extends AbstractWhatsAppNotificationService
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
-     * @param array        $appointmentArray
+     * @param array $appointmentArray
      * @param Notification $notification
-     * @param bool         $logNotification
-     * @param int|null     $bookingKey
+     * @param bool $logNotification
+     * @param int|null $bookingKey
      *
      * @throws NotFoundException
      * @throws QueryExecutionException
-     * @throws ContainerException
      * @throws Exception
+     * @throws ContainerExceptionInterface
      */
     public function sendNotification(
         $appointmentArray,
@@ -207,8 +210,7 @@ class WhatsAppNotificationService extends AbstractWhatsAppNotificationService
                             $language
                         );
                     }
-                } catch (QueryExecutionException $e) {
-                } catch (ContainerException $e) {
+                } catch (QueryExecutionException | Exception $e) {
                 }
             }
         }
@@ -564,7 +566,7 @@ class WhatsAppNotificationService extends AbstractWhatsAppNotificationService
                     $sendTo . '_first_name' => $customer->getFirstName()->getValue(),
                     $sendTo . '_last_name'  => $customer->getLastName() ? $customer->getLastName()->getValue() : '',
                     $sendTo . '_full_name'  =>
-                        $customer->getFirstName()->getValue() . ' ' .
+                    $customer->getFirstName()->getValue() . ' ' .
                         ($customer->getLastName() ? $customer->getLastName()->getValue() : ''),
                     $sendTo . '_phone'      => $customer->getPhone() ? $customer->getPhone()->getValue() : '',
                     $sendTo . '_panel_url'  => $cabinetType === 'customer' ? $helperService->getCustomerCabinetUrl(
@@ -622,7 +624,7 @@ class WhatsAppNotificationService extends AbstractWhatsAppNotificationService
                     'employee_first_name' => $provider['firstName'],
                     'employee_last_name'  => $provider['lastName'],
                     'employee_full_name'  =>
-                        $provider['firstName'] . ' ' . $provider['lastName'],
+                    $provider['firstName'] . ' ' . $provider['lastName'],
                     'employee_phone'      => $provider['phone'],
                     'employee_password'   => $plainPassword,
                     'employee_panel_url'  => trim(

@@ -61,15 +61,15 @@ class ServiceUpdateMessage extends ServiceAnnouncementBase
     * Gets the attachmentsArchive
     * The zip file that contains all attachments for a message.
     *
-    * @return \AmeliaGuzzleHttp\Psr7\Stream|null The attachmentsArchive
+    * @return \AmeliaVendor\GuzzleHttp\Psr7\Stream|null The attachmentsArchive
     */
     public function getAttachmentsArchive()
     {
         if (array_key_exists("attachmentsArchive", $this->_propDict)) {
-            if (is_a($this->_propDict["attachmentsArchive"], "\AmeliaGuzzleHttp\Psr7\Stream") || is_null($this->_propDict["attachmentsArchive"])) {
+            if (is_a($this->_propDict["attachmentsArchive"], "\AmeliaVendor\GuzzleHttp\Psr7\Stream") || is_null($this->_propDict["attachmentsArchive"])) {
                 return $this->_propDict["attachmentsArchive"];
             } else {
-                $this->_propDict["attachmentsArchive"] = \AmeliaGuzzleHttp\Psr7\Utils::streamFor($this->_propDict["attachmentsArchive"]);
+                $this->_propDict["attachmentsArchive"] = \AmeliaVendor\GuzzleHttp\Psr7\Utils::streamFor($this->_propDict["attachmentsArchive"]);
                 return $this->_propDict["attachmentsArchive"];
             }
         }
@@ -80,7 +80,7 @@ class ServiceUpdateMessage extends ServiceAnnouncementBase
     * Sets the attachmentsArchive
     * The zip file that contains all attachments for a message.
     *
-    * @param \AmeliaGuzzleHttp\Psr7\Stream $val The attachmentsArchive
+    * @param \AmeliaVendor\GuzzleHttp\Psr7\Stream $val The attachmentsArchive
     *
     * @return ServiceUpdateMessage
     */

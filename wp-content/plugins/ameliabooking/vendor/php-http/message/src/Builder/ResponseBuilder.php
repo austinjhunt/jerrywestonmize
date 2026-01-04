@@ -2,7 +2,7 @@
 
 namespace AmeliaHttp\Message\Builder;
 
-use AmeliaPsr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
 
 /**
  * Fills response object with values.

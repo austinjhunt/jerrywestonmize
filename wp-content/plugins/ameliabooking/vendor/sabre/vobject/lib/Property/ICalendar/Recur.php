@@ -1,10 +1,10 @@
 <?php
 
-namespace AmeliaSabre\VObject\Property\ICalendar;
+namespace AmeliaVendor\Sabre\VObject\Property\ICalendar;
 
-use AmeliaSabre\VObject\InvalidDataException;
-use AmeliaSabre\VObject\Property;
-use AmeliaSabre\Xml;
+use AmeliaVendor\Sabre\VObject\InvalidDataException;
+use AmeliaVendor\Sabre\VObject\Property;
+use AmeliaVendor\Sabre\Xml;
 
 /**
  * Recur property.

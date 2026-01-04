@@ -27,6 +27,9 @@ class Provider extends AbstractUser
     private $serviceList;
 
     /** @var Collection */
+    private $eventList;
+
+    /** @var Collection */
     private $dayOffList;
 
     /** @var Collection */
@@ -137,6 +140,22 @@ class Provider extends AbstractUser
     /**
      * @return Collection
      */
+    public function getEventList()
+    {
+        return $this->eventList;
+    }
+
+    /**
+     * @param Collection $eventList
+     */
+    public function setEventList(Collection $eventList)
+    {
+        $this->eventList = $eventList;
+    }
+
+    /**
+     * @return Collection
+     */
     public function getDayOffList()
     {
         return $this->dayOffList;
@@ -239,7 +258,7 @@ class Provider extends AbstractUser
     }
 
     /**
-     * @param Name $timeZone
+     * @param Name|null $timeZone
      */
     public function setTimeZone($timeZone)
     {
@@ -329,18 +348,19 @@ class Provider extends AbstractUser
         return array_merge(
             parent::toArray(),
             [
-                'phone'                 => $this->phone->getValue(),
-                'weekDayList'           => $this->weekDayList->toArray(),
-                'serviceList'           => $this->serviceList->toArray(),
-                'dayOffList'            => $this->dayOffList->toArray(),
-                'specialDayList'        => $this->specialDayList->toArray(),
-                'locationId'            => $this->getLocationId() ? $this->getLocationId()->getValue() : null,
-                'googleCalendar'        => $this->getGoogleCalendar() ? $this->getGoogleCalendar()->toArray() : null,
-                'outlookCalendar'       => $this->getOutlookCalendar() ? $this->getOutlookCalendar()->toArray() : null,
-                'timeZone'              => $this->getTimeZone() ? $this->getTimeZone()->getValue() : null,
-                'description'           => $this->getDescription() ? $this->getDescription()->getValue() : null,
-                'badgeId'               => $this->getBadgeId() ? $this->getBadgeId()->getValue() : null,
-                'stripeConnect'         => $this->getStripeConnect() ? $this->getStripeConnect()->toArray() : null,
+                'phone'           => $this->phone->getValue(),
+                'weekDayList'     => $this->weekDayList->toArray(),
+                'serviceList'     => $this->serviceList->toArray(),
+                'eventList'       => $this->eventList ? $this->eventList->toArray() : [],
+                'dayOffList'      => $this->dayOffList->toArray(),
+                'specialDayList'  => $this->specialDayList->toArray(),
+                'locationId'      => $this->getLocationId() ? $this->getLocationId()->getValue() : null,
+                'googleCalendar'  => $this->getGoogleCalendar() ? $this->getGoogleCalendar()->toArray() : null,
+                'outlookCalendar' => $this->getOutlookCalendar() ? $this->getOutlookCalendar()->toArray() : null,
+                'timeZone'        => $this->getTimeZone() ? $this->getTimeZone()->getValue() : null,
+                'description'     => $this->getDescription() ? $this->getDescription()->getValue() : null,
+                'badgeId'         => $this->getBadgeId() ? $this->getBadgeId()->getValue() : null,
+                'stripeConnect'   => $this->getStripeConnect() ? $this->getStripeConnect()->toArray() : null,
                 'employeeAppleCalendar' => $this->getEmployeeAppleCalendar() ? $this->getEmployeeAppleCalendar()->toArray() : null,
                 'show'                  => $this->getShow() ? $this->getShow()->getValue() : null,
             ]

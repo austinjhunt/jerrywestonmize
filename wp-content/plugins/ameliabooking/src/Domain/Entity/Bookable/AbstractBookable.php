@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See COPYING.md for license details.
  */
 
@@ -271,7 +271,7 @@ abstract class AbstractBookable
     }
 
     /**
-     * @param Json $settings
+     * @param Json | null $settings
      */
     public function setSettings($settings)
     {

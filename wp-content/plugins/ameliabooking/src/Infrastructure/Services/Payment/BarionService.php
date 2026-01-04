@@ -89,7 +89,7 @@ class BarionService extends AbstractPaymentService implements PaymentServiceInte
 
         $paymentId = $data['paymentId'];
         $name = $data['name'];
-        $serviceDescription = $reservationData ? $reservationData['service']['description'] : '';
+        $serviceDescription = !empty($reservationData['service']['description']) ? $reservationData['service']['description'] : '';
         $metaDescription = $data['info']['description'] ?: '';
         $payee = $this->getPayeeFromSettings();
         $currency = $this->settingsService->getCategorySettings('payments')['currency'];

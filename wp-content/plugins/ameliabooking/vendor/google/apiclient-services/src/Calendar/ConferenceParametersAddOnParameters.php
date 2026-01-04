@@ -15,9 +15,9 @@
  * the License.
  */
 
-namespace AmeliaGoogle\Service\Calendar;
+namespace AmeliaVendor\Google\Service\Calendar;
 
-class ConferenceParametersAddOnParameters extends \AmeliaGoogle\Model
+class ConferenceParametersAddOnParameters extends \AmeliaVendor\Google\Model
 {
   /**
    * @var string[]
@@ -41,4 +41,4 @@ class ConferenceParametersAddOnParameters extends \AmeliaGoogle\Model
 }
 
 // Adding a class alias for backwards compatibility with the previous class name.
-class_alias(ConferenceParametersAddOnParameters::class, 'AmeliaGoogle_Service_Calendar_ConferenceParametersAddOnParameters');
+class_alias(ConferenceParametersAddOnParameters::class, 'Google_Service_Calendar_ConferenceParametersAddOnParameters');

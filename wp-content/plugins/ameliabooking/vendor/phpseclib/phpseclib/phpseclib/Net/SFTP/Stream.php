@@ -13,11 +13,11 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-namespace phpseclib3\Net\SFTP;
+namespace AmeliaVendor\phpseclib3\Net\SFTP;
 
-use phpseclib3\Crypt\Common\PrivateKey;
-use phpseclib3\Net\SFTP;
-use phpseclib3\Net\SSH2;
+use AmeliaVendor\phpseclib3\Crypt\Common\PrivateKey;
+use AmeliaVendor\phpseclib3\Net\SFTP;
+use AmeliaVendor\phpseclib3\Net\SSH2;
 
 /**
  * SFTP Stream Wrapper
@@ -139,7 +139,15 @@ class Stream
     protected function parse_path($path)
     {
         $orig = $path;
-        extract(parse_url($path) + ['port' => 22]);
+        $url = parse_url($path) + ['port' => 22];
+
+        $keys = ['scheme', 'host', 'port', 'user', 'pass', 'path', 'query', 'fragment'];
+        foreach ($keys as $key) {
+            if (isset($url[$key])) {
+                $$key = $url[$key];
+            }
+        }
+
         if (isset($query)) {
             $path .= '?' . $query;
         } elseif (preg_match('/(\?|\?#)$/', $orig)) {
@@ -613,7 +621,7 @@ class Stream
     /**
      * Flushes the output
      *
-     * See <http://php.net/fflush>. Always returns true because \phpseclib3\Net\SFTP doesn't cache stuff before writing
+     * See <http://php.net/fflush>. Always returns true because \AmeliaVendor\phpseclib3\Net\SFTP doesn't cache stuff before writing
      *
      * @return bool
      */

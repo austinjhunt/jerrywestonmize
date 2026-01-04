@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -57,7 +57,7 @@ class CouponFactory
         }
 
         if (isset($data['limit'])) {
-            $coupon->setLimit(new PositiveInteger($data['limit']));
+            $coupon->setLimit(new WholeNumber($data['limit']));
         }
 
         if (isset($data['status'])) {
@@ -164,6 +164,7 @@ class CouponFactory
             $eventId   = isset($row['event_id']) ? $row['event_id'] : null;
             $packageId = isset($row['package_id']) ? $row['package_id'] : null;
             $bookingId = isset($row['booking_id']) ? $row['booking_id'] : null;
+            $eventPeriodId = isset($row['event_periodId']) ? $row['event_periodId'] : null;
 
             $coupons[$couponId]['id']            = $couponId;
             $coupons[$couponId]['code']          = $row['coupon_code'];
@@ -201,6 +202,14 @@ class CouponFactory
                 $coupons[$couponId]['eventList'][$eventId]['id']    = $eventId;
                 $coupons[$couponId]['eventList'][$eventId]['name']  = $row['event_name'];
                 $coupons[$couponId]['eventList'][$eventId]['price'] = $row['event_price'];
+            }
+
+            if ($eventPeriodId && !isset($coupons[$couponId]['eventList'][$eventId]['periods'][$eventPeriodId])) {
+                $coupons[$couponId]['eventList'][$eventId]['periods'][$eventPeriodId] = [
+                    'id'             => $eventPeriodId,
+                    'periodStart'    => DateTimeService::getCustomDateTimeFromUtc($row['event_periodStart']),
+                    'periodEnd'      => DateTimeService::getCustomDateTimeFromUtc($row['event_periodEnd']),
+                ];
             }
 
             if ($packageId) {

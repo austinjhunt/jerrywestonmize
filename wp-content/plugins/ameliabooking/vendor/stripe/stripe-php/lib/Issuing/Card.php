@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace AmeliaStripe\Issuing;
+namespace AmeliaVendor\Stripe\Issuing;
 
 /**
  * You can <a href="https://stripe.com/docs/issuing">create physical or virtual cards</a> that are issued to cardholders.
@@ -20,40 +19,34 @@ namespace AmeliaStripe\Issuing;
  * @property null|string $financial_account The financial account this card is attached to.
  * @property string $last4 The last 4 digits of the card number.
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
- * @property \AmeliaStripe\StripeObject $metadata Set of <a href="https://stripe.com/docs/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+ * @property \AmeliaVendor\Stripe\StripeObject $metadata Set of <a href="https://stripe.com/docs/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
  * @property null|string $number The full unredacted card number. For security reasons, this is only available for virtual cards, and will be omitted unless you explicitly request it with <a href="https://stripe.com/docs/api/expanding_objects">the <code>expand</code> parameter</a>. Additionally, it's only available via the <a href="https://stripe.com/docs/api/issuing/cards/retrieve">&quot;Retrieve a card&quot; endpoint</a>, not via &quot;List all cards&quot; or any other endpoint.
  * @property null|PersonalizationDesign|string $personalization_design The personalization design object belonging to this card.
  * @property null|Card|string $replaced_by The latest card that replaces this card, if any.
  * @property null|Card|string $replacement_for The card this card replaces, if any.
  * @property null|string $replacement_reason The reason why the previous card needed to be replaced.
- * @property null|(object{address: (object{city: null|string, country: null|string, line1: null|string, line2: null|string, postal_code: null|string, state: null|string}&\AmeliaStripe\StripeObject), address_validation: null|(object{mode: string, normalized_address: null|(object{city: null|string, country: null|string, line1: null|string, line2: null|string, postal_code: null|string, state: null|string}&\AmeliaStripe\StripeObject), result: null|string}&\AmeliaStripe\StripeObject), carrier: null|string, customs: null|(object{eori_number: null|string}&\AmeliaStripe\StripeObject), eta: null|int, name: string, phone_number: null|string, require_signature: null|bool, service: string, status: null|string, tracking_number: null|string, tracking_url: null|string, type: string}&\AmeliaStripe\StripeObject) $shipping Where and how the card will be shipped.
- * @property (object{allowed_categories: null|string[], allowed_merchant_countries: null|string[], blocked_categories: null|string[], blocked_merchant_countries: null|string[], spending_limits: null|((object{amount: int, categories: null|string[], interval: string}&\AmeliaStripe\StripeObject))[], spending_limits_currency: null|string}&\AmeliaStripe\StripeObject) $spending_controls
+ * @property null|(object{address: (object{city: null|string, country: null|string, line1: null|string, line2: null|string, postal_code: null|string, state: null|string}&\AmeliaVendor\Stripe\StripeObject), address_validation: null|(object{mode: string, normalized_address: null|(object{city: null|string, country: null|string, line1: null|string, line2: null|string, postal_code: null|string, state: null|string}&\AmeliaVendor\Stripe\StripeObject), result: null|string}&\AmeliaVendor\Stripe\StripeObject), carrier: null|string, customs: null|(object{eori_number: null|string}&\AmeliaVendor\Stripe\StripeObject), eta: null|int, name: string, phone_number: null|string, require_signature: null|bool, service: string, status: null|string, tracking_number: null|string, tracking_url: null|string, type: string}&\AmeliaVendor\Stripe\StripeObject) $shipping Where and how the card will be shipped.
+ * @property (object{allowed_categories: null|string[], allowed_merchant_countries: null|string[], blocked_categories: null|string[], blocked_merchant_countries: null|string[], spending_limits: null|((object{amount: int, categories: null|string[], interval: string}&\AmeliaVendor\Stripe\StripeObject))[], spending_limits_currency: null|string}&\AmeliaVendor\Stripe\StripeObject) $spending_controls
  * @property string $status Whether authorizations can be approved on this card. May be blocked from activating cards depending on past-due Cardholder requirements. Defaults to <code>inactive</code>.
  * @property string $type The type of the card.
- * @property null|(object{apple_pay: (object{eligible: bool, ineligible_reason: null|string}&\AmeliaStripe\StripeObject), google_pay: (object{eligible: bool, ineligible_reason: null|string}&\AmeliaStripe\StripeObject), primary_account_identifier: null|string}&\AmeliaStripe\StripeObject) $wallets Information relating to digital wallets (like Apple Pay and Google Pay).
+ * @property null|(object{apple_pay: (object{eligible: bool, ineligible_reason: null|string}&\AmeliaVendor\Stripe\StripeObject), google_pay: (object{eligible: bool, ineligible_reason: null|string}&\AmeliaVendor\Stripe\StripeObject), primary_account_identifier: null|string}&\AmeliaVendor\Stripe\StripeObject) $wallets Information relating to digital wallets (like Apple Pay and Google Pay).
  */
-class Card extends \AmeliaStripe\ApiResource
+class Card extends \AmeliaVendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'issuing.card';
-
-    use \AmeliaStripe\ApiOperations\Update;
-
+    use \AmeliaVendor\Stripe\ApiOperations\Update;
     const CANCELLATION_REASON_DESIGN_REJECTED = 'design_rejected';
     const CANCELLATION_REASON_LOST = 'lost';
     const CANCELLATION_REASON_STOLEN = 'stolen';
-
     const REPLACEMENT_REASON_DAMAGED = 'damaged';
     const REPLACEMENT_REASON_EXPIRED = 'expired';
     const REPLACEMENT_REASON_LOST = 'lost';
     const REPLACEMENT_REASON_STOLEN = 'stolen';
-
     const STATUS_ACTIVE = 'active';
     const STATUS_CANCELED = 'canceled';
     const STATUS_INACTIVE = 'inactive';
-
     const TYPE_PHYSICAL = 'physical';
     const TYPE_VIRTUAL = 'virtual';
-
     /**
      * Creates an Issuing <code>Card</code> object.
      *
@@ -62,20 +55,17 @@ class Card extends \AmeliaStripe\ApiResource
      *
      * @return Card the created resource
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function create($params = null, $options = null)
     {
         self::_validateParams($params);
         $url = static::classUrl();
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
-        $obj = \AmeliaStripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \AmeliaVendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
-
     /**
      * Returns a list of Issuing <code>Card</code> objects. The objects are sorted in
      * descending order by creation date, with the most recently created object
@@ -84,17 +74,15 @@ class Card extends \AmeliaStripe\ApiResource
      * @param null|array{cardholder?: string, created?: array|int, ending_before?: string, exp_month?: int, exp_year?: int, expand?: string[], last4?: string, limit?: int, personalization_design?: string, starting_after?: string, status?: string, type?: string} $params
      * @param null|array|string $opts
      *
-     * @return \AmeliaStripe\Collection<Card> of ApiResources
+     * @return \AmeliaVendor\Stripe\Collection<Card> of ApiResources
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
-
-        return static::_requestPage($url, \AmeliaStripe\Collection::class, $params, $opts);
+        return static::_requestPage($url, \AmeliaVendor\Stripe\Collection::class, $params, $opts);
     }
-
     /**
      * Retrieves an Issuing <code>Card</code> object.
      *
@@ -103,17 +91,15 @@ class Card extends \AmeliaStripe\ApiResource
      *
      * @return Card
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = \AmeliaStripe\Util\RequestOptions::parse($opts);
+        $opts = \AmeliaVendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
-
         return $instance;
     }
-
     /**
      * Updates the specified Issuing <code>Card</code> object by setting the values of
      * the parameters passed. Any parameters not provided will be left unchanged.
@@ -124,17 +110,15 @@ class Card extends \AmeliaStripe\ApiResource
      *
      * @return Card the updated resource
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function update($id, $params = null, $opts = null)
     {
         self::_validateParams($params);
         $url = static::resourceUrl($id);
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $opts);
-        $obj = \AmeliaStripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \AmeliaVendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
 }

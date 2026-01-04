@@ -21,7 +21,7 @@ class SpecialDayPeriodRepository extends AbstractRepository
      * @param SpecialDayPeriod $entity
      * @param int              $specialDayId
      *
-     * @return bool
+     * @return int
      * @throws QueryExecutionException
      */
     public function add($entity, $specialDayId)
@@ -70,7 +70,7 @@ class SpecialDayPeriodRepository extends AbstractRepository
      * @param SpecialDayPeriod $entity
      * @param int              $id
      *
-     * @return int
+     * @return void
      * @throws QueryExecutionException
      */
     public function update($entity, $id)
@@ -101,8 +101,6 @@ class SpecialDayPeriodRepository extends AbstractRepository
             if (!$res) {
                 throw new QueryExecutionException('Unable to save data in ' . __CLASS__);
             }
-
-            return $res;
         } catch (\Exception $e) {
             throw new QueryExecutionException('Unable to save data in ' . __CLASS__, $e->getCode(), $e);
         }

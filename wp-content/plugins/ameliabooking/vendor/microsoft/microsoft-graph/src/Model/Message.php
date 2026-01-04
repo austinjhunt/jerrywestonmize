@@ -179,15 +179,15 @@ class Message extends OutlookItem
     * Gets the conversationIndex
     * Indicates the position of the message within the conversation.
     *
-    * @return \AmeliaGuzzleHttp\Psr7\Stream|null The conversationIndex
+    * @return \AmeliaVendor\GuzzleHttp\Psr7\Stream|null The conversationIndex
     */
     public function getConversationIndex()
     {
         if (array_key_exists("conversationIndex", $this->_propDict)) {
-            if (is_a($this->_propDict["conversationIndex"], "\AmeliaGuzzleHttp\Psr7\Stream") || is_null($this->_propDict["conversationIndex"])) {
+            if (is_a($this->_propDict["conversationIndex"], "\AmeliaVendor\GuzzleHttp\Psr7\Stream") || is_null($this->_propDict["conversationIndex"])) {
                 return $this->_propDict["conversationIndex"];
             } else {
-                $this->_propDict["conversationIndex"] = \AmeliaGuzzleHttp\Psr7\Utils::streamFor($this->_propDict["conversationIndex"]);
+                $this->_propDict["conversationIndex"] = \AmeliaVendor\GuzzleHttp\Psr7\Utils::streamFor($this->_propDict["conversationIndex"]);
                 return $this->_propDict["conversationIndex"];
             }
         }
@@ -198,7 +198,7 @@ class Message extends OutlookItem
     * Sets the conversationIndex
     * Indicates the position of the message within the conversation.
     *
-    * @param \AmeliaGuzzleHttp\Psr7\Stream $val The conversationIndex
+    * @param \AmeliaVendor\GuzzleHttp\Psr7\Stream $val The conversationIndex
     *
     * @return Message
     */

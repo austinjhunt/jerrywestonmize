@@ -1,6 +1,6 @@
 <?php
 
-namespace FontLib\Exception;
+namespace AmeliaVendor\FontLib\Exception;
 
 class FontNotFoundException extends \Exception
 {

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -104,7 +104,7 @@ class SettingsFactory
         if (isset($data['lessonSpace']['enabled'])) {
             $lessonSpaceSetings->setEnabled($data['lessonSpace']['enabled']);
         } else {
-            $lessonSpaceSetings->setEnabled($globalSettings['lessonSpace']['enabled']);
+            $lessonSpaceSetings->setEnabled($globalSettings['featuresIntegrations']['lessonSpace']['enabled']);
         }
 
         if (isset($data['googleMeet']['enabled'])) {

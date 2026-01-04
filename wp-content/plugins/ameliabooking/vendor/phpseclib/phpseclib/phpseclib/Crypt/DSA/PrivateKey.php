@@ -9,12 +9,12 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-namespace phpseclib3\Crypt\DSA;
+namespace AmeliaVendor\phpseclib3\Crypt\DSA;
 
-use phpseclib3\Crypt\Common;
-use phpseclib3\Crypt\DSA;
-use phpseclib3\Crypt\DSA\Formats\Signature\ASN1 as ASN1Signature;
-use phpseclib3\Math\BigInteger;
+use AmeliaVendor\phpseclib3\Crypt\Common;
+use AmeliaVendor\phpseclib3\Crypt\DSA;
+use AmeliaVendor\phpseclib3\Crypt\DSA\Formats\Signature\ASN1 as ASN1Signature;
+use AmeliaVendor\phpseclib3\Math\BigInteger;
 
 /**
  * DSA Private Key
@@ -88,7 +88,9 @@ final class PrivateKey extends DSA implements Common\PrivateKey
                     return $signature;
                 }
 
-                extract(ASN1Signature::load($signature));
+                $loaded = ASN1Signature::load($signature);
+                $r = $loaded['r'];
+                $s = $loaded['s'];
 
                 return $format::save($r, $s);
             }

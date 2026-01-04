@@ -3,11 +3,11 @@
 namespace AmeliaBooking\Infrastructure\Licence\Starter;
 
 use AmeliaBooking\Application\Commands;
-use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Routes;
 use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
 use Slim\App;
+use AmeliaBooking\Infrastructure\Licence\LicenceConstants;
 
 /**
  * Class Licence
@@ -18,7 +18,7 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Lite\Licence
 {
     public static $premium = true;
 
-    public static $licence = 'Starter';
+    public static $licence = LicenceConstants::STARTER;
 
     /**
      * @param Container $c
@@ -51,7 +51,6 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Lite\Licence
                 Commands\Report\GetAppointmentsCommand::class                      => new Commands\Report\GetAppointmentsCommandHandler($c),
                 Commands\Report\GetCouponsCommand::class                           => new Commands\Report\GetCouponsCommandHandler($c),
                 Commands\Report\GetCustomersCommand::class                         => new Commands\Report\GetCustomersCommandHandler($c),
-                Commands\Import\ImportCustomersCommand::class                      => new Commands\Import\ImportCustomersCommandHandler($c),
                 Commands\Report\GetPaymentsCommand::class                          => new Commands\Report\GetPaymentsCommandHandler($c),
                 Commands\Report\GetEventAttendeesCommand::class                    => new Commands\Report\GetEventAttendeesCommandHandler($c),
                 // Search
@@ -62,10 +61,6 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Lite\Licence
                 // User
                 Commands\User\LoginCabinetCommand::class                           => new Commands\User\LoginCabinetCommandHandler($c),
                 Commands\User\LogoutCabinetCommand::class                          => new Commands\User\LogoutCabinetCommandHandler($c),
-                // User/Provider
-                Commands\User\Provider\GetProviderCommand::class                   => new Commands\User\Provider\GetProviderCommandHandler($c),
-                Commands\User\Provider\GetProvidersCommand::class                  => new Commands\User\Provider\GetProvidersCommandHandler($c),
-                Commands\User\Provider\UpdateProviderStatusCommand::class          => new Commands\User\Provider\UpdateProviderStatusCommandHandler($c),
             ]
         );
     }
@@ -89,38 +84,6 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Lite\Licence
         Routes\Search\Search::routes($app);
 
         Routes\Cabinet\Cabinet::routes($app);
-    }
-
-    /**
-     * @return array
-     */
-    public static function getLiteMenuItem()
-    {
-        return [];
-    }
-
-    /**
-     * @return array
-     */
-    public static function getEmployeesMenuItem()
-    {
-        return [
-            'parentSlug' => 'amelia',
-            'pageTitle'  => 'Employees',
-            'menuTitle'  => BackendStrings::getCommonStrings()['employees'],
-            'capability' => 'amelia_read_employees',
-            'menuSlug'   => 'wpamelia-employees',
-        ];
-    }
-
-    /**
-     * @param Collection $providers
-     *
-     * @return Collection
-     */
-    public static function getEmployees($providers)
-    {
-        return $providers;
     }
 
     /**

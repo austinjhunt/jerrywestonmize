@@ -1,14 +1,14 @@
 <?php
+
 /**
  * @package dompdf
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace AmeliaDompdf\FrameDecorator;
+namespace AmeliaVendor\Dompdf\FrameDecorator;
 
-use AmeliaDompdf\Dompdf;
-use AmeliaDompdf\Frame;
-
+use AmeliaVendor\Dompdf\Dompdf;
+use AmeliaVendor\Dompdf\Frame;
 /**
  * Dummy decorator
  *
@@ -19,7 +19,7 @@ class NullFrameDecorator extends AbstractFrameDecorator
     /**
      * NullFrameDecorator constructor.
      * @param Frame $frame
-     * @param Dompdf $dompdf
+     * @param \Dompdf $dompdf
      */
     function __construct(Frame $frame, Dompdf $dompdf)
     {

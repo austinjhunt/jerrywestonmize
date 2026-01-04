@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace AmeliaStripe;
+namespace AmeliaVendor\Stripe;
 
 /**
  * <code>Application Fee Refund</code> objects allow you to refund an application fee that
@@ -23,11 +22,9 @@ namespace AmeliaStripe;
 class ApplicationFeeRefund extends ApiResource
 {
     const OBJECT_NAME = 'fee_refund';
-
-    use ApiOperations\Update {
+    use \AmeliaVendor\Stripe\ApiOperations\Update {
         save as protected _save;
     }
-
     /**
      * @return string the API URL for this Stripe refund
      */
@@ -36,22 +33,15 @@ class ApplicationFeeRefund extends ApiResource
         $id = $this['id'];
         $fee = $this['fee'];
         if (!$id) {
-            throw new Exception\UnexpectedValueException(
-                'Could not determine which URL to request: '
-                . "class instance has invalid ID: {$id}",
-                null
-            );
+            throw new Exception\UnexpectedValueException('Could not determine which URL to request: ' . "class instance has invalid ID: {$id}", null);
         }
-        $id = Util\Util::utf8($id);
-        $fee = Util\Util::utf8($fee);
-
+        $id = \AmeliaVendor\Stripe\Util\Util::utf8($id);
+        $fee = \AmeliaVendor\Stripe\Util\Util::utf8($fee);
         $base = ApplicationFee::classUrl();
         $feeExtn = \urlencode($fee);
         $extn = \urlencode($id);
-
         return "{$base}/{$feeExtn}/refunds/{$extn}";
     }
-
     /**
      * @param null|array|string $opts
      *

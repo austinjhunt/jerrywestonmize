@@ -1,9 +1,9 @@
 <?php
 
-namespace AmeliaGoogle;
+namespace AmeliaVendor\Google;
 
 /**
- * Extension to the regular AmeliaGoogle\Model that automatically
+ * Extension to the regular Google\Model that automatically
  * exposes the items array for iteration, so you can just
  * iterate over the object rather than a reference inside.
  */
@@ -81,6 +81,7 @@ class Collection extends Model implements \Iterator, \Countable
     }
 
     /** @return mixed */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         if (!is_numeric($offset)) {

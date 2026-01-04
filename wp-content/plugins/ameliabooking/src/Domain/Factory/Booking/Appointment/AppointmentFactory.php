@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -316,6 +316,7 @@ class AppointmentFactory
                         'phone'     => $row['customer_phone'],
                         'gender'    => $row['customer_gender'],
                         'status'    => $row['customer_status'],
+                        'birthday'  => !empty($row['customer_birthday']) ? $row['customer_birthday'] : null,
                         'type'      => 'customer',
                     ];
             }
@@ -345,29 +346,35 @@ class AppointmentFactory
                         'firstName' => $row['provider_firstName'],
                         'lastName'  => $row['provider_lastName'],
                         'email'     => $row['provider_email'],
-                        'note'      => $row['provider_note'],
-                        'description' => $row['provider_description'],
-                        'phone'     => $row['provider_phone'],
-                        'gender'    => $row['provider_gender'],
+                        'note'      => !empty($row['provider_note']) ? $row['provider_note'] : null,
+                        'description' => !empty($row['provider_description']) ? $row['provider_description'] : null,
+                        'phone'     => !empty($row['provider_phone']) ? $row['provider_phone'] : null,
+                        'gender'    => !empty($row['provider_gender']) ? $row['provider_gender'] : null,
                         'timeZone'  => !empty($row['provider_timeZone']) ? $row['provider_timeZone'] : null,
                         'type'      => 'provider',
+                        'badgeId'   => !empty($row['provider_badgeId']) ? $row['provider_badgeId'] : null,
+                        'pictureFullPath' => !empty($row['provider_pictureFullPath']) ? $row['provider_pictureFullPath'] : null,
+                        'pictureThumbPath' => !empty($row['provider_pictureThumbPath']) ? $row['provider_pictureThumbPath'] : null,
                     ];
             }
 
             if ($serviceId) {
-                $appointments[$appointmentId]['service']['id']          = $row['service_id'];
-                $appointments[$appointmentId]['service']['name']        = $row['service_name'];
-                $appointments[$appointmentId]['service']['description'] = $row['service_description'];
-                $appointments[$appointmentId]['service']['color']       = $row['service_color'];
-                $appointments[$appointmentId]['service']['price']       = $row['service_price'];
-                $appointments[$appointmentId]['service']['status']      = $row['service_status'];
-                $appointments[$appointmentId]['service']['categoryId']  = $row['service_categoryId'];
-                $appointments[$appointmentId]['service']['minCapacity'] = $row['service_minCapacity'];
-                $appointments[$appointmentId]['service']['maxCapacity'] = $row['service_maxCapacity'];
-                $appointments[$appointmentId]['service']['duration']    = $row['service_duration'];
-                $appointments[$appointmentId]['service']['timeBefore']  = isset($row['service_timeBefore'])
+                $appointments[$appointmentId]['service']['id']               = $row['service_id'];
+                $appointments[$appointmentId]['service']['name']             = isset($row['service_name']) ? $row['service_name'] : null;
+                $appointments[$appointmentId]['service']['description']      = isset($row['service_description']) ? $row['service_description'] : null;
+                $appointments[$appointmentId]['service']['pictureFullPath']  = isset($row['service_pictureFullPath']) ? $row['service_pictureFullPath'] : null;
+                $appointments[$appointmentId]['service']['pictureThumbPath'] = isset($row['service_pictureThumbPath']) ?
+                    $row['service_pictureThumbPath'] : null;
+                $appointments[$appointmentId]['service']['color']            = isset($row['service_color']) ? $row['service_color'] : null;
+                $appointments[$appointmentId]['service']['price']            = isset($row['service_price']) ? $row['service_price'] : null;
+                $appointments[$appointmentId]['service']['status']           = isset($row['service_status']) ? $row['service_status'] : null;
+                $appointments[$appointmentId]['service']['categoryId']       = isset($row['service_categoryId']) ? $row['service_categoryId'] : null;
+                $appointments[$appointmentId]['service']['minCapacity']      = isset($row['service_minCapacity']) ? $row['service_minCapacity'] : null;
+                $appointments[$appointmentId]['service']['maxCapacity']      = isset($row['service_maxCapacity']) ? $row['service_maxCapacity'] : null;
+                $appointments[$appointmentId]['service']['duration']         = isset($row['service_duration']) ? $row['service_duration'] : null;
+                $appointments[$appointmentId]['service']['timeBefore']       = isset($row['service_timeBefore'])
                     ? $row['service_timeBefore'] : null;
-                $appointments[$appointmentId]['service']['timeAfter']   = isset($row['service_timeAfter'])
+                $appointments[$appointmentId]['service']['timeAfter']        = isset($row['service_timeAfter'])
                     ? $row['service_timeAfter'] : null;
                 $appointments[$appointmentId]['service']['aggregatedPrice'] = isset($row['service_aggregatedPrice'])
                     ? $row['service_aggregatedPrice'] : null;

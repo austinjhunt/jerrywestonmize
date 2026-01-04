@@ -12,7 +12,7 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 final class DateTimeValue
 {
     /**
-     * @var string
+     * @var \DateTime
      */
     private $date;
 

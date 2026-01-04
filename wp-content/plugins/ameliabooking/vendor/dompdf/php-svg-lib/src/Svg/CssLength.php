@@ -1,6 +1,6 @@
 <?php
 
-namespace Svg;
+namespace AmeliaVendor\Svg;
 
 class CssLength
 {

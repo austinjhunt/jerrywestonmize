@@ -11,10 +11,7 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
  */
 final class PositiveInteger
 {
-    /**
-     * @var string
-     */
-    private $integer;
+    private int $integer;
 
     /**
      * @param string $integer
@@ -35,7 +32,7 @@ final class PositiveInteger
      *
      * @return int
      */
-    public function getValue()
+    public function getValue(): int
     {
         return $this->integer;
     }

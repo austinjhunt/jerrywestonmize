@@ -1,8 +1,8 @@
 <?php
 
-namespace Sabberworm\CSS\Value;
+namespace AmeliaVendor\Sabberworm\CSS\Value;
 
-use Sabberworm\CSS\OutputFormat;
+use AmeliaVendor\Sabberworm\CSS\OutputFormat;
 
 class CalcRuleValueList extends RuleValueList
 {
@@ -15,9 +15,11 @@ class CalcRuleValueList extends RuleValueList
     }
 
     /**
+     * @param OutputFormat|null $oOutputFormat
+     *
      * @return string
      */
-    public function render(OutputFormat $oOutputFormat)
+    public function render($oOutputFormat)
     {
         return $oOutputFormat->implode(' ', $this->aComponents);
     }

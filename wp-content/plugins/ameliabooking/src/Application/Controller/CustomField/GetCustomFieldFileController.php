@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -39,6 +39,7 @@ class GetCustomFieldFileController extends Controller
         }
 
         $requestBody = $request->getParsedBody();
+
         $this->setCommandFields($command, $requestBody);
 
         $command->setToken($request);

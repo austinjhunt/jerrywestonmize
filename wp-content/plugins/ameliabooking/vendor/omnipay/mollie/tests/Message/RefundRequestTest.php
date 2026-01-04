@@ -1,7 +1,7 @@
 <?php
 namespace Omnipay\Mollie\Test\Message;
 
-use AmeliaGuzzleHttp\Psr7\Request;
+use AmeliaVendor\GuzzleHttp\Psr7\Request;
 use Omnipay\Mollie\Message\Request\PurchaseRequest;
 use Omnipay\Mollie\Message\Request\RefundRequest;
 use Omnipay\Mollie\Message\Response\RefundResponse;

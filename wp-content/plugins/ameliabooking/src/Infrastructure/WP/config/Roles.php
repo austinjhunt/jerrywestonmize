@@ -16,10 +16,8 @@ class Roles
 {
     /**
      * Array of all Amelia roles capabilities
-     *
-     * @var array
      */
-    public static $rolesList = [
+    public static array $rolesList = [
         'amelia_read_menu',
         'amelia_read_dashboard',
         'amelia_read_whats_new',
@@ -30,6 +28,7 @@ class Roles
         'amelia_read_employees',
         'amelia_read_services',
         'amelia_read_packages',
+        'amelia_read_resources',
         'amelia_read_locations',
         'amelia_read_taxes',
         'amelia_read_coupons',
@@ -55,6 +54,7 @@ class Roles
         'amelia_write_employees',
         'amelia_write_services',
         'amelia_write_packages',
+        'amelia_write_resources',
         'amelia_write_locations',
         'amelia_write_taxes',
         'amelia_write_coupons',
@@ -82,6 +82,7 @@ class Roles
         'amelia_delete_employees',
         'amelia_delete_services',
         'amelia_delete_packages',
+        'amelia_delete_resources',
         'amelia_delete_locations',
         'amelia_delete_taxes',
         'amelia_delete_coupons',

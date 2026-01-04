@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-namespace AmeliaGoogle\Auth;
+namespace AmeliaVendor\Google\Auth;
 
-use AmeliaGoogle\Auth\Credentials\GCECredentials;
-use Psr\Cache\CacheItemPoolInterface;
+use AmeliaVendor\Google\Auth\Credentials\GCECredentials;
+use AmeliaVendor\Psr\Cache\CacheItemPoolInterface;
 
 /**
  * A class to implement caching for calls to GCECredentials::onGce. This class
@@ -26,8 +26,8 @@ use Psr\Cache\CacheItemPoolInterface;
  * cache object to `ApplicationDefaultCredentials::getCredentials`.
  *
  * ```
- * $sysvCache = new AmeliaGoogle\Auth\SysvCacheItemPool();
- * $creds = AmeliaGoogle\Auth\ApplicationDefaultCredentials::getCredentials(
+ * $sysvCache = new \AmeliaVendor\Google\Auth\SysvCacheItemPool();
+ * $creds = AmeliaVendor\Google\Auth\ApplicationDefaultCredentials::getCredentials(
  *     $scope,
  *     null,
  *     null,
@@ -46,8 +46,8 @@ class GCECache
      * @param CacheItemPoolInterface $cache
      */
     public function __construct(
-        array $cacheConfig = null,
-        CacheItemPoolInterface $cache = null
+        ?array $cacheConfig = null,
+        ?CacheItemPoolInterface $cache = null
     ) {
         $this->cache = $cache;
         $this->cacheConfig = array_merge([
@@ -63,7 +63,7 @@ class GCECache
      * @param callable $httpHandler callback which delivers psr7 request
      * @return bool True if this a GCEInstance, false otherwise
      */
-    public function onGce(callable $httpHandler = null)
+    public function onGce(?callable $httpHandler = null)
     {
         if (is_null($this->cache)) {
             return GCECredentials::onGce($httpHandler);

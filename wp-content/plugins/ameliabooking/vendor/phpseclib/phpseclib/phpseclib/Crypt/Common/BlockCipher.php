@@ -12,7 +12,7 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-namespace phpseclib3\Crypt\Common;
+namespace AmeliaVendor\phpseclib3\Crypt\Common;
 
 /**
  * Base Class for all block cipher classes

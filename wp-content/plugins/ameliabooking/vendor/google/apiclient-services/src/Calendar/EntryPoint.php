@@ -15,9 +15,9 @@
  * the License.
  */
 
-namespace AmeliaGoogle\Service\Calendar;
+namespace AmeliaVendor\Google\Service\Calendar;
 
-class EntryPoint extends \AmeliaGoogle\Collection
+class EntryPoint extends \AmeliaVendor\Google\Collection
 {
   protected $collection_key = 'entryPointFeatures';
   /**
@@ -204,4 +204,4 @@ class EntryPoint extends \AmeliaGoogle\Collection
 }
 
 // Adding a class alias for backwards compatibility with the previous class name.
-class_alias(EntryPoint::class, 'AmeliaGoogle_Service_Calendar_EntryPoint');
+class_alias(EntryPoint::class, 'Google_Service_Calendar_EntryPoint');

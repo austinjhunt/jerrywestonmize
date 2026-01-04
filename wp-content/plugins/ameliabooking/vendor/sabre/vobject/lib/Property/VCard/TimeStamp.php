@@ -1,10 +1,10 @@
 <?php
 
-namespace AmeliaSabre\VObject\Property\VCard;
+namespace AmeliaVendor\Sabre\VObject\Property\VCard;
 
-use AmeliaSabre\VObject\DateTimeParser;
-use AmeliaSabre\VObject\Property\Text;
-use AmeliaSabre\Xml;
+use AmeliaVendor\Sabre\VObject\DateTimeParser;
+use AmeliaVendor\Sabre\VObject\Property\Text;
+use AmeliaVendor\Sabre\Xml;
 
 /**
  * TimeStamp property.

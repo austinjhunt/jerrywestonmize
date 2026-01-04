@@ -28,7 +28,6 @@ class FetchAccessTokenWithAuthCodeCommandHandler extends CommandHandler
      * @return CommandResult
      * @throws \AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function handle(FetchAccessTokenWithAuthCodeCommand $command)
     {
@@ -44,6 +43,9 @@ class FetchAccessTokenWithAuthCodeCommandHandler extends CommandHandler
 
         $providerId = $command->getField('userId');
 
+        /** @var ProviderRepository $providerRepository */
+        $providerRepository = $this->container->get('domain.users.providers.repository');
+
         $accessToken = null;
         try {
             $accessToken = $googleCalService->fetchAccessTokenWithAuthCode(
@@ -53,8 +55,6 @@ class FetchAccessTokenWithAuthCodeCommandHandler extends CommandHandler
                     : $command->getField('redirectUri')
             );
         } catch (\Exception $e) {
-            /** @var ProviderRepository $providerRepository */
-            $providerRepository = $this->container->get('domain.users.providers.repository');
             $providerRepository->updateErrorColumn($providerId, $e->getMessage());
         }
 
@@ -77,6 +77,8 @@ class FetchAccessTokenWithAuthCodeCommandHandler extends CommandHandler
         $googleCalendarRepository->commit();
 
         do_action('amelia_after_google_calendar_added', $googleCalendar ? $googleCalendar->toArray() : null, $command->getField('userId'));
+
+        $providerRepository->updateFieldById($providerId, null, 'googleCalendarId');
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully fetched access token');

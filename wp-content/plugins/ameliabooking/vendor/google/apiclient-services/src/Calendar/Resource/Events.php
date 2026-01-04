@@ -15,21 +15,21 @@
  * the License.
  */
 
-namespace AmeliaGoogle\Service\Calendar\Resource;
+namespace AmeliaVendor\Google\Service\Calendar\Resource;
 
-use AmeliaGoogle\Service\Calendar\Channel;
-use AmeliaGoogle\Service\Calendar\Event;
-use AmeliaGoogle\Service\Calendar\Events as EventsModel;
+use AmeliaVendor\Google\Service\Calendar\Channel;
+use AmeliaVendor\Google\Service\Calendar\Event;
+use AmeliaVendor\Google\Service\Calendar\Events as EventsModel;
 
 /**
  * The "events" collection of methods.
  * Typical usage is:
  *  <code>
- *   $calendarService = new AmeliaGoogle\Service\Calendar(...);
+ *   $calendarService = new \AmeliaVendor\Google\Service\Calendar(...);
  *   $events = $calendarService->events;
  *  </code>
  */
-class Events extends \AmeliaGoogle\Service\Resource
+class Events extends \AmeliaVendor\Google\Service\Resource
 {
   /**
    * Deletes an event. (events.delete)
@@ -47,7 +47,7 @@ class Events extends \AmeliaGoogle\Service\Resource
    * false.
    * @opt_param string sendUpdates Guests who should receive notifications about
    * the deletion of the event.
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function delete($calendarId, $eventId, $optParams = [])
   {
@@ -76,7 +76,7 @@ class Events extends \AmeliaGoogle\Service\Resource
    * @opt_param string timeZone Time zone used in the response. Optional. The
    * default is the time zone of the calendar.
    * @return Event
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function get($calendarId, $eventId, $optParams = [])
   {
@@ -105,7 +105,7 @@ class Events extends \AmeliaGoogle\Service\Resource
    * @opt_param bool supportsAttachments Whether API client performing operation
    * supports event attachments. Optional. The default is False.
    * @return Event
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function import($calendarId, Event $postBody, $optParams = [])
   {
@@ -141,7 +141,7 @@ class Events extends \AmeliaGoogle\Service\Resource
    * @opt_param bool supportsAttachments Whether API client performing operation
    * supports event attachments. Optional. The default is False.
    * @return Event
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function insert($calendarId, Event $postBody, $optParams = [])
   {
@@ -185,7 +185,7 @@ class Events extends \AmeliaGoogle\Service\Resource
    * @opt_param string timeZone Time zone used in the response. Optional. The
    * default is the time zone of the calendar.
    * @return EventsModel
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function instances($calendarId, $eventId, $optParams = [])
   {
@@ -287,7 +287,7 @@ class Events extends \AmeliaGoogle\Service\Resource
    * since this time will always be included regardless of showDeleted. Optional.
    * The default is not to filter by last modification time.
    * @return EventsModel
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function listEvents($calendarId, $optParams = [])
   {
@@ -315,7 +315,7 @@ class Events extends \AmeliaGoogle\Service\Resource
    * @opt_param string sendUpdates Guests who should receive notifications about
    * the change of the event's organizer.
    * @return Event
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function move($calendarId, $eventId, $destination, $optParams = [])
   {
@@ -355,7 +355,7 @@ class Events extends \AmeliaGoogle\Service\Resource
    * @opt_param bool supportsAttachments Whether API client performing operation
    * supports event attachments. Optional. The default is False.
    * @return Event
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function patch($calendarId, $eventId, Event $postBody, $optParams = [])
   {
@@ -380,7 +380,7 @@ class Events extends \AmeliaGoogle\Service\Resource
    * @opt_param string sendUpdates Guests who should receive notifications about
    * the creation of the new event.
    * @return Event
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function quickAdd($calendarId, $text, $optParams = [])
   {
@@ -420,7 +420,7 @@ class Events extends \AmeliaGoogle\Service\Resource
    * @opt_param bool supportsAttachments Whether API client performing operation
    * supports event attachments. Optional. The default is False.
    * @return Event
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function update($calendarId, $eventId, Event $postBody, $optParams = [])
   {
@@ -523,7 +523,7 @@ class Events extends \AmeliaGoogle\Service\Resource
    * since this time will always be included regardless of showDeleted. Optional.
    * The default is not to filter by last modification time.
    * @return Channel
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function watch($calendarId, Channel $postBody, $optParams = [])
   {
@@ -534,4 +534,4 @@ class Events extends \AmeliaGoogle\Service\Resource
 }
 
 // Adding a class alias for backwards compatibility with the previous class name.
-class_alias(Events::class, 'AmeliaGoogle_Service_Calendar_Resource_Events');
+class_alias(Events::class, 'Google_Service_Calendar_Resource_Events');

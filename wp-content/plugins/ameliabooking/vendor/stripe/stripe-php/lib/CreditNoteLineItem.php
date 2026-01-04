@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe;
+namespace AmeliaVendor\Stripe;
 
 /**
  * The credit note line item object.

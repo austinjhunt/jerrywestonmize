@@ -10,7 +10,7 @@
 namespace Mailgun\Hydrator;
 
 use Mailgun\Exception\HydrationException;
-use AmeliaPsr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
 
 /**
  * Deserialize a PSR-7 response to something else.

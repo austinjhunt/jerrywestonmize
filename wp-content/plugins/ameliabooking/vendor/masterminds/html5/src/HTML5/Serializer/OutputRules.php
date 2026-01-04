@@ -7,9 +7,9 @@
  * was parsed. It is not intended to output exactly the document that was parsed.
  */
 
-namespace Masterminds\HTML5\Serializer;
+namespace AmeliaVendor\Masterminds\HTML5\Serializer;
 
-use Masterminds\HTML5\Elements;
+use AmeliaVendor\Masterminds\HTML5\Elements;
 
 /**
  * Generate the output html5 based on element rules.
@@ -206,6 +206,9 @@ class OutputRules implements RulesInterface
         $this->nl();
     }
 
+    /**
+     * @param \DOMElement $ele
+     */
     public function element($ele)
     {
         $name = $ele->tagName;
@@ -227,6 +230,9 @@ class OutputRules implements RulesInterface
         }
 
         $this->openTag($ele);
+        // The tag is already self-closed (`<svg />` or `<math />`) in `openTag` if there are no child nodes.
+        $handledAsVoidTag = $this->outputMode !== static::IM_IN_HTML && !$ele->hasChildNodes();
+
         if (Elements::isA($name, Elements::TEXT_RAW)) {
             foreach ($ele->childNodes as $child) {
                 if ($child instanceof \DOMCharacterData) {
@@ -248,7 +254,7 @@ class OutputRules implements RulesInterface
         }
 
         // If not unary, add a closing tag.
-        if (!Elements::isA($name, Elements::VOID_TAG)) {
+        if (!$handledAsVoidTag && !Elements::isA($name, Elements::VOID_TAG)) {
             $this->closeTag($ele);
         }
     }

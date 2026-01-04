@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaFirebase\JWT;
+namespace AmeliaVendor\Firebase\JWT;
 
 class BeforeValidException extends \UnexpectedValueException implements JWTExceptionWithPayloadInterface
 {

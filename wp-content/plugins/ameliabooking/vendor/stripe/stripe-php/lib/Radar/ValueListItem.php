@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Radar;
+namespace AmeliaVendor\Stripe\Radar;
 
 /**
  * Value list items allow you to add specific values to a given Radar value list, which can then be used in rules.
@@ -17,7 +17,7 @@ namespace AmeliaStripe\Radar;
  * @property string $value The value of the item.
  * @property string $value_list The identifier of the value list this item belongs to.
  */
-class ValueListItem extends \AmeliaStripe\ApiResource
+class ValueListItem extends \AmeliaVendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'radar.value_list_item';
 
@@ -30,7 +30,7 @@ class ValueListItem extends \AmeliaStripe\ApiResource
      *
      * @return ValueListItem the created resource
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function create($params = null, $options = null)
     {
@@ -38,7 +38,7 @@ class ValueListItem extends \AmeliaStripe\ApiResource
         $url = static::classUrl();
 
         list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
-        $obj = \AmeliaStripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \AmeliaVendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
 
         return $obj;
@@ -53,7 +53,7 @@ class ValueListItem extends \AmeliaStripe\ApiResource
      *
      * @return ValueListItem the deleted resource
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function delete($params = null, $opts = null)
     {
@@ -74,15 +74,15 @@ class ValueListItem extends \AmeliaStripe\ApiResource
      * @param null|array{created?: array|int, ending_before?: string, expand?: string[], limit?: int, starting_after?: string, value?: string, value_list: string} $params
      * @param null|array|string $opts
      *
-     * @return \AmeliaStripe\Collection<ValueListItem> of ApiResources
+     * @return \AmeliaVendor\Stripe\Collection<ValueListItem> of ApiResources
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
 
-        return static::_requestPage($url, \AmeliaStripe\Collection::class, $params, $opts);
+        return static::_requestPage($url, \AmeliaVendor\Stripe\Collection::class, $params, $opts);
     }
 
     /**
@@ -93,11 +93,11 @@ class ValueListItem extends \AmeliaStripe\ApiResource
      *
      * @return ValueListItem
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = \AmeliaStripe\Util\RequestOptions::parse($opts);
+        $opts = \AmeliaVendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
 

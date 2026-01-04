@@ -30,6 +30,8 @@ use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Domain\Entity\Tax\Tax;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Entity\User\Provider;
+use AmeliaBooking\Domain\Factory\Bookable\Service\PackageCustomerFactory;
+use AmeliaBooking\Domain\Factory\Bookable\Service\PackageFactory;
 use AmeliaBooking\Domain\Factory\User\UserFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
@@ -507,12 +509,12 @@ class PackageReservationService extends AppointmentReservationService
                 'bookingEnd'         => $packageReservation['bookingEnd'],
                 'notifyParticipants' => $packageReservation['notifyParticipants'],
                 'status'             => $packageReservation['status'],
-                'utcOffset'          => $booking['utcOffset'],
+                'utcOffset'          => !empty($booking['utcOffset']) ? $booking['utcOffset'] : null,
             ];
 
             $packageAppointmentsData[] = $packageAppointmentData;
 
-            $customFields = $booking['customFields'];
+            $customFields = !empty($booking['customFields']) ? $booking['customFields'] : null;
         }
 
         return [
@@ -636,7 +638,7 @@ class PackageReservationService extends AppointmentReservationService
     }
 
     /**
-     * @param PackageCustomer|null $booking
+     * @param CustomerBooking|null $booking
      * @param Package              $bookable
      * @param bool                 $invoice
      *
@@ -715,6 +717,7 @@ class PackageReservationService extends AppointmentReservationService
             'unit_price' => $bookingPrice,
             'qty'        => 1,
             'tax'        => $packageTax ? $this->getTaxAmount($packageTax, $invoiceSubtotal) : 0,
+            'bookable'   => $invoiceSubtotal,
             'subtotal'   => $invoiceSubtotal,
             'total_tax'  => $invoiceTax,
             'tax_rate'   => $packageTax ? $this->getTaxRate($packageTax) : '',
@@ -918,12 +921,7 @@ class PackageReservationService extends AppointmentReservationService
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
 
-        $taxesSettings = $settingsService->getSetting(
-            'payments',
-            'taxes'
-        );
-
-        if ($taxesSettings['enabled']) {
+        if ($settingsService->isFeatureEnabled('tax')) {
             $data['tax'] = $taxAS->getTaxData(
                 $data['packageId'],
                 Entities::PACKAGE,
@@ -934,7 +932,6 @@ class PackageReservationService extends AppointmentReservationService
 
     /**
      * @param int $bookingId
-     * @param string $token
      *
      * @return array
      *
@@ -944,7 +941,7 @@ class PackageReservationService extends AppointmentReservationService
      * @throws NotFoundException
      * @throws Exception
      */
-    public function deleteBooking($bookingId, $token = null)
+    public function deleteBooking($bookingId)
     {
         /** @var PackageCustomerRepository $packageCustomerRepository */
         $packageCustomerRepository = $this->container->get('domain.bookable.packageCustomer.repository');
@@ -959,10 +956,6 @@ class PackageReservationService extends AppointmentReservationService
             throw new NotFoundException('Package customer not found.');
         }
 
-        if ($token && (!$packageCustomer->getToken() || $packageCustomer->getToken()->getValue() !== $token)) {
-            throw new AccessDeniedException('Invalid token.');
-        }
-
         $packageCustomerRepository->beginTransaction();
 
         if (($resultData = $bookableApplicationService->deletePackageCustomer($packageCustomer)) === false) {
@@ -974,5 +967,51 @@ class PackageReservationService extends AppointmentReservationService
         $packageCustomerRepository->commit();
 
         return $resultData;
+    }
+
+    /**
+     * @param array $data
+     * @param bool  $invoices
+     *
+     * @return array
+     * @throws InvalidArgumentException
+     */
+    public function getPaymentSummary($data, $invoices)
+    {
+        /** @var Package $bookable */
+        $bookable = PackageFactory::create(
+            [
+                'price'           => $data['bookedPrice'],
+                'calculatedPrice' => false,
+                'discount'        => 0,
+            ]
+        );
+
+        /** @var PackageCustomer $booking */
+        $booking = PackageCustomerFactory::create(
+            [
+                'tax'    => !empty($data['bookedTax']) ? $data['bookedTax'] : null,
+                'coupon' => !empty($data['coupon']) ? $data['coupon'] : null,
+            ]
+        );
+
+        return $this->getCommonPaymentSummary($booking, $bookable, $data, $invoices);
+    }
+
+    /**
+     * @param int $bookingId
+     *
+     * @return PackageCustomer
+     * @throws QueryExecutionException
+     * @throws InvalidArgumentException
+     */
+    public function getBooking($bookingId)
+    {
+        /** @var PackageCustomerRepository $packageCustomerRepository */
+        $packageCustomerRepository = $this->container->get('domain.bookable.packageCustomer.repository');
+
+        $packageBookings = $packageCustomerRepository->getFiltered([$bookingId]);
+
+        return $packageBookings->length() > 0 ? $packageBookings->getItem($bookingId) : null;
     }
 }

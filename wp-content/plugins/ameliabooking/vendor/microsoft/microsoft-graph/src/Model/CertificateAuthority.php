@@ -28,15 +28,15 @@ class CertificateAuthority extends Entity
     * Gets the certificate
     * Required. The base64 encoded string representing the public certificate.
     *
-    * @return \AmeliaGuzzleHttp\Psr7\Stream|null The certificate
+    * @return \AmeliaVendor\GuzzleHttp\Psr7\Stream|null The certificate
     */
     public function getCertificate()
     {
         if (array_key_exists("certificate", $this->_propDict)) {
-            if (is_a($this->_propDict["certificate"], "\AmeliaGuzzleHttp\Psr7\Stream") || is_null($this->_propDict["certificate"])) {
+            if (is_a($this->_propDict["certificate"], "\AmeliaVendor\GuzzleHttp\Psr7\Stream") || is_null($this->_propDict["certificate"])) {
                 return $this->_propDict["certificate"];
             } else {
-                $this->_propDict["certificate"] = \AmeliaGuzzleHttp\Psr7\Utils::streamFor($this->_propDict["certificate"]);
+                $this->_propDict["certificate"] = \AmeliaVendor\GuzzleHttp\Psr7\Utils::streamFor($this->_propDict["certificate"]);
                 return $this->_propDict["certificate"];
             }
         }
@@ -47,7 +47,7 @@ class CertificateAuthority extends Entity
     * Sets the certificate
     * Required. The base64 encoded string representing the public certificate.
     *
-    * @param \AmeliaGuzzleHttp\Psr7\Stream $val The value to assign to the certificate
+    * @param \AmeliaVendor\GuzzleHttp\Psr7\Stream $val The value to assign to the certificate
     *
     * @return CertificateAuthority The CertificateAuthority
     */

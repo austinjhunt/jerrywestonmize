@@ -495,20 +495,6 @@
               })
             }
 
-            if (view === 'customer_panel' || view === 'employee_panel') {
-              // Selector
-              viewBody.push({
-                type: 'listbox',
-                label: wpAmeliaLabels.choose_panel_version,
-                name: 'am_version',
-                values: [
-                  {value: 1, text: wpAmeliaLabels.panel_version_old},
-                  {value: 2, text: wpAmeliaLabels.panel_version_new}
-                ],
-                classes: 'am_cabinet_version',
-              })
-            }
-
             break
         }
 
@@ -712,10 +698,6 @@
 
               case ('customer_panel'):
               case ('employee_panel'):
-                if (e.data.am_version) {
-                  shortCodeString += ' version=' + e.data.am_version
-                }
-
                 if (e.data.am_cabinet_appointments) {
                   shortCodeString += ' appointments=1'
                 }

@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\V2\Billing;
+namespace AmeliaVendor\Stripe\V2\Billing;
 
 /**
  * @property string $id The unique id of this auth session.
@@ -12,7 +12,7 @@ namespace AmeliaStripe\V2\Billing;
  * @property int $expires_at The time at which this session will expire.
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
  */
-class MeterEventSession extends \AmeliaStripe\ApiResource
+class MeterEventSession extends \AmeliaVendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'v2.billing.meter_event_session';
 }

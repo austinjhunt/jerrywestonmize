@@ -32,6 +32,14 @@ class WhatsAppWebhookCommandHandler extends CommandHandler
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
 
+        if (!$settingsService->isFeatureEnabled('whatsapp')) {
+            $result->setResult(CommandResult::RESULT_SUCCESS);
+            $result->setMessage('WhatsApp feature not enabled');
+            $result->setData([]);
+
+            return $result;
+        }
+
         $enabled = $settingsService->getSetting('notifications', 'whatsAppReplyEnabled');
 
         if (empty($enabled)) {

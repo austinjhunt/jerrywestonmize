@@ -22,12 +22,12 @@
  * @link      http://pear.php.net/package/Math_BigInteger
  */
 
-namespace phpseclib3\Crypt\EC\BaseCurves;
+namespace AmeliaVendor\phpseclib3\Crypt\EC\BaseCurves;
 
-use phpseclib3\Crypt\EC\Curves\Curve25519;
-use phpseclib3\Math\BigInteger;
-use phpseclib3\Math\PrimeField;
-use phpseclib3\Math\PrimeField\Integer as PrimeInteger;
+use AmeliaVendor\phpseclib3\Crypt\EC\Curves\Curve25519;
+use AmeliaVendor\phpseclib3\Math\BigInteger;
+use AmeliaVendor\phpseclib3\Math\PrimeField;
+use AmeliaVendor\phpseclib3\Math\PrimeField\Integer as PrimeInteger;
 
 /**
  * Curves over y^2 = x^3 + a*x + x
@@ -246,7 +246,7 @@ class Montgomery extends Base
      *
      *   x=X/Z
      *
-     * @return \phpseclib3\Math\PrimeField\Integer[]
+     * @return PrimeInteger[]
      */
     public function convertToInternal(array $p)
     {
@@ -266,7 +266,7 @@ class Montgomery extends Base
     /**
      * Returns the affine point
      *
-     * @return \phpseclib3\Math\PrimeField\Integer[]
+     * @return PrimeInteger[]
      */
     public function convertToAffine(array $p)
     {

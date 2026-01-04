@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaStripe\Exception;
+namespace AmeliaVendor\Stripe\Exception;
 
 /**
  * PermissionException is thrown in cases where access was attempted on a

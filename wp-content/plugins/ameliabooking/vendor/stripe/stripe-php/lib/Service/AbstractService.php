@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaStripe\Service;
+namespace AmeliaVendor\Stripe\Service;
 
 /**
  * Abstract base class for all services.
@@ -8,19 +8,19 @@ namespace AmeliaStripe\Service;
 abstract class AbstractService
 {
     /**
-     * @var \AmeliaStripe\StripeClientInterface
+     * @var \AmeliaVendor\Stripe\StripeClientInterface
      */
     protected $client;
 
     /**
-     * @var \AmeliaStripe\StripeStreamingClientInterface
+     * @var \AmeliaVendor\Stripe\StripeStreamingClientInterface
      */
     protected $streamingClient;
 
     /**
      * Initializes a new instance of the {@link AbstractService} class.
      *
-     * @param \AmeliaStripe\StripeClientInterface $client
+     * @param \AmeliaVendor\Stripe\StripeClientInterface $client
      */
     public function __construct($client)
     {
@@ -31,7 +31,7 @@ abstract class AbstractService
     /**
      * Gets the client used by this service to send requests.
      *
-     * @return \AmeliaStripe\StripeClientInterface
+     * @return \AmeliaVendor\Stripe\StripeClientInterface
      */
     public function getClient()
     {
@@ -41,7 +41,7 @@ abstract class AbstractService
     /**
      * Gets the client used by this service to send requests.
      *
-     * @return \AmeliaStripe\StripeStreamingClientInterface
+     * @return \AmeliaVendor\Stripe\StripeStreamingClientInterface
      */
     public function getStreamingClient()
     {
@@ -96,7 +96,7 @@ abstract class AbstractService
             if (null === $id || '' === \trim($id)) {
                 $msg = 'The resource ID cannot be null or whitespace.';
 
-                throw new \AmeliaStripe\Exception\InvalidArgumentException($msg);
+                throw new \AmeliaVendor\Stripe\Exception\InvalidArgumentException($msg);
             }
         }
 

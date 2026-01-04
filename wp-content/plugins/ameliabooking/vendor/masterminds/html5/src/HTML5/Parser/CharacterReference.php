@@ -1,8 +1,8 @@
 <?php
 
-namespace Masterminds\HTML5\Parser;
+namespace AmeliaVendor\Masterminds\HTML5\Parser;
 
-use Masterminds\HTML5\Entities;
+use AmeliaVendor\Masterminds\HTML5\Entities;
 
 /**
  * Manage entity references.
@@ -48,7 +48,7 @@ class CharacterReference
     }
 
     /**
-     * Given a hexidecimal number, return the UTF-8 character.
+     * Given a hexadecimal number, return the UTF-8 character.
      *
      * @param $hexdec
      *

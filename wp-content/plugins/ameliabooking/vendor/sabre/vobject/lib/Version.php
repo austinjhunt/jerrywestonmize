@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaSabre\VObject;
+namespace AmeliaVendor\Sabre\VObject;
 
 /**
  * This class contains the version number for the VObject package.

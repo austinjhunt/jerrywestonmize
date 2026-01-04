@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Monolog\Handler;
+namespace AmeliaVendor\Monolog\Handler;
 
 use RuntimeException;
-use Monolog\Logger;
-use Monolog\Utils;
+use AmeliaVendor\Monolog\Logger;
+use AmeliaVendor\Monolog\Utils;
 
 /**
  * Handler send logs to Telegram using Telegram Bot API.

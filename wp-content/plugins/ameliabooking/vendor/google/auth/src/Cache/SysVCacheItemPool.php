@@ -14,10 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace AmeliaGoogle\Auth\Cache;
+namespace AmeliaVendor\Google\Auth\Cache;
 
-use Psr\Cache\CacheItemInterface;
-use Psr\Cache\CacheItemPoolInterface;
+use AmeliaVendor\Psr\Cache\CacheItemInterface;
+use AmeliaVendor\Psr\Cache\CacheItemPoolInterface;
 
 /**
  * SystemV shared memory based CacheItemPool implementation.

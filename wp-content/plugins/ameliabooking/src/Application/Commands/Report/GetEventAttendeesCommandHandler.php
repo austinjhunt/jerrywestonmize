@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -45,12 +45,11 @@ class GetEventAttendeesCommandHandler extends CommandHandler
      * @throws AccessDeniedException
      * @throws \AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function handle(GetEventAttendeesCommand $command)
     {
-        if (!$command->getPermissionService()->currentUserCanRead(Entities::APPOINTMENTS)) {
-            throw new AccessDeniedException('You are not allowed to read appointments.');
+        if (!$command->getPermissionService()->currentUserCanRead(Entities::EVENTS)) {
+            throw new AccessDeniedException('You are not allowed to read events.');
         }
 
         $result = new CommandResult();
@@ -138,32 +137,32 @@ class GetEventAttendeesCommandHandler extends CommandHandler
             $customerInfo = $infoJson ?: $customer->toArray();
 
             if (in_array('firstName', $fields, true)) {
-                $row[BackendStrings::getUserStrings()['first_name']] .= $customerInfo['firstName'] . $delimiterSeparate;
+                $row[BackendStrings::get('first_name')] .= $customerInfo['firstName'] . $delimiterSeparate;
             }
 
             if (in_array('lastName', $fields, true)) {
-                $row[BackendStrings::getUserStrings()['last_name']] .= $customerInfo['lastName'] . $delimiterSeparate;
+                $row[BackendStrings::get('last_name')] .= $customerInfo['lastName'] . $delimiterSeparate;
             }
 
             if (in_array('email', $fields, true)) {
-                $row[BackendStrings::getUserStrings()['email']] .=
+                $row[BackendStrings::get('email')] .=
                     ($customer->getEmail() ? $customer->getEmail()->getValue() : '') . $delimiterSeparate;
             }
 
             $phone = $customer->getPhone() ? $customer->getPhone()->getValue() : '';
 
             if (in_array('phone', $fields, true)) {
-                $row[BackendStrings::getCommonStrings()['phone']] .=
+                $row[BackendStrings::get('phone')] .=
                     ($customerInfo['phone'] ?: $phone) . $delimiterSeparate;
             }
 
             if (in_array('gender', $fields, true)) {
-                $row[BackendStrings::getCustomerStrings()['gender']] .=
+                $row[BackendStrings::get('gender')] .=
                     ($customer->getGender() ? $customer->getGender()->getValue() : '') . $delimiterSeparate;
             }
 
             if (in_array('birthday', $fields, true)) {
-                $row[BackendStrings::getCustomerStrings()['date_of_birth']] .=
+                $row[BackendStrings::get('date_of_birth')] .=
                     ($customer->getBirthday() ?
                         DateTimeService::getCustomDateTimeObject($customer->getBirthday()->getValue()->format('Y-m-d'))
                         ->format($dateFormat) : '') . $delimiterSeparate;
@@ -175,18 +174,18 @@ class GetEventAttendeesCommandHandler extends CommandHandler
                 $payments = $booking->getPayments() && $booking->getPayments()->length() > 0 ?
                     $booking->getPayments()->toArray() : null;
                 $amount   = !empty($payments) ? array_sum(array_column($payments, 'amount')) : 0;
-                $row[BackendStrings::getCommonStrings()['payment_amount']] .= $helperService->getFormattedPrice($amount) . $delimiterSeparate;
+                $row[BackendStrings::get('payment_amount')] .= $helperService->getFormattedPrice($amount) . $delimiterSeparate;
             }
 
             if (in_array('paymentStatus', $params['fields'], true)) {
                 /** @var PaymentApplicationService $paymentAS */
                 $paymentAS     = $this->container->get('application.payment.service');
                 $paymentStatus = $paymentAS->getFullStatus($booking->toArray(), Entities::EVENT);
-                $row[BackendStrings::getCommonStrings()['payment_status']] .=
+                $row[BackendStrings::get('payment_status')] .=
                     (
                         $paymentStatus === 'partiallyPaid' ?
-                        BackendStrings::getCommonStrings()['partially_paid'] :
-                        BackendStrings::getCommonStrings()[$paymentStatus]
+                        BackendStrings::get('partially_paid') :
+                        BackendStrings::get($paymentStatus)
                     ) . $delimiterSeparate;
             }
 
@@ -199,11 +198,11 @@ class GetEventAttendeesCommandHandler extends CommandHandler
                         if ($method === 'wc') {
                             $method = 'wc_name';
                         }
-                        return !$method || $method === 'onSite' ? BackendStrings::getCommonStrings()['on_site'] : BackendStrings::getSettingsStrings()[$method];
+                        return !$method || $method === 'onSite' ? BackendStrings::get('on_site') : BackendStrings::get($method);
                     },
                     $payments
                 );
-                $row[BackendStrings::getCommonStrings()['payment_method']] .=
+                $row[BackendStrings::get('payment_method')] .=
                     (
                         count(array_unique($methodsUsed)) === 1 ?
                         $methodsUsed[0] :
@@ -216,11 +215,11 @@ class GetEventAttendeesCommandHandler extends CommandHandler
                 $payments  = $booking->getPayments() && $booking->getPayments()->length() > 0 ?
                     $booking->getPayments()->toArray() : null;
                 $wcOrderId = implode((empty($delimiterSeparate) ? ', ' : '/'), array_column($payments, 'wcOrderId'));
-                $row[BackendStrings::getCommonStrings()['wc_order_id_export']] .= $wcOrderId . $delimiterSeparate;
+                $row[BackendStrings::get('wc_order_id_export')] .= $wcOrderId . $delimiterSeparate;
             }
 
             if (in_array('note', $fields, true)) {
-                $row[BackendStrings::getCustomerStrings()['customer_note']] .=
+                $row[BackendStrings::get('customer_note')] .=
                     ($customer->getNote() ? $customer->getNote()->getValue() : '') . $delimiterSeparate;
             }
 
@@ -243,11 +242,11 @@ class GetEventAttendeesCommandHandler extends CommandHandler
                         $persons += $bookingToEventTicket->getPersons() ? $bookingToEventTicket->getPersons()->getValue() : 0;
                     }
                 }
-                $row[BackendStrings::getEventStrings()['event_book_persons']] .= $persons . $delimiterSeparate;
+                $row[BackendStrings::get('event_book_persons')] .= $persons . $delimiterSeparate;
             }
 
             if (in_array('status', $fields, true)) {
-                $row[BackendStrings::getEventStrings()['event_book_status']] .= ucfirst($booking->getStatus()->getValue()) . $delimiterSeparate;
+                $row[BackendStrings::get('event_book_status')] .= ucfirst($booking->getStatus()->getValue()) . $delimiterSeparate;
             }
 
             if (in_array('tickets', $fields, true)) {
@@ -262,16 +261,16 @@ class GetEventAttendeesCommandHandler extends CommandHandler
                         $ticketsExportString .= $bookingToEventTicket->getPersons()->getValue() . ' x ' . $ticket->getName()->getValue() .
                             ($key !== count($ticketsBookings->getItems()) - 1 ? ', ' : '');
                     }
-                    if (empty($row[BackendStrings::getEventStrings()['event_book_tickets']])) {
-                        $row[BackendStrings::getEventStrings()['event_book_tickets']] = '';
+                    if (empty($row[BackendStrings::get('event_book_tickets')])) {
+                        $row[BackendStrings::get('event_book_tickets')] = '';
                     }
 
-                    $row[BackendStrings::getEventStrings()['event_book_tickets']] .= $ticketsExportString . ($params['separate'] === 'true' ? '' : '; ');
+                    $row[BackendStrings::get('event_book_tickets')] .= $ticketsExportString . ($params['separate'] === 'true' ? '' : '; ');
                 }
             }
 
             if (in_array('couponCode', $fields, true)) {
-                $row[BackendStrings::getCommonStrings()['coupon_code']] .=
+                $row[BackendStrings::get('coupon_code')] .=
                     ($booking->getCoupon() && $booking->getCoupon()->getCode() ? $booking->getCoupon()->getCode()->getValue() : '') . $delimiterSeparate;
             }
 

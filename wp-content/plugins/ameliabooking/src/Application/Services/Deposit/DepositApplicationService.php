@@ -4,6 +4,7 @@ namespace AmeliaBooking\Application\Services\Deposit;
 
 use AmeliaBooking\Domain\Entity\Bookable\AbstractBookable;
 use AmeliaBooking\Domain\ValueObjects\String\DepositType;
+use AmeliaBooking\Domain\Services\Settings\SettingsService;
 
 /**
  * Class DepositApplicationService
@@ -21,6 +22,14 @@ class DepositApplicationService extends AbstractDepositApplicationService
      */
     public function calculateDepositAmount($paymentAmount, $bookable, $persons)
     {
+        /** @var SettingsService $settingsDS */
+        $settingsDS = $this->container->get('domain.settings.service');
+
+
+        if ($settingsDS->isFeatureEnabled('depositPayment') === false) {
+            return $paymentAmount;
+        }
+
         if ($bookable->getDepositPayment()->getValue() !== DepositType::DISABLED) {
             switch ($bookable->getDepositPayment()->getValue()) {
                 case DepositType::FIXED:

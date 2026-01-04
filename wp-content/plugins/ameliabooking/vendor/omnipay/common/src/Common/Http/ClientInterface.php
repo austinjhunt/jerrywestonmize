@@ -4,9 +4,9 @@ namespace Omnipay\Common\Http;
 
 use Omnipay\Common\Http\Exception\NetworkException;
 use Omnipay\Common\Http\Exception\RequestException;
-use AmeliaPsr\Http\Message\ResponseInterface;
-use AmeliaPsr\Http\Message\StreamInterface;
-use AmeliaPsr\Http\Message\UriInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\StreamInterface;
+use AmeliaVendor\Psr\Http\Message\UriInterface;
 
 interface ClientInterface
 {

@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Monolog;
+namespace AmeliaVendor\Monolog;
 
-use Psr\Log\LoggerInterface;
-use Psr\Log\LogLevel;
+use AmeliaVendor\Psr\Log\LoggerInterface;
+use AmeliaVendor\Psr\Log\LogLevel;
 use ReflectionExtension;
 
 /**

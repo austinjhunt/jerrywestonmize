@@ -3,7 +3,7 @@
  * Provide general element functions.
  */
 
-namespace Masterminds\HTML5;
+namespace AmeliaVendor\Masterminds\HTML5;
 
 /**
  * This class provides general information about HTML5 elements,

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace AmeliaSabre\Xml\Element;
+namespace AmeliaVendor\Sabre\Xml\Element;
 
-use AmeliaSabre\Xml;
+use AmeliaVendor\Sabre\Xml;
 
 /**
  * The Base XML element is the standard parser & generator that's used by the

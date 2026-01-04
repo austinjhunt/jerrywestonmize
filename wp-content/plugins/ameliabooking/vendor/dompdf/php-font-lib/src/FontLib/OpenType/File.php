@@ -5,13 +5,13 @@
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 
-namespace FontLib\OpenType;
+namespace AmeliaVendor\FontLib\OpenType;
 
 /**
  * Open Type font, the same as a TrueType one.
  *
  * @package php-font-lib
  */
-class File extends \FontLib\TrueType\File {
+class File extends \AmeliaVendor\FontLib\TrueType\File {
   //
 }

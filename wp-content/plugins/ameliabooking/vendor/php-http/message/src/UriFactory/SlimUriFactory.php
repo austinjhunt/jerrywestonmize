@@ -3,7 +3,7 @@
 namespace AmeliaHttp\Message\UriFactory;
 
 use AmeliaHttp\Message\UriFactory;
-use AmeliaPsr\Http\Message\UriInterface;
+use AmeliaVendor\Psr\Http\Message\UriInterface;
 use Slim\Http\Uri;
 
 /**

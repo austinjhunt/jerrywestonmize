@@ -49,7 +49,9 @@ class QrCodeApplicationService extends AbstractQrCodeApplicationService
                     if (!empty($qr['qrCodeData'])) {
                         $eventTranslations = $eventData['translations'] ? json_decode($eventData['translations'], true) : null;
                         $qrData['bookingId'] = $booking['id'];
-                        $qrData['eventName'] =  $eventTranslations['name'][$locale] ?: $eventData['name'];
+                        $qrData['eventName'] =  !empty($eventTranslations['name'][$locale])
+                            ? $eventTranslations['name'][$locale]
+                            : $eventData['name'];
                         $qrData['eventStartDateTime'] = $eventData['periods'][0]['periodStart'];
 
                         if (
@@ -60,7 +62,9 @@ class QrCodeApplicationService extends AbstractQrCodeApplicationService
                             foreach ($eventData['customTickets'] as $ticket) {
                                 if ($ticket['id'] === $qrData['eventTicketId']) {
                                     $ticketTranslations = $ticket['translations'] ? json_decode($ticket['translations'], true) : null;
-                                    $ticketName = $ticketTranslations[$locale] ?: $ticket['name'];
+                                    $ticketName = !empty($ticketTranslations[$locale])
+                                        ? $ticketTranslations[$locale]
+                                        : $ticket['name'];
                                     $qrData['eventTicketName'] = $ticketName;
                                     break;
                                 }

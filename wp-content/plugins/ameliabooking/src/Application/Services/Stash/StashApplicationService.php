@@ -374,6 +374,10 @@ class StashApplicationService
                 'extraList'   => [],
                 'packageList' => [],
                 'eventList'   => [],
+                'allServices' => $tax->getAllServices() ? $tax->getAllServices()->getValue() : null,
+                'allExtras'   => $tax->getAllExtras() ? $tax->getAllExtras()->getValue() : null,
+                'allPackages' => $tax->getAllPackages() ? $tax->getAllPackages()->getValue() : null,
+                'allEvents'   => $tax->getAllEvents() ? $tax->getAllEvents()->getValue() : null,
             ];
 
             /** @var Service $service */

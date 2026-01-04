@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -11,6 +11,7 @@ use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Entity\Booking\AbstractCustomerBooking;
 use AmeliaBooking\Domain\ValueObjects\DateTime\DateTimeValue;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
+use AmeliaBooking\Domain\ValueObjects\Number\Integer\IntegerValue;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\WholeNumber;
 use AmeliaBooking\Domain\ValueObjects\String\Token;
 
@@ -27,6 +28,9 @@ class PackageCustomer extends AbstractCustomerBooking
     /** @var Id */
     private $packageId;
 
+    /** @var Package */
+    private $package;
+
     /** @var DateTimeValue */
     private $end;
 
@@ -41,6 +45,12 @@ class PackageCustomer extends AbstractCustomerBooking
 
     /** @var WholeNumber */
     private $bookingsCount;
+
+    /** @var Collection $packageCustomerServices */
+    private $packageCustomerServices;
+
+    /** @var Collection $appointments */
+    private $appointments;
 
     /** @var Token */
     private $token;
@@ -77,6 +87,23 @@ class PackageCustomer extends AbstractCustomerBooking
     {
         $this->packageId = $packageId;
     }
+
+    /**
+     * @return Package
+     */
+    public function getPackage()
+    {
+        return $this->package;
+    }
+
+    /**
+     * @param Package $package
+     */
+    public function setPackage($package)
+    {
+        $this->package = $package;
+    }
+
 
     /**
      * @return Collection
@@ -159,6 +186,38 @@ class PackageCustomer extends AbstractCustomerBooking
     }
 
     /**
+     * @return Collection
+     */
+    public function getPackageCustomerServices()
+    {
+        return $this->packageCustomerServices;
+    }
+
+    /**
+     * @param Collection $packageCustomerServices
+     */
+    public function setPackageCustomerServices($packageCustomerServices)
+    {
+        $this->packageCustomerServices = $packageCustomerServices;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getAppointments()
+    {
+        return $this->appointments;
+    }
+
+    /**
+     * @param Collection $appointments
+     */
+    public function setAppointments($appointments)
+    {
+        $this->appointments = $appointments;
+    }
+
+    /**
      * @return Token|null
      */
     public function getToken()
@@ -192,6 +251,9 @@ class PackageCustomer extends AbstractCustomerBooking
                 'purchased'     => $this->getPurchased() ?
                     $this->getPurchased()->getValue()->format($dateTimeFormat) : null,
                 'bookingsCount' => $this->getBookingsCount() ? $this->getBookingsCount()->getValue() : null,
+                'package'       => $this->getPackage() ? $this->package->toArray() : null,
+                'packageCustomerServices' => $this->getPackageCustomerServices() ? $this->getPackageCustomerServices()->toArray() : null,
+                'appointments'  => $this->getAppointments() ? $this->getAppointments()->toArray() : null,
                 'token'         => $this->getToken() ? $this->getToken()->getValue() : null,
             ]
         );

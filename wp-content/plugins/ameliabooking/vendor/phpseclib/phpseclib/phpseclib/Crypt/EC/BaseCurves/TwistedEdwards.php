@@ -24,11 +24,11 @@
  * @link      http://pear.php.net/package/Math_BigInteger
  */
 
-namespace phpseclib3\Crypt\EC\BaseCurves;
+namespace AmeliaVendor\phpseclib3\Crypt\EC\BaseCurves;
 
-use phpseclib3\Math\BigInteger;
-use phpseclib3\Math\PrimeField;
-use phpseclib3\Math\PrimeField\Integer as PrimeInteger;
+use AmeliaVendor\phpseclib3\Math\BigInteger;
+use AmeliaVendor\phpseclib3\Math\PrimeField;
+use AmeliaVendor\phpseclib3\Math\PrimeField\Integer as PrimeInteger;
 
 /**
  * Curves over a*x^2 + y^2 = 1 + d*x^2*y^2
@@ -171,7 +171,7 @@ class TwistedEdwards extends Base
     /**
      * Returns the affine point
      *
-     * @return PrimeField\Integer[]
+     * @return PrimeInteger[]
      */
     public function convertToAffine(array $p)
     {

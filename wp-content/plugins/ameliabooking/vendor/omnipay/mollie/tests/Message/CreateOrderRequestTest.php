@@ -1,7 +1,7 @@
 <?php
 namespace Omnipay\Mollie\Test\Message;
 
-use AmeliaGuzzleHttp\Psr7\Request;
+use AmeliaVendor\GuzzleHttp\Psr7\Request;
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\ItemBag;
 use Omnipay\Mollie\Item;

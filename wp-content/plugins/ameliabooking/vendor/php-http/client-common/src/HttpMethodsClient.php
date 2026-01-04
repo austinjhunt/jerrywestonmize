@@ -6,10 +6,10 @@ use AmeliaHttp\Client\Exception;
 use AmeliaHttp\Client\HttpClient;
 use AmeliaHttp\Message\RequestFactory;
 use Psr\Http\Client\ClientInterface;
-use AmeliaPsr\Http\Message\RequestInterface;
-use AmeliaPsr\Http\Message\ResponseInterface;
-use AmeliaPsr\Http\Message\StreamInterface;
-use AmeliaPsr\Http\Message\UriInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\StreamInterface;
+use AmeliaVendor\Psr\Http\Message\UriInterface;
 
 /**
  * Convenience HTTP client that integrates the MessageFactory in order to send

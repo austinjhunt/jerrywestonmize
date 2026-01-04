@@ -15,9 +15,9 @@
  * the License.
  */
 
-namespace AmeliaGoogle\Service\Calendar;
+namespace AmeliaVendor\Google\Service\Calendar;
 
-class EventReminders extends \AmeliaGoogle\Collection
+class EventReminders extends \AmeliaVendor\Google\Collection
 {
   protected $collection_key = 'overrides';
   protected $overridesType = EventReminder::class;
@@ -58,4 +58,4 @@ class EventReminders extends \AmeliaGoogle\Collection
 }
 
 // Adding a class alias for backwards compatibility with the previous class name.
-class_alias(EventReminders::class, 'AmeliaGoogle_Service_Calendar_EventReminders');
+class_alias(EventReminders::class, 'Google_Service_Calendar_EventReminders');

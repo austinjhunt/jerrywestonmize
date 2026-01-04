@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-namespace AmeliaGoogle\Auth\Cache;
+namespace AmeliaVendor\Google\Auth\Cache;
 
-use Psr\Cache\InvalidArgumentException as PsrInvalidArgumentException;
+use AmeliaVendor\Psr\Cache\InvalidArgumentException as PsrInvalidArgumentException;
 
 class InvalidArgumentException extends \InvalidArgumentException implements PsrInvalidArgumentException
 {

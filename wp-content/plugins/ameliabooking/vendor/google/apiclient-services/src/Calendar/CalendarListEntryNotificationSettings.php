@@ -15,9 +15,9 @@
  * the License.
  */
 
-namespace AmeliaGoogle\Service\Calendar;
+namespace AmeliaVendor\Google\Service\Calendar;
 
-class CalendarListEntryNotificationSettings extends \AmeliaGoogle\Collection
+class CalendarListEntryNotificationSettings extends \AmeliaVendor\Google\Collection
 {
   protected $collection_key = 'notifications';
   protected $notificationsType = CalendarNotification::class;
@@ -40,4 +40,4 @@ class CalendarListEntryNotificationSettings extends \AmeliaGoogle\Collection
 }
 
 // Adding a class alias for backwards compatibility with the previous class name.
-class_alias(CalendarListEntryNotificationSettings::class, 'AmeliaGoogle_Service_Calendar_CalendarListEntryNotificationSettings');
+class_alias(CalendarListEntryNotificationSettings::class, 'Google_Service_Calendar_CalendarListEntryNotificationSettings');

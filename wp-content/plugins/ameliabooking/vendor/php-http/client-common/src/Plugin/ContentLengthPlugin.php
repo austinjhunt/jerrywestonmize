@@ -4,7 +4,7 @@ namespace AmeliaHttp\Client\Common\Plugin;
 
 use AmeliaHttp\Client\Common\Plugin;
 use AmeliaHttp\Message\Encoding\ChunkStream;
-use AmeliaPsr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
 
 /**
  * Allow to set the correct content length header on the request or to transfer it as a chunk if not possible.

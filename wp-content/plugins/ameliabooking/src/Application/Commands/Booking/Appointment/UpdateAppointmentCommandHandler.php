@@ -74,7 +74,7 @@ class UpdateAppointmentCommandHandler extends CommandHandler
     {
         $result = new CommandResult();
 
-        $this->checkMandatoryFields($command);
+        $params = $command->getField('params');
 
         /** @var AppointmentRepository $appointmentRepo */
         $appointmentRepo = $this->container->get('domain.booking.appointment.repository');
@@ -123,6 +123,32 @@ class UpdateAppointmentCommandHandler extends CommandHandler
         if ($userAS->isProvider($user) && !$settingsDS->getSetting('roles', 'allowWriteAppointments')) {
             throw new AccessDeniedException('You are not allowed to update appointment');
         }
+
+        if (!empty($params['noteOnly'])) {
+            $appointmentId = (int)$command->getField('id');
+
+            $note = $command->getField('internalNotes');
+
+            $oldAppointment = $appointmentRepo->getById($appointmentId);
+
+            $appointmentRepo->updateFieldById($appointmentId, $note, 'internalNotes');
+
+            $result->setResult(CommandResult::RESULT_SUCCESS);
+            $result->setMessage('Successfully updated appointment note');
+            $result->setData([
+                Entities::APPOINTMENT => array_merge($oldAppointment ? $oldAppointment->toArray() : [], ['internalNotes' => $note]),
+                'appointmentStatusChanged' => false,
+                'appointmentRescheduled' => false,
+                'bookingsWithChangedStatus' => [],
+                'appointmentEmployeeChanged' => false,
+                'appointmentZoomUserChanged' => false,
+                'bookingAdded' => false
+            ]);
+
+            return $result;
+        }
+
+        $this->checkMandatoryFields($command);
 
         $appointmentData = $command->getFields();
 
@@ -299,8 +325,6 @@ class UpdateAppointmentCommandHandler extends CommandHandler
             throw $e;
         }
 
-        $appointmentRepo->commit();
-
         do_action(
             'amelia_after_appointment_updated',
             $appointment ? $appointment->toArray() : null,
@@ -377,6 +401,8 @@ class UpdateAppointmentCommandHandler extends CommandHandler
                 Entities::PROVIDER
             );
         }
+
+        $appointmentRepo->commit();
 
         if ($appointmentStatusChanged) {
             $appointmentStatus = $appointment->getStatus()->getValue();

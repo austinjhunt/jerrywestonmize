@@ -12,7 +12,7 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 final class Price
 {
     /**
-     * @var string
+     * @var float
      */
     private $price;
 

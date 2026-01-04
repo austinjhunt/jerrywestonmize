@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaStripe;
+namespace AmeliaVendor\Stripe;
 
 /**
  * Interface for a Stripe client.

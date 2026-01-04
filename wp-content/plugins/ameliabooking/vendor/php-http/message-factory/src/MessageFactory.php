@@ -7,7 +7,7 @@ namespace AmeliaHttp\Message;
  *
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
  *
- * @deprecated since version 1.1, use AmeliaPsr\Http\Message\RequestFactoryInterface and AmeliaPsr\Http\Message\ResponseFactoryInterface instead.
+ * @deprecated since version 1.1, use AmeliaVendor\Psr\Http\Message\RequestFactoryInterface and AmeliaVendor\Psr\Http\Message\ResponseFactoryInterface instead.
  */
 interface MessageFactory extends RequestFactory, ResponseFactory
 {

@@ -9,7 +9,7 @@
 
 namespace Mailgun\Hydrator;
 
-use AmeliaPsr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
 
 /**
  * Do not serialize at all. Just return a PSR-7 response.

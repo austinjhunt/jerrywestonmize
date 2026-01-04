@@ -12,14 +12,14 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 final class DiscountPercentageValue
 {
     /**
-     * @var string
+     * @var float
      */
     private $value;
 
     /**
      * DiscountPercentageValue constructor.
      *
-     * @param string $value
+     * @param mixed $value
      *
      * @throws InvalidArgumentException
      */
@@ -43,7 +43,7 @@ final class DiscountPercentageValue
     /**
      * Return the value from the value object
      *
-     * @return string
+     * @return float
      */
     public function getValue()
     {

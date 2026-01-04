@@ -15,19 +15,19 @@
  * the License.
  */
 
-namespace AmeliaGoogle\Service\Calendar\Resource;
+namespace AmeliaVendor\Google\Service\Calendar\Resource;
 
-use AmeliaGoogle\Service\Calendar\Calendar;
+use AmeliaVendor\Google\Service\Calendar\Calendar;
 
 /**
  * The "calendars" collection of methods.
  * Typical usage is:
  *  <code>
- *   $calendarService = new AmeliaGoogle\Service\Calendar(...);
+ *   $calendarService = new \AmeliaVendor\Google\Service\Calendar(...);
  *   $calendars = $calendarService->calendars;
  *  </code>
  */
-class Calendars extends \AmeliaGoogle\Service\Resource
+class Calendars extends \AmeliaVendor\Google\Service\Resource
 {
   /**
    * Clears a primary calendar. This operation deletes all events associated with
@@ -37,7 +37,7 @@ class Calendars extends \AmeliaGoogle\Service\Resource
    * the calendarList.list method. If you want to access the primary calendar of
    * the currently logged in user, use the "primary" keyword.
    * @param array $optParams Optional parameters.
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function clear($calendarId, $optParams = [])
   {
@@ -53,7 +53,7 @@ class Calendars extends \AmeliaGoogle\Service\Resource
    * the calendarList.list method. If you want to access the primary calendar of
    * the currently logged in user, use the "primary" keyword.
    * @param array $optParams Optional parameters.
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function delete($calendarId, $optParams = [])
   {
@@ -69,7 +69,7 @@ class Calendars extends \AmeliaGoogle\Service\Resource
    * the currently logged in user, use the "primary" keyword.
    * @param array $optParams Optional parameters.
    * @return Calendar
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function get($calendarId, $optParams = [])
   {
@@ -83,7 +83,7 @@ class Calendars extends \AmeliaGoogle\Service\Resource
    * @param Calendar $postBody
    * @param array $optParams Optional parameters.
    * @return Calendar
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function insert(Calendar $postBody, $optParams = [])
   {
@@ -101,7 +101,7 @@ class Calendars extends \AmeliaGoogle\Service\Resource
    * @param Calendar $postBody
    * @param array $optParams Optional parameters.
    * @return Calendar
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function patch($calendarId, Calendar $postBody, $optParams = [])
   {
@@ -118,7 +118,7 @@ class Calendars extends \AmeliaGoogle\Service\Resource
    * @param Calendar $postBody
    * @param array $optParams Optional parameters.
    * @return Calendar
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function update($calendarId, Calendar $postBody, $optParams = [])
   {
@@ -129,4 +129,4 @@ class Calendars extends \AmeliaGoogle\Service\Resource
 }
 
 // Adding a class alias for backwards compatibility with the previous class name.
-class_alias(Calendars::class, 'AmeliaGoogle_Service_Calendar_Resource_Calendars');
+class_alias(Calendars::class, 'Google_Service_Calendar_Resource_Calendars');

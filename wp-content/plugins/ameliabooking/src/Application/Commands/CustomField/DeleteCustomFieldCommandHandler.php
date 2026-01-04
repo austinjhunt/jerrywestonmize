@@ -27,7 +27,6 @@ class DeleteCustomFieldCommandHandler extends CommandHandler
      * @throws AccessDeniedException
      * @throws NotFoundException
      * @throws QueryExecutionException
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function handle(DeleteCustomFieldCommand $command)
     {

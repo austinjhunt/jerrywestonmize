@@ -15,11 +15,11 @@
  * limitations under the License.
  */
 
-namespace AmeliaGoogle\Auth\Middleware;
+namespace AmeliaVendor\Google\Auth\Middleware;
 
-use AmeliaGoogle\Auth\FetchAuthTokenInterface;
-use AmeliaGoogle\Auth\GetQuotaProjectInterface;
-use AmeliaPsr\Http\Message\RequestInterface;
+use AmeliaVendor\Google\Auth\FetchAuthTokenInterface;
+use AmeliaVendor\Google\Auth\GetQuotaProjectInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
 
 /**
  * ProxyAuthTokenMiddleware is a Guzzle Middleware that adds an Authorization header
@@ -58,8 +58,8 @@ class ProxyAuthTokenMiddleware
      */
     public function __construct(
         FetchAuthTokenInterface $fetcher,
-        callable $httpHandler = null,
-        callable $tokenCallback = null
+        ?callable $httpHandler = null,
+        ?callable $tokenCallback = null
     ) {
         $this->fetcher = $fetcher;
         $this->httpHandler = $httpHandler;
@@ -69,10 +69,10 @@ class ProxyAuthTokenMiddleware
     /**
      * Updates the request with an Authorization header when auth is 'google_auth'.
      *
-     *   use AmeliaGoogle\Auth\Middleware\ProxyAuthTokenMiddleware;
-     *   use AmeliaGoogle\Auth\OAuth2;
-     *   use AmeliaGuzzleHttp\Client;
-     *   use AmeliaGuzzleHttp\HandlerStack;
+     *   use AmeliaVendor\Google\Auth\Middleware\ProxyAuthTokenMiddleware;
+     *   use AmeliaVendor\Google\Auth\OAuth2;
+     *   use AmeliaVendor\GuzzleHttp\Client;
+     *   use AmeliaVendor\GuzzleHttp\HandlerStack;
      *
      *   $config = [..<oauth config param>.];
      *   $oauth2 = new OAuth2($config)

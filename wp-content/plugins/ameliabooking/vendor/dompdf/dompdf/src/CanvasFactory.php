@@ -1,10 +1,11 @@
 <?php
+
 /**
  * @package dompdf
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace AmeliaDompdf;
+namespace AmeliaVendor\Dompdf;
 
 /**
  * Create canvas instances
@@ -22,9 +23,8 @@ class CanvasFactory
     private function __construct()
     {
     }
-
     /**
-     * @param Dompdf         $dompdf
+     * @param \Dompdf         $dompdf
      * @param string|float[] $paper
      * @param string         $orientation
      * @param string|null    $class
@@ -34,25 +34,23 @@ class CanvasFactory
     static function get_instance(Dompdf $dompdf, $paper, string $orientation, ?string $class = null)
     {
         $backend = strtolower($dompdf->getOptions()->getPdfBackend());
-
         if (isset($class) && class_exists($class, false)) {
             $class .= "_Adapter";
+        } else if (($backend === "auto" || $backend === "pdflib") && class_exists("PDFLib", false)) {
+            $class = "AmeliaVendor\\Dompdf\\Adapter\\PDFLib";
+        } else if (class_exists($backend, false)) {
+            $class = $backend;
+        } elseif ($backend === "gd" && extension_loaded('gd')) {
+            $class = "AmeliaVendor\\Dompdf\\Adapter\\GD";
         } else {
-            if (($backend === "auto" || $backend === "pdflib") &&
-                class_exists("PDFLib", false)
-            ) {
-                $class = "AmeliaDompdf\\Adapter\\PDFLib";
-            }
-
-            else {
-                if ($backend === "gd" && extension_loaded('gd')) {
-                    $class = "AmeliaDompdf\\Adapter\\GD";
-                } else {
-                    $class = "AmeliaDompdf\\Adapter\\CPDF";
-                }
-            }
+            $class = "AmeliaVendor\\Dompdf\\Adapter\\CPDF";
         }
-
-        return new $class($paper, $orientation, $dompdf);
+        $instance = new $class($paper, $orientation, $dompdf);
+        $class_interfaces = class_implements($class, false);
+        if (!$class_interfaces || !in_array("AmeliaVendor\\Dompdf\\Canvas", $class_interfaces)) {
+            $class = "AmeliaVendor\\Dompdf\\Adapter\\CPDF";
+            $instance = new $class($paper, $orientation, $dompdf);
+        }
+        return $instance;
     }
 }

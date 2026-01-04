@@ -4,11 +4,11 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace AmeliaDompdf\FrameReflower;
+namespace AmeliaVendor\Dompdf\FrameReflower;
 
-use AmeliaDompdf\Helpers;
-use AmeliaDompdf\FrameDecorator\Block as BlockFrameDecorator;
-use AmeliaDompdf\FrameDecorator\Image as ImageFrameDecorator;
+use AmeliaVendor\Dompdf\Helpers;
+use AmeliaVendor\Dompdf\FrameDecorator\Block as BlockFrameDecorator;
+use AmeliaVendor\Dompdf\FrameDecorator\Image as ImageFrameDecorator;
 
 /**
  * Image reflower class
@@ -30,7 +30,7 @@ class Image extends AbstractFrameReflower
     /**
      * @param BlockFrameDecorator|null $block
      */
-    function reflow(BlockFrameDecorator $block = null)
+    function reflow(?BlockFrameDecorator $block = null)
     {
         $this->determine_absolute_containing_block();
 

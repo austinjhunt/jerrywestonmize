@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaStripe\HttpClient;
+namespace AmeliaVendor\Stripe\HttpClient;
 
 interface StreamingClientInterface
 {
@@ -17,8 +17,8 @@ interface StreamingClientInterface
      * @return array an array whose first element is raw request body, second
      *    element is HTTP status code and third array of HTTP headers
      *
-     * @throws \AmeliaStripe\Exception\ApiConnectionException
-     * @throws \AmeliaStripe\Exception\UnexpectedValueException
+     * @throws \AmeliaVendor\Stripe\Exception\ApiConnectionException
+     * @throws \AmeliaVendor\Stripe\Exception\UnexpectedValueException
      */
     public function requestStream($method, $absUrl, $headers, $params, $hasFile, $readBodyChunkCallable, $maxNetworkRetries = null);
 }

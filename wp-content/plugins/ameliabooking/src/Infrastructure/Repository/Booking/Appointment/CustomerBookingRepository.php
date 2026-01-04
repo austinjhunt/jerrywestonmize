@@ -6,17 +6,14 @@ use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Factory\Booking\Appointment\CustomerBookingFactory;
-use AmeliaBooking\Domain\Repository\Booking\Appointment\CustomerBookingRepositoryInterface;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
-use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking\AppointmentsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking\CustomerBookingsToEventsPeriodsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking\CustomerBookingToEventsTicketsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking\EventsPeriodsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking\EventsProvidersTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking\EventsTable;
-use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking\EventsTicketsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Coupon\CouponsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Payment\PaymentsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\User\UsersTable;
@@ -27,7 +24,7 @@ use Exception;
  *
  * @package AmeliaBooking\Infrastructure\Repository\Booking\Appointment
  */
-class CustomerBookingRepository extends AbstractRepository implements CustomerBookingRepositoryInterface
+class CustomerBookingRepository extends AbstractRepository
 {
     public const FACTORY = CustomerBookingFactory::class;
 
@@ -242,164 +239,6 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
     }
 
     /**
-     * @param int $id
-     * @param int $status
-     *
-     * @return mixed
-     * @throws QueryExecutionException
-     */
-    public function updateStatusByAppointmentId($id, $status)
-    {
-        $params = [
-            ':appointmentId' => $id,
-            ':status'        => $status
-        ];
-
-        try {
-            $statement = $this->connection->prepare(
-                "UPDATE {$this->table} SET
-                `status` = :status
-                WHERE appointmentId = :appointmentId"
-            );
-
-            $res = $statement->execute($params);
-
-            if (!$res) {
-                throw new QueryExecutionException('Unable to save data in ' . __CLASS__);
-            }
-
-            return $res;
-        } catch (Exception $e) {
-            throw new QueryExecutionException('Unable to save data in ' . __CLASS__, $e->getCode(), $e);
-        }
-    }
-
-    /**
-     * @param int $id
-     * @param int $status
-     *
-     * @return mixed
-     * @throws QueryExecutionException
-     */
-    public function updateStatusById($id, $status)
-    {
-        $params = [
-            ':id'     => $id,
-            ':status' => $status
-        ];
-
-        try {
-            $statement = $this->connection->prepare(
-                "UPDATE {$this->table} SET
-                `status` = :status
-                WHERE id = :id"
-            );
-
-            $res = $statement->execute($params);
-
-            if (!$res) {
-                throw new QueryExecutionException('Unable to save data in ' . __CLASS__);
-            }
-
-            return $res;
-        } catch (Exception $e) {
-            throw new QueryExecutionException('Unable to save data in ' . __CLASS__, $e->getCode(), $e);
-        }
-    }
-
-    /**
-     * Returns an array of Customers Id's who have at least one booking until passed date
-     *
-     * @param $criteria
-     *
-     * @return array
-     * @throws QueryExecutionException
-     * @throws InvalidArgumentException
-     */
-    public function getReturningCustomers($criteria)
-    {
-        $appointmentTable = AppointmentsTable::getTableName();
-
-        $params = [];
-
-        $where = [];
-
-        if ($criteria['dates']) {
-            $where[] = "(a.bookingStart < :bookingFrom)";
-
-            $params[':bookingFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
-        }
-
-        $where = $where ? 'WHERE ' . implode(' AND ', $where) : '';
-
-        try {
-            $statement = $this->connection->prepare(
-                "SELECT 
-                customerId,
-                COUNT(*) AS occurrences
-                FROM {$this->table} cb
-                INNER JOIN {$appointmentTable} a ON a.id = cb.appointmentId
-                $where
-                GROUP BY customerId"
-            );
-
-            $statement->execute($params);
-
-            $rows = $statement->fetchAll();
-        } catch (Exception $e) {
-            throw new QueryExecutionException('Unable to return customer bookings from' . __CLASS__, $e->getCode(), $e);
-        }
-
-        return $rows;
-    }
-
-    /**
-     * Returns an array of Customers Id's bookings in selected period
-     *
-     * @param $criteria
-     *
-     * @return array
-     * @throws QueryExecutionException
-     * @throws InvalidArgumentException
-     */
-    public function getFilteredDistinctCustomersIds($criteria)
-    {
-        $appointmentTable = AppointmentsTable::getTableName();
-
-        $params = [];
-
-        $where = [];
-
-        if ($criteria['dates']) {
-            $where[] = "(a.bookingStart BETWEEN :bookingFrom AND :bookingTo)";
-
-            $params[':bookingFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
-
-            $params[':bookingTo'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
-        }
-
-        $where = $where ? 'WHERE ' . implode(' AND ', $where) : '';
-
-        try {
-            $statement = $this->connection->prepare(
-                "SELECT DISTINCT 
-                cb.customerId
-                FROM {$this->table} cb
-                INNER JOIN {$appointmentTable} a ON a.id = cb.appointmentId
-                $where"
-            );
-
-            $statement->execute($params);
-
-            $rows = $statement->fetchAll();
-        } catch (Exception $e) {
-            throw new QueryExecutionException('Unable to return customer bookings from' . __CLASS__, $e->getCode(), $e);
-        }
-
-        return $rows;
-    }
-
-    /**
      * Returns token for given id
      *
      * @param $id
@@ -459,39 +298,6 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
         }
 
         return $rows;
-    }
-
-    /**
-     * @param int    $customerId
-     * @param string $info
-     *
-     * @return mixed
-     * @throws QueryExecutionException
-     */
-    public function updateInfoByCustomerId($customerId, $info)
-    {
-        $params = [
-            ':customerId' => $customerId,
-            ':info'       => $info
-        ];
-
-        try {
-            $statement = $this->connection->prepare(
-                "UPDATE {$this->table} SET
-                `info` = :info
-                WHERE customerId = :customerId"
-            );
-
-            $res = $statement->execute($params);
-
-            if (!$res) {
-                throw new QueryExecutionException('Unable to save data in ' . __CLASS__);
-            }
-
-            return $res;
-        } catch (Exception $e) {
-            throw new QueryExecutionException('Unable to save data in ' . __CLASS__, $e->getCode(), $e);
-        }
     }
 
     public function getQrTicketNumber($ticketNo)
@@ -572,6 +378,7 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
                     p.gatewayTitle AS payment_gatewayTitle,
                     p.transactionId AS payment_transactionId,
                     p.data AS payment_data,
+                    p.created AS payment_created,
                     
                     c.id AS coupon_id,
                     c.code AS coupon_code,
@@ -677,9 +484,9 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
                         break;
                     }
                 }
-                $result[] = [
+                $result[$id] = [
                     'id' => $id,
-                    'count' => $count,
+                    'count' => (int)$count,
                 ];
             }
         } catch (Exception $e) {
@@ -761,24 +568,25 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
 
     /**
      * @param array $criteria
-     * @param int $itemsPerPageBackEnd
+     * @param int $limitPerPage
      *
      * @return array
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      */
-    public function getEventBookingIdsByCriteria($criteria = [], $itemsPerPageBackEnd = 0)
+    public function getEventBookingIdsByCriteria($criteria = [], $limitPerPage = null)
     {
         $eventsPeriodsTable            = EventsPeriodsTable::getTableName();
         $customerBookingsEventsPeriods = CustomerBookingsToEventsPeriodsTable::getTableName();
         $eventsTable         = EventsTable::getTableName();
         $eventProvidersTable = EventsProvidersTable::getTableName();
+        $customersTable = UsersTable::getTableName();
 
         $params = [];
 
         $where = [];
 
-        $joins = '';
+        $joins = [];
 
         if (!empty($criteria['customers'])) {
             $queryIds = [];
@@ -826,7 +634,7 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
 
             $where[] = '(epr.userId IN (' . implode(', ', $queryIds1) . ') OR e.organizerId IN (' . implode(', ', $queryIds2) . '))';
 
-            $joins .= "LEFT JOIN {$eventProvidersTable} epr ON epr.eventId = e.id";
+            $joins[] = "LEFT JOIN {$eventProvidersTable} epr ON epr.eventId = e.id";
         }
 
         if (!empty($criteria['statuses'])) {
@@ -841,6 +649,30 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
             }
 
             $where[] = '(cb.status IN (' . implode(', ', $queryIds) . '))';
+        }
+
+        if (!empty($criteria['status'])) {
+            $whereOr = [];
+            foreach ($criteria['status'] as $index => $value) {
+                switch ($value) {
+                    case 'approved':
+                        $whereOr[] = "(cb.status = 'approved' AND e.status = 'approved')";
+                        break;
+                    case 'canceled':
+                        $whereOr[] = "(cb.status = 'canceled' OR e.status = 'rejected' OR e.status = 'canceled')";
+                        break;
+                    case 'rejected':
+                        $whereOr[] = "(cb.status = 'rejected')";
+                        break;
+                    case 'no-show':
+                        $whereOr[] = "(cb.status = 'no-show' and e.status = 'approved')";
+                        break;
+                    case 'waiting':
+                        $whereOr[] = "(cb.status = 'waiting' and e.status = 'approved')";
+                        break;
+                }
+            }
+            $where[] = '(' . implode(' OR ', $whereOr) . ')';
         }
 
         if (!empty($criteria['events'])) {
@@ -862,7 +694,7 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
         $groupBy = 'GROUP BY cb.id';
         $limit   = $this->getLimit(
             !empty($criteria['page']) ? (int)$criteria['page'] : 0,
-            $itemsPerPageBackEnd
+            $limitPerPage
         );
 
         $orderBy = 'ORDER BY MIN(ep.periodStart), cb.id';
@@ -871,6 +703,8 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
             $column      = $criteria['sort'][0] === '-' ? substr($criteria['sort'], 1) : $criteria['sort'];
             $orderColumn = '';
             if ($column === 'attendee') {
+                $joins[] = "INNER JOIN {$customersTable} cu ON cu.id = cb.customerId ";
+
                 $orderColumn = ', CONCAT(cu.firstName, " ", cu.lastName)';
             } elseif ($column === 'event') {
                 $orderColumn = ', e.name';
@@ -878,6 +712,8 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
             $orderDir = $orderColumn ? ($criteria['sort'][0] === '-' ? 'DESC' : 'ASC') : '';
             $orderBy  = "ORDER BY MIN(DATE(ep.periodStart)) {$orderColumn} {$orderDir}, cb.id";
         }
+
+        $joins = $joins ? implode(' ', $joins) : '';
 
         try {
             $statement = $this->connection->prepare(
@@ -990,12 +826,39 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
             ";
         }
 
+        if (!empty($criteria['fetchEvent'])) {
+            $fields .= '
+                ep.id as event_periodId,
+                ep.periodStart as event_periodStart,
+                ep.periodEnd as event_periodEnd,
+                ep.zoomMeeting as event_zoomMeeting,
+                ep.googleMeetUrl as event_googleMeetUrl,
+                ep.microsoftTeamsUrl as event_microsoftTeamsUrl,
+                ep.lessonSpace as event_lessonSpace,
+                
+                e.id AS event_id,
+                e.name AS event_name,
+                e.customPricing AS event_customPricing,
+                e.status AS event_status,
+                e.organizerId AS event_organizerId,
+                e.settings AS event_settings,
+            ';
+
+            $joins .= "
+                INNER JOIN {$customerBookingsEventsPeriods} cbe ON cbe.customerBookingId = cb.id
+                LEFT JOIN {$eventsPeriodsTable} ep ON ep.id = cbe.eventPeriodId
+                LEFT JOIN {$eventsTable} e ON e.id = ep.eventId
+            ";
+        }
+
         if (!empty($criteria['fetchProviders'])) {
             $fields .= '
                 pu.id AS provider_id,
                 pu.firstName AS provider_firstName,
                 pu.lastName AS provider_lastName,
+                pu.email AS provider_email,
                 pu.pictureThumbPath AS provider_pictureThumbPath,
+                pu.badgeId AS provider_badgeId,
             ';
             $joins  .= "
                 LEFT JOIN {$eventProvidersTable} epr ON epr.eventId = e.id
@@ -1021,7 +884,6 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
             ";
         }
 
-
         $fields .= '
             cb.id AS booking_id,
             cb.appointmentId AS booking_appointmentId,
@@ -1038,22 +900,10 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
             cb.aggregatedPrice AS booking_aggregatedPrice,
             cb.qrCodes AS booking_qrCodes,
             
-            ep.id as event_periodId,
-            ep.periodStart as event_periodStart,
-            ep.zoomMeeting as event_zoomMeeting,
-            ep.googleMeetUrl as event_googleMeetUrl,
-            
             cbt.id AS booking_ticket_id,
             cbt.eventTicketId AS booking_ticket_eventTicketId,
             cbt.price AS booking_ticket_price,
-            cbt.persons AS booking_ticket_persons,
-            
-            e.id AS event_id,
-            e.name AS event_name,
-            e.customPricing AS event_customPricing,
-            e.status AS event_status,
-            e.organizerId AS event_organizerId,
-            e.settings AS event_settings
+            cbt.persons AS booking_ticket_persons
         ';
 
         $where = $where ? 'WHERE ' . implode(' AND ', $where) : '';
@@ -1063,11 +913,8 @@ class CustomerBookingRepository extends AbstractRepository implements CustomerBo
                 "SELECT
                 {$fields}
                 FROM {$this->table} cb
-                INNER JOIN {$customerBookingsEventsPeriods} cbe ON cbe.customerBookingId = cb.id
                 LEFT JOIN {$bookingsTicketsTable} cbt ON cbt.customerBookingId = cb.id
-                LEFT JOIN {$eventsPeriodsTable} ep ON ep.id = cbe.eventPeriodId
-                LEFT JOIN {$eventsTable} e ON e.id = ep.eventId
-                
+            
                 {$joins}
                 {$where}
                 "

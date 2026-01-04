@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Tax;
+namespace AmeliaVendor\Stripe\Tax;
 
 /**
  * @property string $id Unique identifier for the object.
@@ -14,10 +14,10 @@ namespace AmeliaStripe\Tax;
  * @property int $quantity The number of units of the item being purchased. For reversals, this is the quantity reversed.
  * @property string $reference A custom identifier for this line item.
  * @property string $tax_behavior Specifies whether the <code>amount</code> includes taxes. If <code>tax_behavior=inclusive</code>, then the amount includes taxes.
- * @property null|((object{amount: int, jurisdiction: (object{country: string, display_name: string, level: string, state: null|string}&\AmeliaStripe\StripeObject), sourcing: string, tax_rate_details: null|(object{display_name: string, percentage_decimal: string, tax_type: string}&\AmeliaStripe\StripeObject), taxability_reason: string, taxable_amount: int}&\AmeliaStripe\StripeObject))[] $tax_breakdown Detailed account of taxes relevant to this line item.
+ * @property null|((object{amount: int, jurisdiction: (object{country: string, display_name: string, level: string, state: null|string}&\AmeliaVendor\Stripe\StripeObject), sourcing: string, tax_rate_details: null|(object{display_name: string, percentage_decimal: string, tax_type: string}&\AmeliaVendor\Stripe\StripeObject), taxability_reason: string, taxable_amount: int}&\AmeliaVendor\Stripe\StripeObject))[] $tax_breakdown Detailed account of taxes relevant to this line item.
  * @property string $tax_code The <a href="https://stripe.com/docs/tax/tax-categories">tax code</a> ID used for this resource.
  */
-class CalculationLineItem extends \AmeliaStripe\ApiResource
+class CalculationLineItem extends \AmeliaVendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'tax.calculation_line_item';
 

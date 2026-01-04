@@ -4,9 +4,9 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace AmeliaDompdf\Positioner;
+namespace AmeliaVendor\Dompdf\Positioner;
 
-use AmeliaDompdf\FrameDecorator\AbstractFrameDecorator;
+use AmeliaVendor\Dompdf\FrameDecorator\AbstractFrameDecorator;
 
 /**
  * Positions table rows

@@ -2,25 +2,25 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Service\Tax;
+namespace AmeliaVendor\Stripe\Service\Tax;
 
 /**
- * @phpstan-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  *
- * @psalm-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ * @psalm-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  */
-class TransactionService extends \AmeliaStripe\Service\AbstractService
+class TransactionService extends \AmeliaVendor\Stripe\Service\AbstractService
 {
     /**
      * Retrieves the line items of a committed standalone transaction as a collection.
      *
      * @param string $id
      * @param null|array{ending_before?: string, expand?: string[], limit?: int, starting_after?: string} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Collection<\AmeliaStripe\Tax\TransactionLineItem>
+     * @return \AmeliaVendor\Stripe\Collection<\AmeliaVendor\Stripe\Tax\TransactionLineItem>
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function allLineItems($id, $params = null, $opts = null)
     {
@@ -32,11 +32,11 @@ class TransactionService extends \AmeliaStripe\Service\AbstractService
      * expired. Calculations expire after 90 days.
      *
      * @param null|array{calculation: string, expand?: string[], metadata?: array<string, string>, posted_at?: int, reference: string} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Tax\Transaction
+     * @return \AmeliaVendor\Stripe\Tax\Transaction
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function createFromCalculation($params = null, $opts = null)
     {
@@ -47,11 +47,11 @@ class TransactionService extends \AmeliaStripe\Service\AbstractService
      * Partially or fully reverses a previously created <code>Transaction</code>.
      *
      * @param null|array{expand?: string[], flat_amount?: int, line_items?: array{amount: int, amount_tax: int, metadata?: array<string, string>, original_line_item: string, quantity?: int, reference: string}[], metadata?: array<string, string>, mode: string, original_transaction: string, reference: string, shipping_cost?: array{amount: int, amount_tax: int}} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Tax\Transaction
+     * @return \AmeliaVendor\Stripe\Tax\Transaction
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function createReversal($params = null, $opts = null)
     {
@@ -63,11 +63,11 @@ class TransactionService extends \AmeliaStripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[]} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Tax\Transaction
+     * @return \AmeliaVendor\Stripe\Tax\Transaction
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function retrieve($id, $params = null, $opts = null)
     {

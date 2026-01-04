@@ -13,7 +13,7 @@ use Mailgun\Assert;
 use Mailgun\Model\Ip\IndexResponse;
 use Mailgun\Model\Ip\ShowResponse;
 use Mailgun\Model\Ip\UpdateResponse;
-use AmeliaPsr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
 
 /**
  * {@link https://documentation.mailgun.com/en/latest/api-ips.html#ips}.

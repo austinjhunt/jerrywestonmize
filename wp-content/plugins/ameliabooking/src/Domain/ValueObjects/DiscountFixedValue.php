@@ -12,7 +12,7 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 final class DiscountFixedValue
 {
     /**
-     * @var string
+     * @var float
      */
     private $value;
 
@@ -43,7 +43,7 @@ final class DiscountFixedValue
     /**
      * Return the value from the value object
      *
-     * @return string
+     * @return float
      */
     public function getValue()
     {

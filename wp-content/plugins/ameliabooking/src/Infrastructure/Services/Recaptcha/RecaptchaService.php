@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -68,7 +68,7 @@ class RecaptchaService extends AbstractRecaptchaService
         );
 
         if (
-            $googleRecaptchaSettings['enabled'] &&
+            $this->settingsService->isFeatureEnabled('recaptcha') &&
             $googleRecaptchaSettings['siteKey'] &&
             $googleRecaptchaSettings['secret'] &&
             !empty($userRecaptchaSettings['googleRecaptcha']) &&

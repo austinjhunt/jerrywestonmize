@@ -7,7 +7,7 @@
 
 namespace Slim;
 
-use AmeliaPsr\Container\ContainerInterface;
+use AmeliaVendor\Psr\Container\ContainerInterface;
 
 abstract class Routable
 {

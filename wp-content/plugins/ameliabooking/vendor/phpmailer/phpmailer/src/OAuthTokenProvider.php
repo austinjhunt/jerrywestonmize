@@ -19,7 +19,7 @@
  * FITNESS FOR A PARTICULAR PURPOSE.
  */
 
-namespace AmeliaPHPMailer\PHPMailer;
+namespace AmeliaVendor\PHPMailer\PHPMailer;
 
 /**
  * OAuthTokenProvider - OAuth2 token provider interface.

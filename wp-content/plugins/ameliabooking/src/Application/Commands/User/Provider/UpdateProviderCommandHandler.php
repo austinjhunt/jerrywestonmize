@@ -53,6 +53,9 @@ class UpdateProviderCommandHandler extends CommandHandler
         /** @var ProviderApplicationService $providerAS */
         $providerAS = $this->container->get('application.user.provider.service');
 
+        /** @var SettingsService $settingsDS */
+        $settingsDS = $this->container->get('domain.settings.service');
+
         $userId = (int)$command->getArg('id');
 
         /** @var AbstractUser $currentUser */
@@ -73,7 +76,10 @@ class UpdateProviderCommandHandler extends CommandHandler
         ) {
             $oldUser = $userAS->getAuthenticatedUser($command->getToken(), false, 'providerCabinet');
 
-            if ($oldUser === null) {
+            if (
+                $oldUser === null ||
+                ($command->getField('externalId') && (!$oldUser->getExternalId() || $oldUser->getExternalId()->getValue() !== $command->getField('externalId')))
+            ) {
                 $result->setResult(CommandResult::RESULT_ERROR);
                 $result->setMessage('Could not retrieve user');
                 $result->setData(
@@ -96,6 +102,14 @@ class UpdateProviderCommandHandler extends CommandHandler
 
         if (!isset($providerData['stripeConnect'])) {
             $providerData['stripeConnect'] = null;
+        }
+
+        if (!isset($providerData['zoomUserId'])) {
+            $providerData['zoomUserId'] = null;
+        }
+
+        if (!isset($providerData['appleCalendarId'])) {
+            $providerData['appleCalendarId'] = null;
         }
 
         if (!isset($providerData['employeeAppleCalendar'])) {
@@ -121,6 +135,10 @@ class UpdateProviderCommandHandler extends CommandHandler
 
         if (!!$oldUser->getBadgeId() && !isset($providerData['badgeId'])) {
             $providerData['badgeId'] = null;
+        }
+
+        if ($oldUser->getTimeZone() && $settingsDS->isFeatureEnabled('timezones') === false) {
+            $providerData['timeZone'] = $oldUser->getTimeZone()->getValue();
         }
 
         $newUserData = array_merge($oldUser->toArray(), $providerData);
@@ -151,9 +169,6 @@ class UpdateProviderCommandHandler extends CommandHandler
         );
 
         if ($command->getUserApplicationService()->checkProviderPermissions($currentUser, $command->getToken())) {
-            /** @var SettingsService $settingsDS */
-            $settingsDS = $this->container->get('domain.settings.service');
-
             $rolesSettings = $settingsDS->getCategorySettings('roles');
 
             if (!$rolesSettings['allowConfigureServices']) {

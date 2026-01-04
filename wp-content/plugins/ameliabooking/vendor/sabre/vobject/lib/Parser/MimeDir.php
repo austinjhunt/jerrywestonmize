@@ -1,14 +1,14 @@
 <?php
 
-namespace AmeliaSabre\VObject\Parser;
+namespace AmeliaVendor\Sabre\VObject\Parser;
 
-use AmeliaSabre\VObject\Component;
-use AmeliaSabre\VObject\Component\VCalendar;
-use AmeliaSabre\VObject\Component\VCard;
-use AmeliaSabre\VObject\Document;
-use AmeliaSabre\VObject\EofException;
-use AmeliaSabre\VObject\Node;
-use AmeliaSabre\VObject\ParseException;
+use AmeliaVendor\Sabre\VObject\Component;
+use AmeliaVendor\Sabre\VObject\Component\VCalendar;
+use AmeliaVendor\Sabre\VObject\Component\VCard;
+use AmeliaVendor\Sabre\VObject\Document;
+use AmeliaVendor\Sabre\VObject\EofException;
+use AmeliaVendor\Sabre\VObject\Node;
+use AmeliaVendor\Sabre\VObject\ParseException;
 
 /**
  * MimeDir parser.
@@ -16,8 +16,8 @@ use AmeliaSabre\VObject\ParseException;
  * This class parses iCalendar 2.0 and vCard 2.1, 3.0 and 4.0 files. This
  * parser will return one of the following two objects from the parse method:
  *
- * AmeliaSabre\VObject\Component\VCalendar
- * AmeliaSabre\VObject\Component\VCard
+ * Sabre\VObject\Component\VCalendar
+ * Sabre\VObject\Component\VCard
  *
  * @copyright Copyright (C) fruux GmbH (https://fruux.com/)
  * @author Evert Pot (http://evertpot.com/)
@@ -73,7 +73,7 @@ class MimeDir extends Parser
      * @param string|resource|null $input
      * @param int                  $options
      *
-     * @return \AmeliaSabre\VObject\Document
+     * @return \AmeliaVendor\Sabre\VObject\Document
      */
     public function parse($input = null, $options = 0)
     {
@@ -275,7 +275,7 @@ class MimeDir extends Parser
      *
      * This method strips any newlines and also takes care of unfolding.
      *
-     * @throws \AmeliaSabre\VObject\EofException
+     * @throws \AmeliaVendor\Sabre\VObject\EofException
      *
      * @return string
      */

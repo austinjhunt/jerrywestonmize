@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Monolog\Handler;
+namespace AmeliaVendor\Monolog\Handler;
 
-use Monolog\Processor\ProcessorInterface;
+use AmeliaVendor\Monolog\Processor\ProcessorInterface;
 
 /**
  * Interface to describe loggers that have processors

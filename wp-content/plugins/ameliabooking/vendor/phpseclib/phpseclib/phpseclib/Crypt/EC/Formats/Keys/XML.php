@@ -16,16 +16,16 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-namespace phpseclib3\Crypt\EC\Formats\Keys;
+namespace AmeliaVendor\phpseclib3\Crypt\EC\Formats\Keys;
 
-use phpseclib3\Common\Functions\Strings;
-use phpseclib3\Crypt\EC\BaseCurves\Base as BaseCurve;
-use phpseclib3\Crypt\EC\BaseCurves\Montgomery as MontgomeryCurve;
-use phpseclib3\Crypt\EC\BaseCurves\Prime as PrimeCurve;
-use phpseclib3\Crypt\EC\BaseCurves\TwistedEdwards as TwistedEdwardsCurve;
-use phpseclib3\Exception\BadConfigurationException;
-use phpseclib3\Exception\UnsupportedCurveException;
-use phpseclib3\Math\BigInteger;
+use AmeliaVendor\phpseclib3\Common\Functions\Strings;
+use AmeliaVendor\phpseclib3\Crypt\EC\BaseCurves\Base as BaseCurve;
+use AmeliaVendor\phpseclib3\Crypt\EC\BaseCurves\Montgomery as MontgomeryCurve;
+use AmeliaVendor\phpseclib3\Crypt\EC\BaseCurves\Prime as PrimeCurve;
+use AmeliaVendor\phpseclib3\Crypt\EC\BaseCurves\TwistedEdwards as TwistedEdwardsCurve;
+use AmeliaVendor\phpseclib3\Exception\BadConfigurationException;
+use AmeliaVendor\phpseclib3\Exception\UnsupportedCurveException;
+use AmeliaVendor\phpseclib3\Math\BigInteger;
 
 /**
  * XML Formatted EC Key Handler
@@ -71,6 +71,10 @@ abstract class XML
 
         $use_errors = libxml_use_internal_errors(true);
 
+        if (substr($key, 0, 5) != '<?xml') {
+            $key = '<xml>' . $key . '</xml>';
+        }
+
         $temp = self::isolateNamespace($key, 'http://www.w3.org/2009/xmldsig11#');
         if ($temp) {
             $key = $temp;
@@ -82,9 +86,6 @@ abstract class XML
         }
 
         $dom = new \DOMDocument();
-        if (substr($key, 0, 5) != '<?xml') {
-            $key = '<xml>' . $key . '</xml>';
-        }
 
         if (!$dom->loadXML($key)) {
             libxml_use_internal_errors($use_errors);
@@ -212,7 +213,7 @@ abstract class XML
                 throw new UnsupportedCurveException('Curve with OID of ' . $oid . ' is not supported');
             }
 
-            $curve = '\phpseclib3\Crypt\EC\Curves\\' . $name;
+            $curve = '\AmeliaVendor\phpseclib3\Crypt\EC\Curves\\' . $name;
             if (!class_exists($curve)) {
                 throw new UnsupportedCurveException('Named Curve of ' . $name . ' is not supported');
             }
@@ -367,7 +368,7 @@ abstract class XML
      * Convert a public key to the appropriate format
      *
      * @param BaseCurve $curve
-     * @param \phpseclib3\Math\Common\FiniteField\Integer[] $publicKey
+     * @param \AmeliaVendor\phpseclib3\Math\Common\FiniteField\Integer[] $publicKey
      * @param array $options optional
      * @return string
      */

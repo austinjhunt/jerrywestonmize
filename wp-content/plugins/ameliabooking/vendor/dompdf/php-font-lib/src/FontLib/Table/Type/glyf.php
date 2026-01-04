@@ -5,11 +5,11 @@
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 
-namespace FontLib\Table\Type;
+namespace AmeliaVendor\FontLib\Table\Type;
 
-use FontLib\Table\Table;
-use FontLib\Glyph\Outline;
-use FontLib\Glyph\OutlineSimple;
+use AmeliaVendor\FontLib\Table\Table;
+use AmeliaVendor\FontLib\Glyph\Outline;
+use AmeliaVendor\FontLib\Glyph\OutlineSimple;
 
 /**
  * `glyf` font table.

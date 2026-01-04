@@ -15,12 +15,12 @@
  * limitations under the License.
  */
 
-namespace AmeliaGoogle\Auth\Cache;
+namespace AmeliaVendor\Google\Auth\Cache;
 
 use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
-use Psr\Cache\CacheItemInterface;
+use AmeliaVendor\Psr\Cache\CacheItemInterface;
 use TypeError;
 
 /**

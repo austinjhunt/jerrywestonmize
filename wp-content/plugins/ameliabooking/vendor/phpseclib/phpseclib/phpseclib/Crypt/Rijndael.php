@@ -30,7 +30,7 @@
  * <?php
  *    include 'vendor/autoload.php';
  *
- *    $rijndael = new \phpseclib3\Crypt\Rijndael('ctr');
+ *    $rijndael = new \AmeliaVendor\phpseclib3\Crypt\Rijndael('ctr');
  *
  *    $rijndael->setKey('abcdefghijklmnop');
  *
@@ -50,14 +50,14 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-namespace phpseclib3\Crypt;
+namespace AmeliaVendor\phpseclib3\Crypt;
 
-use phpseclib3\Common\Functions\Strings;
-use phpseclib3\Crypt\Common\BlockCipher;
-use phpseclib3\Exception\BadDecryptionException;
-use phpseclib3\Exception\BadModeException;
-use phpseclib3\Exception\InconsistentSetupException;
-use phpseclib3\Exception\InsufficientSetupException;
+use AmeliaVendor\phpseclib3\Common\Functions\Strings;
+use AmeliaVendor\phpseclib3\Crypt\Common\BlockCipher;
+use AmeliaVendor\phpseclib3\Exception\BadDecryptionException;
+use AmeliaVendor\phpseclib3\Exception\BadModeException;
+use AmeliaVendor\phpseclib3\Exception\InconsistentSetupException;
+use AmeliaVendor\phpseclib3\Exception\InsufficientSetupException;
 
 /**
  * Pure-PHP implementation of Rijndael.
@@ -74,8 +74,8 @@ class Rijndael extends BlockCipher
      * or not for the current $block_size/$key_length.
      * In case of, $cipher_name_mcrypt will be set dynamically at run time accordingly.
      *
-     * @see \phpseclib3\Crypt\Common\SymmetricKey::cipher_name_mcrypt
-     * @see \phpseclib3\Crypt\Common\SymmetricKey::engine
+     * @see Common\SymmetricKey::cipher_name_mcrypt
+     * @see Common\SymmetricKey::engine
      * @see self::isValidEngine()
      * @var string
      */
@@ -262,7 +262,7 @@ class Rijndael extends BlockCipher
      *
      * This is mainly just a wrapper to set things up for \phpseclib3\Crypt\Common\SymmetricKey::isValidEngine()
      *
-     * @see \phpseclib3\Crypt\Common\SymmetricKey::__construct()
+     * @see \AmeliaVendor\phpseclib3\Crypt\Common\SymmetricKey::__construct()
      * @param int $engine
      * @return bool
      */
@@ -511,7 +511,7 @@ class Rijndael extends BlockCipher
     /**
      * Setup the key (expansion)
      *
-     * @see \phpseclib3\Crypt\Common\SymmetricKey::setupKey()
+     * @see \AmeliaVendor\phpseclib3\Crypt\Common\SymmetricKey::setupKey()
      */
     protected function setupKey()
     {
@@ -818,7 +818,7 @@ class Rijndael extends BlockCipher
     /**
      * Setup the performance-optimized function for de/encrypt()
      *
-     * @see \phpseclib3\Crypt\Common\SymmetricKey::setupInlineCrypt()
+     * @see \AmeliaVendor\phpseclib3\Crypt\Common\SymmetricKey::setupInlineCrypt()
      */
     protected function setupInlineCrypt()
     {

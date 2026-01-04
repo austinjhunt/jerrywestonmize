@@ -3,6 +3,7 @@
 namespace AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking;
 
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
+use AmeliaBooking\Domain\ValueObjects\Picture;
 use AmeliaBooking\Domain\ValueObjects\String\Color;
 use AmeliaBooking\Domain\ValueObjects\String\Name;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\AbstractDatabaseTable;
@@ -28,6 +29,7 @@ class EventsTable extends AbstractDatabaseTable
         $name        = Name::MAX_LENGTH;
         $description = Description::MAX_LENGTH;
         $color       = Color::MAX_LENGTH;
+        $picture     = Picture::MAX_LENGTH;
 
         return "CREATE TABLE {$table} (
                    `id` INT(11) NOT NULL AUTO_INCREMENT,
@@ -73,6 +75,8 @@ class EventsTable extends AbstractDatabaseTable
                    `closeAfterMinBookings` TINYINT(1) DEFAULT 0,
                    `aggregatedPrice` TINYINT(1) DEFAULT 1,
                    `error` TEXT({$description}) DEFAULT NULL,
+                   `pictureFullPath` varchar ({$picture}) NULL,
+                   `pictureThumbPath` varchar ({$picture}) NULL,
                    PRIMARY KEY (`id`)
                 ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
     }

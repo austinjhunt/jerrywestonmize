@@ -2,7 +2,7 @@
 
 namespace Omnipay\Mollie\Test\Message;
 
-use AmeliaGuzzleHttp\Psr7\Request;
+use AmeliaVendor\GuzzleHttp\Psr7\Request;
 use Omnipay\Mollie\Message\Request\CompleteOrderRequest;
 use Omnipay\Mollie\Message\Request\CompletePurchaseRequest;
 use Omnipay\Mollie\Message\Response\CompleteOrderResponse;

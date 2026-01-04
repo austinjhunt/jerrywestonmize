@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -67,11 +67,26 @@ class ServiceRepository extends AbstractRepository implements ServiceRepositoryI
      * @return Collection
      * @throws QueryExecutionException
      */
-    public function getAllArrayIndexedById()
+    public function getAllArrayIndexedById($ids = [])
     {
+        $where  = '';
+        $params = [];
+        if (!empty($ids)) {
+            $query = [];
+
+            foreach ((array)$ids as $index => $value) {
+                $param = ':id' . $index;
+
+                $query[] = $param;
+
+                $params[$param] = $value;
+            }
+
+            $where = 'WHERE s.id IN (' . implode(', ', $query) . ')';
+        }
+
         try {
-            $statement = $this->connection->query(
-                "SELECT
+            $statement = $this->connection->prepare("SELECT
                 s.id AS service_id,
                 s.name AS service_name,
                 s.description AS service_description,
@@ -122,9 +137,12 @@ class ServiceRepository extends AbstractRepository implements ServiceRepositoryI
               FROM {$this->table} s
               LEFT JOIN {$this->extrasTable} e ON e.serviceId = s.id
               LEFT JOIN {$this->galleriesTable} g ON g.entityId = s.id AND g.entityType = 'service'
-              ORDER BY s.position, s.name ASC, e.position ASC, g.position ASC"
-            );
-            $rows      = $statement->fetchAll();
+              {$where}
+              ORDER BY s.position, s.name ASC, e.position ASC, g.position ASC");
+
+            $statement->execute($params);
+
+            $rows = $statement->fetchAll();
         } catch (\Exception $e) {
             throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
         }
@@ -145,7 +163,7 @@ class ServiceRepository extends AbstractRepository implements ServiceRepositoryI
     /**
      * @param Service $entity
      *
-     * @return bool
+     * @return int
      * @throws QueryExecutionException
      */
     public function add($entity)
@@ -325,39 +343,55 @@ class ServiceRepository extends AbstractRepository implements ServiceRepositoryI
             switch ($criteria['sort']) {
                 case ('nameAsc'):
                     $orderColumn = 's.name';
-
                     $orderDirection = 'ASC';
-
                     break;
 
                 case ('nameDesc'):
                     $orderColumn = 's.name';
-
                     $orderDirection = 'DESC';
-
                     break;
 
                 case ('priceAsc'):
                     $orderColumn = 's.price';
-
                     $orderDirection = 'ASC';
-
                     break;
 
                 case ('priceDesc'):
                     $orderColumn = 's.price';
-
                     $orderDirection = 'DESC';
+                    break;
 
+                case ('durationAsc'):
+                    $orderColumn = 's.duration';
+                    $orderDirection = 'ASC';
+                    break;
+
+                case ('durationDesc'):
+                    $orderColumn = 's.duration';
+                    $orderDirection = 'DESC';
+                    break;
+
+                case ('idAsc'):
+                    $orderColumn = 's.id';
+                    $orderDirection = 'ASC';
+                    break;
+
+                case ('idDesc'):
+                    $orderColumn = 's.id';
+                    $orderDirection = 'DESC';
                     break;
 
                 case ('custom'):
                     $orderColumn = 's.position, s.id';
-
                     $orderDirection = 'ASC';
-
                     break;
             }
+        }
+
+        if (!empty($criteria['search'])) {
+            $params[':search1'] = $params[':search2'] = $params[':search3'] = "%{$criteria['search']}%";
+
+            $where[] = "(s.name LIKE :search1 OR s.description LIKE :search2 OR s.id LIKE :search3)";
         }
 
         if (!empty($criteria['categoryId'])) {
@@ -411,6 +445,12 @@ class ServiceRepository extends AbstractRepository implements ServiceRepositoryI
         $params = [];
 
         $where = [];
+
+        if (!empty($criteria['search'])) {
+            $params[':search1'] = $params[':search2'] = $params[':search3'] = "%{$criteria['search']}%";
+
+            $where[] = "(s.name LIKE :search1 OR s.description LIKE :search2 OR s.id LIKE :search3)";
+        }
 
         if (!empty($criteria['categoryId'])) {
             $params[':categoryId'] = $criteria['categoryId'];
@@ -806,40 +846,6 @@ class ServiceRepository extends AbstractRepository implements ServiceRepositoryI
     }
 
     /**
-     * @param $serviceId
-     * @param $status
-     *
-     * @return bool
-     * @throws QueryExecutionException
-     */
-    public function updateStatusById($serviceId, $status)
-    {
-        $params = [
-            ':id'     => $serviceId,
-            ':status' => $status
-        ];
-
-        try {
-            $statement = $this->connection->prepare(
-                "UPDATE {$this->table}
-                SET
-                `status` = :status
-                WHERE id = :id"
-            );
-
-            $res = $statement->execute($params);
-
-            if (!$res) {
-                throw new QueryExecutionException('Unable to save data in ' . __CLASS__);
-            }
-
-            return $res;
-        } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to save data in ' . __CLASS__, $e->getCode(), $e);
-        }
-    }
-
-    /**
      * Return an array of services with the number of appointments for the given date period.
      * Keys of the array are Services IDs.
      *
@@ -959,7 +965,7 @@ class ServiceRepository extends AbstractRepository implements ServiceRepositoryI
     /**
      * @param $serviceId
      *
-     * @return string
+     * @return bool
      * @throws QueryExecutionException
      */
     public function addViewStats($serviceId)

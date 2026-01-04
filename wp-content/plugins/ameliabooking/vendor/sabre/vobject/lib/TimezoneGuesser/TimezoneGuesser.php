@@ -1,9 +1,9 @@
 <?php
 
-namespace AmeliaSabre\VObject\TimezoneGuesser;
+namespace AmeliaVendor\Sabre\VObject\TimezoneGuesser;
 
 use DateTimeZone;
-use AmeliaSabre\VObject\Component\VTimeZone;
+use AmeliaVendor\Sabre\VObject\Component\VTimeZone;
 
 interface TimezoneGuesser
 {

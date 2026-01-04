@@ -1,8 +1,8 @@
 <?php
 
-namespace Masterminds\HTML5\Parser;
+namespace AmeliaVendor\Masterminds\HTML5\Parser;
 
-use Masterminds\HTML5\Exception;
+use AmeliaVendor\Masterminds\HTML5\Exception;
 
 /**
  * The scanner scans over a given data input to react appropriately to characters.

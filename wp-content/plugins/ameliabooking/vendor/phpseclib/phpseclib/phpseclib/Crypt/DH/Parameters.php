@@ -9,9 +9,9 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-namespace phpseclib3\Crypt\DH;
+namespace AmeliaVendor\phpseclib3\Crypt\DH;
 
-use phpseclib3\Crypt\DH;
+use AmeliaVendor\phpseclib3\Crypt\DH;
 
 /**
  * DH Parameters

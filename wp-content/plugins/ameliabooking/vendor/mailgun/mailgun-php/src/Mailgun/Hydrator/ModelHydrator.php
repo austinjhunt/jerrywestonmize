@@ -11,7 +11,7 @@ namespace Mailgun\Hydrator;
 
 use Mailgun\Exception\HydrationException;
 use Mailgun\Model\ApiResponse;
-use AmeliaPsr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
 
 /**
  * Serialize an HTTP response to domain object.

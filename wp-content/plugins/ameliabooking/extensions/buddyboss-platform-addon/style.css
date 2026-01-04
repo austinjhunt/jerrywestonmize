@@ -5,20 +5,20 @@ It is required for adding icons to your admin settings.
 
 /* Integration Tab Icon */
 .bp-admin-card.section-Amelia_settings_section h2:before {
-    background-image: url('images/amelia-logo-symbol.svg');
+    background-image: url('images/amelia-logo-admin-icon.svg');
     background-size: 35px 35px;
     background-color: transparent;
 }
 
 .bp-admin-card.section-Amelia_settings_section_customers h2:before {
-    background-image: url('images/amelia-logo-symbol.svg');
+    background-image: url('images/amelia-logo-admin-icon.svg');
     background-size: 35px 35px;
     background-color: transparent;
 }
 
 /* Component Settings Icon */
 .bp-admin-card.section-Amelia_addon h2:before {
-    background-image: url('images/amelia-logo-symbol.svg');
+    background-image: url('images/amelia-logo-admin-icon.svg');
     background-size: 35px 35px;
     background-color: transparent;
 }

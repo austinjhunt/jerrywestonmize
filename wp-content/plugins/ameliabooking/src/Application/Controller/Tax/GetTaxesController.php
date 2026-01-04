@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -33,6 +33,8 @@ class GetTaxesController extends Controller
         $command = new GetTaxesCommand($args);
 
         $params = (array)$request->getQueryParams();
+
+        $this->setArrayParams($params, ['extras']);
 
         if (isset($params['services'])) {
             $params['services'] = array_map('intval', $params['services']);

@@ -3,8 +3,8 @@
  * Plugin Name: Amelia
  * Plugin URI:  https://wpamelia.com/
  * Description: Amelia integration with BuddyBoss Platform
- * Author:      TMS
- * Author URI:  https://tmsproducts.io/
+ * Author:      Melograno Ventures
+ * Author URI:  https://melograno.io/
  * Version:     1.0.0
  * Text Domain: buddyboss-platform-addon
  * Domain Path: /languages/

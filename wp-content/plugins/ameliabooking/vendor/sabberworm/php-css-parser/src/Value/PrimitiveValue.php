@@ -1,6 +1,6 @@
 <?php
 
-namespace Sabberworm\CSS\Value;
+namespace AmeliaVendor\Sabberworm\CSS\Value;
 
 abstract class PrimitiveValue extends Value
 {

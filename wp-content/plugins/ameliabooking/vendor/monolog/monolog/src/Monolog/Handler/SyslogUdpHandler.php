@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Monolog\Handler;
+namespace AmeliaVendor\Monolog\Handler;
 
 use DateTimeInterface;
-use Monolog\Logger;
-use Monolog\Handler\SyslogUdp\UdpSocket;
-use Monolog\Utils;
+use AmeliaVendor\Monolog\Logger;
+use AmeliaVendor\Monolog\Handler\SyslogUdp\UdpSocket;
+use AmeliaVendor\Monolog\Utils;
 
 /**
  * A Handler for logging to a remote syslogd server.

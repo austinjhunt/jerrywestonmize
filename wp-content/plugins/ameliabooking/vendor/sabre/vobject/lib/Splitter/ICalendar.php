@@ -1,9 +1,9 @@
 <?php
 
-namespace AmeliaSabre\VObject\Splitter;
+namespace AmeliaVendor\Sabre\VObject\Splitter;
 
-use AmeliaSabre\VObject;
-use AmeliaSabre\VObject\Component\VCalendar;
+use AmeliaVendor\Sabre\VObject;
+use AmeliaVendor\Sabre\VObject\Component\VCalendar;
 
 /**
  * Splitter.
@@ -83,7 +83,7 @@ class ICalendar implements SplitterInterface
      *
      * When the end is reached, null will be returned.
      *
-     * @return \AmeliaSabre\VObject\Component|null
+     * @return \AmeliaVendor\Sabre\VObject\Component|null
      */
     public function getNext()
     {

@@ -3,19 +3,19 @@
 // For older (pre-2.7.2) verions of google/apiclient
 if (
     file_exists(__DIR__ . '/../apiclient/src/Google/Client.php')
-    && !class_exists('AmeliaGoogle_Client', false)
+    && !class_exists('AmeliaVendor_Google_Client', false)
 ) {
     require_once(__DIR__ . '/../apiclient/src/Google/Client.php');
     if (
-        defined('AmeliaGoogle_Client::LIBVER')
-        && version_compare(AmeliaGoogle_Client::LIBVER, '2.7.2', '<=')
+        defined('AmeliaVendor_Google_Client::LIBVER')
+        && version_compare(AmeliaVendor_Google_Client::LIBVER, '2.7.2', '<=')
     ) {
         $servicesClassMap = [
-            'AmeliaGoogle\\Client' => 'AmeliaGoogle_Client',
-            'AmeliaGoogle\\Service' => 'AmeliaGoogle_Service',
-            'AmeliaGoogle\\Service\\Resource' => 'AmeliaGoogle_Service_Resource',
-            'AmeliaGoogle\\Model' => 'AmeliaGoogle_Model',
-            'AmeliaGoogle\\Collection' => 'AmeliaGoogle_Collection',
+            'AmeliaVendor\\Google\\Client' => 'AmeliaVendor_Google_Client',
+            'AmeliaVendor\\Google\\Service' => 'AmeliaVendor_Google_Service',
+            'AmeliaVendor\\Google\\Service\\Resource' => 'AmeliaVendor_Google_Service_Resource',
+            'AmeliaVendor\\Google\\Model' => 'AmeliaVendor_Google_Model',
+            'AmeliaVendor\\Google\\Collection' => 'AmeliaVendor_Google_Collection',
         ];
         foreach ($servicesClassMap as $alias => $class) {
             class_alias($class, $alias);
@@ -23,11 +23,11 @@ if (
     }
 }
 spl_autoload_register(function ($class) {
-    if (0 === strpos($class, 'AmeliaGoogle_Service_')) {
+    if (0 === strpos($class, 'Google_Service_')) {
         // Autoload the new class, which will also create an alias for the
         // old class by changing underscores to namespaces:
-        //     AmeliaGoogle_Service_Speech_Resource_Operations
-        //      => AmeliaGoogle\Service\Speech\Resource\Operations
+        //     Google_Service_Speech_Resource_Operations
+        //      => AmeliaVendor\Google\Service\Speech\Resource\Operations
         $classExists = class_exists($newClass = str_replace('_', '\\', $class));
         if ($classExists) {
             return true;

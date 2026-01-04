@@ -138,6 +138,14 @@ abstract class AbstractPackageApplicationService
     abstract public function getPackageAvailability($appointments, $params);
 
     /**
+     * @return Collection
+     *
+     * @throws QueryExecutionException
+     * @throws InvalidArgumentException
+     */
+    abstract public function getPackages();
+
+    /**
      * @return array
      */
     abstract public function getPackagesArray();

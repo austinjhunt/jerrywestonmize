@@ -1,7 +1,7 @@
 <?php
 
-namespace MailchimpMarketing;
+namespace AmeliaVendor\MailchimpMarketing;
 
-use MailchimpMarketing\Configuration;
+use AmeliaVendor\MailchimpMarketing\Configuration;
 
 class ApiClient extends Configuration {}

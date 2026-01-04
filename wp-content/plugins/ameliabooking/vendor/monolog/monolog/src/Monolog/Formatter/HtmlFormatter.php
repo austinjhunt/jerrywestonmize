@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Monolog\Formatter;
+namespace AmeliaVendor\Monolog\Formatter;
 
-use Monolog\Logger;
-use Monolog\Utils;
+use AmeliaVendor\Monolog\Logger;
+use AmeliaVendor\Monolog\Utils;
 
 /**
  * Formats incoming records into an HTML table

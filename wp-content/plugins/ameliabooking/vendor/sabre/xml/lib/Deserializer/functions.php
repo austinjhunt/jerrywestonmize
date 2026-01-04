@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace AmeliaSabre\Xml\Deserializer;
+namespace AmeliaVendor\Sabre\Xml\Deserializer;
 
-use AmeliaSabre\Xml\Reader;
+use AmeliaVendor\Sabre\Xml\Reader;
 
 /**
  * This class provides a number of 'deserializer' helper functions.

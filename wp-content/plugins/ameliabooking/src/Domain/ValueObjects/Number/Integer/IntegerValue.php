@@ -11,13 +11,10 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
  */
 final class IntegerValue
 {
-    /**
-     * @var string
-     */
     private $integer;
 
     /**
-     * @param string $integer
+     * @param mixed $integer
      *
      * @throws InvalidArgumentException
      */

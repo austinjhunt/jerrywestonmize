@@ -21,6 +21,7 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking\EventsTagsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking\EventsTicketsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Coupon\CouponsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Gallery\GalleriesTable;
+use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Location\LocationsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Payment\PaymentsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\User\UsersTable;
 
@@ -36,7 +37,7 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
     /**
      * @param Event $entity
      *
-     * @return bool
+     * @return int
      * @throws QueryExecutionException
      */
     public function add($entity)
@@ -66,6 +67,8 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
             ':closeAfterMin'        => $data['closeAfterMin'],
             ':closeAfterMinBookings'  => $data['closeAfterMinBookings'] ? 1 : 0,
             ':aggregatedPrice'      => $data['aggregatedPrice'] ? 1 : 0,
+            ':pictureFullPath'      => $data['pictureFullPath'],
+            ':pictureThumbPath'     => $data['pictureThumbPath'],
             ':error'                => '',
         ];
 
@@ -100,6 +103,8 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                 `closeAfterMin`,
                 `closeAfterMinBookings`,
                 `aggregatedPrice`,
+                `pictureFullPath`,
+                `pictureThumbPath`,
                 `error`
                  )
                 VALUES (
@@ -126,6 +131,8 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                 :closeAfterMin,
                 :closeAfterMinBookings,
                 :aggregatedPrice,
+                :pictureFullPath,
+                :pictureThumbPath,
                 :error
                 )"
             );
@@ -175,7 +182,9 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
             ':parentId'             => $data['parentId'],
             ':closeAfterMin'        => $data['closeAfterMin'],
             ':closeAfterMinBookings'  => $data['closeAfterMinBookings'] ? 1 : 0,
-            ':aggregatedPrice'      => $data['aggregatedPrice'] ? 1 : 0
+            ':aggregatedPrice'      => $data['aggregatedPrice'] ? 1 : 0,
+            ':pictureFullPath'      => $data['pictureFullPath'],
+            ':pictureThumbPath'     => $data['pictureThumbPath'],
         ];
 
         $additionalData = Licence\DataModifier::getEventRepositoryData($data);
@@ -207,41 +216,9 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                 `parentId` = :parentId,
                 `closeAfterMin` = :closeAfterMin,
                 `closeAfterMinBookings` = :closeAfterMinBookings,
-                `aggregatedPrice` = :aggregatedPrice
-                WHERE id = :id"
-            );
-
-            $res = $statement->execute($params);
-
-            if (!$res) {
-                throw new QueryExecutionException('Unable to save data in ' . __CLASS__);
-            }
-
-            return $res;
-        } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to save data in ' . __CLASS__, $e->getCode(), $e);
-        }
-    }
-
-    /**
-     * @param int $id
-     * @param int $status
-     *
-     * @return mixed
-     * @throws QueryExecutionException
-     */
-    public function updateStatusById($id, $status)
-    {
-        $params = [
-            ':id'     => $id,
-            ':status' => $status
-        ];
-
-        try {
-            $statement = $this->connection->prepare(
-                "UPDATE {$this->table}
-                SET
-                `status` = :status
+                `aggregatedPrice` = :aggregatedPrice,
+                `pictureFullPath`   = :pictureFullPath,
+                `pictureThumbPath`  = :pictureThumbPath
                 WHERE id = :id"
             );
 
@@ -423,7 +400,7 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
 
     /**
      * @param array $criteria
-     * @param int   $itemsPerPage
+     * @param int|null   $itemsPerPage
      *
      * @return array
      * @throws QueryExecutionException
@@ -442,12 +419,44 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
 
         $where = [];
 
+        $joins = '';
+
+        $groupBy = 'GROUP BY e.id';
+
         if (isset($criteria['parentId'])) {
             $params[':parentId'] = $criteria['parentId'];
 
             $params[':originParentId'] = $criteria['parentId'];
 
-            $where[] = 'e.parentId = :parentId OR e.id = :originParentId';
+            $where[] = '(e.parentId = :parentId OR e.id = :originParentId)';
+        }
+
+        if (!empty($criteria['events'])) {
+            $queryExcludeIds = [];
+
+            foreach ($criteria['events'] as $index => $value) {
+                $param = ':id' . $index;
+
+                $queryExcludeIds[] = $param;
+
+                $params[$param] = $value;
+            }
+
+            $where[] = 'e.id IN (' . implode(', ', $queryExcludeIds) . ')';
+        }
+
+        if (!empty($criteria['excludeIds'])) {
+            $queryExcludeIds = [];
+
+            foreach ($criteria['excludeIds'] as $index => $value) {
+                $param = ':excludeId' . $index;
+
+                $queryExcludeIds[] = $param;
+
+                $params[$param] = $value;
+            }
+
+            $where[] = 'e.id NOT IN (' . implode(', ', $queryExcludeIds) . ')';
         }
 
         if (!empty($criteria['search'])) {
@@ -459,9 +468,14 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
             $where[] = "(e.name LIKE :search1 
             OR e.translations LIKE :search2
             OR e.translations LIKE :search3
-            OR (e.translations LIKE :search4 AND e.translations NOT LIKE '%\"description\":{%'))";
+            OR (e.translations LIKE :search4 AND e.translations NOT LIKE '%\"description\":{%')
+            OR e.id LIKE '%" . $criteria['search'] . "%')";
         }
 
+        if (!empty($criteria['status'])) {
+            $params[':status'] = $criteria['status'];
+            $where[] = "e.status = :status";
+        }
 
         if (isset($criteria['show'])) {
             $where[] = 'e.show = 1';
@@ -490,9 +504,7 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
             }
         }
 
-        $tagJoin = '';
-
-        if (isset($criteria['tag'])) {
+        if (!empty($criteria['tag'])) {
             $queryTags = [];
 
             $tags = $criteria['tag'];
@@ -506,7 +518,9 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
 
             $where[] = 'et.name IN (' . implode(', ', $queryTags) . ')';
 
-            $tagJoin = "INNER JOIN {$eventsTagsTable} et ON et.eventId = e.id";
+            $joins .= "
+                INNER JOIN {$eventsTagsTable} et ON et.eventId = e.id
+            ";
         }
 
         if (!empty($criteria['id'])) {
@@ -540,17 +554,30 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
             }
         }
 
-        $customerJoin = '';
-
-        if (!empty($criteria['customerId']) || !empty($criteria['customerBookingsIds'])) {
-            $customerJoin = "
-            LEFT JOIN {$customerBookingsEventsPeriods} cbe ON cbe.eventPeriodId = ep.id
-            LEFT JOIN {$customerBookingsTable} cb ON cb.id = cbe.customerBookingId";
+        if (!empty($criteria['customers']) || !empty($criteria['customerId']) || !empty($criteria['customerBookingsIds'])) {
+            $joins .= "
+                LEFT JOIN {$customerBookingsEventsPeriods} cbe ON cbe.eventPeriodId = ep.id
+                LEFT JOIN {$customerBookingsTable} cb ON cb.id = cbe.customerBookingId
+            ";
 
             if (!empty($criteria['customerId'])) {
                 $params[':customerId'] = $criteria['customerId'];
 
                 $where[] = 'cb.customerId = :customerId';
+            }
+
+            if (!empty($criteria['customers'])) {
+                $queryCustomerIds = [];
+
+                foreach ($criteria['customers'] as $index => $value) {
+                    $param = ':customerId' . $index;
+
+                    $queryCustomerIds[] = $param;
+
+                    $params[$param] = $value;
+                }
+
+                $where[] = 'cb.customerId IN (' . implode(', ', $queryCustomerIds) . ')';
             }
 
             if (!empty($criteria['customerBookingsIds'])) {
@@ -600,12 +627,12 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
             $where[] = '(' . $where3 . ')';
         }
 
-        $providerJoin = '';
-
         if (!empty($criteria['providers'])) {
-            $providerJoin   = "
-            LEFT JOIN {$eventsProvidersTable} epr ON epr.eventId = e.id
-            INNER JOIN {$usersTable} pu ON pu.id = epr.userId OR pu.id = e.organizerId";
+            $joins .= "
+                LEFT JOIN {$eventsProvidersTable} epr ON epr.eventId = e.id
+                INNER JOIN {$usersTable} pu ON pu.id = epr.userId OR pu.id = e.organizerId
+            ";
+
             $queryProviders = [];
 
             foreach ((array)$criteria['providers'] as $index => $value) {
@@ -641,12 +668,10 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                      e.id
                 FROM {$this->table} e
                 INNER JOIN {$eventsPeriodsTable} ep ON ep.eventId = e.id
-                {$tagJoin}
-                {$providerJoin}
-                {$customerJoin}
+                {$joins}
                 {$where}
-                GROUP BY e.id
-                ORDER BY ep.periodStart, e.id
+                {$groupBy}
+                {$this->getOrderBy(!empty($criteria['sort']) ? $criteria['sort'] : null)}
                 {$limit}"
             );
 
@@ -695,7 +720,8 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
             $where[] = "(e.name LIKE :search1 
             OR e.translations LIKE :search2
             OR e.translations LIKE :search3
-            OR (e.translations LIKE :search4 AND e.translations NOT LIKE '%\"description\":{%'))";
+            OR (e.translations LIKE :search4 AND e.translations NOT LIKE '%\"description\":{%')
+            OR e.id LIKE '%" . $criteria['search'] . "%')";
         }
 
         if (isset($criteria['show'])) {
@@ -1341,7 +1367,7 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      */
-    public function getByIdsWithEntities($ids, $criteria = [])
+    public function getByIdsWithEntities($ids, $criteria = [], $sort = null)
     {
         $params = [];
 
@@ -1373,7 +1399,20 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                 INNER JOIN {$eventsPeriodsTable} ep ON ep.eventId = e.id
             ";
 
-            $orderBy = !empty($criteria['ordered']) ? 'ORDER BY e.id, ep.periodStart' : 'ORDER BY ep.periodStart';
+            $orderBy = $this->getOrderBy($sort);
+        }
+
+        if (!empty($criteria['fetchEventsLocation'])) {
+            $locationsTable = LocationsTable::getTableName();
+
+            $fields .= '
+                l.id AS location_id,
+                l.name AS location_name,
+            ';
+
+            $joins .= "
+                LEFT JOIN {$locationsTable} l ON l.id = e.locationId
+            ";
         }
 
         if (!empty($criteria['fetchEventsCoupons'])) {
@@ -1443,6 +1482,24 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
             ";
         }
 
+        if (!empty($criteria['fetchEventsOrganizer'])) {
+            $usersTable = UsersTable::getTableName();
+
+            $joins .= "
+                LEFT JOIN {$usersTable} ou ON ou.id = e.organizerId
+            ";
+
+            $fields .= '
+                ou.id AS organizer_id,
+                ou.firstName AS organizer_firstName,
+                ou.lastName AS organizer_lastName,
+                ou.email AS organizer_email,
+                ou.badgeId AS organizer_badgeId,
+                ou.pictureThumbPath AS organizer_pictureThumbPath,
+                ou.pictureFullPath AS organizer_pictureFullPath,
+            ';
+        }
+
         if (!empty($criteria['fetchEventsProviders'])) {
             $eventsProvidersTable = EventsProvidersTable::getTableName();
 
@@ -1466,6 +1523,7 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                 pu.pictureThumbPath AS provider_pictureThumbPath,
                 pu.translations AS provider_translations,
                 pu.timeZone AS provider_timeZone,
+                pu.badgeId AS provider_badgeId,
             ';
         }
 
@@ -1511,7 +1569,9 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
             e.customPricing AS event_customPricing,
             e.closeAfterMin AS event_closeAfterMin,
             e.closeAfterMinBookings AS event_closeAfterMinBookings,
-            e.aggregatedPrice AS event_aggregatedPrice
+            e.aggregatedPrice AS event_aggregatedPrice,
+            e.pictureFullPath AS event_pictureFullPath,
+            e.pictureThumbPath AS event_pictureThumbPath
         ";
 
         if (!empty($ids)) {
@@ -1813,5 +1873,118 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
         }
 
         return $rows;
+    }
+
+
+    /**
+     * @param string $sort
+     * @return string
+     */
+    private function getOrderBy($sort)
+    {
+        $order = "ORDER BY ep.periodStart";
+        if ($sort) {
+            $column = $sort[0] === '-' ? substr($sort, 1) : $sort;
+            $orderColumn = 'ep.periodStart';
+            switch ($column) {
+                case 'name':
+                    $orderColumn = 'e.name';
+                    break;
+                case 'id':
+                    $orderColumn = 'e.id';
+                    break;
+                case 'bookingOpens':
+                    $orderColumn = 'COALESCE(e.bookingOpens, e.created)';
+                    break;
+                case 'bookingCloses':
+                    $orderColumn = 'COALESCE(e.bookingCloses, ep.periodStart)';
+                    break;
+            }
+
+            $orderDirection = $sort[0] === '-' ? 'DESC' : 'ASC';
+
+            $order = "ORDER BY {$orderColumn} {$orderDirection}";
+        }
+
+        return $order;
+    }
+
+
+    /**
+     * @param Event $event
+     * @param int $visible
+     * @param boolean $applyGlobally
+     * @throws QueryExecutionException
+     * @throws InvalidArgumentException
+     */
+    public function toggleEventVisibility($event, $visible, $applyGlobally)
+    {
+        $params = [
+            ':show' => $visible
+        ];
+
+        if ($applyGlobally) {
+            $params[':id1'] = $event->getId()->getValue();
+            $params[':id2'] = $event->getId()->getValue();
+
+            $where = "WHERE id = :id1 OR parentId = :id2";
+            if ($event->getParentId()) {
+                $params[':id3'] = $event->getId()->getValue();
+                $params[':parentId'] = $event->getParentId()->getValue();
+                $where .= ' OR (id > :id3 AND parentId = :parentId)';
+            }
+        } else {
+            $params[':id'] = $event->getId()->getValue();
+            $where = 'WHERE id = :id';
+        }
+
+        try {
+            $statement = $this->connection->prepare(
+                "UPDATE {$this->table}
+                SET
+                `show` = :show
+                $where"
+            );
+
+            $res = $statement->execute($params);
+
+            if (!$res) {
+                throw new QueryExecutionException('Unable to update visibility in ' . __CLASS__);
+            }
+
+            return $res;
+        } catch (\Exception $e) {
+            throw new QueryExecutionException('Unable to update visibility in ' . __CLASS__, $e->getCode(), $e);
+        }
+    }
+
+    /**
+     * @param int $organizerId
+     */
+    public function removeOrganizerFromEvents($organizerId)
+    {
+        $params = [
+            ':organizerId' => $organizerId
+        ];
+
+
+        try {
+            $statement = $this->connection->prepare(
+                "UPDATE {$this->table}
+                SET
+                organizerId = NULL
+                WHERE organizerId = :organizerId"
+            );
+
+            $res = $statement->execute($params);
+
+            if (!$res) {
+                throw new QueryExecutionException('Unable to remove organizer in ' . __CLASS__);
+            }
+
+            return $res;
+        } catch (\Exception $e) {
+            throw new QueryExecutionException('Unable to remove organizer in ' . __CLASS__, $e->getCode(), $e);
+        }
     }
 }

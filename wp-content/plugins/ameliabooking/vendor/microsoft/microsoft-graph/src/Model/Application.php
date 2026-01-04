@@ -478,15 +478,15 @@ class Application extends DirectoryObject
     * Gets the logo
     * The main logo for the application. Not nullable.
     *
-    * @return \AmeliaGuzzleHttp\Psr7\Stream|null The logo
+    * @return \AmeliaVendor\GuzzleHttp\Psr7\Stream|null The logo
     */
     public function getLogo()
     {
         if (array_key_exists("logo", $this->_propDict)) {
-            if (is_a($this->_propDict["logo"], "\AmeliaGuzzleHttp\Psr7\Stream") || is_null($this->_propDict["logo"])) {
+            if (is_a($this->_propDict["logo"], "\AmeliaVendor\GuzzleHttp\Psr7\Stream") || is_null($this->_propDict["logo"])) {
                 return $this->_propDict["logo"];
             } else {
-                $this->_propDict["logo"] = \AmeliaGuzzleHttp\Psr7\Utils::streamFor($this->_propDict["logo"]);
+                $this->_propDict["logo"] = \AmeliaVendor\GuzzleHttp\Psr7\Utils::streamFor($this->_propDict["logo"]);
                 return $this->_propDict["logo"];
             }
         }
@@ -497,7 +497,7 @@ class Application extends DirectoryObject
     * Sets the logo
     * The main logo for the application. Not nullable.
     *
-    * @param \AmeliaGuzzleHttp\Psr7\Stream $val The logo
+    * @param \AmeliaVendor\GuzzleHttp\Psr7\Stream $val The logo
     *
     * @return Application
     */

@@ -2,7 +2,7 @@
 
 namespace AmeliaHttp\Message\Decorator;
 
-use AmeliaPsr\Http\Message\StreamInterface;
+use AmeliaVendor\Psr\Http\Message\StreamInterface;
 
 /**
  * Decorates a stream.

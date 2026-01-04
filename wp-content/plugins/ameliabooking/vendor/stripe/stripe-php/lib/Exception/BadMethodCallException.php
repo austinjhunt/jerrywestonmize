@@ -1,5 +1,5 @@
 <?php
 
-namespace AmeliaStripe\Exception;
+namespace AmeliaVendor\Stripe\Exception;
 
 class BadMethodCallException extends \BadMethodCallException implements ExceptionInterface {}

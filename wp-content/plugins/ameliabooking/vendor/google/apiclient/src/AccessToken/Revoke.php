@@ -16,13 +16,13 @@
  * limitations under the License.
  */
 
-namespace AmeliaGoogle\AccessToken;
+namespace AmeliaVendor\Google\AccessToken;
 
-use AmeliaGoogle\Auth\HttpHandler\HttpHandlerFactory;
-use AmeliaGoogle\Client;
-use AmeliaGuzzleHttp\ClientInterface;
-use AmeliaGuzzleHttp\Psr7;
-use AmeliaGuzzleHttp\Psr7\Request;
+use AmeliaVendor\Google\Auth\HttpHandler\HttpHandlerFactory;
+use AmeliaVendor\Google\Client;
+use AmeliaVendor\GuzzleHttp\ClientInterface;
+use AmeliaVendor\GuzzleHttp\Psr7;
+use AmeliaVendor\GuzzleHttp\Psr7\Request;
 
 /**
  * Wrapper around Google Access Tokens which provides convenience functions
@@ -39,7 +39,7 @@ class Revoke
      * Instantiates the class, but does not initiate the login flow, leaving it
      * to the discretion of the caller.
      */
-    public function __construct(ClientInterface $http = null)
+    public function __construct(?ClientInterface $http = null)
     {
         $this->http = $http;
     }

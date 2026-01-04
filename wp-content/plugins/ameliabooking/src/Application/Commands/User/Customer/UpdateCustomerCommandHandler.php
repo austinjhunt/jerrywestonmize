@@ -186,7 +186,7 @@ class UpdateCustomerCommandHandler extends CommandHandler
             /** @var CustomerBookingRepository $bookingRepository */
             $bookingRepository = $this->container->get('domain.booking.customerBooking.repository');
 
-            $bookingRepository->updateInfoByCustomerId($oldUser->getId()->getValue(), null);
+            $bookingRepository->updateFieldByColumn('info', null, 'customerId', $oldUser->getId()->getValue());
         }
 
         if ($oldUser->getEmail() && $oldUser->getEmail()->getValue() && $newUser->getEmail() && $newUser->getEmail()->getValue()) {

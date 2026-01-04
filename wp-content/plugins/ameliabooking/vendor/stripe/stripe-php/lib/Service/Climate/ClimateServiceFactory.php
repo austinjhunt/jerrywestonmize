@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Service\Climate;
+namespace AmeliaVendor\Stripe\Service\Climate;
 
 /**
  * Service factory class for API resources in the Climate namespace.
@@ -11,7 +11,7 @@ namespace AmeliaStripe\Service\Climate;
  * @property ProductService $products
  * @property SupplierService $suppliers
  */
-class ClimateServiceFactory extends \AmeliaStripe\Service\AbstractServiceFactory
+class ClimateServiceFactory extends \AmeliaVendor\Stripe\Service\AbstractServiceFactory
 {
     /**
      * @var array<string, string>

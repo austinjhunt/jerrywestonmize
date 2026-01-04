@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace AmeliaSabre\Xml\Serializer;
+namespace AmeliaVendor\Sabre\Xml\Serializer;
 
-use AmeliaSabre\Xml\Writer;
-use AmeliaSabre\Xml\XmlSerializable;
+use AmeliaVendor\Sabre\Xml\Writer;
+use AmeliaVendor\Sabre\Xml\XmlSerializable;
 
 /**
  * This file provides a number of 'serializer' helper functions.

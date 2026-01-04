@@ -1,10 +1,11 @@
 <?php
+
 /**
  * @package dompdf
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace AmeliaDompdf;
+namespace AmeliaVendor\Dompdf;
 
 /**
  * Embeds Javascript into the PDF document
@@ -13,22 +14,19 @@ namespace AmeliaDompdf;
  */
 class JavascriptEmbedder
 {
-
     /**
-     * @var Dompdf
+     * @var \Dompdf
      */
     protected $_dompdf;
-
     /**
      * JavascriptEmbedder constructor.
      *
-     * @param Dompdf $dompdf
+     * @param \Dompdf $dompdf
      */
     public function __construct(Dompdf $dompdf)
     {
         $this->_dompdf = $dompdf;
     }
-
     /**
      * @param $script
      */
@@ -36,7 +34,6 @@ class JavascriptEmbedder
     {
         $this->_dompdf->getCanvas()->javascript($script);
     }
-
     /**
      * @param Frame $frame
      */
@@ -45,7 +42,6 @@ class JavascriptEmbedder
         if (!$this->_dompdf->getOptions()->getIsJavascriptEnabled()) {
             return;
         }
-
         $this->insert($frame->get_node()->nodeValue);
     }
 }

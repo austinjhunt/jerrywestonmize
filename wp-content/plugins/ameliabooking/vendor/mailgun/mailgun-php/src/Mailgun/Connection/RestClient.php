@@ -19,7 +19,7 @@ use Mailgun\Connection\Exceptions\MissingEndpoint;
 use Mailgun\Connection\Exceptions\MissingRequiredParameters;
 use Mailgun\Constants\Api;
 use Mailgun\Constants\ExceptionMessages;
-use AmeliaPsr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
 
 /**
  * This class is a wrapper for the HTTP client.

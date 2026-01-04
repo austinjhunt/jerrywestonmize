@@ -5,7 +5,7 @@ namespace AmeliaHttp\Client\Common;
 use AmeliaHttp\Client\HttpAsyncClient;
 use AmeliaHttp\Client\HttpClient;
 use Psr\Http\Client\ClientInterface;
-use AmeliaPsr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
 use AmeliaHttp\Client\Exception;
 
 /**

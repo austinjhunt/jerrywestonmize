@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -11,10 +11,12 @@ use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Entity\Bookable\AbstractBookable;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Location\Location;
+use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Domain\ValueObjects\BooleanValueObject;
 use AmeliaBooking\Domain\ValueObjects\DateTime\DateTimeValue;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\IntegerValue;
+use AmeliaBooking\Domain\ValueObjects\Picture;
 use AmeliaBooking\Domain\ValueObjects\Recurring;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Domain\ValueObjects\String\BookableType;
@@ -93,6 +95,9 @@ class Event extends AbstractBookable
 
     /** @var Id */
     private $organizerId;
+
+    /** @var Provider */
+    private $organizer;
 
     /** @var BooleanValueObject */
     private $bringingAnyone;
@@ -237,7 +242,7 @@ class Event extends AbstractBookable
     /**
      * @param DateTimeValue|null $bookingOpens
      */
-    public function setBookingOpens(DateTimeValue $bookingOpens = null)
+    public function setBookingOpens(?DateTimeValue $bookingOpens = null)
     {
         $this->bookingOpens = $bookingOpens;
     }
@@ -253,7 +258,7 @@ class Event extends AbstractBookable
     /**
      * @param DateTimeValue|null $bookingCloses
      */
-    public function setBookingCloses(DateTimeValue $bookingCloses = null)
+    public function setBookingCloses(?DateTimeValue $bookingCloses = null)
     {
         $this->bookingCloses = $bookingCloses;
     }
@@ -368,6 +373,22 @@ class Event extends AbstractBookable
     public function setGallery(Collection $gallery)
     {
         $this->gallery = $gallery;
+    }
+
+    /**
+     * @return Picture
+     */
+    public function getPicture()
+    {
+        return $this->picture;
+    }
+
+    /**
+     * @param Picture $picture
+     */
+    public function setPicture(Picture $picture)
+    {
+        $this->picture = $picture;
     }
 
     /**
@@ -496,6 +517,22 @@ class Event extends AbstractBookable
     public function setOrganizerId($organizerId)
     {
         $this->organizerId = $organizerId;
+    }
+
+    /**
+     * @return Provider
+     */
+    public function getOrganizer()
+    {
+        return $this->organizer;
+    }
+
+    /**
+     * @param Provider $organizer
+     */
+    public function setOrganizer($organizer)
+    {
+        $this->organizer = $organizer;
     }
 
 
@@ -719,6 +756,7 @@ class Event extends AbstractBookable
                 'created'                => $this->getCreated() ? $this->getCreated()->getValue()->format('Y-m-d H:i:s') : null,
                 'zoomUserId'             => $this->getZoomUserId() ? $this->getZoomUserId()->getValue() : null,
                 'organizerId'            => $this->getOrganizerId() ? $this->getOrganizerId()->getValue() : null,
+                'organizer'              => $this->getOrganizer() ? $this->getOrganizer()->toArray() : null,
                 'type'                   => $this->getType()->getValue(),
                 'bringingAnyone'         => $this->getBringingAnyone() ? $this->getBringingAnyone()->getValue() : null,
                 'bookMultipleTimes'      => $this->getBookMultipleTimes() ? $this->getBookMultipleTimes()->getValue() : null,
@@ -730,6 +768,8 @@ class Event extends AbstractBookable
                 'initialEventStart'      => $this->getInitialEventStart() ? $this->getInitialEventStart()->getValue()->format('Y-m-d H:i:s') : null,
                 'initialEventEnd'        => $this->getInitialEventEnd() ? $this->getInitialEventEnd()->getValue()->format('Y-m-d H:i:s') : null,
                 'aggregatedPrice'        => $this->getAggregatedPrice() ? $this->getAggregatedPrice()->getValue() : null,
+                'pictureFullPath'        => $this->getPicture() ? $this->getPicture()->getFullPath() : null,
+                'pictureThumbPath'       => $this->getPicture() ? $this->getPicture()->getThumbPath() : null,
             ]
         );
     }

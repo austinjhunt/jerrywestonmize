@@ -6,8 +6,10 @@ use Automattic\WooCommerce\EmailEditor\Integrations\Utils\Styles_Helper;
 use WP_Theme_JSON;
 class Rendering_Context {
  private WP_Theme_JSON $theme_json;
- public function __construct( WP_Theme_JSON $theme_json ) {
+ private array $email_context;
+ public function __construct( WP_Theme_JSON $theme_json, array $email_context = array() ) {
  $this->theme_json = $theme_json;
+ $this->email_context = $email_context;
  }
  public function get_theme_json(): WP_Theme_JSON {
  return $this->theme_json;
@@ -40,5 +42,17 @@ class Rendering_Context {
  }
  }
  return $color_slug;
+ }
+ public function get_email_context(): array {
+ return $this->email_context;
+ }
+ public function get_user_id(): ?int {
+ return isset( $this->email_context['user_id'] ) && is_numeric( $this->email_context['user_id'] ) ? (int) $this->email_context['user_id'] : null;
+ }
+ public function get_recipient_email(): ?string {
+ return isset( $this->email_context['recipient_email'] ) && is_string( $this->email_context['recipient_email'] ) ? $this->email_context['recipient_email'] : null;
+ }
+ public function get( string $key, $default_value = null ) {
+ return $this->email_context[ $key ] ?? $default_value;
  }
 }

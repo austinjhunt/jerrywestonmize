@@ -2,6 +2,7 @@
 
 namespace AmeliaBooking\Domain\Entity\Location;
 
+use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\ValueObjects\Json;
 use AmeliaBooking\Domain\ValueObjects\String\Status;
 use AmeliaBooking\Domain\ValueObjects\Picture;
@@ -49,6 +50,18 @@ class Location
 
     /** @var  Json */
     protected $translations;
+
+    /** @var  Collection */
+    private $serviceList;
+
+    /** @var  Collection */
+    private $eventList;
+
+    /** @var  Collection */
+    private $providerList;
+
+    /** @var Name */
+    private $countryPhoneIso;
 
     /**
      * @return Id
@@ -211,6 +224,70 @@ class Location
     }
 
     /**
+     * @return Collection
+     */
+    public function getServiceList()
+    {
+        return $this->serviceList;
+    }
+
+    /**
+     * @param Collection $serviceList
+     */
+    public function setServiceList($serviceList)
+    {
+        $this->serviceList = $serviceList;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getEventList()
+    {
+        return $this->eventList;
+    }
+
+    /**
+     * @param Collection $eventList
+     */
+    public function setEventList($eventList)
+    {
+        $this->eventList = $eventList;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getProviderList()
+    {
+        return $this->providerList;
+    }
+
+    /**
+     * @param Collection $providerList
+     */
+    public function setProviderList($providerList)
+    {
+        $this->providerList = $providerList;
+    }
+
+    /**
+     * @return Name
+     */
+    public function getCountryPhoneIso()
+    {
+        return $this->countryPhoneIso;
+    }
+
+    /**
+     * @param Name $countryPhoneIso
+     */
+    public function setCountryPhoneIso(Name $countryPhoneIso)
+    {
+        $this->countryPhoneIso = $countryPhoneIso;
+    }
+
+    /**
      * @return array
      */
     public function toArray()
@@ -228,6 +305,10 @@ class Location
             'pictureThumbPath' => null !== $this->getPicture() ? $this->getPicture()->getThumbPath() : null,
             'pin'              => null !== $this->getPin() ? $this->getPin()->getValue() : null,
             'translations'     => $this->getTranslations() ? $this->getTranslations()->getValue() : null,
+            'serviceList'      => $this->getServiceList() ? $this->getServiceList()->toArray() : [],
+            'eventList'        => $this->getEventList() ? $this->getEventList()->toArray() : [],
+            'providerList'     => $this->getProviderList() ? $this->getProviderList()->toArray() : [],
+            'countryPhoneIso'  => null !== $this->getCountryPhoneIso() ? $this->getCountryPhoneIso()->getValue() : null,
         ];
     }
 }

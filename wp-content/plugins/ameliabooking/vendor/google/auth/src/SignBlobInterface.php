@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-namespace AmeliaGoogle\Auth;
+namespace AmeliaVendor\Google\Auth;
 
 /**
  * Describes a class which supports signing arbitrary strings.
@@ -40,5 +40,5 @@ interface SignBlobInterface extends FetchAuthTokenInterface
      *     one is required to obtain a client name.
      * @return string
      */
-    public function getClientName(callable $httpHandler = null);
+    public function getClientName(?callable $httpHandler = null);
 }

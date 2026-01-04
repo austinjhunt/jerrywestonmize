@@ -8,7 +8,7 @@ trait AssertRequestTrait
 
     abstract function assertJsonStringEqualsJsonString($expected, $actual, $message = null);
 
-    public function assertEqualRequest(\AmeliaPsr\Http\Message\RequestInterface $expectedRequest, \AmeliaPsr\Http\Message\RequestInterface $actualRequest)
+    public function assertEqualRequest(\AmeliaVendor\Psr\Http\Message\RequestInterface $expectedRequest, \AmeliaVendor\Psr\Http\Message\RequestInterface $actualRequest)
     {
         $this->assertEquals($expectedRequest->getMethod(), $actualRequest->getMethod(), "Expected request Method should be equal to actual request method.");
 

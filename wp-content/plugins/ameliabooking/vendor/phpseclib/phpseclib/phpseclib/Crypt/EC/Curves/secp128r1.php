@@ -11,10 +11,10 @@
  * @link      http://pear.php.net/package/Math_BigInteger
  */
 
-namespace phpseclib3\Crypt\EC\Curves;
+namespace AmeliaVendor\phpseclib3\Crypt\EC\Curves;
 
-use phpseclib3\Crypt\EC\BaseCurves\Prime;
-use phpseclib3\Math\BigInteger;
+use AmeliaVendor\phpseclib3\Crypt\EC\BaseCurves\Prime;
+use AmeliaVendor\phpseclib3\Math\BigInteger;
 
 class secp128r1 extends Prime
 {

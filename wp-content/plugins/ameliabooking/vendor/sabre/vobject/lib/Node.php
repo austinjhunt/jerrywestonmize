@@ -1,8 +1,8 @@
 <?php
 
-namespace AmeliaSabre\VObject;
+namespace AmeliaVendor\Sabre\VObject;
 
-use AmeliaSabre\Xml;
+use AmeliaVendor\Sabre\Xml;
 
 /**
  * A node is the root class for every element in an iCalendar of vCard object.

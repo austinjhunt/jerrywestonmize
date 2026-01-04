@@ -16,6 +16,7 @@ use AmeliaBooking\Domain\ValueObjects\String\Name;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Notification\NotificationRepository;
 use AmeliaBooking\Infrastructure\Repository\Notification\NotificationsToEntitiesRepository;
+use AmeliaBooking\Domain\Services\Settings\SettingsService;
 
 /**
  * Class GetNotificationsCommandHandler
@@ -30,7 +31,6 @@ class GetNotificationsCommandHandler extends CommandHandler
      * @throws AccessDeniedException
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function handle(GetNotificationsCommand $command)
     {
@@ -46,14 +46,20 @@ class GetNotificationsCommandHandler extends CommandHandler
         $notificationEntitiesRepo = $this->container->get('domain.notificationEntities.repository');
         /** @var AbstractWhatsAppNotificationService $whatsAppNotificationService */
         $whatsAppNotificationService = $this->container->get('application.whatsAppNotification.service');
+        /** @var SettingsService $settingsService */
+        $settingsService = $this->container->get('domain.settings.service');
 
         $whatsAppTemplates = [];
         if ($whatsAppNotificationService->checkRequiredFields()) {
             $whatsAppTemplates = $whatsAppNotificationService->getTemplates();
         }
 
+        // Check if custom notifications feature is enabled
+        $isCustomNotificationsEnabled = $settingsService->isFeatureEnabled('customNotifications');
+
         /** @var Collection $notifications */
-        $notifications = $notificationRepo->getAll();
+        $notifications = $notificationRepo->getAll($isCustomNotificationsEnabled);
+
         /** @var Notification $notification */
         foreach ($notifications->getItems() as $notification) {
             if ($notification->getCustomName()) {
@@ -89,8 +95,8 @@ class GetNotificationsCommandHandler extends CommandHandler
         $result->setMessage('Successfully retrieved notifications.');
         $result->setData(
             [
-            Entities::NOTIFICATIONS => $notificationsArray,
-            'whatsAppTemplates'     => !empty($whatsAppTemplates[1]) ? $whatsAppTemplates[1] : []
+                Entities::NOTIFICATIONS => $notificationsArray,
+                'whatsAppTemplates'     => !empty($whatsAppTemplates[1]) ? $whatsAppTemplates[1] : []
             ]
         );
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace AmeliaSabre\VObject\Component;
+namespace AmeliaVendor\Sabre\VObject\Component;
 
-use AmeliaSabre\VObject;
+use AmeliaVendor\Sabre\VObject;
 
 /**
  * The VTimeZone component.

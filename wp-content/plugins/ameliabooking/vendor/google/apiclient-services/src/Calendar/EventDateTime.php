@@ -15,9 +15,9 @@
  * the License.
  */
 
-namespace AmeliaGoogle\Service\Calendar;
+namespace AmeliaVendor\Google\Service\Calendar;
 
-class EventDateTime extends \AmeliaGoogle\Model
+class EventDateTime extends \AmeliaVendor\Google\Model
 {
   /**
    * @var string
@@ -77,4 +77,4 @@ class EventDateTime extends \AmeliaGoogle\Model
 }
 
 // Adding a class alias for backwards compatibility with the previous class name.
-class_alias(EventDateTime::class, 'AmeliaGoogle_Service_Calendar_EventDateTime');
+class_alias(EventDateTime::class, 'Google_Service_Calendar_EventDateTime');

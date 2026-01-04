@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaFirebase\JWT;
+namespace AmeliaVendor\Firebase\JWT;
 
 use InvalidArgumentException;
 use OpenSSLAsymmetricKey;

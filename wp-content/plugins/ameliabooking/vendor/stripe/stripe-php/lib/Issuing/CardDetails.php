@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaStripe\Issuing;
+namespace AmeliaVendor\Stripe\Issuing;
 
 /**
  * Class CardDetails.
@@ -13,7 +13,7 @@ namespace AmeliaStripe\Issuing;
  * @property int $exp_year
  * @property string $number
  */
-class CardDetails extends \AmeliaStripe\ApiResource
+class CardDetails extends \AmeliaVendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'issuing.card_details';
 }

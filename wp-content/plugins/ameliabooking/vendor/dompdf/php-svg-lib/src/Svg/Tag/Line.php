@@ -5,9 +5,9 @@
  * @license GNU LGPLv3+ http://www.gnu.org/copyleft/lesser.html
  */
 
-namespace Svg\Tag;
+namespace AmeliaVendor\Svg\Tag;
 
-use Svg\Style;
+use AmeliaVendor\Svg\Style;
 
 class Line extends Shape
 {

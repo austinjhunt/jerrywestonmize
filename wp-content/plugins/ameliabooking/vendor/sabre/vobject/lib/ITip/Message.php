@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaSabre\VObject\ITip;
+namespace AmeliaVendor\Sabre\VObject\ITip;
 
 /**
  * This class represents an iTip message.
@@ -95,7 +95,7 @@ class Message
     /**
      * The iCalendar / iTip body.
      *
-     * @var \AmeliaSabre\VObject\Component\VCalendar
+     * @var \AmeliaVendor\Sabre\VObject\Component\VCalendar
      */
     public $message;
 
@@ -109,7 +109,7 @@ class Message
      * normally a ton of messages may be generated for normal calendar use.
      *
      * To see the list of properties that are considered 'significant', check
-     * out AmeliaSabre\VObject\ITip\Broker::$significantChangeProperties.
+     * out Sabre\VObject\ITip\Broker::$significantChangeProperties.
      *
      * @var bool
      */

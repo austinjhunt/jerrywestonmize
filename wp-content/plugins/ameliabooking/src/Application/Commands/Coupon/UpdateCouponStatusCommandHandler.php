@@ -32,7 +32,6 @@ class UpdateCouponStatusCommandHandler extends CommandHandler
      * @throws \Slim\Exception\ContainerValueNotFoundException
      * @throws InvalidArgumentException
      * @throws AccessDeniedException
-     * @throws \Interop\Container\Exception\ContainerException
      * @throws QueryExecutionException
      */
     public function handle(UpdateCouponStatusCommand $command)
@@ -52,9 +51,10 @@ class UpdateCouponStatusCommandHandler extends CommandHandler
 
         do_action('amelia_before_coupon_status_updated', $command->getArg('id'), $status);
 
-        $couponRepository->updateStatusById(
+        $couponRepository->updateFieldById(
             $command->getArg('id'),
-            $status
+            $status,
+            'status'
         );
 
         do_action('amelia_after_coupon_status_updated', $command->getArg('id'), $status);

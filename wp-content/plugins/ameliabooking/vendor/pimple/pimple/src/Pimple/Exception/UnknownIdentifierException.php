@@ -26,7 +26,7 @@
 
 namespace Pimple\Exception;
 
-use AmeliaPsr\Container\NotFoundExceptionInterface;
+use AmeliaVendor\Psr\Container\NotFoundExceptionInterface;
 
 /**
  * The identifier of a valid service or parameter was expected.

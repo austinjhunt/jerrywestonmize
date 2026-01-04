@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaStripe\Exception;
+namespace AmeliaVendor\Stripe\Exception;
 
 /**
  * UnknownApiErrorException is thrown when the client library receives an

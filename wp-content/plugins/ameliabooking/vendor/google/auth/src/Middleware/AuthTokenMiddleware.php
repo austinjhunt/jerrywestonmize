@@ -15,11 +15,14 @@
  * limitations under the License.
  */
 
-namespace AmeliaGoogle\Auth\Middleware;
+namespace AmeliaVendor\Google\Auth\Middleware;
 
-use AmeliaGoogle\Auth\FetchAuthTokenInterface;
-use AmeliaGoogle\Auth\GetQuotaProjectInterface;
-use AmeliaPsr\Http\Message\RequestInterface;
+use AmeliaVendor\Google\Auth\FetchAuthTokenCache;
+use AmeliaVendor\Google\Auth\FetchAuthTokenInterface;
+use AmeliaVendor\Google\Auth\GetQuotaProjectInterface;
+use AmeliaVendor\Google\Auth\UpdateMetadataInterface;
+use AmeliaVendor\GuzzleHttp\Psr7\Utils;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
 
 /**
  * AuthTokenMiddleware is a Guzzle Middleware that adds an Authorization header
@@ -40,6 +43,9 @@ class AuthTokenMiddleware
     private $httpHandler;
 
     /**
+     * It must be an implementation of FetchAuthTokenInterface.
+     * It may also implement UpdateMetadataInterface allowing direct
+     * retrieval of auth related headers
      * @var FetchAuthTokenInterface
      */
     private $fetcher;
@@ -58,8 +64,8 @@ class AuthTokenMiddleware
      */
     public function __construct(
         FetchAuthTokenInterface $fetcher,
-        callable $httpHandler = null,
-        callable $tokenCallback = null
+        ?callable $httpHandler = null,
+        ?callable $tokenCallback = null
     ) {
         $this->fetcher = $fetcher;
         $this->httpHandler = $httpHandler;
@@ -69,10 +75,10 @@ class AuthTokenMiddleware
     /**
      * Updates the request with an Authorization header when auth is 'google_auth'.
      *
-     *   use AmeliaGoogle\Auth\Middleware\AuthTokenMiddleware;
-     *   use AmeliaGoogle\Auth\OAuth2;
-     *   use AmeliaGuzzleHttp\Client;
-     *   use AmeliaGuzzleHttp\HandlerStack;
+     *   use AmeliaVendor\Google\Auth\Middleware\AuthTokenMiddleware;
+     *   use AmeliaVendor\Google\Auth\OAuth2;
+     *   use AmeliaVendor\GuzzleHttp\Client;
+     *   use AmeliaVendor\GuzzleHttp\HandlerStack;
      *
      *   $config = [..<oauth config param>.];
      *   $oauth2 = new OAuth2($config)
@@ -99,7 +105,7 @@ class AuthTokenMiddleware
                 return $handler($request, $options);
             }
 
-            $request = $request->withHeader('authorization', 'Bearer ' . $this->fetchToken());
+            $request = $this->addAuthHeaders($request);
 
             if ($quotaProject = $this->getQuotaProject()) {
                 $request = $request->withHeader(
@@ -113,32 +119,33 @@ class AuthTokenMiddleware
     }
 
     /**
-     * Call fetcher to fetch the token.
+     * Adds auth related headers to the request.
      *
-     * @return string|null
+     * @param RequestInterface $request
+     * @return RequestInterface
      */
-    private function fetchToken()
+    private function addAuthHeaders(RequestInterface $request)
     {
-        $auth_tokens = (array) $this->fetcher->fetchAuthToken($this->httpHandler);
+        if (!$this->fetcher instanceof UpdateMetadataInterface ||
+            ($this->fetcher instanceof FetchAuthTokenCache &&
+             !$this->fetcher->getFetcher() instanceof UpdateMetadataInterface)
+        ) {
+            $token = $this->fetcher->fetchAuthToken();
+            $request = $request->withHeader(
+                'authorization', 'Bearer ' . ($token['access_token'] ?? $token['id_token'] ?? '')
+            );
+        } else {
+            $headers = $this->fetcher->updateMetadata($request->getHeaders(), null, $this->httpHandler);
+            $request = Utils::modifyRequest($request, ['set_headers' => $headers]);
+        }
 
-        if (array_key_exists('access_token', $auth_tokens)) {
-            // notify the callback if applicable
-            if ($this->tokenCallback) {
-                call_user_func(
-                    $this->tokenCallback,
-                    $this->fetcher->getCacheKey(),
-                    $auth_tokens['access_token']
-                );
+        if ($this->tokenCallback && ($token = $this->fetcher->getLastReceivedToken())) {
+            if (array_key_exists('access_token', $token)) {
+                call_user_func($this->tokenCallback, $this->fetcher->getCacheKey(), $token['access_token']);
             }
-
-            return $auth_tokens['access_token'];
         }
 
-        if (array_key_exists('id_token', $auth_tokens)) {
-            return $auth_tokens['id_token'];
-        }
-
-        return null;
+        return $request;
     }
 
     /**

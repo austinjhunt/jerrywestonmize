@@ -6,7 +6,7 @@ use AmeliaHttp\Client\Common\Exception\HttpClientNotFoundException;
 use AmeliaHttp\Client\HttpAsyncClient;
 use AmeliaHttp\Client\HttpClient;
 use Psr\Http\Client\ClientInterface;
-use AmeliaPsr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
 
 /**
  * A http client pool allows to send requests on a pool of different http client using a specific strategy (least used,

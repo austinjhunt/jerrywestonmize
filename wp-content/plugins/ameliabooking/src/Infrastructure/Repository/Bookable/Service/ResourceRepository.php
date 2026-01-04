@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -39,7 +39,7 @@ class ResourceRepository extends AbstractRepository
     /**
      * @param Resource $entity
      *
-     * @return bool
+     * @return int
      * @throws QueryExecutionException
      */
     public function add($entity)
@@ -128,40 +128,6 @@ class ResourceRepository extends AbstractRepository
         }
     }
 
-    /**
-     * @param int $resourceId
-     * @param int $status
-     *
-     * @return bool
-     * @throws QueryExecutionException
-     */
-    public function updateStatusById($resourceId, $status)
-    {
-        $params = [
-            ':id'     => $resourceId,
-            ':status' => $status
-        ];
-
-        try {
-            $statement = $this->connection->prepare(
-                "UPDATE {$this->table}
-                SET
-                `status` = :status
-                WHERE id = :id"
-            );
-
-            $res = $statement->execute($params);
-
-            if (!$res) {
-                throw new QueryExecutionException('Unable to save data in ' . __CLASS__);
-            }
-
-            return $res;
-        } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to save data in ' . __CLASS__, $e->getCode(), $e);
-        }
-    }
-
 
     /**
      * @param $criteria
@@ -173,13 +139,28 @@ class ResourceRepository extends AbstractRepository
     public function getByCriteria($criteria)
     {
         $params = [];
-
         $where = [];
 
-        if (!empty($criteria['search'])) {
-            $params[':search'] = "%{$criteria['search']}%";
+        // Define ordering
+        $order = 'ORDER BY r.id ASC';
+        if (isset($criteria['sort'])) {
+            if ($criteria['sort'] === '-id') {
+                $order = 'ORDER BY r.id DESC';
+            } elseif ($criteria['sort'] === 'name') {
+                $order = 'ORDER BY r.name ASC';
+            } elseif ($criteria['sort'] === '-name') {
+                $order = 'ORDER BY r.name DESC';
+            } elseif ($criteria['sort'] === 'quantity') {
+                $order = 'ORDER BY r.quantity ASC';
+            } elseif ($criteria['sort'] === '-quantity') {
+                $order = 'ORDER BY r.quantity DESC';
+            }
+        }
 
-            $where[] = 'r.name LIKE :search';
+        if (!empty($criteria['search'])) {
+            $params[':search1'] = $params[':search2'] = "%{$criteria['search']}%";
+
+            $where[] = '(r.name LIKE :search1 OR r.id LIKE :search2)';
         }
 
         if (!empty($criteria['services'])) {
@@ -221,34 +202,71 @@ class ResourceRepository extends AbstractRepository
             $where[] = 'r.status = :status';
         }
 
-        $where = $where ? ' AND ' . implode(' AND ', $where) : '';
+        $whereSql = $where ? ' AND ' . implode(' AND ', $where) : '';
 
         $resourceEntitiesTable = ResourcesToEntitiesTable::getTableName();
 
+        // Define common SELECT and FROM parts
+        $selectSql = "SELECT
+            r.id AS resource_id,
+            r.name AS resource_name,
+            r.quantity AS resource_quantity,
+            r.status AS resource_status,
+            r.shared AS resource_shared,
+            r.countAdditionalPeople AS resource_countAdditionalPeople,
+            
+            re.id AS resource_entity_id,
+            re.resourceId AS resource_entity_resourceId,
+            re.entityId AS resource_entity_entityId,
+            re.entityType AS resource_entity_entityType";
+
+        $fromSql = "FROM {$this->table} r
+            LEFT JOIN {$resourceEntitiesTable} re ON re.resourceId = r.id";
+
         try {
-            $statement = $this->connection->prepare(
-                "SELECT
-                r.id AS resource_id,
-                r.name AS resource_name,
-                r.quantity AS resource_quantity,
-                r.status AS resource_status,
-                r.shared AS resource_shared,
-                r.countAdditionalPeople AS resource_countAdditionalPeople,
-                
-                re.id AS resource_entity_id,
-                re.resourceId AS resource_entity_resourceId,
-                re.entityId AS resource_entity_entityId,
-                re.entityType AS resource_entity_entityType
-                
-                FROM {$this->table} r
-                LEFT JOIN {$resourceEntitiesTable} re ON re.resourceId = r.id
-                WHERE 1 = 1 {$where}
-                "
-            );
+            // PAGINATION: If limit is set, use subquery to get resource IDs first
+            if (!empty($criteria['limit'])) {
+                $itemsPerPage = (int)$criteria['limit'];
+                $page = !empty($criteria['page']) ? (int)$criteria['page'] : 1;
+                $offset = ($page - 1) * $itemsPerPage;
 
-            $statement->execute($params);
+                // 1. Get paginated resource IDs
+                $idSql = "SELECT DISTINCT r.id FROM {$this->table} r 
+                    LEFT JOIN {$resourceEntitiesTable} re ON re.resourceId = r.id 
+                    WHERE 1 = 1{$whereSql} {$order} 
+                    LIMIT {$itemsPerPage} OFFSET {$offset}";
 
-            $rows = $statement->fetchAll();
+                $idStmt = $this->connection->prepare($idSql);
+                $idStmt->execute($params);
+                $resourceIds = $idStmt->fetchAll(\PDO::FETCH_COLUMN);
+
+                if (empty($resourceIds)) {
+                    return call_user_func([static::FACTORY, 'createCollection'], []);
+                }
+
+                // 2. Prepare ID parameters for IN clause
+                $inParams = [];
+                foreach ($resourceIds as $idx => $id) {
+                    $inParams[":r_id{$idx}"] = $id;
+                }
+                $inClause = implode(',', array_keys($inParams));
+                $params = array_merge($params, $inParams);
+
+                $whereSqlWithIds = $whereSql ? $whereSql . ' AND ' : ' AND ';
+                $whereSqlWithIds .= "r.id IN ($inClause)";
+
+                // 3. Get complete resource data
+                $sql = "{$selectSql} {$fromSql} WHERE 1 = 1 {$whereSqlWithIds} {$order}";
+                $statement = $this->connection->prepare($sql);
+                $statement->execute($params);
+                $rows = $statement->fetchAll();
+            } else {
+                // Regular query without pagination
+                $sql = "{$selectSql} {$fromSql} WHERE 1 = 1 {$whereSql} {$order}";
+                $statement = $this->connection->prepare($sql);
+                $statement->execute($params);
+                $rows = $statement->fetchAll();
+            }
         } catch (\Exception $e) {
             throw new QueryExecutionException('Unable to find by criteria in ' . __CLASS__, $e->getCode(), $e);
         }
@@ -327,5 +345,72 @@ class ResourceRepository extends AbstractRepository
         } catch (\Exception $e) {
             throw new QueryExecutionException('Unable to delete data from ' . __CLASS__, $e->getCode(), $e);
         }
+    }
+
+    public function getCount($criteria)
+    {
+        $params = [];
+        $where = [];
+
+        if (!empty($criteria['search'])) {
+            $params[':search1'] = $params[':search2'] = "%{$criteria['search']}%";
+            $where[] = '(r.name LIKE :search1 OR r.id LIKE :search2)';
+        }
+
+        if (!empty($criteria['services'])) {
+            $query = [];
+            foreach ((array)$criteria['services'] as $index => $value) {
+                $param = ':service' . $index;
+                $query[] = $param;
+                $params[$param] = $value;
+            }
+            $where[] = 're.entityId IN (' . implode(', ', $query) . ') AND re.entityType="service"';
+        }
+
+        if (!empty($criteria['locations'])) {
+            $query = [];
+            foreach ((array)$criteria['locations'] as $index => $value) {
+                $param = ':location' . $index;
+                $query[] = $param;
+                $params[$param] = $value;
+            }
+            $where[] = 're.entityId IN (' . implode(', ', $query) . ') AND re.entityType="location"';
+        }
+
+        if (!empty($criteria['employees'])) {
+            $query = [];
+            foreach ((array)$criteria['employees'] as $index => $value) {
+                $param = ':employee' . $index;
+                $query[] = $param;
+                $params[$param] = $value;
+            }
+            $where[] = 're.entityId IN (' . implode(', ', $query) . ') AND re.entityType="employee"';
+        }
+
+        if (!empty($criteria['status'])) {
+            $params[':status'] = $criteria['status'];
+            $where[] = 'r.status = :status';
+        }
+
+        $where = $where ? ' AND ' . implode(' AND ', $where) : '';
+
+        $resourceEntitiesTable = ResourcesToEntitiesTable::getTableName();
+
+        try {
+            $statement = $this->connection->prepare(
+                "SELECT COUNT(DISTINCT r.id) AS count
+                FROM {$this->table} r
+                LEFT JOIN {$resourceEntitiesTable} re ON re.resourceId = r.id
+                WHERE 1 = 1 {$where}"
+            );
+
+            $statement->execute($params);
+
+            $row = $statement->fetch()['count'];
+        } catch (\Exception $e) {
+            throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
+        }
+
+        return $row;
     }
 }

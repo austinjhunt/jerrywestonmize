@@ -4,7 +4,7 @@ namespace AmeliaHttp\Client\Common\Plugin;
 
 use AmeliaHttp\Client\Common\Plugin;
 use AmeliaHttp\Message\RequestMatcher;
-use AmeliaPsr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
 
 /**
  * Apply a delegated plugin based on a request match.

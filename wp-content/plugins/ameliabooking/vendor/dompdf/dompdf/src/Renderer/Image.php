@@ -4,11 +4,11 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace AmeliaDompdf\Renderer;
+namespace AmeliaVendor\Dompdf\Renderer;
 
-use AmeliaDompdf\Frame;
-use AmeliaDompdf\FrameDecorator\Image as ImageFrameDecorator;
-use AmeliaDompdf\Image\Cache;
+use AmeliaVendor\Dompdf\Frame;
+use AmeliaVendor\Dompdf\FrameDecorator\Image as ImageFrameDecorator;
+use AmeliaVendor\Dompdf\Image\Cache;
 
 /**
  * Image renderer

@@ -164,7 +164,7 @@ class BarionPaymentCommandHandler extends CommandHandler
             ) . '/payment/barion/callback&name=' . $identifier . '&bookingId=' . $bookingId . '&type=' . $type;
 
         $orderData = [
-            'amount'      => intval($paymentAmount),
+            'amount'      => $paymentAmount,
             'reservation' => $reservation ?: [],
             'returnUrl'   => $returnUrl,
             'redirectUrl' => $redirectUrl,

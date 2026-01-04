@@ -45,6 +45,7 @@ class UpdateSettingsController extends Controller
         'ics',
         'apiKeys',
         'providerBadges',
+        'pageColumnSettings',
         'socialLogin',
         'mailchimp'
     ];

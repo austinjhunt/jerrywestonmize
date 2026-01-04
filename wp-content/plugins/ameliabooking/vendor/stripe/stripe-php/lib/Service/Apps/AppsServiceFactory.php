@@ -2,14 +2,14 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Service\Apps;
+namespace AmeliaVendor\Stripe\Service\Apps;
 
 /**
  * Service factory class for API resources in the Apps namespace.
  *
  * @property SecretService $secrets
  */
-class AppsServiceFactory extends \AmeliaStripe\Service\AbstractServiceFactory
+class AppsServiceFactory extends \AmeliaVendor\Stripe\Service\AbstractServiceFactory
 {
     /**
      * @var array<string, string>

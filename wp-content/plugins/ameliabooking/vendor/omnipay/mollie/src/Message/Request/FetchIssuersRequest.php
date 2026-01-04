@@ -4,7 +4,7 @@ namespace Omnipay\Mollie\Message\Request;
 
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Mollie\Message\Response\FetchIssuersResponse;
-use AmeliaPsr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
 
 /**
  * Returns issuers available for the ideal payment method.

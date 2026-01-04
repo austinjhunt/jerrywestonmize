@@ -5,16 +5,16 @@
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 
-namespace FontLib\TrueType;
+namespace AmeliaVendor\FontLib\TrueType;
 
-use FontLib\AdobeFontMetrics;
-use FontLib\Font;
-use FontLib\BinaryStream;
-use FontLib\Table\Table;
-use FontLib\Table\DirectoryEntry;
-use FontLib\Table\Type\glyf;
-use FontLib\Table\Type\name;
-use FontLib\Table\Type\nameRecord;
+use AmeliaVendor\FontLib\AdobeFontMetrics;
+use AmeliaVendor\FontLib\Font;
+use AmeliaVendor\FontLib\BinaryStream;
+use AmeliaVendor\FontLib\Table\Table;
+use AmeliaVendor\FontLib\Table\DirectoryEntry;
+use AmeliaVendor\FontLib\Table\Type\glyf;
+use AmeliaVendor\FontLib\Table\Type\name;
+use AmeliaVendor\FontLib\Table\Type\nameRecord;
 
 /**
  * TrueType font file.
@@ -100,7 +100,7 @@ class File extends BinaryStream {
     "Ccaron", "ccaron", "dmacron"
   );
 
-  private function uniord (string $c, string $encoding = null) {
+  private function uniord (string $c, ?string $encoding = null) {
     if (function_exists("mb_ord")) {
       if (PHP_VERSION_ID < 80000 && $encoding === null) {
           // in PHP < 8 the encoding argument, if supplied, must be a valid encoding
@@ -382,7 +382,7 @@ class File extends BinaryStream {
 
   function getFontType(){
     $class_parts = explode("\\", get_class($this));
-    return $class_parts[1];
+    return $class_parts[2];
   }
 
   function parseTableEntries() {
@@ -398,7 +398,7 @@ class File extends BinaryStream {
 
 
     $type = $this->getFontType();
-    $class = "FontLib\\$type\\TableDirectoryEntry";
+    $class = "AmeliaVendor\\FontLib\\$type\\TableDirectoryEntry";
 
     for ($i = 0; $i < $this->header->data["numTables"]; $i++) {
       /** @var TableDirectoryEntry $entry */
@@ -419,14 +419,14 @@ class File extends BinaryStream {
     if (!self::$raw) {
       $name_canon = preg_replace("/[^a-z0-9]/", "", strtolower($tag));
 
-      $class = "FontLib\\Table\\Type\\$name_canon";
+      $class = "AmeliaVendor\\FontLib\\Table\\Type\\$name_canon";
 
       if (!isset($this->directory[$tag]) || !@class_exists($class)) {
         return;
       }
     }
     else {
-      $class = "FontLib\\Table\\Table";
+      $class = "AmeliaVendor\\FontLib\\Table\\Table";
     }
 
     /** @var Table $table */

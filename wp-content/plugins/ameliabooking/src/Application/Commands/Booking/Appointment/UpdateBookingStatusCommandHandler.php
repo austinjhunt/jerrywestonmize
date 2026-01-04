@@ -5,18 +5,15 @@ namespace AmeliaBooking\Application\Commands\Booking\Appointment;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
-use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\BookingCancellationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Entities;
-use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
 use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
-use Interop\Container\Exception\ContainerException;
 
 /**
  * Class UpdateBookingStatusCommandHandler
@@ -34,43 +31,33 @@ class UpdateBookingStatusCommandHandler extends CommandHandler
      * @throws InvalidArgumentException
      * @throws NotFoundException
      * @throws QueryExecutionException
-     * @throws ContainerException
      */
     public function handle(UpdateBookingStatusCommand $command)
     {
         $result = new CommandResult();
 
-        $type = $command->getField('type') ?: Entities::APPOINTMENT;
-
-        /** @var ReservationServiceInterface $reservationService */
-        $reservationService = $this->container->get('application.reservation.service')->get($type);
         /** @var CustomerBookingRepository $bookingRepository */
         $bookingRepository = $this->container->get('domain.booking.customerBooking.repository');
-
-        try {
-            /** @var AbstractUser $user */
-            $user = $command->getUserApplicationService()->authorization(
-                $command->getPage() === 'cabinet' ? $command->getToken() : null,
-                $command->getCabinetType()
-            );
-        } catch (AuthorizationException $e) {
-            $result->setResult(CommandResult::RESULT_ERROR);
-            $result->setData(
-                [
-                    'reauthorize' => true
-                ]
-            );
-
-            return $result;
-        }
 
         /** @var CustomerBooking $booking */
         $booking = $bookingRepository->getById((int)$command->getArg('id'));
 
-        do_action('amelia_before_booking_' . $command->getField('status'), $booking ? $booking->toArray() : null);
+        $type = $booking->getAppointmentId() ? Entities::APPOINTMENT : Entities::EVENT;
+
+        /** @var ReservationServiceInterface $reservationService */
+        $reservationService = $this->container->get('application.reservation.service')->get($type);
+
+        if (
+            ($type === Entities::APPOINTMENT && !$command->getPermissionService()->currentUserCanWrite(Entities::APPOINTMENTS)) ||
+            ($type === Entities::EVENT && !$command->getPermissionService()->currentUserCanWrite(Entities::EVENTS))
+        ) {
+            throw new AccessDeniedException('You are not allowed to update booking status');
+        }
+
+        do_action('amelia_before_booking_' . $command->getField('status'), $booking->toArray());
 
         try {
-            $bookingData = $reservationService->updateStatus($booking, $command->getField('status'));
+            $bookingData = $reservationService->updateStatus($booking, $command->getField('status'), false);
         } catch (BookingCancellationException $e) {
             $result->setResult(CommandResult::RESULT_ERROR);
             $result->setMessage('You are not allowed to update booking status');
@@ -92,7 +79,7 @@ class UpdateBookingStatusCommandHandler extends CommandHandler
                     'type'    => $type,
                     'status'  => $command->getField('status'),
                     'message' =>
-                        BackendStrings::getAppointmentStrings()['booking_status_changed']
+                        BackendStrings::get('booking_status_changed')
                 ]
             )
         );

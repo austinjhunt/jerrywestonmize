@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Monolog\Formatter;
+namespace AmeliaVendor\Monolog\Formatter;
 
 /**
  * Interface for formatters

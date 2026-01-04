@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Service\Identity;
+namespace AmeliaVendor\Stripe\Service\Identity;
 
 /**
  * Service factory class for API resources in the Identity namespace.
@@ -10,7 +10,7 @@ namespace AmeliaStripe\Service\Identity;
  * @property VerificationReportService $verificationReports
  * @property VerificationSessionService $verificationSessions
  */
-class IdentityServiceFactory extends \AmeliaStripe\Service\AbstractServiceFactory
+class IdentityServiceFactory extends \AmeliaVendor\Stripe\Service\AbstractServiceFactory
 {
     /**
      * @var array<string, string>

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -11,6 +11,7 @@ use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\Integration\ApplicationIntegrationService;
 use AmeliaBooking\Application\Services\Notification\ApplicationNotificationService;
+use AmeliaBooking\Application\Services\WaitingList\WaitingListService;
 use AmeliaBooking\Application\Services\WebHook\AbstractWebHookApplicationService;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
@@ -107,6 +108,12 @@ class BookingStatusUpdatedEventHandler
                 true,
                 true
             );
+        }
+
+        if (!empty($booking['status']) && in_array($booking['status'], [BookingStatus::CANCELED, BookingStatus::REJECTED], true)) {
+            /** @var WaitingListService $waitingListService */
+            $waitingListService = $container->get('application.waitingList.service');
+            $waitingListService->sendAvailableSpotNotifications($appointment);
         }
 
         $webHookService->process(self::BOOKING_STATUS_UPDATED, $appointmentArray, [$booking]);

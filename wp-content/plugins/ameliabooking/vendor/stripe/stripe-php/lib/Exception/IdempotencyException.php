@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaStripe\Exception;
+namespace AmeliaVendor\Stripe\Exception;
 
 /**
  * IdempotencyException is thrown in cases where an idempotency key was used

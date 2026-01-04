@@ -18,12 +18,12 @@
  * @license   http://www.opensource.org/licenses/mit-license.html  MIT License
  */
 
-namespace phpseclib3\Math\BinaryField;
+namespace AmeliaVendor\phpseclib3\Math\BinaryField;
 
-use phpseclib3\Common\Functions\Strings;
-use phpseclib3\Math\BigInteger;
-use phpseclib3\Math\BinaryField;
-use phpseclib3\Math\Common\FiniteField\Integer as Base;
+use AmeliaVendor\phpseclib3\Common\Functions\Strings;
+use AmeliaVendor\phpseclib3\Math\BigInteger;
+use AmeliaVendor\phpseclib3\Math\BinaryField;
+use AmeliaVendor\phpseclib3\Math\Common\FiniteField\Integer as Base;
 
 /**
  * Binary Finite Fields

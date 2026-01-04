@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaStripe\Service\V2\Core;
+namespace AmeliaVendor\Stripe\Service\V2\Core;
 
 /**
  * Service factory class for API resources in the root namespace.
@@ -10,7 +10,7 @@ namespace AmeliaStripe\Service\V2\Core;
  * @property EventService $events
  * // Doc: The end of the section generated from our OpenAPI spec
  */
-class CoreServiceFactory extends \AmeliaStripe\Service\AbstractServiceFactory
+class CoreServiceFactory extends \AmeliaVendor\Stripe\Service\AbstractServiceFactory
 {
     /**
      * @var array<string, string>

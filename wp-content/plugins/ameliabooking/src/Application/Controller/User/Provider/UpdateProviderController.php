@@ -47,6 +47,7 @@ class UpdateProviderController extends Controller
         'pictureThumbPath',
         'zoomUserId',
         'appleCalendarId',
+        'googleCalendarId',
         'googleCalendar',
         'outlookCalendar',
         'password',

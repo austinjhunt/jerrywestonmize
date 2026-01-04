@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -187,7 +187,7 @@ class CustomerBookingFactory
         $customerBooking->setTicketsBooking($ticketsBooking);
 
         if (!empty($data['created'])) {
-            $customerBooking->setCreated(new DateTimeValue(DateTimeService::getCustomDateTimeObject($data['created'])));
+            $customerBooking->setCreated(new DateTimeValue(DateTimeService::getCustomDateTimeObjectFromUtc($data['created'])));
         }
 
         if (!empty($data['tax'])) {
@@ -211,36 +211,36 @@ class CustomerBookingFactory
         $data = [];
 
         foreach ($rows as $row) {
-            $id = $row['booking_id'];
+            $id = (int)$row['booking_id'];
 
-            $customerId = !empty($row['customer_id']) ? $row['customer_id'] : null;
+            $customerId = !empty($row['customer_id']) ? (int)$row['customer_id'] : null;
 
-            $paymentId = !empty($row['payment_id']) ? $row['payment_id'] : null;
+            $paymentId = !empty($row['payment_id']) ? (int)$row['payment_id'] : null;
 
-            $couponId = !empty($row['coupon_id']) ? $row['coupon_id'] : null;
+            $couponId = !empty($row['coupon_id']) ? (int)$row['coupon_id'] : null;
 
-            $bookingEventTicketId = !empty($row['booking_ticket_id']) ? $row['booking_ticket_id'] : null;
+            $bookingEventTicketId = !empty($row['booking_ticket_id']) ? (int)$row['booking_ticket_id'] : null;
 
-            $eventPeriodId = !empty($row['event_periodId']) ? $row['event_periodId'] : null;
+            $eventPeriodId = !empty($row['event_periodId']) ? (int)$row['event_periodId'] : null;
 
-            $eventProviderId = !empty($row['provider_id']) ? $row['provider_id'] : null;
+            $eventProviderId = !empty($row['provider_id']) ? (int)$row['provider_id'] : null;
 
-            $eventId = !empty($row['event_id']) ? $row['event_id'] : null;
+            $eventId = !empty($row['event_id']) ? (int)$row['event_id'] : null;
 
             if ($id && empty($data[$id])) {
                 $data[$id] = [
                     'id'              => $id,
-                    'appointmentId'   => $row['booking_appointmentId'],
-                    'customerId'      => $row['booking_customerId'],
+                    'appointmentId'   => isset($row['booking_appointmentId']) ? (int)$row['booking_appointmentId'] : null,
+                    'customerId'      => isset($row['booking_customerId']) ? (int)$row['booking_customerId'] : null,
                     'status'          => $row['booking_status'],
                     'price'           => $row['booking_price'],
-                    'persons'         => $row['booking_persons'],
-                    'couponId'        => $row['booking_couponId'],
+                    'persons'         => isset($row['booking_persons']) ? (int)$row['booking_persons'] : null,
+                    'couponId'        => isset($row['booking_couponId']) ? (int)$row['booking_couponId'] : null,
                     'customFields'    => !empty($row['booking_customFields']) ? $row['booking_customFields'] : null,
                     'info'            => !empty($row['booking_info']) ? $row['booking_info'] : null,
-                    'utcOffset'       => $row['booking_utcOffset'],
-                    'aggregatedPrice' => $row['booking_aggregatedPrice'],
-                    'duration'        => !empty($row['booking_duration']) ? $row['booking_duration'] : null,
+                    'utcOffset'       => isset($row['booking_utcOffset']) ? (int)$row['booking_utcOffset'] : null,
+                    'aggregatedPrice' => isset($row['booking_aggregatedPrice']) ? (int)$row['booking_aggregatedPrice'] : null,
+                    'duration'        => !empty($row['booking_duration']) ? (int)$row['booking_duration'] : null,
                     'token'           => isset($row['booking_token']) ? $row['booking_token'] : null,
                     'tax'             => isset($row['booking_tax']) ? $row['booking_tax'] : null,
                     'qrCodes'         => isset($row['booking_qrCodes']) ? $row['booking_qrCodes'] : (isset($row['qrCodes']) ? $row['qrCodes'] : null),
@@ -249,14 +249,14 @@ class CustomerBookingFactory
 
             if ($data[$id] && $customerId && empty($data[$id]['customer'])) {
                 $data[$id]['customer'] = [
-                    'id'        => $customerId,
-                    'firstName' => $row['customer_firstName'],
-                    'lastName'  => $row['customer_lastName'],
-                    'email'     => $row['customer_email'],
-                    'note'      => $row['customer_note'],
-                    'phone'     => $row['customer_phone'],
-                    'gender'    => $row['customer_gender'],
-                    'birthday'  => $row['customer_birthday'],
+                    'id'           => $customerId,
+                    'firstName'    => $row['customer_firstName'],
+                    'lastName'     => $row['customer_lastName'],
+                    'email'        => $row['customer_email'],
+                    'note'         => $row['customer_note'],
+                    'phone'        => $row['customer_phone'],
+                    'gender'       => $row['customer_gender'],
+                    'birthday'     => $row['customer_birthday'],
                     'customFields' => !empty($row['customer_customFields']) ? $row['customer_customFields'] : null,
                 ];
             }
@@ -272,11 +272,11 @@ class CustomerBookingFactory
                     'gateway'           => $row['payment_gateway'],
                     'gatewayTitle'      => $row['payment_gatewayTitle'],
                     'transactionId'     => !empty($row['payment_transactionId']) ? $row['payment_transactionId'] : null,
-                    'parentId'          => !empty($row['payment_parentId']) ? $row['payment_parentId'] : null,
+                    'parentId'          => isset($row['payment_parentId']) ? (int)$row['payment_parentId'] : null,
                     'data'              => $row['payment_data'],
-                    'wcOrderId'         => !empty($row['payment_wcOrderId']) ? $row['payment_wcOrderId'] : null,
-                    'wcOrderItemId'     => !empty($row['payment_wcOrderItemId']) ? $row['payment_wcOrderItemId'] : null,
-                    'invoiceNumber'     => !empty($row['payment_invoiceNumber']) ? $row['payment_invoiceNumber'] : null
+                    'wcOrderId'         => isset($row['payment_wcOrderId']) ? (int)$row['payment_wcOrderId'] : null,
+                    'wcOrderItemId'     => isset($row['payment_wcOrderItemId']) ? (int)$row['payment_wcOrderItemId'] : null,
+                    'invoiceNumber'     => isset($row['payment_invoiceNumber']) ? (int)$row['payment_invoiceNumber'] : null
                 ];
             }
 
@@ -286,8 +286,8 @@ class CustomerBookingFactory
                     'code'          => $row['coupon_code'],
                     'discount'      => $row['coupon_discount'],
                     'deduction'     => $row['coupon_deduction'],
-                    'limit'         => $row['coupon_limit'],
-                    'customerLimit' => $row['coupon_customerLimit'],
+                    'limit'         => isset($row['coupon_limit']) ? (int)$row['coupon_limit'] : null,
+                    'customerLimit' => isset($row['coupon_customerLimit']) ? (int)$row['coupon_customerLimit'] : null,
                     'status'        => $row['coupon_status'],
                 ];
             }
@@ -295,9 +295,9 @@ class CustomerBookingFactory
             if ($data[$id] && $bookingEventTicketId && empty($data[$id]['ticketsData'][$bookingEventTicketId])) {
                 $data[$id]['ticketsData'][$bookingEventTicketId] = [
                     'id'                => $bookingEventTicketId,
-                    'eventTicketId'     => $row['booking_ticket_eventTicketId'],
+                    'eventTicketId'     => (int)$row['booking_ticket_eventTicketId'],
                     'customerBookingId' => $id,
-                    'persons'           => $row['booking_ticket_persons'],
+                    'persons'           => (int)$row['booking_ticket_persons'],
                     'price'             => $row['booking_ticket_price'],
                 ];
             }
@@ -308,8 +308,11 @@ class CustomerBookingFactory
                     'name'          => $row['event_name'],
                     'status'        => $row['event_status'],
                     'customPricing' => $row['event_customPricing'],
-                    'organizerId'   => $row['event_organizerId'],
-                    'isWaitingList' => $row['event_settings'] ? json_decode($row['event_settings'], true)['waitingList']['enabled'] : false,
+                    'organizerId'   => isset($row['event_organizerId']) ? (int)$row['event_organizerId'] : null,
+                    'settings'      => $row['event_settings'],
+                    'isWaitingList' => $row['event_settings']
+                        ? json_decode($row['event_settings'], true)['waitingList']['enabled']
+                        : false,
                 ];
             }
 
@@ -319,24 +322,31 @@ class CustomerBookingFactory
                         'id'        => $eventProviderId,
                         'firstName' => $row['provider_firstName'],
                         'lastName'  => $row['provider_lastName'],
-                        'picture'   => $row['provider_pictureThumbPath']
+                        'email'     => $row['provider_email'],
+                        'picture'   => $row['provider_pictureThumbPath'],
+                        'badgeId'   => $row['provider_badgeId'],
                     ];
                 } elseif ($data[$id]['event']['organizerId'] !== $eventProviderId && empty($data[$id]['event']['providers'][$eventProviderId])) {
                     $data[$id]['event']['providers'][$eventProviderId] = [
                         'id'        => $eventProviderId,
                         'firstName' => $row['provider_firstName'],
                         'lastName'  => $row['provider_lastName'],
-                        'picture'   => $row['provider_pictureThumbPath']
+                        'email'     => $row['provider_email'],
+                        'picture'   => $row['provider_pictureThumbPath'],
+                        'badgeId'   => $row['provider_badgeId'],
                     ];
                 }
             }
 
-            if ($data[$id] && $eventPeriodId && empty($data[$id]['eventPeriods'][$eventPeriodId])) {
-                $data[$id]['eventPeriods'][$eventPeriodId] = [
-                    'id'          => $eventPeriodId,
-                    'periodStart' => $row['event_periodStart'],
-                    'zoomMeeting' => $row['event_zoomMeeting'],
-                    'googleMeetUrl' => $row['event_googleMeetUrl']
+            if ($data[$id] && $eventPeriodId && empty($data[$id]['event']['periods'][$eventPeriodId])) {
+                $data[$id]['event']['periods'][$eventPeriodId] = [
+                    'id'                => $eventPeriodId,
+                    'periodStart'       => $row['event_periodStart'],
+                    'periodEnd'         => $row['event_periodEnd'],
+                    'zoomMeeting'       => $row['event_zoomMeeting'],
+                    'googleMeetUrl'     => $row['event_googleMeetUrl'],
+                    'microsoftTeamsUrl' => $row['event_microsoftTeamsUrl'],
+                    'lessonSpace'       => $row['event_lessonSpace'],
                 ];
             }
         }

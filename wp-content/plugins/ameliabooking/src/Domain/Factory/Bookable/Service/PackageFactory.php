@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -235,11 +235,10 @@ class PackageFactory
                 $packages[$packageId]['bookable'][$bookableId]['service']['maxCapacity']     = $row['service_maxCapacity'];
                 $packages[$packageId]['bookable'][$bookableId]['service']['pictureFullPath'] = $row['service_picture_full'];
                 $packages[$packageId]['bookable'][$bookableId]['service']['pictureThumbPath'] = $row['service_picture_thumb'];
-                $packages[$packageId]['bookable'][$bookableId]['service']['translations']     =
-                    !empty($row['service_translations']) ?
-                        $row['service_translations'] :
-                        null;
-                $packages[$packageId]['bookable'][$bookableId]['quantity']         = $row['package_service_quantity'];
+                $packages[$packageId]['bookable'][$bookableId]['service']['translations']    =
+                    !empty($row['service_translations']) ? $row['service_translations'] : null;
+                $packages[$packageId]['bookable'][$bookableId]['service']['color'] = $row['service_color'];
+                $packages[$packageId]['bookable'][$bookableId]['quantity'] = $row['package_service_quantity'];
                 $packages[$packageId]['bookable'][$bookableId]['minimumScheduled'] = $row['package_service_minimumScheduled'];
                 $packages[$packageId]['bookable'][$bookableId]['maximumScheduled'] = $row['package_service_maximumScheduled'];
                 $packages[$packageId]['bookable'][$bookableId]['allowProviderSelection'] = $row['package_service_allowProviderSelection'];
@@ -255,19 +254,21 @@ class PackageFactory
             }
 
             if ($providerId) {
-                $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['id']            = $row['provider_id'];
-                $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['firstName']     = $row['provider_firstName'];
-                $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['lastName']      = $row['provider_lastName'];
-                $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['email']         = $row['provider_email'];
-                $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['status']        =
-                    !empty($row['provider_status']) ?
-                        $row['provider_status'] :
-                        Status::VISIBLE;
-                $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['type']          = Entities::PROVIDER;
+                $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['id'] = $row['provider_id'];
+                $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['firstName'] = $row['provider_firstName'];
+                $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['lastName'] = $row['provider_lastName'];
+                $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['email'] = $row['provider_email'];
+                $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['status'] =
+                    !empty($row['provider_status']) ? $row['provider_status'] : Status::VISIBLE;
+                $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['type'] = Entities::PROVIDER;
+                $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['pictureFullPath'] =
+                    !empty($row['provider_picture_full']) ? $row['provider_picture_full'] : null;
+                $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['pictureThumbPath'] =
+                    !empty($row['provider_picture_thumb']) ? $row['provider_picture_thumb'] : null;
                 $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['stripeConnect'] =
                     !empty($row['provider_stripeConnect'])
-                        ? json_decode($row['provider_stripeConnect'], true)
-                        : null;
+                    ? json_decode($row['provider_stripeConnect'], true)
+                    : null;
             }
 
             if ($locationId) {

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Monolog\Processor;
+namespace AmeliaVendor\Monolog\Processor;
 
 /**
  * Injects value of gethostname in all records

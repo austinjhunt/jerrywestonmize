@@ -22,7 +22,7 @@ class EventTagsRepository extends AbstractRepository implements EventRepositoryI
     /**
      * @param EventTag $entity
      *
-     * @return bool
+     * @return int
      * @throws QueryExecutionException
      */
     public function add($entity)

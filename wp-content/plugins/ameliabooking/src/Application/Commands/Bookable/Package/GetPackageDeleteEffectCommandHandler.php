@@ -42,24 +42,24 @@ class GetPackageDeleteEffectCommandHandler extends CommandHandler
 
         $appointmentsCount = $bookableAS->getAppointmentsCountForPackages([$command->getArg('id')]);
 
-        $message = '';
+        $messageKey = '';
+        $messageData = null;
 
         if ($appointmentsCount['futureAppointments'] > 0) {
-            $appointmentString = $appointmentsCount['futureAppointments'] === 1 ? 'appointment' : 'appointments';
-
-            $message = "This package has {$appointmentsCount['futureAppointments']} {$appointmentString} in the future.";
+            $messageKey = 'red_delete_package_effect_future';
+            $messageData = ['count' => $appointmentsCount['futureAppointments']];
         } elseif ($appointmentsCount['pastAppointments'] > 0) {
-            $appointmentString = $appointmentsCount['pastAppointments'] === 1 ? 'appointment' : 'appointments';
-
-            $message = "This package has {$appointmentsCount['pastAppointments']} {$appointmentString} in the past.";
+            $messageKey = 'red_delete_package_effect_past';
+            $messageData = ['count' => $appointmentsCount['pastAppointments']];
         }
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved message.');
         $result->setData(
             [
-                'valid'   => true,
-                'message' => $message
+                'valid'       => true,
+                'messageKey'  => $messageKey,
+                'messageData' => $messageData,
             ]
         );
 

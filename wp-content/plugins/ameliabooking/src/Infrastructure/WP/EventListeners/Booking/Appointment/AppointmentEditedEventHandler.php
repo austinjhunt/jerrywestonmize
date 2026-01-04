@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -12,6 +12,7 @@ use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\Booking\IcsApplicationService;
 use AmeliaBooking\Application\Services\Integration\ApplicationIntegrationService;
 use AmeliaBooking\Application\Services\Notification\ApplicationNotificationService;
+use AmeliaBooking\Application\Services\WaitingList\WaitingListService;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Application\Services\WebHook\AbstractWebHookApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
@@ -28,7 +29,6 @@ use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use Exception;
-use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
 
 /**
@@ -57,14 +57,8 @@ class AppointmentEditedEventHandler
 
     /**
      * @param CommandResult $commandResult
-     * @param Container     $container
-     *
-     * @throws ContainerValueNotFoundException
-     * @throws NotFoundException
-     * @throws QueryExecutionException
-     * @throws ContainerException
+     * @param Container $container
      * @throws InvalidArgumentException
-     * @throws Exception
      */
     public static function handle($commandResult, $container)
     {
@@ -101,12 +95,10 @@ class AppointmentEditedEventHandler
 
         $appointmentZoomUsersLicenced = $commandResult->getData()['appointmentZoomUsersLicenced'];
 
-        /** @var Appointment $reservationObject */
         $reservationObject = AppointmentFactory::create($appointment);
 
         $bookingApplicationService->setReservationEntities($reservationObject);
 
-        /** @var Collection $removedBookings */
         $removedBookings = new Collection();
 
         $notifyWaitingCustomers = false;
@@ -210,7 +202,8 @@ class AppointmentEditedEventHandler
             $reservationObject->getBookings(),
             true,
             true,
-            !empty($settingsService->getSetting('notifications', 'sendInvoice')),
+            $settingsService->isFeatureEnabled('invoices')
+                && !empty($settingsService->getSetting('notifications', 'sendInvoice')),
             $reservationObject->isNotifyParticipants()
         );
 
@@ -224,19 +217,9 @@ class AppointmentEditedEventHandler
         );
 
         if ($notifyWaitingCustomers) {
-            $waitingBookings = new Collection();
-
-            foreach ($appointment['bookings'] as $booking) {
-                if ($booking['status'] === BookingStatus::WAITING) {
-                    $waitingBookings->addItem(CustomerBookingFactory::create($booking));
-                }
-            }
-            if ($waitingBookings->getItems()) {
-                $applicationNotificationService->sendWaitingListAvailableSpotNotifications(
-                    $reservationObject,
-                    $waitingBookings
-                );
-            }
+            /** @var WaitingListService $waitingListService */
+            $waitingListService = $container->get('application.waitingList.service');
+            $waitingListService->sendAvailableSpotNotifications($reservationObject);
         }
 
         if (

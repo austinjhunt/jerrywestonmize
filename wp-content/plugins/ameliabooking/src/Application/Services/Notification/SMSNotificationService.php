@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -22,7 +22,7 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Notification\NotificationLogRepository;
 use AmeliaBooking\Infrastructure\Repository\Notification\NotificationSMSHistoryRepository;
 use Exception;
-use Interop\Container\Exception\ContainerException;
+use Slim\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
 
 /**
@@ -37,14 +37,15 @@ class SMSNotificationService extends AbstractNotificationService
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
-     * @param array        $appointmentArray
+     * @param array $appointmentArray
      * @param Notification $notification
-     * @param bool         $logNotification
-     * @param int|null     $bookingKey
-     *
+     * @param bool $logNotification
+     * @param int|null $bookingKey
+     * @param null $allBookings
+     * @param array $invoice
+     * @throws InvalidArgumentException
      * @throws NotFoundException
      * @throws QueryExecutionException
-     * @throws ContainerException
      * @throws Exception
      */
     public function sendNotification(
@@ -209,7 +210,7 @@ class SMSNotificationService extends AbstractNotificationService
             try {
                 $data = json_decode($undeliveredNotification->getData()->getValue(), true);
 
-                if ($history = $notificationsSMSHistoryRepo->getById($data['historyId'])) {
+                if ($history = $notificationsSMSHistoryRepo->getItemById($data['historyId'])) {
                     $apiResponse = $smsApiService->send(
                         $history['phone'],
                         $data['body'],

@@ -15,21 +15,21 @@
  * the License.
  */
 
-namespace AmeliaGoogle\Service\Calendar\Resource;
+namespace AmeliaVendor\Google\Service\Calendar\Resource;
 
-use AmeliaGoogle\Service\Calendar\CalendarList as CalendarListModel;
-use AmeliaGoogle\Service\Calendar\CalendarListEntry;
-use AmeliaGoogle\Service\Calendar\Channel;
+use AmeliaVendor\Google\Service\Calendar\CalendarList as CalendarListModel;
+use AmeliaVendor\Google\Service\Calendar\CalendarListEntry;
+use AmeliaVendor\Google\Service\Calendar\Channel;
 
 /**
  * The "calendarList" collection of methods.
  * Typical usage is:
  *  <code>
- *   $calendarService = new AmeliaGoogle\Service\Calendar(...);
+ *   $calendarService = new \AmeliaVendor\Google\Service\Calendar(...);
  *   $calendarList = $calendarService->calendarList;
  *  </code>
  */
-class CalendarList extends \AmeliaGoogle\Service\Resource
+class CalendarList extends \AmeliaVendor\Google\Service\Resource
 {
   /**
    * Removes a calendar from the user's calendar list. (calendarList.delete)
@@ -38,7 +38,7 @@ class CalendarList extends \AmeliaGoogle\Service\Resource
    * the calendarList.list method. If you want to access the primary calendar of
    * the currently logged in user, use the "primary" keyword.
    * @param array $optParams Optional parameters.
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function delete($calendarId, $optParams = [])
   {
@@ -54,7 +54,7 @@ class CalendarList extends \AmeliaGoogle\Service\Resource
    * the currently logged in user, use the "primary" keyword.
    * @param array $optParams Optional parameters.
    * @return CalendarListEntry
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function get($calendarId, $optParams = [])
   {
@@ -74,7 +74,7 @@ class CalendarList extends \AmeliaGoogle\Service\Resource
    * used, the index-based colorId field will be set to the best matching option
    * automatically. Optional. The default is False.
    * @return CalendarListEntry
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function insert(CalendarListEntry $postBody, $optParams = [])
   {
@@ -112,7 +112,7 @@ class CalendarList extends \AmeliaGoogle\Service\Resource
    * full synchronization without any syncToken. Learn more about incremental
    * synchronization. Optional. The default is to return all entries.
    * @return CalendarListModel
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function listCalendarList($optParams = [])
   {
@@ -135,7 +135,7 @@ class CalendarList extends \AmeliaGoogle\Service\Resource
    * used, the index-based colorId field will be set to the best matching option
    * automatically. Optional. The default is False.
    * @return CalendarListEntry
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function patch($calendarId, CalendarListEntry $postBody, $optParams = [])
   {
@@ -158,7 +158,7 @@ class CalendarList extends \AmeliaGoogle\Service\Resource
    * used, the index-based colorId field will be set to the best matching option
    * automatically. Optional. The default is False.
    * @return CalendarListEntry
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function update($calendarId, CalendarListEntry $postBody, $optParams = [])
   {
@@ -196,7 +196,7 @@ class CalendarList extends \AmeliaGoogle\Service\Resource
    * full synchronization without any syncToken. Learn more about incremental
    * synchronization. Optional. The default is to return all entries.
    * @return Channel
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function watch(Channel $postBody, $optParams = [])
   {
@@ -207,4 +207,4 @@ class CalendarList extends \AmeliaGoogle\Service\Resource
 }
 
 // Adding a class alias for backwards compatibility with the previous class name.
-class_alias(CalendarList::class, 'AmeliaGoogle_Service_Calendar_Resource_CalendarList');
+class_alias(CalendarList::class, 'Google_Service_Calendar_Resource_CalendarList');

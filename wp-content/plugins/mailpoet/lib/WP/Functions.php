@@ -1019,6 +1019,11 @@ class Functions {
     nocache_headers();
   }
 
+  public function wpDie($message = '', $title = '', $args = []): void {
+    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+    wp_die($message, $title, $args);
+  }
+
   public function wpUniqueId($prefix = ''): string {
     return wp_unique_id($prefix);
   }

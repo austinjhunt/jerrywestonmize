@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -13,7 +13,9 @@ use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Coupon\Coupon;
 use AmeliaBooking\Domain\Entity\Entities;
+use AmeliaBooking\Domain\ValueObjects\Number\Integer\WholeNumber;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
+use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageCustomerRepository;
 use AmeliaBooking\Infrastructure\Repository\Coupon\CouponRepository;
 
 /**
@@ -33,7 +35,6 @@ class GetCouponCommandHandler extends CommandHandler
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      * @throws AccessDeniedException
-     * @throws \Interop\Container\Exception\ContainerException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException
      */
     public function handle(GetCouponCommand $command)
@@ -51,6 +52,16 @@ class GetCouponCommandHandler extends CommandHandler
 
         /** @var Coupon $coupon */
         $coupon = $couponRepository->getById($command->getArg('id'));
+
+        /** @var PackageCustomerRepository $packageCustomerRepository */
+        $packageCustomerRepository = $this->container->get('domain.bookable.packageCustomer.repository');
+
+        $packageCustomerRecords = $packageCustomerRepository->getByEntityId(
+            $coupon->getId()->getValue(),
+            'couponId'
+        );
+
+        $coupon->setUsed(new WholeNumber($coupon->getUsed()->getValue() + $packageCustomerRecords->length()));
 
         $couponArray = $coupon->toArray();
 

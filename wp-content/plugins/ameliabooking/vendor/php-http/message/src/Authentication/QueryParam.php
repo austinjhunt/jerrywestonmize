@@ -3,7 +3,7 @@
 namespace AmeliaHttp\Message\Authentication;
 
 use AmeliaHttp\Message\Authentication;
-use AmeliaPsr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
 
 /**
  * Authenticate a PSR-7 Request by adding parameters to its query.

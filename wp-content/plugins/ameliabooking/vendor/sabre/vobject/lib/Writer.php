@@ -1,9 +1,8 @@
 <?php
 
-namespace AmeliaSabre\VObject;
+namespace AmeliaVendor\Sabre\VObject;
 
-use AmeliaSabre\Xml;
-
+use AmeliaVendor\Sabre\Xml;
 /**
  * iCalendar/vCard/jCal/jCard/xCal/xCard writer object.
  *
@@ -25,7 +24,6 @@ class Writer
     {
         return $component->serialize();
     }
-
     /**
      * Serializes a jCal or jCard object.
      *
@@ -37,7 +35,6 @@ class Writer
     {
         return json_encode($component, $options);
     }
-
     /**
      * Serializes a xCal or xCard object.
      *
@@ -48,21 +45,16 @@ class Writer
         $writer = new Xml\Writer();
         $writer->openMemory();
         $writer->setIndent(true);
-
         $writer->startDocument('1.0', 'utf-8');
-
-        if ($component instanceof Component\VCalendar) {
+        if ($component instanceof \AmeliaVendor\Sabre\VObject\Component\VCalendar) {
             $writer->startElement('icalendar');
-            $writer->writeAttribute('xmlns', Parser\XML::XCAL_NAMESPACE);
+            $writer->writeAttribute('xmlns', \AmeliaVendor\Sabre\VObject\Parser\XML::XCAL_NAMESPACE);
         } else {
             $writer->startElement('vcards');
-            $writer->writeAttribute('xmlns', Parser\XML::XCARD_NAMESPACE);
+            $writer->writeAttribute('xmlns', \AmeliaVendor\Sabre\VObject\Parser\XML::XCARD_NAMESPACE);
         }
-
         $component->xmlSerialize($writer);
-
         $writer->endElement();
-
         return $writer->outputMemory();
     }
 }

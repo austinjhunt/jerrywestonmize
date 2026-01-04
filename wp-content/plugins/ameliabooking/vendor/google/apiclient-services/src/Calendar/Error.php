@@ -15,9 +15,9 @@
  * the License.
  */
 
-namespace AmeliaGoogle\Service\Calendar;
+namespace AmeliaVendor\Google\Service\Calendar;
 
-class Error extends \AmeliaGoogle\Model
+class Error extends \AmeliaVendor\Google\Model
 {
   /**
    * @var string
@@ -59,4 +59,4 @@ class Error extends \AmeliaGoogle\Model
 }
 
 // Adding a class alias for backwards compatibility with the previous class name.
-class_alias(Error::class, 'AmeliaGoogle_Service_Calendar_Error');
+class_alias(Error::class, 'Google_Service_Calendar_Error');

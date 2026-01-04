@@ -8,7 +8,7 @@
 namespace Slim;
 
 use Closure;
-use AmeliaPsr\Container\ContainerInterface;
+use AmeliaVendor\Psr\Container\ContainerInterface;
 
 class DeferredCallable
 {

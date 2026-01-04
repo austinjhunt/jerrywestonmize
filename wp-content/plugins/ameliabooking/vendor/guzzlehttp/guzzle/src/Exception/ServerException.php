@@ -1,5 +1,6 @@
 <?php
-namespace AmeliaGuzzleHttp\Exception;
+
+namespace AmeliaVendor\GuzzleHttp\Exception;
 
 /**
  * Exception when a server error is encountered (5xx codes)

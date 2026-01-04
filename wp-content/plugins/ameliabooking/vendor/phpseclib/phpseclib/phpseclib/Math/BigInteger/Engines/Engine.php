@@ -11,12 +11,12 @@
  * @link      http://pear.php.net/package/Math_BigInteger
  */
 
-namespace phpseclib3\Math\BigInteger\Engines;
+namespace AmeliaVendor\phpseclib3\Math\BigInteger\Engines;
 
-use phpseclib3\Common\Functions\Strings;
-use phpseclib3\Crypt\Random;
-use phpseclib3\Exception\BadConfigurationException;
-use phpseclib3\Math\BigInteger;
+use AmeliaVendor\phpseclib3\Common\Functions\Strings;
+use AmeliaVendor\phpseclib3\Crypt\Random;
+use AmeliaVendor\phpseclib3\Exception\BadConfigurationException;
+use AmeliaVendor\phpseclib3\Math\BigInteger;
 
 /**
  * Base Engine.
@@ -223,7 +223,7 @@ abstract class Engine implements \JsonSerializable
      */
     public static function setModExpEngine($engine)
     {
-        $fqengine = '\\phpseclib3\\Math\\BigInteger\\Engines\\' . static::ENGINE_DIR . '\\' . $engine;
+        $fqengine = '\\AmeliaVendor\\phpseclib3\\Math\\BigInteger\\Engines\\' . static::ENGINE_DIR . '\\' . $engine;
         if (!class_exists($fqengine) || !method_exists($fqengine, 'isValidEngine')) {
             throw new \InvalidArgumentException("$engine is not a valid engine");
         }
@@ -316,11 +316,9 @@ abstract class Engine implements \JsonSerializable
             return $this->normalize($n->subtract($temp));
         }
 
-        extract($this->extendedGCD($n));
-        /**
-         * @var Engine $gcd
-         * @var Engine $x
-         */
+        $extended = $this->extendedGCD($n);
+        $gcd = $extended['gcd'];
+        $x = $extended['x'];
 
         if (!$gcd->equals(static::$one[static::class])) {
             return false;
@@ -363,6 +361,44 @@ abstract class Engine implements \JsonSerializable
         if ($this->precision > 0) {
             // recalculate $this->bitmask
             $this->setPrecision($this->precision);
+        }
+    }
+
+    /**
+     *  __serialize() magic method
+     *
+     * __sleep / __wakeup were depreciated in PHP 8.5
+     * Will be called, automatically, when serialize() is called on a Math_BigInteger object.
+     *
+     * @see self::__unserialize()
+     * @access public
+     */
+    public function __serialize()
+    {
+        $result = ['hex' => $this->toHex(true)];
+        if ($this->precision > 0) {
+            $result['precision'] = $this->precision;
+        }
+        return $result;
+    }
+
+    /**
+     *  __unserialize() magic method
+     *
+     * __sleep / __wakeup were depreciated in PHP 8.5
+     * Will be called, automatically, when unserialize() is called on a Math_BigInteger object.
+     *
+     * @see self::__serialize()
+     * @access public
+     */
+    public function __unserialize(array $data)
+    {
+        $temp = new static($data['hex'], -16);
+        $this->value = $temp->value;
+        $this->is_negative = $temp->is_negative;
+        if (isset($data['precision']) && $data['precision'] > 0) {
+            // recalculate $this->bitmask
+            $this->setPrecision($data['precision']);
         }
     }
 
@@ -644,7 +680,7 @@ abstract class Engine implements \JsonSerializable
             return $this->normalize($temp->powModInner($e, $n));
         }
 
-        if ($this->compare($n) > 0) {
+        if ($this->compare($n) > 0 || $this->isNegative()) {
             list(, $temp) = $this->divide($n);
             return $temp->powModInner($e, $n);
         }
@@ -740,11 +776,9 @@ abstract class Engine implements \JsonSerializable
      */
     public static function random($size)
     {
-        extract(static::minMaxBits($size));
-        /**
-         * @var BigInteger $min
-         * @var BigInteger $max
-         */
+        $minMax = static::minMaxBits($size);
+        $min = $minMax['min'];
+        $max = $minMax['max'];
         return static::randomRange($min, $max);
     }
 
@@ -758,11 +792,9 @@ abstract class Engine implements \JsonSerializable
      */
     public static function randomPrime($size)
     {
-        extract(static::minMaxBits($size));
-        /**
-         * @var static $min
-         * @var static $max
-         */
+        $minMax = static::minMaxBits($size);
+        $min = $minMax['min'];
+        $max = $minMax['max'];
         return static::randomRangePrime($min, $max);
     }
 
@@ -1153,7 +1185,7 @@ abstract class Engine implements \JsonSerializable
         $class = static::class;
 
         $fqengine = !method_exists(static::$modexpEngine[static::class], 'reduce') ?
-            '\\phpseclib3\\Math\\BigInteger\\Engines\\' . static::ENGINE_DIR . '\\DefaultEngine' :
+            '\\AmeliaVendor\\phpseclib3\\Math\\BigInteger\\Engines\\' . static::ENGINE_DIR . '\\DefaultEngine' :
             static::$modexpEngine[static::class];
         if (method_exists($fqengine, 'generateCustomReduction')) {
             $func = $fqengine::generateCustomReduction($this, static::class);

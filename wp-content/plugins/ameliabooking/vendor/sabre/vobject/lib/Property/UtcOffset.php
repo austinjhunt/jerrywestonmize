@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaSabre\VObject\Property;
+namespace AmeliaVendor\Sabre\VObject\Property;
 
 /**
  * UtcOffset property.

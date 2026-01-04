@@ -9,19 +9,19 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-namespace phpseclib3\Crypt\RSA;
+namespace AmeliaVendor\phpseclib3\Crypt\RSA;
 
-use phpseclib3\Common\Functions\Strings;
-use phpseclib3\Crypt\Common;
-use phpseclib3\Crypt\Hash;
-use phpseclib3\Crypt\Random;
-use phpseclib3\Crypt\RSA;
-use phpseclib3\Crypt\RSA\Formats\Keys\PSS;
-use phpseclib3\Exception\UnsupportedAlgorithmException;
-use phpseclib3\Exception\UnsupportedFormatException;
-use phpseclib3\File\ASN1;
-use phpseclib3\File\ASN1\Maps\DigestInfo;
-use phpseclib3\Math\BigInteger;
+use AmeliaVendor\phpseclib3\Common\Functions\Strings;
+use AmeliaVendor\phpseclib3\Crypt\Common;
+use AmeliaVendor\phpseclib3\Crypt\Hash;
+use AmeliaVendor\phpseclib3\Crypt\Random;
+use AmeliaVendor\phpseclib3\Crypt\RSA;
+use AmeliaVendor\phpseclib3\Crypt\RSA\Formats\Keys\PSS;
+use AmeliaVendor\phpseclib3\Exception\UnsupportedAlgorithmException;
+use AmeliaVendor\phpseclib3\Exception\UnsupportedFormatException;
+use AmeliaVendor\phpseclib3\File\ASN1;
+use AmeliaVendor\phpseclib3\File\ASN1\Maps\DigestInfo;
+use AmeliaVendor\phpseclib3\Math\BigInteger;
 
 /**
  * Raw RSA Key Handler

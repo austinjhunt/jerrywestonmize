@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe;
+namespace AmeliaVendor\Stripe;
 
 /**
  * Each customer has a <a href="https://stripe.com/docs/api/customers/object#customer_object-balance"><code>balance</code></a> that is

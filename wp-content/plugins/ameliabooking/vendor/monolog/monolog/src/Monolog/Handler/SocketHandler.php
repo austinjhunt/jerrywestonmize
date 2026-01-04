@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Monolog\Handler;
+namespace AmeliaVendor\Monolog\Handler;
 
-use Monolog\Logger;
+use AmeliaVendor\Monolog\Logger;
 
 /**
  * Stores to any socket - uses fsockopen() or pfsockopen().

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -30,18 +30,18 @@ class AmeliaSearchElementorWidget extends Widget_Base
             'amelia_search_section',
             [
                 'label' => '<div class="amelia-elementor-content-outdated"><p class="amelia-elementor-content-title">'
-                    . BackendStrings::getWordPressStrings()['search_gutenberg_block']['title']
+                    . BackendStrings::get('search_gutenberg_block')['title']
                     . '</p><br><p class="amelia-elementor-content-p">'
-                    . BackendStrings::getWordPressStrings()['search_gutenberg_block']['description']
+                    . BackendStrings::get('search_gutenberg_block')['description']
                     . '</p><br><p class="amelia-elementor-content-p amelia-elementor-content-p-outdated">'
-                    . BackendStrings::getWordPressStrings()['outdated_booking_gutenberg_block']
+                    . BackendStrings::get('outdated_booking_gutenberg_block')
                     . '</p>',
             ]
         );
         $this->add_control(
             'search-preselect-today',
             [
-                'label' => BackendStrings::getWordPressStrings()['search_date'],
+                'label' => BackendStrings::get('search_date'),
                 'type' => Controls_Manager::SWITCHER,
                 'default' => false,
             ]
@@ -50,11 +50,11 @@ class AmeliaSearchElementorWidget extends Widget_Base
         $this->add_control(
             'load_manually',
             [
-                'label' => BackendStrings::getWordPressStrings()['manually_loading'],
+                'label' => BackendStrings::get('manually_loading'),
                 'label_block' => true,
                 'type' => Controls_Manager::TEXT,
                 'placeholder' => '',
-                'description' => BackendStrings::getWordPressStrings()['manually_loading_description'],
+                'description' => BackendStrings::get('manually_loading_description'),
             ]
         );
 
@@ -62,7 +62,7 @@ class AmeliaSearchElementorWidget extends Widget_Base
             $this->add_control(
                 'select_show',
                 [
-                    'label' => BackendStrings::getWordPressStrings()['show_all'],
+                    'label' => BackendStrings::get('show_all'),
                     'type' => Controls_Manager::SELECT,
                     'options' => $controls_data['show'],
                     'default' => '',
@@ -90,9 +90,9 @@ class AmeliaSearchElementorWidget extends Widget_Base
         $elementorData = [];
 
         $elementorData['show'] = $data['packages'] ? [
-            '' => BackendStrings::getWordPressStrings()['show_all'],
-            'services' => BackendStrings::getCommonStrings()['services'],
-            'packages' => BackendStrings::getCommonStrings()['packages']
+            '' => BackendStrings::get('show_all'),
+            'services' => BackendStrings::get('services'),
+            'packages' => BackendStrings::get('packages')
         ] : [];
 
         return $elementorData;

@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaStripe\Service;
+namespace AmeliaVendor\Stripe\Service;
 
 /**
  * Trait for service factories or auxiliary services
@@ -11,7 +11,7 @@ trait ServiceNavigatorTrait
     /** @var array<string, AbstractService|AbstractServiceFactory> */
     protected $services = [];
 
-    /** @var \AmeliaStripe\StripeClientInterface */
+    /** @var \AmeliaVendor\Stripe\StripeClientInterface */
     protected $client;
 
     protected function getServiceClass($name)

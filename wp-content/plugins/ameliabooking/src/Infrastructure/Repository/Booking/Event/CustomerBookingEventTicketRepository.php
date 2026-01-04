@@ -22,7 +22,7 @@ class CustomerBookingEventTicketRepository extends AbstractRepository implements
     /**
      * @param CustomerBookingEventTicket $entity
      *
-     * @return bool
+     * @return int
      * @throws QueryExecutionException
      */
     public function add($entity)

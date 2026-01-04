@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Monolog\Formatter;
+namespace AmeliaVendor\Monolog\Formatter;
 
 use MongoDB\BSON\Type;
 use MongoDB\BSON\UTCDateTime;
-use Monolog\Utils;
+use AmeliaVendor\Monolog\Utils;
 
 /**
  * Formats a record for use with the MongoDBHandler.

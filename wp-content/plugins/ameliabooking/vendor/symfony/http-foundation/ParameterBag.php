@@ -229,7 +229,7 @@ class ParameterBag implements \IteratorAggregate, \Countable
      * @return int The number of parameters
      */
     #[\ReturnTypeWillChange]
-  public function count()
+    public function count()
     {
         return \count($this->parameters);
     }

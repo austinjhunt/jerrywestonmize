@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaStripe\HttpClient;
+namespace AmeliaVendor\Stripe\HttpClient;
 
 interface ClientInterface
 {
@@ -17,8 +17,8 @@ interface ClientInterface
      * @return array an array whose first element is raw request body, second
      *    element is HTTP status code and third array of HTTP headers
      *
-     * @throws \AmeliaStripe\Exception\ApiConnectionException
-     * @throws \AmeliaStripe\Exception\UnexpectedValueException
+     * @throws \AmeliaVendor\Stripe\Exception\ApiConnectionException
+     * @throws \AmeliaVendor\Stripe\Exception\UnexpectedValueException
      */
     public function request($method, $absUrl, $headers, $params, $hasFile, $apiMode = 'v1', $maxNetworkRetries = null);
 }

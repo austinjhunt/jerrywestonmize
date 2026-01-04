@@ -8,8 +8,8 @@
 namespace Slim;
 
 use ArrayAccess;
-use AmeliaPsr\Container\ContainerInterface;
-use AmeliaPsr\Container\ContainerExceptionInterface;
+use AmeliaVendor\Psr\Container\ContainerInterface;
+use AmeliaVendor\Psr\Container\ContainerExceptionInterface;
 use InvalidArgumentException;
 use Pimple\Container as PimpleContainer;
 use Slim\Exception\ContainerException as SlimContainerException;
@@ -18,13 +18,13 @@ use Slim\Exception\ContainerValueNotFoundException;
 /**
  * Slim's default DI container is Pimple.
  *
- * Slim\App expects a container that implements AmeliaPsr\Container\ContainerInterface
+ * Slim\App expects a container that implements AmeliaVendor\Psr\Container\ContainerInterface
  * with these service keys configured and ready for use:
  *
  *  `settings`          an array or instance of \ArrayAccess
  *  `environment`       an instance of \Slim\Http\Environment
- *  `request`           an instance of \AmeliaPsr\Http\Message\ServerRequestInterface
- *  `response`          an instance of \AmeliaPsr\Http\Message\ResponseInterface
+ *  `request`           an instance of \AmeliaVendor\Psr\Http\Message\ServerRequestInterface
+ *  `response`          an instance of \AmeliaVendor\Psr\Http\Message\ResponseInterface
  *  `router`            an instance of \Slim\Interfaces\RouterInterface
  *  `foundHandler`      an instance of \Slim\Interfaces\InvocationStrategyInterface
  *  `errorHandler`      a callable with the signature: function($request, $response, $exception)

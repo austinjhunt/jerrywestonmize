@@ -1,13 +1,12 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See COPYING.md for license details.
  */
 
 namespace AmeliaBooking\Infrastructure\Routes\Stats;
 
-use AmeliaBooking\Application\Controller\Stats\AddStatsController;
 use AmeliaBooking\Application\Controller\Stats\GetStatsController;
 use Slim\App;
 
@@ -24,7 +23,5 @@ class Stats
     public static function routes(App $app)
     {
         $app->get('/stats', GetStatsController::class);
-
-        $app->post('/stats', AddStatsController::class);
     }
 }

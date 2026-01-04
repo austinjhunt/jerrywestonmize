@@ -8,7 +8,7 @@
 namespace Slim\Exception;
 
 use InvalidArgumentException;
-use AmeliaPsr\Http\Message\ServerRequestInterface;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface;
 
 class InvalidMethodException extends InvalidArgumentException
 {

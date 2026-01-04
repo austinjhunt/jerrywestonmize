@@ -8,9 +8,9 @@
 namespace Slim\Http;
 
 use InvalidArgumentException;
-use AmeliaPsr\Http\Message\ResponseInterface;
-use AmeliaPsr\Http\Message\StreamInterface;
-use AmeliaPsr\Http\Message\UriInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\StreamInterface;
+use AmeliaVendor\Psr\Http\Message\UriInterface;
 use RuntimeException;
 use Slim\Interfaces\Http\HeadersInterface;
 

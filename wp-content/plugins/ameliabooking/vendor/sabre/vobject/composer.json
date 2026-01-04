@@ -71,12 +71,12 @@
     },
     "autoload" : {
         "psr-4" : {
-            "AmeliaSabre\\Uri\\" : "lib/"
+            "Sabre\\VObject\\" : "lib/"
         }
     },
     "autoload-dev" : {
         "psr-4" : {
-            "AmeliaSabre\\Uri\\" : "tests/VObject"
+            "Sabre\\VObject\\" : "tests/VObject"
         }
     },
     "bin" : [

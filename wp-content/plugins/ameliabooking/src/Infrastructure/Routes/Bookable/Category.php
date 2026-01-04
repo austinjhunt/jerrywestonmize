@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See COPYING.md for license details.
  */
 
@@ -11,6 +11,7 @@ use AmeliaBooking\Application\Controller\Bookable\Category\AddCategoryController
 use AmeliaBooking\Application\Controller\Bookable\Category\DeleteCategoryController;
 use AmeliaBooking\Application\Controller\Bookable\Category\GetCategoriesController;
 use AmeliaBooking\Application\Controller\Bookable\Category\GetCategoryController;
+use AmeliaBooking\Application\Controller\Bookable\Category\GetCategoryDeleteEffectController;
 use AmeliaBooking\Application\Controller\Bookable\Category\UpdateCategoriesPositionsController;
 use AmeliaBooking\Application\Controller\Bookable\Category\UpdateCategoryController;
 use Slim\App;
@@ -38,5 +39,7 @@ class Category
         $app->post('/categories/{id:[0-9]+}', UpdateCategoryController::class);
 
         $app->post('/categories/positions', UpdateCategoriesPositionsController::class);
+
+        $app->get('/categories/effect/{id:[0-9]+}', GetCategoryDeleteEffectController::class);
     }
 }

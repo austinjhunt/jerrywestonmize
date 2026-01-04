@@ -21,7 +21,7 @@ class DeleteEventController extends Controller
      * @var array
      */
     public $allowedFields = [
-        'applyGlobally'
+        'applyGlobally',
     ];
 
     /**

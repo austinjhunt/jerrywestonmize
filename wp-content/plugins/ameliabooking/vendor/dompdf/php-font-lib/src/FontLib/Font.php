@@ -5,9 +5,9 @@
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 
-namespace FontLib;
+namespace AmeliaVendor\FontLib;
 
-use FontLib\Exception\FontNotFoundException;
+use AmeliaVendor\FontLib\Exception\FontNotFoundException;
 
 /**
  * Generic font file.
@@ -34,19 +34,19 @@ class Font {
       case "\x00\x01\x00\x00":
       case "true":
       case "typ1":
-        $class = "TrueType\\File";
+        $class = "AmeliaVendor\\FontLib\\TrueType\\File";
         break;
 
       case "OTTO":
-        $class = "OpenType\\File";
+        $class = "AmeliaVendor\\FontLib\\OpenType\\File";
         break;
 
       case "wOFF":
-        $class = "WOFF\\File";
+        $class = "AmeliaVendor\\FontLib\\WOFF\\File";
         break;
 
       case "ttcf":
-        $class = "TrueType\\Collection";
+        $class = "AmeliaVendor\\FontLib\\TrueType\\Collection";
         break;
 
       // Unknown type or EOT
@@ -54,12 +54,12 @@ class Font {
         $magicNumber = file_get_contents($file, false, null, 34, 2);
 
         if ($magicNumber === "LP") {
-          $class = "EOT\\File";
+          $class = "AmeliaVendor\\FontLib\\EOT\\File";
         }
     }
 
     if ($class) {
-      $class = "FontLib\\$class";
+      // $class already contains full namespace
 
       /** @var TrueType\File $obj */
       $obj = new $class;

@@ -40,6 +40,8 @@ class UpdateEventController extends Controller
         'providers',
         'tags',
         'description',
+        'pictureFullPath',
+        'pictureThumbPath',
         'gallery',
         'color',
         'show',

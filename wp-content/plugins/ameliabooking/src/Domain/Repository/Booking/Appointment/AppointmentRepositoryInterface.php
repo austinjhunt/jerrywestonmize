@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -18,14 +18,6 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
  */
 interface AppointmentRepositoryInterface extends BaseRepositoryInterface
 {
-    /**
-     * @param int $id
-     * @param int $status
-     *
-     * @return mixed
-     */
-    public function updateStatusById($id, $status);
-
     /**
      * @return array
      */

@@ -13,7 +13,7 @@
     },
     "autoload": {
         "psr-4": {
-            "AmeliaGoogle\\Service\\": "src"
+            "Google\\Service\\": "src"
         },
         "files": [
             "autoload.php"
@@ -21,7 +21,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "AmeliaGoogle\\": "tests/mocks"
+            "Google\\": "tests/mocks"
         }
     }
 }

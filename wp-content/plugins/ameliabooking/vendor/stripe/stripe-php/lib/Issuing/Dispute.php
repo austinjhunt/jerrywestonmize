@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace AmeliaStripe\Issuing;
+namespace AmeliaVendor\Stripe\Issuing;
 
 /**
  * As a <a href="https://stripe.com/docs/issuing">card issuer</a>, you can dispute transactions that the cardholder does not recognize, suspects to be fraudulent, or has other issues with.
@@ -12,23 +11,21 @@ namespace AmeliaStripe\Issuing;
  * @property string $id Unique identifier for the object.
  * @property string $object String representing the object's type. Objects of the same type share the same value.
  * @property int $amount Disputed amount in the card's currency and in the <a href="https://stripe.com/docs/currencies#zero-decimal">smallest currency unit</a>. Usually the amount of the <code>transaction</code>, but can differ (usually because of currency fluctuation).
- * @property null|\AmeliaStripe\BalanceTransaction[] $balance_transactions List of balance transactions associated with the dispute.
+ * @property null|\AmeliaVendor\Stripe\BalanceTransaction[] $balance_transactions List of balance transactions associated with the dispute.
  * @property int $created Time at which the object was created. Measured in seconds since the Unix epoch.
  * @property string $currency The currency the <code>transaction</code> was made in.
- * @property (object{canceled?: (object{additional_documentation: null|string|\AmeliaStripe\File, canceled_at: null|int, cancellation_policy_provided: null|bool, cancellation_reason: null|string, expected_at: null|int, explanation: null|string, product_description: null|string, product_type: null|string, return_status: null|string, returned_at: null|int}&\AmeliaStripe\StripeObject), duplicate?: (object{additional_documentation: null|string|\AmeliaStripe\File, card_statement: null|string|\AmeliaStripe\File, cash_receipt: null|string|\AmeliaStripe\File, check_image: null|string|\AmeliaStripe\File, explanation: null|string, original_transaction: null|string}&\AmeliaStripe\StripeObject), fraudulent?: (object{additional_documentation: null|string|\AmeliaStripe\File, explanation: null|string}&\AmeliaStripe\StripeObject), merchandise_not_as_described?: (object{additional_documentation: null|string|\AmeliaStripe\File, explanation: null|string, received_at: null|int, return_description: null|string, return_status: null|string, returned_at: null|int}&\AmeliaStripe\StripeObject), no_valid_authorization?: (object{additional_documentation: null|string|\AmeliaStripe\File, explanation: null|string}&\AmeliaStripe\StripeObject), not_received?: (object{additional_documentation: null|string|\AmeliaStripe\File, expected_at: null|int, explanation: null|string, product_description: null|string, product_type: null|string}&\AmeliaStripe\StripeObject), other?: (object{additional_documentation: null|string|\AmeliaStripe\File, explanation: null|string, product_description: null|string, product_type: null|string}&\AmeliaStripe\StripeObject), reason: string, service_not_as_described?: (object{additional_documentation: null|string|\AmeliaStripe\File, canceled_at: null|int, cancellation_reason: null|string, explanation: null|string, received_at: null|int}&\AmeliaStripe\StripeObject)}&\AmeliaStripe\StripeObject) $evidence
+ * @property (object{canceled?: (object{additional_documentation: null|string|\AmeliaVendor\Stripe\File, canceled_at: null|int, cancellation_policy_provided: null|bool, cancellation_reason: null|string, expected_at: null|int, explanation: null|string, product_description: null|string, product_type: null|string, return_status: null|string, returned_at: null|int}&\AmeliaVendor\Stripe\StripeObject), duplicate?: (object{additional_documentation: null|string|\AmeliaVendor\Stripe\File, card_statement: null|string|\AmeliaVendor\Stripe\File, cash_receipt: null|string|\AmeliaVendor\Stripe\File, check_image: null|string|\AmeliaVendor\Stripe\File, explanation: null|string, original_transaction: null|string}&\AmeliaVendor\Stripe\StripeObject), fraudulent?: (object{additional_documentation: null|string|\AmeliaVendor\Stripe\File, explanation: null|string}&\AmeliaVendor\Stripe\StripeObject), merchandise_not_as_described?: (object{additional_documentation: null|string|\AmeliaVendor\Stripe\File, explanation: null|string, received_at: null|int, return_description: null|string, return_status: null|string, returned_at: null|int}&\AmeliaVendor\Stripe\StripeObject), no_valid_authorization?: (object{additional_documentation: null|string|\AmeliaVendor\Stripe\File, explanation: null|string}&\AmeliaVendor\Stripe\StripeObject), not_received?: (object{additional_documentation: null|string|\AmeliaVendor\Stripe\File, expected_at: null|int, explanation: null|string, product_description: null|string, product_type: null|string}&\AmeliaVendor\Stripe\StripeObject), other?: (object{additional_documentation: null|string|\AmeliaVendor\Stripe\File, explanation: null|string, product_description: null|string, product_type: null|string}&\AmeliaVendor\Stripe\StripeObject), reason: string, service_not_as_described?: (object{additional_documentation: null|string|\AmeliaVendor\Stripe\File, canceled_at: null|int, cancellation_reason: null|string, explanation: null|string, received_at: null|int}&\AmeliaVendor\Stripe\StripeObject)}&\AmeliaVendor\Stripe\StripeObject) $evidence
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
  * @property null|string $loss_reason The enum that describes the dispute loss outcome. If the dispute is not lost, this field will be absent. New enum values may be added in the future, so be sure to handle unknown values.
- * @property \AmeliaStripe\StripeObject $metadata Set of <a href="https://stripe.com/docs/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+ * @property \AmeliaVendor\Stripe\StripeObject $metadata Set of <a href="https://stripe.com/docs/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
  * @property string $status Current status of the dispute.
  * @property string|Transaction $transaction The transaction being disputed.
- * @property null|(object{debit_reversal: null|string, received_debit: string}&\AmeliaStripe\StripeObject) $treasury <a href="https://stripe.com/docs/api/treasury">Treasury</a> details related to this dispute if it was created on a [FinancialAccount](/docs/api/treasury/financial_accounts
+ * @property null|(object{debit_reversal: null|string, received_debit: string}&\AmeliaVendor\Stripe\StripeObject) $treasury <a href="https://stripe.com/docs/api/treasury">Treasury</a> details related to this dispute if it was created on a [FinancialAccount](/docs/api/treasury/financial_accounts
  */
-class Dispute extends \AmeliaStripe\ApiResource
+class Dispute extends \AmeliaVendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'issuing.dispute';
-
-    use \AmeliaStripe\ApiOperations\Update;
-
+    use \AmeliaVendor\Stripe\ApiOperations\Update;
     const LOSS_REASON_CARDHOLDER_AUTHENTICATION_ISSUER_LIABILITY = 'cardholder_authentication_issuer_liability';
     const LOSS_REASON_ECI5_TOKEN_TRANSACTION_WITH_TAVV = 'eci5_token_transaction_with_tavv';
     const LOSS_REASON_EXCESS_DISPUTES_IN_TIMEFRAME = 'excess_disputes_in_timeframe';
@@ -49,13 +46,11 @@ class Dispute extends \AmeliaStripe\ApiResource
     const LOSS_REASON_TRANSACTION_ELECTRONICALLY_READ = 'transaction_electronically_read';
     const LOSS_REASON_TRANSACTION_QUALIFIES_FOR_VISA_EASY_PAYMENT_SERVICE = 'transaction_qualifies_for_visa_easy_payment_service';
     const LOSS_REASON_TRANSACTION_UNATTENDED = 'transaction_unattended';
-
     const STATUS_EXPIRED = 'expired';
     const STATUS_LOST = 'lost';
     const STATUS_SUBMITTED = 'submitted';
     const STATUS_UNSUBMITTED = 'unsubmitted';
     const STATUS_WON = 'won';
-
     /**
      * Creates an Issuing <code>Dispute</code> object. Individual pieces of evidence
      * within the <code>evidence</code> object are optional at this point. Stripe only
@@ -68,20 +63,17 @@ class Dispute extends \AmeliaStripe\ApiResource
      *
      * @return Dispute the created resource
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function create($params = null, $options = null)
     {
         self::_validateParams($params);
         $url = static::classUrl();
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
-        $obj = \AmeliaStripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \AmeliaVendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
-
     /**
      * Returns a list of Issuing <code>Dispute</code> objects. The objects are sorted
      * in descending order by creation date, with the most recently created object
@@ -90,17 +82,15 @@ class Dispute extends \AmeliaStripe\ApiResource
      * @param null|array{created?: array|int, ending_before?: string, expand?: string[], limit?: int, starting_after?: string, status?: string, transaction?: string} $params
      * @param null|array|string $opts
      *
-     * @return \AmeliaStripe\Collection<Dispute> of ApiResources
+     * @return \AmeliaVendor\Stripe\Collection<Dispute> of ApiResources
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
-
-        return static::_requestPage($url, \AmeliaStripe\Collection::class, $params, $opts);
+        return static::_requestPage($url, \AmeliaVendor\Stripe\Collection::class, $params, $opts);
     }
-
     /**
      * Retrieves an Issuing <code>Dispute</code> object.
      *
@@ -109,17 +99,15 @@ class Dispute extends \AmeliaStripe\ApiResource
      *
      * @return Dispute
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = \AmeliaStripe\Util\RequestOptions::parse($opts);
+        $opts = \AmeliaVendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
-
         return $instance;
     }
-
     /**
      * Updates the specified Issuing <code>Dispute</code> object by setting the values
      * of the parameters passed. Any parameters not provided will be left unchanged.
@@ -132,34 +120,30 @@ class Dispute extends \AmeliaStripe\ApiResource
      *
      * @return Dispute the updated resource
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function update($id, $params = null, $opts = null)
     {
         self::_validateParams($params);
         $url = static::resourceUrl($id);
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $opts);
-        $obj = \AmeliaStripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \AmeliaVendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
-
     /**
      * @param null|array $params
      * @param null|array|string $opts
      *
      * @return Dispute the submited dispute
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function submit($params = null, $opts = null)
     {
         $url = $this->instanceUrl() . '/submit';
         list($response, $opts) = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
-
         return $this;
     }
 }

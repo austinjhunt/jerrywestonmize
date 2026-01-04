@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Service\TestHelpers\Treasury;
+namespace AmeliaVendor\Stripe\Service\TestHelpers\Treasury;
 
 /**
  * Service factory class for API resources in the Treasury namespace.
@@ -13,7 +13,7 @@ namespace AmeliaStripe\Service\TestHelpers\Treasury;
  * @property ReceivedCreditService $receivedCredits
  * @property ReceivedDebitService $receivedDebits
  */
-class TreasuryServiceFactory extends \AmeliaStripe\Service\AbstractServiceFactory
+class TreasuryServiceFactory extends \AmeliaVendor\Stripe\Service\AbstractServiceFactory
 {
     /**
      * @var array<string, string>

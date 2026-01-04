@@ -15,9 +15,9 @@
  * the License.
  */
 
-namespace AmeliaGoogle\Service\Calendar;
+namespace AmeliaVendor\Google\Service\Calendar;
 
-class Calendar extends \AmeliaGoogle\Model
+class Calendar extends \AmeliaVendor\Google\Model
 {
   protected $conferencePropertiesType = ConferenceProperties::class;
   protected $conferencePropertiesDataType = '';
@@ -165,4 +165,4 @@ class Calendar extends \AmeliaGoogle\Model
 }
 
 // Adding a class alias for backwards compatibility with the previous class name.
-class_alias(Calendar::class, 'AmeliaGoogle_Service_Calendar_Calendar');
+class_alias(Calendar::class, 'Google_Service_Calendar_Calendar');

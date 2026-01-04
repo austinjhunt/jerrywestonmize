@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -19,6 +19,7 @@ use AmeliaBooking\Infrastructure\Connection;
 use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
 use AmeliaBooking\Domain\Repository\Coupon\CouponRepositoryInterface;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
+use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking\EventsPeriodsTable;
 
 /**
  * Class CouponRepository
@@ -50,6 +51,9 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
     /** @var string */
     protected $bookingsTable;
 
+    /** @var string */
+    protected $eventsPeriodsTable;
+
     /**
      * @param Connection $connection
      * @param string     $table
@@ -70,7 +74,8 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
         $couponToEventsTable,
         $packagesTable,
         $couponToPackagesTable,
-        $bookingsTable
+        $bookingsTable,
+        $eventsPeriodsTable
     ) {
         parent::__construct($connection, $table);
 
@@ -81,12 +86,13 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
         $this->packagesTable         = $packagesTable;
         $this->couponToPackagesTable = $couponToPackagesTable;
         $this->bookingsTable         = $bookingsTable;
+        $this->eventsPeriodsTable    = $eventsPeriodsTable;
     }
 
     /**
      * @param Coupon $entity
      *
-     * @return bool
+     * @return int
      * @throws QueryExecutionException
      */
     public function add($entity)
@@ -224,6 +230,7 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
      * @return Coupon
      * @throws QueryExecutionException
      * @throws NotFoundException
+     * @throws InvalidArgumentException
      */
     public function getById($id)
     {
@@ -257,6 +264,9 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
                     e.id AS event_id,
                     e.price AS event_price,
                     e.name AS event_name,
+                    ep.id AS event_periodId,
+                    ep.periodStart AS event_periodStart,
+                    ep.periodEnd AS event_periodEnd,
                     p.id AS package_id,
                     p.price AS package_price,
                     p.name AS package_name
@@ -266,6 +276,7 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
                 LEFT JOIN {$this->couponToPackagesTable} cp ON cp.couponId = c.id
                 LEFT JOIN {$this->servicesTable} s ON cs.serviceId = s.id
                 LEFT JOIN {$this->eventsTable} e ON ce.eventId = e.id
+                LEFT JOIN {$this->eventsPeriodsTable} ep ON ep.eventId = e.id
                 LEFT JOIN {$this->packagesTable} p ON cp.packageId = p.id
                 WHERE c.id = :couponId"
             );
@@ -283,7 +294,12 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
             throw new NotFoundException('Data not found in ' . __CLASS__);
         }
 
-        return call_user_func([static::FACTORY, 'createCollection'], $rows)->getItem($id);
+        /** @var Collection $coupons */
+        $coupons = call_user_func([static::FACTORY, 'createCollection'], $rows);
+
+        $this->populateCouponsUsed($coupons);
+
+        return $coupons->getItem($id);
     }
 
     /**
@@ -327,10 +343,10 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
                     $params[$param]  = $value;
                 }
 
-                $where[] = "c.id IN (
+                $where[] = "(c.id IN (
                     SELECT couponId FROM {$this->couponToServicesTable} 
                     WHERE serviceId IN (" . implode(', ', $queryServices) . ')
-                )';
+                ) OR c.allServices = 1)';
             }
 
             if (!empty($criteria['events'])) {
@@ -342,10 +358,10 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
                     $params[$param] = $value;
                 }
 
-                $where[] = "c.id IN (
+                $where[] = "(c.id IN (
                     SELECT couponId FROM {$this->couponToEventsTable} 
                     WHERE eventId IN (" . implode(', ', $queryEvents) . ')
-                )';
+                ) OR c.allEvents = 1)';
             }
 
             if (!empty($criteria['packages'])) {
@@ -357,10 +373,10 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
                     $params[$param]  = $value;
                 }
 
-                $where[] = "c.id IN (
+                $where[] = "(c.id IN (
                     SELECT couponId FROM {$this->couponToPackagesTable} 
                     WHERE packageId IN (" . implode(', ', $queryPackages) . ')
-                )';
+                ) OR c.allPackages = 1)';
             }
 
 
@@ -370,6 +386,11 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
                 !empty($criteria['page']) ? (int)$criteria['page'] : 0,
                 (int)$itemsPerPage
             );
+
+            $order = "ORDER BY id";
+            if (!empty($criteria['sort'])) {
+                $order = "ORDER BY {$criteria['sort']['field']} {$criteria['sort']['order']}";
+            }
 
             $statement = $this->connection->prepare(
                 "SELECT
@@ -389,6 +410,7 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
                     c.allPackages AS coupon_allPackages
                 FROM {$this->table} c
                 {$where}
+                {$order}
                 {$limit}"
             );
 
@@ -418,7 +440,7 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
             if (!empty($criteria['search'])) {
                 $params[':search'] = "%{$criteria['search']}%";
 
-                $where[] = 'c.code LIKE :search';
+                $where[] = 'UPPER(c.code) LIKE UPPER(:search)';
             }
 
             if (!empty($criteria['services'])) {
@@ -430,8 +452,38 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
                     $params[$param]  = $value;
                 }
 
-                $where[] = "c.id IN (SELECT couponId FROM {$this->couponToServicesTable}
-                WHERE serviceId IN (" . implode(', ', $queryServices) . '))';
+                $where[] = "(c.id IN (SELECT couponId FROM {$this->couponToServicesTable}
+                WHERE serviceId IN (" . implode(', ', $queryServices) . ')) OR c.allServices = 1)';
+            }
+
+            if (!empty($criteria['events'])) {
+                $queryEvents = [];
+
+                foreach ((array)$criteria['events'] as $index => $value) {
+                    $param = ':event' . $index;
+                    $queryEvents[] = $param;
+                    $params[$param] = $value;
+                }
+
+                $where[] = "(c.id IN (
+                    SELECT couponId FROM {$this->couponToEventsTable} 
+                    WHERE eventId IN (" . implode(', ', $queryEvents) . ')
+                ) OR c.allEvents = 1)';
+            }
+
+            if (!empty($criteria['packages'])) {
+                $queryPackages = [];
+
+                foreach ((array)$criteria['packages'] as $index => $value) {
+                    $param = ':package' . $index;
+                    $queryPackages[] = $param;
+                    $params[$param] = $value;
+                }
+
+                $where[] = "(c.id IN (
+                    SELECT couponId FROM {$this->couponToPackagesTable} 
+                    WHERE packageId IN (" . implode(', ', $queryPackages) . ')
+                ) OR c.allPackages = 1)';
             }
 
             $where = $where ? ' WHERE ' . implode(' AND ', $where) : '';
@@ -450,40 +502,6 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
         }
 
         return $row;
-    }
-
-    /**
-     * @param int    $id
-     * @param string $status
-     *
-     * @return mixed
-     * @throws QueryExecutionException
-     */
-    public function updateStatusById($id, $status)
-    {
-        $params = [
-            ':id'     => $id,
-            ':status' => $status
-        ];
-
-        try {
-            $statement = $this->connection->prepare(
-                "UPDATE {$this->table}
-                SET
-                `status` = :status
-                WHERE id = :id"
-            );
-
-            $res = $statement->execute($params);
-
-            if (!$res) {
-                throw new QueryExecutionException('Unable to save data in ' . __CLASS__);
-            }
-
-            return $res;
-        } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to save data in ' . __CLASS__, $e->getCode(), $e);
-        }
     }
 
     /**
@@ -574,6 +592,23 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
             return $coupons;
         }
 
+        $this->populateCouponsUsed($coupons);
+
+        return $coupons;
+    }
+
+    /**
+     * Populate used counts for provided coupons from bookings table.
+     *
+     * @throws QueryExecutionException
+     * @throws InvalidArgumentException
+     */
+    private function populateCouponsUsed(Collection $coupons): void
+    {
+        if (!$coupons->length()) {
+            return;
+        }
+
         $params = [];
 
         foreach ($coupons->keys() as $key => $id) {
@@ -607,8 +642,6 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
                 $coupon->setUsed(new WholeNumber($row['used']));
             }
         }
-
-        return $coupons;
     }
 
     /**

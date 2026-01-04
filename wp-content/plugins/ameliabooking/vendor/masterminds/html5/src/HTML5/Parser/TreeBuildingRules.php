@@ -1,6 +1,6 @@
 <?php
 
-namespace Masterminds\HTML5\Parser;
+namespace AmeliaVendor\Masterminds\HTML5\Parser;
 
 /**
  * Handles special-case rules for the DOM tree builder.
@@ -80,7 +80,6 @@ class TreeBuildingRules
             case 'thead':
             case 'tfoot':
             case 'table': // Spec isn't explicit about this, but it's necessary.
-
                 return $this->closeIfCurrentMatches($new, $current, array(
                     'thead',
                     'tfoot',

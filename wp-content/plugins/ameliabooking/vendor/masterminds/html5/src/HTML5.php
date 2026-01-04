@@ -1,12 +1,12 @@
 <?php
 
-namespace Masterminds;
+namespace AmeliaVendor\Masterminds;
 
-use Masterminds\HTML5\Parser\DOMTreeBuilder;
-use Masterminds\HTML5\Parser\Scanner;
-use Masterminds\HTML5\Parser\Tokenizer;
-use Masterminds\HTML5\Serializer\OutputRules;
-use Masterminds\HTML5\Serializer\Traverser;
+use AmeliaVendor\Masterminds\HTML5\Parser\DOMTreeBuilder;
+use AmeliaVendor\Masterminds\HTML5\Parser\Scanner;
+use AmeliaVendor\Masterminds\HTML5\Parser\Tokenizer;
+use AmeliaVendor\Masterminds\HTML5\Serializer\OutputRules;
+use AmeliaVendor\Masterminds\HTML5\Serializer\Traverser;
 
 /**
  * This class offers convenience methods for parsing and serializing HTML5.
@@ -146,7 +146,6 @@ class HTML5
      * Parse an input string.
      *
      * @param string $input
-     * @param array  $options
      *
      * @return \DOMDocument
      */

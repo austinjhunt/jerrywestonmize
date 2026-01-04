@@ -9,10 +9,10 @@ namespace Slim\Http;
 
 use Closure;
 use InvalidArgumentException;
-use AmeliaPsr\Http\Message\ServerRequestInterface;
-use AmeliaPsr\Http\Message\StreamInterface;
-use AmeliaPsr\Http\Message\UploadedFileInterface;
-use AmeliaPsr\Http\Message\UriInterface;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface;
+use AmeliaVendor\Psr\Http\Message\StreamInterface;
+use AmeliaVendor\Psr\Http\Message\UploadedFileInterface;
+use AmeliaVendor\Psr\Http\Message\UriInterface;
 use RuntimeException;
 use Slim\Collection;
 use Slim\Exception\InvalidMethodException;
@@ -810,7 +810,7 @@ class Request extends Message implements ServerRequestInterface
      * Retrieve normalized file upload data.
      *
      * This method returns upload metadata in a normalized tree, with each leaf
-     * an instance of AmeliaPsr\Http\Message\UploadedFileInterface.
+     * an instance of AmeliaVendor\Psr\Http\Message\UploadedFileInterface.
      *
      * These values MAY be prepared from $_FILES or the message body during
      * instantiation, or MAY be injected via withUploadedFiles().

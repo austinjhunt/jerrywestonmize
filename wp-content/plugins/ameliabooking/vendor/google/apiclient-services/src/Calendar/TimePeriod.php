@@ -15,9 +15,9 @@
  * the License.
  */
 
-namespace AmeliaGoogle\Service\Calendar;
+namespace AmeliaVendor\Google\Service\Calendar;
 
-class TimePeriod extends \AmeliaGoogle\Model
+class TimePeriod extends \AmeliaVendor\Google\Model
 {
   /**
    * @var string
@@ -59,4 +59,4 @@ class TimePeriod extends \AmeliaGoogle\Model
 }
 
 // Adding a class alias for backwards compatibility with the previous class name.
-class_alias(TimePeriod::class, 'AmeliaGoogle_Service_Calendar_TimePeriod');
+class_alias(TimePeriod::class, 'Google_Service_Calendar_TimePeriod');

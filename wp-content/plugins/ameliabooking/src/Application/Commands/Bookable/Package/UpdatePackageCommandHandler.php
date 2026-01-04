@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -96,7 +96,7 @@ class UpdatePackageCommandHandler extends CommandHandler
                 'allowProviderSelection' => $bookable['allowProviderSelection'],
                 'providers'        => !empty($bookable['providers']) ? $bookable['providers'] : [],
                 'locations'        => !empty($bookable['locations']) ? $bookable['locations'] : [],
-                'position'         => !empty($bookable['position']) ? $bookable['position'] : 0,
+                'position'         => !empty($bookable['position']) ? $bookable['position'] : 1,
             ];
         }
 

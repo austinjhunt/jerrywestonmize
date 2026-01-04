@@ -62,33 +62,33 @@ class GetUserDeleteEffectCommandHandler extends CommandHandler
             0
         );
 
-        $message = '';
+        $messageKey = '';
+        $messageData = null;
 
         if ($appointmentsCount['futureAppointments'] > 0) {
-            $appointmentString = $appointmentsCount['futureAppointments'] === 1 ? 'appointment' : 'appointments';
-
-            $message = "Could not delete user.
-                This user has {$appointmentsCount['futureAppointments']} {$appointmentString} in the future.";
+            $messageKey = 'red_delete_user_effect_future';
+            $messageData = ['count' => $appointmentsCount['futureAppointments']];
         } elseif ($appointmentsCount['packageAppointments']) {
-            $message = "This user has bookings in purchased package.
-                Are you sure you want to delete this user?";
+            $messageKey = 'red_delete_user_effect_package';
         } elseif ($appointmentsCount['pastAppointments'] > 0) {
-            $appointmentString = $appointmentsCount['pastAppointments'] === 1 ? 'appointment' : 'appointments';
-
-            $message = "This user has {$appointmentsCount['pastAppointments']} {$appointmentString} in the past.";
+            $messageKey = 'red_delete_user_effect_past';
+            $messageData = ['count' => $appointmentsCount['pastAppointments']];
         } elseif ($eventsIds) {
-            $eventString = sizeof($eventsIds) > 1 ? 'events' : 'event';
-
-            $message = "This user is an attendee in future {$eventString}.
-                Are you sure you want to delete this user?";
+            $messageKey = 'red_delete_user_event_effect_future';
+            $messageData = ['count' => count($eventsIds)];
         }
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved message.');
         $result->setData(
             [
-                'valid'   => $appointmentsCount['futureAppointments'] ? false : true,
-                'message' => $message
+                'valid'                    => ! $appointmentsCount['futureAppointments'],
+                'messageKey'               => $messageKey,
+                'messageData'              => $messageData,
+                'futureAppointmentsCount'  => $appointmentsCount['futureAppointments'],
+                'packageAppointmentsCount' => $appointmentsCount['packageAppointments'],
+                'pastAppointmentsCount'    => $appointmentsCount['pastAppointments'],
+                'eventsCount'              => count($eventsIds)
             ]
         );
 

@@ -5,10 +5,10 @@
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 
-namespace FontLib\EOT;
+namespace AmeliaVendor\FontLib\EOT;
 
 use Exception;
-use FontLib\Font;
+use AmeliaVendor\FontLib\Font;
 
 /**
  * TrueType font file header.
@@ -17,7 +17,7 @@ use FontLib\Font;
  *
  * @property File $font
  */
-class Header extends \FontLib\Header {
+class Header extends \AmeliaVendor\FontLib\Header {
   protected $def = array(
     "format"        => self::uint32,
     "numTables"     => self::uint16,

@@ -20,7 +20,7 @@ final class AmountType
     /**
      * Status constructor.
      *
-     * @param int $value
+     * @param string $value
      */
     public function __construct($value)
     {

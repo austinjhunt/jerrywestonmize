@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaStripe\Exception;
+namespace AmeliaVendor\Stripe\Exception;
 
 /**
  * Implements properties and methods common to all (non-SPL) Stripe exceptions.
@@ -22,7 +22,7 @@ abstract class ApiErrorException extends \Exception implements ExceptionInterfac
      * @param null|int $httpStatus the HTTP status code
      * @param null|string $httpBody the HTTP body as a string
      * @param null|array $jsonBody the JSON deserialized body
-     * @param null|array|\AmeliaStripe\Util\CaseInsensitiveArray $httpHeaders the HTTP headers array
+     * @param null|array|\AmeliaVendor\Stripe\Util\CaseInsensitiveArray $httpHeaders the HTTP headers array
      * @param null|string $stripeCode the Stripe error code
      *
      * @return static
@@ -55,7 +55,7 @@ abstract class ApiErrorException extends \Exception implements ExceptionInterfac
     /**
      * Gets the Stripe error object.
      *
-     * @return null|\AmeliaStripe\ErrorObject
+     * @return null|\AmeliaVendor\Stripe\ErrorObject
      */
     public function getError()
     {
@@ -65,7 +65,7 @@ abstract class ApiErrorException extends \Exception implements ExceptionInterfac
     /**
      * Sets the Stripe error object.
      *
-     * @param null|\AmeliaStripe\ErrorObject $error
+     * @param null|\AmeliaVendor\Stripe\ErrorObject $error
      */
     public function setError($error)
     {
@@ -95,7 +95,7 @@ abstract class ApiErrorException extends \Exception implements ExceptionInterfac
     /**
      * Gets the HTTP headers array.
      *
-     * @return null|array|\AmeliaStripe\Util\CaseInsensitiveArray
+     * @return null|array|\AmeliaVendor\Stripe\Util\CaseInsensitiveArray
      */
     public function getHttpHeaders()
     {
@@ -105,7 +105,7 @@ abstract class ApiErrorException extends \Exception implements ExceptionInterfac
     /**
      * Sets the HTTP headers array.
      *
-     * @param null|array|\AmeliaStripe\Util\CaseInsensitiveArray $httpHeaders
+     * @param null|array|\AmeliaVendor\Stripe\Util\CaseInsensitiveArray $httpHeaders
      */
     public function setHttpHeaders($httpHeaders)
     {
@@ -175,7 +175,7 @@ abstract class ApiErrorException extends \Exception implements ExceptionInterfac
     /**
      * Gets the Stripe error code.
      *
-     * Cf. the `CODE_*` constants on {@see \AmeliaStripe\ErrorObject} for possible
+     * Cf. the `CODE_*` constants on {@see \Stripe\ErrorObject} for possible
      * values.
      *
      * @return null|string
@@ -215,6 +215,6 @@ abstract class ApiErrorException extends \Exception implements ExceptionInterfac
             return null;
         }
 
-        return \AmeliaStripe\ErrorObject::constructFrom($this->jsonBody['error']);
+        return \AmeliaVendor\Stripe\ErrorObject::constructFrom($this->jsonBody['error']);
     }
 }

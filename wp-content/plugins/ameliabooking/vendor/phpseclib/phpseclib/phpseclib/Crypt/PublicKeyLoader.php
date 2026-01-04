@@ -11,13 +11,13 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-namespace phpseclib3\Crypt;
+namespace AmeliaVendor\phpseclib3\Crypt;
 
-use phpseclib3\Crypt\Common\AsymmetricKey;
-use phpseclib3\Crypt\Common\PrivateKey;
-use phpseclib3\Crypt\Common\PublicKey;
-use phpseclib3\Exception\NoKeyLoadedException;
-use phpseclib3\File\X509;
+use AmeliaVendor\phpseclib3\Crypt\Common\AsymmetricKey;
+use AmeliaVendor\phpseclib3\Crypt\Common\PrivateKey;
+use AmeliaVendor\phpseclib3\Crypt\Common\PublicKey;
+use AmeliaVendor\phpseclib3\Exception\NoKeyLoadedException;
+use AmeliaVendor\phpseclib3\File\X509;
 
 /**
  * PublicKeyLoader
@@ -32,6 +32,7 @@ abstract class PublicKeyLoader
      * @return AsymmetricKey
      * @param string|array $key
      * @param string $password optional
+     * @throws NoKeyLoadedException if key is not valid
      */
     public static function load($key, $password = false)
     {

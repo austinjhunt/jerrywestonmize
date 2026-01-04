@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -144,15 +144,15 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
             [
             'booked_customer'     =>
                 $paragraphStart .
-                BackendStrings::getNotificationsStrings()['ph_customer_full_name'] .
+                BackendStrings::get('ph_customer_full_name') .
                 ': John Micheal Doe ' .
                 $paragraphEnd .
                 $paragraphStart .
-                BackendStrings::getNotificationsStrings()['ph_customer_phone'] .
+                BackendStrings::get('ph_customer_phone') .
                 ': 193-951-2600 ' .
                 $paragraphEnd .
                 $paragraphStart .
-                BackendStrings::getNotificationsStrings()['ph_customer_email'] .
+                BackendStrings::get('ph_customer_email') .
                 ': customer@domain.com ' .
                 $paragraphEnd,
             'company_address'     => $companySettings['address'],
@@ -306,17 +306,17 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
                     }
 
                     $couponsUsed[] =
-                        BackendStrings::getCommonStrings()['customer'] . ': ' .
+                        BackendStrings::get('customer') . ': ' .
                         $customerData['firstName'] . ' ' . $customerData['lastName'] . ' ' . $break .
-                        BackendStrings::getFinanceStrings()['code'] . ': ' .
+                        BackendStrings::get('code') . ': ' .
                         $customerBooking['coupon']['code'] . ' ' . $break .
-                        ($amountData['discount'] ? BackendStrings::getPaymentStrings()['discount_amount'] . ': ' .
+                        ($amountData['discount'] ? BackendStrings::get('discount_amount') . ': ' .
                             $helperService->getFormattedPrice($amountData['discount']) . ' ' . $break : '') .
-                        ($amountData['deduction'] ? BackendStrings::getPaymentStrings()['deduction'] . ': ' .
+                        ($amountData['deduction'] ? BackendStrings::get('deduction') . ': ' .
                             $helperService->getFormattedPrice($amountData['deduction']) . ' ' . $break : '') .
-                        ($startDate ? BackendStrings::getCommonStrings()['start_date'] . ': ' .
+                        ($startDate ? BackendStrings::get('start_date') . ': ' .
                             $startDate . ' ' . $break : '') .
-                        ($expirationDate ? BackendStrings::getPaymentStrings()['expiration_date'] . ': ' .
+                        ($expirationDate ? BackendStrings::get('expiration_date') . ': ' .
                             $expirationDate : '');
                 }
 
@@ -330,7 +330,7 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
 
             foreach ($numberOfPersonsData[AbstractUser::USER_ROLE_PROVIDER] as $key => $value) {
                 if ($value) {
-                    $numberOfPersons[] = BackendStrings::getCommonStrings()[$key] . ': ' . $value;
+                    $numberOfPersons[] = BackendStrings::get($key) . ': ' . $value;
                 }
             }
 
@@ -357,13 +357,13 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
             if (!empty($appointment['bookings'][$bookingKey]['coupon']['code'])) {
                 $couponsUsed[] =
                     $appointment['bookings'][$bookingKey]['coupon']['code'] . ' ' . $break .
-                    ($amountData['discount'] ? BackendStrings::getPaymentStrings()['discount_amount'] . ': ' .
+                    ($amountData['discount'] ? BackendStrings::get('discount_amount') . ': ' .
                         $helperService->getFormattedPrice($amountData['discount']) . ' ' . $break : '') .
-                    ($amountData['deduction'] ? BackendStrings::getPaymentStrings()['deduction'] . ': ' .
+                    ($amountData['deduction'] ? BackendStrings::get('deduction') . ': ' .
                         $helperService->getFormattedPrice($amountData['deduction']) . ' ' . $break : '') .
-                    ($startDate ? BackendStrings::getCommonStrings()['start_date'] . ': ' .
+                    ($startDate ? BackendStrings::get('start_date') . ': ' .
                         $startDate . ' ' . $break : '') .
-                    ($expirationDate ? BackendStrings::getPaymentStrings()['expiration_date'] . ': ' .
+                    ($expirationDate ? BackendStrings::get('expiration_date') . ': ' .
                         $expirationDate : '');
             }
 
@@ -415,16 +415,16 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
         if ($payment) {
             switch ($payment['gateway']) {
                 case 'onSite':
-                    $paymentType = BackendStrings::getCommonStrings()['on_site'];
+                    $paymentType = BackendStrings::get('on_site');
                     break;
                 case 'wc':
-                    $paymentType = BackendStrings::getSettingsStrings()['wc_name'];
+                    $paymentType = BackendStrings::get('wc_name');
                     break;
                 case 'square':
-                    $paymentType = BackendStrings::getSettingsStrings()['square'];
+                    $paymentType = BackendStrings::get('square');
                     break;
                 default:
-                    $paymentType = BackendStrings::getSettingsStrings()[$payment['gateway']];
+                    $paymentType = BackendStrings::get($payment['gateway']);
                     break;
             }
         }
@@ -571,15 +571,15 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
             }
 
             $bookedCustomer =
-                $paragraphStart . BackendStrings::getNotificationsStrings()['ph_customer_full_name'] . ': ' . $bookedCustomerFullName . $paragraphEnd;
+                $paragraphStart . BackendStrings::get('ph_customer_full_name') . ': ' . $bookedCustomerFullName . $paragraphEnd;
 
             $bookedCustomer .=
                 $bookedCustomerPhone ?
-                    $paragraphStart . BackendStrings::getNotificationsStrings()['ph_customer_phone'] . ': ' . $bookedCustomerPhone . $paragraphEnd :
+                    $paragraphStart . BackendStrings::get('ph_customer_phone') . ': ' . $bookedCustomerPhone . $paragraphEnd :
                     '';
             $bookedCustomer .=
                 $bookedCustomerEmail ?
-                    $paragraphStart . BackendStrings::getNotificationsStrings()['ph_customer_email'] . ': ' . $bookedCustomerEmail . $paragraphEnd :
+                    $paragraphStart . BackendStrings::get('ph_customer_email') . ': ' . $bookedCustomerEmail . $paragraphEnd :
                     '';
 
             return [
@@ -1110,19 +1110,19 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
                             FrontendStrings::getCommonStrings()['coupon_send_text'] . ' ' .
                             $coupon->getCode()->getValue() . ' ' . $break .
                             ($coupon->getDeduction() && $coupon->getDeduction()->getValue() ?
-                                BackendStrings::getFinanceStrings()['deduction'] . ' ' .
+                                BackendStrings::get('deduction') . ' ' .
                                 $helperService->getFormattedPrice($coupon->getDeduction()->getValue()) . ' ' . $break
                                 : ''
                             ) .
                             ($coupon->getDiscount() && $coupon->getDiscount()->getValue() ?
-                                BackendStrings::getPaymentStrings()['discount_amount'] . ' ' .
+                                BackendStrings::get('discount_amount') . ' ' .
                                 $coupon->getDiscount()->getValue() . '% ' . $break
                                 : '') .
                             ($coupon->getStartDate() && $coupon->getStartDate()->getValue() ?
-                                BackendStrings::getCommonStrings()['start_date'] . ': ' .
+                                BackendStrings::get('start_date') . ': ' .
                                 date_i18n($coupon->getStartDate()->getValue()->format('Y-m-d')) . ' ' : '') .
                             ($coupon->getExpirationDate() && $coupon->getExpirationDate()->getValue() ?
-                                BackendStrings::getPaymentStrings()['expiration_date'] . ': ' .
+                                BackendStrings::get('expiration_date') . ': ' .
                                 date_i18n($coupon->getExpirationDate()->getValue()->format('Y-m-d')) : '');
                     } else {
                         $couponsData["coupon_{$coupon->getId()->getValue()}"] = '';
@@ -1164,7 +1164,7 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
      * @param array    $appointment
      * @param int|null $bookingKey
      *
-     * @return string
+     * @return string|null
      */
     protected function getLocale($appointment, $bookingKey)
     {
@@ -1246,7 +1246,7 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
     /**
      * @param array $appointment
      *
-     * @return int
+     * @return int|null
      */
     protected function getBookingKeyForEmployee($appointment)
     {

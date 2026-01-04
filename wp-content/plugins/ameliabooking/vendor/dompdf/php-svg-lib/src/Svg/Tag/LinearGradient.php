@@ -5,11 +5,11 @@
  * @license GNU LGPLv3+ http://www.gnu.org/copyleft/lesser.html
  */
 
-namespace Svg\Tag;
+namespace AmeliaVendor\Svg\Tag;
 
 
-use Svg\Gradient;
-use Svg\Style;
+use AmeliaVendor\Svg\Gradient;
+use AmeliaVendor\Svg\Style;
 
 class LinearGradient extends AbstractTag
 {

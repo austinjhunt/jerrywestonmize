@@ -1,6 +1,6 @@
 <?php
 
-namespace AmeliaSabre\VObject\ITip;
+namespace AmeliaVendor\Sabre\VObject\ITip;
 
 /**
  * SameOrganizerForAllComponentsException.

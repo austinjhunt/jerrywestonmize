@@ -10,6 +10,7 @@ use AmeliaBooking\Domain\Entity\Location\Location;
 use AmeliaBooking\Domain\Entity\Schedule\DayOff;
 use AmeliaBooking\Domain\Entity\Schedule\Period;
 use AmeliaBooking\Domain\Entity\Schedule\PeriodLocation;
+use AmeliaBooking\Domain\Entity\Schedule\PeriodService;
 use AmeliaBooking\Domain\Entity\Schedule\SpecialDay;
 use AmeliaBooking\Domain\Entity\Schedule\SpecialDayPeriod;
 use AmeliaBooking\Domain\Entity\Schedule\SpecialDayPeriodLocation;
@@ -216,7 +217,7 @@ class ProviderService
                 if (
                     $availableLocation &&
                     (
-                    $providerLocation ?
+                        $providerLocation ?
                         $periodLocation->getLocationId()->getValue() !== $providerLocation->getId()->getValue() : true
                     ) &&
                     ($hasVisibleLocations ? $availableLocation->getStatus()->getValue() === Status::VISIBLE : true)
@@ -484,9 +485,8 @@ class ProviderService
             if (
                 $customPricing &&
                 $customPricing['enabled'] === 'period' &&
-                Licence\Licence::$licence !== 'Lite' &&
-                Licence\Licence::$licence !== 'Starter' &&
-                Licence\Licence::$licence !== 'Basic'
+                Licence\Licence::getLicence() !== 'Lite' &&
+                Licence\Licence::getLicence() !== 'Starter'
             ) {
                 foreach ($customPricing['periods']['default'] as &$item) {
                     $ranges = [];
@@ -579,5 +579,94 @@ class ProviderService
         }
 
         return null;
+    }
+
+    /**
+     * @param Collection $providers
+     * @param array      $criteria
+     *
+     * @return void
+     * @throws InvalidArgumentException
+     */
+    public function filterProvidersAndScheduleByCriteria($providers, $criteria)
+    {
+        if (!empty($criteria['providers'])) {
+            foreach ($providers->getItems() as $providerId => $provider) {
+                if (!in_array($provider->getId()->getValue(), $criteria['providers'])) {
+                    $providers->deleteItem($providerId);
+                }
+            }
+        }
+
+        if (!empty($criteria['services']) || !empty($criteria['locations'])) {
+            /** @var Provider $provider */
+            foreach ($providers->getItems() as $provider) {
+                $this->filterScheduleByCriteria($provider->getWeekDayList(), $criteria);
+
+                $this->filterScheduleByCriteria($provider->getSpecialDayList(), $criteria);
+            }
+        }
+    }
+
+    /**
+     * @param Collection $dayList
+     * @param array      $criteria
+     *
+     * @return void
+     * @throws InvalidArgumentException
+     */
+    private function filterScheduleByCriteria($dayList, $criteria)
+    {
+        /** @var WeekDay|SpecialDay $day */
+        foreach ($dayList->getItems() as $weekDayIndex => $day) {
+            $hasPeriods = $day->getPeriodList()->length() > 0;
+
+            /** @var Period $period */
+            foreach ($day->getPeriodList()->getItems() as $periodIndex => $period) {
+                if ($period->getLocationId() && $period->getPeriodLocationList()->length() > 0) {
+                    $period->setLocationId(null);
+                }
+
+                $hasPeriodServices = $period->getPeriodServiceList()->length() > 0;
+
+                $hasPeriodLocations = $period->getPeriodLocationList()->length() > 0;
+
+                /** @var PeriodService $periodService */
+                foreach ($period->getPeriodServiceList()->getItems() as $periodServiceIndex => $periodService) {
+                    if (
+                        !empty($criteria['services']) &&
+                        !in_array($periodService->getServiceId()->getValue(), $criteria['services'])
+                    ) {
+                        $period->getPeriodServiceList()->deleteItem($periodServiceIndex);
+                    }
+                }
+
+                /** @var PeriodLocation $periodLocation */
+                foreach ($period->getPeriodLocationList()->getItems() as $periodLocationIndex => $periodLocation) {
+                    if (
+                        !empty($criteria['locations']) &&
+                        !in_array($periodLocation->getLocationId()->getValue(), $criteria['locations'])
+                    ) {
+                        $period->getPeriodLocationList()->deleteItem($periodLocationIndex);
+                    }
+                }
+
+                if (
+                    ($hasPeriodServices && $period->getPeriodServiceList()->length() === 0) ||
+                    ($hasPeriodLocations && $period->getPeriodLocationList()->length() === 0) ||
+                    (
+                        !empty($criteria['locations']) &&
+                        $period->getLocationId() &&
+                        !in_array($period->getLocationId()->getValue(), $criteria['locations'])
+                    )
+                ) {
+                    $day->getPeriodList()->deleteItem($periodIndex);
+                }
+            }
+
+            if ($hasPeriods && $day->getPeriodList()->length() === 0) {
+                $dayList->deleteItem($weekDayIndex);
+            }
+        }
     }
 }

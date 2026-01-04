@@ -1,11 +1,11 @@
 <?php
 
-namespace AmeliaSabre\VObject\ITip;
+namespace AmeliaVendor\Sabre\VObject\ITip;
 
-use AmeliaSabre\VObject\Component\VCalendar;
-use AmeliaSabre\VObject\DateTimeParser;
-use AmeliaSabre\VObject\Reader;
-use AmeliaSabre\VObject\Recur\EventIterator;
+use AmeliaVendor\Sabre\VObject\Component\VCalendar;
+use AmeliaVendor\Sabre\VObject\DateTimeParser;
+use AmeliaVendor\Sabre\VObject\Reader;
+use AmeliaVendor\Sabre\VObject\Recur\EventIterator;
 
 /**
  * The ITip\Broker class is a utility class that helps with processing

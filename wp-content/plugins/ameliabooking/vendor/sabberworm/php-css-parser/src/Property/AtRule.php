@@ -1,9 +1,9 @@
 <?php
 
-namespace Sabberworm\CSS\Property;
+namespace AmeliaVendor\Sabberworm\CSS\Property;
 
-use Sabberworm\CSS\Comment\Commentable;
-use Sabberworm\CSS\Renderable;
+use AmeliaVendor\Sabberworm\CSS\Comment\Commentable;
+use AmeliaVendor\Sabberworm\CSS\Renderable;
 
 interface AtRule extends Renderable, Commentable
 {
@@ -13,7 +13,7 @@ interface AtRule extends Renderable, Commentable
      *
      * @var string
      *
-     * @internal
+     * @internal since 8.5.2
      */
     const BLOCK_RULES = 'media/document/supports/region-style/font-feature-values';
 
@@ -22,7 +22,7 @@ interface AtRule extends Renderable, Commentable
      *
      * @var string
      *
-     * @internal
+     * @internal since 8.5.2
      */
     const SET_RULES = 'font-face/counter-style/page/swash/styleset/annotation';
 

@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Treasury;
+namespace AmeliaVendor\Stripe\Treasury;
 
 /**
  * Transactions represent changes to a <a href="https://stripe.com/docs/api#financial_accounts">FinancialAccount's</a> balance.
@@ -10,20 +10,20 @@ namespace AmeliaStripe\Treasury;
  * @property string $id Unique identifier for the object.
  * @property string $object String representing the object's type. Objects of the same type share the same value.
  * @property int $amount Amount (in cents) transferred.
- * @property (object{cash: int, inbound_pending: int, outbound_pending: int}&\AmeliaStripe\StripeObject) $balance_impact Change to a FinancialAccount's balance
+ * @property (object{cash: int, inbound_pending: int, outbound_pending: int}&\AmeliaVendor\Stripe\StripeObject) $balance_impact Change to a FinancialAccount's balance
  * @property int $created Time at which the object was created. Measured in seconds since the Unix epoch.
  * @property string $currency Three-letter <a href="https://www.iso.org/iso-4217-currency-codes.html">ISO currency code</a>, in lowercase. Must be a <a href="https://stripe.com/docs/currencies">supported currency</a>.
  * @property string $description An arbitrary string attached to the object. Often useful for displaying to users.
- * @property null|\AmeliaStripe\Collection<TransactionEntry> $entries A list of TransactionEntries that are part of this Transaction. This cannot be expanded in any list endpoints.
+ * @property null|\AmeliaVendor\Stripe\Collection<TransactionEntry> $entries A list of TransactionEntries that are part of this Transaction. This cannot be expanded in any list endpoints.
  * @property string $financial_account The FinancialAccount associated with this object.
  * @property null|string $flow ID of the flow that created the Transaction.
- * @property null|(object{credit_reversal?: CreditReversal, debit_reversal?: DebitReversal, inbound_transfer?: InboundTransfer, issuing_authorization?: \AmeliaStripe\Issuing\Authorization, outbound_payment?: OutboundPayment, outbound_transfer?: OutboundTransfer, received_credit?: ReceivedCredit, received_debit?: ReceivedDebit, type: string}&\AmeliaStripe\StripeObject) $flow_details Details of the flow that created the Transaction.
+ * @property null|(object{credit_reversal?: CreditReversal, debit_reversal?: DebitReversal, inbound_transfer?: InboundTransfer, issuing_authorization?: \AmeliaVendor\Stripe\Issuing\Authorization, outbound_payment?: OutboundPayment, outbound_transfer?: OutboundTransfer, received_credit?: ReceivedCredit, received_debit?: ReceivedDebit, type: string}&\AmeliaVendor\Stripe\StripeObject) $flow_details Details of the flow that created the Transaction.
  * @property string $flow_type Type of the flow that created the Transaction.
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
  * @property string $status Status of the Transaction.
- * @property (object{posted_at: null|int, void_at: null|int}&\AmeliaStripe\StripeObject) $status_transitions
+ * @property (object{posted_at: null|int, void_at: null|int}&\AmeliaVendor\Stripe\StripeObject) $status_transitions
  */
-class Transaction extends \AmeliaStripe\ApiResource
+class Transaction extends \AmeliaVendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'treasury.transaction';
 
@@ -47,15 +47,15 @@ class Transaction extends \AmeliaStripe\ApiResource
      * @param null|array{created?: array|int, ending_before?: string, expand?: string[], financial_account: string, limit?: int, order_by?: string, starting_after?: string, status?: string, status_transitions?: array{posted_at?: array|int}} $params
      * @param null|array|string $opts
      *
-     * @return \AmeliaStripe\Collection<Transaction> of ApiResources
+     * @return \AmeliaVendor\Stripe\Collection<Transaction> of ApiResources
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
 
-        return static::_requestPage($url, \AmeliaStripe\Collection::class, $params, $opts);
+        return static::_requestPage($url, \AmeliaVendor\Stripe\Collection::class, $params, $opts);
     }
 
     /**
@@ -66,11 +66,11 @@ class Transaction extends \AmeliaStripe\ApiResource
      *
      * @return Transaction
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = \AmeliaStripe\Util\RequestOptions::parse($opts);
+        $opts = \AmeliaVendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
 

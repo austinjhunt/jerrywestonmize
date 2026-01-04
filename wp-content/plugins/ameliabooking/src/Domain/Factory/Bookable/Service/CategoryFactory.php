@@ -27,12 +27,19 @@ class CategoryFactory
      */
     public static function create($data)
     {
-        $category = new Category(
-            new Status($data['status']),
-            new Name($data['name']),
-            new PositiveInteger($data['position']),
-            new Color($data['color'])
-        );
+        $category = new Category(new Name($data['name']));
+
+        if (!empty($data['status'])) {
+            $category->setStatus(new Status($data['status']));
+        }
+
+        if (!empty($data['position'])) {
+            $category->setPosition(new PositiveInteger($data['position']));
+        }
+
+        if (!empty($data['color'])) {
+            $category->setColor(new Color($data['color']));
+        }
 
         if (isset($data['id'])) {
             $category->setId(new Id($data['id']));

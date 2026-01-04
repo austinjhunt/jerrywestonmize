@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -21,18 +21,20 @@ class AmeliaStepBookingGutenbergBlock extends GutenbergBlock
      */
     public static function registerBlockType()
     {
+        // Enqueue shared icon
+        parent::enqueueSharedIcon();
+
         wp_enqueue_script(
             'amelia_step_booking_gutenberg_block',
             AMELIA_URL . 'public/js/gutenberg/amelia-step-booking/amelia-step-booking-gutenberg.js',
-            array( 'wp-blocks', 'wp-components', 'wp-element', 'wp-editor')
+            array('wp-blocks', 'wp-components', 'wp-element', 'wp-editor', 'amelia_block_icon')
         );
 
         wp_localize_script(
             'amelia_step_booking_gutenberg_block',
             'wpAmeliaLabels',
             array_merge(
-                BackendStrings::getCommonStrings(),
-                BackendStrings::getWordPressStrings(),
+                BackendStrings::getAllStrings(),
                 self::getEntitiesData()
             )
         );

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -29,7 +29,6 @@ class AmeliaShortcodeService
     /**
      * Prepare scripts and styles
      * @throws InvalidArgumentException
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public static function prepareScriptsAndStyles()
     {

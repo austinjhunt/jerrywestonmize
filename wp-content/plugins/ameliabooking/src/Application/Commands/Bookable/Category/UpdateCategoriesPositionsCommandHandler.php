@@ -26,7 +26,6 @@ class UpdateCategoriesPositionsCommandHandler extends CommandHandler
      * @throws \Slim\Exception\ContainerValueNotFoundException
      * @throws AccessDeniedException
      * @throws QueryExecutionException
-     * @throws \Interop\Container\Exception\ContainerException
      * @throws InvalidArgumentException
      */
     public function handle(UpdateCategoriesPositionsCommand $command)
@@ -63,7 +62,11 @@ class UpdateCategoriesPositionsCommandHandler extends CommandHandler
         /** @var CategoryRepository $categoryRepository */
         $categoryRepository = $this->container->get('domain.bookable.category.repository');
         foreach ($categories as $category) {
-            $categoryRepository->update($category->getId()->getValue(), $category);
+            $categoryRepository->updateFieldById(
+                $category->getId()->getValue(),
+                $category->getPosition()->getValue(),
+                'position'
+            );
         }
 
         do_action('amelia_after_category_position_updated', $categorized);

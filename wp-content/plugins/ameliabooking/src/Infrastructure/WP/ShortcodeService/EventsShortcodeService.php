@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -24,31 +24,10 @@ class EventsShortcodeService extends AmeliaShortcodeService
      */
     public static function shortcodeHandler($atts)
     {
-        $atts = shortcode_atts(
-            [
-                'trigger'       => '',
-                'counter'       => self::$counter,
-                'event'         => null,
-                'recurring'     => null,
-                'employee'      => null,
-                'tag'           => null,
-                'today'         => null,
-                'type'          => null,
-            ],
-            $atts
-        );
-
-        if (!empty($atts['tag'])) {
-            $atts['tag'] = htmlspecialchars_decode($atts['tag']);
+        if (empty($atts['type']) || $atts['type'] === 'list') {
+            return EventsListBookingShortcodeService::shortcodeHandler($atts);
+        } else {
+            return EventsCalendarBookingShortcodeService::shortcodeHandler($atts);
         }
-
-        self::prepareScriptsAndStyles();
-
-        ob_start();
-        include AMELIA_PATH . '/view/frontend/events.inc.php';
-        $html = ob_get_contents();
-        ob_end_clean();
-
-        return $html;
     }
 }

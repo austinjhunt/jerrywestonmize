@@ -121,8 +121,8 @@ class CustomFieldFactory
         foreach ($rows as $row) {
             $customFieldId = $row['cf_id'];
             $optionId      = $row['cfo_id'];
-            $serviceId     = $row['s_id'];
-            $eventId       = $row['e_id'];
+            $serviceId     = !empty($row['s_id']) ? $row['s_id'] : null;
+            $eventId       = !empty($row['e_id']) ? $row['e_id'] : null;
 
             $customFields[$customFieldId]['id']              = $row['cf_id'];
             $customFields[$customFieldId]['label']           = $row['cf_label'];

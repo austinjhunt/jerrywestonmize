@@ -8,8 +8,6 @@ use AmeliaBooking\Application\Commands\Booking\Appointment\SuccessfulBookingComm
 use AmeliaBooking\Application\Commands\Coupon\GetValidCouponCommand;
 use AmeliaBooking\Application\Commands\Google\FetchAccessTokenWithAuthCodeCommand;
 use AmeliaBooking\Application\Commands\Google\GetGoogleAuthURLCommand;
-use AmeliaBooking\Application\Commands\Mailchimp\FetchAccessTokenMailchimpCommand;
-use AmeliaBooking\Application\Commands\Notification\GetSMSNotificationsHistoryCommand;
 use AmeliaBooking\Application\Commands\Notification\UpdateSMSNotificationHistoryCommand;
 use AmeliaBooking\Application\Commands\Notification\WhatsAppWebhookCommand;
 use AmeliaBooking\Application\Commands\Notification\WhatsAppWebhookRegisterCommand;
@@ -26,10 +24,7 @@ use AmeliaBooking\Application\Commands\PaymentGateway\PayPalPaymentCommand;
 use AmeliaBooking\Application\Commands\PaymentGateway\WooCommercePaymentCommand;
 use AmeliaBooking\Application\Commands\PaymentGateway\RazorpayPaymentCommand;
 use AmeliaBooking\Application\Commands\Square\DisconnectFromSquareAccountCommand;
-use AmeliaBooking\Application\Commands\Square\FetchAccessTokenSquareCommand;
 use AmeliaBooking\Application\Commands\Square\SquareRefundWebhookCommand;
-use AmeliaBooking\Application\Commands\Square\SquarePaymentCommand;
-use AmeliaBooking\Application\Commands\Stats\AddStatsCommand;
 use AmeliaBooking\Application\Commands\User\Customer\ReauthorizeCommand;
 use AmeliaBooking\Application\Commands\User\LoginCabinetCommand;
 use AmeliaBooking\Application\Commands\User\LogoutCabinetCommand;
@@ -199,7 +194,7 @@ abstract class Command
 
     /**
      * @param $request
-     * @return string|null
+     * @return int|boolean
      */
     public function validateNonce($request)
     {
@@ -211,7 +206,6 @@ abstract class Command
             !($this instanceof LoginCabinetCommand) &&
             !($this instanceof LogoutCabinetCommand) &&
             !($this instanceof AddBookingCommand) &&
-            !($this instanceof AddStatsCommand) &&
             !($this instanceof DeleteBookingRemotelyCommand) &&
             !($this instanceof GetValidCouponCommand) &&
             !($this instanceof MolliePaymentCommand) &&
@@ -221,7 +215,6 @@ abstract class Command
             !($this instanceof RazorpayPaymentCommand) &&
             !($this instanceof BarionPaymentCommand) &&
             !($this instanceof BarionPaymentCallbackCommand) &&
-            !($this instanceof SquarePaymentCommand) &&
             !($this instanceof SquareRefundWebhookCommand) &&
             !($this instanceof DisconnectFromSquareAccountCommand) &&
             !($this instanceof WooCommercePaymentCommand) &&
@@ -230,13 +223,10 @@ abstract class Command
             !($this instanceof GetGoogleAuthURLCommand) &&
             !($this instanceof FetchAccessTokenWithAuthCodeOutlookCommand) &&
             !($this instanceof FetchAccessTokenWithAuthCodeCommand) &&
-            !($this instanceof FetchAccessTokenMailchimpCommand) &&
-            !($this instanceof FetchAccessTokenSquareCommand) &&
             !($this instanceof WhatsAppWebhookRegisterCommand) &&
             !($this instanceof WhatsAppWebhookCommand) &&
             !($this instanceof PaymentLinkCommand) &&
             !($this instanceof SocialLoginCommand) &&
-            !($this instanceof GetSMSNotificationsHistoryCommand) &&
             !($this instanceof UpdateSMSNotificationHistoryCommand)
         ) {
             $queryParams = $request->getQueryParams();

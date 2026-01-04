@@ -26,7 +26,7 @@
 
 namespace Pimple\Exception;
 
-use AmeliaPsr\Container\ContainerExceptionInterface;
+use AmeliaVendor\Psr\Container\ContainerExceptionInterface;
 
 /**
  * An attempt to modify a frozen service was made.

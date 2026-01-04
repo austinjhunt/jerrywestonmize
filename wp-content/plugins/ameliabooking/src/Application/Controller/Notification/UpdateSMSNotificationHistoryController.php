@@ -20,7 +20,8 @@ class UpdateSMSNotificationHistoryController extends Controller
         'status',
         'price',
         'dateTime',
-        'logId'
+        'logId',
+        'signature'
     ];
 
     /**

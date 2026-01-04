@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -37,7 +37,7 @@ class Coupon
     /** @var DiscountFixedValue */
     private $deduction;
 
-    /** @var PositiveInteger */
+    /** @var WholeNumber */
     private $limit;
 
     /** @var WholeNumber */
@@ -145,7 +145,7 @@ class Coupon
     }
 
     /**
-     * @return PositiveInteger
+     * @return WholeNumber
      */
     public function getLimit()
     {
@@ -153,7 +153,7 @@ class Coupon
     }
 
     /**
-     * @param PositiveInteger $limit
+     * @param WholeNumber $limit
      */
     public function setLimit($limit)
     {
@@ -389,9 +389,9 @@ class Coupon
             'packageList'           => $this->getPackageList() ? $this->getPackageList()->toArray() : [],
             'expirationDate'        => $this->getExpirationDate() ? $this->getExpirationDate()->getValue()->format('Y-m-d') : null,
             'startDate'             => $this->getStartDate() ? $this->getStartDate()->getValue()->format('Y-m-d') : null,
-            'allServices'           => $this->getAllServices() ? $this->getAllServices()->getValue() : 0,
-            'allEvents'             => $this->getAllEvents() ? $this->getAllEvents()->getValue() : 0,
-            'allPackages'           => $this->getAllPackages() ? $this->getAllPackages()->getValue() : 0,
+            'allServices'           => $this->getAllServices() ? $this->getAllServices()->getValue() : false,
+            'allEvents'             => $this->getAllEvents() ? $this->getAllEvents()->getValue() : false,
+            'allPackages'           => $this->getAllPackages() ? $this->getAllPackages()->getValue() : false,
         ];
     }
 }

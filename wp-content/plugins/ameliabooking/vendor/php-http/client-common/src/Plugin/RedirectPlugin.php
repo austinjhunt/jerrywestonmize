@@ -6,10 +6,10 @@ use AmeliaHttp\Client\Common\Exception\CircularRedirectionException;
 use AmeliaHttp\Client\Common\Exception\MultipleRedirectionException;
 use AmeliaHttp\Client\Common\Plugin;
 use AmeliaHttp\Client\Exception\HttpException;
-use AmeliaPsr\Http\Message\MessageInterface;
-use AmeliaPsr\Http\Message\RequestInterface;
-use AmeliaPsr\Http\Message\ResponseInterface;
-use AmeliaPsr\Http\Message\UriInterface;
+use AmeliaVendor\Psr\Http\Message\MessageInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\UriInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**

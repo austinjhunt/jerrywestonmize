@@ -4,7 +4,7 @@ namespace AmeliaHttp\Message\Authentication;
 
 use AmeliaHttp\Message\Authentication;
 use AmeliaHttp\Message\RequestMatcher\CallbackRequestMatcher;
-use AmeliaPsr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
 
 @trigger_error('The '.__NAMESPACE__.'\Matching class is deprecated since version 1.2 and will be removed in 2.0. Use AmeliaHttp\Message\Authentication\RequestConditional instead.', E_USER_DEPRECATED);
 

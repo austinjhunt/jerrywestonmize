@@ -15,7 +15,7 @@ use Mailgun\Model\Tag\IndexResponse;
 use Mailgun\Model\Tag\ShowResponse;
 use Mailgun\Model\Tag\StatisticsResponse;
 use Mailgun\Model\Tag\UpdateResponse;
-use AmeliaPsr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
 
 /**
  * {@link https://documentation.mailgun.com/api-tags.html#tags}.

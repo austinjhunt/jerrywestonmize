@@ -3,7 +3,7 @@
 namespace AmeliaHttp\Client\Curl;
 
 use AmeliaHttp\Message\Builder\ResponseBuilder as OriginalResponseBuilder;
-use AmeliaPsr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
 
 /**
  * Extended response builder.

@@ -15,21 +15,21 @@
  * the License.
  */
 
-namespace AmeliaGoogle\Service\Calendar\Resource;
+namespace AmeliaVendor\Google\Service\Calendar\Resource;
 
-use AmeliaGoogle\Service\Calendar\Acl as AclModel;
-use AmeliaGoogle\Service\Calendar\AclRule;
-use AmeliaGoogle\Service\Calendar\Channel;
+use AmeliaVendor\Google\Service\Calendar\Acl as AclModel;
+use AmeliaVendor\Google\Service\Calendar\AclRule;
+use AmeliaVendor\Google\Service\Calendar\Channel;
 
 /**
  * The "acl" collection of methods.
  * Typical usage is:
  *  <code>
- *   $calendarService = new AmeliaGoogle\Service\Calendar(...);
+ *   $calendarService = new \AmeliaVendor\Google\Service\Calendar(...);
  *   $acl = $calendarService->acl;
  *  </code>
  */
-class Acl extends \AmeliaGoogle\Service\Resource
+class Acl extends \AmeliaVendor\Google\Service\Resource
 {
   /**
    * Deletes an access control rule. (acl.delete)
@@ -39,7 +39,7 @@ class Acl extends \AmeliaGoogle\Service\Resource
    * the currently logged in user, use the "primary" keyword.
    * @param string $ruleId ACL rule identifier.
    * @param array $optParams Optional parameters.
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function delete($calendarId, $ruleId, $optParams = [])
   {
@@ -56,7 +56,7 @@ class Acl extends \AmeliaGoogle\Service\Resource
    * @param string $ruleId ACL rule identifier.
    * @param array $optParams Optional parameters.
    * @return AclRule
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function get($calendarId, $ruleId, $optParams = [])
   {
@@ -76,7 +76,7 @@ class Acl extends \AmeliaGoogle\Service\Resource
    * @opt_param bool sendNotifications Whether to send notifications about the
    * calendar sharing change. Optional. The default is True.
    * @return AclRule
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function insert($calendarId, AclRule $postBody, $optParams = [])
   {
@@ -110,7 +110,7 @@ class Acl extends \AmeliaGoogle\Service\Resource
    * without any syncToken. Learn more about incremental synchronization.
    * Optional. The default is to return all entries.
    * @return AclModel
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function listAcl($calendarId, $optParams = [])
   {
@@ -133,7 +133,7 @@ class Acl extends \AmeliaGoogle\Service\Resource
    * calendar sharing change. Note that there are no notifications on access
    * removal. Optional. The default is True.
    * @return AclRule
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function patch($calendarId, $ruleId, AclRule $postBody, $optParams = [])
   {
@@ -155,7 +155,7 @@ class Acl extends \AmeliaGoogle\Service\Resource
    * calendar sharing change. Note that there are no notifications on access
    * removal. Optional. The default is True.
    * @return AclRule
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function update($calendarId, $ruleId, AclRule $postBody, $optParams = [])
   {
@@ -190,7 +190,7 @@ class Acl extends \AmeliaGoogle\Service\Resource
    * without any syncToken. Learn more about incremental synchronization.
    * Optional. The default is to return all entries.
    * @return Channel
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function watch($calendarId, Channel $postBody, $optParams = [])
   {
@@ -201,4 +201,4 @@ class Acl extends \AmeliaGoogle\Service\Resource
 }
 
 // Adding a class alias for backwards compatibility with the previous class name.
-class_alias(Acl::class, 'AmeliaGoogle_Service_Calendar_Resource_Acl');
+class_alias(Acl::class, 'Google_Service_Calendar_Resource_Acl');

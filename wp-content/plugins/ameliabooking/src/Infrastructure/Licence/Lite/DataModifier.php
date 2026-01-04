@@ -19,12 +19,6 @@ class DataModifier
     {
         self::commonRestoreSettings($settings, $savedSettings);
 
-        $settings['payments']['coupons'] = $savedSettings['payments']['coupons'];
-
-        $settings['roles']['customerCabinet']['enabled'] = $savedSettings['roles']['customerCabinet']['enabled'];
-
-        $settings['roles']['providerCabinet']['enabled'] = $savedSettings['roles']['providerCabinet']['enabled'];
-
         $settings['general']['serviceDurationAsSlot'] = $savedSettings['general']['serviceDurationAsSlot'];
 
         $settings['general']['bufferTimeInSlot'] = $savedSettings['general']['bufferTimeInSlot'];
@@ -42,8 +36,6 @@ class DataModifier
      */
     public static function commonRestoreSettings(&$settings, $savedSettings)
     {
-        $settings['payments']['cart'] = $savedSettings['payments']['cart'];
-
         $settings['payments']['stripe']['enabled'] = $savedSettings['payments']['stripe']['enabled'];
 
         $settings['payments']['payPal']['enabled'] = $savedSettings['payments']['payPal']['enabled'];
@@ -66,10 +58,6 @@ class DataModifier
 
         $settings['roles']['allowCustomerCancelPackages'] = $savedSettings['roles']['allowCustomerCancelPackages'];
 
-        $settings['roles']['enableNoShowTag'] = $savedSettings['roles']['enableNoShowTag'];
-
-        $settings['notifications']['whatsAppEnabled'] = $savedSettings['notifications']['whatsAppEnabled'];
-
         $settings['general']['usedLanguages'] = $savedSettings['general']['usedLanguages'];
 
         $settings['appointments']['employeeSelection'] = $savedSettings['appointments']['employeeSelection'];
@@ -85,18 +73,8 @@ class DataModifier
 
         self::commonModifySettings($settings);
 
-        if ($settings && isset($settings['payments'])) {
-            $settings['payments']['coupons'] = false;
-        }
-
         if ($settings && isset($settings['activation'])) {
             $settings['activation']['hideUnavailableFeatures'] = false;
-        }
-
-        if ($settings && isset($settings['roles'])) {
-            $settings['roles']['customerCabinet']['enabled'] = false;
-
-            $settings['roles']['providerCabinet']['enabled'] = false;
         }
 
         if ($settings && isset($settings['general'])) {
@@ -121,16 +99,12 @@ class DataModifier
 
         $generalSettings = ActivationSettingsHook::getDefaultGeneralSettings($settings);
 
-        $notificationSettings = ActivationSettingsHook::getDefaultNotificationsSettings($settings);
-
         $appointmentsSettings = ActivationSettingsHook::getDefaultAppointmentsSettings();
 
         $paymentSettings = ActivationSettingsHook::getDefaultPaymentsSettings($settings);
 
 
         if ($settings && isset($settings['payments'])) {
-            $settings['payments']['cart'] = $paymentSettings['cart'];
-
             $settings['payments']['stripe']['enabled'] = $paymentSettings['stripe']['enabled'];
 
             $settings['payments']['payPal']['enabled'] = $paymentSettings['payPal']['enabled'];
@@ -142,8 +116,6 @@ class DataModifier
             $settings['payments']['wc']['enabled'] = $paymentSettings['wc']['enabled'];
 
             $settings['payments']['paymentLinks']['enabled'] = $paymentSettings['paymentLinks']['enabled'];
-
-            $settings['payments']['taxes']['enabled'] = $paymentSettings['taxes']['enabled'];
         }
 
         if ($settings && isset($settings['roles'])) {
@@ -156,16 +128,10 @@ class DataModifier
             $settings['roles']['limitPerEmployee']['enabled'] = $rolesSettings['limitPerEmployee']['enabled'];
 
             $settings['roles']['allowCustomerCancelPackages'] = false;
-
-            $settings['roles']['enableNoShowTag'] = false;
         }
 
         if ($settings && isset($settings['general'])) {
             $settings['general']['usedLanguages'] = $generalSettings['usedLanguages'];
-        }
-
-        if ($settings && isset($settings['notifications'])) {
-            $settings['notifications']['whatsAppEnabled'] = $notificationSettings['whatsAppEnabled'];
         }
 
         if ($settings && isset($settings['appointments'])) {
@@ -182,14 +148,13 @@ class DataModifier
     {
         return [
             'values'              =>
-                [
-                ],
+            [],
             'columns'             =>
-                '',
+            '',
             'placeholders'        =>
-                '',
+            '',
             'columnsPlaceholders' =>
-                '',
+            '',
         ];
     }
 
@@ -211,6 +176,8 @@ class DataModifier
         $data['zoomUserId'] = null;
 
         $data['appleCalendarId'] = null;
+
+        $data['googleCalendarId'] = null;
 
         $data['translations'] = null;
 
@@ -234,14 +201,13 @@ class DataModifier
     {
         return [
             'values'              =>
-                [
-                ],
+            [],
             'columns'             =>
-                '',
+            '',
             'placeholders'        =>
-                '',
+            '',
             'columnsPlaceholders' =>
-                '',
+            '',
         ];
     }
 
@@ -263,14 +229,13 @@ class DataModifier
     {
         return [
             'values'              =>
-                [
-                ],
+            [],
             'columns'             =>
-                '',
+            '',
             'placeholders'        =>
-                '',
+            '',
             'columnsPlaceholders' =>
-                '',
+            '',
         ];
     }
 
@@ -295,14 +260,13 @@ class DataModifier
     {
         return [
             'values'              =>
-                [
-                ],
+            [],
             'columns'             =>
-                '',
+            '',
             'placeholders'        =>
-                '',
+            '',
             'columnsPlaceholders' =>
-                '',
+            '',
         ];
     }
 
@@ -363,17 +327,15 @@ class DataModifier
     {
         return [
             'values'              =>
-                [
-                ],
+            [],
             'addValues'           =>
-                [
-                ],
+            [],
             'columns'             =>
-                '',
+            '',
             'placeholders'        =>
-                '',
+            '',
             'columnsPlaceholders' =>
-                '',
+            '',
         ];
     }
 

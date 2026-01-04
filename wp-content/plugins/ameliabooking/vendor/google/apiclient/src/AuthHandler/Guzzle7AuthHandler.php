@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-namespace AmeliaGoogle\AuthHandler;
+namespace AmeliaVendor\Google\AuthHandler;
 
 /**
  * This supports Guzzle 7

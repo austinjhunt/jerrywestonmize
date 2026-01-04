@@ -56,15 +56,15 @@ class MimeContent extends Entity
     * Gets the value
     * The byte array that contains the actual content.
     *
-    * @return \AmeliaGuzzleHttp\Psr7\Stream|null The value
+    * @return \AmeliaVendor\GuzzleHttp\Psr7\Stream|null The value
     */
     public function getValue()
     {
         if (array_key_exists("value", $this->_propDict)) {
-            if (is_a($this->_propDict["value"], "\AmeliaGuzzleHttp\Psr7\Stream") || is_null($this->_propDict["value"])) {
+            if (is_a($this->_propDict["value"], "\AmeliaVendor\GuzzleHttp\Psr7\Stream") || is_null($this->_propDict["value"])) {
                 return $this->_propDict["value"];
             } else {
-                $this->_propDict["value"] = \AmeliaGuzzleHttp\Psr7\Utils::streamFor($this->_propDict["value"]);
+                $this->_propDict["value"] = \AmeliaVendor\GuzzleHttp\Psr7\Utils::streamFor($this->_propDict["value"]);
                 return $this->_propDict["value"];
             }
         }
@@ -75,7 +75,7 @@ class MimeContent extends Entity
     * Sets the value
     * The byte array that contains the actual content.
     *
-    * @param \AmeliaGuzzleHttp\Psr7\Stream $val The value to assign to the value
+    * @param \AmeliaVendor\GuzzleHttp\Psr7\Stream $val The value to assign to the value
     *
     * @return MimeContent The MimeContent
     */

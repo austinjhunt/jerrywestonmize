@@ -2,14 +2,14 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Service\TestHelpers\Terminal;
+namespace AmeliaVendor\Stripe\Service\TestHelpers\Terminal;
 
 /**
- * @phpstan-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  *
- * @psalm-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ * @psalm-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  */
-class ReaderService extends \AmeliaStripe\Service\AbstractService
+class ReaderService extends \AmeliaVendor\Stripe\Service\AbstractService
 {
     /**
      * Presents a payment method on a simulated reader. Can be used to simulate
@@ -17,11 +17,11 @@ class ReaderService extends \AmeliaStripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{amount_tip?: int, card_present?: array{number?: string}, expand?: string[], interac_present?: array{number?: string}, type?: string} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Terminal\Reader
+     * @return \AmeliaVendor\Stripe\Terminal\Reader
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function presentPaymentMethod($id, $params = null, $opts = null)
     {

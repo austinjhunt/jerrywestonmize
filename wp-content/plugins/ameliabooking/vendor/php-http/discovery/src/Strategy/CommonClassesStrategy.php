@@ -2,7 +2,7 @@
 
 namespace AmeliaHttp\Discovery\Strategy;
 
-use AmeliaGuzzleHttp\Psr7\Request as GuzzleRequest;
+use AmeliaVendor\GuzzleHttp\Psr7\Request as GuzzleRequest;
 use AmeliaHttp\Client\HttpAsyncClient;
 use AmeliaHttp\Client\HttpClient;
 use AmeliaHttp\Discovery\MessageFactoryDiscovery;

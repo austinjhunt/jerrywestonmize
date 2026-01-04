@@ -24,7 +24,6 @@ class GetLocationDeleteEffectCommandHandler extends CommandHandler
      * @throws \Slim\Exception\ContainerValueNotFoundException
      * @throws InvalidArgumentException
      * @throws AccessDeniedException
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function handle(GetLocationDeleteEffectCommand $command)
     {
@@ -41,15 +40,22 @@ class GetLocationDeleteEffectCommandHandler extends CommandHandler
 
         /** @var Collection $services */
         $services      = $locationRepository->getServicesById($command->getArg('id'));
-        $serviceString = $services->length() === 1 ? Entities::SERVICE : Entities::SERVICES;
+
+        $messageKey = '';
+        $messageData = null;
+
+        if ($services->length()) {
+            $messageKey = 'red_delete_location_effect';
+            $messageData = ['count' => $services->length()];
+        }
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved message.');
         $result->setData(
             [
             'valid'   => true,
-            'message' => $services->length() ?
-                "This location has {$services->length()} {$serviceString} connected to it." : ''
+                'messageKey'  => $messageKey,
+                'messageData' => $messageData,
             ]
         );
 

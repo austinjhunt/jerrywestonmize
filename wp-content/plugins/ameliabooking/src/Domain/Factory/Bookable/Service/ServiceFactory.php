@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -9,6 +9,7 @@ namespace AmeliaBooking\Domain\Factory\Bookable\Service;
 
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
+use AmeliaBooking\Domain\Entity\Bookable\Service\Category;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Gallery\GalleryImage;
@@ -70,6 +71,11 @@ class ServiceFactory
 
         if (isset($data['categoryId'])) {
             $service->setCategoryId(new Id($data['categoryId']));
+        }
+
+        if (!empty($data['category'])) {
+            $name = !empty($data['category']['name']) ? $data['category']['name'] : null;
+            $service->setCategory(new Category(new Name($name)));
         }
 
         if (isset($data['minCapacity'])) {
@@ -150,7 +156,7 @@ class ServiceFactory
             $service->setCustomPricing(new Json($data['customPricing']));
         }
 
-        if (isset($data['limitPerCustomer'])) {
+        if (!empty($data['limitPerCustomer'])) {
             $service->setLimitPerCustomer(new Json($data['limitPerCustomer']));
         }
 

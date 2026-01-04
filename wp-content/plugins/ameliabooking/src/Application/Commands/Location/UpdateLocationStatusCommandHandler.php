@@ -36,7 +36,6 @@ class UpdateLocationStatusCommandHandler extends CommandHandler
      * @throws AccessDeniedException
      * @throws InvalidArgumentException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function handle(UpdateLocationStatusCommand $command)
     {
@@ -57,9 +56,10 @@ class UpdateLocationStatusCommandHandler extends CommandHandler
 
         do_action('amelia_before_location_status_updated', $status, $command->getArg('id'));
 
-        $locationRepository->updateStatusById(
+        $locationRepository->updateFieldById(
             $command->getArg('id'),
-            $status
+            $status,
+            'status'
         );
 
         if ($command->getField('status') === Status::VISIBLE) {

@@ -17,35 +17,35 @@
  * Do not edit the class manually.
  */
 
-namespace MailchimpMarketing;
+namespace AmeliaVendor\MailchimpMarketing;
 
-use MailchimpMarketing\Api\AccountExportApi;
-use MailchimpMarketing\Api\AccountExportsApi;
-use MailchimpMarketing\Api\ActivityFeedApi;
-use MailchimpMarketing\Api\AuthorizedAppsApi;
-use MailchimpMarketing\Api\AutomationsApi;
-use MailchimpMarketing\Api\BatchWebhooksApi;
-use MailchimpMarketing\Api\BatchesApi;
-use MailchimpMarketing\Api\CampaignFoldersApi;
-use MailchimpMarketing\Api\CampaignsApi;
-use MailchimpMarketing\Api\ConnectedSitesApi;
-use MailchimpMarketing\Api\ConversationsApi;
-use MailchimpMarketing\Api\CustomerJourneysApi;
-use MailchimpMarketing\Api\EcommerceApi;
-use MailchimpMarketing\Api\FacebookAdsApi;
-use MailchimpMarketing\Api\FileManagerApi;
-use MailchimpMarketing\Api\LandingPagesApi;
-use MailchimpMarketing\Api\ListsApi;
-use MailchimpMarketing\Api\PingApi;
-use MailchimpMarketing\Api\ReportingApi;
-use MailchimpMarketing\Api\ReportsApi;
-use MailchimpMarketing\Api\RootApi;
-use MailchimpMarketing\Api\SearchCampaignsApi;
-use MailchimpMarketing\Api\SearchMembersApi;
-use MailchimpMarketing\Api\SurveysApi;
-use MailchimpMarketing\Api\TemplateFoldersApi;
-use MailchimpMarketing\Api\TemplatesApi;
-use MailchimpMarketing\Api\VerifiedDomainsApi;
+use AmeliaVendor\MailchimpMarketing\Api\AccountExportApi;
+use AmeliaVendor\MailchimpMarketing\Api\AccountExportsApi;
+use AmeliaVendor\MailchimpMarketing\Api\ActivityFeedApi;
+use AmeliaVendor\MailchimpMarketing\Api\AuthorizedAppsApi;
+use AmeliaVendor\MailchimpMarketing\Api\AutomationsApi;
+use AmeliaVendor\MailchimpMarketing\Api\BatchWebhooksApi;
+use AmeliaVendor\MailchimpMarketing\Api\BatchesApi;
+use AmeliaVendor\MailchimpMarketing\Api\CampaignFoldersApi;
+use AmeliaVendor\MailchimpMarketing\Api\CampaignsApi;
+use AmeliaVendor\MailchimpMarketing\Api\ConnectedSitesApi;
+use AmeliaVendor\MailchimpMarketing\Api\ConversationsApi;
+use AmeliaVendor\MailchimpMarketing\Api\CustomerJourneysApi;
+use AmeliaVendor\MailchimpMarketing\Api\EcommerceApi;
+use AmeliaVendor\MailchimpMarketing\Api\FacebookAdsApi;
+use AmeliaVendor\MailchimpMarketing\Api\FileManagerApi;
+use AmeliaVendor\MailchimpMarketing\Api\LandingPagesApi;
+use AmeliaVendor\MailchimpMarketing\Api\ListsApi;
+use AmeliaVendor\MailchimpMarketing\Api\PingApi;
+use AmeliaVendor\MailchimpMarketing\Api\ReportingApi;
+use AmeliaVendor\MailchimpMarketing\Api\ReportsApi;
+use AmeliaVendor\MailchimpMarketing\Api\RootApi;
+use AmeliaVendor\MailchimpMarketing\Api\SearchCampaignsApi;
+use AmeliaVendor\MailchimpMarketing\Api\SearchMembersApi;
+use AmeliaVendor\MailchimpMarketing\Api\SurveysApi;
+use AmeliaVendor\MailchimpMarketing\Api\TemplateFoldersApi;
+use AmeliaVendor\MailchimpMarketing\Api\TemplatesApi;
+use AmeliaVendor\MailchimpMarketing\Api\VerifiedDomainsApi;
 
 class Configuration
 {

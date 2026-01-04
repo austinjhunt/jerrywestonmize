@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright 2019 Google LLC
  *
@@ -14,11 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+namespace AmeliaVendor\Google\Auth;
 
-namespace AmeliaGoogle\Auth;
-
-use phpseclib\Crypt\RSA;
-
+use AmeliaVendor\phpseclib3\Crypt\PublicKeyLoader;
+use AmeliaVendor\phpseclib3\Crypt\RSA;
 /**
  * Sign a string using a Service Account private key.
  */
@@ -35,14 +35,10 @@ trait ServiceAccountSignerTrait
     public function signBlob($stringToSign, $forceOpenssl = false)
     {
         $privateKey = $this->auth->getSigningKey();
-
         $signedString = '';
-        if (class_exists('\\phpseclib\\Crypt\\RSA') && !$forceOpenssl) {
-            $rsa = new RSA();
-            $rsa->loadKey($privateKey);
-            $rsa->setSignatureMode(RSA::SIGNATURE_PKCS1);
-            $rsa->setHash('sha256');
-
+        if (class_exists(\AmeliaVendor\phpseclib3\Crypt\RSA::class) && !$forceOpenssl) {
+            $key = PublicKeyLoader::load($privateKey);
+            $rsa = $key->withHash('sha256')->withPadding(RSA::SIGNATURE_PKCS1);
             $signedString = $rsa->sign($stringToSign);
         } elseif (extension_loaded('openssl')) {
             openssl_sign($stringToSign, $signedString, $privateKey, 'sha256WithRSAEncryption');
@@ -51,7 +47,6 @@ trait ServiceAccountSignerTrait
             throw new \RuntimeException('OpenSSL is not installed.');
         }
         // @codeCoverageIgnoreEnd
-
         return base64_encode($signedString);
     }
 }

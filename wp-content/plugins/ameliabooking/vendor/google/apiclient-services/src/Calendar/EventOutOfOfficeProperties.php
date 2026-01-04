@@ -15,9 +15,9 @@
  * the License.
  */
 
-namespace AmeliaGoogle\Service\Calendar;
+namespace AmeliaVendor\Google\Service\Calendar;
 
-class EventOutOfOfficeProperties extends \AmeliaGoogle\Model
+class EventOutOfOfficeProperties extends \AmeliaVendor\Google\Model
 {
   /**
    * @var string
@@ -59,4 +59,4 @@ class EventOutOfOfficeProperties extends \AmeliaGoogle\Model
 }
 
 // Adding a class alias for backwards compatibility with the previous class name.
-class_alias(EventOutOfOfficeProperties::class, 'AmeliaGoogle_Service_Calendar_EventOutOfOfficeProperties');
+class_alias(EventOutOfOfficeProperties::class, 'Google_Service_Calendar_EventOutOfOfficeProperties');

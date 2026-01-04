@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -270,7 +270,7 @@ class DateTimeService
      *
      * @param $dateString
      *
-     * @return int
+     * @return string
      */
     public static function getDayIndex($dateString)
     {
@@ -292,5 +292,11 @@ class DateTimeService
         );
 
         return $dateTimes;
+    }
+
+    public static function getDateTimeStringInUtc(string $dateTimeString): string
+    {
+        return self::getCustomDateTimeObject($dateTimeString)
+            ->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');
     }
 }

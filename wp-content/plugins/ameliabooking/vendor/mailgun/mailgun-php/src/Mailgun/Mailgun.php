@@ -21,7 +21,7 @@ use Mailgun\Messages\Exceptions;
 use Mailgun\Messages\MessageBuilder;
 use Mailgun\Hydrator\ModelHydrator;
 use Mailgun\Hydrator\Hydrator;
-use AmeliaPsr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
 
 /**
  * This class is the base class for the Mailgun SDK.

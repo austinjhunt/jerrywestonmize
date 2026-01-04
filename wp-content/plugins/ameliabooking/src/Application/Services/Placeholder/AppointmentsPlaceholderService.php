@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -72,18 +72,18 @@ class AppointmentsPlaceholderService extends AppointmentPlaceholderService
             'payment_due_amount'      => $helperService->getFormattedPrice(80),
             'appointment_cancel_url'  => 'http://cancel_url.com',
             'zoom_join_url'           => $type === 'email' ?
-                '<a href="#">' . BackendStrings::getCommonStrings()['zoom_click_to_join'] . '</a>' : 'https://join_zoom_link.com',
+                '<a href="#">' . BackendStrings::get('zoom_click_to_join') . '</a>' : 'https://join_zoom_link.com',
             'zoom_host_url'           => $type === 'email' ?
-                '<a href="#">' . BackendStrings::getCommonStrings()['zoom_click_to_start'] . '</a>' : 'https://start_zoom_link.com',
+                '<a href="#">' . BackendStrings::get('zoom_click_to_start') . '</a>' : 'https://start_zoom_link.com',
             'google_meet_url'         => $type === 'email' ?
-                '<a href="#">' . BackendStrings::getCommonStrings()['google_meet_join'] . '</a>' : 'https://join_google_meet_link.com',
+                '<a href="#">' . BackendStrings::get('google_meet_join') . '</a>' : 'https://join_google_meet_link.com',
             'lesson_space_url'        => $type === 'email' ?
-                '<a href="#">' . BackendStrings::getCommonStrings()['lesson_space_join'] . '</a>' : 'https://lessonspace.com/room-id',
+                '<a href="#">' . BackendStrings::get('lesson_space_join') . '</a>' : 'https://lessonspace.com/room-id',
             'microsoft_teams_url'     => $type === 'email' ?
-                '<a href="#">' . BackendStrings::getCommonStrings()['microsoft_teams_join'] . '</a>' : 'https://join_microsoft_teams_link.com',
+                '<a href="#">' . BackendStrings::get('microsoft_teams_join') . '</a>' : 'https://join_microsoft_teams_link.com',
             'appointment_duration'    => $helperService->secondsToNiceDuration(1800),
             'appointment_deposit_payment'     => $helperService->getFormattedPrice(20),
-            'appointment_status'      => BackendStrings::getCommonStrings()['approved'],
+            'appointment_status'      => BackendStrings::get('approved'),
             'category_name'           => 'Category Name',
             'service_description'     => 'Service Description',
             'reservation_description' => 'Service Description',

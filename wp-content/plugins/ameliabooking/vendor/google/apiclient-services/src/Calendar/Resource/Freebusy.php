@@ -15,20 +15,20 @@
  * the License.
  */
 
-namespace AmeliaGoogle\Service\Calendar\Resource;
+namespace AmeliaVendor\Google\Service\Calendar\Resource;
 
-use AmeliaGoogle\Service\Calendar\FreeBusyRequest;
-use AmeliaGoogle\Service\Calendar\FreeBusyResponse;
+use AmeliaVendor\Google\Service\Calendar\FreeBusyRequest;
+use AmeliaVendor\Google\Service\Calendar\FreeBusyResponse;
 
 /**
  * The "freebusy" collection of methods.
  * Typical usage is:
  *  <code>
- *   $calendarService = new AmeliaGoogle\Service\Calendar(...);
+ *   $calendarService = new \AmeliaVendor\Google\Service\Calendar(...);
  *   $freebusy = $calendarService->freebusy;
  *  </code>
  */
-class Freebusy extends \AmeliaGoogle\Service\Resource
+class Freebusy extends \AmeliaVendor\Google\Service\Resource
 {
   /**
    * Returns free/busy information for a set of calendars. (freebusy.query)
@@ -36,7 +36,7 @@ class Freebusy extends \AmeliaGoogle\Service\Resource
    * @param FreeBusyRequest $postBody
    * @param array $optParams Optional parameters.
    * @return FreeBusyResponse
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function query(FreeBusyRequest $postBody, $optParams = [])
   {
@@ -47,4 +47,4 @@ class Freebusy extends \AmeliaGoogle\Service\Resource
 }
 
 // Adding a class alias for backwards compatibility with the previous class name.
-class_alias(Freebusy::class, 'AmeliaGoogle_Service_Calendar_Resource_Freebusy');
+class_alias(Freebusy::class, 'Google_Service_Calendar_Resource_Freebusy');

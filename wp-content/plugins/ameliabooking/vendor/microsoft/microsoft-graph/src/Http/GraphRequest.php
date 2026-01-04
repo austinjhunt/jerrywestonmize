@@ -17,8 +17,8 @@
 
 namespace Microsoft\Graph\Http;
 
-use AmeliaGuzzleHttp\Client;
-use AmeliaGuzzleHttp\Exception\BadResponseException;
+use AmeliaVendor\GuzzleHttp\Client;
+use AmeliaVendor\GuzzleHttp\Exception\BadResponseException;
 use Microsoft\Graph\Core\GraphConstants;
 use Microsoft\Graph\Core\ExceptionWrapper;
 use Microsoft\Graph\Exception\GraphException;
@@ -211,7 +211,7 @@ class GraphRequest
     public function setReturnType($returnClass)
     {
         $this->returnType = $returnClass;
-        if ($this->returnType == "AmeliaGuzzleHttp\Psr7\Stream" || $this->returnType === \AmeliaPsr\Http\Message\StreamInterface::class) {
+        if ($this->returnType == "AmeliaVendor\GuzzleHttp\Psr7\Stream" || $this->returnType === \AmeliaVendor\Psr\Http\Message\StreamInterface::class) {
             $this->returnsStream  = true;
         } else {
             $this->returnsStream = false;
@@ -253,7 +253,7 @@ class GraphRequest
     public function attachBody($obj)
     {
         // Attach streams & JSON automatically
-        if (is_string($obj) || is_a($obj, \AmeliaPsr\Http\Message\StreamInterface::class)) {
+        if (is_string($obj) || is_a($obj, \AmeliaVendor\Psr\Http\Message\StreamInterface::class)) {
             $this->requestBody = $obj;
         }
         // By default, JSON-encode
@@ -301,7 +301,7 @@ class GraphRequest
     *
     * @param mixed $client The client to use in the request
     *
-    * @throws \AmeliaGuzzleHttp\Exception\GuzzleException
+    * @throws \AmeliaVendor\GuzzleHttp\Exception\GuzzleException
     *
     * @return mixed object or array of objects
     *         of class $returnType
@@ -410,7 +410,7 @@ class GraphRequest
     * @param mixed  $client The client to use in the request
     *
     * @throws GraphException if file path is invalid
-    * @throws \AmeliaGuzzleHttp\Exception\GuzzleException
+    * @throws \AmeliaVendor\GuzzleHttp\Exception\GuzzleException
     *
     * @return null
     */
@@ -454,7 +454,7 @@ class GraphRequest
     * @param mixed  $client The client to use in the request
     *
     * @throws GraphException if file is invalid
-    * @throws \AmeliaGuzzleHttp\Exception\GuzzleException
+    * @throws \AmeliaVendor\GuzzleHttp\Exception\GuzzleException
     *
     * @return mixed DriveItem or array of DriveItems
     */
@@ -466,7 +466,7 @@ class GraphRequest
         try {
             if (file_exists($path) && is_readable($path)) {
                 $file = fopen($path, 'r');
-                $stream = \AmeliaGuzzleHttp\Psr7\Utils::streamFor($file);
+                $stream = \AmeliaVendor\GuzzleHttp\Psr7\Utils::streamFor($file);
                 $this->requestBody = $stream;
                 return $this->execute($client);
             } else {
@@ -532,7 +532,7 @@ class GraphRequest
     * If a proxyPort was passed in the constructor, all
     * requests will be forwared through this proxy.
     *
-    * @return \AmeliaGuzzleHttp\Client The new client
+    * @return \AmeliaVendor\GuzzleHttp\Client The new client
     */
     protected function createGuzzleClient()
     {

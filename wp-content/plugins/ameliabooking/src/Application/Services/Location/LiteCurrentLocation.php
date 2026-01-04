@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -20,8 +20,6 @@ class LiteCurrentLocation extends AbstractCurrentLocation
      * @param string $ipLocateApyKey
      *
      * @return string
-     *
-     * @SuppressWarnings(PHPMD.Superglobals)
      */
     public function getCurrentLocationCountryIso($ipLocateApyKey)
     {

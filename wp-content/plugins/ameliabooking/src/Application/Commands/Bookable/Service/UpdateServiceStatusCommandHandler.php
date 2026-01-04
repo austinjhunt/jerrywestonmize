@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -36,7 +36,6 @@ class UpdateServiceStatusCommandHandler extends CommandHandler
      * @throws \Slim\Exception\ContainerValueNotFoundException
      * @throws InvalidArgumentException
      * @throws AccessDeniedException
-     * @throws \Interop\Container\Exception\ContainerException
      * @throws QueryExecutionException
      */
     public function handle(UpdateServiceStatusCommand $command)
@@ -54,9 +53,10 @@ class UpdateServiceStatusCommandHandler extends CommandHandler
 
         do_action('amelia_before_service_status_updated', $command->getArg('id'), $command->getField('status'));
 
-        $serviceRepository->updateStatusById(
+        $serviceRepository->updateFieldById(
             $command->getArg('id'),
-            $command->getField('status')
+            $command->getField('status'),
+            'status'
         );
 
         do_action('amelia_after_service_status_updated', $command->getArg('id'), $command->getField('status'));

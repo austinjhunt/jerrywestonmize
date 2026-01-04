@@ -28,15 +28,15 @@ class OnenoteResource extends OnenoteEntityBaseModel
     * Gets the content
     * The content stream
     *
-    * @return \AmeliaGuzzleHttp\Psr7\Stream|null The content
+    * @return \AmeliaVendor\GuzzleHttp\Psr7\Stream|null The content
     */
     public function getContent()
     {
         if (array_key_exists("content", $this->_propDict)) {
-            if (is_a($this->_propDict["content"], "\AmeliaGuzzleHttp\Psr7\Stream") || is_null($this->_propDict["content"])) {
+            if (is_a($this->_propDict["content"], "\AmeliaVendor\GuzzleHttp\Psr7\Stream") || is_null($this->_propDict["content"])) {
                 return $this->_propDict["content"];
             } else {
-                $this->_propDict["content"] = \AmeliaGuzzleHttp\Psr7\Utils::streamFor($this->_propDict["content"]);
+                $this->_propDict["content"] = \AmeliaVendor\GuzzleHttp\Psr7\Utils::streamFor($this->_propDict["content"]);
                 return $this->_propDict["content"];
             }
         }
@@ -47,7 +47,7 @@ class OnenoteResource extends OnenoteEntityBaseModel
     * Sets the content
     * The content stream
     *
-    * @param \AmeliaGuzzleHttp\Psr7\Stream $val The content
+    * @param \AmeliaVendor\GuzzleHttp\Psr7\Stream $val The content
     *
     * @return OnenoteResource
     */

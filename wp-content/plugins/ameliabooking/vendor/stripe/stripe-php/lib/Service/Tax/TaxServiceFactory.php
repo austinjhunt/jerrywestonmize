@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Service\Tax;
+namespace AmeliaVendor\Stripe\Service\Tax;
 
 /**
  * Service factory class for API resources in the Tax namespace.
@@ -12,7 +12,7 @@ namespace AmeliaStripe\Service\Tax;
  * @property SettingsService $settings
  * @property TransactionService $transactions
  */
-class TaxServiceFactory extends \AmeliaStripe\Service\AbstractServiceFactory
+class TaxServiceFactory extends \AmeliaVendor\Stripe\Service\AbstractServiceFactory
 {
     /**
      * @var array<string, string>

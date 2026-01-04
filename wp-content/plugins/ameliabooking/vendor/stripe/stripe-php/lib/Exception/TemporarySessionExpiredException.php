@@ -2,6 +2,6 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Exception;
+namespace AmeliaVendor\Stripe\Exception;
 
 class TemporarySessionExpiredException extends ApiErrorException {}

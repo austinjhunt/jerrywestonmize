@@ -4,7 +4,7 @@ namespace AmeliaHttp\Message\MultipartStream;
 
 use AmeliaHttp\Discovery\StreamFactoryDiscovery;
 use AmeliaHttp\Message\StreamFactory;
-use AmeliaPsr\Http\Message\StreamInterface;
+use AmeliaVendor\Psr\Http\Message\StreamInterface;
 
 /**
  * Build your own Multipart stream. A Multipart stream is a collection of streams separated with a $bounary. This

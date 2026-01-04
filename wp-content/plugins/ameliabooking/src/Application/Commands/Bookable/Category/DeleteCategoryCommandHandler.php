@@ -30,7 +30,6 @@ class DeleteCategoryCommandHandler extends CommandHandler
      * @throws QueryExecutionException
      * @throws NotFoundException
      * @throws AccessDeniedException
-     * @throws \Interop\Container\Exception\ContainerException
      * @throws \AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException
      */
     public function handle(DeleteCategoryCommand $command)

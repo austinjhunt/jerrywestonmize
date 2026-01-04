@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -14,11 +14,7 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use Exception;
-use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
-use DOMDocument;
-use DOMXPath;
-use stdClass;
 
 /**
  * Class GetWhatsNewCommandHandler
@@ -36,7 +32,6 @@ class GetWhatsNewCommandHandler extends CommandHandler
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      * @throws Exception
-     * @throws ContainerException
      */
     public function handle(GetWhatsNewCommand $command)
     {
@@ -44,52 +39,73 @@ class GetWhatsNewCommandHandler extends CommandHandler
             throw new AccessDeniedException('You are not allowed to read news.');
         }
 
-        $blogPosts = null;
-
         $result = new CommandResult();
+        $params = $command->getFields();
 
-        $blogPageContent = $this->getPageContent('https://wpamelia.com/blog/');
+        try {
+            $response = $this->getPosts($params);
 
-        $blogPostsElements = $blogPageContent->query('//article[contains(@class, "post-list-post")]');
-
-        /** @var \DOMElement $blogPostElement */
-        foreach ($blogPostsElements as $blogPostElement) {
-            $post = new stdClass();
-
-            $post->href = $blogPostElement->getElementsByTagName('a')[0]->getAttribute('href');
-
-            $post->title = $blogPostElement->getElementsByTagName('h2')->item(0)->textContent;
-
-            $blogPosts[] = $post;
+            $result->setResult(CommandResult::RESULT_SUCCESS);
+            $result->setMessage('Successfully retrieved posts.');
+            $result->setData([
+                'posts'               => $response['data'],
+                'filteredPostsNumber' => $response['pagination']['total'],
+            ]);
+        } catch (Exception $e) {
+            $result->setResult(CommandResult::RESULT_ERROR);
+            $result->setMessage('Failed to retrieve news: ' . $e->getMessage());
         }
-
-        $result->setResult(CommandResult::RESULT_SUCCESS);
-        $result->setMessage('Successfully retrieved news.');
-        $result->setData(
-            [
-                'blogPosts'  => $blogPosts
-            ]
-        );
 
         return $result;
     }
 
     /**
-     * @param string $URL
-     * @return DOMXPath
+     * @param array $params
+     * @return array
+     * @throws Exception
      */
-    public function getPageContent(string $URL)
+    private function getPosts(array $params): array
     {
-        $curl = curl_init($URL);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        $pageData = curl_exec($curl);
+        $fullUrl = AMELIA_MIDDLEWARE_URL . 'blog-content?' . http_build_query($params);
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $fullUrl,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_HTTPHEADER => [
+                'Content-Type: application/json',
+                'Accept: application/json'
+            ],
+            CURLOPT_USERAGENT => 'Amelia Plugin/1.0',
+            CURLOPT_SSL_VERIFYPEER => true,
+            CURLOPT_SSL_VERIFYHOST => 2,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_MAXREDIRS => 3
+        ]);
+
+        $response = curl_exec($curl);
+        $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        $curlError = curl_error($curl);
+
         curl_close($curl);
 
-        $dom = new DOMDocument();
-        libxml_use_internal_errors(true);
-        $dom->loadHTML($pageData);
-        libxml_clear_errors();
+        if ($response === false) {
+            throw new Exception('Failed to fetch posts from API: ' . $curlError);
+        }
 
-        return new DOMXPath($dom);
+        if ($httpCode !== 200) {
+            throw new Exception('Failed to fetch posts from API. HTTP Code: ' . $httpCode);
+        }
+
+        $content = json_decode($response, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new Exception('Invalid JSON response from API: ' . json_last_error_msg());
+        }
+
+        return $content;
     }
 }

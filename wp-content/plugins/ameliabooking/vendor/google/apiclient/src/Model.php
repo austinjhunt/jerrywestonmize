@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-namespace AmeliaGoogle;
+namespace AmeliaVendor\Google;
 
-use AmeliaGoogle\Exception as GoogleException;
+use AmeliaVendor\Google\Exception as GoogleException;
 use ReflectionObject;
 use ReflectionProperty;
 use stdClass;
@@ -28,10 +28,11 @@ use stdClass;
  * http://tools.ietf.org/html/draft-zyp-json-schema-03#section-5
  *
  */
+#[\AllowDynamicProperties]
 class Model implements \ArrayAccess
 {
     /**
-     * If you need to specify a NULL JSON value, use AmeliaGoogle\Model::NULL_VALUE
+     * If you need to specify a NULL JSON value, use AmeliaVendor\Google\Model::NULL_VALUE
      * instead - it will be replaced when converting to JSON with a real null.
      */
     const NULL_VALUE = "{}gapi-php-null";
@@ -240,7 +241,7 @@ class Model implements \ArrayAccess
 
     /**
      * Verify if $obj is an array.
-     * @throws \AmeliaGoogle\Exception Thrown if $obj isn't an array.
+     * @throws \AmeliaVendor\Google\Exception Thrown if $obj isn't an array.
      * @param array $obj Items that should be validated.
      * @param string $method Method expecting an array as an argument.
      */
@@ -293,7 +294,7 @@ class Model implements \ArrayAccess
         $keyType = $key . "Type";
 
         // ensure keyType is a valid class
-        if (property_exists($this, $keyType) && class_exists($this->$keyType)) {
+        if (property_exists($this, $keyType) && $this->$keyType !== null && class_exists($this->$keyType)) {
             return $this->$keyType;
         }
     }

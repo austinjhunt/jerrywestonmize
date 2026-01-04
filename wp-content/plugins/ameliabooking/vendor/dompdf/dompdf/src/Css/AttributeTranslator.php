@@ -4,10 +4,10 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace AmeliaDompdf\Css;
+namespace AmeliaVendor\Dompdf\Css;
 
-use AmeliaDompdf\Frame;
-use AmeliaDompdf\Helpers;
+use AmeliaVendor\Dompdf\Frame;
+use AmeliaVendor\Dompdf\Helpers;
 
 /**
  * Translates HTML 4.0 attributes into CSS rules
@@ -503,7 +503,7 @@ class AttributeTranslator
             $width = "100%";
         }
 
-        $remainder = 100 - (double)rtrim($width, "% ");
+        $remainder = 100 - (float)rtrim($width, "% ");
 
         switch ($value) {
             case "left":

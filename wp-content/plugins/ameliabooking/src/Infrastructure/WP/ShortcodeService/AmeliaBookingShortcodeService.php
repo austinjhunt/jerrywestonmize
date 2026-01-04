@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -110,7 +110,7 @@ class AmeliaBookingShortcodeService
         } else {
             wp_enqueue_script(
                 $scriptId,
-                AMELIA_URL . 'v3/public/assets/public.0f97d9c4.js',
+                AMELIA_URL . 'v3/public/assets/public.e9d039f9.js',
                 [],
                 AMELIA_VERSION,
                 true
@@ -213,6 +213,9 @@ class AmeliaBookingShortcodeService
         switch ($handle) {
             case ('amelia_booking_scripts_dev_vite'):
             case ('amelia_booking_scripts_dev_main'):
+            case ('amelia_dev_vite_client'):
+            case ('amelia_dev_main_script'):
+            case ('amelia_prod_main_script'):
                 return "<script type='module' src='{$src}'></script>";
 
             case ('amelia_booking_script_index'):

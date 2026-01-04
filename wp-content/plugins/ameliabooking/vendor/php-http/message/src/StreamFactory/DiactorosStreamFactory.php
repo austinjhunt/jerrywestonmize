@@ -3,7 +3,7 @@
 namespace AmeliaHttp\Message\StreamFactory;
 
 use AmeliaHttp\Message\StreamFactory;
-use AmeliaPsr\Http\Message\StreamInterface;
+use AmeliaVendor\Psr\Http\Message\StreamInterface;
 use Zend\Diactoros\Stream;
 
 /**

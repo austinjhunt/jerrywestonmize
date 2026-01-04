@@ -1,6 +1,8 @@
 <?php
 
-namespace AmeliaGuzzleHttp\Promise;
+declare(strict_types=1);
+
+namespace AmeliaVendor\GuzzleHttp\Promise;
 
 /**
  * Interface used with classes that return a promise.
@@ -9,8 +11,6 @@ interface PromisorInterface
 {
     /**
      * Returns a promise.
-     *
-     * @return PromiseInterface
      */
-    public function promise();
+    public function promise(): PromiseInterface;
 }

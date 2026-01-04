@@ -16,6 +16,7 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
+use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarMiddlewareService;
 use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
@@ -69,7 +70,10 @@ class GetProviderCommandHandler extends CommandHandler
         $outlookCalendarService = $this->container->get('infrastructure.outlook.calendar.service');
         /** @var ProviderRepository $providerRepository */
         $providerRepository = $this->container->get('domain.users.providers.repository');
-
+        /** @var AbstractGoogleCalendarMiddlewareService $googleCalendarMiddlewareService */
+        $googleCalendarMiddlewareService = $this->container->get(
+            'infrastructure.google.calendar.middleware.service'
+        );
 
         $companyDaysOff = $settingsService->getCategorySettings('daysOff');
 
@@ -96,19 +100,31 @@ class GetProviderCommandHandler extends CommandHandler
 
         $successfulOutlookConnection = true;
 
-        try {
-            $providerArray['googleCalendar']['calendarList'] = $googleCalService->listCalendarList($provider);
+        $providerArray['googleCalendar']['calendarList'] = [];
+        $providerArray['googleCalendar']['calendarId'] = null;
 
-            $providerArray['googleCalendar']['calendarId'] = $googleCalService->getProviderGoogleCalendarId($provider);
-        } catch (\Exception $e) {
-            $providerArray['googleCalendar']['calendarId'] = !empty($providerArray['googleCalendar']['calendarId'])
-                ? $providerArray['googleCalendar']['calendarId']
-                : null;
+        if ($settingsService->isFeatureEnabled('googleCalendar')) {
+            try {
+                $googleCalendar = $settingsService->getCategorySettings('googleCalendar');
+                if (!$googleCalendar['accessToken']) {
+                    $providerArray['googleCalendar']['calendarList'] = $googleCalService->listCalendarList($provider);
+                    $providerArray['googleCalendar']['calendarId'] = $googleCalService->getProviderGoogleCalendarId($provider);
+                } else {
+                    $providerArray['googleCalendar']['calendarList'] = $googleCalendarMiddlewareService->getCalendarList($providerArray['googleCalendar']);
+                    $providerArray['googleCalendar']['calendarId'] = $provider->getGoogleCalendar() ?
+                        $provider->getGoogleCalendar()->getCalendarId()->getValue() :
+                        null;
+                }
+            } catch (\Exception $e) {
+                $providerArray['googleCalendar']['calendarId'] = !empty($providerArray['googleCalendar']['calendarId'])
+                    ? $providerArray['googleCalendar']['calendarId']
+                    : null;
 
-            $providerArray['googleCalendar']['calendarList'] = [];
+                $providerArray['googleCalendar']['calendarList'] = [];
 
-            $providerRepository->updateErrorColumn($providerId, $e->getMessage());
-            $successfulGoogleConnection = false;
+                $providerRepository->updateErrorColumn($providerId, $e->getMessage());
+                $successfulGoogleConnection = false;
+            }
         }
 
         try {
@@ -129,6 +145,19 @@ class GetProviderCommandHandler extends CommandHandler
         }
 
         $providerArray['mandatoryServicesIds'] = $providerService->getMandatoryServicesIds($providerId);
+
+        $providerArray['eventList'] = array_map(
+            function ($event) {
+                return [
+                    'name' => $event['name'],
+                    'id' => $event['id'],
+                    'periods' => $event['periods'],
+                    'color' => $event['color'],
+                    'organizer' => ['id' => $event['organizerId']]
+                ];
+            },
+            $providerArray['eventList']
+        );
 
         $providerArray = apply_filters('amelia_get_provider_filter', $providerArray);
 

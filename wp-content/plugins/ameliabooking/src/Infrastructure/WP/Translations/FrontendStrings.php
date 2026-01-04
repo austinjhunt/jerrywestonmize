@@ -66,7 +66,7 @@ class FrontendStrings
      */
     public static function getBookableStrings()
     {
-        $labels = Licence\Licence::$premium ? [
+        $labels = Licence\Licence::isPremium() ? [
             'allow_customers_to_pay_total'       => __('Check this option if you want your<br> customers to have the option to choose<br> whether they will pay a full amount<br> or just a deposit. If unchecked,<br> customers will only have deposit<br> as a payment option.', 'wpamelia'),
             'deposit_by_the_number_of_people'    => __('Check this option if you want the deposit<br> amount to be multiplied by the number<br> of people that customers add in the<br> "Bringing anyone with you" section.', 'wpamelia'),
             'allow_total_amount'                 => __('Allow customers to pay total appointment amount', 'wpamelia'),
@@ -96,7 +96,8 @@ class FrontendStrings
      */
     public static function getCommonStrings()
     {
-        $labels = Licence\Licence::$premium ? [
+        $labels = Licence\Licence::isPremium() ? [
+            'no_results_found'             => __('No results found...', 'wpamelia'),
             'add_coupon'                   => __('Add Coupon', 'wpamelia'),
             'amount_fixed'                 => __('Fixed amount', 'wpamelia'),
             'amount_percentage'            => __('Percentage', 'wpamelia'),
@@ -107,8 +108,9 @@ class FrontendStrings
             'apple_calendar_placeholder'   => __('Select Apple Calendar', 'wpamelia'),
             'apple_icloud_id'              => __('iCloud Email Address', 'wpamelia'),
             'apple_app_specific_password'  => __('iCloud App-specific Password', 'wpamelia'),
-            'apple_connect'                => __('Connect to Apple', 'wpamelia'),
             'apple_disconnect'             => __('Disconnect from Apple', 'wpamelia'),
+            'apple_connect'                   => __('Connect to Apple Calendar', 'wpamelia'),
+            'apple_connect_employee_calendar' => __('Connect to your personal Apple Calendar', 'wpamelia'),
             'no_package_services'          => __('It seems like there are no available or visible services assigned to the packages, at this moment.', 'wpamelia'),
             'all_slots_selected'           => __('All slots are selected', 'wpamelia'),
             'appointment'                  => __('Appointment', 'wpamelia'),
@@ -210,7 +212,7 @@ class FrontendStrings
             'wc_product_name'              => __('Appointment', 'wpamelia'),
             'zoom_join'                    => __('Join Zoom Meeting', 'wpamelia'),
             'zoom_start'                   => __('Start Zoom Meeting', 'wpamelia'),
-            'your_position_on_waiting_list'=> __('You are on the waiting list with position', 'wpamelia'),
+            'your_position_on_waiting_list' => __('You are on the waiting list with position', 'wpamelia'),
             'google_meet_join'             => __('Join Google Meeting', 'wpamelia'),
             'microsoft_teams_join'         => __('Join With Microsoft Teams', 'wpamelia'),
             'day'                          => __('Day', 'wpamelia'),
@@ -237,7 +239,7 @@ class FrontendStrings
      */
     public static function getSearchStrings()
     {
-        $labels = Licence\Licence::$premium ? [
+        $labels = Licence\Licence::isPremium() ? [
             'appointment_date_colon'  => __('Appointment Date:', 'wpamelia'),
             'book_package'            => __('Book Package', 'wpamelia'),
             'bringing_anyone'         => __('Bringing anyone with you?', 'wpamelia'),
@@ -274,7 +276,7 @@ class FrontendStrings
      */
     public static function getBookingStrings()
     {
-        $labels = Licence\Licence::$premium ? [
+        $labels = Licence\Licence::isPremium() ? [
             'add_appointment'              => __('Add appointment', 'wpamelia'),
             'add_extra'                    => __('Add extra', 'wpamelia'),
             'add_people'                   => __('Number of people that are coming with you.', 'wpamelia'),
@@ -423,7 +425,7 @@ class FrontendStrings
             'recurrence_ends'              => __('Ends', 'wpamelia'),
             'recurrence_choose_ends'       => __('Choose when the repeating ends', 'wpamelia'),
             'recurrence_on'                => __('On', 'wpamelia'),
-            'recurrence_each'              => __('Each', 'wpamelia'),
+            'recurrence_each'              => __('On the same day each month', 'wpamelia'),
             'recurrence_select_date'       => __('Select Date', 'wpamelia'),
             'recurrence_after'             => __('After', 'wpamelia'),
             'occurrences'                  => __('Occurrences', 'wpamelia'),
@@ -511,7 +513,7 @@ class FrontendStrings
      */
     public static function getEventStrings()
     {
-        $labels = Licence\Licence::$premium ? [
+        $labels = Licence\Licence::isPremium() ? [
             'add_ticket_category'       => __('Add Pricing Category', 'wpamelia'),
             'apply_to_all'              => __('Apply this to all recurring events', 'wpamelia'),
             'custom_pricing_warning'    => __('Custom pricing spots will override Maximum allowed spots value.', 'wpamelia'),
@@ -577,7 +579,7 @@ class FrontendStrings
      */
     public static function getCatalogStrings()
     {
-        $labels = Licence\Licence::$premium ? [
+        $labels = Licence\Licence::isPremium() ? [
             'booking_appointment'                => __('Booking Appointment', 'wpamelia'),
             'buffer_time'                        => __('Buffer Time', 'wpamelia'),
             'description_colon'                  => __('Description:', 'wpamelia'),
@@ -645,8 +647,8 @@ class FrontendStrings
             'new_password_set'                       => __('Set Password', 'wpamelia'),
             'new_password_set_action'                => __('Set Password', 'wpamelia'),
             'new_password_set_description'           => __('Enter, and re-enter your new password to continue', 'wpamelia'),
-            'new_password_colon'                     => __('New Password:', 'wpamelia'),
-            'new_password_colon_retype'              => __('Re-type New Password:', 'wpamelia'),
+            'new_password_colon'                     => __('New Password', 'wpamelia'),
+            'new_password_colon_retype'              => __('Re-type New Password', 'wpamelia'),
             'new_password_required'                  => __('Please enter new password', 'wpamelia'),
             'new_password_length'                    => __('Password must be longer than 3 characters', 'wpamelia'),
             'new_password_changed'                   => __('Password Updated!', 'wpamelia'),
@@ -670,7 +672,7 @@ class FrontendStrings
      */
     public static function getCabinetStrings()
     {
-        $labels = Licence\Licence::$premium ? [
+        $labels = Licence\Licence::isPremium() ? [
             'add_customer'                           => __('Add Customer', 'wpamelia'),
             'add_date'                               => __('Add Date', 'wpamelia'),
             'add_day_off'                            => __('Add Day Off', 'wpamelia'),
@@ -966,7 +968,7 @@ class FrontendStrings
             'providers_dropdown'                     => __('Employee', 'wpamelia'),
             'provider_profile'                       => __('Employee Profile', 'wpamelia'),
             'purchased'                              => __('Purchased', 'wpamelia'),
-            're_type_requred'                        => __('Please enter new password again', 'wpamelia'),
+            're_type_required'                       => __('Please enter new password again', 'wpamelia'),
             'recovery_email_sent'                    => __('Email with access link has been sent', 'wpamelia'),
             'recurring'                              => __('Recurring', 'wpamelia'),
             'recurring_active'                       => __('Repeat this appointment', 'wpamelia'),

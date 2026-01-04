@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -15,6 +15,8 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\PackageCustomer;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
+use AmeliaBooking\Domain\Factory\Bookable\Service\PackageCustomerFactory;
+use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageCustomerRepository;
@@ -28,13 +30,6 @@ use Slim\Exception\ContainerValueNotFoundException;
  */
 class UpdatePackageCustomerCommandHandler extends CommandHandler
 {
-    /**
-     * @var array
-     */
-    public $mandatoryFields = [
-        'status',
-    ];
-
     /**
      * @param UpdatePackageCustomerCommand $command
      *
@@ -82,29 +77,78 @@ class UpdatePackageCustomerCommandHandler extends CommandHandler
 
         $packageCustomerId = apply_filters('amelia_before_package_customer_status_updated_filter', $packageCustomerId, $command->getField('status'));
 
-        /** @var PackageCustomer $packageCustomer */
-        $packageCustomer = $packageCustomerRepository->getById($packageCustomerId);
+        /** @var PackageCustomer $oldPackageCustomer */
+        $oldPackageCustomer = $packageCustomerRepository->getById($packageCustomerId);
 
-        if ($user && $packageCustomer->getCustomerId()->getValue() !== $user->getId()->getValue()) {
+        if ($user && $oldPackageCustomer->getCustomerId()->getValue() !== $user->getId()->getValue()) {
             throw new AccessDeniedException('You are not allowed to update status');
         }
 
-        do_action('amelia_before_package_customer_status_updated', $packageCustomer->toArray(), $command->getField('status'));
+        $packageCustomerArray = $command->getFields();
 
-        $packageCustomerRepository->updateFieldById(
+        $oldPackageCustomerArray = $oldPackageCustomer->toArray();
+
+        $wasExpired = !empty($oldPackageCustomerArray['end']) &&
+            DateTimeService::getCustomDateTimeObjectFromUtc($oldPackageCustomerArray['end']) < DateTimeService::getNowDateTimeObject();
+
+        if (isset($packageCustomerArray['expirationDate'])) {
+            if ($packageCustomerArray['expirationDate'] !== '') {
+                $packageCustomerArray['end'] = DateTimeService::getCustomDateTimeObjectInUtc(
+                    $packageCustomerArray['expirationDate']
+                )->format('Y-m-d H:i:s');
+            } else {
+                $packageCustomerArray['end'] = null;
+            }
+        }
+
+        if (isset($packageCustomerArray['status'])) {
+            if ($packageCustomerArray['status'] === 'expired') {
+                $packageCustomerArray['status'] = 'approved';
+                if (empty($oldPackageCustomerArray['end']) || !$wasExpired) {
+                    $packageCustomerArray['end'] = DateTimeService::getNowDateTimeObjectInUtc()->format('Y-m-d H:i:s');
+                }
+            }
+            if ($packageCustomerArray['status'] === 'active') {
+                if ($wasExpired) {
+                    $packageCustomerArray['end'] = null;
+                }
+                $packageCustomerArray['status'] = 'approved';
+            }
+        }
+
+        $packageCustomer = array_merge($oldPackageCustomerArray, $packageCustomerArray);
+
+        $newPackageCustomer = PackageCustomerFactory::create($packageCustomer);
+
+        do_action('amelia_before_package_customer_status_updated', $newPackageCustomer->toArray(), $command->getField('status'));
+
+        $packageCustomerRepository->update(
             $command->getArg('id'),
-            $command->getField('status'),
-            'status'
+            $newPackageCustomer
         );
 
-        do_action('amelia_after_package_customer_status_updated', $packageCustomer->toArray(), $command->getField('status'));
+        do_action('amelia_after_package_customer_status_updated', $newPackageCustomer->toArray(), $command->getField('status'));
+
+        if ($packageCustomer['status'] === 'approved') {
+            if (
+                !empty($packageCustomer['end']) &&
+                DateTimeService::getCustomDateTimeObjectFromUtc($packageCustomer['end']) < DateTimeService::getNowDateTimeObject()
+            ) {
+                $status = 'expired';
+            } else {
+                $status = 'active';
+            }
+        } else {
+            $status = 'canceled';
+        }
+        $packageCustomer['status'] = $status;
+        $packageCustomer['end']    = !empty($packageCustomer['end']) ? DateTimeService::getCustomDateTimeFromUtc($packageCustomer['end']) : null;
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully updated package');
         $result->setData(
             [
-                'packageCustomerId' => $command->getArg('id'),
-                'status'            => $command->getField('status')
+                'packageCustomer' => $packageCustomer,
             ]
         );
 

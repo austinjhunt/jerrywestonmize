@@ -26,6 +26,7 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Common\Exceptions\PackageBookingUnavailableException;
 use AmeliaBooking\Domain\Entity\Bookable\AbstractBookable;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Extra;
+use AmeliaBooking\Domain\Entity\Bookable\Service\Package;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
@@ -39,6 +40,7 @@ use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Domain\Entity\Tax\Tax;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Entity\User\Provider;
+use AmeliaBooking\Domain\Factory\Bookable\Service\ServiceFactory;
 use AmeliaBooking\Domain\Factory\Booking\Appointment\AppointmentFactory;
 use AmeliaBooking\Domain\Factory\Booking\Appointment\CustomerBookingFactory;
 use AmeliaBooking\Domain\Services\Booking\AppointmentDomainService;
@@ -395,7 +397,9 @@ class AppointmentReservationService extends AbstractReservationService
             ->getDefaultAppointmentStatus();
 
         $appointmentData['bookings'][0]['status'] = (!empty($appointmentData['packageBookingFromBackend']) ||
-            $appointmentData['bookings'][0]['status'] === BookingStatus::WAITING) ? $appointmentData['bookings'][0]['status'] : $bookingStatus;
+            isset($appointmentData['bookings'][0]['status']) &&
+            $appointmentData['bookings'][0]['status'] === BookingStatus::WAITING) ?
+            $appointmentData['bookings'][0]['status'] : $bookingStatus;
 
         if (!empty($appointmentData['payment']['gateway']) && !empty($appointmentData['payment']['orderStatus'])) {
             $appointmentData['bookings'][0]['status'] = $this->getWcStatus(
@@ -747,6 +751,7 @@ class AppointmentReservationService extends AbstractReservationService
     /**
      * @param CustomerBooking $booking
      * @param string          $requestedStatus
+     * @param bool            $inspectCancellationTime
      *
      * @return array
      *
@@ -759,7 +764,7 @@ class AppointmentReservationService extends AbstractReservationService
      * @throws NotFoundException
      * @throws BookingCancellationException
      */
-    public function updateStatus($booking, $requestedStatus)
+    public function updateStatus($booking, $requestedStatus, $inspectCancellationTime = true)
     {
         /** @var CustomerBookingRepository $bookingRepository */
         $bookingRepository = $this->container->get('domain.booking.customerBooking.repository');
@@ -788,7 +793,7 @@ class AppointmentReservationService extends AbstractReservationService
             ->getGeneralSettings()
             ->getDefaultAppointmentStatus() : $requestedStatus;
 
-        if ($requestedStatus === BookingStatus::CANCELED) {
+        if ($requestedStatus === BookingStatus::CANCELED && $inspectCancellationTime) {
             $minimumCancelTime = $settingsDS
                 ->getEntitySettings($service->getSettings())
                 ->getGeneralSettings()
@@ -818,8 +823,8 @@ class AppointmentReservationService extends AbstractReservationService
         $appointmentRepository->beginTransaction();
 
         try {
-            $bookingRepository->updateStatusById($booking->getId()->getValue(), $requestedStatus);
-            $appointmentRepository->updateStatusById($booking->getAppointmentId()->getValue(), $appointmentStatus);
+            $bookingRepository->updateFieldById($booking->getId()->getValue(), $requestedStatus, 'status');
+            $appointmentRepository->updateFieldById($booking->getAppointmentId()->getValue(), $appointmentStatus, 'status');
             $appointmentRepository->updateFieldById(
                 $appointment->getId()->getValue(),
                 DateTimeService::getCustomDateTimeInUtc(
@@ -1275,7 +1280,7 @@ class AppointmentReservationService extends AbstractReservationService
 
     /**
      * @param CustomerBooking $booking
-     * @param Service         $bookable
+     * @param Service|Package $bookable
      *
      * @return array
      *
@@ -1291,7 +1296,9 @@ class AppointmentReservationService extends AbstractReservationService
 
         $persons = $booking->getPersons()->getValue();
 
-        $serviceAmount = (float)$bookable->getPrice()->getValue() * ($this->isAggregatedPrice($bookable) ? $persons : 1);
+        $serviceAmount = (float)($booking->getPrice() ?
+                $booking->getPrice()->getValue() :
+                $bookable->getPrice()->getValue()) * ($this->isAggregatedPrice($bookable) ? $persons : 1);
 
         $serviceBookingAmount = $serviceAmount;
 
@@ -1348,6 +1355,7 @@ class AppointmentReservationService extends AbstractReservationService
         }
 
         $extras = [];
+        $extraTotal = 0;
         $extrasAmountWithoutDiscount = 0;
         $extrasTaxAmount = 0;
         /** @var CustomerBookingExtra $customerBookingExtra */
@@ -1363,8 +1371,8 @@ class AppointmentReservationService extends AbstractReservationService
                 : $extra->getAggregatedPrice()->getValue();
 
             $extraAmount = (float)$extra->getPrice()->getValue() *
-                ($isExtraAggregatedPrice ? $booking->getPersons()->getValue() : 1) *
-                $customerBookingExtra->getQuantity()->getValue();
+                           ($isExtraAggregatedPrice ? $booking->getPersons()->getValue() : 1) *
+                           $customerBookingExtra->getQuantity()->getValue();
 
             $extraBookingAmount = $extraAmount;
 
@@ -1407,13 +1415,17 @@ class AppointmentReservationService extends AbstractReservationService
                     $extraAmount - $extraDiscountAmount - $extraDeductionAmount
                 );
 
+                $extraTotal += $extraAmount + $extraTaxAmount - $extraDiscountAmount - $extraDeductionAmount;
                 $bookingAmount += $extraAmount + $extraTaxAmount - $extraDiscountAmount - $extraDeductionAmount;
             } elseif ($extraTax && $extraTax->getExcluded()->getValue()) {
                 $extraTaxAmount = $this->getTaxAmount($extraTax, $extraAmount);
+                $extraTotal += $extraAmount + $extraTaxAmount;
                 $bookingAmount += $extraAmount + $extraTaxAmount;
             } else {
+                $extraTotal += $extraAmount;
                 $bookingAmount += $extraAmount;
             }
+
             $extrasAmountWithoutDiscount += $extraAmountWithoutDiscount;
             $extrasTaxAmount += $extraTaxAmount;
 
@@ -1449,6 +1461,8 @@ class AppointmentReservationService extends AbstractReservationService
             'discount'   => $reductionAmount['discount'],
             'unit_price' => (float)$bookable->getPrice()->getValue(),
             'qty'        => $this->isAggregatedPrice($bookable) ? $persons : 1,
+            'extra_total' => $extraTotal,
+            'bookable'   => $serviceAmountWithoutDiscount,
             'subtotal'   => $serviceAmountWithoutDiscount + $extrasAmountWithoutDiscount,
             'tax'        => $serviceTax ? $this->getTaxAmount($serviceTax, $serviceAmountWithoutDiscount) : 0,
             'tax_rate'   => $serviceTax ? $this->getTaxRate($serviceTax) : '',
@@ -1917,12 +1931,7 @@ class AppointmentReservationService extends AbstractReservationService
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
 
-        $taxesSettings = $settingsService->getSetting(
-            'payments',
-            'taxes'
-        );
-
-        if ($taxesSettings['enabled']) {
+        if ($settingsService->isFeatureEnabled('tax')) {
             /** @var Collection $taxes */
             $taxes = $taxAS->getAll();
 
@@ -1980,13 +1989,12 @@ class AppointmentReservationService extends AbstractReservationService
 
     /**
      * @param int $bookingId
-     * @param string $token
      *
      * @return array
      *
      * @throws AccessDeniedException
      */
-    public function deleteBooking($bookingId, $token = null)
+    public function deleteBooking($bookingId)
     {
         /** @var BookingApplicationService $bookingApplicationService */
         $bookingApplicationService = $this->container->get('application.booking.booking.service');
@@ -2007,10 +2015,6 @@ class AppointmentReservationService extends AbstractReservationService
             throw new \Exception('Booking not found');
         }
 
-        if ($token && (!$customerBooking->getToken() || $customerBooking->getToken()->getValue() !== $token)) {
-            throw new AccessDeniedException('Invalid token');
-        }
-
         /** @var Appointment $appointment */
         $appointment = $appointmentRepository->getByBookingId($bookingId);
 
@@ -2021,14 +2025,11 @@ class AppointmentReservationService extends AbstractReservationService
 
         $hasMultipleBookings = $appointment->getBookings()->length() > 1;
 
-        if (!$token) {
-            // Called from DeleteBookingCommandHandler, deleting package booking on the backend
-            do_action(
-                'amelia_before_package_booking_deleted',
-                $appointment ? $appointment->toArray() : null,
-                $removedBooking ? $removedBooking->toArray() : null
-            );
-        }
+        do_action(
+            'amelia_before_package_booking_deleted',
+            $appointment ? $appointment->toArray() : null,
+            $removedBooking ? $removedBooking->toArray() : null
+        );
 
         if ($appointment->getBookings()->length() === 1) {
             $resultData = $appointmentApplicationService->removeBookingFromNonGroupAppointment(
@@ -2059,15 +2060,53 @@ class AppointmentReservationService extends AbstractReservationService
 
         $appointmentRepository->commit();
 
-        if (!$token) {
-            // Called from DeleteBookingCommandHandler, deleting package booking on the backend
-            do_action(
-                'amelia_after_package_booking_deleted',
-                $appointment ? $appointment->toArray() : null,
-                $removedBooking ? $removedBooking->toArray() : null
-            );
-        }
+        do_action(
+            'amelia_after_package_booking_deleted',
+            $appointment ? $appointment->toArray() : null,
+            $removedBooking ? $removedBooking->toArray() : null
+        );
 
         return $resultData;
+    }
+
+    /**
+     * @param array $data
+     * @param bool  $invoices
+     *
+     * @return array
+     * @throws InvalidArgumentException
+     */
+    public function getPaymentSummary($data, $invoices)
+    {
+        $extras = [];
+
+        foreach ($data['extras'] as $extra) {
+            $extras[$extra['extraId']] = [
+                'id'              => $extra['extraId'],
+                'price'           => $extra['price'],
+                'aggregatedPrice' => !!$extra['aggregatedPrice'],
+            ];
+        }
+
+        /** @var Service $bookable */
+        $bookable = ServiceFactory::create(
+            [
+                'price'           => $data['bookedPrice'],
+                'aggregatedPrice' => !empty($data['aggregatedPrice']),
+                'extras'          => $extras,
+            ]
+        );
+
+        /** @var CustomerBooking $booking */
+        $booking = CustomerBookingFactory::create(
+            [
+                'persons' => $data['persons'],
+                'coupon'  => !empty($data['coupon']) ? $data['coupon'] : null,
+                'extras'  => $data['extras'],
+                'tax'     => !empty($data['bookedTax']) ? $data['bookedTax'] : null,
+            ]
+        );
+
+        return $this->getCommonPaymentSummary($booking, $bookable, $data, $invoices);
     }
 }

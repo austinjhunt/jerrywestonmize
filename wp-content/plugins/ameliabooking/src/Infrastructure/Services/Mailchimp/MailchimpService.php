@@ -5,7 +5,7 @@ namespace AmeliaBooking\Infrastructure\Services\Mailchimp;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Container;
-use MailchimpMarketing\ApiClient;
+use AmeliaVendor\MailchimpMarketing\ApiClient;
 
 /**
  * Class MailchimpService
@@ -35,7 +35,7 @@ class MailchimpService extends AbstractMailchimpService
             http_build_query([
                 'response_type' => 'code',
                 'client_id'     => AMELIA_MAILCHIMP_CLIENT_ID,
-                'redirect_uri'  => 'https://middleware.wpamelia.com/mailchimp/redirect',
+                'redirect_uri'  => AMELIA_MIDDLEWARE_URL . 'mailchimp/redirect',
                 'state'         => urlencode(admin_url('admin-ajax.php', ''))
             ]);
     }

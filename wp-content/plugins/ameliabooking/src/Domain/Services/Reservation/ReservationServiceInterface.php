@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -45,6 +45,7 @@ interface ReservationServiceInterface
     /**
      * @param CustomerBooking $booking
      * @param string          $requestedStatus
+     * @param bool            $inspectCancellationTime
      *
      * @return array
      *
@@ -52,11 +53,10 @@ interface ReservationServiceInterface
      * @throws InvalidArgumentException
      * @throws NotFoundException
      * @throws QueryExecutionException
-     * @throws ContainerException
      * @throws NotFoundException
      * @throws BookingCancellationException
      */
-    public function updateStatus($booking, $requestedStatus);
+    public function updateStatus($booking, $requestedStatus, $inspectCancellationTime = true);
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
@@ -319,4 +319,13 @@ interface ReservationServiceInterface
      * @throws QueryExecutionException
      */
     public function manageTaxes(&$data);
+
+    /**
+     * @param array $data
+     * @param bool  $invoices
+     *
+     * @return array
+     * @throws InvalidArgumentException
+     */
+    public function getPaymentSummary($data, $invoices);
 }

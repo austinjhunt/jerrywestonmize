@@ -43,7 +43,7 @@ abstract class AbstractTaxApplicationService
     /**
      * @param Tax $tax
      *
-     * @return boolean
+     * @return void
      *
      * @throws ContainerValueNotFoundException
      * @throws QueryExecutionException

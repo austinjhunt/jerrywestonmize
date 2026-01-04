@@ -17,11 +17,11 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-namespace phpseclib3\Crypt\DSA\Formats\Keys;
+namespace AmeliaVendor\phpseclib3\Crypt\DSA\Formats\Keys;
 
-use phpseclib3\Common\Functions\Strings;
-use phpseclib3\Exception\BadConfigurationException;
-use phpseclib3\Math\BigInteger;
+use AmeliaVendor\phpseclib3\Common\Functions\Strings;
+use AmeliaVendor\phpseclib3\Exception\BadConfigurationException;
+use AmeliaVendor\phpseclib3\Math\BigInteger;
 
 /**
  * XML Formatted DSA Key Handler

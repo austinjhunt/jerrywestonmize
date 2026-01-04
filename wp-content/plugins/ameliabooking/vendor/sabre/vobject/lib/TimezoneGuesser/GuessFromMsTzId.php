@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace AmeliaSabre\VObject\TimezoneGuesser;
+namespace AmeliaVendor\Sabre\VObject\TimezoneGuesser;
 
 use DateTimeZone;
-use AmeliaSabre\VObject\Component\VTimeZone;
+use AmeliaVendor\Sabre\VObject\Component\VTimeZone;
 
 class GuessFromMsTzId implements TimezoneGuesser
 {

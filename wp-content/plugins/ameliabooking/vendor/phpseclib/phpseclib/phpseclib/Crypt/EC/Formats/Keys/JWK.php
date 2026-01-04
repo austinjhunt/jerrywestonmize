@@ -11,19 +11,19 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-namespace phpseclib3\Crypt\EC\Formats\Keys;
+namespace AmeliaVendor\phpseclib3\Crypt\EC\Formats\Keys;
 
-use phpseclib3\Common\Functions\Strings;
-use phpseclib3\Crypt\Common\Formats\Keys\JWK as Progenitor;
-use phpseclib3\Crypt\EC\BaseCurves\Base as BaseCurve;
-use phpseclib3\Crypt\EC\BaseCurves\TwistedEdwards as TwistedEdwardsCurve;
-use phpseclib3\Crypt\EC\Curves\Ed25519;
-use phpseclib3\Crypt\EC\Curves\secp256k1;
-use phpseclib3\Crypt\EC\Curves\secp256r1;
-use phpseclib3\Crypt\EC\Curves\secp384r1;
-use phpseclib3\Crypt\EC\Curves\secp521r1;
-use phpseclib3\Exception\UnsupportedCurveException;
-use phpseclib3\Math\BigInteger;
+use AmeliaVendor\phpseclib3\Common\Functions\Strings;
+use AmeliaVendor\phpseclib3\Crypt\Common\Formats\Keys\JWK as Progenitor;
+use AmeliaVendor\phpseclib3\Crypt\EC\BaseCurves\Base as BaseCurve;
+use AmeliaVendor\phpseclib3\Crypt\EC\BaseCurves\TwistedEdwards as TwistedEdwardsCurve;
+use AmeliaVendor\phpseclib3\Crypt\EC\Curves\Ed25519;
+use AmeliaVendor\phpseclib3\Crypt\EC\Curves\secp256k1;
+use AmeliaVendor\phpseclib3\Crypt\EC\Curves\secp256r1;
+use AmeliaVendor\phpseclib3\Crypt\EC\Curves\secp384r1;
+use AmeliaVendor\phpseclib3\Crypt\EC\Curves\secp521r1;
+use AmeliaVendor\phpseclib3\Exception\UnsupportedCurveException;
+use AmeliaVendor\phpseclib3\Math\BigInteger;
 
 /**
  * JWK Formatted EC Handler
@@ -70,7 +70,7 @@ abstract class JWK extends Progenitor
                 throw new \Exception('Only EC and OKP JWK keys are supported');
         }
 
-        $curve = '\phpseclib3\Crypt\EC\Curves\\' . str_replace('P-', 'nistp', $key->crv);
+        $curve = '\AmeliaVendor\phpseclib3\Crypt\EC\Curves\\' . str_replace('P-', 'nistp', $key->crv);
         $curve = new $curve();
 
         if ($curve instanceof TwistedEdwardsCurve) {
@@ -131,7 +131,7 @@ abstract class JWK extends Progenitor
      * Return the array superstructure for an EC public key
      *
      * @param BaseCurve $curve
-     * @param \phpseclib3\Math\Common\FiniteField\Integer[] $publicKey
+     * @param \AmeliaVendor\phpseclib3\Math\Common\FiniteField\Integer[] $publicKey
      * @return array
      */
     private static function savePublicKeyHelper(BaseCurve $curve, array $publicKey)
@@ -156,7 +156,7 @@ abstract class JWK extends Progenitor
      * Convert an EC public key to the appropriate format
      *
      * @param BaseCurve $curve
-     * @param \phpseclib3\Math\Common\FiniteField\Integer[] $publicKey
+     * @param \AmeliaVendor\phpseclib3\Math\Common\FiniteField\Integer[] $publicKey
      * @param array $options optional
      * @return string
      */
@@ -172,7 +172,7 @@ abstract class JWK extends Progenitor
      *
      * @param BigInteger $privateKey
      * @param Ed25519 $curve
-     * @param \phpseclib3\Math\Common\FiniteField\Integer[] $publicKey
+     * @param \AmeliaVendor\phpseclib3\Math\Common\FiniteField\Integer[] $publicKey
      * @param string $secret optional
      * @param string $password optional
      * @param array $options optional

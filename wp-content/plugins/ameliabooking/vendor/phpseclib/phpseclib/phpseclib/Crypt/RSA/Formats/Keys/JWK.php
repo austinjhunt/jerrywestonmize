@@ -11,11 +11,11 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-namespace phpseclib3\Crypt\RSA\Formats\Keys;
+namespace AmeliaVendor\phpseclib3\Crypt\RSA\Formats\Keys;
 
-use phpseclib3\Common\Functions\Strings;
-use phpseclib3\Crypt\Common\Formats\Keys\JWK as Progenitor;
-use phpseclib3\Math\BigInteger;
+use AmeliaVendor\phpseclib3\Common\Functions\Strings;
+use AmeliaVendor\phpseclib3\Crypt\Common\Formats\Keys\JWK as Progenitor;
+use AmeliaVendor\phpseclib3\Math\BigInteger;
 
 /**
  * JWK Formatted RSA Handler

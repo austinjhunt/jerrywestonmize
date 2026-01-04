@@ -15,7 +15,7 @@
  * the License.
  */
 
-namespace AmeliaGoogle\Task;
+namespace AmeliaVendor\Google\Task;
 
 use Composer\Script\Event;
 use InvalidArgumentException;
@@ -30,7 +30,7 @@ class Composer
      */
     public static function cleanup(
         Event $event,
-        Filesystem $filesystem = null
+        ?Filesystem $filesystem = null
     ) {
         $composer = $event->getComposer();
         $extra = $composer->getPackage()->getExtra();

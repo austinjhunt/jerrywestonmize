@@ -31,7 +31,6 @@ class UpdateTaxStatusCommandHandler extends CommandHandler
      * @throws \Slim\Exception\ContainerValueNotFoundException
      * @throws InvalidArgumentException
      * @throws AccessDeniedException
-     * @throws \Interop\Container\Exception\ContainerException
      * @throws QueryExecutionException
      */
     public function handle(UpdateTaxStatusCommand $command)
@@ -47,9 +46,10 @@ class UpdateTaxStatusCommandHandler extends CommandHandler
         /** @var TaxRepository $taxRepository */
         $taxRepository = $this->getContainer()->get('domain.tax.repository');
 
-        $taxRepository->updateStatusById(
+        $taxRepository->updateFieldById(
             $command->getArg('id'),
-            $command->getField('status')
+            $command->getField('status'),
+            'status'
         );
 
         $result->setResult(CommandResult::RESULT_SUCCESS);

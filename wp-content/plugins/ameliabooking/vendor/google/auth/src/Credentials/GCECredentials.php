@@ -15,21 +15,21 @@
  * limitations under the License.
  */
 
-namespace AmeliaGoogle\Auth\Credentials;
+namespace AmeliaVendor\Google\Auth\Credentials;
 
-use AmeliaGoogle\Auth\CredentialsLoader;
-use AmeliaGoogle\Auth\GetQuotaProjectInterface;
-use AmeliaGoogle\Auth\HttpHandler\HttpClientCache;
-use AmeliaGoogle\Auth\HttpHandler\HttpHandlerFactory;
-use AmeliaGoogle\Auth\Iam;
-use AmeliaGoogle\Auth\IamSignerTrait;
-use AmeliaGoogle\Auth\ProjectIdProviderInterface;
-use AmeliaGoogle\Auth\SignBlobInterface;
-use AmeliaGuzzleHttp\Exception\ClientException;
-use AmeliaGuzzleHttp\Exception\ConnectException;
-use AmeliaGuzzleHttp\Exception\RequestException;
-use AmeliaGuzzleHttp\Exception\ServerException;
-use AmeliaGuzzleHttp\Psr7\Request;
+use AmeliaVendor\Google\Auth\CredentialsLoader;
+use AmeliaVendor\Google\Auth\GetQuotaProjectInterface;
+use AmeliaVendor\Google\Auth\HttpHandler\HttpClientCache;
+use AmeliaVendor\Google\Auth\HttpHandler\HttpHandlerFactory;
+use AmeliaVendor\Google\Auth\Iam;
+use AmeliaVendor\Google\Auth\IamSignerTrait;
+use AmeliaVendor\Google\Auth\ProjectIdProviderInterface;
+use AmeliaVendor\Google\Auth\SignBlobInterface;
+use AmeliaVendor\GuzzleHttp\Exception\ClientException;
+use AmeliaVendor\GuzzleHttp\Exception\ConnectException;
+use AmeliaVendor\GuzzleHttp\Exception\RequestException;
+use AmeliaVendor\GuzzleHttp\Exception\ServerException;
+use AmeliaVendor\GuzzleHttp\Psr7\Request;
 use InvalidArgumentException;
 
 /**
@@ -38,10 +38,10 @@ use InvalidArgumentException;
  * It can be used to authorize requests using the AuthTokenMiddleware, but will
  * only succeed if being run on GCE:
  *
- *   use AmeliaGoogle\Auth\Credentials\GCECredentials;
- *   use AmeliaGoogle\Auth\Middleware\AuthTokenMiddleware;
- *   use AmeliaGuzzleHttp\Client;
- *   use AmeliaGuzzleHttp\HandlerStack;
+ *   use AmeliaVendor\Google\Auth\Credentials\GCECredentials;
+ *   use AmeliaVendor\Google\Auth\Middleware\AuthTokenMiddleware;
+ *   use AmeliaVendor\GuzzleHttp\Client;
+ *   use AmeliaVendor\GuzzleHttp\HandlerStack;
  *
  *   $gce = new GCECredentials();
  *   $middleware = new AuthTokenMiddleware($gce);
@@ -96,9 +96,19 @@ class GCECredentials extends CredentialsLoader implements
     const PROJECT_ID_URI_PATH = 'v1/project/project-id';
 
     /**
+     * The metadata path of the project ID.
+     */
+    const UNIVERSE_DOMAIN_URI_PATH = 'v1/universe/universe_domain';
+
+    /**
      * The header whose presence indicates GCE presence.
      */
     const FLAVOR_HEADER = 'Metadata-Flavor';
+
+    /**
+     * The Linux file which contains the product name.
+     */
+    private const GKE_PRODUCT_NAME_FILE = '/sys/class/dmi/id/product_name';
 
     /**
      * Note: the explicit `timeout` and `tries` below is a workaround. The underlying
@@ -165,6 +175,11 @@ class GCECredentials extends CredentialsLoader implements
     private $serviceAccountIdentity;
 
     /**
+     * @var string
+     */
+    private ?string $universeDomain;
+
+    /**
      * @param Iam $iam [optional] An IAM instance.
      * @param string|string[] $scope [optional] the scope of the access request,
      *        expressed either as an array or as a space-delimited string.
@@ -173,13 +188,16 @@ class GCECredentials extends CredentialsLoader implements
      *   charges associated with the request.
      * @param string $serviceAccountIdentity [optional] Specify a service
      *   account identity name to use instead of "default".
+     * @param string $universeDomain [optional] Specify a universe domain to use
+     *   instead of fetching one from the metadata server.
      */
     public function __construct(
-        Iam $iam = null,
+        ?Iam $iam = null,
         $scope = null,
         $targetAudience = null,
         $quotaProject = null,
-        $serviceAccountIdentity = null
+        $serviceAccountIdentity = null,
+        ?string $universeDomain = null
     ) {
         $this->iam = $iam;
 
@@ -207,6 +225,7 @@ class GCECredentials extends CredentialsLoader implements
         $this->tokenUri = $tokenUri;
         $this->quotaProject = $quotaProject;
         $this->serviceAccountIdentity = $serviceAccountIdentity;
+        $this->universeDomain = $universeDomain;
     }
 
     /**
@@ -290,6 +309,18 @@ class GCECredentials extends CredentialsLoader implements
     }
 
     /**
+     * The full uri for accessing the default universe domain.
+     *
+     * @return string
+     */
+    private static function getUniverseDomainUri()
+    {
+        $base = 'http://' . self::METADATA_IP . '/computeMetadata/';
+
+        return $base . self::UNIVERSE_DOMAIN_URI_PATH;
+    }
+
+    /**
      * Determines if this an App Engine Flexible instance, by accessing the
      * GAE_INSTANCE environment variable.
      *
@@ -308,7 +339,7 @@ class GCECredentials extends CredentialsLoader implements
      * @param callable $httpHandler callback which delivers psr7 request
      * @return bool True if this a GCEInstance, false otherwise
      */
-    public static function onGce(callable $httpHandler = null)
+    public static function onGce(?callable $httpHandler = null)
     {
         $httpHandler = $httpHandler
             ?: HttpHandlerFactory::build(HttpClientCache::getHttpClient());
@@ -328,17 +359,33 @@ class GCECredentials extends CredentialsLoader implements
                     new Request(
                         'GET',
                         $checkUri,
-                        [self::FLAVOR_HEADER => 'Google']
+                        [self::FLAVOR_HEADER => 'AmeliaVendor\Google']
                     ),
                     ['timeout' => self::COMPUTE_PING_CONNECTION_TIMEOUT_S]
                 );
 
-                return $resp->getHeaderLine(self::FLAVOR_HEADER) == 'Google';
+                return $resp->getHeaderLine(self::FLAVOR_HEADER) == 'AmeliaVendor\Google';
             } catch (ClientException $e) {
             } catch (ServerException $e) {
             } catch (RequestException $e) {
             } catch (ConnectException $e) {
             }
+        }
+
+        if (PHP_OS === 'Windows') {
+            // @TODO: implement GCE residency detection on Windows
+            return false;
+        }
+
+        // Detect GCE residency on Linux
+        return self::detectResidencyLinux(self::GKE_PRODUCT_NAME_FILE);
+    }
+
+    private static function detectResidencyLinux(string $productNameFile): bool
+    {
+        if (file_exists($productNameFile)) {
+            $productName = trim((string) file_get_contents($productNameFile));
+            return 0 === strpos($productName, 'AmeliaVendor\Google');
         }
         return false;
     }
@@ -361,7 +408,7 @@ class GCECredentials extends CredentialsLoader implements
      * }
      * @throws \Exception
      */
-    public function fetchAuthToken(callable $httpHandler = null)
+    public function fetchAuthToken(?callable $httpHandler = null)
     {
         $httpHandler = $httpHandler
             ?: HttpHandlerFactory::build(HttpClientCache::getHttpClient());
@@ -377,7 +424,7 @@ class GCECredentials extends CredentialsLoader implements
         $response = $this->getFromMetadata($httpHandler, $this->tokenUri);
 
         if ($this->targetAudience) {
-            return ['id_token' => $response];
+            return $this->lastReceivedToken = ['id_token' => $response];
         }
 
         if (null === $json = json_decode($response, true)) {
@@ -401,14 +448,18 @@ class GCECredentials extends CredentialsLoader implements
     }
 
     /**
-     * @return array{access_token:string,expires_at:int}|null
+     * @return array<mixed>|null
      */
     public function getLastReceivedToken()
     {
         if ($this->lastReceivedToken) {
+            if (array_key_exists('id_token', $this->lastReceivedToken)) {
+                return $this->lastReceivedToken;
+            }
+
             return [
                 'access_token' => $this->lastReceivedToken['access_token'],
-                'expires_at' => $this->lastReceivedToken['expires_at'],
+                'expires_at' => $this->lastReceivedToken['expires_at']
             ];
         }
 
@@ -423,7 +474,7 @@ class GCECredentials extends CredentialsLoader implements
      * @param callable $httpHandler callback which delivers psr7 request
      * @return string
      */
-    public function getClientName(callable $httpHandler = null)
+    public function getClientName(?callable $httpHandler = null)
     {
         if ($this->clientName) {
             return $this->clientName;
@@ -457,7 +508,7 @@ class GCECredentials extends CredentialsLoader implements
      * @param callable $httpHandler Callback which delivers psr7 request
      * @return string|null
      */
-    public function getProjectId(callable $httpHandler = null)
+    public function getProjectId(?callable $httpHandler = null)
     {
         if ($this->projectId) {
             return $this->projectId;
@@ -480,6 +531,50 @@ class GCECredentials extends CredentialsLoader implements
     }
 
     /**
+     * Fetch the default universe domain from the metadata server.
+     *
+     * @param callable $httpHandler Callback which delivers psr7 request
+     * @return string
+     */
+    public function getUniverseDomain(?callable $httpHandler = null): string
+    {
+        if (null !== $this->universeDomain) {
+            return $this->universeDomain;
+        }
+
+        $httpHandler = $httpHandler
+            ?: HttpHandlerFactory::build(HttpClientCache::getHttpClient());
+
+        if (!$this->hasCheckedOnGce) {
+            $this->isOnGce = self::onGce($httpHandler);
+            $this->hasCheckedOnGce = true;
+        }
+
+        try {
+            $this->universeDomain = $this->getFromMetadata(
+                $httpHandler,
+                self::getUniverseDomainUri()
+            );
+        } catch (ClientException $e) {
+            // If the metadata server exists, but returns a 404 for the universe domain, the auth
+            // libraries should safely assume this is an older metadata server running in GCU, and
+            // should return the default universe domain.
+            if (!$e->hasResponse() || 404 != $e->getResponse()->getStatusCode()) {
+                throw $e;
+            }
+            $this->universeDomain = self::DEFAULT_UNIVERSE_DOMAIN;
+        }
+
+        // We expect in some cases the metadata server will return an empty string for the universe
+        // domain. In this case, the auth library MUST return the default universe domain.
+        if ('' === $this->universeDomain) {
+            $this->universeDomain = self::DEFAULT_UNIVERSE_DOMAIN;
+        }
+
+        return $this->universeDomain;
+    }
+
+    /**
      * Fetch the value of a GCE metadata server URI.
      *
      * @param callable $httpHandler An HTTP Handler to deliver PSR7 requests.
@@ -492,7 +587,7 @@ class GCECredentials extends CredentialsLoader implements
             new Request(
                 'GET',
                 $uri,
-                [self::FLAVOR_HEADER => 'Google']
+                [self::FLAVOR_HEADER => 'AmeliaVendor\Google']
             )
         );
 

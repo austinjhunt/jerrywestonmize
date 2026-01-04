@@ -20,7 +20,7 @@ class TimeOutRepository extends AbstractRepository
      * @param TimeOut $entity
      * @param int     $weekDayId
      *
-     * @return bool
+     * @return int
      * @throws QueryExecutionException
      */
     public function add($entity, $weekDayId)
@@ -55,7 +55,7 @@ class TimeOutRepository extends AbstractRepository
      * @param TimeOut $entity
      * @param int     $id
      *
-     * @return int
+     * @return void
      * @throws QueryExecutionException
      */
     public function update($entity, $id)
@@ -79,8 +79,6 @@ class TimeOutRepository extends AbstractRepository
             if (!$res) {
                 throw new QueryExecutionException('Unable to save data in ' . __CLASS__);
             }
-
-            return $res;
         } catch (\Exception $e) {
             throw new QueryExecutionException('Unable to save data in ' . __CLASS__, $e->getCode(), $e);
         }

@@ -15,9 +15,9 @@
  * the License.
  */
 
-namespace AmeliaGoogle\Service\Calendar;
+namespace AmeliaVendor\Google\Service\Calendar;
 
-class Acl extends \AmeliaGoogle\Collection
+class Acl extends \AmeliaVendor\Google\Collection
 {
   protected $collection_key = 'items';
   /**
@@ -112,4 +112,4 @@ class Acl extends \AmeliaGoogle\Collection
 }
 
 // Adding a class alias for backwards compatibility with the previous class name.
-class_alias(Acl::class, 'AmeliaGoogle_Service_Calendar_Acl');
+class_alias(Acl::class, 'Google_Service_Calendar_Acl');

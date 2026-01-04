@@ -5,8 +5,8 @@ namespace AmeliaHttp\Client\Common\Plugin;
 use AmeliaHttp\Client\Common\Exception\ClientErrorException;
 use AmeliaHttp\Client\Common\Exception\ServerErrorException;
 use AmeliaHttp\Client\Common\Plugin;
-use AmeliaPsr\Http\Message\RequestInterface;
-use AmeliaPsr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**

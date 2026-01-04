@@ -15,9 +15,9 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-namespace phpseclib3\Crypt\EC\Formats\Signature;
+namespace AmeliaVendor\phpseclib3\Crypt\EC\Formats\Signature;
 
-use phpseclib3\Math\BigInteger;
+use AmeliaVendor\phpseclib3\Math\BigInteger;
 
 /**
  * ASN1 Signature Handler

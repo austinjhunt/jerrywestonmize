@@ -2,8 +2,8 @@
 
 namespace AmeliaHttp\Message;
 
-use AmeliaPsr\Http\Message\ResponseInterface;
-use AmeliaPsr\Http\Message\StreamInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\StreamInterface;
 
 /**
  * Factory for PSR-7 Response.
@@ -12,7 +12,7 @@ use AmeliaPsr\Http\Message\StreamInterface;
  *
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
  *
- * @deprecated since version 1.1, use AmeliaPsr\Http\Message\ResponseFactoryInterface instead.
+ * @deprecated since version 1.1, use AmeliaVendor\Psr\Http\Message\ResponseFactoryInterface instead.
  */
 interface ResponseFactory
 {

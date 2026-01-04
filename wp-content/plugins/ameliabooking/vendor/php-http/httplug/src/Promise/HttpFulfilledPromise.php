@@ -4,7 +4,7 @@ namespace AmeliaHttp\Client\Promise;
 
 use AmeliaHttp\Client\Exception;
 use AmeliaHttp\Promise\Promise;
-use AmeliaPsr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
 
 final class HttpFulfilledPromise implements Promise
 {

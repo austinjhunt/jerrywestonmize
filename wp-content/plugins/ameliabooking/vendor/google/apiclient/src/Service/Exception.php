@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-namespace AmeliaGoogle\Service;
+namespace AmeliaVendor\Google\Service;
 
-use AmeliaGoogle\Exception as GoogleException;
+use AmeliaVendor\Google\Exception as GoogleException;
 
 class Exception extends GoogleException
 {
@@ -39,7 +39,7 @@ class Exception extends GoogleException
     public function __construct(
         $message,
         $code = 0,
-        Exception $previous = null,
+        ?Exception $previous = null,
         $errors = []
     ) {
         if (version_compare(PHP_VERSION, '5.3.0') >= 0) {

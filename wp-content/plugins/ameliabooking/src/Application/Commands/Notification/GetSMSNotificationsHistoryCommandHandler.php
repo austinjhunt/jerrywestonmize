@@ -26,7 +26,6 @@ class GetSMSNotificationsHistoryCommandHandler extends CommandHandler
      * @return CommandResult
      * @throws AccessDeniedException
      * @throws QueryExecutionException
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function handle(GetSMSNotificationsHistoryCommand $command)
     {
@@ -41,9 +40,13 @@ class GetSMSNotificationsHistoryCommandHandler extends CommandHandler
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
 
-        $itemsPerPage = $settingsService->getSetting('general', 'itemsPerPage');
-
         $params = $command->getField('params');
+
+        $itemsPerPage = !empty($params['itemsPerPage'])
+            ? $params['itemsPerPage']
+            : $settingsService->getSetting('general', 'itemsPerPage');
+
+
 
         $notifications = $notificationsSMSHistoryRepo->getFiltered($params, $itemsPerPage);
 

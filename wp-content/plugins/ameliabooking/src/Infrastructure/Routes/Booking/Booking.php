@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright Â© TMS-Plugins. All rights reserved.
+ * @copyright Â© Melograno Ventures. All rights reserved.
  * @licence   See COPYING.md for license details.
  */
 

@@ -69,10 +69,13 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
     /** @var Graph */
     private $graph;
 
-    /** @var SettingsService */
-    private $settings;
+    /** @var mixed */
+    private $outlookCalendarSettings;
 
     public const GUID = '{66f5a359-4659-4830-9070-00049ec6ac6e}';
+
+    /** @var SettingsService */
+    private $settings;
 
     /**
      * OutlookCalendarService constructor.
@@ -82,7 +85,8 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
     public function __construct(Container $container)
     {
         $this->container = $container;
-        $this->settings  = $this->container->get('domain.settings.service')->getCategorySettings('outlookCalendar');
+        $this->settings = $this->container->get('domain.settings.service');
+        $this->outlookCalendarSettings = $this->settings->getCategorySettings('outlookCalendar');
 
         $this->graph = new Graph();
     }
@@ -140,6 +144,8 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                         'type'  => 'outlook'
                         ]
                     ),
+                    // TODO: Redesign back to 'admin_url($id ? 'admin.php?page=wpamelia-employees' : 'admin.php?page=wpamelia-settings')'
+                    // after redesign will be finished
                     admin_url($id ? 'admin.php?page=wpamelia-employees' : 'admin.php?page=wpamelia-settings')
                 )
             );
@@ -151,7 +157,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      * @param $redirectUri
      * @param $providerId
      *
-     * @return array
+     * @return array|bool
      */
     public function fetchAccessTokenWithAuthCode($authCode, $redirectUri, $providerId)
     {
@@ -297,7 +303,8 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                 if ($outlookCalendar->getCanEdit()) {
                     $calendars[] = [
                         'id'   => $outlookCalendar->getId(),
-                        'name' => $outlookCalendar->getName()
+                        'name' => $outlookCalendar->getName(),
+                        'owner' => $outlookCalendar->getOwner()->getName(),
                     ];
                 }
             }
@@ -426,7 +433,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
             switch ($commandSlug) {
                 case AppointmentAddedEventHandler::APPOINTMENT_ADDED:
                 case BookingAddedEventHandler::BOOKING_ADDED:
-                    if ($appointmentStatus === 'pending' && $this->settings['insertPendingAppointments'] === false) {
+                    if ($appointmentStatus === 'pending' && $this->outlookCalendarSettings['insertPendingAppointments'] === false) {
                         break;
                     }
 
@@ -446,7 +453,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                 case BookingRejectedEventHandler::BOOKING_REJECTED:
                     if (
                         $appointmentStatus === 'canceled' || $appointmentStatus === 'rejected' ||
-                        ($appointmentStatus === 'pending' && $this->settings['insertPendingAppointments'] === false)
+                        ($appointmentStatus === 'pending' && $this->outlookCalendarSettings['insertPendingAppointments'] === false)
                     ) {
                         $this->deleteEvent($appointment, $provider);
                         break;
@@ -454,7 +461,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
 
                     if (
                         $appointmentStatus === 'approved' && $oldStatus && $oldStatus !== 'approved' &&
-                        $this->settings['insertPendingAppointments'] === false
+                        $this->outlookCalendarSettings['insertPendingAppointments'] === false
                     ) {
                         $this->insertEvent($appointment, $provider);
                         break;
@@ -578,7 +585,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                 )
             )
                 ->setReturnType(Event::class)
-                ->setPageSize($this->settings['maximumNumberOfEventsReturned']);
+                ->setPageSize($this->outlookCalendarSettings['maximumNumberOfEventsReturned']);
 
             $events = $request->getPage();
 
@@ -588,7 +595,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                     continue;
                 }
                 $extendedProperties = $event->getSingleValueExtendedProperties();
-                if ($extendedProperties !== null && !$this->settings['ignoreAmeliaEvents']) {
+                if ($extendedProperties !== null && !$this->outlookCalendarSettings['ignoreAmeliaEvents']) {
                     foreach ($extendedProperties as $extendedProperty) {
                         if (
                             $extendedProperty['id'] === 'Integer ' . self::GUID . ' Name appointmentId' &&
@@ -634,7 +641,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
         $startDateTime,
         $endDateTime
     ) {
-        if ($this->settings['removeOutlookCalendarBusySlots'] === true && $this->isCalendarEnabled()) {
+        if ($this->outlookCalendarSettings['removeOutlookCalendarBusySlots'] === true && $this->isCalendarEnabled()) {
             foreach ($providers->keys() as $providerKey) {
                 /** @var Provider $provider */
                 $provider = $providers->getItem($providerKey);
@@ -671,7 +678,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                             )
                         )
                             ->setReturnType(Event::class)
-                            ->setPageSize($this->settings['maximumNumberOfEventsReturned']);
+                            ->setPageSize($this->outlookCalendarSettings['maximumNumberOfEventsReturned']);
 
                         $events = $request->getPage();
                         self::$providersOutlookEvents[$provider->getId()->getValue()] = $events;
@@ -687,7 +694,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                         }
 
                         $extendedProperties = $event->getSingleValueExtendedProperties();
-                        if ($extendedProperties !== null && !$this->settings['ignoreAmeliaEvents']) {
+                        if ($extendedProperties !== null && !$this->outlookCalendarSettings['ignoreAmeliaEvents']) {
                             foreach ($extendedProperties as $extendedProperty) {
                                 if (
                                     $extendedProperty['id'] === 'Integer ' . self::GUID . ' Name appointmentId' &&
@@ -1013,7 +1020,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
             $end = clone $appointment->getBookingEnd()->getValue();
         }
 
-        if ($this->settings['includeBufferTimeOutlookCalendar'] === true && $type === Entities::APPOINTMENT) {
+        if ($this->outlookCalendarSettings['includeBufferTimeOutlookCalendar'] === true && $type === Entities::APPOINTMENT) {
             $timeBefore = $appointment->getService()->getTimeBefore() ?
                 $appointment->getService()->getTimeBefore()->getValue() : 0;
             $timeAfter  = $appointment->getService()->getTimeAfter() ?
@@ -1034,7 +1041,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
 
         $event->setSubject(
             $placeholderService->applyPlaceholders(
-                $period ? $this->settings['title']['event'] : $this->settings['title']['appointment'],
+                $period ? $this->outlookCalendarSettings['title']['event'] : $this->outlookCalendarSettings['title']['appointment'],
                 $placeholderData
             )
         );
@@ -1087,7 +1094,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
     private function getDescription($placeholderService, $placeholderData, $type)
     {
         $description = $placeholderService->applyPlaceholders(
-            $type === 'event' ? $this->settings['description']['event'] : $this->settings['description']['appointment'],
+            $type === 'event' ? $this->outlookCalendarSettings['description']['event'] : $this->outlookCalendarSettings['description']['appointment'],
             $placeholderData
         );
         return str_replace("\n", '<br>', $description);
@@ -1156,7 +1163,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
     {
         $attendees = [];
 
-        if ($this->settings['addAttendees'] === true) {
+        if ($this->outlookCalendarSettings['addAttendees'] === true) {
             /** @var ProviderRepository $providerRepository */
             $providerRepository = $this->container->get('domain.users.providers.repository');
 
@@ -1203,7 +1210,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
 
                 if (
                     $bookingStatus === 'approved' ||
-                    ($bookingStatus === 'pending' && $this->settings['insertPendingAppointments'] === true)
+                    ($bookingStatus === 'pending' && $this->outlookCalendarSettings['insertPendingAppointments'] === true)
                 ) {
                     $customer = $customerRepository->getById($booking->getCustomerId()->getValue());
 
@@ -1343,9 +1350,9 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      */
     private function isCalendarEnabled()
     {
-        return (!array_key_exists('calendarEnabled', $this->settings) || $this->settings['calendarEnabled']) &&
-            $this->settings['clientID'] &&
-            $this->settings['clientSecret'];
+        return $this->settings->isFeatureEnabled('outlookCalendar') &&
+            $this->outlookCalendarSettings['clientID'] &&
+            $this->outlookCalendarSettings['clientSecret'];
     }
 
     /** @noinspection MoreThanThreeArgumentsInspection */

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -36,7 +36,7 @@ class CacheRepository extends AbstractRepository
     /**
      * @param Cache $entity
      *
-     * @return bool
+     * @return int
      * @throws QueryExecutionException
      */
     public function add($entity)
@@ -116,7 +116,7 @@ class CacheRepository extends AbstractRepository
      * @param int    $id
      * @param string $name
      *
-     * @return Cache
+     * @return Cache|null
      * @throws QueryExecutionException
      */
     public function getByIdAndName($id, $name)

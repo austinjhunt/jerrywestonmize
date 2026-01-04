@@ -13,7 +13,7 @@ use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 final class Birthday
 {
     /**
-     * @var string
+     * @var \DateTime
      */
     private $date;
 

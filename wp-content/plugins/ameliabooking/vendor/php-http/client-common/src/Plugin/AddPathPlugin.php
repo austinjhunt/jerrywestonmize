@@ -3,8 +3,8 @@
 namespace AmeliaHttp\Client\Common\Plugin;
 
 use AmeliaHttp\Client\Common\Plugin;
-use AmeliaPsr\Http\Message\RequestInterface;
-use AmeliaPsr\Http\Message\UriInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\UriInterface;
 
 /**
  * Prepend a base path to the request URI. Useful for base API URLs like http://domain.com/api.

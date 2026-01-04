@@ -5,9 +5,9 @@
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 
-namespace FontLib\WOFF;
+namespace AmeliaVendor\FontLib\WOFF;
 
-use FontLib\Table\DirectoryEntry;
+use AmeliaVendor\FontLib\Table\DirectoryEntry;
 
 /**
  * WOFF font file.
@@ -16,7 +16,7 @@ use FontLib\Table\DirectoryEntry;
  *
  * @property TableDirectoryEntry[] $directory
  */
-class File extends \FontLib\TrueType\File {
+class File extends \AmeliaVendor\FontLib\TrueType\File {
   function parseHeader() {
     if (!empty($this->header)) {
       return;

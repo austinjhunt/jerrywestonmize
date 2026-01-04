@@ -5,10 +5,10 @@
  * @license GNU LGPLv3+ http://www.gnu.org/copyleft/lesser.html
  */
 
-namespace Svg\Surface;
+namespace AmeliaVendor\Svg\Surface;
 
-use Svg\Style;
-use Svg\Document;
+use AmeliaVendor\Svg\Style;
+use AmeliaVendor\Svg\Document;
 
 class SurfacePDFLib implements SurfaceInterface
 {

@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Forwarding;
+namespace AmeliaVendor\Stripe\Forwarding;
 
 /**
  * Instructs Stripe to make a request on your behalf using the destination URL. The destination URL
@@ -26,15 +26,15 @@ namespace AmeliaStripe\Forwarding;
  * @property string $object String representing the object's type. Objects of the same type share the same value.
  * @property int $created Time at which the object was created. Measured in seconds since the Unix epoch.
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
- * @property null|\AmeliaStripe\StripeObject $metadata Set of <a href="https://stripe.com/docs/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+ * @property null|\AmeliaVendor\Stripe\StripeObject $metadata Set of <a href="https://stripe.com/docs/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
  * @property string $payment_method The PaymentMethod to insert into the forwarded request. Forwarding previously consumed PaymentMethods is allowed.
  * @property string[] $replacements The field kinds to be replaced in the forwarded request.
- * @property null|(object{destination_duration: int, destination_ip_address: string}&\AmeliaStripe\StripeObject) $request_context Context about the request from Stripe's servers to the destination endpoint.
- * @property null|(object{body: string, headers: (object{name: string, value: string}&\AmeliaStripe\StripeObject)[], http_method: string}&\AmeliaStripe\StripeObject) $request_details The request that was sent to the destination endpoint. We redact any sensitive fields.
- * @property null|(object{body: string, headers: (object{name: string, value: string}&\AmeliaStripe\StripeObject)[], status: int}&\AmeliaStripe\StripeObject) $response_details The response that the destination endpoint returned to us. We redact any sensitive fields.
+ * @property null|(object{destination_duration: int, destination_ip_address: string}&\AmeliaVendor\Stripe\StripeObject) $request_context Context about the request from Stripe's servers to the destination endpoint.
+ * @property null|(object{body: string, headers: (object{name: string, value: string}&\AmeliaVendor\Stripe\StripeObject)[], http_method: string}&\AmeliaVendor\Stripe\StripeObject) $request_details The request that was sent to the destination endpoint. We redact any sensitive fields.
+ * @property null|(object{body: string, headers: (object{name: string, value: string}&\AmeliaVendor\Stripe\StripeObject)[], status: int}&\AmeliaVendor\Stripe\StripeObject) $response_details The response that the destination endpoint returned to us. We redact any sensitive fields.
  * @property null|string $url The destination URL for the forwarded request. Must be supported by the config.
  */
-class Request extends \AmeliaStripe\ApiResource
+class Request extends \AmeliaVendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'forwarding.request';
 
@@ -46,7 +46,7 @@ class Request extends \AmeliaStripe\ApiResource
      *
      * @return Request the created resource
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function create($params = null, $options = null)
     {
@@ -54,7 +54,7 @@ class Request extends \AmeliaStripe\ApiResource
         $url = static::classUrl();
 
         list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
-        $obj = \AmeliaStripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \AmeliaVendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
 
         return $obj;
@@ -66,15 +66,15 @@ class Request extends \AmeliaStripe\ApiResource
      * @param null|array{created?: array{gt?: int, gte?: int, lt?: int, lte?: int}, ending_before?: string, expand?: string[], limit?: int, starting_after?: string} $params
      * @param null|array|string $opts
      *
-     * @return \AmeliaStripe\Collection<Request> of ApiResources
+     * @return \AmeliaVendor\Stripe\Collection<Request> of ApiResources
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
 
-        return static::_requestPage($url, \AmeliaStripe\Collection::class, $params, $opts);
+        return static::_requestPage($url, \AmeliaVendor\Stripe\Collection::class, $params, $opts);
     }
 
     /**
@@ -85,11 +85,11 @@ class Request extends \AmeliaStripe\ApiResource
      *
      * @return Request
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = \AmeliaStripe\Util\RequestOptions::parse($opts);
+        $opts = \AmeliaVendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
 

@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-namespace AmeliaGoogle\Auth\Credentials;
+namespace AmeliaVendor\Google\Auth\Credentials;
 
-use AmeliaGoogle\Auth\FetchAuthTokenInterface;
+use AmeliaVendor\Google\Auth\FetchAuthTokenInterface;
 
 /**
  * Provides a set of credentials that will always return an empty access token.
@@ -39,7 +39,7 @@ class InsecureCredentials implements FetchAuthTokenInterface
      * @param callable $httpHandler
      * @return array{access_token:string} A set of auth related metadata
      */
-    public function fetchAuthToken(callable $httpHandler = null)
+    public function fetchAuthToken(?callable $httpHandler = null)
     {
         return $this->token;
     }

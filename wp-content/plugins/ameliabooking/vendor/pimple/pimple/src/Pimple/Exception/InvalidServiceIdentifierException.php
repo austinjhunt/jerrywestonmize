@@ -26,7 +26,7 @@
 
 namespace Pimple\Exception;
 
-use AmeliaPsr\Container\NotFoundExceptionInterface;
+use AmeliaVendor\Psr\Container\NotFoundExceptionInterface;
 
 /**
  * An attempt to perform an operation that requires a service identifier was made.

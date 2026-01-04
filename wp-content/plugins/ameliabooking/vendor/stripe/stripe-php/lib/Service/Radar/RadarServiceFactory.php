@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Service\Radar;
+namespace AmeliaVendor\Stripe\Service\Radar;
 
 /**
  * Service factory class for API resources in the Radar namespace.
@@ -11,7 +11,7 @@ namespace AmeliaStripe\Service\Radar;
  * @property ValueListItemService $valueListItems
  * @property ValueListService $valueLists
  */
-class RadarServiceFactory extends \AmeliaStripe\Service\AbstractServiceFactory
+class RadarServiceFactory extends \AmeliaVendor\Stripe\Service\AbstractServiceFactory
 {
     /**
      * @var array<string, string>

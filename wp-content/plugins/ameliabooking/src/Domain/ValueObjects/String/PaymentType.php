@@ -31,9 +31,7 @@ final class PaymentType
     private $status;
 
     /**
-     * Status constructor.
-     *
-     * @param int $status
+     * @param string $status
      */
     public function __construct($status)
     {

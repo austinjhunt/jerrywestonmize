@@ -1,6 +1,8 @@
 <?php
 
-namespace AmeliaPsr\Http\Message;
+declare(strict_types=1);
+
+namespace AmeliaVendor\Psr\Http\Message;
 
 /**
  * Representation of an incoming, server-side HTTP request.
@@ -126,7 +128,7 @@ interface ServerRequestInterface extends RequestInterface
      * Retrieve normalized file upload data.
      *
      * This method returns upload metadata in a normalized tree, with each leaf
-     * an instance of AmeliaPsr\Http\Message\UploadedFileInterface.
+     * an instance of AmeliaVendor\Psr\Http\Message\UploadedFileInterface.
      *
      * These values MAY be prepared from $_FILES or the message body during
      * instantiation, or MAY be injected via withUploadedFiles().
@@ -224,7 +226,7 @@ interface ServerRequestInterface extends RequestInterface
      * @param mixed $default Default value to return if the attribute does not exist.
      * @return mixed
      */
-    public function getAttribute($name, $default = null);
+    public function getAttribute(string $name, $default = null);
 
     /**
      * Return an instance with the specified derived request attribute.
@@ -241,7 +243,7 @@ interface ServerRequestInterface extends RequestInterface
      * @param mixed $value The value of the attribute.
      * @return static
      */
-    public function withAttribute($name, $value);
+    public function withAttribute(string $name, $value);
 
     /**
      * Return an instance that removes the specified derived request attribute.
@@ -257,5 +259,5 @@ interface ServerRequestInterface extends RequestInterface
      * @param string $name The attribute name.
      * @return static
      */
-    public function withoutAttribute($name);
+    public function withoutAttribute(string $name);
 }

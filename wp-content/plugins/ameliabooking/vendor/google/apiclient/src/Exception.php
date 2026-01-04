@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-namespace AmeliaGoogle;
+namespace AmeliaVendor\Google;
 
 use Exception as BaseException;
 

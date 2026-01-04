@@ -1,15 +1,15 @@
 <?php
 
-namespace AmeliaFirebase\JWT;
+namespace AmeliaVendor\Firebase\JWT;
 
 use ArrayAccess;
 use InvalidArgumentException;
 use LogicException;
 use OutOfBoundsException;
-use Psr\Cache\CacheItemInterface;
-use Psr\Cache\CacheItemPoolInterface;
-use Psr\Http\Client\ClientInterface;
-use AmeliaPsr\Http\Message\RequestFactoryInterface;
+use AmeliaVendor\Psr\Cache\CacheItemInterface;
+use AmeliaVendor\Psr\Cache\CacheItemPoolInterface;
+use AmeliaVendor\Psr\Http\Client\ClientInterface;
+use AmeliaVendor\Psr\Http\Message\RequestFactoryInterface;
 use RuntimeException;
 use UnexpectedValueException;
 

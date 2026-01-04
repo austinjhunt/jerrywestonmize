@@ -40,6 +40,11 @@ interface SettingsStorageInterface
     public function getFrontendSettings();
 
     /**
+     * @return mixed
+     */
+    public function getBackendSettings();
+
+    /**
      * @param $settingCategoryKey
      * @param $settingKey
      * @param $settingValue

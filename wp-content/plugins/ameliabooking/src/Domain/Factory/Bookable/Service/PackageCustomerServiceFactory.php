@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -105,6 +105,9 @@ class PackageCustomerServiceFactory
                         'status'        => $row['package_customer_status'],
                         'bookingsCount' => $row['package_customer_bookingsCount'],
                         'couponId'      => $row['package_customer_couponId'],
+                        'package'       => [
+                            'name' => $row['package_name']
+                        ]
                     ]
                 ];
             }

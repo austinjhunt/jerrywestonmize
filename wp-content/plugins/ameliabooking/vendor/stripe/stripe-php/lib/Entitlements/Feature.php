@@ -1,8 +1,7 @@
 <?php
 
 // File generated from our OpenAPI spec
-
-namespace AmeliaStripe\Entitlements;
+namespace AmeliaVendor\Stripe\Entitlements;
 
 /**
  * A feature represents a monetizable ability or functionality in your system.
@@ -13,15 +12,13 @@ namespace AmeliaStripe\Entitlements;
  * @property bool $active Inactive features cannot be attached to new products and will not be returned from the features list endpoint.
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
  * @property string $lookup_key A unique key you provide as your own system identifier. This may be up to 80 characters.
- * @property \AmeliaStripe\StripeObject $metadata Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+ * @property \AmeliaVendor\Stripe\StripeObject $metadata Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
  * @property string $name The feature's name, for your own purpose, not meant to be displayable to the customer.
  */
-class Feature extends \AmeliaStripe\ApiResource
+class Feature extends \AmeliaVendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'entitlements.feature';
-
-    use \AmeliaStripe\ApiOperations\Update;
-
+    use \AmeliaVendor\Stripe\ApiOperations\Update;
     /**
      * Creates a feature.
      *
@@ -30,37 +27,32 @@ class Feature extends \AmeliaStripe\ApiResource
      *
      * @return Feature the created resource
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function create($params = null, $options = null)
     {
         self::_validateParams($params);
         $url = static::classUrl();
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
-        $obj = \AmeliaStripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \AmeliaVendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
-
     /**
      * Retrieve a list of features.
      *
      * @param null|array{archived?: bool, ending_before?: string, expand?: string[], limit?: int, lookup_key?: string, starting_after?: string} $params
      * @param null|array|string $opts
      *
-     * @return \AmeliaStripe\Collection<Feature> of ApiResources
+     * @return \AmeliaVendor\Stripe\Collection<Feature> of ApiResources
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
-
-        return static::_requestPage($url, \AmeliaStripe\Collection::class, $params, $opts);
+        return static::_requestPage($url, \AmeliaVendor\Stripe\Collection::class, $params, $opts);
     }
-
     /**
      * Retrieves a feature.
      *
@@ -69,17 +61,15 @@ class Feature extends \AmeliaStripe\ApiResource
      *
      * @return Feature
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = \AmeliaStripe\Util\RequestOptions::parse($opts);
+        $opts = \AmeliaVendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
-
         return $instance;
     }
-
     /**
      * Update a feature’s metadata or permanently deactivate it.
      *
@@ -89,17 +79,15 @@ class Feature extends \AmeliaStripe\ApiResource
      *
      * @return Feature the updated resource
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function update($id, $params = null, $opts = null)
     {
         self::_validateParams($params);
         $url = static::resourceUrl($id);
-
         list($response, $opts) = static::_staticRequest('post', $url, $params, $opts);
-        $obj = \AmeliaStripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \AmeliaVendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
-
         return $obj;
     }
 }

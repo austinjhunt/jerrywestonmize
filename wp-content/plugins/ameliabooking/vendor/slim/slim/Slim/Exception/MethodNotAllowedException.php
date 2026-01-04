@@ -7,8 +7,8 @@
 
 namespace Slim\Exception;
 
-use AmeliaPsr\Http\Message\ResponseInterface;
-use AmeliaPsr\Http\Message\ServerRequestInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface;
 
 class MethodNotAllowedException extends SlimException
 {

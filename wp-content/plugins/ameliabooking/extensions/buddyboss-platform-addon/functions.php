@@ -10,7 +10,6 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Location\LocationRepository;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
-use Interop\Container\Exception\ContainerException;
 
 if (! function_exists('Amelia_admin_enqueue_script')) {
     function Amelia_admin_enqueue_script()
@@ -28,11 +27,11 @@ if (! function_exists('Amelia_get_settings_sections')) {
         $settings = array(
             'Amelia_settings_section' => array(
                 'page'  => 'amelia',
-                'title' => BackendStrings::getBuddyBossStrings()['amelia_settings_profile'],
+                'title' => BackendStrings::get('amelia_settings_profile'),
             ),
             'Amelia_settings_section_customers' => array(
                 'page'  => 'amelia',
-                'title' => BackendStrings::getBuddyBossStrings()['amelia_settings_customers'],
+                'title' => BackendStrings::get('amelia_settings_customers'),
             ),
         );
 
@@ -65,7 +64,7 @@ if (! function_exists('Amelia_get_settings_fields')) {
         $fields['Amelia_settings_section'] = array(
 
             'Amelia_field' => array(
-                'title'             => BackendStrings::getBuddyBossStrings()['enable_amelia'],
+                'title'             => BackendStrings::get('enable_amelia'),
                 'callback'          => 'Amelia_settings_callback_field',
                 'sanitize_callback' => 'absint',
                 'args'              => array(),
@@ -76,14 +75,14 @@ if (! function_exists('Amelia_get_settings_fields')) {
                 $fields['Amelia_settings_section'],
                 array(
                     'Amelia_bookingform_enabled' => array(
-                        'title'             => BackendStrings::getBuddyBossStrings()['bookingform_enabled'],
+                        'title'             => BackendStrings::get('bookingform_enabled'),
                         'callback'          => 'Amelia_bookingform_enabled',
                         'sanitize_callback' => 'theme_slug_sanitize_select',
                         'args'              => array(),
                     ),
 
                     'Amelia_booking_form' => array(
-                        'title'             => BackendStrings::getBuddyBossStrings()['booking_form_type'],
+                        'title'             => BackendStrings::get('booking_form_type'),
                         'callback'          => 'Amelia_booking_form_field',
                         'sanitize_callback' => 'theme_slug_sanitize_select',
                         'args'              => array(),
@@ -91,35 +90,35 @@ if (! function_exists('Amelia_get_settings_fields')) {
 
 
                     'Amelia_tab' => array(
-                        'title'             => BackendStrings::getBuddyBossStrings()['booking_tab_name'],
+                        'title'             => BackendStrings::get('booking_tab_name'),
                         'callback'          => 'Amelia_settings_callback_tab',
                         'sanitize_callback' => 'wp_filter_nohtml_kses',
                         'args'              => array(),
                     ),
 
                     'Amelia_subtab_1' => array(
-                        'title'             => BackendStrings::getBuddyBossStrings()['book_subtab_name'],
+                        'title'             => BackendStrings::get('book_subtab_name'),
                         'callback'          => 'Amelia_settings_callback_subtab_1',
                         'sanitize_callback' => 'wp_filter_nohtml_kses',
                         'args'              => array(),
                     ),
 
                     'Amelia_subtab_2' => array(
-                        'title'             => BackendStrings::getBuddyBossStrings()['panel_subtab_name'],
+                        'title'             => BackendStrings::get('panel_subtab_name'),
                         'callback'          => 'Amelia_settings_callback_subtab_2',
                         'sanitize_callback' => 'wp_filter_nohtml_kses',
                         'args'              => array(),
                     ),
 
                     'Amelia_bookingform_employee_enabled' => array(
-                        'title'             => BackendStrings::getBuddyBossStrings()['bookingform_enabled'],
+                        'title'             => BackendStrings::get('bookingform_enabled'),
                         'callback'          => 'Amelia_bookingform_employee_enabled',
                         'sanitize_callback' => 'theme_slug_sanitize_select',
                         'args'              => array(),
                     ),
 
                     'Amelia_booking_form_employee' => array(
-                        'title'             => BackendStrings::getBuddyBossStrings()['booking_form_type_employee'],
+                        'title'             => BackendStrings::get('booking_form_type_employee'),
                         'callback'          => 'Amelia_booking_form_employee',
                         'sanitize_callback' => 'theme_slug_sanitize_select',
                         'args'              => array(),
@@ -127,14 +126,14 @@ if (! function_exists('Amelia_get_settings_fields')) {
 
 
                     'Amelia_booking_employee_tab' => array(
-                        'title'             => BackendStrings::getBuddyBossStrings()['booking_employee_tab_name'],
+                        'title'             => BackendStrings::get('booking_employee_tab_name'),
                         'callback'          => 'Amelia_booking_employee_tab',
                         'sanitize_callback' => 'wp_filter_nohtml_kses',
                         'args'              => array(),
                     ),
 
                     'Amelia_guest_booking_enabled' => array(
-                        'title'             => BackendStrings::getBuddyBossStrings()['guest_booking_enabled'],
+                        'title'             => BackendStrings::get('guest_booking_enabled'),
                         'callback'          => 'Amelia_guest_booking_enabled',
                         'sanitize_callback' => 'absint',
                         'args'              => array(),
@@ -145,19 +144,19 @@ if (! function_exists('Amelia_get_settings_fields')) {
 
         $fields['Amelia_settings_section_customers'] = array(
             'Amelia_subscribers_to_customers' => array(
-                'title'             => BackendStrings::getBuddyBossStrings()['subscribers_transform'],
+                'title'             => BackendStrings::get('subscribers_transform'),
                 'callback'          => 'Amelia_settings_callback_transform',
                 'sanitize_callback' => 'absint',
                 'args'              => array(),
             ),
             'Amelia_create_customers' => array(
-                'title'             => BackendStrings::getBuddyBossStrings()['create_customers_text'],
+                'title'             => BackendStrings::get('create_customers_text'),
                 'callback'          => 'Amelia_settings_callback_create_customers',
                 'sanitize_callback' => 'absint',
                 'args'              => array(),
             ),
             'Amelia_create_providers' => array(
-                'title'             => BackendStrings::getBuddyBossStrings()['create_providers_text'],
+                'title'             => BackendStrings::get('create_providers_text'),
                 'callback'          => 'Amelia_settings_callback_create_providers',
                 'sanitize_callback' => 'absint',
                 'args'              => array(),
@@ -180,7 +179,7 @@ if (! function_exists('Amelia_settings_callback_field')) {
             <?php checked(Amelia_is_addon_field_enabled()); ?>
         />
         <label for="Amelia_field">
-            <?php echo esc_html__(BackendStrings::getBuddyBossStrings()['enable_booking_tab']) ?>
+            <?php echo esc_html__(BackendStrings::get('enable_booking_tab')) ?>
         </label>
         <?php
     }
@@ -224,7 +223,7 @@ if (! function_exists('Amelia_guest_booking_enabled')) {
             <?php checked(Amelia_guest_booking_enabled_check()); ?>
         />
         <label for="Amelia_guest_booking_enabled">
-            <?php echo esc_html__(BackendStrings::getBuddyBossStrings()['guest_booking_enabled_text']) ?>
+            <?php echo esc_html__(BackendStrings::get('guest_booking_enabled_text')) ?>
         </label>
         <?php
     }
@@ -267,7 +266,7 @@ if (! function_exists('Amelia_bookingform_enabled')) {
             <?php checked(Amelia_is_bookingform_enabled()); ?>
         />
         <label for="Amelia_bookingform_enabled">
-            <?php echo esc_html__(BackendStrings::getBuddyBossStrings()['booking_form_enabled']) ?>
+            <?php echo esc_html__(BackendStrings::get('booking_form_enabled')) ?>
         </label>
         <?php
     }
@@ -284,7 +283,7 @@ if (! function_exists('Amelia_bookingform_employee_enabled')) {
             <?php checked(Amelia_is_bookingform_employee_enabled()); ?>
         />
         <label for="Amelia_bookingform_employee_enabled">
-            <?php echo esc_html__(BackendStrings::getBuddyBossStrings()['booking_form_employee_enabled']) ?>
+            <?php echo esc_html__(BackendStrings::get('booking_form_employee_enabled')) ?>
         </label>
         <?php
     }
@@ -299,28 +298,28 @@ if (! function_exists('Amelia_booking_form_field')) {
                 id="Amelia_booking_form"
         >
             <option <?php selected(Amelia_booking_form_field_selected(), 'step_booking')?> value="step_booking">
-                <?php echo esc_html__(BackendStrings::getWordPressStrings()['step_booking'])  ?>
+                <?php echo esc_html__(BackendStrings::get('step_booking'))  ?>
             </option>
             <option <?php selected(Amelia_booking_form_field_selected(), 'catalog_booking')?> value="catalog_booking">
-                <?php echo esc_html__(BackendStrings::getWordPressStrings()['catalog_booking'])  ?>
+                <?php echo esc_html__(BackendStrings::get('catalog_booking'))  ?>
             </option>
             <option <?php selected(Amelia_booking_form_field_selected(), 'booking')?> value="booking">
-                <?php echo esc_html__(BackendStrings::getCommonStrings()['booking'])  ?>
+                <?php echo esc_html__(BackendStrings::get('booking'))  ?>
             </option>
             <option <?php selected(Amelia_booking_form_field_selected(), 'catalog')?> value="catalog">
-                <?php echo esc_html__(BackendStrings::getWordPressStrings()['catalog'])  ?>
+                <?php echo esc_html__(BackendStrings::get('catalog'))  ?>
             </option>
             <option <?php selected(Amelia_booking_form_field_selected(), 'search')?> value="search">
-                <?php echo esc_html__(BackendStrings::getWordPressStrings()['search'])  ?>
+                <?php echo esc_html__(BackendStrings::get('search'))  ?>
             </option>
             <option <?php selected(Amelia_booking_form_field_selected(), 'events_list_booking')?> value="events_list_booking">
-                <?php echo esc_html__(BackendStrings::getWordPressStrings()['events_list_booking'])  ?>
+                <?php echo esc_html__(BackendStrings::get('events_list_booking'))  ?>
             </option>
             <option <?php selected(Amelia_booking_form_field_selected(), 'events_list')?> value="events_list">
-                <?php echo esc_html__(BackendStrings::getBuddyBossStrings()['booking_form_events_list'])  ?>
+                <?php echo esc_html__(BackendStrings::get('booking_form_events_list'))  ?>
             </option>
             <option <?php selected(Amelia_booking_form_field_selected(), 'events_calendar')?> value="events_calendar">
-                <?php echo esc_html__(BackendStrings::getBuddyBossStrings()['booking_form_events_calendar'])  ?>
+                <?php echo esc_html__(BackendStrings::get('booking_form_events_calendar'))  ?>
             </option>
         </select>
         <?php
@@ -336,25 +335,25 @@ if (! function_exists('Amelia_booking_form_employee')) {
                 id="Amelia_booking_form_employee"
         >
             <option <?php selected(Amelia_booking_form_field_selected(), 'step_booking')?> value="step_booking">
-                <?php echo esc_html__(BackendStrings::getWordPressStrings()['step_booking'])  ?>
+                <?php echo esc_html__(BackendStrings::get('step_booking'))  ?>
             </option>
             <option <?php selected(Amelia_booking_form_field_selected(), 'catalog_booking')?> value="catalog_booking">
-                <?php echo esc_html__(BackendStrings::getWordPressStrings()['catalog_booking'])  ?>
+                <?php echo esc_html__(BackendStrings::get('catalog_booking'))  ?>
             </option>
             <option <?php selected(Amelia_booking_form_employee_selected(), 'booking')?> value="booking">
-                <?php echo esc_html__(BackendStrings::getCommonStrings()['booking'])  ?>
+                <?php echo esc_html__(BackendStrings::get('booking'))  ?>
             </option>
             <option <?php selected(Amelia_booking_form_employee_selected(), 'catalog')?> value="catalog">
-                <?php echo esc_html__(BackendStrings::getWordPressStrings()['catalog'])  ?>
+                <?php echo esc_html__(BackendStrings::get('catalog'))  ?>
             </option>
             <option <?php selected(Amelia_booking_form_employee_selected(), 'events_list_booking')?> value="events_list_booking">
-                <?php echo esc_html__(BackendStrings::getWordPressStrings()['events_list_booking'])  ?>
+                <?php echo esc_html__(BackendStrings::get('events_list_booking'))  ?>
             </option>
             <option <?php selected(Amelia_booking_form_employee_selected(), 'events_list')?> value="events_list">
-                <?php echo esc_html__(BackendStrings::getBuddyBossStrings()['booking_form_events_list'])  ?>
+                <?php echo esc_html__(BackendStrings::get('booking_form_events_list'))  ?>
             </option>
             <option <?php selected(Amelia_booking_form_employee_selected(), 'events_calendar')?> value="events_calendar">
-                <?php echo esc_html__(BackendStrings::getBuddyBossStrings()['booking_form_events_calendar'])  ?>
+                <?php echo esc_html__(BackendStrings::get('booking_form_events_calendar'))  ?>
             </option>
         </select>
         <?php
@@ -372,7 +371,7 @@ if (! function_exists('Amelia_settings_callback_transform')) {
             <?php checked(Amelia_transform_users_enabled()); ?>
         />
         <label for="Amelia_subscribers_to_customers">
-            <?php echo esc_html__(BackendStrings::getBuddyBossStrings()['subscribers_transform_text']) ?>
+            <?php echo esc_html__(BackendStrings::get('subscribers_transform_text')) ?>
         </label>
         <?php
     }
@@ -383,7 +382,7 @@ if (! function_exists('Amelia_settings_callback_create_customers')) {
     {
         ?>
         <form method="post">
-            <input type="submit" value="<?php echo esc_attr__(BackendStrings::getBuddyBossStrings()['create_customers']) ?>" name="create_customers">
+            <input type="submit" value="<?php echo esc_attr__(BackendStrings::get('create_customers')) ?>" name="create_customers">
         </form>
         <?php
     }
@@ -394,7 +393,7 @@ if (! function_exists('Amelia_settings_callback_create_providers')) {
     {
         ?>
         <form method="post">
-            <input type="submit" value="<?php echo esc_attr__(BackendStrings::getBuddyBossStrings()['create_providers']) ?>" name="create_providers">
+            <input type="submit" value="<?php echo esc_attr__(BackendStrings::get('create_providers')) ?>" name="create_providers">
         </form>
         <?php
     }

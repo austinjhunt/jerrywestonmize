@@ -10,6 +10,5 @@ return array(
     'Requests' => array($vendorDir . '/rmccue/requests/library'),
     'Pimple' => array($vendorDir . '/pimple/pimple/src'),
     'Mailgun' => array($vendorDir . '/mailgun/mailgun-php/src'),
-    'Less' => array($vendorDir . '/oyejorge/less.php/lib'),
     'Eluceo\\iCal' => array($vendorDir . '/eluceo/ical/src'),
 );

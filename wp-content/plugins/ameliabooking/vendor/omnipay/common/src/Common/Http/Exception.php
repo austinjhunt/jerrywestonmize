@@ -2,7 +2,7 @@
 
 namespace Omnipay\Common\Http;
 
-use AmeliaPsr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
 use Throwable;
 
 abstract class Exception extends \RuntimeException

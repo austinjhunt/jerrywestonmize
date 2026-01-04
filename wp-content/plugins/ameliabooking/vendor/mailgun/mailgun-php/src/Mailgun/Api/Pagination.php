@@ -11,7 +11,7 @@ namespace Mailgun\Api;
 
 use Mailgun\Assert;
 use Mailgun\Model\PagingProvider;
-use AmeliaPsr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
 
 /**
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>

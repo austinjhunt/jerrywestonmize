@@ -25,10 +25,13 @@ class CustomFieldOptionFactory
     public static function create($data)
     {
         $customFieldOption = new CustomFieldOption(
-            new Id($data['customFieldId']),
             new Label($data['label']),
             new IntegerValue($data['position'])
         );
+
+        if (isset($data['customFieldId'])) {
+            $customFieldOption->setId(new Id($data['customFieldId']));
+        }
 
         if (isset($data['translations'])) {
             $customFieldOption->setTranslations(new Json($data['translations']));

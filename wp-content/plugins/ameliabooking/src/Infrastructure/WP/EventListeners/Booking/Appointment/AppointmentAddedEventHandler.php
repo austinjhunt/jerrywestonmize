@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -186,7 +186,8 @@ class AppointmentAddedEventHandler
                 false,
                 true,
                 true,
-                !empty($settingsService->getSetting('notifications', 'sendInvoice'))
+                $settingsService->isFeatureEnabled('invoices') &&
+                    !empty($settingsService->getSetting('notifications', 'sendInvoice'))
             );
 
             if ($settingsService->getSetting('notifications', 'smsSignedIn') === true) {

@@ -2,16 +2,16 @@
 
 namespace AmeliaHttp\Message;
 
-use AmeliaPsr\Http\Message\UriInterface;
-use AmeliaPsr\Http\Message\RequestInterface;
-use AmeliaPsr\Http\Message\StreamInterface;
+use AmeliaVendor\Psr\Http\Message\UriInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\StreamInterface;
 
 /**
  * Factory for PSR-7 Request.
  *
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
  *
- * @deprecated since version 1.1, use AmeliaPsr\Http\Message\RequestFactoryInterface instead.
+ * @deprecated since version 1.1, use AmeliaVendor\Psr\Http\Message\RequestFactoryInterface instead.
  */
 interface RequestFactory
 {

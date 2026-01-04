@@ -2,6 +2,7 @@
 
 namespace AmeliaBooking\Infrastructure\Repository\User;
 
+use AmeliaBooking\Domain\Services\Database\ConnectionInterface;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Connection;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\User\UsersTable;
@@ -13,7 +14,7 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\User\UsersTable;
  */
 class WPUserRepository
 {
-    /** @var \PDO */
+    /** @var ConnectionInterface */
     protected $connection;
 
     /** @var string */

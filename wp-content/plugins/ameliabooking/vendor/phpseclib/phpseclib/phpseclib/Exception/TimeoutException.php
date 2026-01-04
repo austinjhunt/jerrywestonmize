@@ -1,6 +1,6 @@
 <?php
 
-namespace phpseclib3\Exception;
+namespace AmeliaVendor\phpseclib3\Exception;
 
 /**
  * Indicates a timeout awaiting server response

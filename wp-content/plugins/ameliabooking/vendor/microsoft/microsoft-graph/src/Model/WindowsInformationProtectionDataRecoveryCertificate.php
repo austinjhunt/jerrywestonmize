@@ -28,15 +28,15 @@ class WindowsInformationProtectionDataRecoveryCertificate extends Entity
     * Gets the certificate
     * Data recovery Certificate
     *
-    * @return \AmeliaGuzzleHttp\Psr7\Stream|null The certificate
+    * @return \AmeliaVendor\GuzzleHttp\Psr7\Stream|null The certificate
     */
     public function getCertificate()
     {
         if (array_key_exists("certificate", $this->_propDict)) {
-            if (is_a($this->_propDict["certificate"], "\AmeliaGuzzleHttp\Psr7\Stream") || is_null($this->_propDict["certificate"])) {
+            if (is_a($this->_propDict["certificate"], "\AmeliaVendor\GuzzleHttp\Psr7\Stream") || is_null($this->_propDict["certificate"])) {
                 return $this->_propDict["certificate"];
             } else {
-                $this->_propDict["certificate"] = \AmeliaGuzzleHttp\Psr7\Utils::streamFor($this->_propDict["certificate"]);
+                $this->_propDict["certificate"] = \AmeliaVendor\GuzzleHttp\Psr7\Utils::streamFor($this->_propDict["certificate"]);
                 return $this->_propDict["certificate"];
             }
         }
@@ -47,7 +47,7 @@ class WindowsInformationProtectionDataRecoveryCertificate extends Entity
     * Sets the certificate
     * Data recovery Certificate
     *
-    * @param \AmeliaGuzzleHttp\Psr7\Stream $val The value to assign to the certificate
+    * @param \AmeliaVendor\GuzzleHttp\Psr7\Stream $val The value to assign to the certificate
     *
     * @return WindowsInformationProtectionDataRecoveryCertificate The WindowsInformationProtectionDataRecoveryCertificate
     */

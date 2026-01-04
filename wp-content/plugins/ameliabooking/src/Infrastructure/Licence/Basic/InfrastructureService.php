@@ -26,6 +26,18 @@ class InfrastructureService extends \AmeliaBooking\Infrastructure\Licence\Starte
     /**
      * @param Container $c
      *
+     * @return InfrastructureServices\Google\AbstractGoogleCalendarMiddlewareService
+     */
+    public static function getCalendarGoogleMiddlewareService($c)
+    {
+        return new InfrastructureServices\Google\GoogleCalendarMiddlewareService(
+            $c->get('domain.settings.service')
+        );
+    }
+
+    /**
+     * @param Container $c
+     *
      * @return InfrastructureServices\Outlook\AbstractOutlookCalendarService
      */
     public static function getCalendarOutlookService($c)

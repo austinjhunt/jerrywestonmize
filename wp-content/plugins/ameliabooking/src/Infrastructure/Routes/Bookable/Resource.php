@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See COPYING.md for license details.
  */
 
@@ -12,6 +12,7 @@ use AmeliaBooking\Application\Controller\Bookable\Resource\DeleteResourceControl
 use AmeliaBooking\Application\Controller\Bookable\Resource\GetResourcesController;
 use AmeliaBooking\Application\Controller\Bookable\Resource\UpdateResourceController;
 use AmeliaBooking\Application\Controller\Bookable\Resource\UpdateResourceStatusController;
+use AmeliaBooking\Application\Controller\Bookable\Resource\GetResourceController;
 use Slim\App;
 
 /**
@@ -27,6 +28,8 @@ class Resource
     public static function routes(App $app)
     {
         $app->get('/resources', GetResourcesController::class);
+
+        $app->get('/resources/{id:[0-9]+}', GetResourceController::class);
 
         $app->post('/resources', AddResourceController::class);
 

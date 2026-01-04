@@ -2,8 +2,8 @@
 
 namespace AmeliaHttp\Message\MessageFactory;
 
-use AmeliaGuzzleHttp\Psr7\Request;
-use AmeliaGuzzleHttp\Psr7\Response;
+use AmeliaVendor\GuzzleHttp\Psr7\Request;
+use AmeliaVendor\GuzzleHttp\Psr7\Response;
 use AmeliaHttp\Message\MessageFactory;
 
 /**

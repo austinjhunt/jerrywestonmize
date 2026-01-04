@@ -7,6 +7,7 @@ use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Booking\EventApplicationService;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
+use AmeliaBooking\Application\Services\User\ProviderApplicationService;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
 use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
@@ -17,6 +18,7 @@ use AmeliaBooking\Domain\Entity\Booking\Event\EventTicket;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Entity\User\Provider;
+use AmeliaBooking\Domain\Factory\Booking\Event\EventFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\String\BookableType;
@@ -56,13 +58,21 @@ class GetEventBookingsCommandHandler extends CommandHandler
         $eventApplicationService = $this->container->get('application.booking.event.service');
         /** @var CustomerBookingRepository $bookingRepository */
         $bookingRepository = $this->container->get('domain.booking.customerBooking.repository');
+        /** @var ProviderApplicationService $providerAS */
+        $providerAS = $this->container->get('application.user.provider.service');
 
         $params = $command->getField('params');
+
+        if (isset($params['dates']) && empty($params['dates'][0]) && empty($params['dates'][1])) {
+            unset($params['dates']);
+        }
+
+        $isCabinetPage = $command->getPage() === 'cabinet';
 
         try {
             /** @var AbstractUser $user */
             $user = $command->getUserApplicationService()->authorization(
-                $command->getToken(),
+                $isCabinetPage ? $command->getToken() : null,
                 $command->getCabinetType()
             );
         } catch (AuthorizationException $e) {
@@ -86,25 +96,14 @@ class GetEventBookingsCommandHandler extends CommandHandler
 
         $providerTimeZoneSet = ($user instanceof Provider) && $user->getTimeZone() && $user->getTimeZone()->getValue();
 
-        if (isset($params['dates'][0])) {
-            $params['dates'][0] ? $params['dates'][0] .= ' 00:00:00' : null;
+        if (!empty($params['dates'])) {
+            if (!empty($params['dates'][0])) {
+                $params['dates'][0] .= ' 00:00:00';
+            }
+            if (!empty($params['dates'][1])) {
+                $params['dates'][1] .= ' 23:59:59';
+            }
         }
-
-        if (isset($params['dates'][1])) {
-            $params['dates'][1] ? $params['dates'][1] .= ' 23:59:59' : null;
-        }
-
-        $itemsPerPageBackEnd = $settingsDS->getSetting('general', 'itemsPerPageBackEnd');
-
-        /** @var Event $event */
-        $event = $eventApplicationService->getEventById(
-            (int)$params['events'][0],
-            [
-                'fetchEventsTickets'    => true,
-                'fetchBookings'         => true,
-                'fetchBookingsTickets'  => true,
-            ]
-        );
 
         $attendeeCount = 0;
 
@@ -112,77 +111,89 @@ class GetEventBookingsCommandHandler extends CommandHandler
 
         $maxCapacity = 0;
 
-        if ($event->getCustomPricing()->getValue()) {
-            /** @var CustomerBooking $customerBooking */
-            foreach ($event->getBookings()->getItems() as $customerBooking) {
-                if (
-                    $customerBooking->getStatus()->getValue() === BookingStatus::APPROVED ||
-                    $customerBooking->getStatus()->getValue() === BookingStatus::PENDING
-                ) {
-                    /** @var CustomerBookingEventTicket $bookingToEventTicket */
-                    foreach ($customerBooking->getTicketsBooking()->getItems() as $bookingToEventTicket) {
-                        $attendeeCount += $bookingToEventTicket->getPersons()->getValue();
-                    }
-                }
-
-                if ($customerBooking->getStatus()->getValue() === BookingStatus::WAITING) {
-                    /** @var CustomerBookingEventTicket $bookingToEventTicket */
-                    foreach ($customerBooking->getTicketsBooking()->getItems() as $bookingToEventTicket) {
-                        $waitingCount += $bookingToEventTicket->getPersons()->getValue();
-                    }
-                }
-            }
-
-            /** @var EventTicket $ticket */
-            foreach ($event->getCustomTickets()->getItems() as $ticket) {
-                $maxCapacity += $ticket->getSpots()->getValue();
-            }
-        } else {
-            $maxCapacity = $event->getMaxCapacity()->getValue();
-
-            /** @var CustomerBooking $customerBooking */
-            foreach ($event->getBookings()->getItems() as $customerBooking) {
-                if (
-                    $customerBooking->getStatus()->getValue() === BookingStatus::APPROVED ||
-                    $customerBooking->getStatus()->getValue() === BookingStatus::PENDING
-                ) {
-                    $attendeeCount += $customerBooking->getPersons()->getValue();
-                }
-            }
-
-            /** @var CustomerBooking $customerBooking */
-            foreach ($event->getBookings()->getItems() as $customerBooking) {
-                if ($customerBooking->getStatus()->getValue() === BookingStatus::WAITING) {
-                    $waitingCount += $customerBooking->getPersons()->getValue();
-                }
-            }
-        }
-
-        $waitingListSettings = $settingsDS->getSetting('appointments', 'waitingListEvents');
-
-        $eventSettings = $waitingListSettings['enabled'] && $event->getSettings() && $event->getSettings()->getValue()
-            ? json_decode($event->getSettings()->getValue(), true)
-            : null;
-
         $waitingCapacity = 0;
 
-        if ($eventSettings && !empty($eventSettings['waitingList']['enabled'])) {
+        if ($isCabinetPage) {
+            /** @var Event $event */
+            $event = $eventApplicationService->getEventById(
+                (int)$params['events'][0],
+                [
+                    'fetchEventsTickets'    => true,
+                    'fetchBookings'         => true,
+                    'fetchBookingsTickets'  => true,
+                ]
+            );
+
+
             if ($event->getCustomPricing()->getValue()) {
+                /** @var CustomerBooking $customerBooking */
+                foreach ($event->getBookings()->getItems() as $customerBooking) {
+                    if (
+                        $customerBooking->getStatus()->getValue() === BookingStatus::APPROVED ||
+                        $customerBooking->getStatus()->getValue() === BookingStatus::PENDING
+                    ) {
+                        /** @var CustomerBookingEventTicket $bookingToEventTicket */
+                        foreach ($customerBooking->getTicketsBooking()->getItems() as $bookingToEventTicket) {
+                            $attendeeCount += $bookingToEventTicket->getPersons()->getValue();
+                        }
+                    }
+
+                    if ($customerBooking->getStatus()->getValue() === BookingStatus::WAITING) {
+                        /** @var CustomerBookingEventTicket $bookingToEventTicket */
+                        foreach ($customerBooking->getTicketsBooking()->getItems() as $bookingToEventTicket) {
+                            $waitingCount += $bookingToEventTicket->getPersons()->getValue();
+                        }
+                    }
+                }
+
                 /** @var EventTicket $ticket */
                 foreach ($event->getCustomTickets()->getItems() as $ticket) {
-                    $waitingCapacity += $ticket->getWaitingListSpots()->getValue();
+                    $maxCapacity += $ticket->getSpots()->getValue();
                 }
             } else {
-                $waitingCapacity = $eventSettings['waitingList']['maxCapacity'];
+                $maxCapacity = $event->getMaxCapacity()->getValue();
+
+                /** @var CustomerBooking $customerBooking */
+                foreach ($event->getBookings()->getItems() as $customerBooking) {
+                    if (
+                        $customerBooking->getStatus()->getValue() === BookingStatus::APPROVED ||
+                        $customerBooking->getStatus()->getValue() === BookingStatus::PENDING
+                    ) {
+                        $attendeeCount += $customerBooking->getPersons()->getValue();
+                    }
+                }
+
+                /** @var CustomerBooking $customerBooking */
+                foreach ($event->getBookings()->getItems() as $customerBooking) {
+                    if ($customerBooking->getStatus()->getValue() === BookingStatus::WAITING) {
+                        $waitingCount += $customerBooking->getPersons()->getValue();
+                    }
+                }
+            }
+
+            $eventSettings = $settingsDS->isFeatureEnabled('waitingList') && $event->getSettings() && $event->getSettings()->getValue()
+                ? json_decode($event->getSettings()->getValue(), true)
+                : null;
+
+
+            if ($eventSettings && !empty($eventSettings['waitingList']['enabled'])) {
+                if ($event->getCustomPricing()->getValue()) {
+                    /** @var EventTicket $ticket */
+                    foreach ($event->getCustomTickets()->getItems() as $ticket) {
+                        $waitingCapacity += $ticket->getWaitingListSpots()->getValue();
+                    }
+                } else {
+                    $waitingCapacity = $eventSettings['waitingList']['maxCapacity'];
+                }
             }
         }
 
-        $bookingIds = $bookingRepository->getEventBookingIdsByCriteria($params, $itemsPerPageBackEnd);
+        $bookingIds = $bookingRepository->getEventBookingIdsByCriteria($params, !empty($params['limit']) ? $params['limit'] : 10);
 
         if (!$bookingIds && $params['page'] && (int)$params['page'] > 1) {
             $params['page'] = 1;
 
-            $bookingIds = $bookingRepository->getEventBookingIdsByCriteria($params, $itemsPerPageBackEnd);
+            $bookingIds = $bookingRepository->getEventBookingIdsByCriteria($params, !empty($params['limit']) ? $params['limit'] : 10);
         }
 
         if (empty($bookingIds)) {
@@ -211,7 +222,8 @@ class GetEventBookingsCommandHandler extends CommandHandler
                     'fetchBookingsPayments' => true,
                     'fetchBookingsCoupons' => true,
                     'fetchProviders' => true,
-                    'fetchCustomers' => true
+                    'fetchCustomers' => true,
+                    'fetchEvent' => true,
                 ]
             )
         );
@@ -219,22 +231,25 @@ class GetEventBookingsCommandHandler extends CommandHandler
 
         $customersNoShowCountIds = [];
 
-        $noShowTagEnabled = $settingsDS->getSetting('roles', 'enableNoShowTag');
+        $noShowTagEnabled = $settingsDS->isFeatureEnabled('noShowTag');
 
         $eventBookings = [];
 
-        foreach ($bookings as $key => &$booking) {
+        foreach ($bookings as &$booking) {
             ksort($booking['payments']);
 
             if ($noShowTagEnabled) {
                 $customersNoShowCountIds[] = $booking['customer']['id'];
             }
 
-            foreach ($booking['eventPeriods'] as &$period) {
+            foreach ($booking['event']['periods'] as &$period) {
                 $period['periodStart'] = DateTimeService::getCustomDateTimeFromUtc($period['periodStart']);
+                $period['periodEnd']   = DateTimeService::getCustomDateTimeFromUtc($period['periodEnd']);
                 if ($providerTimeZoneSet) {
                     $period['periodStart'] =
                         DateTimeService::getCustomDateTimeObjectInTimeZone($period['periodStart'], $user->getTimeZone()->getValue())->format('Y-m-d H:i:s');
+                    $period['periodEnd']   =
+                        DateTimeService::getCustomDateTimeObjectInTimeZone($period['periodEnd'], $user->getTimeZone()->getValue())->format('Y-m-d H:i:s');
                 }
             }
 
@@ -252,10 +267,34 @@ class GetEventBookingsCommandHandler extends CommandHandler
 
             $booking['ticketsData'] = !empty($booking['ticketsData']) ? $booking['ticketsData'] : [];
 
-            $eventBookings[] = [
+            if (!empty($booking['event']['providers'])) {
+                foreach ($booking['event']['providers'] as &$provider) {
+                    if (!empty($provider['badgeId'])) {
+                        $provider['badge'] = $providerAS->getBadge($provider['badgeId']);
+                    }
+                }
+            }
+
+            if (!empty($booking['event']['organizer']) && !empty($booking['event']['organizer']['badgeId'])) {
+                $booking['event']['organizer']['badge'] = $providerAS->getBadge($booking['event']['organizer']['badgeId']);
+            }
+
+            $wcTax = 0;
+            $wcDiscount = 0;
+
+            foreach ($booking['payments'] as $payment) {
+                $paymentAS->addWcFields($payment);
+
+                $wcTax += !empty($payment['wcItemTaxValue']) ? $payment['wcItemTaxValue'] : 0;
+
+                $wcDiscount += !empty($payment['wcItemCouponValue']) ? $payment['wcItemCouponValue'] : 0;
+            }
+
+            $eventBooking = [
                 'id' => $booking['id'],
                 'bookedSpots' => $persons,
                 'status' => $booking['event']['status'] === 'canceled' || $booking['event']['status'] === 'rejected' ? 'canceled' : $booking['status'],
+                'persons' => $persons,
                 'checked' => false,
                 'customer' => [
                     'id' => $booking['customer']['id'],
@@ -267,18 +306,21 @@ class GetEventBookingsCommandHandler extends CommandHandler
                 ],
                 'code' => !empty($booking['token']) ? substr($booking['token'], 0, 5) : '',
                 'event' => [
-                    'id' => $booking['event']['id'],
+                    'id' => (int)$booking['event']['id'],
                     'name' => $booking['event']['name'],
-                    'startDate' => explode(' ', array_values($booking['eventPeriods'])[0]['periodStart'])[0],
-                    'startTime' => explode(' ', array_values($booking['eventPeriods'])[0]['periodStart'])[1],
+                    'startDate' => explode(' ', array_values($booking['event']['periods'])[0]['periodStart'])[0],
+                    'endDate' => explode(' ', array_values($booking['event']['periods'])[sizeof($booking['event']['periods']) - 1]['periodEnd'])[0],
+                    'startTime' => explode(' ', array_values($booking['event']['periods'])[0]['periodStart'])[1],
                     'organizer' => !empty($booking['event']['organizer']) ? $booking['event']['organizer'] : null,
                     'staff' => !empty($booking['event']['providers']) ? array_values($booking['event']['providers']) : [],
-                    'isZoom' => !empty(array_values($booking['eventPeriods'])[0]['zoomMeeting']),
-                    'isGoogleMeet' => !empty(array_values($booking['eventPeriods'])[0]['googleMeetUrl']),
-                    'isWaitingList' => $booking['event']['isWaitingList'],
+                    'isZoom' => !empty(array_values($booking['event']['periods'])[0]['zoomMeeting']),
+                    'isGoogleMeet' => !empty(array_values($booking['event']['periods'])[0]['googleMeetUrl']),
+                    'isMicrosoftTeams' => !empty(array_values($booking['event']['periods'])[0]['microsoftTeamsUrl']),
+                    'isLessonSpace' => !empty(array_values($booking['event']['periods'])[0]['lessonSpace']),
+                    'isWaitingList' => !empty($booking['event']['settings']) ?
+                        json_decode($booking['event']['settings'], true)['waitingList']['enabled'] :
+                        false,
                 ],
-                'persons' => $booking['persons'],
-                'customFields' => $booking['customFields'],
                 'ticketsData' => $booking['ticketsData'],
                 'tax' => $booking['tax'],
                 'price' => $booking['price'],
@@ -286,11 +328,18 @@ class GetEventBookingsCommandHandler extends CommandHandler
                 'coupon' => !empty($booking['coupon']) ? $booking['coupon'] : null,
                 'payment' => [
                     'status' => $paymentAS->getFullStatus($booking, BookableType::EVENT),
-                    'total'  => $paymentAS->calculateAppointmentPrice($booking, BookableType::EVENT),
+                    'total'  => $paymentAS->calculateAppointmentPrice($booking, BookableType::EVENT) + $wcTax - $wcDiscount,
                 ],
                 'payments' => array_values($booking['payments']),
                 'qrCodes' => !empty($booking['qrCodes']) ? $booking['qrCodes'] : null,
+                'cancelable' => $eventApplicationService->isCancelable(EventFactory::create($booking['event']), $user),
             ];
+
+            if ($isCabinetPage) {
+                $eventBooking['customFields'] = $booking['customFields'];
+            }
+
+            $eventBookings[] = $eventBooking;
         }
 
 

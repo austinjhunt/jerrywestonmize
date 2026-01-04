@@ -17,7 +17,7 @@ final class Priority
     public const MOST_OCCUPIED   = 'most_occupied';
 
     /**
-     * @var int
+     * @var string
      */
     private $value;
 

@@ -83,6 +83,14 @@ class SettingsService
     }
 
     /**
+     * @return mixed
+     */
+    public function getBackendSettings()
+    {
+        return $this->settingsStorage->getBackendSettings();
+    }
+
+    /**
      * @param $settingCategoryKey
      * @param $settingKey
      * @param $settingValue
@@ -134,7 +142,7 @@ class SettingsService
     {
         $data = $entitySettingsJson ? json_decode($entitySettingsJson->getValue(), true) : [];
 
-        $isOldEntitySettings = !isset($data['activation']['version']);
+        $isOldEntitySettings = ! isset($data['activation']['version']);
 
         if ($isOldEntitySettings && isset($data['general']['minimumTimeRequirementPriorToCanceling'])) {
             $data['general']['minimumTimeRequirementPriorToRescheduling'] =
@@ -162,6 +170,25 @@ class SettingsService
         $entitiesStash = get_option('amelia_stash');
 
         return $entitiesStash ? json_decode($entitiesStash, true) : [];
+    }
+
+    public function isFeatureEnabled($feature)
+    {
+        // First check if the feature is enabled in settings
+        $featureSettings = $this->getSetting('featuresIntegrations', $feature);
+
+        if (!is_array($featureSettings) || !isset($featureSettings['enabled'])) {
+            return false;
+        }
+
+        // If the feature is not enabled in settings, return false
+        if (!$featureSettings['enabled']) {
+            return false;
+        }
+
+        // Check if the current license has access to this feature
+        // If not, the feature is considered disabled even if enabled in settings
+        return \AmeliaBooking\Infrastructure\Licence\Licence::hasFeatureAccess($feature);
     }
 
     /**

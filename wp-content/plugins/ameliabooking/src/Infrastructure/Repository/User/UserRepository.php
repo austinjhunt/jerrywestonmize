@@ -122,7 +122,7 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
             throw new QueryExecutionException('Unable to add data in ' . __CLASS__, $e->getCode(), $e);
         }
 
-        return $this->connection->lastInsertId();
+        return (int) $this->connection->lastInsertId();
     }
 
     /**
@@ -361,7 +361,7 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
      * @param boolean $setPassword
      * @param boolean $setUsedTokens
      *
-     * @return Admin|Customer|Manager|Provider
+     * @return Admin|Customer|Manager|Provider|null
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      */
@@ -401,7 +401,7 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
     /**
      * @param string $phone
      *
-     * @return Admin|Customer|Manager|Provider
+     * @return Admin|Customer|Manager|Provider|null
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      */

@@ -1,13 +1,13 @@
 <?php
 
-namespace AmeliaSabre\VObject\Recur;
+namespace AmeliaVendor\Sabre\VObject\Recur;
 
 use DateTimeImmutable;
 use DateTimeInterface;
 use Iterator;
-use AmeliaSabre\VObject\DateTimeParser;
-use AmeliaSabre\VObject\InvalidDataException;
-use AmeliaSabre\VObject\Property;
+use AmeliaVendor\Sabre\VObject\DateTimeParser;
+use AmeliaVendor\Sabre\VObject\InvalidDataException;
+use AmeliaVendor\Sabre\VObject\Property;
 
 /**
  * RRuleParser.

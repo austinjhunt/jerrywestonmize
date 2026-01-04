@@ -70,16 +70,8 @@ class CustomerApplicationService extends UserApplicationService
 
         $user = UserFactory::create($fields);
 
-        if (!$user instanceof AbstractUser) {
-            $result->setResult(CommandResult::RESULT_ERROR);
-            $result->setMessage('Could not create a new user entity.');
-
-            return $result;
-        }
-
         /** @var UserRepository $userRepository */
         $userRepository = $this->container->get('domain.users.repository');
-
 
         if ($oldUser = $userRepository->getByEmail($user->getEmail()->getValue())) {
             $result->setResult(CommandResult::RESULT_CONFLICT);

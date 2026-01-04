@@ -5,6 +5,7 @@ namespace AmeliaBooking\Application\Commands\Mailchimp;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
+use AmeliaBooking\Application\Services\Validation\ValidationService;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Infrastructure\Services\Mailchimp\AbstractMailchimpService;
 
@@ -21,11 +22,22 @@ class FetchAccessTokenMailchimpCommandHandler extends CommandHandler
      * @return CommandResult
      * @throws \AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException
-     * @throws \Interop\Container\Exception\ContainerException
      * @throws AccessDeniedException
      */
     public function handle(FetchAccessTokenMailchimpCommand $command)
     {
+        if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::SETTINGS)) {
+            throw new AccessDeniedException('You are not allowed to write settings.');
+        }
+
+        $params = $command->getFields();
+
+        $stringToVerify = "/mailchimp/authorization/token&access_token=" . $params['access_token'];
+
+        if (!ValidationService::verifySignature($stringToVerify, 'middleware', !empty($params['signature']) ? $params['signature'] : null)) {
+            throw new AccessDeniedException('Signature mismatch.');
+        }
+
         $result = new CommandResult();
 
         $this->checkMandatoryFields($command);
@@ -35,10 +47,6 @@ class FetchAccessTokenMailchimpCommandHandler extends CommandHandler
 
         /** @var \AmeliaBooking\Domain\Services\Settings\SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
-
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::SETTINGS)) {
-            throw new AccessDeniedException('You are not allowed to write settings.');
-        }
 
         $accessToken = $command->getFields()['access_token'];
 
@@ -73,7 +81,7 @@ class FetchAccessTokenMailchimpCommandHandler extends CommandHandler
             ]
         );
 
-        $result->setUrl(AMELIA_SITE_URL . '/wp-admin/admin.php?page=wpamelia-settings&mailchimp=1');
+        $result->setUrl(AMELIA_SITE_URL . '/wp-admin/admin.php?page=wpamelia-features-integrations#/integrations/mailchimp');
 
         return $result;
     }

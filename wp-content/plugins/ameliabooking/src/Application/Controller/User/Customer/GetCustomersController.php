@@ -28,7 +28,7 @@ class GetCustomersController extends Controller
 
         $params = (array)$request->getQueryParams();
 
-        $this->setArrayParams($params);
+        $this->setArrayParams($params, ['noShow', 'includeCustomers']);
 
         $command->setField('params', $params);
 

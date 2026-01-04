@@ -8,15 +8,43 @@ $helperService = $this->container->get('application.helper.service');
 
 $data = $invoiceData['placeholders'];
 
+$locale = get_locale();
+$localePrefix = substr($locale, 0, 2);
+
+$googleFontCss = null;
+switch ($localePrefix) {
+    case 'ja':
+        $googleFontCss = 'https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap';
+        $fontFamily = "'Noto Sans JP', 'DejaVu Sans', sans-serif";
+        break;
+    case 'ko':
+        $googleFontCss = 'https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap';
+        $fontFamily = "'Noto Sans KR', 'DejaVu Sans', sans-serif";
+        break;
+    case 'th':
+        $googleFontCss = 'https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700&display=swap';
+        $fontFamily = "'Noto Sans Thai', 'DejaVu Sans', sans-serif";
+        break;
+    case 'zh':
+        $googleFontCss = 'https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap';
+        $fontFamily = "'Noto Sans SC', 'DejaVu Sans', sans-serif";
+        break;
+    default:
+        $fontFamily = "'DejaVu Sans', sans-serif";
+}
+
 ?>
 <!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <?php if (!empty($googleFontCss)) : ?>
+        <link rel="stylesheet" href="<?php echo $googleFontCss; ?>">
+    <?php endif; ?>
   <style>
-      body { margin: 0; font-family: 'DejaVu Sans', sans-serif; line-height: 15px; }
-      html { margin: 0; font-family: 'DejaVu Sans', sans-serif; line-height: 15px;}
-      @page { margin: 0; font-family: 'DejaVu Sans', sans-serif; line-height: 15px;}
+      body { margin: 0; font-family: <?php echo $fontFamily; ?>; line-height: 15px; }
+      html { margin: 0; font-family: <?php echo $fontFamily; ?>; line-height: 15px;}
+      @page { margin: 0; font-family: <?php echo $fontFamily; ?>; line-height: 15px;}
 
       .invoice-header {
           background-color: #F5F5F5;
@@ -213,7 +241,7 @@ $data = $invoiceData['placeholders'];
       }
 
   </style>
-  <title><?php echo BackendStrings::getFinanceStrings()['invoice'] ?></title>
+  <title><?php echo BackendStrings::get('invoice') ?></title>
 </head>
 <body>
 <div class="invoice">
@@ -238,7 +266,7 @@ $data = $invoiceData['placeholders'];
             </table>
 
             <h2>
-                <?php echo BackendStrings::getFinanceStrings()['invoice'] ?>
+                <?php echo BackendStrings::get('invoice') ?>
             </h2>
 
         </div>
@@ -250,7 +278,7 @@ $data = $invoiceData['placeholders'];
             <table class="invoice-header-table">
                 <tr>
                     <td class="invoice-header-table-invoice-number">
-                        <span class="invoice-header-table-invoice-number-label"><?php echo BackendStrings::getFinanceStrings()['invoice'] ?></span>
+                        <span class="invoice-header-table-invoice-number-label"><?php echo BackendStrings::get('invoice') ?></span>
                         <span class="invoice-header-table-invoice-number-value">#<?php echo str_pad($data['invoice_number'], 4, '0', STR_PAD_LEFT) ?></span>
                     </td>
                     <td class="invoice-header-table-company invoice-header-table-company-name">
@@ -259,7 +287,7 @@ $data = $invoiceData['placeholders'];
                 </tr>
                 <tr>
                     <td class="invoice-header-table-invoice-issued">
-                        <span class="invoice-header-table-invoice-issued-label"><?php echo BackendStrings::getFinanceStrings()['issued'] ?></span>
+                        <span class="invoice-header-table-invoice-issued-label"><?php echo BackendStrings::get('issued') ?></span>
                         <span class="invoice-header-table-invoice-issued-date"><?php echo $data['invoice_issued'] ?></span>
                     </td>
                     <td class="invoice-header-table-company">
@@ -304,7 +332,7 @@ $data = $invoiceData['placeholders'];
     <div class="invoice-body">
         <table class="invoice-body-customer">
             <tr class="invoice-body-customer-to">
-                <td><?php echo BackendStrings::getCommonStrings()['to_upper'] ?></td>
+                <td><?php echo BackendStrings::get('to_upper') ?></td>
             </tr>
             <tr>
                 <td class="invoice-body-customer-name"><?php echo $data['customer_full_name'] ?></td>
@@ -320,7 +348,7 @@ $data = $invoiceData['placeholders'];
         <?php if (!empty($data['customer_custom_fields'])) : ?>
             <table class="invoice-body-cf">
                 <tr>
-                    <td><?php echo BackendStrings::getFinanceStrings()['invoice_additional_information'] ?></td>
+                    <td><?php echo BackendStrings::get('invoice_additional_information') ?></td>
                 </tr>
                 <?php foreach ($data['customer_custom_fields'] as $key => $customerCustomField) : ?>
                     <tr>
@@ -334,15 +362,15 @@ $data = $invoiceData['placeholders'];
         <table class='invoice-body-items'>
             <thead class="invoice-body-items-name">
             <tr>
-                <td><?php echo BackendStrings::getFinanceStrings()['invoice_item']; ?></td>
-                <td><?php echo BackendStrings::getFinanceStrings()['invoice_unit_price'] .
-                        ($invoiceData['includedTax'] ? BackendStrings::getFinanceStrings()['invoice_incl_tax'] : ''); ?></td>
-                <td><?php echo BackendStrings::getFinanceStrings()['invoice_qty']; ?></td>
-                <td><?php echo BackendStrings::getFinanceStrings()['invoice_total_item_price'] .
-                        ($invoiceData['includedTax'] ? BackendStrings::getFinanceStrings()['invoice_incl_tax'] : ''); ?></td>
+                <td><?php echo BackendStrings::get('invoice_item'); ?></td>
+                <td><?php echo BackendStrings::get('invoice_unit_price') .
+                        ($invoiceData['includedTax'] ? BackendStrings::get('invoice_incl_tax') : ''); ?></td>
+                <td><?php echo BackendStrings::get('invoice_qty'); ?></td>
+                <td><?php echo BackendStrings::get('invoice_total_item_price') .
+                        ($invoiceData['includedTax'] ? BackendStrings::get('invoice_incl_tax') : ''); ?></td>
                 <?php if ($invoiceData['taxEnabled']) : ?>
-                    <td><?php echo BackendStrings::getFinanceStrings()['invoice_tax_rate']; ?></td>
-                    <td><?php echo BackendStrings::getFinanceStrings()['invoice_tax_amount']; ?></td>
+                    <td><?php echo BackendStrings::get('invoice_tax_rate'); ?></td>
+                    <td><?php echo BackendStrings::get('invoice_tax_amount'); ?></td>
                 <?php endif; ?>
             </tr>
             </thead>
@@ -364,19 +392,19 @@ $data = $invoiceData['placeholders'];
         <div class="invoice-body-sum">
             <?php if ($invoiceData['subtotal'] !== $invoiceData['total']) : ?>
                 <div>
-                    <span><?php echo BackendStrings::getFinanceStrings()['invoice_subtotal'];?></span>
+                    <span><?php echo BackendStrings::get('invoice_subtotal');?></span>
                     <span><?php echo $helperService->getFormattedPrice($invoiceData['subtotal']) ?></span>
                 </div>
             <?php endif; ?>
             <?php if ($invoiceData['discount'] > 0) : ?>
                 <div>
-                    <span><?php echo BackendStrings::getFinanceStrings()['invoice_discount']; ?></span>
+                    <span><?php echo BackendStrings::get('invoice_discount'); ?></span>
                     <span><?php echo $helperService->getFormattedPrice($invoiceData['discount']) ?></span>
                 </div>
             <?php endif; ?>
             <?php if ($invoiceData['tax'] > 0) : ?>
                 <div>
-                    <span><?php echo BackendStrings::getFinanceStrings()['invoice_tax']; ?></span>
+                    <span><?php echo BackendStrings::get('invoice_tax'); ?></span>
                     <span><?php echo $helperService->getFormattedPrice($invoiceData['tax']) ?></span>
                 </div>
             <?php endif; ?>
@@ -384,18 +412,18 @@ $data = $invoiceData['placeholders'];
                 <hr>
             <?php endif; ?>
             <div class="invoice-body-total">
-                <span><?php echo BackendStrings::getFinanceStrings()['invoice_total'] .
-                        ($invoiceData['includedTax'] && $invoiceData['total'] > 0 ? BackendStrings::getFinanceStrings()['invoice_incl_tax'] : ''); ?></span>
+                <span><?php echo BackendStrings::get('invoice_total') .
+                        ($invoiceData['includedTax'] && $invoiceData['total'] > 0 ? BackendStrings::get('invoice_incl_tax') : ''); ?></span>
                 <span><?php echo $helperService->getFormattedPrice($invoiceData['total']) ?></span>
             </div>
             <?php if ($invoiceData['paid']) : ?>
                 <hr>
                 <div>
-                    <span><?php echo BackendStrings::getFinanceStrings()['invoice_paid']; ?></span>
+                    <span><?php echo BackendStrings::get('invoice_paid'); ?></span>
                     <span><?php echo $helperService->getFormattedPrice($invoiceData['paid']) ?></span>
                 </div>
                 <div>
-                    <span><?php echo BackendStrings::getFinanceStrings()['invoice_left_to_pay']; ?></span>
+                    <span><?php echo BackendStrings::get('invoice_left_to_pay'); ?></span>
                     <span><?php echo $helperService->getFormattedPrice($invoiceData['leftToPay']) ?></span>
                 </div>
             <?php endif; ?>
@@ -404,9 +432,9 @@ $data = $invoiceData['placeholders'];
     </div>
 
     <div class="invoice-footer">
-<!--        <div class="invoice-footer-info">--><?php //echo BackendStrings::getFinanceStrings()['invoice_payment_info']; ?><!--</div>-->
+<!--        <div class="invoice-footer-info">--><?php //echo BackendStrings::get('invoice_payment_info'); ?><!--</div>-->
         <div class="invoice-footer-method">
-            <div><?php echo BackendStrings::getFinanceStrings()['invoice_payment_method']; ?></div>
+            <div><?php echo BackendStrings::get('invoice_payment_method'); ?></div>
             <div><?php echo $data['invoice_method'] ?></div>
         </div>
     </div>

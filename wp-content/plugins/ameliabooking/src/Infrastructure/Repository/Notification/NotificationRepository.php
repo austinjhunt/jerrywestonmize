@@ -26,7 +26,7 @@ class NotificationRepository extends AbstractRepository implements NotificationR
     /**
      * @param Notification $entity
      *
-     * @return bool
+     * @return int
      * @throws QueryExecutionException
      */
     public function add($entity)
@@ -129,13 +129,15 @@ class NotificationRepository extends AbstractRepository implements NotificationR
     }
 
     /**
+     * @param bool $includeCustom Whether to include custom notifications
      * @return Collection
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      */
-    public function getAll()
+    public function getAll($includeCustom = true)
     {
-        $custom = !self::CUSTOM ? ' WHERE customName IS NULL' : '';
+        // Only include custom notifications if both self::CUSTOM is true AND $includeCustom parameter is true
+        $custom = (!self::CUSTOM || !$includeCustom) ? ' WHERE customName IS NULL' : '';
 
         try {
             $statement = $this->connection->query($this->selectQuery() . $custom);
@@ -156,14 +158,16 @@ class NotificationRepository extends AbstractRepository implements NotificationR
     /**
      * @param $name
      * @param $type
+     * @param bool $includeCustom Whether to include custom notifications (default: true for backward compatibility)
      *
      * @return Collection
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      */
-    public function getByNameAndType($name, $type)
+    public function getByNameAndType($name, $type, $includeCustom = true)
     {
-        $custom = !self::CUSTOM ? 'customName IS NULL AND ' : '';
+        // Only include custom notifications if both self::CUSTOM is true AND $includeCustom parameter is true
+        $custom = (!self::CUSTOM || !$includeCustom) ? 'customName IS NULL AND ' : '';
 
         try {
             $statement = $this->connection->prepare(

@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\TestHelpers;
+namespace AmeliaVendor\Stripe\TestHelpers;
 
 /**
  * A test clock enables deterministic control over objects in testmode. With a test clock, you can create
@@ -17,9 +17,9 @@ namespace AmeliaStripe\TestHelpers;
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
  * @property null|string $name The custom name supplied at creation.
  * @property string $status The status of the Test Clock.
- * @property (object{advancing?: (object{target_frozen_time: int}&\AmeliaStripe\StripeObject)}&\AmeliaStripe\StripeObject) $status_details
+ * @property (object{advancing?: (object{target_frozen_time: int}&\AmeliaVendor\Stripe\StripeObject)}&\AmeliaVendor\Stripe\StripeObject) $status_details
  */
-class TestClock extends \AmeliaStripe\ApiResource
+class TestClock extends \AmeliaVendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'test_helpers.test_clock';
 
@@ -35,7 +35,7 @@ class TestClock extends \AmeliaStripe\ApiResource
      *
      * @return TestClock the created resource
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function create($params = null, $options = null)
     {
@@ -43,7 +43,7 @@ class TestClock extends \AmeliaStripe\ApiResource
         $url = static::classUrl();
 
         list($response, $opts) = static::_staticRequest('post', $url, $params, $options);
-        $obj = \AmeliaStripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj = \AmeliaVendor\Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
 
         return $obj;
@@ -57,7 +57,7 @@ class TestClock extends \AmeliaStripe\ApiResource
      *
      * @return TestClock the deleted resource
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function delete($params = null, $opts = null)
     {
@@ -76,15 +76,15 @@ class TestClock extends \AmeliaStripe\ApiResource
      * @param null|array{ending_before?: string, expand?: string[], limit?: int, starting_after?: string} $params
      * @param null|array|string $opts
      *
-     * @return \AmeliaStripe\Collection<TestClock> of ApiResources
+     * @return \AmeliaVendor\Stripe\Collection<TestClock> of ApiResources
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function all($params = null, $opts = null)
     {
         $url = static::classUrl();
 
-        return static::_requestPage($url, \AmeliaStripe\Collection::class, $params, $opts);
+        return static::_requestPage($url, \AmeliaVendor\Stripe\Collection::class, $params, $opts);
     }
 
     /**
@@ -95,11 +95,11 @@ class TestClock extends \AmeliaStripe\ApiResource
      *
      * @return TestClock
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public static function retrieve($id, $opts = null)
     {
-        $opts = \AmeliaStripe\Util\RequestOptions::parse($opts);
+        $opts = \AmeliaVendor\Stripe\Util\RequestOptions::parse($opts);
         $instance = new static($id, $opts);
         $instance->refresh();
 
@@ -112,7 +112,7 @@ class TestClock extends \AmeliaStripe\ApiResource
      *
      * @return TestClock the advanced test clock
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function advance($params = null, $opts = null)
     {

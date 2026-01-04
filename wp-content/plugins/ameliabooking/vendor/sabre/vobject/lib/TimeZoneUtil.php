@@ -1,16 +1,16 @@
 <?php
 
-namespace AmeliaSabre\VObject;
+namespace AmeliaVendor\Sabre\VObject;
 
 use DateTimeZone;
 use InvalidArgumentException;
-use AmeliaSabre\VObject\TimezoneGuesser\FindFromOffset;
-use AmeliaSabre\VObject\TimezoneGuesser\FindFromTimezoneIdentifier;
-use AmeliaSabre\VObject\TimezoneGuesser\FindFromTimezoneMap;
-use AmeliaSabre\VObject\TimezoneGuesser\GuessFromLicEntry;
-use AmeliaSabre\VObject\TimezoneGuesser\GuessFromMsTzId;
-use AmeliaSabre\VObject\TimezoneGuesser\TimezoneFinder;
-use AmeliaSabre\VObject\TimezoneGuesser\TimezoneGuesser;
+use AmeliaVendor\Sabre\VObject\TimezoneGuesser\FindFromOffset;
+use AmeliaVendor\Sabre\VObject\TimezoneGuesser\FindFromTimezoneIdentifier;
+use AmeliaVendor\Sabre\VObject\TimezoneGuesser\FindFromTimezoneMap;
+use AmeliaVendor\Sabre\VObject\TimezoneGuesser\GuessFromLicEntry;
+use AmeliaVendor\Sabre\VObject\TimezoneGuesser\GuessFromMsTzId;
+use AmeliaVendor\Sabre\VObject\TimezoneGuesser\TimezoneFinder;
+use AmeliaVendor\Sabre\VObject\TimezoneGuesser\TimezoneGuesser;
 
 /**
  * Time zone name translation.

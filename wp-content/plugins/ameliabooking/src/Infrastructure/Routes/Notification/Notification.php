@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See COPYING.md for license details.
  */
 
@@ -18,6 +18,7 @@ use AmeliaBooking\Application\Controller\Notification\SendUndeliveredNotificatio
 use AmeliaBooking\Application\Controller\Notification\UpdateNotificationController;
 use AmeliaBooking\Application\Controller\Notification\UpdateNotificationStatusController;
 use AmeliaBooking\Application\Controller\Notification\UpdateSMSNotificationHistoryController;
+use AmeliaBooking\Application\Controller\Notification\UpdateSMSNotificationHistoryDirectlyController;
 use Slim\App;
 
 /**
@@ -53,5 +54,7 @@ class Notification
         $app->get('/notifications/sms/history', GetSMSNotificationsHistoryController::class);
 
         $app->post('/notifications/delete/{id:[0-9]+}', DeleteNotificationController::class);
+
+        $app->post('/notifications/sms/history/direct/{id:[0-9]+}', UpdateSMSNotificationHistoryDirectlyController::class);
     }
 }

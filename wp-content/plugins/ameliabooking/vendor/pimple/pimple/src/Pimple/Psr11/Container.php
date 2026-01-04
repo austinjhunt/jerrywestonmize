@@ -27,7 +27,7 @@
 namespace Pimple\Psr11;
 
 use Pimple\Container as PimpleContainer;
-use AmeliaPsr\Container\ContainerInterface;
+use AmeliaVendor\Psr\Container\ContainerInterface;
 
 /**
  * PSR-11 compliant wrapper.

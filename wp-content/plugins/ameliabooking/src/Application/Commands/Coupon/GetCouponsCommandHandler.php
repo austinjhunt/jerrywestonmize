@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -40,7 +40,6 @@ class GetCouponsCommandHandler extends CommandHandler
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      * @throws AccessDeniedException
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function handle(GetCouponsCommand $command)
     {
@@ -51,6 +50,8 @@ class GetCouponsCommandHandler extends CommandHandler
         $result = new CommandResult();
 
         $this->checkMandatoryFields($command);
+
+        $params = $command->getField('params');
 
         /** @var CouponRepository $couponRepository */
         $couponRepository = $this->container->get('domain.coupon.repository');
@@ -67,10 +68,19 @@ class GetCouponsCommandHandler extends CommandHandler
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
 
+        $sort = !empty($params['sort']) ? $params['sort'] : null;
+        if ($sort) {
+            $isDescending   = substr($sort, 0, 1) === '-';
+            $params['sort'] = [
+                'field' => $isDescending ? substr($sort, 1) : $sort,
+                'order' => $isDescending ? 'DESC' : 'ASC',
+            ];
+        }
+
         /** @var Collection $coupons */
         $coupons = $couponRepository->getFiltered(
-            $command->getField('params'),
-            $settingsService->getSetting('general', 'itemsPerPage')
+            $params,
+            $params['limit'] ?? 10
         );
 
         if ($coupons->length()) {
@@ -89,12 +99,16 @@ class GetCouponsCommandHandler extends CommandHandler
                 /** @var PackageCustomerRepository $packageCustomerRepository */
                 $packageCustomerRepository = $this->container->get('domain.bookable.packageCustomer.repository');
 
-                $couponWithUsedPackage = $packageCustomerRepository->getByEntityId(
+                $packageCustomerRecords = $packageCustomerRepository->getByEntityId(
                     $couponWithUsedBookings->getId()->getValue(),
                     'couponId'
                 );
 
-                $coupon->setUsed(new WholeNumber($couponWithUsedBookings->getUsed()->getValue() + $couponWithUsedPackage->length()));
+                $coupon->setUsed(
+                    new WholeNumber(
+                        $couponWithUsedBookings->getUsed()->getValue() + $packageCustomerRecords->length()
+                    )
+                );
             }
 
             /** @var Collection $allServices */

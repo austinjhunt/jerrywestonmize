@@ -1,9 +1,9 @@
 <?php
 
-namespace AmeliaSabre\VObject\Component;
+namespace AmeliaVendor\Sabre\VObject\Component;
 
-use AmeliaSabre\VObject;
-use AmeliaSabre\Xml;
+use AmeliaVendor\Sabre\VObject;
+use AmeliaVendor\Sabre\Xml;
 
 /**
  * The VCard component.
@@ -87,7 +87,7 @@ class VCard extends VObject\Document
         'TITLE' => VObject\Property\FlatText::class,
         'ROLE' => VObject\Property\FlatText::class,
         'LOGO' => VObject\Property\Binary::class,
-        // 'AGENT'   => 'AmeliaSabre\\VObject\\Property\\',      // Todo: is an embedded vCard. Probably rare, so
+        // 'AGENT'   => 'AmeliaVendor\\Sabre\\VObject\\Property\\',      // Todo: is an embedded vCard. Probably rare, so
                                  // not supported at the moment
         'ORG' => VObject\Property\Text::class,
         'NOTE' => VObject\Property\FlatText::class,

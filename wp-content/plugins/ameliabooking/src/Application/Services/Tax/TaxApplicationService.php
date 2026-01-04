@@ -43,6 +43,56 @@ class TaxApplicationService extends AbstractTaxApplicationService
      * @throws InvalidArgumentException
      * @throws NotFoundException
      */
+    public function getTaxEntities($tax, $entitiesIds)
+    {
+        /** @var ServiceRepository $serviceRepository */
+        $serviceRepository = $this->container->get('domain.bookable.service.repository');
+
+        /** @var EventRepository $eventRepository */
+        $eventRepository = $this->container->get('domain.booking.event.repository');
+
+        /** @var PackageRepository $packageRepository */
+        $packageRepository = $this->container->get('domain.bookable.package.repository');
+
+        /** @var ExtraRepository $extraRepository */
+        $extraRepository = $this->container->get('domain.bookable.extra.repository');
+
+        $services = !empty($entitiesIds['services']) && !($tax->getAllServices() && $tax->getAllServices()->getValue())
+            ? $serviceRepository->getByIds($entitiesIds['services'])
+            : new Collection();
+
+        $tax->setServiceList($services);
+
+        $events = !empty($entitiesIds['events']) && !($tax->getAllEvents() && $tax->getAllEvents()->getValue())
+            ? $eventRepository->getByIds($entitiesIds['events'])
+            : new Collection();
+
+        $tax->setEventList($events);
+
+        $packages = !empty($entitiesIds['packages']) && !($tax->getAllPackages() && $tax->getAllPackages()->getValue())
+            ? $packageRepository->getByIds($entitiesIds['packages'])
+            : new Collection();
+
+        $tax->setPackageList($packages);
+
+        $extras = !empty($entitiesIds['extras']) && !($tax->getAllExtras() && $tax->getAllExtras()->getValue())
+            ? $extraRepository->getByIds($entitiesIds['extras'])
+            : new Collection();
+
+        $tax->setExtraList($extras);
+    }
+
+    /**
+     * @param Tax   $tax
+     * @param array $entitiesIds
+     *
+     * @return void
+     *
+     * @throws ContainerValueNotFoundException
+     * @throws QueryExecutionException
+     * @throws InvalidArgumentException
+     * @throws NotFoundException
+     */
     public function setTaxEntities($tax, $entitiesIds)
     {
         /** @var TaxRepository $taxRepository */
@@ -119,7 +169,7 @@ class TaxApplicationService extends AbstractTaxApplicationService
     /**
      * @param Tax $tax
      *
-     * @return int
+     * @return bool
      *
      * @throws ContainerValueNotFoundException
      * @throws QueryExecutionException
@@ -135,7 +185,7 @@ class TaxApplicationService extends AbstractTaxApplicationService
 
         $this->manageEntities($tax);
 
-        return (int)$taxId;
+        return (bool)$taxId;
     }
 
     /**
@@ -242,10 +292,15 @@ class TaxApplicationService extends AbstractTaxApplicationService
      */
     public function getAll()
     {
+        /** @var SettingsService $settingsService */
+        $settingsService = $this->container->get('domain.settings.service');
+
+        $isTaxesEnabled = $settingsService->isFeatureEnabled('tax');
+
         /** @var TaxRepository $taxRepository */
         $taxRepository = $this->container->get('domain.tax.repository');
 
-        return $taxRepository->getWithEntities([]);
+        return $isTaxesEnabled ? $taxRepository->getWithEntities([]) : new Collection();
     }
 
     /**

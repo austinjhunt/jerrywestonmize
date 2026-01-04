@@ -53,7 +53,7 @@ class NotificationHelperService
 
     /**
      * @param $content
-     * @return string
+     * @return string|null
      */
     private function parseContent($content)
     {

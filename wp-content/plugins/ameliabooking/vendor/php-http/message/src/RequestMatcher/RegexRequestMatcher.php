@@ -3,7 +3,7 @@
 namespace AmeliaHttp\Message\RequestMatcher;
 
 use AmeliaHttp\Message\RequestMatcher;
-use AmeliaPsr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
 
 @trigger_error('The '.__NAMESPACE__.'\RegexRequestMatcher class is deprecated since version 1.2 and will be removed in 2.0. Use AmeliaHttp\Message\RequestMatcher\RequestMatcher instead.', E_USER_DEPRECATED);
 

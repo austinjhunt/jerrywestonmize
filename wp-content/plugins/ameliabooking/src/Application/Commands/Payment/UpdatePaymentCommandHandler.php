@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -37,7 +37,6 @@ class UpdatePaymentCommandHandler extends CommandHandler
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      * @throws AccessDeniedException
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function handle(UpdatePaymentCommand $command)
     {
@@ -77,10 +76,9 @@ class UpdatePaymentCommandHandler extends CommandHandler
 
             $paymentEntity = $payment->getEntity() ? $payment->getEntity()->getValue() : null;
             $paymentStatus = $payment->getStatus() ? $payment->getStatus()->getValue() : null;
-            $qrCodeSettings = $settingsDS->getSetting('appointments', 'qrCodeEvents');
 
             if (
-                $qrCodeSettings['enabled'] === true &&
+                $settingsDS->isFeatureEnabled('eTickets') &&
                 $paymentEntity === Entities::EVENT &&
                 $paymentStatus === 'paid'
             ) {

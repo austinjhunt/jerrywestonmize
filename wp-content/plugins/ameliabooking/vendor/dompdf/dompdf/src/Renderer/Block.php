@@ -4,10 +4,10 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace AmeliaDompdf\Renderer;
+namespace AmeliaVendor\Dompdf\Renderer;
 
-use AmeliaDompdf\Frame;
-use AmeliaDompdf\FrameDecorator\Block as BlockFrameDecorator;
+use AmeliaVendor\Dompdf\Frame;
+use AmeliaVendor\Dompdf\FrameDecorator\Block as BlockFrameDecorator;
 
 /**
  * Renders block frames

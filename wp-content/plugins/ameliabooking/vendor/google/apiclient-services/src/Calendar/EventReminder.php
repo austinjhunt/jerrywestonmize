@@ -15,9 +15,9 @@
  * the License.
  */
 
-namespace AmeliaGoogle\Service\Calendar;
+namespace AmeliaVendor\Google\Service\Calendar;
 
-class EventReminder extends \AmeliaGoogle\Model
+class EventReminder extends \AmeliaVendor\Google\Model
 {
   /**
    * @var string
@@ -59,4 +59,4 @@ class EventReminder extends \AmeliaGoogle\Model
 }
 
 // Adding a class alias for backwards compatibility with the previous class name.
-class_alias(EventReminder::class, 'AmeliaGoogle_Service_Calendar_EventReminder');
+class_alias(EventReminder::class, 'Google_Service_Calendar_EventReminder');

@@ -2,7 +2,7 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Billing;
+namespace AmeliaVendor\Stripe\Billing;
 
 /**
  * @property string $object String representing the object's type. Objects of the same type share the same value.
@@ -12,7 +12,7 @@ namespace AmeliaStripe\Billing;
  * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
  * @property int $value The value triggering the alert
  */
-class AlertTriggered extends \AmeliaStripe\ApiResource
+class AlertTriggered extends \AmeliaVendor\Stripe\ApiResource
 {
     const OBJECT_NAME = 'billing.alert_triggered';
 }

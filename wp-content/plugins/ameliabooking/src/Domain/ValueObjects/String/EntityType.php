@@ -19,9 +19,7 @@ final class EntityType
     private $type;
 
     /**
-     * Status constructor.
-     *
-     * @param int $type
+     * @param string $type
      */
     public function __construct($type)
     {

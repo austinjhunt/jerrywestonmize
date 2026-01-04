@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Monolog\Processor;
+namespace AmeliaVendor\Monolog\Processor;
 
-use Monolog\Logger;
-use Psr\Log\LogLevel;
+use AmeliaVendor\Monolog\Logger;
+use AmeliaVendor\Psr\Log\LogLevel;
 
 /**
  * Injects Git branch and Git commit SHA in all records

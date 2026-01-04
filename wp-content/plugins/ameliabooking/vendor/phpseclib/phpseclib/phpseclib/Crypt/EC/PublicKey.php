@@ -9,19 +9,19 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-namespace phpseclib3\Crypt\EC;
+namespace AmeliaVendor\phpseclib3\Crypt\EC;
 
-use phpseclib3\Common\Functions\Strings;
-use phpseclib3\Crypt\Common;
-use phpseclib3\Crypt\EC;
-use phpseclib3\Crypt\EC\BaseCurves\Montgomery as MontgomeryCurve;
-use phpseclib3\Crypt\EC\BaseCurves\TwistedEdwards as TwistedEdwardsCurve;
-use phpseclib3\Crypt\EC\Curves\Ed25519;
-use phpseclib3\Crypt\EC\Formats\Keys\PKCS1;
-use phpseclib3\Crypt\EC\Formats\Signature\ASN1 as ASN1Signature;
-use phpseclib3\Crypt\Hash;
-use phpseclib3\Exception\UnsupportedOperationException;
-use phpseclib3\Math\BigInteger;
+use AmeliaVendor\phpseclib3\Common\Functions\Strings;
+use AmeliaVendor\phpseclib3\Crypt\Common;
+use AmeliaVendor\phpseclib3\Crypt\EC;
+use AmeliaVendor\phpseclib3\Crypt\EC\BaseCurves\Montgomery as MontgomeryCurve;
+use AmeliaVendor\phpseclib3\Crypt\EC\BaseCurves\TwistedEdwards as TwistedEdwardsCurve;
+use AmeliaVendor\phpseclib3\Crypt\EC\Curves\Ed25519;
+use AmeliaVendor\phpseclib3\Crypt\EC\Formats\Keys\PKCS1;
+use AmeliaVendor\phpseclib3\Crypt\EC\Formats\Signature\ASN1 as ASN1Signature;
+use AmeliaVendor\phpseclib3\Crypt\Hash;
+use AmeliaVendor\phpseclib3\Exception\UnsupportedOperationException;
+use AmeliaVendor\phpseclib3\Math\BigInteger;
 
 /**
  * EC Public Key
@@ -115,7 +115,8 @@ final class PublicKey extends EC implements Common\PublicKey
         if ($params === false || count($params) != 2) {
             return false;
         }
-        extract($params);
+        $r = $params['r'];
+        $s = $params['s'];
 
         if (self::$engines['OpenSSL'] && in_array($this->hash->getHash(), openssl_get_md_methods())) {
             $sig = $format != 'ASN1' ? ASN1Signature::save($r, $s) : $signature;

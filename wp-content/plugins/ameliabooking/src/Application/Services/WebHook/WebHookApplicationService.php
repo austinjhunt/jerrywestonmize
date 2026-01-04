@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -44,6 +44,10 @@ class WebHookApplicationService extends AbstractWebHookApplicationService
         $settingsService = $this->container->get('domain.settings.service');
         /** @var BookingApplicationService $bookingApplicationService */
         $bookingApplicationService = $this->container->get('application.booking.booking.service');
+
+        if (!$settingsService->isFeatureEnabled('webhooks')) {
+            return;
+        }
 
         do_action('Amelia' . ucwords($action), $reservation, $bookings, $this->container);
 

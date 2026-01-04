@@ -11,9 +11,9 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-namespace phpseclib3\Crypt\Common\Formats\Keys;
+namespace AmeliaVendor\phpseclib3\Crypt\Common\Formats\Keys;
 
-use phpseclib3\Common\Functions\Strings;
+use AmeliaVendor\phpseclib3\Common\Functions\Strings;
 
 /**
  * JSON Web Key Formatted Key Handler
@@ -48,6 +48,14 @@ abstract class JWK
 
         if (isset($key->kty)) {
             return $key;
+        }
+
+        if (!is_object($key)) {
+            throw new \RuntimeException('invalid JWK: not an object');
+        }
+
+        if (!isset($key->keys)) {
+            throw new \RuntimeException('invalid JWK: object has no property "keys"');
         }
 
         if (count($key->keys) != 1) {

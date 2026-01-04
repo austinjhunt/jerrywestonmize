@@ -10,8 +10,8 @@
 namespace Mailgun\HttpClient\Plugin;
 
 use AmeliaHttp\Client\Common\Plugin;
-use AmeliaPsr\Http\Message\RequestInterface;
-use AmeliaPsr\Http\Message\UriInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\UriInterface;
 
 /**
  * Replaces a URI with a new one. Good for debugging.

@@ -3,7 +3,7 @@
 namespace AmeliaHttp\Message\Encoding;
 
 use AmeliaClue\StreamFilter as Filter;
-use AmeliaPsr\Http\Message\StreamInterface;
+use AmeliaVendor\Psr\Http\Message\StreamInterface;
 
 /**
  * Stream inflate (RFC 1951).

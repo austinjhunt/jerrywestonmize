@@ -28,6 +28,8 @@ class GetProvidersController extends Controller
 
         $params = (array)$request->getQueryParams();
 
+        $this->setArrayParams($params);
+
         if (isset($params['services'])) {
             $params['services'] = array_map('intval', $params['services']);
         }

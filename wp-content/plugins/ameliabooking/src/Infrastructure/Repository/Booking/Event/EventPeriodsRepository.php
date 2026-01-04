@@ -22,7 +22,7 @@ class EventPeriodsRepository extends AbstractRepository implements EventReposito
     /**
      * @param EventPeriod $entity
      *
-     * @return bool
+     * @return int
      * @throws QueryExecutionException
      */
     public function add($entity)

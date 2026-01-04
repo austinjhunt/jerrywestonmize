@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AmeliaSabre\VObject\TimezoneGuesser;
+namespace AmeliaVendor\Sabre\VObject\TimezoneGuesser;
 
 use DateTimeZone;
 

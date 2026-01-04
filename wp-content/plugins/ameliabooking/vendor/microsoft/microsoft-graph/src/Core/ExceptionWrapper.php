@@ -17,7 +17,7 @@
 
 namespace Microsoft\Graph\Core;
 
-use AmeliaGuzzleHttp\Exception\BadResponseException;
+use AmeliaVendor\GuzzleHttp\Exception\BadResponseException;
 
 /**
  * Class ExceptionWrapper
@@ -45,7 +45,7 @@ class ExceptionWrapper
             return $ex;
         }
 
-        /** @see \AmeliaGuzzleHttp\Exception\RequestException::create() */
+        /** @see \AmeliaVendor\GuzzleHttp\Exception\RequestException::create() */
         if (preg_match('/^(.+: `.+ .+` resulted in a `.+ .+` response):\n/U', $ex->getMessage(), $match)) {
             $message = $match[1];
 

@@ -5,10 +5,10 @@
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 
-namespace FontLib;
+namespace AmeliaVendor\FontLib;
 
-use FontLib\Table\Type\name;
-use FontLib\TrueType\File;
+use AmeliaVendor\FontLib\Table\Type\name;
+use AmeliaVendor\FontLib\TrueType\File;
 
 /**
  * Adobe Font Metrics file creation utility class.

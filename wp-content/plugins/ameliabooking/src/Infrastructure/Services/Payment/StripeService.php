@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -17,15 +17,15 @@ use AmeliaBooking\Domain\ValueObjects\Number\Float\Price;
 use AmeliaBooking\Domain\ValueObjects\String\Name;
 use AmeliaBooking\Domain\ValueObjects\String\Token;
 use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
-use AmeliaStripe\Customer;
-use AmeliaStripe\Exception\ApiErrorException;
-use AmeliaStripe\PaymentIntent;
-use AmeliaStripe\PaymentMethod;
-use AmeliaStripe\Stripe;
-use AmeliaStripe\StripeClient;
-use AmeliaStripe\Account;
-use AmeliaStripe\AccountLink;
-use AmeliaStripe\Transfer;
+use AmeliaVendor\Stripe\Customer;
+use AmeliaVendor\Stripe\Exception\ApiErrorException;
+use AmeliaVendor\Stripe\PaymentMethod;
+use AmeliaVendor\Stripe\Stripe;
+use AmeliaVendor\Stripe\StripeClient;
+use AmeliaVendor\Stripe\Account;
+use AmeliaVendor\Stripe\AccountLink;
+use AmeliaVendor\Stripe\Transfer;
+use AmeliaVendor\Stripe\PaymentIntent;
 use Exception;
 
 /**
@@ -120,11 +120,8 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
                 $stripeData['metadata'] = $data['metaData'];
             }
 
-            // also added a fallback description since that was appearing as null on the Stripe side
             if ($data['description']) {
                 $stripeData['description'] = $data['description'];
-            } else {
-                $stripeData['description'] = 'Payment for ' . $data['metaData']['Customer Name'] . ' - ' . $data['metaData']['Customer Email'] . ' - ' . $data['metaData']['Service'] . '';
             }
 
             $customerId = $this->createCustomer($data, $additionalStripeData);
@@ -136,7 +133,7 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
             if (!empty($data['customerData']) && !empty($data['customerData']['email'])) {
                 $stripeData['receipt_email'] = $data['customerData']['email'];
             }
-          
+
             $stripeData = apply_filters(
                 'amelia_before_stripe_payment',
                 $stripeData
@@ -226,7 +223,7 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
      * @param array $data
      *
      * @return array
-     * @throws \AmeliaStripe\Exception\ApiErrorException
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException
      */
     public function getPaymentLink($data)
     {

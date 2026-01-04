@@ -6,9 +6,11 @@ use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\ForbiddenFileUploadException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
+use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Entity\Booking\Event\Event;
 use AmeliaBooking\Domain\Entity\CustomField\CustomField;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
+use AmeliaBooking\Domain\ValueObjects\Json;
 use AmeliaBooking\Domain\ValueObjects\String\Token;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
@@ -276,5 +278,99 @@ class CustomFieldApplicationService extends AbstractCustomFieldApplicationServic
         $customFieldRepository = $this->container->get('domain.customField.repository');
 
         return $customFieldRepository->getAll();
+    }
+
+    /**
+     * @param CustomerBooking|AbstractUser $entity
+     * @param array $sentCustomFields
+     * @param Collection $allCustomFields
+     *
+     * @return array
+     * @throws ContainerException
+     */
+    public function reformatCustomField($entity, $sentCustomFields, $allCustomFields)
+    {
+        $customFields = [];
+
+        if (
+            $entity->getCustomFields() &&
+            ($customFields = json_decode($entity->getCustomFields()->getValue(), true)) === null
+        ) {
+            $entity->setCustomFields(null);
+        }
+
+        $hasCustomFields = false;
+        if ($customFields) {
+            $parsedCustomFields = [];
+
+            foreach ((array)$customFields as $key => $customField) {
+                if ($customField) {
+                    $parsedCustomFields[$key]       = $customField;
+                    $existingCustomField            = array_filter(
+                        $sentCustomFields,
+                        function ($item) use ($customField) {
+                            $item['label'] = $customField['label'];
+                        }
+                    );
+                    $parsedCustomFields[$key]['id'] = !empty($existingCustomField) ? $existingCustomField['id'] : $key;
+                    if ($customField['type'] === 'file' && !empty($customField['value'])) {
+                        foreach ($parsedCustomFields[$key]['value'] as &$cfFile) {
+                            $fileSizeBytes = filesize(
+                                $this->getUploadsPath() . $entity->getId()->getValue() . '_' . $cfFile['fileName']
+                            );
+                            if ($fileSizeBytes >= 1073741824) {
+                                $size = number_format($fileSizeBytes / 1073741824, 2) . ' GB';
+                            } elseif ($fileSizeBytes >= 1048576) {
+                                $size = number_format($fileSizeBytes / 1048576, 2) . ' MB';
+                            } elseif ($fileSizeBytes >= 1024) {
+                                $size = number_format($fileSizeBytes / 1024, 2) . ' KB';
+                            } else {
+                                $size = $fileSizeBytes . ' bytes';
+                            }
+                            $cfFile['size'] = $size;
+                        }
+                    }
+                }
+                if ($customField['value']) {
+                    $hasCustomFields = true;
+                }
+            }
+
+            $entity->setCustomFields(new Json(json_encode($parsedCustomFields)));
+        }
+        if (!$hasCustomFields) {
+            $entity->setCustomFields(null);
+        }
+
+        $result = $entity->getCustomFields() && json_decode($entity->getCustomFields()->getValue(), true) ?
+            array_values(json_decode($entity->getCustomFields()->getValue(), true)) :
+            [];
+
+        $existingResult = [];
+
+        foreach ($result as $item) {
+            if ($allCustomFields->keyExists($item['id'])) {
+                $existingResult[] = $item;
+            }
+        }
+
+        $arrayAllCustomFields = array_column($allCustomFields->toArray(), null, 'id');
+
+        if ($existingResult) {
+            usort(
+                $existingResult,
+                function ($a, $b) use ($arrayAllCustomFields) {
+                    return $arrayAllCustomFields[$a['id']]['position'] - $arrayAllCustomFields[$b['id']]['position'];
+                }
+            );
+        }
+
+        foreach ($result as $item) {
+            if (!$allCustomFields->keyExists($item['id'])) {
+                $existingResult[] = $item;
+            }
+        }
+
+        return $existingResult;
     }
 }

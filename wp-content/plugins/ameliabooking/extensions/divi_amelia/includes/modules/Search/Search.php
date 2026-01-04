@@ -20,7 +20,7 @@ class DIVI_Search extends ET_Builder_Module
 
     public function init()
     {
-        $this->name = esc_html__(BackendStrings::getWordPressStrings()['search_divi'], 'divi-divi_amelia');
+        $this->name = esc_html__(BackendStrings::get('search_divi'), 'divi-divi_amelia');
 
         if (!is_admin()) {
             return;
@@ -30,9 +30,9 @@ class DIVI_Search extends ET_Builder_Module
 
         $this->showPackages = !empty($data['packages']);
 
-        $this->type['0']        = BackendStrings::getWordPressStrings()['show_all'];
-        $this->type['services'] = BackendStrings::getCommonStrings()['services'];
-        $this->type['packages'] = BackendStrings::getCommonStrings()['packages'];
+        $this->type['0']        = BackendStrings::get('show_all');
+        $this->type['services'] = BackendStrings::get('services');
+        $this->type['packages'] = BackendStrings::get('packages');
     }
 
     /**
@@ -52,11 +52,11 @@ class DIVI_Search extends ET_Builder_Module
     {
         $array = array(
             'booking_params' => array(
-                'label'           => esc_html__(BackendStrings::getWordPressStrings()['search_date'], 'divi-divi_amelia'),
+                'label'           => esc_html__(BackendStrings::get('search_date'), 'divi-divi_amelia'),
                 'type'            => 'yes_no_button',
                 'options' => array(
-                    'on'  => esc_html__(BackendStrings::getCommonStrings()['yes'], 'divi-divi_amelia'),
-                    'off' => esc_html__(BackendStrings::getCommonStrings()['no'], 'divi-divi_amelia'),
+                    'on'  => esc_html__(BackendStrings::get('yes'), 'divi-divi_amelia'),
+                    'off' => esc_html__(BackendStrings::get('no'), 'divi-divi_amelia'),
                 ),
                 'toggle_slug'     => 'main_content',
                 'option_category' => 'basic_option',
@@ -65,7 +65,7 @@ class DIVI_Search extends ET_Builder_Module
 
         if ($this->showPackages) {
             $array['type'] = array(
-                'label'           => esc_html__(BackendStrings::getWordPressStrings()['show_all'], 'divi-divi_amelia'),
+                'label'           => esc_html__(BackendStrings::get('show_all'), 'divi-divi_amelia'),
                 'type'            => 'select',
                 'options'         => $this->type,
                 'toggle_slug'     => 'main_content',
@@ -74,11 +74,11 @@ class DIVI_Search extends ET_Builder_Module
         }
 
         $array['trigger'] = array(
-            'label'           => esc_html__(BackendStrings::getWordPressStrings()['manually_loading'], 'divi-divi_amelia'),
+            'label'           => esc_html__(BackendStrings::get('manually_loading'), 'divi-divi_amelia'),
             'type'            => 'text',
             'toggle_slug'     => 'main_content',
             'option_category' => 'basic_option',
-            'description'     => BackendStrings::getWordPressStrings()['manually_loading_description'],
+            'description'     => BackendStrings::get('manually_loading_description'),
         );
 
         return $array;

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See COPYING.md for license details.
  */
 
@@ -11,6 +11,7 @@ use AmeliaBooking\Application\Controller\Payment\AddPaymentController;
 use AmeliaBooking\Application\Controller\Payment\DeletePaymentController;
 use AmeliaBooking\Application\Controller\Payment\CalculatePaymentAmountController;
 use AmeliaBooking\Application\Controller\Payment\GetPaymentController;
+use AmeliaBooking\Application\Controller\Payment\GetPaymentDetailsController;
 use AmeliaBooking\Application\Controller\Payment\GetPaymentsController;
 use AmeliaBooking\Application\Controller\Payment\UpdatePaymentController;
 use Slim\App;
@@ -30,6 +31,8 @@ class Payment
         $app->get('/payments', GetPaymentsController::class);
 
         $app->get('/payments/{id:[0-9]+}', GetPaymentController::class);
+
+        $app->get('/payments/details/{id:[0-9]+}', GetPaymentDetailsController::class);
 
         $app->post('/payments', AddPaymentController::class);
 

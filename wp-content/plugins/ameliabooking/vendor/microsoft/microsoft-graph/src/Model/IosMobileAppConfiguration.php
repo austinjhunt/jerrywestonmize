@@ -28,15 +28,15 @@ class IosMobileAppConfiguration extends ManagedDeviceMobileAppConfiguration
     * Gets the encodedSettingXml
     * mdm app configuration Base64 binary.
     *
-    * @return \AmeliaGuzzleHttp\Psr7\Stream|null The encodedSettingXml
+    * @return \AmeliaVendor\GuzzleHttp\Psr7\Stream|null The encodedSettingXml
     */
     public function getEncodedSettingXml()
     {
         if (array_key_exists("encodedSettingXml", $this->_propDict)) {
-            if (is_a($this->_propDict["encodedSettingXml"], "\AmeliaGuzzleHttp\Psr7\Stream") || is_null($this->_propDict["encodedSettingXml"])) {
+            if (is_a($this->_propDict["encodedSettingXml"], "\AmeliaVendor\GuzzleHttp\Psr7\Stream") || is_null($this->_propDict["encodedSettingXml"])) {
                 return $this->_propDict["encodedSettingXml"];
             } else {
-                $this->_propDict["encodedSettingXml"] = \AmeliaGuzzleHttp\Psr7\Utils::streamFor($this->_propDict["encodedSettingXml"]);
+                $this->_propDict["encodedSettingXml"] = \AmeliaVendor\GuzzleHttp\Psr7\Utils::streamFor($this->_propDict["encodedSettingXml"]);
                 return $this->_propDict["encodedSettingXml"];
             }
         }
@@ -47,7 +47,7 @@ class IosMobileAppConfiguration extends ManagedDeviceMobileAppConfiguration
     * Sets the encodedSettingXml
     * mdm app configuration Base64 binary.
     *
-    * @param \AmeliaGuzzleHttp\Psr7\Stream $val The encodedSettingXml
+    * @param \AmeliaVendor\GuzzleHttp\Psr7\Stream $val The encodedSettingXml
     *
     * @return IosMobileAppConfiguration
     */

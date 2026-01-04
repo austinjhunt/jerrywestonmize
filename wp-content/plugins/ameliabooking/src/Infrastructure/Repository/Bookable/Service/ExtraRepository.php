@@ -20,7 +20,7 @@ class ExtraRepository extends AbstractRepository implements ExtraRepositoryInter
     /**
      * @param Extra $entity
      *
-     * @return mixed
+     * @return int
      * @throws QueryExecutionException
      */
     public function add($entity)

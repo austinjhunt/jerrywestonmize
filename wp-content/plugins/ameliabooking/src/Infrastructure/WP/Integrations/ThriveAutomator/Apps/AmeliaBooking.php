@@ -23,7 +23,7 @@ class AmeliaBooking extends App
 
     public static function get_logo()
     {
-        return AMELIA_URL . 'public/img/amelia-logo-symbol.svg';
+        return AMELIA_URL . 'public/img/amelia-logo-admin-icon.svg';
     }
 
     public static function has_access()

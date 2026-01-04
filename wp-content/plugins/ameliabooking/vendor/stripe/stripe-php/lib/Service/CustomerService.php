@@ -2,12 +2,12 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Service;
+namespace AmeliaVendor\Stripe\Service;
 
 /**
- * @phpstan-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  *
- * @psalm-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ * @psalm-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  */
 class CustomerService extends AbstractService
 {
@@ -16,11 +16,11 @@ class CustomerService extends AbstractService
      * date, with the most recent customers appearing first.
      *
      * @param null|array{created?: array|int, email?: string, ending_before?: string, expand?: string[], limit?: int, starting_after?: string, test_clock?: string} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Collection<\AmeliaStripe\Customer>
+     * @return \AmeliaVendor\Stripe\Collection<\AmeliaVendor\Stripe\Customer>
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function all($params = null, $opts = null)
     {
@@ -33,11 +33,11 @@ class CustomerService extends AbstractService
      *
      * @param string $parentId
      * @param null|array{ending_before?: string, expand?: string[], limit?: int, starting_after?: string} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Collection<\AmeliaStripe\CustomerBalanceTransaction>
+     * @return \AmeliaVendor\Stripe\Collection<\AmeliaVendor\Stripe\CustomerBalanceTransaction>
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function allBalanceTransactions($parentId, $params = null, $opts = null)
     {
@@ -50,11 +50,11 @@ class CustomerService extends AbstractService
      *
      * @param string $parentId
      * @param null|array{ending_before?: string, expand?: string[], limit?: int, starting_after?: string} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Collection<\AmeliaStripe\CustomerCashBalanceTransaction>
+     * @return \AmeliaVendor\Stripe\Collection<\AmeliaVendor\Stripe\CustomerCashBalanceTransaction>
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function allCashBalanceTransactions($parentId, $params = null, $opts = null)
     {
@@ -66,11 +66,11 @@ class CustomerService extends AbstractService
      *
      * @param string $id
      * @param null|array{allow_redisplay?: string, ending_before?: string, expand?: string[], limit?: int, starting_after?: string, type?: string} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Collection<\AmeliaStripe\PaymentMethod>
+     * @return \AmeliaVendor\Stripe\Collection<\AmeliaVendor\Stripe\PaymentMethod>
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function allPaymentMethods($id, $params = null, $opts = null)
     {
@@ -82,11 +82,11 @@ class CustomerService extends AbstractService
      *
      * @param string $parentId
      * @param null|array{ending_before?: string, expand?: string[], limit?: int, object?: string, starting_after?: string} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Collection<\AmeliaStripe\Account|\AmeliaStripe\BankAccount|\AmeliaStripe\Card|\AmeliaStripe\Source>
+     * @return \AmeliaVendor\Stripe\Collection<\AmeliaVendor\Stripe\Account|\AmeliaVendor\Stripe\BankAccount|\AmeliaVendor\Stripe\Card|\AmeliaVendor\Stripe\Source>
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function allSources($parentId, $params = null, $opts = null)
     {
@@ -98,11 +98,11 @@ class CustomerService extends AbstractService
      *
      * @param string $parentId
      * @param null|array{ending_before?: string, expand?: string[], limit?: int, starting_after?: string} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Collection<\AmeliaStripe\TaxId>
+     * @return \AmeliaVendor\Stripe\Collection<\AmeliaVendor\Stripe\TaxId>
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function allTaxIds($parentId, $params = null, $opts = null)
     {
@@ -113,11 +113,11 @@ class CustomerService extends AbstractService
      * Creates a new customer object.
      *
      * @param null|array{address?: null|array{city?: string, country?: string, line1?: string, line2?: string, postal_code?: string, state?: string}, balance?: int, cash_balance?: array{settings?: array{reconciliation_mode?: string}}, description?: string, email?: string, expand?: string[], invoice_prefix?: string, invoice_settings?: array{custom_fields?: null|array{name: string, value: string}[], default_payment_method?: string, footer?: string, rendering_options?: null|array{amount_tax_display?: null|string, template?: string}}, metadata?: null|array<string, string>, name?: string, next_invoice_sequence?: int, payment_method?: string, phone?: string, preferred_locales?: string[], shipping?: null|array{address: array{city?: string, country?: string, line1?: string, line2?: string, postal_code?: string, state?: string}, name: string, phone?: string}, source?: string, tax?: array{ip_address?: null|string, validate_location?: string}, tax_exempt?: null|string, tax_id_data?: array{type: string, value: string}[], test_clock?: string, validate?: bool} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Customer
+     * @return \AmeliaVendor\Stripe\Customer
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function create($params = null, $opts = null)
     {
@@ -130,11 +130,11 @@ class CustomerService extends AbstractService
      *
      * @param string $parentId
      * @param null|array{amount: int, currency: string, description?: string, expand?: string[], metadata?: null|array<string, string>} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\CustomerBalanceTransaction
+     * @return \AmeliaVendor\Stripe\CustomerBalanceTransaction
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function createBalanceTransaction($parentId, $params = null, $opts = null)
     {
@@ -150,11 +150,11 @@ class CustomerService extends AbstractService
      *
      * @param string $id
      * @param null|array{bank_transfer: array{eu_bank_transfer?: array{country: string}, requested_address_types?: string[], type: string}, currency: string, expand?: string[], funding_type: string} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\FundingInstructions
+     * @return \AmeliaVendor\Stripe\FundingInstructions
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function createFundingInstructions($id, $params = null, $opts = null)
     {
@@ -172,11 +172,11 @@ class CustomerService extends AbstractService
      *
      * @param string $parentId
      * @param null|array{expand?: string[], metadata?: array<string, string>, source: string, validate?: bool} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Account|\AmeliaStripe\BankAccount|\AmeliaStripe\Card|\AmeliaStripe\Source
+     * @return \AmeliaVendor\Stripe\Account|\AmeliaVendor\Stripe\BankAccount|\AmeliaVendor\Stripe\Card|\AmeliaVendor\Stripe\Source
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function createSource($parentId, $params = null, $opts = null)
     {
@@ -188,11 +188,11 @@ class CustomerService extends AbstractService
      *
      * @param string $parentId
      * @param null|array{expand?: string[], type: string, value: string} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\TaxId
+     * @return \AmeliaVendor\Stripe\TaxId
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function createTaxId($parentId, $params = null, $opts = null)
     {
@@ -205,11 +205,11 @@ class CustomerService extends AbstractService
      *
      * @param string $id
      * @param null|array $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Customer
+     * @return \AmeliaVendor\Stripe\Customer
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function delete($id, $params = null, $opts = null)
     {
@@ -221,11 +221,11 @@ class CustomerService extends AbstractService
      *
      * @param string $id
      * @param null|array $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Discount
+     * @return \AmeliaVendor\Stripe\Discount
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function deleteDiscount($id, $params = null, $opts = null)
     {
@@ -238,11 +238,11 @@ class CustomerService extends AbstractService
      * @param string $parentId
      * @param string $id
      * @param null|array{expand?: string[]} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Account|\AmeliaStripe\BankAccount|\AmeliaStripe\Card|\AmeliaStripe\Source
+     * @return \AmeliaVendor\Stripe\Account|\AmeliaVendor\Stripe\BankAccount|\AmeliaVendor\Stripe\Card|\AmeliaVendor\Stripe\Source
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function deleteSource($parentId, $id, $params = null, $opts = null)
     {
@@ -255,11 +255,11 @@ class CustomerService extends AbstractService
      * @param string $parentId
      * @param string $id
      * @param null|array $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\TaxId
+     * @return \AmeliaVendor\Stripe\TaxId
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function deleteTaxId($parentId, $id, $params = null, $opts = null)
     {
@@ -271,11 +271,11 @@ class CustomerService extends AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[]} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Customer
+     * @return \AmeliaVendor\Stripe\Customer
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function retrieve($id, $params = null, $opts = null)
     {
@@ -289,11 +289,11 @@ class CustomerService extends AbstractService
      * @param string $parentId
      * @param string $id
      * @param null|array{expand?: string[]} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\CustomerBalanceTransaction
+     * @return \AmeliaVendor\Stripe\CustomerBalanceTransaction
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function retrieveBalanceTransaction($parentId, $id, $params = null, $opts = null)
     {
@@ -305,11 +305,11 @@ class CustomerService extends AbstractService
      *
      * @param string $parentId
      * @param null|array{expand?: string[]} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\CashBalance
+     * @return \AmeliaVendor\Stripe\CashBalance
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function retrieveCashBalance($parentId, $params = null, $opts = null)
     {
@@ -323,11 +323,11 @@ class CustomerService extends AbstractService
      * @param string $parentId
      * @param string $id
      * @param null|array{expand?: string[]} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\CustomerCashBalanceTransaction
+     * @return \AmeliaVendor\Stripe\CustomerCashBalanceTransaction
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function retrieveCashBalanceTransaction($parentId, $id, $params = null, $opts = null)
     {
@@ -340,11 +340,11 @@ class CustomerService extends AbstractService
      * @param string $parentId
      * @param string $id
      * @param null|array{expand?: string[]} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\PaymentMethod
+     * @return \AmeliaVendor\Stripe\PaymentMethod
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function retrievePaymentMethod($parentId, $id, $params = null, $opts = null)
     {
@@ -357,11 +357,11 @@ class CustomerService extends AbstractService
      * @param string $parentId
      * @param string $id
      * @param null|array{expand?: string[]} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Account|\AmeliaStripe\BankAccount|\AmeliaStripe\Card|\AmeliaStripe\Source
+     * @return \AmeliaVendor\Stripe\Account|\AmeliaVendor\Stripe\BankAccount|\AmeliaVendor\Stripe\Card|\AmeliaVendor\Stripe\Source
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function retrieveSource($parentId, $id, $params = null, $opts = null)
     {
@@ -374,11 +374,11 @@ class CustomerService extends AbstractService
      * @param string $parentId
      * @param string $id
      * @param null|array{expand?: string[]} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\TaxId
+     * @return \AmeliaVendor\Stripe\TaxId
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function retrieveTaxId($parentId, $id, $params = null, $opts = null)
     {
@@ -394,11 +394,11 @@ class CustomerService extends AbstractService
      * during outages. Search functionality is not available to merchants in India.
      *
      * @param null|array{expand?: string[], limit?: int, page?: string, query: string} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\SearchResult<\AmeliaStripe\Customer>
+     * @return \AmeliaVendor\Stripe\SearchResult<\AmeliaVendor\Stripe\Customer>
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function search($params = null, $opts = null)
     {
@@ -422,11 +422,11 @@ class CustomerService extends AbstractService
      *
      * @param string $id
      * @param null|array{address?: null|array{city?: string, country?: string, line1?: string, line2?: string, postal_code?: string, state?: string}, balance?: int, cash_balance?: array{settings?: array{reconciliation_mode?: string}}, default_source?: string, description?: string, email?: string, expand?: string[], invoice_prefix?: string, invoice_settings?: array{custom_fields?: null|array{name: string, value: string}[], default_payment_method?: string, footer?: string, rendering_options?: null|array{amount_tax_display?: null|string, template?: string}}, metadata?: null|array<string, string>, name?: string, next_invoice_sequence?: int, phone?: string, preferred_locales?: string[], shipping?: null|array{address: array{city?: string, country?: string, line1?: string, line2?: string, postal_code?: string, state?: string}, name: string, phone?: string}, source?: string, tax?: array{ip_address?: null|string, validate_location?: string}, tax_exempt?: null|string, validate?: bool} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Customer
+     * @return \AmeliaVendor\Stripe\Customer
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function update($id, $params = null, $opts = null)
     {
@@ -440,11 +440,11 @@ class CustomerService extends AbstractService
      * @param string $parentId
      * @param string $id
      * @param null|array{description?: string, expand?: string[], metadata?: null|array<string, string>} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\CustomerBalanceTransaction
+     * @return \AmeliaVendor\Stripe\CustomerBalanceTransaction
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function updateBalanceTransaction($parentId, $id, $params = null, $opts = null)
     {
@@ -456,11 +456,11 @@ class CustomerService extends AbstractService
      *
      * @param string $parentId
      * @param null|array{expand?: string[], settings?: array{reconciliation_mode?: string}} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\CashBalance
+     * @return \AmeliaVendor\Stripe\CashBalance
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function updateCashBalance($parentId, $params = null, $opts = null)
     {
@@ -473,11 +473,11 @@ class CustomerService extends AbstractService
      * @param string $parentId
      * @param string $id
      * @param null|array{account_holder_name?: string, account_holder_type?: string, address_city?: string, address_country?: string, address_line1?: string, address_line2?: string, address_state?: string, address_zip?: string, exp_month?: string, exp_year?: string, expand?: string[], metadata?: null|array<string, string>, name?: string, owner?: array{address?: array{city?: string, country?: string, line1?: string, line2?: string, postal_code?: string, state?: string}, email?: string, name?: string, phone?: string}} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Account|\AmeliaStripe\BankAccount|\AmeliaStripe\Card|\AmeliaStripe\Source
+     * @return \AmeliaVendor\Stripe\Account|\AmeliaVendor\Stripe\BankAccount|\AmeliaVendor\Stripe\Card|\AmeliaVendor\Stripe\Source
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function updateSource($parentId, $id, $params = null, $opts = null)
     {
@@ -490,11 +490,11 @@ class CustomerService extends AbstractService
      * @param string $parentId
      * @param string $id
      * @param null|array{amounts?: int[], expand?: string[]} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Account|\AmeliaStripe\BankAccount|\AmeliaStripe\Card|\AmeliaStripe\Source
+     * @return \AmeliaVendor\Stripe\Account|\AmeliaVendor\Stripe\BankAccount|\AmeliaVendor\Stripe\Card|\AmeliaVendor\Stripe\Source
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function verifySource($parentId, $id, $params = null, $opts = null)
     {

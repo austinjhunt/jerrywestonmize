@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Monolog\Formatter;
+namespace AmeliaVendor\Monolog\Formatter;
 
-use Monolog\Utils;
+use AmeliaVendor\Monolog\Utils;
 
 /**
  * Formats incoming records into a one-line string

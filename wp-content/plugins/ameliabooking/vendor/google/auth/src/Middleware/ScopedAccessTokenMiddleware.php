@@ -15,11 +15,11 @@
  * limitations under the License.
  */
 
-namespace AmeliaGoogle\Auth\Middleware;
+namespace AmeliaVendor\Google\Auth\Middleware;
 
-use AmeliaGoogle\Auth\CacheTrait;
-use Psr\Cache\CacheItemPoolInterface;
-use AmeliaPsr\Http\Message\RequestInterface;
+use AmeliaVendor\Google\Auth\CacheTrait;
+use AmeliaVendor\Psr\Cache\CacheItemPoolInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
 
 /**
  * ScopedAccessTokenMiddleware is a Guzzle Middleware that adds an Authorization
@@ -60,8 +60,8 @@ class ScopedAccessTokenMiddleware
     public function __construct(
         callable $tokenFunc,
         $scopes,
-        array $cacheConfig = null,
-        CacheItemPoolInterface $cache = null
+        ?array $cacheConfig = null,
+        ?CacheItemPoolInterface $cache = null
     ) {
         $this->tokenFunc = $tokenFunc;
         if (!(is_string($scopes) || is_array($scopes))) {
@@ -87,15 +87,15 @@ class ScopedAccessTokenMiddleware
      *   AppIdentityService.
      *
      *   use google\appengine\api\app_identity\AppIdentityService;
-     *   use AmeliaGoogle\Auth\Middleware\ScopedAccessTokenMiddleware;
-     *   use AmeliaGuzzleHttp\Client;
-     *   use AmeliaGuzzleHttp\HandlerStack;
+     *   use AmeliaVendor\Google\Auth\Middleware\ScopedAccessTokenMiddleware;
+     *   use AmeliaVendor\GuzzleHttp\Client;
+     *   use AmeliaVendor\GuzzleHttp\HandlerStack;
      *
      *   $scope = 'https://www.googleapis.com/auth/taskqueue'
      *   $middleware = new ScopedAccessTokenMiddleware(
      *       'AppIdentityService::getAccessToken',
      *       $scope,
-     *       [ 'prefix' => 'AmeliaGoogle\Auth\ScopedAccessToken::' ],
+     *       [ 'prefix' => 'AmeliaVendor\Google\Auth\ScopedAccessToken::' ],
      *       $cache = new Memcache()
      *   );
      *   $stack = HandlerStack::create();

@@ -4,12 +4,12 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace AmeliaDompdf\FrameReflower;
+namespace AmeliaVendor\Dompdf\FrameReflower;
 
-use AmeliaDompdf\Exception;
-use AmeliaDompdf\FrameDecorator\Block as BlockFrameDecorator;
-use AmeliaDompdf\FrameDecorator\Table as TableFrameDecorator;
-use AmeliaDompdf\FrameDecorator\TableRowGroup as TableRowGroupFrameDecorator;
+use AmeliaVendor\Dompdf\Exception;
+use AmeliaVendor\Dompdf\FrameDecorator\Block as BlockFrameDecorator;
+use AmeliaVendor\Dompdf\FrameDecorator\Table as TableFrameDecorator;
+use AmeliaVendor\Dompdf\FrameDecorator\TableRowGroup as TableRowGroupFrameDecorator;
 
 /**
  * Reflows table row groups (e.g. tbody tags)
@@ -31,7 +31,7 @@ class TableRowGroup extends AbstractFrameReflower
     /**
      * @param BlockFrameDecorator|null $block
      */
-    function reflow(BlockFrameDecorator $block = null)
+    function reflow(?BlockFrameDecorator $block = null)
     {
         /** @var TableRowGroupFrameDecorator */
         $frame = $this->_frame;

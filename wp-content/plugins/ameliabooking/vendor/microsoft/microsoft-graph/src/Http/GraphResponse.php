@@ -17,7 +17,7 @@
 
 namespace Microsoft\Graph\Http;
 
-use AmeliaPsr\Http\Message\StreamInterface;
+use AmeliaVendor\Psr\Http\Message\StreamInterface;
 
 /**
  * Class GraphResponse

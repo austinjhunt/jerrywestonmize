@@ -10,7 +10,7 @@
  * <?php
  * include 'vendor/autoload.php';
  *
- * $private = \phpseclib3\Crypt\EC::createKey('secp256k1');
+ * $private = \AmeliaVendor\phpseclib3\Crypt\EC::createKey('secp256k1');
  * $public = $private->getPublicKey();
  *
  * $plaintext = 'terrafrost';
@@ -27,24 +27,24 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-namespace phpseclib3\Crypt;
+namespace AmeliaVendor\phpseclib3\Crypt;
 
-use phpseclib3\Crypt\Common\AsymmetricKey;
-use phpseclib3\Crypt\EC\BaseCurves\Montgomery as MontgomeryCurve;
-use phpseclib3\Crypt\EC\BaseCurves\TwistedEdwards as TwistedEdwardsCurve;
-use phpseclib3\Crypt\EC\Curves\Curve25519;
-use phpseclib3\Crypt\EC\Curves\Ed25519;
-use phpseclib3\Crypt\EC\Curves\Ed448;
-use phpseclib3\Crypt\EC\Formats\Keys\PKCS1;
-use phpseclib3\Crypt\EC\Parameters;
-use phpseclib3\Crypt\EC\PrivateKey;
-use phpseclib3\Crypt\EC\PublicKey;
-use phpseclib3\Exception\UnsupportedAlgorithmException;
-use phpseclib3\Exception\UnsupportedCurveException;
-use phpseclib3\Exception\UnsupportedOperationException;
-use phpseclib3\File\ASN1;
-use phpseclib3\File\ASN1\Maps\ECParameters;
-use phpseclib3\Math\BigInteger;
+use AmeliaVendor\phpseclib3\Crypt\Common\AsymmetricKey;
+use AmeliaVendor\phpseclib3\Crypt\EC\BaseCurves\Montgomery as MontgomeryCurve;
+use AmeliaVendor\phpseclib3\Crypt\EC\BaseCurves\TwistedEdwards as TwistedEdwardsCurve;
+use AmeliaVendor\phpseclib3\Crypt\EC\Curves\Curve25519;
+use AmeliaVendor\phpseclib3\Crypt\EC\Curves\Ed25519;
+use AmeliaVendor\phpseclib3\Crypt\EC\Curves\Ed448;
+use AmeliaVendor\phpseclib3\Crypt\EC\Formats\Keys\PKCS1;
+use AmeliaVendor\phpseclib3\Crypt\EC\Parameters;
+use AmeliaVendor\phpseclib3\Crypt\EC\PrivateKey;
+use AmeliaVendor\phpseclib3\Crypt\EC\PublicKey;
+use AmeliaVendor\phpseclib3\Exception\UnsupportedAlgorithmException;
+use AmeliaVendor\phpseclib3\Exception\UnsupportedCurveException;
+use AmeliaVendor\phpseclib3\Exception\UnsupportedOperationException;
+use AmeliaVendor\phpseclib3\File\ASN1;
+use AmeliaVendor\phpseclib3\File\ASN1\Maps\ECParameters;
+use AmeliaVendor\phpseclib3\Math\BigInteger;
 
 /**
  * Pure-PHP implementation of EC.
@@ -170,7 +170,7 @@ abstract class EC extends AsymmetricKey
         } elseif (substr($curveName, 0, 10) == 'brainpoolp') {
             $curveName = 'brainpoolP' . substr($curveName, 10);
         }
-        $curve = '\phpseclib3\Crypt\EC\Curves\\' . $curveName;
+        $curve = '\AmeliaVendor\phpseclib3\Crypt\EC\Curves\\' . $curveName;
 
         if (!class_exists($curve)) {
             throw new UnsupportedCurveException('Named Curve of ' . $curveName . ' is not supported');

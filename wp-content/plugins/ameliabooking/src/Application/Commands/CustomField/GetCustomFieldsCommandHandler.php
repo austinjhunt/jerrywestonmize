@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -26,7 +26,6 @@ class GetCustomFieldsCommandHandler extends CommandHandler
      * @throws \Slim\Exception\ContainerValueNotFoundException
      * @throws AccessDeniedException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function handle(GetCustomFieldsCommand $command)
     {
@@ -56,9 +55,12 @@ class GetCustomFieldsCommandHandler extends CommandHandler
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved custom fields.');
+        // TODO: Redesign - change filteredCount when customer custom fields are added
         $result->setData(
             [
             'customFields' => $customFieldsArray,
+            'totalCount' => count($customFieldsArray),
+            'filteredCount' => count($customFieldsArray)
             ]
         );
 

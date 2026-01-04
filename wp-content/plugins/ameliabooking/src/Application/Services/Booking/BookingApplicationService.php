@@ -435,7 +435,7 @@ class BookingApplicationService
         // Convert UTC slot to slot in TimeZone based on Settings
         if (
             (isset($data['bookingStart']) &&
-            $data['bookings'][0]['utcOffset'] !== null &&
+            isset($data['bookings'][0]['utcOffset']) &&
             $settingsService->getSetting('general', 'showClientTimeZone')) ||
             (isset($data['utc']) ? (isset($data['bookingStart']) && $data['utc'] === true) : false)
         ) {

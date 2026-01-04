@@ -33,7 +33,7 @@ class GetEventBookingsController extends Controller
             unset($params['source']);
         }
 
-        $this->setArrayParams($params);
+        $this->setArrayParams($params, ['status']);
 
         $command->setField('params', $params);
 

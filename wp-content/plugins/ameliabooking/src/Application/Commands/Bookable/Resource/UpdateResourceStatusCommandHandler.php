@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -56,9 +56,10 @@ class UpdateResourceStatusCommandHandler extends CommandHandler
 
         do_action('amelia_before_resource_status_updated', $command->getArg('id'), $command->getField('status'));
 
-        $resourceRepository->updateStatusById(
+        $resourceRepository->updateFieldById(
             $command->getArg('id'),
-            $command->getField('status')
+            $command->getField('status'),
+            'status'
         );
 
         do_action('amelia_after_resource_status_updated', $command->getArg('id'), $command->getField('status'));

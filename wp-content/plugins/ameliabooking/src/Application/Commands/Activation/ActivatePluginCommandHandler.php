@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -24,7 +24,6 @@ class ActivatePluginCommandHandler extends CommandHandler
      *
      * @return CommandResult
      *
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function handle(ActivatePluginCommand $command)
     {
@@ -44,7 +43,7 @@ class ActivatePluginCommandHandler extends CommandHandler
         $subdomain = $command->getField('params')['subdomain'];
         $subdomain = AutoUpdateHook::getSubDomain($subdomain);
 
-        // Call the TMS Store API to check if purchase code is valid
+        // Call the Melograno Store API to check if purchase code is valid
         $ch = curl_init(
             AMELIA_STORE_API_URL . 'activation/code?slug=ameliabooking&purchaseCode=' . $purchaseCode .
             '&domain=' . $domain . '&subdomain=' . $subdomain
@@ -53,7 +52,7 @@ class ActivatePluginCommandHandler extends CommandHandler
 
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, apply_filters('amelia/curlopt_ssl_verifypeer', 1));
 
-        // Response from the TMS Store
+        // Response from the Melograno Store
         $response = json_decode(curl_exec($ch));
 
         curl_close($ch);

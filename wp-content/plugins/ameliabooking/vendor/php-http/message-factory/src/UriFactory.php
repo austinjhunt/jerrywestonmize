@@ -2,14 +2,14 @@
 
 namespace AmeliaHttp\Message;
 
-use AmeliaPsr\Http\Message\UriInterface;
+use AmeliaVendor\Psr\Http\Message\UriInterface;
 
 /**
  * Factory for PSR-7 URI.
  *
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
  *
- * @deprecated since version 1.1, use AmeliaPsr\Http\Message\UriFactoryInterface instead.
+ * @deprecated since version 1.1, use AmeliaVendor\Psr\Http\Message\UriFactoryInterface instead.
  */
 interface UriFactory
 {

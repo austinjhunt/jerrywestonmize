@@ -15,26 +15,26 @@
  * the License.
  */
 
-namespace AmeliaGoogle\Service\Calendar\Resource;
+namespace AmeliaVendor\Google\Service\Calendar\Resource;
 
-use AmeliaGoogle\Service\Calendar\Colors as ColorsModel;
+use AmeliaVendor\Google\Service\Calendar\Colors as ColorsModel;
 
 /**
  * The "colors" collection of methods.
  * Typical usage is:
  *  <code>
- *   $calendarService = new AmeliaGoogle\Service\Calendar(...);
+ *   $calendarService = new \AmeliaVendor\Google\Service\Calendar(...);
  *   $colors = $calendarService->colors;
  *  </code>
  */
-class Colors extends \AmeliaGoogle\Service\Resource
+class Colors extends \AmeliaVendor\Google\Service\Resource
 {
   /**
    * Returns the color definitions for calendars and events. (colors.get)
    *
    * @param array $optParams Optional parameters.
    * @return ColorsModel
-   * @throws \AmeliaGoogle\Service\Exception
+   * @throws \AmeliaVendor\Google\Service\Exception
    */
   public function get($optParams = [])
   {
@@ -45,4 +45,4 @@ class Colors extends \AmeliaGoogle\Service\Resource
 }
 
 // Adding a class alias for backwards compatibility with the previous class name.
-class_alias(Colors::class, 'AmeliaGoogle_Service_Calendar_Resource_Colors');
+class_alias(Colors::class, 'Google_Service_Calendar_Resource_Colors');

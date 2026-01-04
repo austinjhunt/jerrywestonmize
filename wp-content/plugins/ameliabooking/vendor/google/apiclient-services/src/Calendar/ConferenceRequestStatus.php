@@ -15,9 +15,9 @@
  * the License.
  */
 
-namespace AmeliaGoogle\Service\Calendar;
+namespace AmeliaVendor\Google\Service\Calendar;
 
-class ConferenceRequestStatus extends \AmeliaGoogle\Model
+class ConferenceRequestStatus extends \AmeliaVendor\Google\Model
 {
   /**
    * @var string
@@ -41,4 +41,4 @@ class ConferenceRequestStatus extends \AmeliaGoogle\Model
 }
 
 // Adding a class alias for backwards compatibility with the previous class name.
-class_alias(ConferenceRequestStatus::class, 'AmeliaGoogle_Service_Calendar_ConferenceRequestStatus');
+class_alias(ConferenceRequestStatus::class, 'Google_Service_Calendar_ConferenceRequestStatus');

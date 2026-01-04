@@ -8,8 +8,8 @@
 namespace Slim\Exception;
 
 use Exception;
-use AmeliaPsr\Http\Message\ResponseInterface;
-use AmeliaPsr\Http\Message\ServerRequestInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface;
 
 class SlimException extends Exception
 {

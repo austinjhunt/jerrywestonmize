@@ -19,7 +19,8 @@ class SquareRefundWebhookController extends Controller
      * @var array
      */
     protected $allowedFields = [
-        'data'
+        'data',
+        'signature',
     ];
 
     /**

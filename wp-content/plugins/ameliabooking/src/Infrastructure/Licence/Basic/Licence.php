@@ -5,6 +5,7 @@ namespace AmeliaBooking\Infrastructure\Licence\Basic;
 use AmeliaBooking\Application\Commands;
 use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Routes;
+use AmeliaBooking\Infrastructure\Licence\LicenceConstants;
 use Slim\App;
 
 /**
@@ -14,7 +15,7 @@ use Slim\App;
  */
 class Licence extends \AmeliaBooking\Infrastructure\Licence\Starter\Licence
 {
-    public static $licence = 'Basic';
+    public static $licence = LicenceConstants::BASIC;
 
     /**
      * @param Container $c
@@ -41,10 +42,15 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Starter\Licence
                 Commands\CustomField\DeleteCustomFieldCommand::class               => new Commands\CustomField\DeleteCustomFieldCommandHandler($c),
                 Commands\CustomField\UpdateCustomFieldCommand::class               => new Commands\CustomField\UpdateCustomFieldCommandHandler($c),
                 Commands\CustomField\UpdateCustomFieldsPositionsCommand::class     => new Commands\CustomField\UpdateCustomFieldsPositionsCommandHandler($c),
+                Commands\CustomField\BatchCustomFieldsCommand::class               => new Commands\CustomField\BatchCustomFieldsCommandHandler($c),
                 // Google
                 Commands\Google\DisconnectFromGoogleAccountCommand::class          => new Commands\Google\DisconnectFromGoogleAccountCommandHandler($c),
                 Commands\Google\FetchAccessTokenWithAuthCodeCommand::class         => new Commands\Google\FetchAccessTokenWithAuthCodeCommandHandler($c),
                 Commands\Google\GetGoogleAuthURLCommand::class                     => new Commands\Google\GetGoogleAuthURLCommandHandler($c),
+                Commands\Google\GetGoogleMiddlewareAuthURLCommand::class           => new Commands\Google\GetGoogleMiddlewareAuthURLCommandHandler($c),
+                Commands\Google\FetchGoogleMiddlewareAccessTokenCommand::class     => new Commands\Google\FetchGoogleMiddlewareAccessTokenCommandHandler($c),
+                Commands\Google\DisconnectFromGoogleMiddlewareAccountCommand::class =>
+                    new Commands\Google\DisconnectFromGoogleMiddlewareAccountCommandHandler($c),
                 // Outlook
                 Commands\Outlook\DisconnectFromOutlookAccountCommand::class        => new Commands\Outlook\DisconnectFromOutlookAccountCommandHandler($c),
                 Commands\Outlook\GetOutlookAuthURLCommand::class                   => new Commands\Outlook\GetOutlookAuthURLCommandHandler($c),

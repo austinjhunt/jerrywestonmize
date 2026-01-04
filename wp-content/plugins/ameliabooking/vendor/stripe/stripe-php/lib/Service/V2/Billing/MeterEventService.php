@@ -2,14 +2,14 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Service\V2\Billing;
+namespace AmeliaVendor\Stripe\Service\V2\Billing;
 
 /**
- * @phpstan-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  *
- * @psalm-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ * @psalm-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  */
-class MeterEventService extends \AmeliaStripe\Service\AbstractService
+class MeterEventService extends \AmeliaVendor\Stripe\Service\AbstractService
 {
     /**
      * Creates a meter event. Events are validated synchronously, but are processed
@@ -17,11 +17,11 @@ class MeterEventService extends \AmeliaStripe\Service\AbstractService
      * rate-limits, please use meter event streams instead.
      *
      * @param null|array{event_name: string, identifier?: string, payload: array<string, string>, timestamp?: string} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\V2\Billing\MeterEvent
+     * @return \AmeliaVendor\Stripe\V2\Billing\MeterEvent
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function create($params = null, $opts = null)
     {

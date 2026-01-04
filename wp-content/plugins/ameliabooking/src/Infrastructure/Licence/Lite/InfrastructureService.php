@@ -26,6 +26,16 @@ class InfrastructureService
     /**
      * @param Container $c
      *
+     * @return InfrastructureServices\Google\AbstractGoogleCalendarMiddlewareService
+     */
+    public static function getCalendarGoogleMiddlewareService($c)
+    {
+        return new InfrastructureServices\Google\StarterGoogleCalendarMiddlewareService($c);
+    }
+
+    /**
+     * @param Container $c
+     *
      * @return InfrastructureServices\Outlook\AbstractOutlookCalendarService
      */
     public static function getCalendarOutlookService($c)

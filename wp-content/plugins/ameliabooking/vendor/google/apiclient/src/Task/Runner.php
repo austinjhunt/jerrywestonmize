@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-namespace AmeliaGoogle\Task;
+namespace AmeliaVendor\Google\Task;
 
-use AmeliaGoogle\Service\Exception as GoogleServiceException;
-use AmeliaGoogle\Task\Exception as GoogleTaskException;
+use AmeliaVendor\Google\Service\Exception as GoogleServiceException;
+use AmeliaVendor\Google\Task\Exception as GoogleTaskException;
 
 /**
  * A task runner with exponential backoff support.
@@ -96,7 +96,7 @@ class Runner
      * @param string $name The name of the current task (used for logging)
      * @param callable $action The task to run and possibly retry
      * @param array $arguments The task arguments
-     * @throws \AmeliaGoogle\Task\Exception when misconfigured
+     * @throws \AmeliaVendor\Google\Task\Exception when misconfigured
      */
     // @phpstan-ignore-next-line
     public function __construct(
@@ -178,7 +178,7 @@ class Runner
      * Runs the task and (if applicable) automatically retries when errors occur.
      *
      * @return mixed
-     * @throws \AmeliaGoogle\Service\Exception on failure when no retries are available.
+     * @throws \AmeliaVendor\Google\Service\Exception on failure when no retries are available.
      */
     public function run()
     {

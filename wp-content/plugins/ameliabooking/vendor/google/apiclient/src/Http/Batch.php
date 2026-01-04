@@ -15,20 +15,20 @@
  * limitations under the License.
  */
 
-namespace AmeliaGoogle\Http;
+namespace AmeliaVendor\Google\Http;
 
-use AmeliaGoogle\Client;
-use AmeliaGoogle\Service\Exception as GoogleServiceException;
-use AmeliaGuzzleHttp\Psr7;
-use AmeliaGuzzleHttp\Psr7\Request;
-use AmeliaGuzzleHttp\Psr7\Response;
-use AmeliaPsr\Http\Message\RequestInterface;
-use AmeliaPsr\Http\Message\ResponseInterface;
+use AmeliaVendor\Google\Client;
+use AmeliaVendor\Google\Service\Exception as GoogleServiceException;
+use AmeliaVendor\GuzzleHttp\Psr7;
+use AmeliaVendor\GuzzleHttp\Psr7\Request;
+use AmeliaVendor\GuzzleHttp\Psr7\Response;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
 
 /**
  * Class to handle batched requests to the Google API service.
  *
- * Note that calls to `AmeliaGoogle\Http\Batch::execute()` do not clear the queued
+ * Note that calls to `Google\Http\Batch::execute()` do not clear the queued
  * requests. To start a new batch, be sure to create a new instance of this
  * class.
  */
@@ -62,7 +62,12 @@ class Batch
     ) {
         $this->client = $client;
         $this->boundary = $boundary ?: mt_rand();
-        $this->rootUrl = rtrim($rootUrl ?: $this->client->getConfig('base_path'), '/');
+        $rootUrl = rtrim($rootUrl ?: $this->client->getConfig('base_path'), '/');
+        $this->rootUrl = str_replace(
+            'UNIVERSE_DOMAIN',
+            $this->client->getUniverseDomain(),
+            $rootUrl
+        );
         $this->batchPath = $batchPath ?: self::BATCH_PATH;
     }
 

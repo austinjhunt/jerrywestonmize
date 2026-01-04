@@ -58,6 +58,10 @@ class UpdateAppointmentController extends Controller
 
         $params = (array)$request->getQueryParams();
 
+        if (!empty($params)) {
+            $command->setField('params', $params);
+        }
+
         if (isset($params['source'])) {
             $command->setPage($params['source']);
         }

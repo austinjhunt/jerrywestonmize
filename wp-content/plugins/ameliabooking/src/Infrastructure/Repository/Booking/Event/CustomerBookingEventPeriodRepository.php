@@ -19,7 +19,7 @@ class CustomerBookingEventPeriodRepository extends AbstractRepository implements
     /**
      * @param CustomerBookingEventPeriod $entity
      *
-     * @return bool
+     * @return int
      * @throws QueryExecutionException
      */
     public function add($entity)

@@ -25,7 +25,8 @@ class FetchAccessTokenSquareController extends Controller
         'refresh_token',
         'merchant_id',
         'decrypted_access_token',
-        'decrypted_refresh_token'
+        'decrypted_refresh_token',
+        'signature',
     ];
 
     /**

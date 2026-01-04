@@ -1,12 +1,12 @@
 <?php
 
-namespace Sabberworm\CSS\Value;
+namespace AmeliaVendor\Sabberworm\CSS\Value;
 
-use Sabberworm\CSS\OutputFormat;
-use Sabberworm\CSS\Parsing\ParserState;
-use Sabberworm\CSS\Parsing\SourceException;
-use Sabberworm\CSS\Parsing\UnexpectedEOFException;
-use Sabberworm\CSS\Parsing\UnexpectedTokenException;
+use AmeliaVendor\Sabberworm\CSS\OutputFormat;
+use AmeliaVendor\Sabberworm\CSS\Parsing\ParserState;
+use AmeliaVendor\Sabberworm\CSS\Parsing\SourceException;
+use AmeliaVendor\Sabberworm\CSS\Parsing\UnexpectedEOFException;
+use AmeliaVendor\Sabberworm\CSS\Parsing\UnexpectedTokenException;
 
 /**
  * This class is a wrapper for quoted strings to distinguish them from keywords.
@@ -36,6 +36,8 @@ class CSSString extends PrimitiveValue
      * @throws SourceException
      * @throws UnexpectedEOFException
      * @throws UnexpectedTokenException
+     *
+     * @internal since V8.8.0
      */
     public static function parse(ParserState $oParserState)
     {
@@ -92,6 +94,8 @@ class CSSString extends PrimitiveValue
 
     /**
      * @return string
+     *
+     * @deprecated in V8.8.0, will be removed in V9.0.0. Use `render` instead.
      */
     public function __toString()
     {
@@ -99,9 +103,11 @@ class CSSString extends PrimitiveValue
     }
 
     /**
+     * @param OutputFormat|null $oOutputFormat
+     *
      * @return string
      */
-    public function render(OutputFormat $oOutputFormat)
+    public function render($oOutputFormat)
     {
         $sString = addslashes($this->sString);
         $sString = str_replace("\n", '\A', $sString);

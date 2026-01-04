@@ -4,7 +4,7 @@ namespace AmeliaHttp\Client\Common;
 
 use AmeliaHttp\Client\Exception;
 use AmeliaHttp\Promise\Promise;
-use AmeliaPsr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
 
 /**
  * A deferred allow to return a promise which has not been resolved yet.

@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-namespace AmeliaGoogle\Auth\HttpHandler;
+namespace AmeliaVendor\Google\Auth\HttpHandler;
 
-use AmeliaGuzzleHttp\ClientInterface;
+use AmeliaVendor\GuzzleHttp\ClientInterface;
 
 /**
  * Stores an HTTP Client in order to prevent multiple instantiations.
@@ -37,7 +37,7 @@ class HttpClientCache
      * @param ClientInterface|null $client
      * @return void
      */
-    public static function setHttpClient(ClientInterface $client = null)
+    public static function setHttpClient(?ClientInterface $client = null)
     {
         self::$httpClient = $client;
     }

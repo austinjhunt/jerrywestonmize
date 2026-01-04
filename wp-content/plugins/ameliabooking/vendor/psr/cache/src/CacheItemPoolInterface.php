@@ -1,6 +1,6 @@
 <?php
 
-namespace Psr\Cache;
+namespace AmeliaVendor\Psr\Cache;
 
 /**
  * CacheItemPoolInterface generates CacheItemInterface objects.

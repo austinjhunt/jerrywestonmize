@@ -9,10 +9,10 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-namespace phpseclib3\Crypt\DH;
+namespace AmeliaVendor\phpseclib3\Crypt\DH;
 
-use phpseclib3\Crypt\Common;
-use phpseclib3\Crypt\DH;
+use AmeliaVendor\phpseclib3\Crypt\Common;
+use AmeliaVendor\phpseclib3\Crypt\DH;
 
 /**
  * DH Private Key
@@ -26,14 +26,14 @@ final class PrivateKey extends DH
     /**
      * Private Key
      *
-     * @var \phpseclib3\Math\BigInteger
+     * @var \AmeliaVendor\phpseclib3\Math\BigInteger
      */
     protected $privateKey;
 
     /**
      * Public Key
      *
-     * @var \phpseclib3\Math\BigInteger
+     * @var \AmeliaVendor\phpseclib3\Math\BigInteger
      */
     protected $publicKey;
 

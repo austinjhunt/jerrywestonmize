@@ -11,9 +11,9 @@
  * @link      http://pear.php.net/package/Math_BigInteger
  */
 
-namespace phpseclib3\Math\BigInteger\Engines\PHP;
+namespace AmeliaVendor\phpseclib3\Math\BigInteger\Engines\PHP;
 
-use phpseclib3\Math\BigInteger\Engines\PHP;
+use AmeliaVendor\phpseclib3\Math\BigInteger\Engines\PHP;
 
 /**
  * PHP Modular Exponentiation Engine

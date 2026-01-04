@@ -5,6 +5,7 @@ namespace AmeliaBooking\Application\Commands\Square;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
+use AmeliaBooking\Application\Services\Validation\ValidationService;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Infrastructure\Services\Payment\SquareService;
 
@@ -21,11 +22,25 @@ class FetchAccessTokenSquareCommandHandler extends CommandHandler
      * @return CommandResult
      * @throws \AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException
-     * @throws \Interop\Container\Exception\ContainerException
      * @throws AccessDeniedException
      */
     public function handle(FetchAccessTokenSquareCommand $command)
     {
+        if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::SETTINGS)) {
+            throw new AccessDeniedException('You are not allowed to write settings.');
+        }
+
+        $params = $command->getFields();
+
+        $apiPath = '/square/authorization/token&decrypted_access_token=' . $params['decrypted_access_token']
+            . '&expires_at=' . $params['expires_at'] . '&decrypted_refresh_token=' . $params['decrypted_refresh_token']
+            . '&merchant_id=' . $params['merchant_id']
+            . '&access_token=' . $params['access_token'] . '&refresh_token=' . $params['refresh_token'];
+
+        if (!ValidationService::verifySignature($apiPath, 'middleware', !empty($params['signature']) ? $params['signature'] : null)) {
+            throw new AccessDeniedException('Signature mismatch.');
+        }
+
         $result = new CommandResult();
 
         $this->checkMandatoryFields($command);
@@ -36,9 +51,6 @@ class FetchAccessTokenSquareCommandHandler extends CommandHandler
         /** @var \AmeliaBooking\Domain\Services\Settings\SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
 
-        if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::SETTINGS)) {
-            throw new AccessDeniedException('You are not allowed to write settings.');
-        }
 
         $accessToken = $command->getFields();
 
@@ -51,7 +63,7 @@ class FetchAccessTokenSquareCommandHandler extends CommandHandler
 
             $result->setResult(CommandResult::RESULT_ERROR);
             $result->setMessage('There has been an error retrieving the access token');
-            $result->setUrl(AMELIA_SITE_URL . '/wp-admin/admin.php?page=wpamelia-settings&square=1&square_error=1');
+            $result->setUrl(AMELIA_SITE_URL . '/wp-admin/admin.php?page=wpamelia-settings/payment?square=1&square_error=1');
 
             return $result;
         }
@@ -93,7 +105,7 @@ class FetchAccessTokenSquareCommandHandler extends CommandHandler
             ]
         );
 
-        $result->setUrl(AMELIA_SITE_URL . '/wp-admin/admin.php?page=wpamelia-settings&square=1');
+        $result->setUrl(AMELIA_SITE_URL . '/wp-admin/admin.php?page=wpamelia-settings#/payment?square=1');
 
         return $result;
     }

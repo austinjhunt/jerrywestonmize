@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -28,7 +28,7 @@ class SquareMiddlewareService
     {
         $squareSettings         = $settingsService->getCategorySettings('payments')['square'];
         $this->middlewareApiUrl = $squareSettings['testMode'] ?
-            'https://middleware-dev.wpamelia.com/' : 'https://middleware.wpamelia.com/';
+            'https://middleware-dev.wpamelia.com/' : AMELIA_MIDDLEWARE_URL;
     }
 
     /**
@@ -124,7 +124,7 @@ class SquareMiddlewareService
      * @param string $savedAccessToken
      * @param bool $testMode
      *
-     * @return boolean
+     * @return array|null
      *
      * @throws \Exception
      */

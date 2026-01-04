@@ -19,7 +19,7 @@
  * FITNESS FOR A PARTICULAR PURPOSE.
  */
 
-namespace AmeliaPHPMailer\PHPMailer;
+namespace AmeliaVendor\PHPMailer\PHPMailer;
 
 /**
  * PHPMailer RFC821 SMTP email transport class.
@@ -145,7 +145,7 @@ class SMTP
      * $mail->Debugoutput = new myPsr3Logger;
      * ```
      *
-     * @var string|callable|\Psr\Log\LoggerInterface
+     * @var string|callable|\AmeliaVendor\Psr\Log\LoggerInterface
      */
     public $Debugoutput = 'echo';
 
@@ -267,7 +267,7 @@ class SMTP
             return;
         }
         //Is this a PSR-3 logger?
-        if ($this->Debugoutput instanceof \Psr\Log\LoggerInterface) {
+        if ($this->Debugoutput instanceof \AmeliaVendor\Psr\Log\LoggerInterface) {
             $this->Debugoutput->debug($str);
 
             return;

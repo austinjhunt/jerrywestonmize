@@ -41,7 +41,7 @@ abstract class AbstractGoogleCalendarService
      *
      * @param $authCode
      * @param $redirectUri
-     * @return string
+     * @return array|string
      */
     abstract public function fetchAccessTokenWithAuthCode($authCode, $redirectUri);
 

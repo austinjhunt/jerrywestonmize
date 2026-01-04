@@ -2,24 +2,24 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Service\Apps;
+namespace AmeliaVendor\Stripe\Service\Apps;
 
 /**
- * @phpstan-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  *
- * @psalm-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ * @psalm-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  */
-class SecretService extends \AmeliaStripe\Service\AbstractService
+class SecretService extends \AmeliaVendor\Stripe\Service\AbstractService
 {
     /**
      * List all secrets stored on the given scope.
      *
      * @param null|array{ending_before?: string, expand?: string[], limit?: int, scope: array{type: string, user?: string}, starting_after?: string} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Collection<\AmeliaStripe\Apps\Secret>
+     * @return \AmeliaVendor\Stripe\Collection<\AmeliaVendor\Stripe\Apps\Secret>
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function all($params = null, $opts = null)
     {
@@ -30,11 +30,11 @@ class SecretService extends \AmeliaStripe\Service\AbstractService
      * Create or replace a secret in the secret store.
      *
      * @param null|array{expand?: string[], expires_at?: int, name: string, payload: string, scope: array{type: string, user?: string}} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Apps\Secret
+     * @return \AmeliaVendor\Stripe\Apps\Secret
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function create($params = null, $opts = null)
     {
@@ -45,11 +45,11 @@ class SecretService extends \AmeliaStripe\Service\AbstractService
      * Deletes a secret from the secret store by name and scope.
      *
      * @param null|array{expand?: string[], name: string, scope: array{type: string, user?: string}} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Apps\Secret
+     * @return \AmeliaVendor\Stripe\Apps\Secret
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function deleteWhere($params = null, $opts = null)
     {
@@ -60,11 +60,11 @@ class SecretService extends \AmeliaStripe\Service\AbstractService
      * Finds a secret in the secret store by name and scope.
      *
      * @param null|array{expand?: string[], name: string, scope: array{type: string, user?: string}} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Apps\Secret
+     * @return \AmeliaVendor\Stripe\Apps\Secret
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function find($params = null, $opts = null)
     {

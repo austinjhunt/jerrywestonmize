@@ -2,14 +2,14 @@
 
 namespace AmeliaHttp\Message;
 
-use AmeliaPsr\Http\Message\StreamInterface;
+use AmeliaVendor\Psr\Http\Message\StreamInterface;
 
 /**
  * Factory for PSR-7 Stream.
  *
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
  *
- * @deprecated since version 1.1, use AmeliaPsr\Http\Message\StreamFactoryInterface instead.
+ * @deprecated since version 1.1, use AmeliaVendor\Psr\Http\Message\StreamFactoryInterface instead.
  */
 interface StreamFactory
 {

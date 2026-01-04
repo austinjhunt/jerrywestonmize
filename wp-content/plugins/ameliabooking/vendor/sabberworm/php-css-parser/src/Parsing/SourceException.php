@@ -1,13 +1,13 @@
 <?php
 
-namespace Sabberworm\CSS\Parsing;
+namespace AmeliaVendor\Sabberworm\CSS\Parsing;
 
-class SourceException extends \Exception
+use AmeliaVendor\Sabberworm\CSS\Position\Position;
+use AmeliaVendor\Sabberworm\CSS\Position\Positionable;
+
+class SourceException extends \Exception implements Positionable
 {
-    /**
-     * @var int
-     */
-    private $iLineNo;
+    use Position;
 
     /**
      * @param string $sMessage
@@ -15,18 +15,10 @@ class SourceException extends \Exception
      */
     public function __construct($sMessage, $iLineNo = 0)
     {
-        $this->iLineNo = $iLineNo;
+        $this->setPosition($iLineNo);
         if (!empty($iLineNo)) {
             $sMessage .= " [line no: $iLineNo]";
         }
         parent::__construct($sMessage);
-    }
-
-    /**
-     * @return int
-     */
-    public function getLineNo()
-    {
-        return $this->iLineNo;
     }
 }

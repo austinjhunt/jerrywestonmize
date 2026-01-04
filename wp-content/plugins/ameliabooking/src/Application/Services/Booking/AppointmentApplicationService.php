@@ -21,6 +21,7 @@ use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBookingExtra;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Payment\Payment;
+use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Domain\Factory\Booking\Appointment\CustomerBookingFactory;
 use AmeliaBooking\Domain\Services\Booking\AppointmentDomainService;
@@ -638,18 +639,20 @@ class AppointmentApplicationService
                     /** @var CustomerBooking $oldBooking */
                     $oldBooking = $oldAppointment->getBookings()->getItem($newBooking->getId()->getValue());
 
-                    if ($this->isDurationPricingType($service) &&
+                    if (
+                        $this->isDurationPricingType($service) &&
                         $newBooking->getDuration() &&
                         $newBooking->getDuration()->getValue() !== (
                             $oldBooking->getDuration()
-                                ? $oldBooking->getDuration()->getValue()
-                                : $service->getDuration()->getValue()
+                            ? $oldBooking->getDuration()->getValue()
+                            : $service->getDuration()->getValue()
                         )
                     ) {
                         $bookingRepository->updatePrice($newBooking->getId()->getValue(), $newBooking);
                     }
 
-                    if ($this->isPersonPricingType($service) &&
+                    if (
+                        $this->isPersonPricingType($service) &&
                         $newBooking->getPersons()->getValue() !== $oldBooking->getPersons()->getValue()
                     ) {
                         $bookingRepository->updatePrice($newBooking->getId()->getValue(), $newBooking);
@@ -859,7 +862,7 @@ class AppointmentApplicationService
      * @param Appointment $appointment
      * @param int         $bookingId
      *
-     * @return CustomerBooking
+     * @return CustomerBooking|null
      */
     public function getAppointmentBooking($appointment, $bookingId)
     {
@@ -1232,8 +1235,8 @@ class AppointmentApplicationService
             foreach ($appointment->getBookings()->getItems() as $booking) {
                 if (
                     (
-                    $booking->getStatus()->getValue() === BookingStatus::APPROVED &&
-                    $appointment->getStatus()->getValue() === BookingStatus::PENDING
+                        $booking->getStatus()->getValue() === BookingStatus::APPROVED &&
+                        $appointment->getStatus()->getValue() === BookingStatus::PENDING
                     )
                 ) {
                     $booking->setChangedStatus(new BooleanValueObject(true));
@@ -1327,7 +1330,7 @@ class AppointmentApplicationService
      * @param CustomerBooking $booking
      * @param Collection      $ignoredBookings
      * @param int             $serviceId
-     * @param array           $paymentData
+     * @param array|null      $paymentData
      *
      * @return boolean
      * @throws InvalidArgumentException
@@ -1508,7 +1511,10 @@ class AppointmentApplicationService
      */
     public function isDurationPricingType($service)
     {
-        if ($service->getCustomPricing()) {
+        /** @var SettingsService $settingsService */
+        $settingsService = $this->container->get('domain.settings.service');
+
+        if ($settingsService->isFeatureEnabled('customPricing') && $service->getCustomPricing()) {
             $customPricing = json_decode($service->getCustomPricing()->getValue(), true);
 
             if (
@@ -1531,7 +1537,10 @@ class AppointmentApplicationService
      */
     public function isPersonPricingType($service)
     {
-        if ($service->getCustomPricing()) {
+        /** @var SettingsService $settingsService */
+        $settingsService = $this->container->get('domain.settings.service');
+
+        if ($settingsService->isFeatureEnabled('customPricing') && $service->getCustomPricing()) {
             $customPricing = json_decode($service->getCustomPricing()->getValue(), true);
 
             if (
@@ -1553,13 +1562,15 @@ class AppointmentApplicationService
      */
     public function isPeriodCustomPricing($service)
     {
-        if ($service->getCustomPricing()) {
+        /** @var SettingsService $settingsService */
+        $settingsService = $this->container->get('domain.settings.service');
+
+        if ($settingsService->isFeatureEnabled('customPricing') && $service->getCustomPricing()) {
             $customPricing = json_decode($service->getCustomPricing()->getValue(), true);
 
             if (
-                Licence\Licence::$licence !== 'Lite' &&
-                Licence\Licence::$licence !== 'Starter' &&
-                Licence\Licence::$licence !== 'Basic' &&
+                Licence\Licence::getLicence() !== 'Lite' &&
+                Licence\Licence::getLicence() !== 'Starter' &&
                 $customPricing !== null &&
                 $customPricing['enabled'] === 'period' &&
                 $customPricing['periods']
@@ -1582,7 +1593,10 @@ class AppointmentApplicationService
      */
     public function getBookingPriceForService($service, $booking, $provider, $bookingStart)
     {
-        if ($service->getCustomPricing()) {
+        /** @var SettingsService $settingsService */
+        $settingsService = $this->container->get('domain.settings.service');
+
+        if ($settingsService->isFeatureEnabled('customPricing') && $service->getCustomPricing()) {
             $customPricing = json_decode($service->getCustomPricing()->getValue(), true);
 
             if (
@@ -1617,9 +1631,8 @@ class AppointmentApplicationService
 
                 return $item['price'];
             } elseif (
-                Licence\Licence::$licence !== 'Lite' &&
-                Licence\Licence::$licence !== 'Starter' &&
-                Licence\Licence::$licence !== 'Basic' &&
+                Licence\Licence::getLicence() !== 'Lite' &&
+                Licence\Licence::getLicence() !== 'Starter' &&
                 $customPricing !== null &&
                 $customPricing['enabled'] === 'period' &&
                 $customPricing['periods']
@@ -1916,12 +1929,12 @@ class AppointmentApplicationService
                 $customerBooking->setChangedStatus(
                     new BooleanValueObject(
                         $appointmentStatusChanged &&
-                        $bookingAS->isAppointmentStatusChangedForBooking(
-                            $customerBooking->getStatus()->getValue(),
-                            $customerBooking->getStatus()->getValue(),
-                            $newAppointmentStatus,
-                            $oldAppointmentStatus
-                        )
+                            $bookingAS->isAppointmentStatusChangedForBooking(
+                                $customerBooking->getStatus()->getValue(),
+                                $customerBooking->getStatus()->getValue(),
+                                $newAppointmentStatus,
+                                $oldAppointmentStatus
+                            )
                     )
                 );
             }
@@ -1930,5 +1943,73 @@ class AppointmentApplicationService
         $appointment->setChangedStatus(new BooleanValueObject($appointmentStatusChanged));
 
         return $appointmentStatusChanged;
+    }
+
+    /**
+     * @param Appointment  $appointment
+     * @param Service      $service
+     * @param AbstractUser $user
+     *
+     * @return bool
+     */
+    public function isReschedulable($appointment, $service, $user)
+    {
+        /** @var SettingsService $settingsDS */
+        $settingsDS = $this->container->get('domain.settings.service');
+
+        $reschedulable = true;
+
+        if ($user->getType() === Entities::CUSTOMER) {
+            $currentDateTime = DateTimeService::getNowDateTimeObject();
+
+            $minimumRescheduleTimeInSeconds = $settingsDS
+                ->getEntitySettings($service->getSettings())
+                ->getGeneralSettings()
+                ->getMinimumTimeRequirementPriorToRescheduling();
+
+            $minimumRescheduleTime = DateTimeService::getCustomDateTimeObject(
+                $appointment->getBookingStart()->getValue()->format('Y-m-d H:i:s')
+            )->modify("-{$minimumRescheduleTimeInSeconds} seconds");
+
+            $reschedulable =
+                $appointment->getBookingStart()->getValue() > $currentDateTime &&
+                $currentDateTime <= $minimumRescheduleTime;
+        }
+
+        return $reschedulable;
+    }
+
+    /**
+     * @param Appointment  $appointment
+     * @param Service      $service
+     * @param AbstractUser $user
+     *
+     * @return bool
+     */
+    public function isCancelable($appointment, $service, $user)
+    {
+        /** @var SettingsService $settingsDS */
+        $settingsDS = $this->container->get('domain.settings.service');
+
+        $cancelable = true;
+
+        if ($user->getType() === Entities::CUSTOMER) {
+            $currentDateTime = DateTimeService::getNowDateTimeObject();
+
+            $minimumCancelTimeInSeconds = $settingsDS
+                ->getEntitySettings($service->getSettings())
+                ->getGeneralSettings()
+                ->getMinimumTimeRequirementPriorToCanceling();
+
+            $minimumCancelTime = DateTimeService::getCustomDateTimeObject(
+                $appointment->getBookingStart()->getValue()->format('Y-m-d H:i:s')
+            )->modify("-{$minimumCancelTimeInSeconds} seconds");
+
+            $cancelable =
+                $appointment->getBookingStart()->getValue() > $currentDateTime &&
+                $currentDateTime <= $minimumCancelTime;
+        }
+
+        return $cancelable;
     }
 }

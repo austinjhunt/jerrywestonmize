@@ -12,7 +12,7 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-namespace phpseclib3\Crypt\Common;
+namespace AmeliaVendor\phpseclib3\Crypt\Common;
 
 /**
  * Base Class for all stream cipher classes
@@ -26,7 +26,7 @@ abstract class StreamCipher extends SymmetricKey
      *
      * Stream ciphers do not have a block size
      *
-     * @see \phpseclib3\Crypt\Common\SymmetricKey::block_size
+     * @see SymmetricKey::block_size
      * @var int
      */
     protected $block_size = 0;
@@ -34,7 +34,7 @@ abstract class StreamCipher extends SymmetricKey
     /**
      * Default Constructor.
      *
-     * @see \phpseclib3\Crypt\Common\SymmetricKey::__construct()
+     * @see \AmeliaVendor\phpseclib3\Crypt\Common\SymmetricKey::__construct()
      * @return StreamCipher
      */
     public function __construct()

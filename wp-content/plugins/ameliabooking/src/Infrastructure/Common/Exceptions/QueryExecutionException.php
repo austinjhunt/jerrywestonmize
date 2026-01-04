@@ -12,13 +12,11 @@ use Exception;
 class QueryExecutionException extends \Exception
 {
     /**
-     * QueryExecutionException constructor.
-     *
      * @param string         $message
      * @param int            $code
      * @param Exception|null $previous
      */
-    public function __construct($message = 'Query Execution Error', $code = 0, Exception $previous = null)
+    public function __construct($message = 'Query Execution Error', $code = 0, ?Exception $previous = null)
     {
         if (!is_int($code)) {
             $message .= $previous ? ' ' . $previous->getMessage() : '';

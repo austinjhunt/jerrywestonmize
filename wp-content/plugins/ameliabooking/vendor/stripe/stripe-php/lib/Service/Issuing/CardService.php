@@ -2,14 +2,14 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Service\Issuing;
+namespace AmeliaVendor\Stripe\Service\Issuing;
 
 /**
- * @phpstan-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  *
- * @psalm-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ * @psalm-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  */
-class CardService extends \AmeliaStripe\Service\AbstractService
+class CardService extends \AmeliaVendor\Stripe\Service\AbstractService
 {
     /**
      * Returns a list of Issuing <code>Card</code> objects. The objects are sorted in
@@ -17,11 +17,11 @@ class CardService extends \AmeliaStripe\Service\AbstractService
      * appearing first.
      *
      * @param null|array{cardholder?: string, created?: array|int, ending_before?: string, exp_month?: int, exp_year?: int, expand?: string[], last4?: string, limit?: int, personalization_design?: string, starting_after?: string, status?: string, type?: string} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Collection<\AmeliaStripe\Issuing\Card>
+     * @return \AmeliaVendor\Stripe\Collection<\AmeliaVendor\Stripe\Issuing\Card>
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function all($params = null, $opts = null)
     {
@@ -32,11 +32,11 @@ class CardService extends \AmeliaStripe\Service\AbstractService
      * Creates an Issuing <code>Card</code> object.
      *
      * @param null|array{cardholder?: string, currency: string, expand?: string[], financial_account?: string, metadata?: array<string, string>, personalization_design?: string, pin?: array{encrypted_number?: string}, replacement_for?: string, replacement_reason?: string, second_line?: null|string, shipping?: array{address: array{city: string, country: string, line1: string, line2?: string, postal_code: string, state?: string}, address_validation?: array{mode: string}, customs?: array{eori_number?: string}, name: string, phone_number?: string, require_signature?: bool, service?: string, type?: string}, spending_controls?: array{allowed_categories?: string[], allowed_merchant_countries?: string[], blocked_categories?: string[], blocked_merchant_countries?: string[], spending_limits?: array{amount: int, categories?: string[], interval: string}[]}, status?: string, type: string} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Issuing\Card
+     * @return \AmeliaVendor\Stripe\Issuing\Card
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function create($params = null, $opts = null)
     {
@@ -48,11 +48,11 @@ class CardService extends \AmeliaStripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{expand?: string[]} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Issuing\Card
+     * @return \AmeliaVendor\Stripe\Issuing\Card
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function retrieve($id, $params = null, $opts = null)
     {
@@ -65,11 +65,11 @@ class CardService extends \AmeliaStripe\Service\AbstractService
      *
      * @param string $id
      * @param null|array{cancellation_reason?: string, expand?: string[], metadata?: null|array<string, string>, personalization_design?: string, pin?: array{encrypted_number?: string}, shipping?: array{address: array{city: string, country: string, line1: string, line2?: string, postal_code: string, state?: string}, address_validation?: array{mode: string}, customs?: array{eori_number?: string}, name: string, phone_number?: string, require_signature?: bool, service?: string, type?: string}, spending_controls?: array{allowed_categories?: string[], allowed_merchant_countries?: string[], blocked_categories?: string[], blocked_merchant_countries?: string[], spending_limits?: array{amount: int, categories?: string[], interval: string}[]}, status?: string} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
-     * @return \AmeliaStripe\Issuing\Card
+     * @return \AmeliaVendor\Stripe\Issuing\Card
      *
-     * @throws \AmeliaStripe\Exception\ApiErrorException if the request fails
+     * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException if the request fails
      */
     public function update($id, $params = null, $opts = null)
     {

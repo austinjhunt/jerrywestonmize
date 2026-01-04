@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Monolog\Test;
+namespace AmeliaVendor\Monolog\Test;
 
-use Monolog\Logger;
-use Monolog\DateTimeImmutable;
-use Monolog\Formatter\FormatterInterface;
+use AmeliaVendor\Monolog\Logger;
+use AmeliaVendor\Monolog\DateTimeImmutable;
+use AmeliaVendor\Monolog\Formatter\FormatterInterface;
 
 /**
  * Lets you easily generate log records and a dummy formatter for testing purposes

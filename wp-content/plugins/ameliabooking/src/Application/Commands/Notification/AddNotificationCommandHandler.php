@@ -76,7 +76,15 @@ class AddNotificationCommandHandler extends CommandHandler
         $content = $command->getField('content');
 
         if ($command->getField('type') === 'email') {
-            $content = preg_replace("/\r|\n/", "", $content);
+            // If content has paragraph tags, only remove newlines between HTML tags (formatting)
+            // Otherwise convert newlines to <br> tags for plain text content
+            if (strpos($content, '<p>') !== false || strpos($content, '<P>') !== false) {
+                // WYSIWYG mode: remove only formatting newlines between tags
+                $content = preg_replace('/>\s+</', '><', $content);
+            } else {
+                // Plain text/HTML mode: convert newlines to <br> tags
+                $content = nl2br($content);
+            }
         }
 
         if ($command->getField('type') !== 'whatsapp') {
@@ -114,9 +122,9 @@ class AddNotificationCommandHandler extends CommandHandler
             $result->setMessage('Successfully added notification.');
             $result->setData(
                 [
-                Entities::NOTIFICATION => $notification->toArray(),
-                'update'               => !empty($parsedContent),
-                'id'                   => $id
+                    Entities::NOTIFICATION => $notification->toArray(),
+                    'update'               => !empty($parsedContent),
+                    'id'                   => $id
                 ]
             );
         }

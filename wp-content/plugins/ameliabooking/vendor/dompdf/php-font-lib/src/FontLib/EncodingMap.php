@@ -5,7 +5,7 @@
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 
-namespace FontLib;
+namespace AmeliaVendor\FontLib;
 
 /**
  * Encoding map used to map a code point to a Unicode char.

@@ -133,6 +133,14 @@ class BasicPackageApplicationService extends AbstractPackageApplicationService
     }
 
     /**
+     * @return Collection
+     */
+    public function getPackages()
+    {
+        return new Collection();
+    }
+
+    /**
      * @return array
      */
     public function getPackagesArray()

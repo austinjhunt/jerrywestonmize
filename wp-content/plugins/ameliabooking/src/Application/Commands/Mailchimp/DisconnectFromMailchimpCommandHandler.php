@@ -32,7 +32,6 @@ class DisconnectFromMailchimpCommandHandler extends CommandHandler
      */
     public function handle(DisconnectFromMailchimpCommand $command)
     {
-
         if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::SETTINGS)) {
             throw new AccessDeniedException('You are not allowed to write settings.');
         }

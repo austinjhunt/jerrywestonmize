@@ -6,13 +6,16 @@ use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\User\ProviderApplicationService;
+use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Entities;
-use AmeliaBooking\Domain\Collection\AbstractCollection;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
+use AmeliaBooking\Infrastructure\Licence\Licence;
+use AmeliaBooking\Infrastructure\Licence\LicenceConstants;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
+use AmeliaBooking\Infrastructure\Services\Google\GoogleCalendarMiddlewareService;
 use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
 
@@ -49,26 +52,24 @@ class GetProvidersCommandHandler extends CommandHandler
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
 
-        $itemsPerPage   = $settingsService->getSetting('general', 'itemsPerPageBackEnd');
         $companyDaysOff = $settingsService->getCategorySettings('daysOff');
 
         $params = $command->getField('params');
 
-        if (!$command->getPermissionService()->currentUserCanReadOthers(Entities::EMPLOYEES)) {
-            /** @var AbstractUser $currentUser */
-            $currentUser = $this->container->get('logged.in.user');
+        /** @var AbstractUser $currentUser */
+        $currentUser = $this->container->get('logged.in.user');
 
+        if (
+            !$command->getPermissionService()->currentUserCanReadOthers(Entities::EMPLOYEES) &&
+            $currentUser->getType() === Entities::PROVIDER
+        ) {
             $params['providers'][] = $currentUser->getId()->getValue();
         }
 
+        $itemsPerPage = !empty($params['limit']) ? $params['limit'] : 10;
+
+        /** @var Collection $providers */
         $providers = $providerRepository->getFiltered($params, $itemsPerPage);
-
-        if (!$providers instanceof AbstractCollection) {
-            $result->setResult(CommandResult::RESULT_ERROR);
-            $result->setMessage('Could not get users');
-
-            return $result;
-        }
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved users.');
@@ -83,9 +84,9 @@ class GetProvidersCommandHandler extends CommandHandler
 
         $result->setData(
             [
-            Entities::USERS => $providers,
-            'countFiltered' => (int)$providerRepository->getCount($command->getField('params')),
-            'countTotal'    => (int)$providerRepository->getCount([]),
+                Entities::USERS => $providers,
+                'countFiltered' => (int)$providerRepository->getCount($command->getField('params')),
+                'countTotal'    => (int)$providerRepository->getCount([]),
             ]
         );
 

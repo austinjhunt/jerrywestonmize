@@ -5,27 +5,27 @@
  * @license GNU LGPLv3+ http://www.gnu.org/copyleft/lesser.html
  */
 
-namespace Svg;
+namespace AmeliaVendor\Svg;
 
-use Svg\Surface\SurfaceInterface;
-use Svg\Tag\AbstractTag;
-use Svg\Tag\Anchor;
-use Svg\Tag\Circle;
-use Svg\Tag\Ellipse;
-use Svg\Tag\Group;
-use Svg\Tag\ClipPath;
-use Svg\Tag\Image;
-use Svg\Tag\Line;
-use Svg\Tag\LinearGradient;
-use Svg\Tag\Path;
-use Svg\Tag\Polygon;
-use Svg\Tag\Polyline;
-use Svg\Tag\Rect;
-use Svg\Tag\Stop;
-use Svg\Tag\Symbol;
-use Svg\Tag\Text;
-use Svg\Tag\StyleTag;
-use Svg\Tag\UseTag;
+use AmeliaVendor\Svg\Surface\SurfaceInterface;
+use AmeliaVendor\Svg\Tag\AbstractTag;
+use AmeliaVendor\Svg\Tag\Anchor;
+use AmeliaVendor\Svg\Tag\Circle;
+use AmeliaVendor\Svg\Tag\Ellipse;
+use AmeliaVendor\Svg\Tag\Group;
+use AmeliaVendor\Svg\Tag\ClipPath;
+use AmeliaVendor\Svg\Tag\Image;
+use AmeliaVendor\Svg\Tag\Line;
+use AmeliaVendor\Svg\Tag\LinearGradient;
+use AmeliaVendor\Svg\Tag\Path;
+use AmeliaVendor\Svg\Tag\Polygon;
+use AmeliaVendor\Svg\Tag\Polyline;
+use AmeliaVendor\Svg\Tag\Rect;
+use AmeliaVendor\Svg\Tag\Stop;
+use AmeliaVendor\Svg\Tag\Symbol;
+use AmeliaVendor\Svg\Tag\Text;
+use AmeliaVendor\Svg\Tag\StyleTag;
+use AmeliaVendor\Svg\Tag\UseTag;
 
 class Document extends AbstractTag
 {
@@ -51,7 +51,7 @@ class Document extends AbstractTag
     /** @var AbstractTag[] */
     protected $defs = array();
 
-    /** @var \Sabberworm\CSS\CSSList\Document[] */
+    /** @var \AmeliaVendor\Sabberworm\CSS\CSSList\Document[] */
     protected $styleSheets = array();
 
     public $allowExternalReferences = true;
@@ -210,7 +210,7 @@ class Document extends AbstractTag
     /**
      * Append a style sheet
      *
-     * @param \Sabberworm\CSS\CSSList\Document $stylesheet
+     * @param \AmeliaVendor\Sabberworm\CSS\CSSList\Document $stylesheet
      */
     public function appendStyleSheet($stylesheet) {
         $this->styleSheets[] = $stylesheet;
@@ -219,7 +219,7 @@ class Document extends AbstractTag
     /**
      * Get the document style sheets
      *
-     * @return \Sabberworm\CSS\CSSList\Document[]
+     * @return \AmeliaVendor\Sabberworm\CSS\CSSList\Document[]
      */
     public function getStyleSheets() {
         return $this->styleSheets;

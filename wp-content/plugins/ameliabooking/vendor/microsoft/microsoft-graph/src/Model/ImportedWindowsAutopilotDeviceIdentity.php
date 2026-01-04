@@ -86,15 +86,15 @@ class ImportedWindowsAutopilotDeviceIdentity extends Entity
     * Gets the hardwareIdentifier
     * Hardware Blob of the Windows autopilot device.
     *
-    * @return \AmeliaGuzzleHttp\Psr7\Stream|null The hardwareIdentifier
+    * @return \AmeliaVendor\GuzzleHttp\Psr7\Stream|null The hardwareIdentifier
     */
     public function getHardwareIdentifier()
     {
         if (array_key_exists("hardwareIdentifier", $this->_propDict)) {
-            if (is_a($this->_propDict["hardwareIdentifier"], "\AmeliaGuzzleHttp\Psr7\Stream") || is_null($this->_propDict["hardwareIdentifier"])) {
+            if (is_a($this->_propDict["hardwareIdentifier"], "\AmeliaVendor\GuzzleHttp\Psr7\Stream") || is_null($this->_propDict["hardwareIdentifier"])) {
                 return $this->_propDict["hardwareIdentifier"];
             } else {
-                $this->_propDict["hardwareIdentifier"] = \AmeliaGuzzleHttp\Psr7\Utils::streamFor($this->_propDict["hardwareIdentifier"]);
+                $this->_propDict["hardwareIdentifier"] = \AmeliaVendor\GuzzleHttp\Psr7\Utils::streamFor($this->_propDict["hardwareIdentifier"]);
                 return $this->_propDict["hardwareIdentifier"];
             }
         }
@@ -105,7 +105,7 @@ class ImportedWindowsAutopilotDeviceIdentity extends Entity
     * Sets the hardwareIdentifier
     * Hardware Blob of the Windows autopilot device.
     *
-    * @param \AmeliaGuzzleHttp\Psr7\Stream $val The hardwareIdentifier
+    * @param \AmeliaVendor\GuzzleHttp\Psr7\Stream $val The hardwareIdentifier
     *
     * @return ImportedWindowsAutopilotDeviceIdentity
     */

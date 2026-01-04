@@ -2,14 +2,14 @@
 
 // File generated from our OpenAPI spec
 
-namespace AmeliaStripe\Service\V2\Billing;
+namespace AmeliaVendor\Stripe\Service\V2\Billing;
 
 /**
- * @phpstan-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ * @phpstan-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  *
- * @psalm-import-type RequestOptionsArray from \AmeliaStripe\Util\RequestOptions
+ * @psalm-import-type RequestOptionsArray from \Stripe\Util\RequestOptions
  */
-class MeterEventStreamService extends \AmeliaStripe\Service\AbstractService
+class MeterEventStreamService extends \AmeliaVendor\Stripe\Service\AbstractService
 {
     /**
      * Creates meter events. Events are processed asynchronously, including validation.
@@ -17,15 +17,15 @@ class MeterEventStreamService extends \AmeliaStripe\Service\AbstractService
      * requests per second in livemode. For even higher rate-limits, contact sales.
      *
      * @param null|array{events: array{event_name: string, identifier?: string, payload: array<string, string>, timestamp?: string}[]} $params
-     * @param null|RequestOptionsArray|\AmeliaStripe\Util\RequestOptions $opts
+     * @param null|RequestOptionsArray|\AmeliaVendor\Stripe\Util\RequestOptions $opts
      *
      * @return void
      *
-     * @throws \AmeliaStripe\Exception\TemporarySessionExpiredException
+     * @throws \AmeliaVendor\Stripe\Exception\TemporarySessionExpiredException
      */
     public function create($params = null, $opts = null)
     {
-        $opts = \AmeliaStripe\Util\RequestOptions::parse($opts);
+        $opts = \AmeliaVendor\Stripe\Util\RequestOptions::parse($opts);
         if (!isset($opts->apiBase)) {
             $opts->apiBase = $this->getClient()->getMeterEventsBase();
         }

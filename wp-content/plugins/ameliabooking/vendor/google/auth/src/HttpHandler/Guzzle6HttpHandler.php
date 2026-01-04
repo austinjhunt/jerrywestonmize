@@ -14,11 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace AmeliaGoogle\Auth\HttpHandler;
+namespace AmeliaVendor\Google\Auth\HttpHandler;
 
-use AmeliaGuzzleHttp\ClientInterface;
-use AmeliaPsr\Http\Message\RequestInterface;
-use AmeliaPsr\Http\Message\ResponseInterface;
+use AmeliaVendor\GuzzleHttp\ClientInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
 
 class Guzzle6HttpHandler
 {
@@ -53,7 +53,7 @@ class Guzzle6HttpHandler
      * @param RequestInterface $request
      * @param array<mixed> $options
      *
-     * @return \AmeliaGuzzleHttp\Promise\PromiseInterface
+     * @return \AmeliaVendor\GuzzleHttp\Promise\PromiseInterface
      */
     public function async(RequestInterface $request, array $options = [])
     {

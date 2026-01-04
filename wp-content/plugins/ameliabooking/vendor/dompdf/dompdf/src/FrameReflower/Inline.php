@@ -4,11 +4,11 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace AmeliaDompdf\FrameReflower;
+namespace AmeliaVendor\Dompdf\FrameReflower;
 
-use AmeliaDompdf\FrameDecorator\Block as BlockFrameDecorator;
-use AmeliaDompdf\FrameDecorator\Inline as InlineFrameDecorator;
-use AmeliaDompdf\FrameDecorator\Text as TextFrameDecorator;
+use AmeliaVendor\Dompdf\FrameDecorator\Block as BlockFrameDecorator;
+use AmeliaVendor\Dompdf\FrameDecorator\Inline as InlineFrameDecorator;
+use AmeliaVendor\Dompdf\FrameDecorator\Text as TextFrameDecorator;
 
 /**
  * Reflows inline frames
@@ -74,7 +74,7 @@ class Inline extends AbstractFrameReflower
     /**
      * @param BlockFrameDecorator|null $block
      */
-    function reflow(BlockFrameDecorator $block = null)
+    function reflow(?BlockFrameDecorator $block = null)
     {
         /** @var InlineFrameDecorator */
         $frame = $this->_frame;

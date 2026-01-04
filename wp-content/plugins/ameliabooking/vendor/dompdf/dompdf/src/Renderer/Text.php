@@ -4,10 +4,10 @@
  * @link    https://github.com/dompdf/dompdf
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
-namespace AmeliaDompdf\Renderer;
+namespace AmeliaVendor\Dompdf\Renderer;
 
-use AmeliaDompdf\Adapter\CPDF;
-use AmeliaDompdf\Frame;
+use AmeliaVendor\Dompdf\Adapter\CPDF;
+use AmeliaVendor\Dompdf\Frame;
 
 /**
  * Renders text frames
@@ -38,7 +38,7 @@ class Text extends AbstractRenderer
     const DECO_EXTENSION = 0.0;
 
     /**
-     * @param \AmeliaDompdf\FrameDecorator\Text $frame
+     * @param \AmeliaVendor\Dompdf\FrameDecorator\Text $frame
      */
     function render(Frame $frame)
     {

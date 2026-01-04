@@ -8,7 +8,7 @@
  * Internally for phpseclib developers:
  *  If you plan to add a new cipher class, please note following rules:
  *
- *  - The new \phpseclib3\Crypt\* cipher class should extend \phpseclib3\Crypt\Common\SymmetricKey
+ *  - The new \AmeliaVendor\phpseclib3\Crypt\* cipher class should extend \phpseclib3\Crypt\Common\SymmetricKey
  *
  *  - Following methods are then required to be overridden/overloaded:
  *
@@ -32,19 +32,19 @@
  * @link      http://phpseclib.sourceforge.net
  */
 
-namespace phpseclib3\Crypt\Common;
+namespace AmeliaVendor\phpseclib3\Crypt\Common;
 
-use phpseclib3\Common\Functions\Strings;
-use phpseclib3\Crypt\Blowfish;
-use phpseclib3\Crypt\Hash;
-use phpseclib3\Exception\BadDecryptionException;
-use phpseclib3\Exception\BadModeException;
-use phpseclib3\Exception\InconsistentSetupException;
-use phpseclib3\Exception\InsufficientSetupException;
-use phpseclib3\Exception\UnsupportedAlgorithmException;
-use phpseclib3\Math\BigInteger;
-use phpseclib3\Math\BinaryField;
-use phpseclib3\Math\PrimeField;
+use AmeliaVendor\phpseclib3\Common\Functions\Strings;
+use AmeliaVendor\phpseclib3\Crypt\Blowfish;
+use AmeliaVendor\phpseclib3\Crypt\Hash;
+use AmeliaVendor\phpseclib3\Exception\BadDecryptionException;
+use AmeliaVendor\phpseclib3\Exception\BadModeException;
+use AmeliaVendor\phpseclib3\Exception\InconsistentSetupException;
+use AmeliaVendor\phpseclib3\Exception\InsufficientSetupException;
+use AmeliaVendor\phpseclib3\Exception\UnsupportedAlgorithmException;
+use AmeliaVendor\phpseclib3\Math\BigInteger;
+use AmeliaVendor\phpseclib3\Math\BinaryField;
+use AmeliaVendor\phpseclib3\Math\PrimeField;
 
 /**
  * Base Class for all \phpseclib3\Crypt\* cipher classes
@@ -60,76 +60,76 @@ abstract class SymmetricKey
      * Set to -1 since that's what Crypt/Random.php uses to index the CTR mode.
      *
      * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Counter_.28CTR.29
-     * @see \phpseclib3\Crypt\Common\SymmetricKey::encrypt()
-     * @see \phpseclib3\Crypt\Common\SymmetricKey::decrypt()
+     * @see \AmeliaVendor\phpseclib3\Crypt\Common\SymmetricKey::encrypt()
+     * @see \AmeliaVendor\phpseclib3\Crypt\Common\SymmetricKey::decrypt()
      */
     const MODE_CTR = -1;
     /**
      * Encrypt / decrypt using the Electronic Code Book mode.
      *
      * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Electronic_codebook_.28ECB.29
-     * @see \phpseclib3\Crypt\Common\SymmetricKey::encrypt()
-     * @see \phpseclib3\Crypt\Common\SymmetricKey::decrypt()
+     * @see \AmeliaVendor\phpseclib3\Crypt\Common\SymmetricKey::encrypt()
+     * @see \AmeliaVendor\phpseclib3\Crypt\Common\SymmetricKey::decrypt()
      */
     const MODE_ECB = 1;
     /**
      * Encrypt / decrypt using the Code Book Chaining mode.
      *
      * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Cipher-block_chaining_.28CBC.29
-     * @see \phpseclib3\Crypt\Common\SymmetricKey::encrypt()
-     * @see \phpseclib3\Crypt\Common\SymmetricKey::decrypt()
+     * @see \AmeliaVendor\phpseclib3\Crypt\Common\SymmetricKey::encrypt()
+     * @see \AmeliaVendor\phpseclib3\Crypt\Common\SymmetricKey::decrypt()
      */
     const MODE_CBC = 2;
     /**
      * Encrypt / decrypt using the Cipher Feedback mode.
      *
      * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Cipher_feedback_.28CFB.29
-     * @see \phpseclib3\Crypt\Common\SymmetricKey::encrypt()
-     * @see \phpseclib3\Crypt\Common\SymmetricKey::decrypt()
+     * @see \AmeliaVendor\phpseclib3\Crypt\Common\SymmetricKey::encrypt()
+     * @see \AmeliaVendor\phpseclib3\Crypt\Common\SymmetricKey::decrypt()
      */
     const MODE_CFB = 3;
     /**
      * Encrypt / decrypt using the Cipher Feedback mode (8bit)
      *
-     * @see \phpseclib3\Crypt\Common\SymmetricKey::encrypt()
-     * @see \phpseclib3\Crypt\Common\SymmetricKey::decrypt()
+     * @see \AmeliaVendor\phpseclib3\Crypt\Common\SymmetricKey::encrypt()
+     * @see \AmeliaVendor\phpseclib3\Crypt\Common\SymmetricKey::decrypt()
      */
     const MODE_CFB8 = 7;
     /**
      * Encrypt / decrypt using the Output Feedback mode (8bit)
      *
-     * @see \phpseclib3\Crypt\Common\SymmetricKey::encrypt()
-     * @see \phpseclib3\Crypt\Common\SymmetricKey::decrypt()
+     * @see \AmeliaVendor\phpseclib3\Crypt\Common\SymmetricKey::encrypt()
+     * @see \AmeliaVendor\phpseclib3\Crypt\Common\SymmetricKey::decrypt()
      */
     const MODE_OFB8 = 8;
     /**
      * Encrypt / decrypt using the Output Feedback mode.
      *
      * @link http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation#Output_feedback_.28OFB.29
-     * @see \phpseclib3\Crypt\Common\SymmetricKey::encrypt()
-     * @see \phpseclib3\Crypt\Common\SymmetricKey::decrypt()
+     * @see \AmeliaVendor\phpseclib3\Crypt\Common\SymmetricKey::encrypt()
+     * @see \AmeliaVendor\phpseclib3\Crypt\Common\SymmetricKey::decrypt()
      */
     const MODE_OFB = 4;
     /**
      * Encrypt / decrypt using Galois/Counter mode.
      *
      * @link https://en.wikipedia.org/wiki/Galois/Counter_Mode
-     * @see \phpseclib3\Crypt\Common\SymmetricKey::encrypt()
-     * @see \phpseclib3\Crypt\Common\SymmetricKey::decrypt()
+     * @see \AmeliaVendor\phpseclib3\Crypt\Common\SymmetricKey::encrypt()
+     * @see \AmeliaVendor\phpseclib3\Crypt\Common\SymmetricKey::decrypt()
      */
     const MODE_GCM = 5;
     /**
      * Encrypt / decrypt using streaming mode.
      *
-     * @see \phpseclib3\Crypt\Common\SymmetricKey::encrypt()
-     * @see \phpseclib3\Crypt\Common\SymmetricKey::decrypt()
+     * @see \AmeliaVendor\phpseclib3\Crypt\Common\SymmetricKey::encrypt()
+     * @see \AmeliaVendor\phpseclib3\Crypt\Common\SymmetricKey::decrypt()
      */
     const MODE_STREAM = 6;
 
     /**
      * Mode Map
      *
-     * @see \phpseclib3\Crypt\Common\SymmetricKey::__construct()
+     * @see \AmeliaVendor\phpseclib3\Crypt\Common\SymmetricKey::__construct()
      */
     const MODE_MAP = [
         'ctr'    => self::MODE_CTR,
@@ -146,44 +146,44 @@ abstract class SymmetricKey
     /**
      * Base value for the internal implementation $engine switch
      *
-     * @see \phpseclib3\Crypt\Common\SymmetricKey::__construct()
+     * @see \AmeliaVendor\phpseclib3\Crypt\Common\SymmetricKey::__construct()
      */
     const ENGINE_INTERNAL = 1;
     /**
      * Base value for the eval() implementation $engine switch
      *
-     * @see \phpseclib3\Crypt\Common\SymmetricKey::__construct()
+     * @see \AmeliaVendor\phpseclib3\Crypt\Common\SymmetricKey::__construct()
      */
     const ENGINE_EVAL = 2;
     /**
      * Base value for the mcrypt implementation $engine switch
      *
-     * @see \phpseclib3\Crypt\Common\SymmetricKey::__construct()
+     * @see \AmeliaVendor\phpseclib3\Crypt\Common\SymmetricKey::__construct()
      */
     const ENGINE_MCRYPT = 3;
     /**
      * Base value for the openssl implementation $engine switch
      *
-     * @see \phpseclib3\Crypt\Common\SymmetricKey::__construct()
+     * @see \AmeliaVendor\phpseclib3\Crypt\Common\SymmetricKey::__construct()
      */
     const ENGINE_OPENSSL = 4;
     /**
      * Base value for the libsodium implementation $engine switch
      *
-     * @see \phpseclib3\Crypt\Common\SymmetricKey::__construct()
+     * @see \AmeliaVendor\phpseclib3\Crypt\Common\SymmetricKey::__construct()
      */
     const ENGINE_LIBSODIUM = 5;
     /**
      * Base value for the openssl / gcm implementation $engine switch
      *
-     * @see \phpseclib3\Crypt\Common\SymmetricKey::__construct()
+     * @see \AmeliaVendor\phpseclib3\Crypt\Common\SymmetricKey::__construct()
      */
     const ENGINE_OPENSSL_GCM = 6;
 
     /**
      * Engine Reverse Map
      *
-     * @see \phpseclib3\Crypt\Common\SymmetricKey::getEngine()
+     * @see \AmeliaVendor\phpseclib3\Crypt\Common\SymmetricKey::getEngine()
      */
     const ENGINE_MAP = [
         self::ENGINE_INTERNAL    => 'PHP',
@@ -302,8 +302,8 @@ abstract class SymmetricKey
     /**
      * Does the enmcrypt resource need to be (re)initialized?
      *
-     * @see \phpseclib3\Crypt\Twofish::setKey()
-     * @see \phpseclib3\Crypt\Twofish::setIV()
+     * @see \AmeliaVendor\phpseclib3\Crypt\Twofish::setKey()
+     * @see \AmeliaVendor\phpseclib3\Crypt\Twofish::setIV()
      * @var bool
      */
     private $enchanged = true;
@@ -311,8 +311,8 @@ abstract class SymmetricKey
     /**
      * Does the demcrypt resource need to be (re)initialized?
      *
-     * @see \phpseclib3\Crypt\Twofish::setKey()
-     * @see \phpseclib3\Crypt\Twofish::setIV()
+     * @see \AmeliaVendor\phpseclib3\Crypt\Twofish::setKey()
+     * @see \AmeliaVendor\phpseclib3\Crypt\Twofish::setIV()
      * @var bool
      */
     private $dechanged = true;
@@ -2823,10 +2823,10 @@ abstract class SymmetricKey
                             if (strlen($_block) > strlen($_buffer["ciphertext"])) {
                                 $in = $_xor;
                                 ' . $encrypt_block . '
-                                \phpseclib3\Common\Functions\Strings::increment_str($_xor);
+                                \AmeliaVendor\phpseclib3\Common\Functions\Strings::increment_str($_xor);
                                 $_buffer["ciphertext"].= $in;
                             }
-                            $_key = \phpseclib3\Common\Functions\Strings::shift($_buffer["ciphertext"], ' . $block_size . ');
+                            $_key = \AmeliaVendor\phpseclib3\Common\Functions\Strings::shift($_buffer["ciphertext"], ' . $block_size . ');
                             $_ciphertext.= $_block ^ $_key;
                         }
                     } else {
@@ -2834,7 +2834,7 @@ abstract class SymmetricKey
                             $_block = substr($_text, $_i, ' . $block_size . ');
                             $in = $_xor;
                             ' . $encrypt_block . '
-                            \phpseclib3\Common\Functions\Strings::increment_str($_xor);
+                            \AmeliaVendor\phpseclib3\Common\Functions\Strings::increment_str($_xor);
                             $_key = $in;
                             $_ciphertext.= $_block ^ $_key;
                         }
@@ -2861,10 +2861,10 @@ abstract class SymmetricKey
                             if (strlen($_block) > strlen($_buffer["ciphertext"])) {
                                 $in = $_xor;
                                 ' . $encrypt_block . '
-                                \phpseclib3\Common\Functions\Strings::increment_str($_xor);
+                                \AmeliaVendor\phpseclib3\Common\Functions\Strings::increment_str($_xor);
                                 $_buffer["ciphertext"].= $in;
                             }
-                            $_key = \phpseclib3\Common\Functions\Strings::shift($_buffer["ciphertext"], ' . $block_size . ');
+                            $_key = \AmeliaVendor\phpseclib3\Common\Functions\Strings::shift($_buffer["ciphertext"], ' . $block_size . ');
                             $_plaintext.= $_block ^ $_key;
                         }
                     } else {
@@ -2872,7 +2872,7 @@ abstract class SymmetricKey
                             $_block = substr($_text, $_i, ' . $block_size . ');
                             $in = $_xor;
                             ' . $encrypt_block . '
-                            \phpseclib3\Common\Functions\Strings::increment_str($_xor);
+                            \AmeliaVendor\phpseclib3\Common\Functions\Strings::increment_str($_xor);
                             $_key = $in;
                             $_plaintext.= $_block ^ $_key;
                         }
@@ -3086,7 +3086,7 @@ abstract class SymmetricKey
                                 $_xor = $in;
                                 $_buffer["xor"].= $_xor;
                             }
-                            $_key = \phpseclib3\Common\Functions\Strings::shift($_buffer["xor"], ' . $block_size . ');
+                            $_key = \AmeliaVendor\phpseclib3\Common\Functions\Strings::shift($_buffer["xor"], ' . $block_size . ');
                             $_ciphertext.= $_block ^ $_key;
                         }
                     } else {
@@ -3122,7 +3122,7 @@ abstract class SymmetricKey
                                 $_xor = $in;
                                 $_buffer["xor"].= $_xor;
                             }
-                            $_key = \phpseclib3\Common\Functions\Strings::shift($_buffer["xor"], ' . $block_size . ');
+                            $_key = \AmeliaVendor\phpseclib3\Common\Functions\Strings::shift($_buffer["xor"], ' . $block_size . ');
                             $_plaintext.= $_block ^ $_key;
                         }
                     } else {

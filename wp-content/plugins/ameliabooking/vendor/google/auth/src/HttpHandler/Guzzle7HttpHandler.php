@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-namespace AmeliaGoogle\Auth\HttpHandler;
+namespace AmeliaVendor\Google\Auth\HttpHandler;
 
 class Guzzle7HttpHandler extends Guzzle6HttpHandler
 {

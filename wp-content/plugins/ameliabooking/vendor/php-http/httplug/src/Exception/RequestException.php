@@ -2,7 +2,7 @@
 
 namespace AmeliaHttp\Client\Exception;
 
-use AmeliaPsr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
 
 /**
  * Exception for when a request failed, providing access to the failed request.

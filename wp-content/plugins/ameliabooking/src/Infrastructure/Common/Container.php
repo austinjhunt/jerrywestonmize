@@ -14,7 +14,6 @@ final class Container extends \Slim\Container
 {
     /**
      * @return Connection
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function getDatabaseConnection()
     {
@@ -23,7 +22,6 @@ final class Container extends \Slim\Container
 
     /**
      * @return UserRepositoryInterface
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function getUserRepository()
     {
@@ -34,7 +32,6 @@ final class Container extends \Slim\Container
      * Get the command bus
      *
      * @return mixed
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function getCommandBus()
     {
@@ -45,7 +42,6 @@ final class Container extends \Slim\Container
      * Get the event bus
      *
      * @return mixed
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function getEventBus()
     {
@@ -55,7 +51,6 @@ final class Container extends \Slim\Container
     /**
      * Get the Permissions domain service
      *
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function getPermissionsService()
     {
@@ -65,7 +60,6 @@ final class Container extends \Slim\Container
     /**
      * Get the API Permissions domain service
      *
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function getApiPermissionsService()
     {
@@ -75,7 +69,6 @@ final class Container extends \Slim\Container
     /**
      * Get the API User application service
      *
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function getApiUserApplicationService()
     {
@@ -85,7 +78,6 @@ final class Container extends \Slim\Container
     /**
      * Get the User application service
      *
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function getUserApplicationService()
     {
@@ -94,7 +86,6 @@ final class Container extends \Slim\Container
 
     /**
      * @return mixed
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function getMailerService()
     {
@@ -103,7 +94,6 @@ final class Container extends \Slim\Container
 
     /**
      * @return mixed
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function getSettingsService()
     {

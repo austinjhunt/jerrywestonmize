@@ -4,7 +4,7 @@ namespace AmeliaHttp\Client\Common;
 
 use AmeliaHttp\Client\Exception;
 use AmeliaHttp\Client\Promise;
-use AmeliaPsr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
 
 /**
  * Emulates an HTTP Async Client in an HTTP Client.

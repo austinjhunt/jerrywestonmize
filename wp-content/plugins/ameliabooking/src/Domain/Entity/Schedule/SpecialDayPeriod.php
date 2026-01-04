@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright © TMS-Plugins. All rights reserved.
+ * @copyright © Melograno Ventures. All rights reserved.
  * @licence   See LICENCE.md for license details.
  */
 
@@ -116,9 +116,9 @@ class SpecialDayPeriod
     }
 
     /**
-     * @param Id $locationId
+     * @param Id|null $locationId
      */
-    public function setLocationId(Id $locationId)
+    public function setLocationId($locationId)
     {
         $this->locationId = $locationId;
     }

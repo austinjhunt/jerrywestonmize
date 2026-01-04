@@ -3,7 +3,7 @@
  * A handler for processor instructions.
  */
 
-namespace Masterminds\HTML5;
+namespace AmeliaVendor\Masterminds\HTML5;
 
 /**
  * Provide an processor to handle embedded instructions.

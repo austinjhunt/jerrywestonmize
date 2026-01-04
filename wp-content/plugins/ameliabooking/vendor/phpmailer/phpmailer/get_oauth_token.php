@@ -30,7 +30,7 @@
  * revoke access to your app and run the script again.
  */
 
-namespace PHPMailer\PHPMailer;
+namespace AmeliaVendor\PHPMailer\PHPMailer;
 
 /**
  * Aliases for League Provider Classes
@@ -53,7 +53,7 @@ if (!isset($_GET['code']) && !isset($_POST['provider'])) {
 <body>
 <form method="post">
     <h1>Select Provider</h1>
-    <input type="radio" name="provider" value="Google" id="providerGoogle">
+    <input type="radio" name="provider" value="AmeliaVendor\Google" id="providerGoogle">
     <label for="providerGoogle">Google</label><br>
     <input type="radio" name="provider" value="Yahoo" id="providerYahoo">
     <label for="providerYahoo">Yahoo</label><br>
@@ -119,7 +119,7 @@ $options = [];
 $provider = null;
 
 switch ($providerName) {
-    case 'Google':
+    case 'AmeliaVendor\Google':
         $provider = new Google($params);
         $options = [
             'scope' => [

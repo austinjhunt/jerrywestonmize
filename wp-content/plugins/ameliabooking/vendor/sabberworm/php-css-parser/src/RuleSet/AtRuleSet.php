@@ -1,9 +1,9 @@
 <?php
 
-namespace Sabberworm\CSS\RuleSet;
+namespace AmeliaVendor\Sabberworm\CSS\RuleSet;
 
-use Sabberworm\CSS\OutputFormat;
-use Sabberworm\CSS\Property\AtRule;
+use AmeliaVendor\Sabberworm\CSS\OutputFormat;
+use AmeliaVendor\Sabberworm\CSS\Property\AtRule;
 
 /**
  * This class represents rule sets for generic at-rules which are not covered by specific classes, i.e., not
@@ -53,6 +53,8 @@ class AtRuleSet extends RuleSet implements AtRule
 
     /**
      * @return string
+     *
+     * @deprecated in V8.8.0, will be removed in V9.0.0. Use `render` instead.
      */
     public function __toString()
     {
@@ -60,9 +62,11 @@ class AtRuleSet extends RuleSet implements AtRule
     }
 
     /**
+     * @param OutputFormat|null $oOutputFormat
+     *
      * @return string
      */
-    public function render(OutputFormat $oOutputFormat)
+    public function render($oOutputFormat)
     {
         $sResult = $oOutputFormat->comments($this);
         $sArgs = $this->sArgs;

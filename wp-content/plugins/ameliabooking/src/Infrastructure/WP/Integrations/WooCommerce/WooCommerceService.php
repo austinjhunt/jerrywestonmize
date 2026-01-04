@@ -67,7 +67,7 @@ use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingEd
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\PackageCustomerUpdatedEventHandler;
 use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
-use Interop\Container\Exception\ContainerException;
+use Slim\Exception\ContainerException;
 
 /**
  * Class WooCommerceService
@@ -84,6 +84,9 @@ class WooCommerceService
 
     /** @var array $checkout_info */
     protected static $checkout_info = [];
+
+    /** @var array $processedAmeliaItems */
+    protected static $processedAmeliaItems = [];
 
     public const AMELIA = 'ameliabooking';
 
@@ -551,13 +554,8 @@ class WooCommerceService
         /** @var SettingsService $settingsService */
         $settingsService = self::$container->get('domain.settings.service');
 
-        $taxesSettings = $settingsService->getSetting(
-            'payments',
-            'taxes'
-        );
-
         try {
-            Cache::setTaxes($taxesSettings['enabled'] ? $taxAS->getAll() : new Collection());
+            Cache::setTaxes($settingsService->isFeatureEnabled('tax') ? $taxAS->getAll() : new Collection());
         } catch (\Exception $e) {
         }
     }
@@ -1264,7 +1262,7 @@ class WooCommerceService
                 . ':</strong> ' . $bookableName,
                 !$ticketsData ? '<strong>' . FrontendStrings::getCommonStrings()['total_number_of_persons'] . '</strong> '
                 . $data['bookings'][0]['persons'] :
-                '<strong>' . BackendStrings::getCommonStrings()['event_tickets'] . ': ' . '</strong> '
+                '<strong>' . BackendStrings::get('event_tickets') . ': ' . '</strong> '
                     . implode(', ', $ticketsData),
             ]
         );
@@ -2155,7 +2153,6 @@ class WooCommerceService
      * @param $cart_item_key
      * @param $values
      * @param $order
-     * @throws ContainerException
      */
     public static function checkoutCreateOrderLineItem($item, $cart_item_key, $values, $order)
     {
@@ -2178,7 +2175,6 @@ class WooCommerceService
      * @param int   $orderId
      * @param int   $orderItemId
      * @param array $reservation
-     * @throws ContainerException
      */
     public static function updateItemMetaData($orderId, $orderItemId, $reservation)
     {
@@ -2774,7 +2770,7 @@ class WooCommerceService
      * @param $amount
      * @param $refund_reason
      *
-     * @return array
+     * @return array|false
      * @throws ContainerException
      */
     public static function refund($order_id, $order_item_id, $amount, $refund_reason = '')
@@ -3201,10 +3197,13 @@ class WooCommerceService
             try {
                 if (
                     (!$inspectRules || self::isValid($order->get_status(), $data) !== false) &&
+                    !array_key_exists($key, self::$processedAmeliaItems) &&
                     !array_key_exists('booked', $data) &&
                     !empty($data) &&
                     !isset($data['processed'])
                 ) {
+                    self::$processedAmeliaItems[$key] = true;
+
                     $data['booked'] = false;
 
                     wc_update_order_item_meta($item_id, self::AMELIA, $data);
@@ -3304,14 +3303,19 @@ class WooCommerceService
         foreach ($order->get_items() as $item_id => $order_item) {
             $data = wc_get_order_item_meta($item_id, self::AMELIA);
 
+            $key = $data && is_array($data) && isset($data['wcItemHash']) ? $data['wcItemHash'] : 0;
+
             try {
                 if (
                     self::isValid($order->get_status(), $data) !== false &&
+                    !array_key_exists($key, self::$processedAmeliaItems) &&
                     !array_key_exists('booked', $data) &&
                     !isset($data['processed']) &&
                     isset($data['payment']['fromLink']) &&
                     $data['payment']['fromLink']
                 ) {
+                    self::$processedAmeliaItems[$key] = true;
+
                     $data['booked'] = false;
 
                     wc_update_order_item_meta($item_id, self::AMELIA, $data);
@@ -3380,7 +3384,7 @@ class WooCommerceService
                                 null;
                         $changeBookingStatus  =
                             $paymentLinksSettings &&
-                            $paymentLinksSettings['changeBookingStatus'] !== null ?
+                            !empty($paymentLinksSettings['changeBookingStatus']) ?
                                 $paymentLinksSettings['changeBookingStatus'] :
                                 $settingsDS->getSetting('payments', 'paymentLinks')['changeBookingStatus'];
 

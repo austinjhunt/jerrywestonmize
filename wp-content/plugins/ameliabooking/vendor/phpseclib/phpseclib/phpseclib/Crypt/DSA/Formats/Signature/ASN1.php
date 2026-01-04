@@ -13,13 +13,11 @@
  * @license   http://www.opensource.org/licenses/mit-license.html  MIT License
  * @link      http://phpseclib.sourceforge.net
  */
+namespace AmeliaVendor\phpseclib3\Crypt\DSA\Formats\Signature;
 
-namespace phpseclib3\Crypt\DSA\Formats\Signature;
-
-use phpseclib3\File\ASN1 as Encoder;
-use phpseclib3\File\ASN1\Maps;
-use phpseclib3\Math\BigInteger;
-
+use AmeliaVendor\phpseclib3\File\ASN1 as Encoder;
+use AmeliaVendor\phpseclib3\File\ASN1\Maps;
+use AmeliaVendor\phpseclib3\Math\BigInteger;
 /**
  * ASN1 Signature Handler
  *
@@ -38,16 +36,13 @@ abstract class ASN1
         if (!is_string($sig)) {
             return false;
         }
-
         $decoded = Encoder::decodeBER($sig);
         if (empty($decoded)) {
             return false;
         }
-        $components = Encoder::asn1map($decoded[0], Maps\DssSigValue::MAP);
-
+        $components = Encoder::asn1map($decoded[0], \AmeliaVendor\phpseclib3\File\ASN1\Maps\DssSigValue::MAP);
         return $components;
     }
-
     /**
      * Returns a signature in the appropriate format
      *
@@ -57,6 +52,6 @@ abstract class ASN1
      */
     public static function save(BigInteger $r, BigInteger $s)
     {
-        return Encoder::encodeDER(compact('r', 's'), Maps\DssSigValue::MAP);
+        return Encoder::encodeDER(compact('r', 's'), \AmeliaVendor\phpseclib3\File\ASN1\Maps\DssSigValue::MAP);
     }
 }

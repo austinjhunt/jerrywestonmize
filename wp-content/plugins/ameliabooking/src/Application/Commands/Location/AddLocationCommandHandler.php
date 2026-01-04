@@ -32,7 +32,6 @@ class AddLocationCommandHandler extends CommandHandler
     public $mandatoryFields = [
         'name',
         'address',
-        'phone',
         'latitude',
         'longitude'
     ];
@@ -45,7 +44,6 @@ class AddLocationCommandHandler extends CommandHandler
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      * @throws AccessDeniedException
-     * @throws \Interop\Container\Exception\ContainerException
      */
     public function handle(AddLocationCommand $command)
     {

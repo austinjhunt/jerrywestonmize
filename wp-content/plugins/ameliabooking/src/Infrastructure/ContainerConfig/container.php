@@ -2,7 +2,7 @@
 
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Container;
-use AmeliaBooking\Infrastructure\WP\SettingsService\SettingsStorage;
+use AmeliaBooking\Infrastructure\Connection;
 
 // Handle the 404 API calls
 $entries['notFoundHandler'] = function () {
@@ -61,43 +61,12 @@ $entries['errorHandler'] = function (Container $c) {
 # App common
 ##########################################################################
 ##########################################################################
-
-//
 $entries['app.connection'] = function () {
-    $config = new \AmeliaBooking\Infrastructure\WP\config\Database();
+    global $wpdb;
 
-    $settingsService = new SettingsService(new SettingsStorage());
-
-    $mysqliEnabled = $settingsService->getSetting('db', 'mysqliEnabled');
-
-    $dbSettingsPort = $settingsService->getSetting('db', 'port');
-
-    $port = !empty($dbSettingsPort) ? $dbSettingsPort : 3306;
-
-    if (!extension_loaded('pdo_mysql') || $mysqliEnabled) {
-        $config::$connection = $config::$connection ?: new \AmeliaBooking\Infrastructure\DB\MySQLi\Connection(
-            $config('host'),
-            $config('database'),
-            $config('username'),
-            $config('password'),
-            $config('charset'),
-            $port
-        );
-
-        return $config::$connection;
-    }
-
-    $config::$connection = $config::$connection ?: new \AmeliaBooking\Infrastructure\DB\PDO\Connection(
-        $config('host'),
-        $config('database'),
-        $config('username'),
-        $config('password'),
-        $config('charset'),
-        $port
-    );
-
-    return $config::$connection;
+    return new Connection($wpdb);
 };
+
 
 ################
 # Repositories #

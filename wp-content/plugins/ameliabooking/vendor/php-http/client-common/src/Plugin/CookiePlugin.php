@@ -8,8 +8,8 @@ use AmeliaHttp\Message\Cookie;
 use AmeliaHttp\Message\CookieJar;
 use AmeliaHttp\Message\CookieUtil;
 use AmeliaHttp\Message\Exception\UnexpectedValueException;
-use AmeliaPsr\Http\Message\RequestInterface;
-use AmeliaPsr\Http\Message\ResponseInterface;
+use AmeliaVendor\Psr\Http\Message\RequestInterface;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface;
 
 /**
  * Handle request cookies.

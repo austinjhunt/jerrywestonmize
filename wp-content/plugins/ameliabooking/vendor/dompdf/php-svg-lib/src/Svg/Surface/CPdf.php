@@ -8,7 +8,7 @@
  * @package Cpdf
  */
 
-namespace Svg\Surface;
+namespace AmeliaVendor\Svg\Surface;
 
 class CPdf
 {

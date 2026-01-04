@@ -15,9 +15,9 @@
  * the License.
  */
 
-namespace AmeliaGoogle\Service\Calendar;
+namespace AmeliaVendor\Google\Service\Calendar;
 
-class ColorDefinition extends \AmeliaGoogle\Model
+class ColorDefinition extends \AmeliaVendor\Google\Model
 {
   /**
    * @var string
@@ -59,4 +59,4 @@ class ColorDefinition extends \AmeliaGoogle\Model
 }
 
 // Adding a class alias for backwards compatibility with the previous class name.
-class_alias(ColorDefinition::class, 'AmeliaGoogle_Service_Calendar_ColorDefinition');
+class_alias(ColorDefinition::class, 'Google_Service_Calendar_ColorDefinition');

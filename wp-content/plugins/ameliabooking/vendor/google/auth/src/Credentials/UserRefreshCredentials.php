@@ -15,11 +15,11 @@
  * limitations under the License.
  */
 
-namespace AmeliaGoogle\Auth\Credentials;
+namespace AmeliaVendor\Google\Auth\Credentials;
 
-use AmeliaGoogle\Auth\CredentialsLoader;
-use AmeliaGoogle\Auth\GetQuotaProjectInterface;
-use AmeliaGoogle\Auth\OAuth2;
+use AmeliaVendor\Google\Auth\CredentialsLoader;
+use AmeliaVendor\Google\Auth\GetQuotaProjectInterface;
+use AmeliaVendor\Google\Auth\OAuth2;
 
 /**
  * Authenticates requests using User Refresh credentials.
@@ -109,7 +109,7 @@ class UserRefreshCredentials extends CredentialsLoader implements GetQuotaProjec
      *     @type string $id_token
      * }
      */
-    public function fetchAuthToken(callable $httpHandler = null)
+    public function fetchAuthToken(?callable $httpHandler = null)
     {
         return $this->auth->fetchAuthToken($httpHandler);
     }
