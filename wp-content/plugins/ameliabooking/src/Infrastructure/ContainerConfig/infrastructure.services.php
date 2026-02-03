@@ -6,6 +6,7 @@
  */
 
 use AmeliaBooking\Infrastructure\Common\Container;
+use AmeliaBooking\Infrastructure\Services\Logger\WPLogger;
 use AmeliaBooking\Infrastructure\Services\Notification\MailerFactory;
 use AmeliaBooking\Infrastructure\Services\Notification\MailgunService;
 use AmeliaBooking\Infrastructure\Services\Notification\OutlookService;
@@ -14,6 +15,15 @@ use AmeliaBooking\Infrastructure\Services\Notification\SMTPService;
 use AmeliaBooking\Infrastructure\Services\Notification\WpMailService;
 
 defined('ABSPATH') or die('No script kiddies please!');
+
+/**
+ * Logger Service
+ *
+ * @return AmeliaBooking\Infrastructure\Services\Logger\WPLogger
+ */
+$entries['infrastructure.logger'] = function () {
+    return new WPLogger('Amelia');
+};
 
 /**
  * Mailer Service
@@ -194,6 +204,17 @@ $entries['infrastructure.lesson.space.service'] = function ($c) {
  */
 $entries['infrastructure.outlook.calendar.service'] = function ($c) {
     return AmeliaBooking\Infrastructure\Licence\InfrastructureService::getCalendarOutlookService($c);
+};
+
+/**
+ * Google Calendar Middleware Service
+ *
+ * @param Container $c
+ *
+ * @return AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarMiddlewareService
+ */
+$entries['infrastructure.outlook.calendar.middleware.service'] = function ($c) {
+    return AmeliaBooking\Infrastructure\Licence\InfrastructureService::getOutlookCalendarMiddlewareService($c);
 };
 
 /**

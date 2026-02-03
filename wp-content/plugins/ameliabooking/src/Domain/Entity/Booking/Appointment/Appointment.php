@@ -530,11 +530,11 @@ class Appointment extends AbstractBooking
                 'resources'              => $this->getResources()->toArray(),
                 'initialAppointmentDateTime' => $this->getInitialBookingStart() && $this->getInitialBookingEnd()
                     ? [
-                        'bookingEnd' => $this->getInitialBookingStart()
-                            ? $this->getInitialBookingStart()->getValue()->format('Y-m-d H:i:s')
-                            : null,
-                        'bookingStart' => $this->getInitialBookingEnd()
+                        'bookingEnd' => $this->getInitialBookingEnd()
                             ? $this->getInitialBookingEnd()->getValue()->format('Y-m-d H:i:s')
+                            : null,
+                        'bookingStart' => $this->getInitialBookingStart()
+                            ? $this->getInitialBookingStart()->getValue()->format('Y-m-d H:i:s')
                             : null
                     ]
                     : null,

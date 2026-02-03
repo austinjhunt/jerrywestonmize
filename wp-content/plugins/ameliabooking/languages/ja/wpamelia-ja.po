@@ -4672,6 +4672,9 @@ msgstr ""
 msgid "Header"
 msgstr "ヘッダー"
 
+msgid "Heading"
+msgstr ""
+
 msgid "Heading Text Color"
 msgstr "テキストの色"
 

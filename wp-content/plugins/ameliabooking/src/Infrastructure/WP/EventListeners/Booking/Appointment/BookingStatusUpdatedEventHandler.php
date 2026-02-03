@@ -35,6 +35,8 @@ class BookingStatusUpdatedEventHandler
     /** @var string */
     public const BOOKING_STATUS_UPDATED = 'bookingStatusUpdated';
 
+    /** @var string */
+    public const BOOKING_CANCELED = 'bookingCanceled';
 
     /**
      * @param CommandResult $commandResult
@@ -73,7 +75,7 @@ class BookingStatusUpdatedEventHandler
         $applicationIntegrationService->handleAppointment(
             $appointment,
             $appointmentArray,
-            $commandResult->getData()['status'],
+            self::BOOKING_STATUS_UPDATED,
             [
                 ApplicationIntegrationService::SKIP_LESSON_SPACE => true,
             ]
@@ -116,6 +118,10 @@ class BookingStatusUpdatedEventHandler
             $waitingListService->sendAvailableSpotNotifications($appointment);
         }
 
-        $webHookService->process(self::BOOKING_STATUS_UPDATED, $appointmentArray, [$booking]);
+        if ($booking['status'] === BookingStatus::CANCELED) {
+            $webHookService->process(self::BOOKING_CANCELED, $appointmentArray, [$booking]);
+        } else {
+            $webHookService->process(self::BOOKING_STATUS_UPDATED, $appointmentArray, [$booking]);
+        }
     }
 }

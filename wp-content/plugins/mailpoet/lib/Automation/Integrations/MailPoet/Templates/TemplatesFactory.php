@@ -9,6 +9,7 @@ use MailPoet\Automation\Engine\Data\Automation;
 use MailPoet\Automation\Engine\Data\AutomationTemplate;
 use MailPoet\Automation\Engine\Templates\AutomationBuilder;
 use MailPoet\Automation\Integrations\WooCommerce\WooCommerce;
+use MailPoet\Config\Env;
 use MailPoet\WooCommerce\WooCommerceSubscriptions\Helper as WooCommerceSubscriptions;
 
 class TemplatesFactory {
@@ -95,7 +96,10 @@ class TemplatesFactory {
       [
         'automationSteps' => 1, // trigger and all delay steps are excluded
       ],
-      AutomationTemplate::TYPE_DEFAULT
+      AutomationTemplate::TYPE_DEFAULT,
+      'megaphone',
+      'wordpress',
+      true
     );
   }
 
@@ -124,7 +128,8 @@ class TemplatesFactory {
       [
         'automationSteps' => 1, // trigger and all delay steps are excluded
       ],
-      AutomationTemplate::TYPE_DEFAULT
+      AutomationTemplate::TYPE_DEFAULT,
+      'megaphone'
     );
   }
 
@@ -146,7 +151,8 @@ class TemplatesFactory {
       [
         'automationSteps' => 2, // trigger and all delay steps are excluded
       ],
-      AutomationTemplate::TYPE_PREMIUM
+      AutomationTemplate::TYPE_PREMIUM,
+      'megaphone'
     );
   }
 
@@ -168,7 +174,8 @@ class TemplatesFactory {
       [
         'automationSteps' => 2, // trigger and all delay steps are excluded
       ],
-      AutomationTemplate::TYPE_PREMIUM
+      AutomationTemplate::TYPE_PREMIUM,
+      'megaphone'
     );
   }
 
@@ -215,7 +222,10 @@ class TemplatesFactory {
       [
         'automationSteps' => 1, // trigger and all delay steps are excluded
       ],
-      AutomationTemplate::TYPE_DEFAULT
+      AutomationTemplate::TYPE_DEFAULT,
+      'people',
+      'wordpress',
+      true
     );
   }
 
@@ -237,7 +247,8 @@ class TemplatesFactory {
       [
         'automationSteps' => 1, // trigger and all delay steps are excluded
       ],
-      AutomationTemplate::TYPE_PREMIUM
+      AutomationTemplate::TYPE_PREMIUM,
+      'people'
     );
   }
 
@@ -259,7 +270,8 @@ class TemplatesFactory {
       [
         'automationSteps' => 4, // trigger and all delay steps are excluded
       ],
-      AutomationTemplate::TYPE_PREMIUM
+      AutomationTemplate::TYPE_PREMIUM,
+      'people'
     );
   }
 
@@ -290,7 +302,10 @@ class TemplatesFactory {
       [
         'automationSteps' => 1, // trigger and all delay steps are excluded
       ],
-      AutomationTemplate::TYPE_DEFAULT
+      AutomationTemplate::TYPE_DEFAULT,
+      Env::$assetsUrl . '/img/icons/cart.svg',
+      'svg',
+      true
     );
   }
 
@@ -312,7 +327,9 @@ class TemplatesFactory {
       [
         'automationSteps' => 5, // trigger and all delay steps are excluded
       ],
-      AutomationTemplate::TYPE_PREMIUM
+      AutomationTemplate::TYPE_PREMIUM,
+      Env::$assetsUrl . '/img/icons/cart.svg',
+      'svg'
     );
   }
 
@@ -345,7 +362,8 @@ class TemplatesFactory {
       [
         'automationSteps' => 1, // trigger and all delay steps are excluded
       ],
-      AutomationTemplate::TYPE_DEFAULT
+      AutomationTemplate::TYPE_DEFAULT,
+      'store'
     );
   }
 
@@ -378,7 +396,8 @@ class TemplatesFactory {
       [
         'automationSteps' => 1, // trigger and all delay steps are excluded
       ],
-      AutomationTemplate::TYPE_DEFAULT
+      AutomationTemplate::TYPE_DEFAULT,
+      'store'
     );
   }
 
@@ -411,7 +430,8 @@ class TemplatesFactory {
       [
         'automationSteps' => 1, // trigger and all delay steps are excluded
       ],
-      AutomationTemplate::TYPE_DEFAULT
+      AutomationTemplate::TYPE_DEFAULT,
+      'store'
     );
   }
 
@@ -433,7 +453,8 @@ class TemplatesFactory {
       [
         'automationSteps' => 2, // trigger and all delay steps are excluded
       ],
-      AutomationTemplate::TYPE_PREMIUM
+      AutomationTemplate::TYPE_PREMIUM,
+      'starFilled'
     );
   }
 
@@ -455,7 +476,8 @@ class TemplatesFactory {
       [
         'automationSteps' => 1, // trigger and all delay steps are excluded
       ],
-      AutomationTemplate::TYPE_PREMIUM
+      AutomationTemplate::TYPE_PREMIUM,
+      'starFilled'
     );
   }
 
@@ -477,7 +499,8 @@ class TemplatesFactory {
       [
         'automationSteps' => 1, // trigger and all delay steps are excluded
       ],
-      AutomationTemplate::TYPE_PREMIUM
+      AutomationTemplate::TYPE_PREMIUM,
+      'starFilled'
     );
   }
 
@@ -499,7 +522,8 @@ class TemplatesFactory {
       [
         'automationSteps' => 1, // trigger and all delay steps are excluded
       ],
-      AutomationTemplate::TYPE_PREMIUM
+      AutomationTemplate::TYPE_PREMIUM,
+      'payment'
     );
   }
 
@@ -521,7 +545,8 @@ class TemplatesFactory {
       [
         'automationSteps' => 1, // trigger and all delay steps are excluded
       ],
-      AutomationTemplate::TYPE_PREMIUM
+      AutomationTemplate::TYPE_PREMIUM,
+      'payment'
     );
   }
 
@@ -543,7 +568,8 @@ class TemplatesFactory {
       [
         'automationSteps' => 1, // trigger and all delay steps are excluded
       ],
-      AutomationTemplate::TYPE_PREMIUM
+      AutomationTemplate::TYPE_PREMIUM,
+      'payment'
     );
   }
 
@@ -565,7 +591,8 @@ class TemplatesFactory {
       [
         'automationSteps' => 1, // trigger and all delay steps are excluded
       ],
-      AutomationTemplate::TYPE_PREMIUM
+      AutomationTemplate::TYPE_PREMIUM,
+      'payment'
     );
   }
 
@@ -587,7 +614,8 @@ class TemplatesFactory {
       [
         'automationSteps' => 1, // trigger and all delay steps are excluded
       ],
-      AutomationTemplate::TYPE_PREMIUM
+      AutomationTemplate::TYPE_PREMIUM,
+      'payment'
     );
   }
 
@@ -609,7 +637,8 @@ class TemplatesFactory {
       [
         'automationSteps' => 2, // trigger and all delay steps are excluded
       ],
-      AutomationTemplate::TYPE_PREMIUM
+      AutomationTemplate::TYPE_PREMIUM,
+      'payment'
     );
   }
 }

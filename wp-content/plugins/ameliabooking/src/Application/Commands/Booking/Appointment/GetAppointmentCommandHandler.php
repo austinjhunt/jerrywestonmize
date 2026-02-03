@@ -10,6 +10,7 @@ use AmeliaBooking\Application\Services\CustomField\AbstractCustomFieldApplicatio
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Application\Services\Reservation\AppointmentReservationService;
 use AmeliaBooking\Application\Services\User\CustomerApplicationService;
+use AmeliaBooking\Application\Services\User\ProviderApplicationService;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
@@ -27,6 +28,7 @@ use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepos
 use AmeliaBooking\Infrastructure\Repository\CustomField\CustomFieldRepository;
 use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
 use AmeliaBooking\Infrastructure\Services\LessonSpace\AbstractLessonSpaceService;
+use DateTimeZone;
 use Slim\Exception\ContainerValueNotFoundException;
 
 /**
@@ -85,6 +87,9 @@ class GetAppointmentCommandHandler extends CommandHandler
         /** @var CustomerApplicationService $customerAS */
         $customerAS = $this->container->get('application.user.customer.service');
 
+        /** @var ProviderApplicationService $providerAS */
+        $providerAS = $this->container->get('application.user.provider.service');
+
         /** @var CustomFieldRepository $customFieldRepository */
         $customFieldRepository = $this->container->get('domain.customField.repository');
 
@@ -105,14 +110,14 @@ class GetAppointmentCommandHandler extends CommandHandler
 
         $customerAS->removeBookingsForOtherCustomers($user, new Collection([$appointment]));
 
-        if (!empty($command->getField('params')['timeZone'])) {
-            $appointment->getBookingStart()->getValue()->setTimezone(
-                new \DateTimeZone($command->getField('params')['timeZone'])
-            );
+        $timeZone = !empty($command->getField('params')['timeZone'])
+            ? $command->getField('params')['timeZone']
+            : ($user && $user->getType() === Entities::PROVIDER ? $providerAS->getTimeZone($user) : null);
 
-            $appointment->getBookingEnd()->getValue()->setTimezone(
-                new \DateTimeZone($command->getField('params')['timeZone'])
-            );
+        if ($timeZone) {
+            $appointment->getBookingStart()->getValue()->setTimezone(new DateTimeZone($timeZone));
+
+            $appointment->getBookingEnd()->getValue()->setTimezone(new DateTimeZone($timeZone));
         }
 
         /** @var SettingsService $settingsDS */
@@ -232,10 +237,11 @@ class GetAppointmentCommandHandler extends CommandHandler
 
                 // Create bookable with extras to properly calculate payment amount
                 $bookableWithExtras = $paymentAS->createBookableWithExtras($booking->toArray(), 'appointment');
-                $bookingPaymentAmount = $reservationService->getPaymentAmount($booking, $bookableWithExtras);
+                $bookingPaymentAmount = $reservationService->getPaymentAmount($booking, $bookableWithExtras, true);
 
                 $bookingPaidPrice = 0;
                 $paymentMethods   = [];
+                $wcOrderUrls      = [];
                 foreach ($booking->getPayments()->toArray() as $paymentItem) {
                     $paymentMethods[] = $paymentItem['gateway'];
                     if ($paymentItem['status'] === 'paid' || $paymentItem['status'] === 'partiallyPaid') {
@@ -247,6 +253,10 @@ class GetAppointmentCommandHandler extends CommandHandler
                     $wcTax += !empty($paymentItem['wcItemTaxValue']) ? $paymentItem['wcItemTaxValue'] : 0;
 
                     $wcDiscount += !empty($paymentItem['wcItemCouponValue']) ? $paymentItem['wcItemCouponValue'] : 0;
+
+                    if (!empty($paymentItem['wcOrderId'])) {
+                        $wcOrderUrls[$paymentItem['wcOrderId']] = $paymentItem['wcOrderUrl'];
+                    }
                 }
 
                 $paidPrice += $bookingPaidPrice;
@@ -272,6 +282,7 @@ class GetAppointmentCommandHandler extends CommandHandler
                     'status' => $booking->getStatus()->getValue(),
                     'payment' => [
                         'paymentMethods' => $paymentMethods,
+                        'wcOrderUrls' => $wcOrderUrls,
                         'status' => $paymentAS->getFullStatus($booking->toArray(), 'appointment'),
                         'total' => $total,
                         'tax' => $bookingPaymentAmount['total_tax'],

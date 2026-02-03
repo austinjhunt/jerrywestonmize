@@ -312,6 +312,24 @@ class GetEntitiesCommandHandler extends CommandHandler
                 $employee['googleCalendarList'] = $calendarList;
             }
 
+            $outlookCalendar = $settingsDS->getSetting('outlookCalendar', 'accessToken');
+            $calendarList = [];
+
+            if ($outlookCalendar) {
+                $outlookCalendarMiddlewareService = $this->container->get('infrastructure.outlook.calendar.middleware.service');
+
+                $accessToken = json_decode($outlookCalendar, true);
+                $calendarList = $outlookCalendarMiddlewareService->getCalendarList($accessToken);
+            }
+
+            foreach ($resultData['employees'] as &$employee) {
+                if ($employee['outlookCalendar'] && $employee['outlookCalendar']['token']) {
+                    continue;
+                }
+
+                $employee['outlookCalendarList'] = $calendarList;
+            }
+
             if (
                 $currentUser === null ||
                 $currentUser->getType() === AbstractUser::USER_ROLE_CUSTOMER ||
@@ -323,6 +341,7 @@ class GetEntitiesCommandHandler extends CommandHandler
                         $employee['googleCalendarId'],
                         $employee['googleCalendar'],
                         $employee['outlookCalendar'],
+                        $employee['outlookCalendarId'],
                         $employee['stripeConnect'],
                         $employee['birthday'],
                         $employee['email'],

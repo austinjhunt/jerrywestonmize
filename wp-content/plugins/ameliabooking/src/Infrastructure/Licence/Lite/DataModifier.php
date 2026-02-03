@@ -179,6 +179,8 @@ class DataModifier
 
         $data['googleCalendarId'] = null;
 
+        $data['outlookCalendarId'] = null;
+
         $data['translations'] = null;
 
         $data['timeZone'] = null;

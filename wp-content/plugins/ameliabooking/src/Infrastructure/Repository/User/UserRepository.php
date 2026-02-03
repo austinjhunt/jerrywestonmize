@@ -15,6 +15,7 @@ use AmeliaBooking\Domain\ValueObjects\Json;
 use AmeliaBooking\Domain\ValueObjects\String\Password;
 use AmeliaBooking\Infrastructure\Licence;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
+use AmeliaBooking\Infrastructure\DB\WPDB\Statement;
 use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking\CustomerBookingsTable;
 
@@ -448,7 +449,7 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
                 "
             );
             $statement->execute($params);
-            $rows = $statement->fetchAll(\PDO::FETCH_COLUMN);
+            $rows = $statement->fetchAll(Statement::FETCH_COLUMN);
         } catch (\Exception $e) {
             throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
         }

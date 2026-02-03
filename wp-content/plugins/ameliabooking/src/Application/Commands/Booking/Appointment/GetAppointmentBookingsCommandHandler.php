@@ -6,6 +6,7 @@ use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Booking\AppointmentApplicationService;
+use AmeliaBooking\Application\Services\Helper\HelperService;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Application\Services\User\ProviderApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
@@ -22,6 +23,7 @@ use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ServiceRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
+use DateTimeZone;
 
 /**
  * Class GetAppointmentBookingsCommandHandler
@@ -42,6 +44,9 @@ class GetAppointmentBookingsCommandHandler extends CommandHandler
     public function handle(GetAppointmentBookingsCommand $command)
     {
         $result = new CommandResult();
+
+        /** @var HelperService $helperService */
+        $helperService = $this->container->get('application.helper.service');
 
         /** @var AppointmentRepository $appointmentRepository */
         $appointmentRepository = $this->container->get('domain.booking.appointment.repository');
@@ -106,15 +111,7 @@ class GetAppointmentBookingsCommandHandler extends CommandHandler
 
         $appointmentsIds = [];
 
-
-        if (!empty($params['dates'])) {
-            if (!empty($params['dates'][0])) {
-                $params['dates'][0] .= ' 00:00:00';
-            }
-            if (!empty($params['dates'][1])) {
-                $params['dates'][1] .= ' 23:59:59';
-            }
-        }
+        $helperService->convertDates($params);
 
         /** @var Collection $periodAppointments */
         $periodAppointments = $appointmentRepository->getPeriodAppointments(
@@ -179,15 +176,14 @@ class GetAppointmentBookingsCommandHandler extends CommandHandler
 
             $appointmentAS->calculateAndSetAppointmentEnd($appointment, $service);
 
-            if ($user && $user->getType() === Entities::PROVIDER) {
-                $timeZone = 'UTC';
+            $timeZone = !empty($params['timeZone'])
+                ? $params['timeZone']
+                : ($user && $user->getType() === Entities::PROVIDER ? $providerAS->getTimeZone($user) : null);
 
-                if (!empty($params['timeZone'])) {
-                    $timeZone = $params['timeZone'];
-                }
+            if ($timeZone) {
+                $appointment->getBookingStart()->getValue()->setTimezone(new DateTimeZone($timeZone));
 
-                $appointment->getBookingStart()->getValue()->setTimezone(new \DateTimeZone($timeZone));
-                $appointment->getBookingEnd()->getValue()->setTimezone(new \DateTimeZone($timeZone));
+                $appointment->getBookingEnd()->getValue()->setTimezone(new DateTimeZone($timeZone));
             }
 
             $bookedSpots = 0;

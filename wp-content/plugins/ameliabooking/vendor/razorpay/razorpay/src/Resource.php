@@ -9,21 +9,21 @@ use IteratorAggregate;
 class Resource implements ArrayAccess, IteratorAggregate
 {
     protected $attributes = array();
-
+    
     #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new ArrayIterator($this->attributes);
     }
+    
 
-    #[\ReturnTypeWillChange]
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return (isset($this->attributes[$offset]));
     }
+    
 
-    #[\ReturnTypeWillChange]
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this->attributes[$offset] = $value;
     }
@@ -33,9 +33,9 @@ class Resource implements ArrayAccess, IteratorAggregate
     {
         return $this->attributes[$offset];
     }
+    
 
-    #[\ReturnTypeWillChange]
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->attributes[$offset]);
     }

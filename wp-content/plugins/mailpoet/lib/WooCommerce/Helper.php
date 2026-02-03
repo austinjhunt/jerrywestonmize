@@ -316,6 +316,19 @@ class Helper {
     return wc_get_attribute_taxonomies();
   }
 
+  public function getWoocommerceStoreConfig(): array {
+    return [
+      'precision' => $this->wcGetPriceDecimals(),
+      'decimalSeparator' => $this->wcGetPriceDecimalSeperator(),
+      'thousandSeparator' => $this->wcGetPriceThousandSeparator(),
+      'code' => $this->getWoocommerceCurrency(),
+      'symbol' => html_entity_decode($this->getWoocommerceCurrencySymbol(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401),
+      'symbolPosition' => $this->wp->getOption('woocommerce_currency_pos'),
+      'priceFormat' => $this->getWoocommercePriceFormat(),
+
+    ];
+  }
+
   protected function formatShippingMethods(array $shippingMethods, string $shippingZoneName): array {
     $formattedShippingMethods = [];
 
@@ -351,11 +364,6 @@ class Helper {
   public function isWooCommerceEmailImprovementsEnabled(): bool {
     if (!class_exists('\Automattic\WooCommerce\Utilities\FeaturesUtil')) {
       return false;
-    }
-    // By this point, the feature should be enabled by default for everyone
-    $wcVersion = $this->getWooCommerceVersion();
-    if (version_compare($wcVersion, '10.0.0', '>')) {
-      return true;
     }
     return \Automattic\WooCommerce\Utilities\FeaturesUtil::feature_is_enabled('email_improvements');
   }

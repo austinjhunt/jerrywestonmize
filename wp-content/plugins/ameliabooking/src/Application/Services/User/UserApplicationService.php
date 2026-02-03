@@ -30,6 +30,7 @@ use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
 use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarMiddlewareService;
+use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarMiddlewareService;
 use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 use AmeliaBooking\Infrastructure\WP\UserService\CreateWPUser;
 use AmeliaBooking\Infrastructure\WP\UserService\UserService;
@@ -148,18 +149,26 @@ class UserApplicationService
     /**
      * @param int          $userId
      * @param AbstractUser $user
+     * @param string       $type
+     * @param string|null  $password
      *
+     * @return boolean
      * @throws ContainerValueNotFoundException
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      */
-    public function setWpUserIdForNewUser($userId, $user, $password = null)
+    public function setWpUserIdForNewUser($userId, $user, $type, $password = null)
     {
-        do_action('amelia_set_wp_user_for_new_customer', $user ? $user->toArray() : null);
-
-        if (!$user->getEmail() || !$user->getEmail()->getValue() || !trim($user->getEmail()->getValue())) {
-            return;
+        if (
+            !$user->getEmail() ||
+            !$user->getEmail()->getValue() ||
+            !trim($user->getEmail()->getValue()) ||
+            !$this->isRoleForEmailAllowed($user->getEmail()->getValue(), $type)
+        ) {
+            return false;
         }
+
+        do_action('amelia_set_wp_user_for_new_customer', $user->toArray());
 
         /** @var CreateWPUser $createWPUserService */
         $createWPUserService = $this->container->get('user.create.wp.user');
@@ -182,19 +191,26 @@ class UserApplicationService
             $user->setExternalId(new Id($externalId));
             $userRepository->updateFieldById($userId, $externalId, 'externalId');
         }
+
+        return true;
     }
 
     /**
      * @param int          $userId
      * @param AbstractUser $user
+     * @param string       $type
      *
+     * @return boolean
      * @throws ContainerValueNotFoundException
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
-     * @throws ContainerException
      */
-    public function setWpUserIdForExistingUser($userId, $user)
+    public function setWpUserIdForExistingUser($userId, $user, $type)
     {
+        if (!$this->isRoleForEmailAllowed($user->getEmail()->getValue(), $type)) {
+            return false;
+        }
+
         /** @var CreateWPUser $createWPUserService */
         $createWPUserService = $this->container->get('user.create.wp.user');
 
@@ -226,6 +242,32 @@ class UserApplicationService
             $user->setExternalId(new Id($externalId));
             $userRepository->update($userId, $user);
         }
+
+        return true;
+    }
+
+    /**
+     * @param string $email
+     * @param string $type
+     *
+     * @return boolean
+     *
+     */
+    private function isRoleForEmailAllowed($email, $type)
+    {
+        $user = get_user_by('email', $email);
+
+        if (
+            $user &&
+            (
+                ($type === Entities::CUSTOMER && array_intersect(['administrator', 'wpamelia-manager', 'wpamelia-provider'], (array)$user->roles)) ||
+                ($type === Entities::PROVIDER && array_intersect(['administrator', 'wpamelia-manager', 'wpamelia-customer'], (array)$user->roles))
+            )
+        ) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -343,19 +385,6 @@ class UserApplicationService
 
             $userArray['mandatoryServicesIds'] = $providerService->getMandatoryServicesIds($user->getId()->getValue());
 
-            try {
-                $userArray['outlookCalendar']['calendarList'] = $outlookCalendarService->listCalendarList($user);
-
-                $userArray['outlookCalendar']['calendarId'] = $outlookCalendarService->getProviderOutlookCalendarId(
-                    $user
-                );
-            } catch (\Exception $e) {
-                $providerRepository->updateErrorColumn($user->getId()->getValue(), $e->getMessage());
-
-                $userArray['outlookCalendar']['calendarList'] = [];
-                $userArray['outlookCalendar']['calendarId'] = null;
-            }
-
             $userArray['googleCalendar']['calendarList'] = [];
             $userArray['googleCalendar']['calendarId'] = null;
 
@@ -374,6 +403,30 @@ class UserApplicationService
                         $userArray['googleCalendar']['calendarList'] = $googleCalendarMiddlewareService->getCalendarList($userArray['googleCalendar']);
                         $userArray['googleCalendar']['calendarId'] = $provider && $provider->getGoogleCalendar() ?
                             $provider->getGoogleCalendar()->getCalendarId()->getValue() :
+                            null;
+                    }
+                } catch (\Exception $e) {
+                    $providerRepository->updateErrorColumn($user->getId()->getValue(), $e->getMessage());
+                }
+            }
+
+            $userArray['outlookCalendar']['calendarList'] = [];
+            $userArray['outlookCalendar']['calendarId'] = null;
+
+            if ($settingsService->isFeatureEnabled('outlookCalendar')) {
+                try {
+                    $outlookCalendar = $settingsService->getCategorySettings('outlookCalendar');
+                    if (!$outlookCalendar['accessToken']) {
+                        $userArray['outlookCalendar']['calendarList'] = $outlookCalendarService->listCalendarList($user);
+                        $userArray['outlookCalendar']['calendarId'] = $outlookCalendarService->getProviderOutlookCalendarId($user);
+                    } else {
+                        /** @var AbstractOutlookCalendarMiddlewareService $outlookCalendarMiddlewareService */
+                        $outlookCalendarMiddlewareService = $this->container->get(
+                            'infrastructure.outlook.calendar.middleware.service'
+                        );
+                        $userArray['outlookCalendar']['calendarList'] = $outlookCalendarMiddlewareService->getCalendarList($userArray['outlookCalendar']);
+                        $userArray['outlookCalendar']['calendarId'] = $provider && $provider->getOutlookCalendar() ?
+                            $provider->getOutlookCalendar()->getCalendarId()->getValue() :
                             null;
                     }
                 } catch (\Exception $e) {

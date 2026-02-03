@@ -3,6 +3,7 @@
 namespace AmeliaBooking\Infrastructure\Common;
 
 use AmeliaBooking\Domain\Repository\User\UserRepositoryInterface;
+use AmeliaBooking\Domain\Services\Logger\LoggerInterface;
 use AmeliaBooking\Infrastructure\Connection;
 
 /**
@@ -82,6 +83,16 @@ final class Container extends \Slim\Container
     public function getUserApplicationService()
     {
         return $this->get('application.user.service');
+    }
+
+    /**
+     * Get the Logger service
+     *
+     * @return LoggerInterface
+     */
+    public function getLoggerService()
+    {
+        return $this->get('infrastructure.logger');
     }
 
     /**

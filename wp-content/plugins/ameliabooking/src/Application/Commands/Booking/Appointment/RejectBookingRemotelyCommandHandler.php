@@ -5,6 +5,7 @@ namespace AmeliaBooking\Application\Commands\Booking\Appointment;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
+use AmeliaBooking\Application\Services\Booking\BookingFallbackService;
 use AmeliaBooking\Application\Services\User\CustomerApplicationService;
 use AmeliaBooking\Domain\Common\Exceptions\BookingCancellationException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
@@ -75,9 +76,13 @@ class RejectBookingRemotelyCommandHandler extends CommandHandler
         $notificationSettings = $settingsService->getCategorySettings('notifications');
 
         if ($booking === null) {
-            $result->setUrl($notificationSettings['rejectErrorUrl']);
-            $result->setMessage('This booking does not exist!');
-            return $result;
+            if (!empty($notificationSettings['rejectErrorUrl'])) {
+                $result->setUrl($notificationSettings['rejectErrorUrl']);
+
+                return $result;
+            }
+
+            return $result->setHtml(BookingFallbackService::getFallbackHtml('failed'));
         }
 
         $token = $bookingRepository->getToken((int)$command->getArg('id'));
@@ -124,12 +129,16 @@ class RejectBookingRemotelyCommandHandler extends CommandHandler
             $result->setUrl($notificationSettings['rejectSuccessUrl']);
 
             do_action('amelia_after_booking_rejected_link', $booking ? $booking->toArray() : null);
-        } elseif ($notificationSettings['rejectErrorUrl'] && $result->getResult() === CommandResult::RESULT_ERROR) {
-            $result->setUrl($notificationSettings['rejectErrorUrl']);
-        } else {
-            $result->setUrl('/');
+
+            return $result;
         }
 
-        return $result;
+        if ($notificationSettings['rejectErrorUrl'] && $result->getResult() === CommandResult::RESULT_ERROR) {
+            $result->setUrl($notificationSettings['rejectErrorUrl']);
+
+            return $result;
+        }
+        // No redirect URL defined - show fallback page
+        return $result->setHtml(BookingFallbackService::getFallbackHtml('rejected'));
     }
 }

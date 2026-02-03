@@ -19,14 +19,14 @@ abstract class AbstractMailchimpService
      *
      * @return string
      */
-    abstract public function createAuthUrl();
+    abstract public function createAuthUrl(): string;
 
     /**
      * Returns the mailing lists
      *
      * @return array
      */
-    abstract public function getLists();
+    abstract public function getLists(): array;
 
     /**
      * Get the metadata server name from Mailchimp.
@@ -47,8 +47,7 @@ abstract class AbstractMailchimpService
      *
      * @return void
      */
-    abstract public function addOrUpdateSubscriber($email, $customer, $add = true);
-
+    abstract public function addOrUpdateSubscriber($email, array $customer, bool $add = true): void;
 
     /**
      * Delete subscriber from the mailing list.

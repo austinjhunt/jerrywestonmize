@@ -5,7 +5,9 @@ use Composer\Autoload\ClassLoader;
 use Composer\Semver\VersionParser;
 class InstalledVersions
 {
+ private static $selfDir = null;
  private static $installed;
+ private static $installedIsLocalDir;
  private static $canGetVendors;
  private static $installedByVendor = array();
  public static function getInstalledPackages()
@@ -145,6 +147,18 @@ class InstalledVersions
  {
  self::$installed = $data;
  self::$installedByVendor = array();
+ // when using reload, we disable the duplicate protection to ensure that self::$installed data is
+ // always returned, but we cannot know whether it comes from the installed.php in __DIR__ or not,
+ // so we have to assume it does not, and that may result in duplicate data being returned when listing
+ // all installed packages for example
+ self::$installedIsLocalDir = false;
+ }
+ private static function getSelfDir()
+ {
+ if (self::$selfDir === null) {
+ self::$selfDir = strtr(__DIR__, '\\', '/');
+ }
+ return self::$selfDir;
  }
  private static function getInstalled()
  {
@@ -152,16 +166,24 @@ class InstalledVersions
  self::$canGetVendors = method_exists('Composer\Autoload\ClassLoader', 'getRegisteredLoaders');
  }
  $installed = array();
+ $copiedLocalDir = false;
  if (self::$canGetVendors) {
+ $selfDir = self::getSelfDir();
  foreach (ClassLoader::getRegisteredLoaders() as $vendorDir => $loader) {
+ $vendorDir = strtr($vendorDir, '\\', '/');
  if (isset(self::$installedByVendor[$vendorDir])) {
  $installed[] = self::$installedByVendor[$vendorDir];
  } elseif (is_file($vendorDir.'/composer/installed.php')) {
  $required = require $vendorDir.'/composer/installed.php';
- $installed[] = self::$installedByVendor[$vendorDir] = $required;
- if (null === self::$installed && strtr($vendorDir.'/composer', '\\', '/') === strtr(__DIR__, '\\', '/')) {
- self::$installed = $installed[count($installed) - 1];
+ self::$installedByVendor[$vendorDir] = $required;
+ $installed[] = $required;
+ if (self::$installed === null && $vendorDir.'/composer' === $selfDir) {
+ self::$installed = $required;
+ self::$installedIsLocalDir = true;
  }
+ }
+ if (self::$installedIsLocalDir && $vendorDir.'/composer' === $selfDir) {
+ $copiedLocalDir = true;
  }
  }
  }
@@ -175,7 +197,7 @@ class InstalledVersions
  self::$installed = array();
  }
  }
- if (self::$installed !== array()) {
+ if (self::$installed !== array() && !$copiedLocalDir) {
  $installed[] = self::$installed;
  }
  return $installed;

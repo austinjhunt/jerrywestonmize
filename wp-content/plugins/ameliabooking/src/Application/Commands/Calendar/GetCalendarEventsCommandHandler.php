@@ -10,7 +10,9 @@ namespace AmeliaBooking\Application\Commands\Calendar;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
+use AmeliaBooking\Application\Services\Booking\AppointmentApplicationService;
 use AmeliaBooking\Application\Services\Booking\EventApplicationService;
+use AmeliaBooking\Application\Services\User\ProviderApplicationService;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Event\Event;
 use AmeliaBooking\Domain\Entity\Booking\Event\EventPeriod;
@@ -20,6 +22,7 @@ use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
+use DateTimeZone;
 
 class GetCalendarEventsCommandHandler extends CommandHandler
 {
@@ -41,8 +44,13 @@ class GetCalendarEventsCommandHandler extends CommandHandler
             throw new AccessDeniedException('You are not allowed to read calendar events.');
         }
 
+        /** @var ProviderApplicationService $providerAS */
+        $providerAS = $this->container->get('application.user.provider.service');
+
         /** @var AbstractUser $user */
         $user = $this->container->get('logged.in.user');
+
+        $timeZone = '';
 
         if ($user->getType() === Entities::CUSTOMER) {
             $queryParams['customers'] = [$user->getId()->getValue()];
@@ -50,10 +58,13 @@ class GetCalendarEventsCommandHandler extends CommandHandler
 
         if ($user->getType() === Entities::PROVIDER) {
             $queryParams['providers'] = [$user->getId()->getValue()];
+
+            $timeZone = $providerAS->getTimeZone($user);
         }
 
-        $appointments = $this->getAppointments($queryParams);
-        $events       = $this->getEvents($queryParams);
+        $appointments = $this->getAppointments($queryParams, $timeZone);
+        $events       = $this->getEvents($queryParams, $timeZone);
+
         $sortedItems  = array_merge($appointments, $events);
 
         usort(
@@ -129,7 +140,7 @@ class GetCalendarEventsCommandHandler extends CommandHandler
     /**
      * @throws QueryExecutionException
      */
-    private function getAppointments(array $queryParams): array
+    private function getAppointments(array $queryParams, string $timeZone): array
     {
         if (!isset($queryParams['entitiesToShow']) || !in_array('appointments', $queryParams['entitiesToShow']) || !empty($queryParams['events'])) {
             return [];
@@ -147,10 +158,19 @@ class GetCalendarEventsCommandHandler extends CommandHandler
 
         $appointments = $appointmentRepository->getFiltered($queryParams);
 
+        if ($timeZone) {
+            /** @var Appointment $appointment */
+            foreach ($appointments->getItems() as $appointment) {
+                $appointment->getBookingStart()->getValue()->setTimezone(new DateTimeZone($timeZone));
+
+                $appointment->getBookingEnd()->getValue()->setTimezone(new DateTimeZone($timeZone));
+            }
+        }
+
         return $appointments->getItems();
     }
 
-    private function getEvents(array $queryParams): array
+    private function getEvents(array $queryParams, string $timeZone): array
     {
         if (!isset($queryParams['entitiesToShow']) || !in_array('events', $queryParams['entitiesToShow']) || !empty($queryParams['services'])) {
             return [];
@@ -168,6 +188,18 @@ class GetCalendarEventsCommandHandler extends CommandHandler
         }
 
         $events = $eventAS->getEventsByCriteria($queryParams, ['fetchEventsPeriods' => true], -1);
+
+        if ($timeZone) {
+            /** @var Event $event */
+            foreach ($events->getItems() as $event) {
+                /** @var EventPeriod $period */
+                foreach ($event->getPeriods()->getItems() as $period) {
+                    $period->getPeriodStart()->getValue()->setTimezone(new DateTimeZone($timeZone));
+
+                    $period->getPeriodEnd()->getValue()->setTimezone(new DateTimeZone($timeZone));
+                }
+            }
+        }
 
         /** @var Event $event */
         foreach ($events->getItems() as $event) {
@@ -200,16 +232,12 @@ class GetCalendarEventsCommandHandler extends CommandHandler
         $endWithoutBuffer = $appointment->getBookingEnd()->getValue();
         $end = (clone($endWithoutBuffer))->modify($bufferTimeAfter . 'seconds');
 
-        $title = $appointment->getService()->getName()->getValue();
-        if (!empty($queryParams['showEmployeeName'])) {
-            $title = $appointment->getProvider()->getFullName();
-        }
-
         return [
             'uuid'                    => $appointment->getId()->getValue(),
             'id'                      => $appointment->getId()->getValue(),
             'bookings'                => $appointment->getBookings()->toArray(),
-            'title'                   => $title,
+            'serviceName'             => $appointment->getService()->getName()->getValue(),
+            'employeeName'            => $appointment->getProvider()->getFullName(),
             'start'                   => $start->format('Y-m-d H:i:s'),
             'end'                     => $end->format('Y-m-d H:i:s'),
             'startWithoutBuffer'      => $startWithoutBuffer->format('Y-m-d H:i:s'),
@@ -221,7 +249,10 @@ class GetCalendarEventsCommandHandler extends CommandHandler
             'locationId'              => $appointment->getLocationId() ?: null,
             'bufferTimeBefore'        => $bufferTimeBefore,
             'bufferTimeAfter'         => $bufferTimeAfter,
-            'notes'                   => $appointment->getInternalNotes()->getValue(),
+            'timeZone'                => $start->getTimeZone()->getName(),
+            'notes'                   => $appointment->getInternalNotes() ?
+                $appointment->getInternalNotes()->getValue()
+                : '',
             'integrationCalendarType' => false,
             'type'                    => $appointment->getBookings()->length() === 1
                 ? 'singleAppointment'
@@ -254,6 +285,7 @@ class GetCalendarEventsCommandHandler extends CommandHandler
             'editable'           => false,
             'startWithoutBuffer' => $periodStartDate->format('Y-m-d H:i:s'),
             'endWithoutBuffer'   => $periodEndDate->format('Y-m-d H:i:s'),
+            'timeZone'           => $periodStartDate->getTimeZone()->getName(),
             'notes'              => '',
         ];
 

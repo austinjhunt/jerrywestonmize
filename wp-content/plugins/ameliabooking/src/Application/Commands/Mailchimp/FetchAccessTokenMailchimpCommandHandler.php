@@ -5,26 +5,21 @@ namespace AmeliaBooking\Application\Commands\Mailchimp;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
+use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Application\Services\Validation\ValidationService;
 use AmeliaBooking\Domain\Entity\Entities;
+use AmeliaBooking\Domain\Services\Settings\SettingsService;
+use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Services\Mailchimp\AbstractMailchimpService;
 
-/**
- * Class FetchAccessTokenMailchimpCommandHandler
- *
- * @package AmeliaBooking\Application\Commands\Mailchimp
- */
 class FetchAccessTokenMailchimpCommandHandler extends CommandHandler
 {
     /**
-     * @param FetchAccessTokenMailchimpCommand $command
-     *
-     * @return CommandResult
-     * @throws \AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException
-     * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException
+     * @throws InvalidArgumentException
+     * @throws QueryExecutionException
      * @throws AccessDeniedException
      */
-    public function handle(FetchAccessTokenMailchimpCommand $command)
+    public function handle(FetchAccessTokenMailchimpCommand $command): CommandResult
     {
         if (!$this->getContainer()->getPermissionsService()->currentUserCanWrite(Entities::SETTINGS)) {
             throw new AccessDeniedException('You are not allowed to write settings.');
@@ -45,7 +40,7 @@ class FetchAccessTokenMailchimpCommandHandler extends CommandHandler
         /** @var AbstractMailchimpService $mailchimpService */
         $mailchimpService = $this->container->get('infrastructure.mailchimp.service');
 
-        /** @var \AmeliaBooking\Domain\Services\Settings\SettingsService $settingsService */
+        /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
 
         $accessToken = $command->getFields()['access_token'];
@@ -64,11 +59,9 @@ class FetchAccessTokenMailchimpCommandHandler extends CommandHandler
             return $result;
         }
 
-        $server      = $mailchimpService->getMetadataServerName($accessToken);
-
         $mailchimpSettings = $settingsService->getCategorySettings('mailchimp');
         $mailchimpSettings['accessToken'] = $accessToken;
-        $mailchimpSettings['server'] = $server;
+        $mailchimpSettings['server'] = $mailchimpService->getMetadataServerName($accessToken);
         $settingsService->setCategorySettings('mailchimp', $mailchimpSettings);
 
         $lists = $mailchimpService->getLists();

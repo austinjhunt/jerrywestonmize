@@ -27,6 +27,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+// fix for backend customize icons
+.el-popper {
+  [class^="am-icon-"], [class*=" am-icon-"] {
+      font-family: '#{$icomoon-font-family}' !important;
+  }
+}
+
 .am-icon-mobile {
   &:before {
     content: $am-icon-mobile; 

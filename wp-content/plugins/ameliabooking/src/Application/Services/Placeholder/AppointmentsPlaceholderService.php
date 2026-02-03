@@ -75,12 +75,9 @@ class AppointmentsPlaceholderService extends AppointmentPlaceholderService
                 '<a href="#">' . BackendStrings::get('zoom_click_to_join') . '</a>' : 'https://join_zoom_link.com',
             'zoom_host_url'           => $type === 'email' ?
                 '<a href="#">' . BackendStrings::get('zoom_click_to_start') . '</a>' : 'https://start_zoom_link.com',
-            'google_meet_url'         => $type === 'email' ?
-                '<a href="#">' . BackendStrings::get('google_meet_join') . '</a>' : 'https://join_google_meet_link.com',
-            'lesson_space_url'        => $type === 'email' ?
-                '<a href="#">' . BackendStrings::get('lesson_space_join') . '</a>' : 'https://lessonspace.com/room-id',
-            'microsoft_teams_url'     => $type === 'email' ?
-                '<a href="#">' . BackendStrings::get('microsoft_teams_join') . '</a>' : 'https://join_microsoft_teams_link.com',
+            'google_meet_url'         => 'https://join_google_meet_link.com',
+            'lesson_space_url'        => 'https://lessonspace.com/room-id',
+            'microsoft_teams_url'     => 'https://join_microsoft_teams_link.com',
             'appointment_duration'    => $helperService->secondsToNiceDuration(1800),
             'appointment_deposit_payment'     => $helperService->getFormattedPrice(20),
             'appointment_status'      => BackendStrings::get('approved'),

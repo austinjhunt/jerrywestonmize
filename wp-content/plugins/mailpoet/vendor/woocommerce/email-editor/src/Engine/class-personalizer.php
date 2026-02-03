@@ -5,6 +5,7 @@ if (!defined('ABSPATH')) exit;
 use Automattic\WooCommerce\EmailEditor\Engine\PersonalizationTags\HTML_Tag_Processor;
 use Automattic\WooCommerce\EmailEditor\Engine\PersonalizationTags\Personalization_Tags_Registry;
 class Personalizer {
+ private const TAG_NAME_PATTERN = '[a-zA-Z0-9\-\/]+';
  private Personalization_Tags_Registry $tags_registry;
  private array $context;
  public function __construct( Personalization_Tags_Registry $tags_registry ) {
@@ -54,7 +55,9 @@ class Personalizer {
  if ( ! is_string( $href ) ) {
  continue;
  }
- if ( ! $href || ! preg_match( '/\[[a-z-\/]+\]/', urldecode( $href ), $matches ) ) {
+ // Decode both URL encoding (%XX) and HTML entities (&#039;) to handle various encoding scenarios.
+ $decoded_href = html_entity_decode( urldecode( $href ), ENT_QUOTES, 'UTF-8' );
+ if ( ! preg_match( '/\[' . self::TAG_NAME_PATTERN . '(?:\s+[^\]]+)?\]/', $decoded_href, $matches ) ) {
  continue;
  }
  $token = $this->parse_token( $matches[0] );
@@ -77,13 +80,31 @@ class Personalizer {
  'arguments' => array(),
  );
  // Step 1: Separate the tag and attributes.
- if ( preg_match( '/^\[([a-zA-Z0-9\-\/]+)\s*(.*?)\]$/', trim( $token ), $matches ) ) {
+ if ( preg_match( '/^\[(' . self::TAG_NAME_PATTERN . ')\s*(.*?)\]$/', trim( $token ), $matches ) ) {
  $result['token'] = "[{$matches[1]}]"; // The tag part (e.g., "[mailpoet/subscriber-firstname]").
  $attributes_string = $matches[2]; // The attributes part (e.g., 'default="subscriber"').
  // Step 2: Extract attributes from the attribute string.
- if ( preg_match_all( '/(\w+)=["\']([^"\']*)["\']/', $attributes_string, $attribute_matches, PREG_SET_ORDER ) ) {
+ // Match quoted values (double or single quotes separately to avoid mixing) and unquoted values.
+ // Unquoted values can occur when esc_url() strips quotes from personalization tags.
+ // For unquoted values with spaces, capture until the next key= pattern or closing bracket.
+ // The negative lookahead (?!\w+=) is critical for preventing ReDoS:
+ // it ensures the inner loop terminates as soon as the next key= pattern appears,
+ // preventing excessive backtracking despite the nested quantifiers.
+ if ( preg_match_all( '/(\w+)=(?:"([^"]*)"|\'([^\']*)\'|([^\s\]]+(?:\s+(?!\w+=)[^\s\]]+)*))/', $attributes_string, $attribute_matches, PREG_SET_ORDER ) ) {
  foreach ( $attribute_matches as $attribute ) {
- $result['arguments'][ $attribute[1] ] = $attribute[2];
+ // $attribute[2] is double-quoted value, $attribute[3] is single-quoted value,
+ // $attribute[4] is unquoted value (may contain spaces).
+ // Use null coalescing as only one of these will be populated depending on which pattern matched.
+ $double_quoted_value = $attribute[2] ?? '';
+ $single_quoted_value = $attribute[3] ?? '';
+ $unquoted_value = $attribute[4] ?? '';
+ if ( '' !== $double_quoted_value ) {
+ $result['arguments'][ $attribute[1] ] = $double_quoted_value;
+ } elseif ( '' !== $single_quoted_value ) {
+ $result['arguments'][ $attribute[1] ] = $single_quoted_value;
+ } else {
+ $result['arguments'][ $attribute[1] ] = $unquoted_value;
+ }
  }
  }
  }

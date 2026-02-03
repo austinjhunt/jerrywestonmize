@@ -28,9 +28,6 @@ class SettingsStorage implements SettingsStorageInterface
         'gmtOffset'      => 'gmt_offset'
     ];
 
-    /**
-     * SettingsStorage constructor.
-     */
     public function __construct()
     {
         $this->locationService = Licence\ApplicationService::getCurrentLocationService();
@@ -63,8 +60,7 @@ class SettingsStorage implements SettingsStorageInterface
      */
     public function getSetting($settingCategoryKey, $settingKey)
     {
-        return isset($this->settingsCache[$settingCategoryKey][$settingKey]) ?
-            $this->settingsCache[$settingCategoryKey][$settingKey] : null;
+        return $this->settingsCache[$settingCategoryKey][$settingKey] ?? null;
     }
 
     /**
@@ -74,8 +70,7 @@ class SettingsStorage implements SettingsStorageInterface
      */
     public function getCategorySettings($settingCategoryKey)
     {
-        return isset($this->settingsCache[$settingCategoryKey]) ?
-            $this->settingsCache[$settingCategoryKey] : null;
+        return $this->settingsCache[$settingCategoryKey] ?? null;
     }
 
     /**
@@ -105,7 +100,7 @@ class SettingsStorage implements SettingsStorageInterface
      */
     public function getAllSettingsCategorized()
     {
-        return isset($this->settingsCache) ? $this->settingsCache : null;
+        return $this->settingsCache ?? null;
     }
 
     /**
@@ -177,6 +172,8 @@ class SettingsStorage implements SettingsStorageInterface
                 'googleClientId'                            => $this->getSetting('googleCalendar', 'clientID'),
                 'googleAccessToken'                         => $this->getSetting('googleCalendar', 'accessToken'),
                 'googleAccountData'                         => $this->getSetting('googleCalendar', 'googleAccountData'),
+                'outlookAccessToken'                        => $this->getSetting('outlookCalendar', 'accessToken'),
+                'outlookAccountData'                        => $this->getSetting('outlookCalendar', 'outlookAccountData'),
                 'addToCalendar'                             => $this->getSetting('general', 'addToCalendar'),
                 'requiredPhoneNumberField'                  => $this->getSetting('general', 'requiredPhoneNumberField'),
                 'requiredEmailField'                        => $this->getSetting('general', 'requiredEmailField'),
@@ -252,6 +249,7 @@ class SettingsStorage implements SettingsStorageInterface
                         $this->getSetting('featuresIntegrations', 'outlookCalendar')
                     ),
                 'microsoftTeamsEnabled' => $this->getSetting('outlookCalendar', 'enableMicrosoftTeams'),
+                'accessToken' => $this->getSetting('outlookCalendar', 'accessToken'),
             ],
             'appleCalendar'          =>
             $this->getSetting('appleCalendar', 'clientID') && $this->getSetting('appleCalendar', 'clientSecret'),
@@ -689,9 +687,11 @@ class SettingsStorage implements SettingsStorageInterface
                     $this->getSetting('featuresIntegrations', 'googleCalendar')
                 ) &&
                     (($this->getSetting('googleCalendar', 'clientID') &&
-                        $this->getSetting('googleCalendar', 'clientSecret')) || $this->getSetting('googleCalendar', 'accessToken')),
+                        $this->getSetting('googleCalendar', 'clientSecret')) ||
+                        $this->getSetting('googleCalendar', 'accessToken')),
                 'googleMeet' => $this->getSetting('googleCalendar', 'enableGoogleMeet'),
-                'hasAccessToken' => (bool)$this->getSetting('googleCalendar', 'accessToken'),
+                'hasAccessToken' => !empty($this->getSetting('googleCalendar', 'accessToken')) &&
+                    $this->getSetting('googleCalendar', 'accessToken') !== 'null',
 
             ],
             'lessonSpace'          => [
@@ -742,15 +742,18 @@ class SettingsStorage implements SettingsStorageInterface
                     'phoneId' => $this->getSetting('notifications', 'whatsAppPhoneID'),
                 ],
             ],
-            'outlookCalendar'      => [
-                'active'         =>
-                Licence\Licence::isFeatureEnabledWithLicense(
+            'outlookCalendar'       => [
+                'active'     => Licence\Licence::isFeatureEnabledWithLicense(
                     'outlookCalendar',
                     $this->getSetting('featuresIntegrations', 'outlookCalendar')
                 ) &&
-                    $this->getSetting('outlookCalendar', 'clientID') &&
-                    $this->getSetting('outlookCalendar', 'clientSecret'),
-                'microsoftTeams' => $this->getSetting('outlookCalendar', 'enableMicrosoftTeams')
+                    (($this->getSetting('outlookCalendar', 'clientID') &&
+                      $this->getSetting('outlookCalendar', 'clientSecret')) ||
+                      $this->getSetting('outlookCalendar', 'accessToken')),
+                'microsoftTeams' => $this->getSetting('outlookCalendar', 'enableMicrosoftTeams'),
+                'hasAccessToken' => !empty($this->getSetting('outlookCalendar', 'accessToken')) &&
+                    $this->getSetting('outlookCalendar', 'accessToken') !== 'null',
+
             ],
             'pageColumnSettings'   => $this->getCategorySettings('pageColumnSettings'),
             'payments'             => [
@@ -896,6 +899,7 @@ class SettingsStorage implements SettingsStorageInterface
                 'startOfWeek' => (int)$this->getSetting('wordpress', 'startOfWeek'),
                 'timeFormat'  => $this->getSetting('wordpress', 'timeFormat'),
                 'timezone'    => $this->getSetting('wordpress', 'timeZoneString'),
+                'gmtOffset'   => $this->getSetting('wordpress', 'gmtOffset'),
             ],
             'zoom'         => [
                 'active' => (

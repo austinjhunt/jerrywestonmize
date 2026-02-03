@@ -4803,6 +4803,9 @@ msgstr ""
 msgid "Header"
 msgstr "سربرگ"
 
+msgid "Heading"
+msgstr ""
+
 msgid "Heading Text Color"
 msgstr "رنگ متن سربرگ"
 

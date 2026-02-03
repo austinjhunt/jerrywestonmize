@@ -26,6 +26,7 @@ class CommandResult
     private $file       = null;
     private $url;
     private $dataInResponse = true;
+    private ?string $html = null;
 
     /**
      * @return string
@@ -121,6 +122,21 @@ class CommandResult
     public function getFile()
     {
         return $this->file;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHtml()
+    {
+        return $this->html;
+    }
+
+    public function setHtml(string $html): CommandResult
+    {
+        $this->html = $html;
+
+        return $this;
     }
 
     /**

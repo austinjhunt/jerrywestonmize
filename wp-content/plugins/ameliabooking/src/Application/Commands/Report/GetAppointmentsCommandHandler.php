@@ -123,7 +123,7 @@ class GetAppointmentsCommandHandler extends CommandHandler
         if (!empty($customFields)) {
             $allCustomFields = array_column($allCustomFields->toArray(), null, 'id');
 
-            usort(
+            uasort(
                 $customFields,
                 function ($a, $b) use ($allCustomFields) {
                     return $allCustomFields[$a['id']]['position'] - $allCustomFields[$b['id']]['position'];

@@ -4821,6 +4821,9 @@ msgstr ""
 msgid "Header"
 msgstr "Đầu trang"
 
+msgid "Heading"
+msgstr ""
+
 msgid "Heading Text Color"
 msgstr "Màu chữ Tiêu đề"
 

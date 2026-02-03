@@ -10,6 +10,7 @@ use AmeliaBooking\Application\Services\CustomField\AbstractCustomFieldApplicatio
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Application\Services\Reservation\EventReservationService;
 use AmeliaBooking\Application\Services\User\CustomerApplicationService;
+use AmeliaBooking\Application\Services\User\ProviderApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
@@ -20,6 +21,7 @@ use AmeliaBooking\Domain\Entity\Booking\Event\EventPeriod;
 use AmeliaBooking\Domain\Entity\Booking\Event\EventTicket;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
+use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\IntegerValue;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
@@ -77,6 +79,8 @@ class GetEventCommandHandler extends CommandHandler
         $eventRepository = $this->container->get('domain.booking.event.repository');
         /** @var PaymentApplicationService $paymentAS */
         $paymentAS = $this->container->get('application.payment.service');
+        /** @var ProviderApplicationService $providerAS */
+        $providerAS = $this->container->get('application.user.provider.service');
         /** @var AbstractCustomFieldApplicationService $customFieldService */
         $customFieldService = $this->container->get('application.customField.service');
         /** @var EventReservationService $reservationService */
@@ -126,15 +130,19 @@ class GetEventCommandHandler extends CommandHandler
             $event->setCustomTickets($eventApplicationService->getTicketsPriceByDateRange($event->getCustomTickets()));
         }
 
-        if (!empty($command->getField('params')['timeZone'])) {
+        $timeZone = !empty($command->getField('params')['timeZone'])
+            ? $command->getField('params')['timeZone']
+            : ($user->getType() === Entities::PROVIDER ? $providerAS->getTimeZone($user) : null);
+
+        if ($timeZone) {
             /** @var EventPeriod $period */
             foreach ($event->getPeriods()->getItems() as $period) {
                 $period->getPeriodStart()->getValue()->setTimezone(
-                    new \DateTimeZone($command->getField('params')['timeZone'])
+                    new \DateTimeZone($timeZone)
                 );
 
                 $period->getPeriodEnd()->getValue()->setTimezone(
-                    new \DateTimeZone($command->getField('params')['timeZone'])
+                    new \DateTimeZone($timeZone)
                 );
             }
         }

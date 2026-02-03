@@ -9,10 +9,10 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 msgid "\"Book now\" Button Type"
-msgstr ""
+msgstr "Typ tlačítka Rezervovat teď"
 
 msgid "\"Go back\" Button Type"
-msgstr ""
+msgstr "Typ tlačítka Vrátit se"
 
 msgid "\"I'm not a robot\" checkbox"
 msgstr "Zaškrtávací políčko „Nejsem robot“"
@@ -33,16 +33,16 @@ msgid "# of bookings"
 msgstr "# rezervací"
 
 msgid "'Back' button style"
-msgstr ""
+msgstr "Styl tlačítka Zpět"
 
 msgid "'Book' button style"
-msgstr ""
+msgstr "Styl tlačítka Rezervovat"
 
 msgid "'Book another' button style"
-msgstr ""
+msgstr "Styl tlačítka Rezervovat další"
 
 msgid "'Book now' button style"
-msgstr ""
+msgstr "Styl tlačítka Rezervovat teď"
 
 msgid ""
 "'Booking Date and Time' sets the limit based on when the booking is made, "
@@ -54,73 +54,73 @@ msgstr ""
 "na základě samotné naplánované schůzky."
 
 msgid "'Bringing anyone with you' popup"
-msgstr ""
+msgstr "Vyskakovací okno Vzít někoho s sebou"
 
 msgid "'Cancel' button style"
-msgstr ""
+msgstr "Styl tlačítka Zrušit"
 
 msgid "'Change password' button style"
-msgstr ""
+msgstr "Styl tlačítka Změnit heslo"
 
 msgid "'Close' button style"
-msgstr ""
+msgstr "Styl tlačítka Zavřít"
 
 msgid "'Confirm' button style"
-msgstr ""
+msgstr "Styl tlačítka Potvrdit"
 
 msgid "'Continue' button style"
-msgstr ""
+msgstr "Styl tlačítka Pokračovat"
 
 msgid "'Customer panel' button style"
-msgstr ""
+msgstr "Styl tlačítka Panel zákazníka"
 
 msgid "'Delete' button style"
-msgstr ""
+msgstr "Styl tlačítka Smazat"
 
 msgid "'Filter' button style"
-msgstr ""
+msgstr "Styl tlačítka Filtr"
 
 msgid "'Finish' button style"
-msgstr ""
+msgstr "Styl tlačítka Dokončit"
 
 msgid "'Join waiting list' button style"
-msgstr ""
+msgstr "Styl tlačítka Přihlásit se na čekací listinu"
 
 msgid "'Learn more' button"
-msgstr ""
+msgstr "Tlačítko Dozvědět se více"
 
 msgid "'Learn more' button style"
-msgstr ""
+msgstr "Styl tlačítka Dozvědět se více"
 
 msgid "'New Event' button style"
-msgstr ""
+msgstr "Styl tlačítka Nová akce"
 
 msgid "'New appointment' button style"
-msgstr ""
+msgstr "Styl tlačítka Nový termín"
 
 msgid "'Read more' button style"
-msgstr ""
+msgstr "Styl tlačítka Číst více"
 
 msgid "'Save changes' button style"
-msgstr ""
+msgstr "Styl tlačítka Uložit změny"
 
 msgid "'Scan e-ticket' button"
-msgstr ""
+msgstr "Tlačítko Skenovat e-vstupenku"
 
 msgid "'Send' button style"
-msgstr ""
+msgstr "Styl tlačítka Poslat"
 
 msgid "'Set password' button style"
-msgstr ""
+msgstr "Styl tlačítka Nastavit heslo"
 
 msgid "'Sign in' button style"
-msgstr ""
+msgstr "Styl tlačítka Přihlásit se"
 
 msgid "'View employee' button style"
-msgstr ""
+msgstr "Styl tlačítka Zobrazit pracovníky"
 
 msgid "'View in package' button"
-msgstr ""
+msgstr "Tlačítko Zobrazit v balíčku"
 
 msgid "+more"
 msgstr "+více"
@@ -312,25 +312,25 @@ msgid "About Service"
 msgstr "O službě"
 
 msgid "About event"
-msgstr ""
+msgstr "O akci"
 
 msgid "About package"
-msgstr ""
+msgstr "O balíčku"
 
 msgid "About service"
-msgstr ""
+msgstr "O službě"
 
 msgid "About this Event"
 msgstr "Informace o akci"
 
 msgid "About this event"
-msgstr ""
+msgstr "O této akci"
 
 msgid "Accent"
-msgstr ""
+msgstr "Akcent"
 
 msgid "Accent text"
-msgstr ""
+msgstr "Text akcentu"
 
 msgid "Accept payments for bookings and services via PayPal."
 msgstr "Přijímat platby za rezervace a služby přes PayPal."
@@ -342,7 +342,7 @@ msgid "Accept payments via Razorpay, ideal for Indian businesses."
 msgstr "Přijímat platby přes Razorpay, ideální pro indické firmy."
 
 msgid "Access link"
-msgstr ""
+msgstr "Přístupový odkaz"
 
 msgid "Access link success"
 msgstr ""
@@ -378,7 +378,7 @@ msgid "Activation"
 msgstr "Aktivace"
 
 msgid "Activation settings"
-msgstr ""
+msgstr "Nastavení aktivace"
 
 msgid "Active"
 msgstr "Aktivní"
@@ -488,7 +488,7 @@ msgid "Add more Appointments"
 msgstr "Přidat další termíny"
 
 msgid "Add more appointments"
-msgstr ""
+msgstr "Přidat další termíny"
 
 msgid ""
 "Add multiple employees to your booking system, manage their schedules, and "
@@ -530,7 +530,7 @@ msgid "Add work hours"
 msgstr "Přidat pracovní hodiny"
 
 msgid "Additional information"
-msgstr ""
+msgstr "Dodatečné informace"
 
 msgid "Additional people"
 msgstr "Další osoby"
@@ -542,7 +542,7 @@ msgid "Admin"
 msgstr "Správce"
 
 msgid "Advanced"
-msgstr ""
+msgstr "Pokročilé"
 
 msgid "After"
 msgstr "Po"
@@ -559,10 +559,10 @@ msgid "Agencies"
 msgstr "Agentury"
 
 msgid "Alert content"
-msgstr ""
+msgstr "Obsah upozornění"
 
 msgid "Alert message"
-msgstr ""
+msgstr "Zpráva upozornění"
 
 msgid "All"
 msgstr "Vše"
@@ -610,7 +610,7 @@ msgid "All services"
 msgstr "Všechny služby"
 
 msgid "All services are booked separately"
-msgstr ""
+msgstr "Všechny služby jsou rezervovány samostatně"
 
 msgid "All services are booked separately."
 msgstr "Všechny služby jsou rezervovány samostatně."
@@ -837,7 +837,7 @@ msgid "Apple Calendar (Personal)"
 msgstr "Kalendář Apple (osobní)"
 
 msgid "Apple Calendar setup"
-msgstr ""
+msgstr "Nastavení kalendáře Apple"
 
 msgid "Application (client) ID"
 msgstr "ID aplikace (uživatelské)"
@@ -900,7 +900,7 @@ msgid "Appointment can't be rescheduled"
 msgstr "Termín nemůže být přeplánován"
 
 msgid "Appointment canceled"
-msgstr ""
+msgstr "Termín zrušen"
 
 msgid "Appointment date"
 msgstr "Datum termínu"
@@ -975,7 +975,7 @@ msgid "Appointment price"
 msgstr "Cena rezervace"
 
 msgid "Appointment repeats"
-msgstr ""
+msgstr "Termín se opakuje"
 
 msgid "Appointment space name"
 msgstr "Název prostoru rezervace"
@@ -1305,10 +1305,10 @@ msgid "Available"
 msgstr "K dispozici"
 
 msgid "Available date background"
-msgstr ""
+msgstr "Dostupné pozadí datumu"
 
 msgid "Available date text"
-msgstr ""
+msgstr "Dostupuný text datumu"
 
 msgid "Available from Pro license"
 msgstr "Dostupné od licence Pro"
@@ -1330,7 +1330,7 @@ msgid ""
 "or tools"
 msgstr ""
 "Vyhněte se překrývajícím se rezervacím automatickou koordinací sdílených "
-"místností, vybavení nebo nástrojů."
+"místností, vybavení nebo nástrojů"
 
 msgid "Away"
 msgstr "Pryč"
@@ -1342,7 +1342,7 @@ msgid "Back"
 msgstr "Zpět"
 
 msgid "Back button"
-msgstr ""
+msgstr "Tlačítko Zpět"
 
 msgid "Back to"
 msgstr "Zpět na"
@@ -1360,7 +1360,7 @@ msgid "Backend"
 msgstr "Administrace"
 
 msgid "Background"
-msgstr ""
+msgstr "Pozadí"
 
 msgid "Background Color"
 msgstr "Barva pozadí"
@@ -1384,7 +1384,7 @@ msgid "Badge label"
 msgstr "Popisek štítku"
 
 msgid "Badges setup"
-msgstr ""
+msgstr "Nastavení štítků"
 
 msgid "Balance"
 msgstr "Zůstatek"
@@ -1396,7 +1396,7 @@ msgid "Base Price:"
 msgstr "Základní cena:"
 
 msgid "Basic"
-msgstr ""
+msgstr "Základní"
 
 msgid "Beauty"
 msgstr "Krása"
@@ -1448,7 +1448,7 @@ msgid "Blog"
 msgstr ""
 
 msgid "Body text"
-msgstr ""
+msgstr "Text"
 
 msgid "Book"
 msgstr "Rezervovat"
@@ -1484,10 +1484,10 @@ msgid "Book now"
 msgstr "Rezervovat ihned"
 
 msgid "Book option on employee dialog"
-msgstr ""
+msgstr "Rezervovat možnost v dialogu pracovníka"
 
 msgid "Book package"
-msgstr ""
+msgstr "Rezervovat balíček"
 
 msgid "Book subtab name"
 msgstr "Název podzáložky Rezervovat"
@@ -1496,7 +1496,7 @@ msgid "Book this event"
 msgstr "Rezervovat akci"
 
 msgid "Book this service"
-msgstr ""
+msgstr "Rezervovat tuto službu"
 
 msgid "Booked"
 msgstr "Rezervováno"
@@ -1661,7 +1661,7 @@ msgstr ""
 "manuálních činností."
 
 msgid "Border color"
-msgstr ""
+msgstr "Barva okraje"
 
 msgid "Break Hours"
 msgstr "Hodiny volna"
@@ -1673,7 +1673,7 @@ msgid "Bringing Anyone With You"
 msgstr "Berete někoho sebou"
 
 msgid "Bringing anyone with you"
-msgstr ""
+msgstr "Berete někoho sebou"
 
 msgid "Bringing anyone with you?"
 msgstr "Berete někoho sebou?"
@@ -1718,16 +1718,16 @@ msgid "Busy"
 msgstr "Zaneprázdněný"
 
 msgid "Busy slots"
-msgstr ""
+msgstr "Obsazené sloty"
 
 msgid "Button"
-msgstr ""
+msgstr "Tlačítko"
 
 msgid "Button Type"
 msgstr "Typ tlačítka"
 
 msgid "Button style"
-msgstr ""
+msgstr "Styl tlačítka"
 
 msgid "Buttons"
 msgstr "Tlačítka"
@@ -1783,13 +1783,13 @@ msgid "Cancel and Delete"
 msgstr "Zrušit a smazat"
 
 msgid "Cancel appointment"
-msgstr ""
+msgstr "Zrušit rezervaci"
 
 msgid "Cancel appointment link"
 msgstr "Odkaz Zrušit termín"
 
 msgid "Cancel event"
-msgstr ""
+msgstr "Zrušit akci"
 
 msgid "Cancel event link"
 msgstr "Odkaz Zrušit akci"
@@ -1798,7 +1798,7 @@ msgid "Cancel following"
 msgstr "Zrušit následující"
 
 msgid "Cancel package"
-msgstr ""
+msgstr "Zrušit balíček"
 
 msgid "Canceled"
 msgstr "Zrušeno"
@@ -1828,13 +1828,13 @@ msgid "Card"
 msgstr "Karta"
 
 msgid "Card color"
-msgstr ""
+msgstr "Barva karty"
 
 msgid "Card content"
-msgstr ""
+msgstr "Obsah karty"
 
 msgid "Card field"
-msgstr ""
+msgstr "Pole karty"
 
 msgid "Card number"
 msgstr "Číslo karty"
@@ -1846,7 +1846,7 @@ msgid "Cards"
 msgstr "Karty"
 
 msgid "Cards and buttons"
-msgstr ""
+msgstr "Karty a tlačítka"
 
 msgid "Carrier:"
 msgstr "Nositel:"
@@ -1885,7 +1885,7 @@ msgid "Categories positions updated successfully."
 msgstr "Pozice kategorií byly úspěšně aktualizovány."
 
 msgid "Categories sidebar"
-msgstr ""
+msgstr "Postranní panel kategorií"
 
 msgid "Category"
 msgstr "Kategorie"
@@ -1921,7 +1921,7 @@ msgid "Change Password"
 msgstr "Změnit heslo"
 
 msgid "Change colors"
-msgstr ""
+msgstr "Změnit barvy"
 
 msgid "Change group status"
 msgstr "Změnit stav skupinového termínu"
@@ -2029,7 +2029,7 @@ msgid "Choose a group service"
 msgstr "Zvolte skupinovou službu"
 
 msgid "Choose date and time"
-msgstr ""
+msgstr "Zvolte datum a čas"
 
 msgid ""
 "Choose how Amelia suggests an alternative date when the selected recurring "
@@ -2243,7 +2243,7 @@ msgid "Configure the recurring appointments details placeholder."
 msgstr "Nastavit zástupný text podrobností pravidelných termínů."
 
 msgid "Configure waiting list for appointments"
-msgstr ""
+msgstr "Nastavit čekací listinu termínů"
 
 msgid "Confirm"
 msgstr "Potvrdit"
@@ -2351,7 +2351,7 @@ msgid "Consulting"
 msgstr "Konzultace"
 
 msgid "Contact message"
-msgstr ""
+msgstr "Kontaktní zpráva"
 
 msgid "Contact support."
 msgstr "Kontaktovat podporu."
@@ -2363,7 +2363,7 @@ msgid "Content Text Color"
 msgstr "Barva textu obsahu"
 
 msgid "Content area"
-msgstr ""
+msgstr "Oblast obsahu"
 
 msgid "Content placeholders"
 msgstr "Zástupné texty obsahu"
@@ -2444,7 +2444,7 @@ msgid "Coupon code"
 msgstr "Slevový kód"
 
 msgid "Coupon field"
-msgstr ""
+msgstr "Pole slevového kódu"
 
 msgid "Coupon has been created."
 msgstr "Slevový kód byl vytvořen."
@@ -2462,13 +2462,13 @@ msgid "Coupon is now visible."
 msgstr "Slevový kód je nyní viditelný."
 
 msgid "Coupon limit reached"
-msgstr ""
+msgstr "Počet uplatnění slevového kódu dosažen"
 
 msgid "Coupon needs to have discount or deduction"
 msgstr "Slevový kód musí obsahovat slevu nebo odečet"
 
 msgid "Coupon segment"
-msgstr ""
+msgstr "Segment slevového kódu"
 
 msgid "Coupons"
 msgstr "Slevové kódy"
@@ -2477,7 +2477,7 @@ msgid "Coupons overview"
 msgstr "Přehled slevových kódů"
 
 msgid "Coupons setup"
-msgstr ""
+msgstr "Nastavení slevových kódů"
 
 msgid "Create Amelia Customers"
 msgstr "Založit zákazníka Amelia"
@@ -2617,7 +2617,7 @@ msgid "Custom currency symbol"
 msgstr "Vlastní symbol měny"
 
 msgid "Custom field"
-msgstr ""
+msgstr "Vlastní pole"
 
 msgid "Custom field has been added"
 msgstr "Vlastní pole bylo přidáno"
@@ -2638,10 +2638,10 @@ msgid "Custom fields have been updated."
 msgstr "Vlastní pole byla aktualizována."
 
 msgid "Custom fields setup"
-msgstr ""
+msgstr "Nastavení vlastních polí"
 
 msgid "Custom font family"
-msgstr ""
+msgstr "Vlastní rodina písma"
 
 msgid "Custom notification"
 msgstr "Vlastní upozornění"
@@ -2692,7 +2692,7 @@ msgid "Customer email"
 msgstr "Email zákazníka"
 
 msgid "Customer filter"
-msgstr ""
+msgstr "Filtr zákazníka"
 
 msgid "Customer first name"
 msgstr "Jméno zákazníka"
@@ -2719,7 +2719,7 @@ msgid "Customer has been updated."
 msgstr "Zákazník byl aktualizován."
 
 msgid "Customer information"
-msgstr ""
+msgstr "Informace o zákazníkovi"
 
 msgid "Customer last name"
 msgstr "Příjmení zákazníka"
@@ -2734,7 +2734,7 @@ msgid "Customer note has been updated."
 msgstr "Poznámka o zákazníkovi byla aktualizována."
 
 msgid "Customer panel"
-msgstr ""
+msgstr "Panel zákazníka"
 
 msgid "Customer panel access link"
 msgstr "Přístupový odkaz na panel zákazníka"
@@ -2794,7 +2794,7 @@ msgid ""
 "events, and customer records"
 msgstr ""
 "Upravte každou interakci sběrem správných údajů o službách, akcích a "
-"záznamech zákazníků."
+"záznamech zákazníků"
 
 msgid ""
 "Customize offerings to match specific services and meet diverse client needs"
@@ -2808,10 +2808,10 @@ msgid "Daily occupancy"
 msgstr "Denní obsazenost"
 
 msgid "Danger button background color"
-msgstr ""
+msgstr "Barva pozadí tlačítka Nebezpečí"
 
 msgid "Danger button text color"
-msgstr ""
+msgstr "Barva textu tlačítka Nebezpečí"
 
 msgid "Dark Theme"
 msgstr "Tmavé zobrazení"
@@ -2862,7 +2862,7 @@ msgid "Date and Time"
 msgstr "Datum a čas"
 
 msgid "Date and time"
-msgstr ""
+msgstr "Datum a čas"
 
 msgid "Date of Birth"
 msgstr "Datum narození"
@@ -3028,7 +3028,7 @@ msgid ""
 "connected account"
 msgstr ""
 "Stanovte, která oprávnění budou vyžadována při vytváření účtu připojeného k "
-"Express."
+"Express"
 
 msgid ""
 "Defines the language used for notifications sent to this customer for "
@@ -3072,7 +3072,7 @@ msgid "Delete coupon"
 msgstr "Smazat slevový kód"
 
 msgid "Delete custom field"
-msgstr ""
+msgstr "Smazat vlastní pole"
 
 msgid "Delete customer"
 msgstr "Smazat zákazníka"
@@ -3114,7 +3114,7 @@ msgid ""
 "available time slots"
 msgstr ""
 "Poskytněte plynulejší zážitek z rezervace tím, že zákazníkům zobrazíte pouze "
-"skutečné, dostupné časové sloty."
+"skutečné, dostupné časové sloty"
 
 msgid ""
 "Deliver personalized messages tailored to your business tone, branding, and "
@@ -3293,7 +3293,7 @@ msgid "Download .csv"
 msgstr "Stáhnout .csv"
 
 msgid "Download invoice"
-msgstr ""
+msgstr "Stáhnout fakturu"
 
 msgid ""
 "Download your customer list instantly for reporting, marketing, or external "
@@ -3538,7 +3538,7 @@ msgid "Email Address"
 msgstr "Email"
 
 msgid "Email address"
-msgstr ""
+msgstr "Emailová adresa"
 
 msgid "Email already exists with different name. Please check your name."
 msgstr ""
@@ -3600,19 +3600,19 @@ msgid "Employee description"
 msgstr "Popis pracovníka"
 
 msgid "Employee description popup"
-msgstr ""
+msgstr "Vyskakovací okno popisu pracovníka"
 
 msgid "Employee details"
 msgstr "Údaje o pracovníkovi"
 
 msgid "Employee dialog"
-msgstr ""
+msgstr "Dialog pracovníka"
 
 msgid "Employee email"
 msgstr "Email pracovníka"
 
 msgid "Employee filter"
-msgstr ""
+msgstr "Filtr pracovníka"
 
 msgid "Employee first name"
 msgstr "Jméno pracovníka"
@@ -3651,7 +3651,7 @@ msgid "Employee note has been updated."
 msgstr "Poznámka o pracovníkovi byla aktualizována."
 
 msgid "Employee panel"
-msgstr ""
+msgstr "Panel pracovníka"
 
 msgid "Employee panel access link"
 msgstr "Odkaz na panel pracovníka"
@@ -3669,13 +3669,13 @@ msgid "Employee phone"
 msgstr "Telefon pracovníka"
 
 msgid "Employee price"
-msgstr ""
+msgstr "Cena pracovníka"
 
 msgid "Employee profile"
-msgstr ""
+msgstr "Profil pracovníka"
 
 msgid "Employee selection"
-msgstr ""
+msgstr "Výběr pracovníka"
 
 msgid "Employee selection logic"
 msgstr "Logika výběru pracovníka"
@@ -3690,7 +3690,7 @@ msgid "Empower your team with seamless integrations"
 msgstr "Umožněte svému týmu pracovat lépe díky integracím"
 
 msgid "Empty state"
-msgstr ""
+msgstr "Prázdný stav"
 
 msgid "Enable"
 msgstr "Povolit"
@@ -3783,7 +3783,7 @@ msgid ""
 "duration in the booking process"
 msgstr ""
 "Zaškrtněte, pokud chcete, aby v průběhu rezervace délka kroku časového okna "
-"odpovídala délce služby."
+"odpovídala délce služby"
 
 msgid ""
 "Enable this option if you want to send ics file in email after approved "
@@ -3893,6 +3893,8 @@ msgid ""
 "Enable this option to use this custom field as the location in Google and "
 "Outlook Calendar events, ICS files, and ‘Add to Calendar’ events."
 msgstr ""
+"Zaškrtněte pro použití tohoto vlastního pole jako lokalita v událostech "
+"kalendáře Google a Outlook, souborech ICS a událostech „Přidat do kalendáře“."
 
 msgid "Enable to display booking slots based on the client's time zone."
 msgstr ""
@@ -3950,14 +3952,14 @@ msgid ""
 "offers"
 msgstr ""
 "Posilujte loajalitu zákazníků tím, že je odměníte exkluzivními, "
-"personalizovanými nabídkami."
+"personalizovanými nabídkami"
 
 msgid ""
 "Enhance flexibility with customer information ready for marketing tools or "
 "external platforms"
 msgstr ""
 "Zvyšte flexibilitu díky zákaznickým informacím připraveným pro marketingové "
-"nástroje nebo externí platformy."
+"nástroje nebo externí platformy"
 
 msgid ""
 "Enhance the customer experience with clear, intuitive forms designed around "
@@ -3976,7 +3978,7 @@ msgstr ""
 msgid "Ensure accurate billing by applying the correct tax rates every time"
 msgstr ""
 "Zajistěte správné účtování tím, že při každé transakci použijete "
-"odpovídající daňové sazby."
+"odpovídající daňové sazby"
 
 msgid "Ensure accurate bookkeeping with clear, organized financial data"
 msgstr ""
@@ -4083,7 +4085,7 @@ msgid "Error while generating CSV."
 msgstr "Chyba při generování souboru CSV."
 
 msgid "Estimated price"
-msgstr ""
+msgstr "Odhadovaná cena"
 
 msgid "Event"
 msgstr "Akce"
@@ -4162,7 +4164,7 @@ msgid "Event Type"
 msgstr "Typ akce"
 
 msgid "Event available"
-msgstr ""
+msgstr "Akce k dispozici"
 
 msgid "Event booking has been created."
 msgstr "Rezervace akce byla vytvořena."
@@ -4180,7 +4182,7 @@ msgid "Event calendar booking from"
 msgstr "Rezervační formulář kalendáře akcí"
 
 msgid "Event card"
-msgstr ""
+msgstr "Karta akce"
 
 msgid "Event date & time period"
 msgstr "Datum a čas období akce"
@@ -4225,10 +4227,10 @@ msgid "Event e-ticket"
 msgstr "E-vstupenka na akci"
 
 msgid "Event employee"
-msgstr ""
+msgstr "Pracovník akce"
 
 msgid "Event employees"
-msgstr ""
+msgstr "Pracovníci akce"
 
 msgid "Event end date"
 msgstr "Datum ukončení akce"
@@ -4240,13 +4242,13 @@ msgid "Event end time"
 msgstr "Čas ukončení akce"
 
 msgid "Event ends"
-msgstr ""
+msgstr "Akce končí"
 
 msgid "Event filter"
-msgstr ""
+msgstr "Filtr akce"
 
 msgid "Event gallery"
-msgstr ""
+msgstr "Galerie akce"
 
 msgid "Event has been canceled"
 msgstr "Akce byla zrušena"
@@ -4279,7 +4281,7 @@ msgid "Event has been updated."
 msgstr "Akce byla aktualizována."
 
 msgid "Event info"
-msgstr ""
+msgstr "Informace o akci"
 
 msgid "Event initial start date"
 msgstr "Prvotní datum začátku akce"
@@ -4300,7 +4302,7 @@ msgid "Event price"
 msgstr "Cena akce"
 
 msgid "Event slots capacity"
-msgstr ""
+msgstr "Kapacita slotů akce"
 
 msgid "Event space name"
 msgstr "Název prostoru akce"
@@ -4318,10 +4320,10 @@ msgid "Event start time"
 msgstr "Čas zahájení akce"
 
 msgid "Event starts"
-msgstr ""
+msgstr "Akce začíná"
 
 msgid "Event status"
-msgstr ""
+msgstr "Status akce"
 
 msgid "Event ticketing"
 msgstr "Vstupenky na akci"
@@ -4336,7 +4338,7 @@ msgid "Event title and description"
 msgstr "Název a popis akce"
 
 msgid "Event type"
-msgstr ""
+msgstr "Typ akce"
 
 msgid "Events"
 msgstr "Akce"
@@ -4354,16 +4356,16 @@ msgid "Events List Booking"
 msgstr "Rezervační formulář seznamu akcí"
 
 msgid "Events available"
-msgstr ""
+msgstr "Akce k dispozici"
 
 msgid "Events calendar"
-msgstr ""
+msgstr "Kalendář akcí"
 
 msgid "Events custom pricing"
-msgstr ""
+msgstr "Vlastní ceník akcí"
 
 msgid "Events list"
-msgstr ""
+msgstr "Seznam akcí"
 
 msgid "Events list view"
 msgstr "Zobrazení seznamu akcí"
@@ -4372,7 +4374,7 @@ msgid "Events pricing"
 msgstr "Ceník akcí"
 
 msgid "Events setup"
-msgstr ""
+msgstr "Nastavení akcí"
 
 msgid "Events waiting list"
 msgstr "Čekací listina akcí"
@@ -4470,10 +4472,10 @@ msgid "Extras available"
 msgstr "Dostupné doplňky"
 
 msgid "Extras cost:"
-msgstr ""
+msgstr "Cena Extras:"
 
 msgid "Extras subtotal"
-msgstr ""
+msgstr "Mezisoučet doplňků"
 
 msgid "Extras total price"
 msgstr "Celková cena za doplňky"
@@ -4533,7 +4535,7 @@ msgid "Field Order"
 msgstr "Objednávka"
 
 msgid "Field order"
-msgstr ""
+msgstr "Pořadí polí"
 
 msgid "Field order, mandatory fields, labels and display options"
 msgstr "Pořadí polí, povinná pole, popisky a volby zobrazení"
@@ -4554,10 +4556,10 @@ msgid "Filter by Location"
 msgstr "Filtrovat podle místa"
 
 msgid "Filter by employee"
-msgstr ""
+msgstr "Filtrovat podle pracovníka"
 
 msgid "Filter by location"
-msgstr ""
+msgstr "Filtrovat podle místa"
 
 msgid "Filterable Field:"
 msgstr "Filtrovatelné pole:"
@@ -4566,7 +4568,7 @@ msgid "Filters"
 msgstr "Filtry"
 
 msgid "Filters block"
-msgstr ""
+msgstr "Blok filtrů"
 
 msgid "Finance"
 msgstr ""
@@ -4616,7 +4618,7 @@ msgid ""
 "discounts"
 msgstr ""
 "Flexibilní cenová politika vám umožňuje nastavit pevnou cenu balíčku a "
-"nabízet atraktivní slevy."
+"nabízet atraktivní slevy"
 
 msgid "Follow up"
 msgstr "Následná aktivita"
@@ -4628,7 +4630,7 @@ msgid "Font URL"
 msgstr "URL písma"
 
 msgid "Font family"
-msgstr ""
+msgstr "Rodina písma"
 
 msgid "Fonts"
 msgstr "Písmo"
@@ -4640,10 +4642,10 @@ msgid "Footer"
 msgstr "Zápatí"
 
 msgid "Footer buttons"
-msgstr ""
+msgstr "Tlačítka zápatí"
 
 msgid "Footer content"
-msgstr ""
+msgstr "Obsah zápatí"
 
 msgid "For multiselect: hold CTRL / Command (⌘)."
 msgstr "Pro několikanásobný výběr: podržte CTRL / Command (⌘)."
@@ -4674,7 +4676,7 @@ msgid "Form colors"
 msgstr "Barvy formulářů"
 
 msgid "Forms"
-msgstr ""
+msgstr "Formuláře"
 
 msgid "Fourth"
 msgstr "Čtvrtý"
@@ -4789,7 +4791,7 @@ msgid "Get in Touch"
 msgstr "Kontaktujte nás"
 
 msgid "Get in touch"
-msgstr ""
+msgstr "Kontaktujte nás"
 
 msgid "Global Settings"
 msgstr "Obecné nastavení"
@@ -4805,10 +4807,10 @@ msgid "Go Back"
 msgstr "Zpět"
 
 msgid "Go back"
-msgstr ""
+msgstr "Vrátit se"
 
 msgid "Go to Catalog form"
-msgstr ""
+msgstr "Jít na Katalogový formulář"
 
 msgid "Go to Custom Fields"
 msgstr "Přejít na Informace/vlastní pole"
@@ -4817,7 +4819,7 @@ msgid "Go to Notifications"
 msgstr "Přejít na Upozornění"
 
 msgid "Go to Step-by-step form"
-msgstr ""
+msgstr "Jít na Formulář krok za krokem"
 
 msgid "Google"
 msgstr ""
@@ -4829,16 +4831,16 @@ msgid "Google Analytics"
 msgstr ""
 
 msgid "Google Analytics setup"
-msgstr ""
+msgstr "Nastavení Google Analytics"
 
 msgid "Google Calendar"
 msgstr "Kalendář Google"
 
 msgid "Google Calendar & Google Meet"
-msgstr ""
+msgstr "Google kalendář & Google Meet"
 
 msgid "Google Calendar setup"
-msgstr ""
+msgstr "Nastavení kalendáře Google"
 
 msgid "Google Map API key"
 msgstr ""
@@ -4857,7 +4859,7 @@ msgid "Google Meet join link"
 msgstr "Odkaz Google Meet"
 
 msgid "Google Meet link"
-msgstr ""
+msgstr "Odkaz na Google Meet"
 
 msgid "Google Meet setup"
 msgstr "Nastavení Google Meet"
@@ -4917,14 +4919,17 @@ msgstr ""
 msgid "Header"
 msgstr "Záhlaví"
 
+msgid "Heading"
+msgstr "Nadpis"
+
 msgid "Heading Text Color"
 msgstr "Barva nadpisu"
 
 msgid "Heading content"
-msgstr ""
+msgstr "Obsah nadpisu"
 
 msgid "Heading title"
-msgstr ""
+msgstr "Název nadpisu"
 
 msgid "Healthcare"
 msgstr "Zdravotnické služby"
@@ -5055,10 +5060,10 @@ msgid "Hide tips & suggestions"
 msgstr "Skrýt tipy & návrhy"
 
 msgid "Higher price background"
-msgstr ""
+msgstr "Pozadí Vyšší cena"
 
 msgid "Higher price text"
-msgstr ""
+msgstr "Text Vyšší cena"
 
 msgid "Highest price"
 msgstr "Nejvyšší cena"
@@ -5272,13 +5277,13 @@ msgstr ""
 "bude mu založen Amelia zákaznický účet a zaslán email s přihlašovacími údaji."
 
 msgid "Image"
-msgstr ""
+msgstr "Obrázek"
 
 msgid "Image Color"
 msgstr "Barva obrázku"
 
 msgid "Image thumbs"
-msgstr ""
+msgstr "Náhledy obrázku"
 
 msgid "Import"
 msgstr "Importovat"
@@ -5343,7 +5348,7 @@ msgid "In Package"
 msgstr "V balíčku"
 
 msgid "In package"
-msgstr ""
+msgstr "V balíčku"
 
 msgid "Incl. VAT"
 msgstr "Vč. DPH"
@@ -5420,10 +5425,10 @@ msgid "Input Text Color"
 msgstr "Barva textu vstupu"
 
 msgid "Input field"
-msgstr ""
+msgstr "Vstupní pole"
 
 msgid "Input fields"
-msgstr ""
+msgstr "Vstupní pole"
 
 msgid "Insert Amelia Booking Shortcode"
 msgstr "Vložit Amelia shortcode"
@@ -5480,7 +5485,7 @@ msgid "Invoices"
 msgstr "Faktury"
 
 msgid "Invoices setup"
-msgstr ""
+msgstr "Nastavení faktur"
 
 msgid "Issued"
 msgstr "Vydáno"
@@ -5510,7 +5515,7 @@ msgid "Item"
 msgstr "Položka"
 
 msgid "Item status"
-msgstr ""
+msgstr "Stav položky"
 
 msgid "Jane Doe"
 msgstr "Jana Nováková"
@@ -5565,7 +5570,7 @@ msgid ""
 "confusion"
 msgstr ""
 "Udržujte všechny v obraze pomocí naplánovaných připomínek, které snižují "
-"počet neomluvených absencí a mýlku."
+"počet neomluvených absencí a mýlku"
 
 msgid ""
 "Keep operations aligned with unified settings, availability, and resource "
@@ -5594,7 +5599,7 @@ msgid "Language"
 msgstr "Jazyk"
 
 msgid "Languages"
-msgstr ""
+msgstr "Jazyky"
 
 msgid "Last"
 msgstr "Poslední"
@@ -5760,10 +5765,10 @@ msgid "Local Time:"
 msgstr "Místní čas:"
 
 msgid "Local time"
-msgstr ""
+msgstr "Místní čas"
 
 msgid "Local time:"
-msgstr ""
+msgstr "Místní čas:"
 
 msgid "Location"
 msgstr "Místo"
@@ -5796,7 +5801,7 @@ msgid "Location details"
 msgstr "Podrobnosti o místě"
 
 msgid "Location filter"
-msgstr ""
+msgstr "Filtr místa"
 
 msgid "Location has been added."
 msgstr "Místo bylo přidáno."
@@ -5829,7 +5834,7 @@ msgid "Location phone"
 msgstr "Telefon místa"
 
 msgid "Location selection"
-msgstr ""
+msgstr "Výběr místa"
 
 msgid "Locations"
 msgstr "Místa"
@@ -5856,10 +5861,10 @@ msgid "Longitude"
 msgstr "Zeměpisná délka"
 
 msgid "Lower price background"
-msgstr ""
+msgstr "Pozadí Nižší cena"
 
 msgid "Lower price text"
-msgstr ""
+msgstr "Text Nižší cena"
 
 msgid "Lowest price"
 msgstr "Nejnižší cena"
@@ -5886,10 +5891,10 @@ msgid "Mailgun Domain"
 msgstr "Doména Mailgun"
 
 msgid "Main category button"
-msgstr ""
+msgstr "Tlačítko hlavní kategorie"
 
 msgid "Main content"
-msgstr ""
+msgstr "Hlavní obsah"
 
 msgid ""
 "Maintain consistent scheduling with customizable frequencies and patterns"
@@ -5903,7 +5908,7 @@ msgid "Male"
 msgstr "Muž"
 
 msgid "Manage badges"
-msgstr ""
+msgstr "Nastavení štítků"
 
 msgid "Manage bookings"
 msgstr "Spravovat rezervace"
@@ -6014,7 +6019,7 @@ msgid ""
 "setting the “Auto-reply” message"
 msgstr ""
 "Zprávy odeslané přes WhatsApp nemají možnost odpovědi, proto doporučujeme "
-"nastavit zprávu „Automatická odpověď“."
+"nastavit zprávu „Automatická odpověď“"
 
 msgid "Meta"
 msgstr ""
@@ -6131,7 +6136,7 @@ msgid "Multiple Locations"
 msgstr "Více míst"
 
 msgid "Multiple locations"
-msgstr ""
+msgstr "Více míst"
 
 msgid "Multiple packages purchased."
 msgstr "Zakoupeno více balíčků."
@@ -6152,7 +6157,7 @@ msgid "My Profile"
 msgstr "Můj profil"
 
 msgid "My profile"
-msgstr ""
+msgstr "Můj profil"
 
 msgid "Name"
 msgstr "Název"
@@ -6185,7 +6190,7 @@ msgid "Need additional fields?"
 msgstr "Potřebujete další pole?"
 
 msgid "Need help?"
-msgstr ""
+msgstr "Potřebujete pomoc?"
 
 msgid "Need to update your company's days off?"
 msgstr "Potřebujete aktualizovat dny volna ve vaší společnosti?"
@@ -6536,13 +6541,13 @@ msgid "Number of people"
 msgstr "Počet osob"
 
 msgid "Number of people on waiting list"
-msgstr ""
+msgstr "Počet osob na čekací listině"
 
 msgid "Number of people that are coming with you."
 msgstr "Počet osob, kteří jdou s vámi."
 
 msgid "Number of recurrences:"
-msgstr ""
+msgstr "Počet opakování:"
 
 msgid "Number of tickets"
 msgstr "Počet vstupenek"
@@ -6819,13 +6824,13 @@ msgid "Outlook Calendar"
 msgstr "Outlook kalendář"
 
 msgid "Outlook Calendar & Microsoft Teams"
-msgstr ""
+msgstr "Outlook kalendář & Microsoft Teams"
 
 msgid "Outlook Calendar WP hooks"
 msgstr ""
 
 msgid "Outlook Calendar setup"
-msgstr ""
+msgstr "Nastavení kalendáře Outlook"
 
 msgid "Outlook Mailer"
 msgstr ""
@@ -6883,13 +6888,13 @@ msgid "Package appointment has been updated."
 msgstr "Balíček termínů byl aktualizován."
 
 msgid "Package appointments"
-msgstr ""
+msgstr "Balíček termínů"
 
 msgid "Package appointments details"
 msgstr "Detaily balíčku termínů"
 
 msgid "Package badge"
-msgstr ""
+msgstr "Odznak balíčku"
 
 msgid "Package booking details"
 msgstr "Podrobnosti o rezervaci balíčku"
@@ -6910,13 +6915,13 @@ msgid "Package canceled"
 msgstr "Balíček zrušen"
 
 msgid "Package capacity"
-msgstr ""
+msgstr "Kapacita balíčku"
 
 msgid "Package category"
-msgstr ""
+msgstr "Kategorie balíčku"
 
 msgid "Package count"
-msgstr ""
+msgstr "Počet balíčku"
 
 msgid "Package deal"
 msgstr "Balíček"
@@ -6934,7 +6939,7 @@ msgid "Package duration"
 msgstr "Trvání balíčku"
 
 msgid "Package filter"
-msgstr ""
+msgstr "Filtr balíčku"
 
 msgid "Package has been created."
 msgstr "Balíček byl vytvořen."
@@ -6952,13 +6957,13 @@ msgid "Package includes"
 msgstr "Balíček obsahuje"
 
 msgid "Package info"
-msgstr ""
+msgstr "Informace o balíčku"
 
 msgid "Package is now visible."
 msgstr "Balíček je nyní viditelný."
 
 msgid "Package location"
-msgstr ""
+msgstr "Místo balíčku"
 
 msgid "Package management"
 msgstr "Správa balíčků"
@@ -6967,7 +6972,7 @@ msgid "Package name"
 msgstr "Název balíčku"
 
 msgid "Package overview"
-msgstr ""
+msgstr "Přehled balíčku"
 
 msgid "Package price"
 msgstr "Cena balíčku"
@@ -6982,19 +6987,19 @@ msgid "Package rules and description"
 msgstr "Pravidla a popis balíčku"
 
 msgid "Package selection"
-msgstr ""
+msgstr "Výběr balíčku"
 
 msgid "Package services list"
-msgstr ""
+msgstr "Seznam služeb balíčku"
 
 msgid "Packages"
 msgstr "Balíčky"
 
 msgid "Packages appointments"
-msgstr ""
+msgstr "Termíny balíčků"
 
 msgid "Packages block"
-msgstr ""
+msgstr "Blok balíčků"
 
 msgid "Packages have been reordered."
 msgstr "Pořadí balíčků bylo změněno."
@@ -7003,7 +7008,7 @@ msgid "Packages overview"
 msgstr "Přehled balíčků"
 
 msgid "Packages popup"
-msgstr ""
+msgstr "Vyskakovací okno balíčků"
 
 msgid "Paddle"
 msgstr "Pádlo"
@@ -7012,19 +7017,19 @@ msgid "Page"
 msgstr "Stránka"
 
 msgid "Page card"
-msgstr ""
+msgstr "Karta stránky"
 
 msgid "Page content"
-msgstr ""
+msgstr "Obsah stránky"
 
 msgid "Page header"
-msgstr ""
+msgstr "Záhlaví stránky"
 
 msgid "Page messages"
-msgstr ""
+msgstr "Zprávy stránky"
 
 msgid "Page scroll"
-msgstr ""
+msgstr "Posouvání stránky"
 
 msgid "Paid"
 msgstr "Zaplaceno"
@@ -7200,13 +7205,13 @@ msgid "Payment protected by policy and powered by"
 msgstr "Platba chráněná zásadami a poháněná"
 
 msgid "Payment segment"
-msgstr ""
+msgstr "Platební segment"
 
 msgid "Payment status"
 msgstr "Stav platby"
 
 msgid "Payment summary"
-msgstr ""
+msgstr "Souhrn plateb"
 
 msgid "Payment type"
 msgstr "Typ platby"
@@ -7278,7 +7283,7 @@ msgid "Personal Information"
 msgstr "Osobní údaje"
 
 msgid "Personal information"
-msgstr ""
+msgstr "Osobní informace"
 
 msgid "Phone"
 msgstr "Telefon"
@@ -7334,7 +7339,7 @@ msgid "Placeholder copied to clipboard."
 msgstr "Zástupný text zkopírován do schránky."
 
 msgid "Placeholder text"
-msgstr ""
+msgstr "Zástupný text"
 
 msgid "Placeholders"
 msgstr "Zástupné texty"
@@ -7398,7 +7403,7 @@ msgid "Please enter a first name."
 msgstr "Zadejte jméno."
 
 msgid "Please enter a last name"
-msgstr ""
+msgstr "Zadejte příjmení"
 
 msgid "Please enter a live publishable key."
 msgstr "Zadejte live publishable key."
@@ -7615,7 +7620,7 @@ msgid "Please select a duration."
 msgstr "Zvolte dobu trvání."
 
 msgid "Please select a location"
-msgstr ""
+msgstr "Zvolte místo"
 
 msgid "Please select a location."
 msgstr "Zvolte místo."
@@ -7735,10 +7740,10 @@ msgid "Popup Heading"
 msgstr "Nadpis vyskakovacího okna"
 
 msgid "Popup buttons"
-msgstr ""
+msgstr "Tlačítka vyskakovacího okna"
 
 msgid "Popup title"
-msgstr ""
+msgstr "Název vyskakovacího okna"
 
 msgid "Preload entities when page loads"
 msgstr "Načíst entity při načtení stránky"
@@ -7779,7 +7784,7 @@ msgid "Preview Invoice"
 msgstr "Náhled faktury"
 
 msgid "Preview invoice"
-msgstr ""
+msgstr "Náhled faktury"
 
 msgid "Previous range"
 msgstr "Předchozí rozsah"
@@ -7803,7 +7808,7 @@ msgid "Price Descending"
 msgstr "Cena sestupně"
 
 msgid "Price indicators"
-msgstr ""
+msgstr "Indikátory ceny"
 
 msgid "Price number of decimals"
 msgstr "Počet desetinných míst ceny"
@@ -7824,7 +7829,7 @@ msgid "Pricing"
 msgstr "Ceník"
 
 msgid "Pricing & duration "
-msgstr "Ceník & doba"
+msgstr "Ceník & doba "
 
 msgid "Pricing by Date range"
 msgstr "Ceník podle období"
@@ -7857,13 +7862,13 @@ msgid "Primary and state colors"
 msgstr "Hlavní a stavové barvy"
 
 msgid "Primary button style"
-msgstr ""
+msgstr "Typ hlavního tlačítka"
 
 msgid "Primary color"
-msgstr ""
+msgstr "Hlavní barva"
 
 msgid "Primary text"
-msgstr ""
+msgstr "Hlavní text"
 
 msgid "Process payments easily with Square."
 msgstr "Zpracujte platby jednoduše se Square."
@@ -7902,7 +7907,7 @@ msgstr ""
 "potřebám vaší firmy."
 
 msgid "Publish"
-msgstr ""
+msgstr "Zveřejnit"
 
 msgid "Publish Form"
 msgstr "Zveřejnit formulář"
@@ -8011,7 +8016,7 @@ msgid "Recurring Summary"
 msgstr "Souhrn opakování"
 
 msgid "Recurring appointment"
-msgstr ""
+msgstr "Pravidelný termín"
 
 msgid "Recurring appointment payment"
 msgstr "Platba za pravidelný termín"
@@ -8020,7 +8025,7 @@ msgid "Recurring appointments"
 msgstr "Pravidelné termíny"
 
 msgid "Recurring appointments:"
-msgstr ""
+msgstr "Pravidelné termíny:"
 
 msgid "Recurring appointments details"
 msgstr "Detaily pravidelných termínů"
@@ -8038,13 +8043,13 @@ msgid "Recurring popup"
 msgstr "Vyskakovací okno opakování"
 
 msgid "Recurring summary"
-msgstr ""
+msgstr "Souhrn opakování"
 
 msgid "Red"
 msgstr "Červená"
 
 msgid "Redirect"
-msgstr ""
+msgstr "Přesměrování"
 
 msgid "Redirect URI"
 msgstr "URL přesměrování"
@@ -8117,7 +8122,7 @@ msgid "Remind me when my SMS balance is low"
 msgstr "Upozornit mě, pokud je můj SMS kredit nízký"
 
 msgid "Remove Apple Calendar busy slots"
-msgstr ""
+msgstr "Odstranit zaneprázdněné termíny z kalendáře Apple"
 
 msgid "Remove Attendee"
 msgstr "Odstranit účastníka"
@@ -8126,7 +8131,7 @@ msgid "Remove Google Calendar busy slots"
 msgstr "Odstranit zaneprázdněné termíny z kalendáře Google"
 
 msgid "Remove Outlook Calendar busy slots"
-msgstr ""
+msgstr "Odstranit zaneprázdněné termíny z kalendáře Outlook"
 
 msgid "Reorder Packages"
 msgstr "Změnit pořadí balíčků"
@@ -8174,7 +8179,7 @@ msgid "Repeat every year"
 msgstr "Opakovat každý rok"
 
 msgid "Repeat new password"
-msgstr ""
+msgstr "Zadejte znovu nové heslo"
 
 msgid "Repeat on"
 msgstr "Opakovat"
@@ -8204,7 +8209,7 @@ msgid "Reschedule"
 msgstr "Přeplánovat"
 
 msgid "Reschedule appointment"
-msgstr ""
+msgstr "Přeplánovat termín"
 
 msgid "Rescheduled"
 msgstr "Přeplánováno"
@@ -8336,7 +8341,7 @@ msgid "Save Special Day"
 msgstr "Uložit mimořádný den"
 
 msgid "Save changes"
-msgstr ""
+msgstr "Uložit změny"
 
 msgid "Save time and reduce manual work with instant, auto-generated invoices"
 msgstr ""
@@ -8346,7 +8351,7 @@ msgstr ""
 msgid ""
 "Save time by automating repeating events instead of creating them manually"
 msgstr ""
-"Ušetřete čas automatizací pravidelných akcí místo jejich ručního vytváření."
+"Ušetřete čas automatizací pravidelných akcí místo jejich ručního vytváření"
 
 msgid "Save time with fast, one-click appointment exports"
 msgstr "Ušetřete čas rychlým exportem termínů na jedno kliknutí"
@@ -8442,7 +8447,7 @@ msgid "Search for Events"
 msgstr "Vyhledat akce"
 
 msgid "Search for events"
-msgstr ""
+msgstr "Vyhledat akce"
 
 msgid "Search integrations"
 msgstr "Vyhledat integrace"
@@ -8469,19 +8474,19 @@ msgid "Second {day}"
 msgstr "Druhý {day}"
 
 msgid "Secondary"
-msgstr ""
+msgstr "Vedlejší"
 
 msgid "Secondary Button Type"
 msgstr "Typ sekundárního tlačítka"
 
 msgid "Secondary button style"
-msgstr ""
+msgstr "Styl vedlejšího tlačítka"
 
 msgid "Secondary color"
-msgstr ""
+msgstr "Vedlejší barva"
 
 msgid "Secondary text"
-msgstr ""
+msgstr "Vedlejší text"
 
 msgid "Secret key (POSKey)"
 msgstr "Tajný klíč (POSKey)"
@@ -8589,7 +8594,7 @@ msgid "Select customer, employee and service"
 msgstr "Zvolte zákazníka, pracovníka a službu"
 
 msgid "Select date"
-msgstr ""
+msgstr "Zvolte datum"
 
 msgid "Select date and time"
 msgstr "Zvolte datum a čas"
@@ -8654,6 +8659,9 @@ msgid ""
 "Select the employee who will be added as the organizer of the Google/Outlook/"
 "Apple Calendar event. Employees selected under Staff will be added as guests."
 msgstr ""
+"Zvolte pracovníka, který bude nastaven jako organizátor události v kalendáři "
+"Google/Outlook/Apple. Ostatní pracovníci vybraní v sekci Personál budou "
+"přidáni jako hosté."
 
 msgid "Select the events this coupon can be used for."
 msgstr "Vyberte akce, pro které lze slevový kód použít."
@@ -8675,7 +8683,7 @@ msgid "Select this employee"
 msgstr "Zvolte tohoto pracovníka"
 
 msgid "Select tickets"
-msgstr ""
+msgstr "Vybrat vstupenky"
 
 msgid "Select your Square Location"
 msgstr "Zvolte své místo Square"
@@ -8687,10 +8695,10 @@ msgid "Selected Customers"
 msgstr "Vybraní zákazníci"
 
 msgid "Selected date background"
-msgstr ""
+msgstr "Pozadí vybraného datumu"
 
 msgid "Selected date text"
-msgstr ""
+msgstr "Text vybraného datumu"
 
 msgid "Selected extras"
 msgstr "Vybrané doplňky"
@@ -8720,7 +8728,7 @@ msgid "Send Reset Link"
 msgstr "Odeslat odkaz pro resetování"
 
 msgid "Send access link"
-msgstr ""
+msgstr "Zaslat přístupový odkaz"
 
 msgid "Send after appointment"
 msgstr "Poslat po termínu"
@@ -8825,16 +8833,16 @@ msgid "Service Subtotal"
 msgstr "Mezisoučet služeb"
 
 msgid "Service badge"
-msgstr ""
+msgstr "Odznak služby"
 
 msgid "Service capacity"
-msgstr ""
+msgstr "Kapacita služby"
 
 msgid "Service category"
-msgstr ""
+msgstr "Kategorie služby"
 
 msgid "Service count"
-msgstr ""
+msgstr "Počet služby"
 
 msgid "Service description"
 msgstr "Popis služby"
@@ -8849,7 +8857,7 @@ msgid "Service employees list"
 msgstr "Seznam pracovníků služeb"
 
 msgid "Service filter"
-msgstr ""
+msgstr "Filtr služby"
 
 msgid "Service has been added."
 msgstr "Služba byla přidána."
@@ -8873,7 +8881,7 @@ msgid "Service is now visible."
 msgstr "Služba je nyní viditelná."
 
 msgid "Service location"
-msgstr ""
+msgstr "Místo služby"
 
 msgid "Service name"
 msgstr "Název služby"
@@ -8891,10 +8899,10 @@ msgid "Service price"
 msgstr "Cena služby"
 
 msgid "Service selection"
-msgstr ""
+msgstr "Výběr služby"
 
 msgid "Service subtotal"
-msgstr ""
+msgstr "Mezisoučet služby"
 
 msgid "Services"
 msgstr "Služby"
@@ -8909,7 +8917,7 @@ msgid "Services Desc"
 msgstr "Služby sestupně"
 
 msgid "Services and packages overview"
-msgstr ""
+msgstr "Přehled služeb a balíčků"
 
 msgid "Services have been reordered."
 msgstr "Pořadí služeb bylo změněno."
@@ -8918,7 +8926,7 @@ msgid "Services list, Appointments"
 msgstr "Seznam služeb, rezervace"
 
 msgid "Services overview"
-msgstr ""
+msgstr "Přehled služeb"
 
 msgid "Services setup"
 msgstr "Nastavení služeb"
@@ -8962,6 +8970,8 @@ msgid ""
 "Set individual time zones for employees so availability and bookings are "
 "shown correctly for clients worldwide."
 msgstr ""
+"Nastavit každému pracovníkovi jeho časové pásmo, aby klienti po celém světě "
+"viděli dostupnost a rezervace správně."
 
 msgid "Set metadata and description"
 msgstr "Nastavit metadata a popis"
@@ -8970,13 +8980,13 @@ msgid "Set minimum"
 msgstr "Nastavit minimum"
 
 msgid "Set new password"
-msgstr ""
+msgstr "Nastavit nové heslo"
 
 msgid "Set options, colors and labels for booking form"
 msgstr "Nastavit volby, barvy a popisky rezervačního formuláře"
 
 msgid "Set password"
-msgstr ""
+msgstr "Nastavit heslo"
 
 msgid "Set pricing based on the number of people in the booking."
 msgstr "Nastavit ceník na základě počtu osob v rezervaci."
@@ -9104,6 +9114,7 @@ msgstr "Nastavení popisků a tlačítek"
 
 msgid "Set up staff, location, gallery and other event information visibility"
 msgstr ""
+"Nastavit viditelnost personálu, místa, galerie a ostatních informací o akci"
 
 msgid "Set up visibility, button type and labels"
 msgstr "Nastavení viditelnosti, typu tlačítka a popisků"
@@ -9278,10 +9289,10 @@ msgid "Sidebar"
 msgstr "Postranní panel"
 
 msgid "Sidebar area"
-msgstr ""
+msgstr "Oblast postranního panelu"
 
 msgid "Sidebar visibility"
-msgstr ""
+msgstr "Viditelnost postranního panelu"
 
 msgid "Sign In"
 msgstr "Přihlásit"
@@ -9332,7 +9343,7 @@ msgid ""
 "assignments"
 msgstr ""
 "Zjednodušte plánování s individuální dostupností, pracovní dobou a "
-"přidělenými službami."
+"přidělenými službami"
 
 msgid "Simplify scheduling with recurring events"
 msgstr "Zjednodušte plánování s pravidelnými akcemi"
@@ -9356,10 +9367,10 @@ msgid "Skip packages and continue with the selected service"
 msgstr "Přeskočit balíčky a pokračovat s vybranou službou"
 
 msgid "Slot end time"
-msgstr ""
+msgstr "Čas ukončení slotu"
 
 msgid "Social login"
-msgstr ""
+msgstr "Přihlášení pomocí sociálních sítí"
 
 msgid "Social login setup"
 msgstr "Přihlášení pomocí sociálních sítí"
@@ -9388,7 +9399,7 @@ msgstr "Některé termíny jsou obsazené. Nabídli jsme vám nejbližší term�
 msgid "Some payment methods cannot be used together due to compatibility rules"
 msgstr ""
 "Některé způsoby platby nejsou vzájemně kompatibilní a nelze je používat "
-"společně."
+"společně"
 
 msgid "Some records have an incorrect format."
 msgstr "Některé údaje mají špatný formát."
@@ -9537,7 +9548,7 @@ msgstr ""
 "krocích."
 
 msgid "Step-by-step"
-msgstr ""
+msgstr "Krok za krokem"
 
 msgid "Step-by-step booking form guide"
 msgstr "Průvodce rezervačním formulářem krok za krokem"
@@ -9552,31 +9563,31 @@ msgid "Step Popups"
 msgstr "Vyskakovací okna kroků"
 
 msgid "Step content"
-msgstr ""
+msgstr "Obsah kroku"
 
 msgid "Step header"
-msgstr ""
+msgstr "Záhlaví kroku"
 
 msgid "Step heading"
-msgstr ""
+msgstr "Nadpis kroku"
 
 msgid "Step info tab"
-msgstr ""
+msgstr "Informační záložka kroku"
 
 msgid "Step message"
-msgstr ""
+msgstr "Zpráva kroku"
 
 msgid "Step pagination"
-msgstr ""
+msgstr "Stránkování kroků"
 
 msgid "Step tickets tab"
-msgstr ""
+msgstr "Záložka vstupenek kroku"
 
 msgid "Steps"
 msgstr "Kroky"
 
 msgid "Steps order"
-msgstr ""
+msgstr "Pořadí kroků"
 
 msgid "Stop Scanner"
 msgstr "Vypnout skener"
@@ -9617,7 +9628,7 @@ msgid "Sub Steps"
 msgstr "Dílčí kroky"
 
 msgid "Sub step title"
-msgstr ""
+msgstr "Název dílčího kroku"
 
 msgid "Subject"
 msgstr "Předmět"
@@ -9659,7 +9670,7 @@ msgid "Summary"
 msgstr "Souhrn"
 
 msgid "Summary segment"
-msgstr ""
+msgstr "Souhrnný segment"
 
 msgid "Sun"
 msgstr "Ne"
@@ -9671,7 +9682,7 @@ msgid "Support"
 msgstr "Podpora"
 
 msgid "Support Amelia by displaying a backlink"
-msgstr "Podpořte Amélii tím, že zveřejníte odkaz na její stránky."
+msgstr "Podpořte Amélii tím, že zveřejníte odkaz na její stránky"
 
 msgid ""
 "Support deeper insights by using exported data for analysis and reporting"
@@ -9730,13 +9741,13 @@ msgid "TLS"
 msgstr ""
 
 msgid "Tab title"
-msgstr ""
+msgstr "Název záložky"
 
 msgid "Table settings have been updated."
 msgstr "Nastavení tabulky bylo aktualizováno."
 
 msgid "Tabs (All / Packages / Services)"
-msgstr ""
+msgstr "Záložky (Vše / Balíčky / Služby)"
 
 msgid "Tag"
 msgstr "Štítek"
@@ -9775,7 +9786,7 @@ msgid "Tax rate name"
 msgstr "Název daňové sazby"
 
 msgid "Tax setup"
-msgstr ""
+msgstr "Nastavení daní"
 
 msgid "Tax will be excluded from price calculation and showed separately."
 msgstr "Daň nebude zahrnuta v cenové kalkulaci a bude zobrazena samostatně."
@@ -9805,7 +9816,7 @@ msgid "Test WhatsApp"
 msgstr "Testovat WhatsApp"
 
 msgid "Test WhatsApp message sent successfully"
-msgstr "Testovací zpráva WhatsApp úspěšně odeslána."
+msgstr "Testovací zpráva WhatsApp úspěšně odeslána"
 
 msgid "Test client ID"
 msgstr "Testovací Client ID"
@@ -9841,10 +9852,10 @@ msgid "Text area"
 msgstr "Oblast textu"
 
 msgid "Text color"
-msgstr ""
+msgstr "Barva textu"
 
 msgid "Text color on background"
-msgstr ""
+msgstr "Barva textu na pozadí"
 
 msgid "Text content"
 msgstr "Textový obsah"
@@ -10208,7 +10219,7 @@ msgid "This service is available in a Package"
 msgstr "Tato služba je k dispozici v balíčku"
 
 msgid "This service is available in a package"
-msgstr ""
+msgstr "Tato služba je dostupná v balíčku"
 
 msgid "This time slot is no longer available. Please select a different time."
 msgstr "Tento časový úsek už není k dispozici. Vyberte jiný čas."
@@ -10283,7 +10294,7 @@ msgid "Ticket not valid"
 msgstr "Vstupenka není platná"
 
 msgid "Ticket types"
-msgstr ""
+msgstr "Typy vstupenek"
 
 msgid "Tickets"
 msgstr "Vstupenky"
@@ -10330,7 +10341,7 @@ msgid "Time slot is unavailable"
 msgstr "Časový slot je nedostupný"
 
 msgid "Time slot price"
-msgstr ""
+msgstr "Cena časového okna"
 
 msgid "Time slots are unavailable"
 msgstr "Časové sloty jsou nedostupné"
@@ -10360,10 +10371,10 @@ msgid "Tips & suggestions"
 msgstr "Tipy & návrhy"
 
 msgid "Title section"
-msgstr ""
+msgstr "Výběr názvu"
 
 msgid "Title text"
-msgstr ""
+msgstr "Text názvu"
 
 msgid "To"
 msgstr "Zákazník"
@@ -10452,7 +10463,7 @@ msgid "Total Services Booked"
 msgstr "Celkem rezervovaných služeb"
 
 msgid "Total amount"
-msgstr ""
+msgstr "Množství celkem"
 
 msgid "Total appointments"
 msgstr "Termínů celkem"
@@ -10488,7 +10499,7 @@ msgid "Total price"
 msgstr "Cena celkem"
 
 msgid "Total services booked"
-msgstr ""
+msgstr "Rezervovaných služeb celkem"
 
 msgid "Total tickets"
 msgstr "Vstupenek celkem"
@@ -10591,13 +10602,13 @@ msgid "Unavailable Time Slots"
 msgstr "Nedostupná časová okna"
 
 msgid "Unavailable date background"
-msgstr ""
+msgstr "Pozadí nedostupného datumu"
 
 msgid "Unavailable date text"
-msgstr ""
+msgstr "Text nedostupného datumu"
 
 msgid "Unavailable time slots"
-msgstr ""
+msgstr "Nedostupná časová okna"
 
 msgid "Unblock"
 msgstr "Odblokovat"
@@ -10645,7 +10656,7 @@ msgid "Upcoming events"
 msgstr "Nadcházející akce"
 
 msgid "Upcoming events section"
-msgstr ""
+msgstr "Sekce nadcházejících akcí"
 
 msgid "Update"
 msgstr "Aktualizovat"
@@ -10724,7 +10735,7 @@ msgid "VAT"
 msgstr "DPH"
 
 msgid "VAT info"
-msgstr ""
+msgstr "Informace DIČ"
 
 msgid "VAT number"
 msgstr "IČO"
@@ -10781,7 +10792,7 @@ msgid "View More Packages"
 msgstr "Zobrazit další balíčky"
 
 msgid "View all"
-msgstr ""
+msgstr "Zobrazit vše"
 
 msgid "View all photos"
 msgstr "Zobrazit všechny fotky"
@@ -10793,7 +10804,7 @@ msgid "View booking"
 msgstr "Zobrazit rezervace"
 
 msgid "View employees"
-msgstr ""
+msgstr "Zobrazit pracovníky"
 
 msgid "View events"
 msgstr "Zobrazit akce"
@@ -10808,7 +10819,7 @@ msgid "View invoice"
 msgstr "Zobrazit faktury"
 
 msgid "View less packages"
-msgstr ""
+msgstr "Zobrazit méně balíčků"
 
 msgid "View message"
 msgstr "Zobrazit zprávu"
@@ -10817,7 +10828,7 @@ msgid "View more"
 msgstr "Zobrazit více"
 
 msgid "View more packages"
-msgstr ""
+msgstr "Zobrazit více balíčků"
 
 msgid "View packages"
 msgstr "Zobrazit balíčky"
@@ -10841,10 +10852,10 @@ msgid "Waiting"
 msgstr "Čeká se"
 
 msgid "Waiting button background color"
-msgstr ""
+msgstr "Barva pozadí tlačítka Nepotvrzeno"
 
 msgid "Waiting button text color"
-msgstr ""
+msgstr "Barva textu tlačítka Nepotvrzeno"
 
 msgid "Waiting for payment"
 msgstr "Čekám na platbu"
@@ -10856,7 +10867,7 @@ msgid "Waiting list availability"
 msgstr "Dostupnost čekací listiny"
 
 msgid "Waiting list background"
-msgstr ""
+msgstr "Pozadí čekací listiny"
 
 msgid "Waiting list capacity"
 msgstr "Kapacita čekací listiny"
@@ -10871,7 +10882,7 @@ msgid "Waiting list is empty"
 msgstr "Čekací listina je prázdná"
 
 msgid "Waiting list text"
-msgstr ""
+msgstr "Text čekací listiny"
 
 msgid "Warning"
 msgstr "Varování"
@@ -10926,7 +10937,7 @@ msgid "Welcome Back"
 msgstr "Vítejte zpět"
 
 msgid "Welcome back"
-msgstr ""
+msgstr "Vítejte zpět"
 
 msgid "Wellness"
 msgstr ""
@@ -11249,13 +11260,13 @@ msgid "Your current changes will be lost."
 msgstr "Aktuální změny budou ztraceny."
 
 msgid "Your data will be saved before redirecting to another form."
-msgstr ""
+msgstr "Vaše data budou uložena před přesměrováním na jiný formulář."
 
 msgid "Your information"
-msgstr ""
+msgstr "Vaše informace"
 
 msgid "Your name"
-msgstr ""
+msgstr "Jméno"
 
 msgid ""
 "Your password has been changed successfully. Use your new password to log in."

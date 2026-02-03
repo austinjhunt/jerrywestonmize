@@ -44,6 +44,16 @@ class InfrastructureService
     }
 
     /**
+     * @param Container $c
+     *
+     * @return InfrastructureServices\Outlook\AbstractOutlookCalendarMiddlewareService
+     */
+    public static function getOutlookCalendarMiddlewareService($c)
+    {
+        return new InfrastructureServices\Outlook\StarterOutlookCalendarMiddlewareService($c);
+    }
+
+    /**
      * @param $c
      * @return InfrastructureServices\Apple\AbstractAppleCalendarService
      */

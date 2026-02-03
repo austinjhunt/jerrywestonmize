@@ -3,7 +3,7 @@
 Plugin Name: Amelia
 Plugin URI: https://wpamelia.com/
 Description: Amelia is a simple yet powerful automated booking specialist, working 24/7 to make sure your customers can make appointments and events even while you sleep!
-Version: 9.0.3
+Version: 9.1
 Author: Melograno Ventures
 Author URI: https://melograno.io/
 Text Domain: wpamelia
@@ -14,6 +14,7 @@ namespace AmeliaBooking;
 
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Container;
+use AmeliaBooking\Infrastructure\Licence\LicenceConstants;
 use AmeliaBooking\Infrastructure\Routes\Routes;
 use AmeliaBooking\Infrastructure\Services\Payment\SquareService;
 use AmeliaBooking\Infrastructure\WP\ButtonService\ButtonService;
@@ -38,6 +39,7 @@ use AmeliaBooking\Infrastructure\WP\WPMenu\Submenu;
 use AmeliaBooking\Infrastructure\WP\WPMenu\SubmenuPageHandler;
 use Exception;
 use Slim\App;
+use AmeliaBooking\Infrastructure\Licence;
 
 // No direct access
 defined('ABSPATH') or die('No script kiddies please!');
@@ -105,7 +107,7 @@ if (!defined('AMELIA_LOGIN_URL')) {
 
 // Const for Amelia version
 if (!defined('AMELIA_VERSION')) {
-    define('AMELIA_VERSION', '9.0.3');
+    define('AMELIA_VERSION', '9.1');
 }
 
 // Const for site URL
@@ -304,6 +306,8 @@ class Plugin
 
         $theme = wp_get_theme();
 
+        $theme = $theme->parent() ?: $theme;
+
         if ($theme && strtolower($theme->get('Name')) === 'divi' || strtolower($theme->get_template()) === 'divi') {
             $version = $theme->get('Version');
 
@@ -430,6 +434,8 @@ class Plugin
     {
         $settingsService = new SettingsService(new SettingsStorage());
 
+        self::handleWelcomePageRedirect($settingsService);
+
         if (AMELIA_VERSION !== $settingsService->getSetting('activation', 'version')) {
             $settingsService->setSetting('activation', 'version', AMELIA_VERSION);
 
@@ -437,6 +443,35 @@ class Plugin
 
             deactivate_plugins(AMELIA_PLUGIN_SLUG);
             activate_plugin(AMELIA_PLUGIN_SLUG);
+        }
+    }
+
+    /**
+     * Handle welcome page redirect and access control
+     *
+     * @param SettingsService $settingsService
+     */
+    public static function handleWelcomePageRedirect($settingsService)
+    {
+        $currentPage = isset($_GET['page']) ? sanitize_text_field(wp_unslash($_GET['page'])) : '';
+
+        $showWelcomePage = $settingsService->getSetting('activation', 'showWelcomePage');
+        $isNewInstallation = $settingsService->getSetting('activation', 'isNewInstallation');
+
+        if (get_transient('amelia_activation_redirect') && $currentPage !== 'wpamelia-welcome') {
+            delete_transient('amelia_activation_redirect');
+
+            if ($showWelcomePage && $isNewInstallation) {
+                wp_safe_redirect(admin_url('admin.php?page=wpamelia-welcome'));
+
+                exit;
+            }
+        }
+
+        if (!$showWelcomePage && $currentPage === 'wpamelia-welcome') {
+            wp_safe_redirect(admin_url('admin.php?page=wpamelia-dashboard'));
+
+            exit;
         }
     }
 
@@ -462,6 +497,8 @@ class Plugin
         }
 
         Infrastructure\WP\InstallActions\ActivationDatabaseHook::init();
+
+        set_transient('amelia_activation_redirect', true, 30);
     }
 
     /**
@@ -525,21 +562,6 @@ class Plugin
         }
     }
 
-
-    public static function elementor_popup_notice(){
-        global $pagenow;
-        if ($pagenow == 'edit.php' &&
-            !empty($_REQUEST['post_type']) &&
-            $_REQUEST['post_type'] === 'elementor_library' &&
-            !empty($_REQUEST['tabs_group']) &&
-            $_REQUEST['tabs_group'] === 'popup'
-        ) {
-            echo "<div class='notice notice-warning'>
-             <p>" . esc_html__(BackendStrings::get('elementor_popup_notice')) . "</p>
-         </div>";
-        }
-    }
-
     /**
      * Show WPDT promo notice
      **/
@@ -569,6 +591,23 @@ class Plugin
     }
 
     /**
+     * Hide admin notices on Amelia pages
+     **/
+    public static function hide_notices_on_amelia_pages()
+    {
+        $screen = get_current_screen();
+        if ($screen && strpos($screen->id, 'wpamelia')) {
+            remove_action('admin_notices', 'update_nag', 3);
+            remove_action('network_admin_notices', 'update_nag', 3);
+            remove_action('admin_notices', 'maintenance_nag');
+            remove_all_actions('admin_notices');
+            remove_all_actions('all_admin_notices');
+        }
+
+        add_action('admin_notices', array('AmeliaBooking\Plugin', 'wpdt_dashboard_promo'));
+    }
+
+    /**
      * @param array $links
      *
      * @return array
@@ -579,6 +618,10 @@ class Plugin
             '<a href="' . admin_url('admin.php?page=wpamelia-dashboard') . '">View</a>',
             '<a href="' . admin_url('admin.php?page=wpamelia-settings') . '">Settings</a>'
         ];
+
+        if (Licence\Licence::getLicence() === LicenceConstants::LITE) {
+            $links[] = '<a href="https://wpamelia.com/pricing/?utm_source=wp_org&utm_medium=wp_org&utm_content=plugin_row&utm_campaign=wp_org" style="color: #5951F6; font-weight: bold;" target="_blank">Get Amelia Pro</a>';
+        }
 
         return array_merge($primaryLinks, $links);
     }
@@ -625,8 +668,7 @@ class Plugin
 
 add_action('wp_ajax_amelia_remove_wpdt_promo_notice', array('AmeliaBooking\Plugin', 'amelia_remove_wpdt_promo_notice'));
 
-add_action('admin_notices', array('AmeliaBooking\Plugin', 'elementor_popup_notice'));
-add_action('admin_notices', array('AmeliaBooking\Plugin', 'wpdt_dashboard_promo'));
+add_action('admin_head', array('AmeliaBooking\Plugin', 'hide_notices_on_amelia_pages'));
 
 /** Redirect For Outlook Calendar */
 if (is_admin()) {

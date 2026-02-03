@@ -85,16 +85,19 @@ class GetCalendarSlotAvailabilityHandler extends CommandHandler
             $appointment->getProviderId()->getValue()
         );
 
-        $bookingStart = $command->getField('bookingStart');
-
-        $appointment->setBookingStart(new DateTimeValue(DateTimeService::getCustomDateTimeObject($bookingStart)));
-
-        $appointment->setBookingEnd(
-            new DateTimeValue(
-                DateTimeService::getCustomDateTimeObject($bookingStart)
-                    ->modify('+' . $appointmentAS->getAppointmentLengthTime($appointment, $service) . ' second')
-            )
+        $bookingStart = DateTimeService::getDateTimeObjectInTimeZone(
+            $command->getField('bookingStart'),
+            $command->getField('timeZone') ?: DateTimeService::getTimeZone()->getName()
         );
+
+        $bookingEnd = (clone $bookingStart)->modify('+' . $appointmentAS->getAppointmentLengthTime($appointment, $service) . ' second');
+
+        $bookingStart->setTimezone(DateTimeService::getTimeZone());
+        $bookingEnd->setTimezone(DateTimeService::getTimeZone());
+
+        $appointment->setBookingStart(new DateTimeValue($bookingStart));
+
+        $appointment->setBookingEnd(new DateTimeValue($bookingEnd));
 
         if (!$appointmentAS->canBeBooked($appointment, $userAS->isCustomer($user), null, null)) {
             $result->setResult(CommandResult::RESULT_ERROR);

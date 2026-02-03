@@ -5,6 +5,7 @@ namespace AmeliaBooking\Application\Commands\Payment;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Booking\AppointmentApplicationService;
+use AmeliaBooking\Application\Services\Booking\BookingFallbackService;
 use AmeliaBooking\Application\Services\Notification\ApplicationNotificationService;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Domain\Entity\Entities;
@@ -14,14 +15,11 @@ use AmeliaBooking\Domain\Factory\Booking\Event\EventFactory;
 use AmeliaBooking\Domain\Factory\Payment\PaymentFactory;
 use AmeliaBooking\Domain\Factory\Stripe\StripeFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
-use AmeliaBooking\Domain\Services\Payment\AbstractPaymentService;
-use AmeliaBooking\Domain\Services\Payment\PaymentServiceInterface;
 use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Domain\ValueObjects\String\Name;
 use AmeliaBooking\Domain\ValueObjects\String\PaymentStatus;
-use AmeliaBooking\Domain\ValueObjects\String\PaymentType;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
 use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
@@ -86,9 +84,10 @@ class PaymentCallbackCommandHandler extends CommandHandler
             $entitySettings       = !empty($bookableSettings) && json_decode($bookableSettings, true) ? json_decode($bookableSettings, true) : null;
             $paymentLinksSettings =
                 !empty($entitySettings) && !empty($entitySettings['payments']['paymentLinks']) ? $entitySettings['payments']['paymentLinks'] : null;
-            $redirectUrl          = $paymentLinksSettings && $paymentLinksSettings['redirectUrl'] ? $paymentLinksSettings['redirectUrl'] :
-                $settingsDS->getSetting('payments', 'paymentLinks')['redirectUrl'];
-            $redirectLink         = empty($redirectUrl) ? AMELIA_SITE_URL : $redirectUrl;
+            $generalPaymentSettings = $settingsDS->getSetting('payments', 'paymentLinks');
+            $redirectUrl          = $paymentLinksSettings && !empty($paymentLinksSettings['redirectUrl']) ? $paymentLinksSettings['redirectUrl'] :
+                (!empty($generalPaymentSettings['redirectUrl']) ? $generalPaymentSettings['redirectUrl'] : '');
+            $redirectLink         = !empty($redirectUrl) ? $redirectUrl : '';
             $customerPanelUrl     = $settingsDS->getSetting('roles', 'customerCabinet')['pageUrl'];
             $redirectLink         = !empty($command->getField('fromPanel')) ? $customerPanelUrl : $redirectLink;
 
@@ -130,8 +129,11 @@ class PaymentCallbackCommandHandler extends CommandHandler
                                 $result->setResult(CommandResult::RESULT_SUCCESS);
                                 $result->setMessage('');
                                 $result->setData([]);
-                                $result->setUrl($redirectLink . '&status=canceled');
-
+                                if (!empty($redirectLink)) {
+                                    $result->setUrl($redirectLink . '&status=canceled');
+                                } else {
+                                    BookingFallbackService::getFallbackHtml('failed');
+                                }
 
                                 return $result;
                             }
@@ -151,8 +153,11 @@ class PaymentCallbackCommandHandler extends CommandHandler
                                 $result->setResult(CommandResult::RESULT_SUCCESS);
                                 $result->setMessage('');
                                 $result->setData([]);
-                                $result->setUrl($redirectLink . '&status=canceled');
-
+                                if (!empty($redirectLink)) {
+                                    $result->setUrl($redirectLink . '&status=canceled');
+                                } else {
+                                    BookingFallbackService::getFallbackHtml('failed');
+                                }
 
                                 return $result;
                             }

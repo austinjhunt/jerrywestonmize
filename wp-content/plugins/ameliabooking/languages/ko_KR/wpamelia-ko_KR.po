@@ -24,10 +24,10 @@ msgid "\"Payment Method\" View"
 msgstr "\"결제 방법” 보기"
 
 msgid "# of Hours in appointment"
-msgstr "약속 시간 수"
+msgstr "예약 시간 수"
 
 msgid "# of appointments"
-msgstr "약속 횟수"
+msgstr "예약 횟수"
 
 msgid "# of bookings"
 msgstr "예약 수"
@@ -50,7 +50,7 @@ msgid ""
 "limit based on the scheduled appointment itself."
 msgstr ""
 "'예약 날짜 및 시간'은 예약이 이루어진 시점을 기준으로 제한을 설정하며, 예약"
-"된 약속 날짜와는 무관합니다. '약속 날짜 및 시간'은 예약된 약속 자체를 기준으"
+"된 예약 날짜와는 무관합니다. '예약 날짜 및 시간'은 예약된 예약 자체를 기준으"
 "로 제한을 설정합니다."
 
 msgid "'Bringing anyone with you' popup"
@@ -84,7 +84,7 @@ msgid "'Finish' button style"
 msgstr "'완료' 버튼 스타일"
 
 msgid "'Join waiting list' button style"
-msgstr "'대기 목록에 가입하기' 버튼 스타일"
+msgstr "'대기자 명단에 등록' 버튼 스타일"
 
 msgid "'Learn more' button"
 msgstr "'자세히 알아보기' 버튼"
@@ -117,7 +117,7 @@ msgid "'Sign in' button style"
 msgstr "'로그인' 버튼 스타일"
 
 msgid "'View employee' button style"
-msgstr "'직원 보기' 버튼 스타일"
+msgstr "'담당자 보기' 버튼 스타일"
 
 msgid "'View in package' button"
 msgstr "'패키지 보기' 버튼"
@@ -322,7 +322,7 @@ msgid "About this Event"
 msgstr "이 이벤트 정보"
 
 msgid "About this event"
-msgstr "이 행사에 관하여"
+msgstr "이 이벤트에 관하여"
 
 msgid "Accent"
 msgstr "강조"
@@ -331,13 +331,13 @@ msgid "Accent text"
 msgstr "강조 텍스트"
 
 msgid "Accept payments for bookings and services via PayPal."
-msgstr "PayPal을 통해 예약 및 서비스 결제를 받으세요."
+msgstr "페이팔을 통해 예약 및 서비스 결제를 받으세요."
 
 msgid "Accept payments seamlessly through the Mollie payment gateway."
 msgstr "Mollie 결제 게이트웨이를 통해 간편하게 결제를 받으세요."
 
 msgid "Accept payments via Razorpay, ideal for Indian businesses."
-msgstr "Razorpay를 통해 결제를 받으세요. 인도 사업에 이상적입니다."
+msgstr "레이저페이를 통해 결제를 받으세요. 인도 사업에 이상적입니다."
 
 msgid "Access link"
 msgstr "접속 링크"
@@ -388,7 +388,7 @@ msgid "Add Attendee"
 msgstr "참석자 추가"
 
 msgid "Add Break"
-msgstr "Rest 추가"
+msgstr "휴식 추가"
 
 msgid "Add Coupon"
 msgstr "쿠폰 추가"
@@ -406,7 +406,7 @@ msgid "Add Day Off"
 msgstr "휴무일 추가"
 
 msgid "Add Extra"
-msgstr "추가 항목 추가"
+msgstr "부가 서비스 추가"
 
 msgid "Add Google Map API Key to show Google static map on \"Locations\" page."
 msgstr ""
@@ -422,7 +422,7 @@ msgid "Add Pricing Category"
 msgstr "요금제 카테고리 추가"
 
 msgid "Add Special Day"
-msgstr "특별한 날 추가"
+msgstr "기념일 추가"
 
 msgid "Add Stripe address fields"
 msgstr "스트라이프 주소 필드 추가"
@@ -479,20 +479,20 @@ msgid "Add event attendees"
 msgstr "이벤트 참석자 추가"
 
 msgid "Add extra"
-msgstr "추가 항목 추가"
+msgstr "부가 서비스 추가"
 
 msgid "Add more Appointments"
 msgstr "더 많은 예약 추가"
 
 msgid "Add more appointments"
-msgstr "더 많은 약속 추가하기"
+msgstr "더 많은 예약 추가하기"
 
 msgid ""
 "Add multiple employees to your booking system, manage their schedules, and "
 "assign them to services or events, making it easy to scale your business and "
 "coordinate your team."
 msgstr ""
-"여러 직원을 예약 시스템에 추가하고, 그들의 일정을 관리하며, 서비스나 이벤트"
+"여러 담당자를 예약 시스템에 추가하고, 그들의 일정을 관리하며, 서비스나 이벤트"
 "에 배정하여 비즈니스 확장과 팀 협업을 손쉽게 진행하세요."
 
 msgid "Add option"
@@ -511,13 +511,13 @@ msgid "Add services"
 msgstr "서비스 추가"
 
 msgid "Add special day"
-msgstr "특별한 날 추가하기"
+msgstr "기념일 추가하기"
 
 msgid "Add to Calendar"
 msgstr "캘린더에 추가"
 
 msgid "Add to calendar"
-msgstr "달력에 추가"
+msgstr "캘린더에 추가"
 
 msgid "Add tracking"
 msgstr "추적 기능 추가"
@@ -529,7 +529,7 @@ msgid "Additional information"
 msgstr "추가 정보"
 
 msgid "Additional people"
-msgstr "추가 사람"
+msgstr "추가 인원"
 
 msgid "Address"
 msgstr "주소"
@@ -575,7 +575,7 @@ msgid "All appointments will be scheduled with the status selected here."
 msgstr "모든 예약은 여기서 선택한 상태로 예약됩니다."
 
 msgid "All appointments will be selected later"
-msgstr "모든 약속은 나중에 선택됩니다"
+msgstr "모든 예약은 나중에 선택됩니다"
 
 msgid "All assigned services"
 msgstr "모든 할당된 서비스"
@@ -593,10 +593,10 @@ msgid "All events"
 msgstr "모든 이벤트"
 
 msgid "All extras"
-msgstr "모든 추가 항목"
+msgstr "모든 부가 서비스"
 
 msgid "All locations"
-msgstr "모든 위치"
+msgstr "모든 장소"
 
 msgid "All packages"
 msgstr "모든 패키지"
@@ -620,7 +620,7 @@ msgid "Allow additional people"
 msgstr "추가 인원 허용"
 
 msgid "Allow admin to book appointment at any time"
-msgstr "관리자가 언제든지 약속을 예약할 수 있도록 허용"
+msgstr "관리자가 언제든지 예약을 예약할 수 있도록 허용"
 
 msgid "Allow admin to book over an existing appointment"
 msgstr "관리자가 기존 예약을 통해 예약하도록 허용"
@@ -644,15 +644,15 @@ msgid ""
 "Allow customers and employees to quickly sign in using their Facebook "
 "account, making the login process faster, simpler, and more secure."
 msgstr ""
-"고객과 직원이 페이스북 계정으로 빠르게 로그인할 수 있도록 하여 로그인 절차를 "
-"더 빠르고, 간편하며, 안전하게 만듭니다."
+"고객과 담당자가 페이스북 계정으로 빠르게 로그인할 수 있도록 하여 로그인 절차"
+"를 더 빠르고, 간편하며, 안전하게 만듭니다."
 
 msgid ""
 "Allow customers and employees to quickly sign in using their Google account, "
 "making the login process faster, simpler, and more secure."
 msgstr ""
-"고객과 직원이 구글 계정으로 빠르게 로그인할 수 있도록 하여 로그인 절차를 더 "
-"빠르고, 더 간단하며, 더 안전하게 만드십시오."
+"고객과 담당자가 구글 계정으로 빠르게 로그인할 수 있도록 하여 로그인 절차를 "
+"더 빠르고, 더 간단하며, 더 안전하게 만드십시오."
 
 msgid ""
 "Allow customers to book multiple services in a single transaction for a "
@@ -679,7 +679,7 @@ msgid "Allow customers to pay full amount"
 msgstr "고객이 전액을 결제할 수 있도록 허용하십시오"
 
 msgid "Allow customers to pay total appointment amount"
-msgstr "고객이 총 약속 금액을 결제하도록 허용"
+msgstr "고객이 총 예약 금액을 결제하도록 허용"
 
 msgid "Allow customers to pay total event amount"
 msgstr "고객이 총 이벤트 금액을 결제하도록 허용"
@@ -694,29 +694,29 @@ msgid ""
 "Allow employees to manage appointments and events with ease. Customize "
 "colors to match your branding and improve usability."
 msgstr ""
-"직원들이 손쉽게 약속과 행사를 관리할 수 있도록 지원합니다. 브랜드에 맞춰 색상"
-"을 맞춤 설정하고 사용성을 개선하세요."
+"담당자들이 손쉽게 예약과 이벤트를 관리할 수 있도록 지원합니다. 브랜드에 맞춰 "
+"색상을 맞춤 설정하고 사용성을 개선하세요."
 
 msgid "Allow employees to manage customers"
-msgstr "직원들이 고객을 관리할 수 있도록 허용하십시오"
+msgstr "담당자들이 고객을 관리할 수 있도록 허용하십시오"
 
 msgid "Allow employees to manage their appointments"
-msgstr "직원들이 자신의 약속을 관리할 수 있도록 허용하십시오"
+msgstr "담당자들이 자신의 예약을 관리할 수 있도록 허용하십시오"
 
 msgid "Allow employees to manage their days off"
-msgstr "직원들이 자신의 휴가를 관리할 수 있도록 허용하십시오"
+msgstr "담당자들이 자신의 휴가를 관리할 수 있도록 허용하십시오"
 
 msgid "Allow employees to manage their events"
-msgstr "직원들이 자신의 이벤트를 관리할 수 있도록 허용하십시오"
+msgstr "담당자들이 자신의 이벤트를 관리할 수 있도록 허용하십시오"
 
 msgid "Allow employees to manage their schedule"
-msgstr "직원들이 자신의 일정을 관리할 수 있도록 허용하십시오"
+msgstr "담당자들이 자신의 일정을 관리할 수 있도록 허용하십시오"
 
 msgid "Allow employees to manage their services"
-msgstr "직원들이 자신의 서비스를 관리할 수 있도록 허용하십시오"
+msgstr "담당자들이 자신의 서비스를 관리할 수 있도록 허용하십시오"
 
 msgid "Allow employees to manage their special days"
-msgstr "직원들이 자신의 특별한 날을 관리할 수 있도록 허용하십시오"
+msgstr "담당자들이 자신의 기념일을 관리할 수 있도록 허용하십시오"
 
 msgid "Allow multiple bookings per customer"
 msgstr "고객당 여러 건의 예약 허용"
@@ -735,7 +735,7 @@ msgstr ""
 "리도록 하십시오."
 
 msgid "Alpha sender ID"
-msgstr "알파 송신 ID"
+msgstr ""
 
 msgid "Alpha sender ID can't be empty"
 msgstr "Alpha sender ID는 비어 있을 수 없습니다"
@@ -747,13 +747,13 @@ msgid "Also cancel and delete future events"
 msgstr "또한 향후 예정된 이벤트를 취소하고 삭제하십시오"
 
 msgid "Also cancel future events"
-msgstr "또한 향후 예정된 행사도 취소하십시오"
+msgstr "또한 향후 예정된 이벤트도 취소하십시오"
 
 msgid "Also delete future events"
 msgstr "또한 향후 예정된 이벤트도 삭제하십시오"
 
 msgid "Also open future events"
-msgstr "또한 향후 예정된 행사도 열기"
+msgstr "또한 향후 예정된 이벤트도 열기"
 
 msgid "Amelia - Booking view"
 msgstr "아멜리아 - 예약 보기"
@@ -831,7 +831,7 @@ msgid "Apple Calendar (Personal)"
 msgstr "애플 캘린더(개인)"
 
 msgid "Apple Calendar setup"
-msgstr "Apple 캘린더 설정"
+msgstr "애플 캘린더 설정"
 
 msgid "Application (client) ID"
 msgstr "애플리케이션(클라이언트) ID"
@@ -870,28 +870,28 @@ msgid "Apply to future recurring events"
 msgstr "향후 반복되는 이벤트에 적용"
 
 msgid "Appointment"
-msgstr "약속"
+msgstr "예약"
 
 msgid "Appointment Canceled"
-msgstr "약속 취소됨"
+msgstr "예약 취소됨"
 
 msgid "Appointment Date:"
-msgstr "약속일:"
+msgstr "예약일:"
 
 msgid "Appointment ID"
-msgstr "약속 ID"
+msgstr "예약 ID"
 
 msgid "Appointment Info"
-msgstr "약속 정보"
+msgstr "예약 정보"
 
 msgid "Appointment Repeats"
-msgstr "약속 반복"
+msgstr "예약 반복"
 
 msgid "Appointment booked"
-msgstr "약속 예약됨"
+msgstr "예약 완료"
 
 msgid "Appointment can't be rescheduled"
-msgstr "약속 일정을 변경할 수 없음"
+msgstr "예약 일정을 변경할 수 없음"
 
 msgid "Appointment canceled"
 msgstr "예약 취소됨"
@@ -903,7 +903,7 @@ msgid "Appointment date & time"
 msgstr "예약 날짜 및 시간"
 
 msgid "Appointment deposit"
-msgstr "약속 보증금"
+msgstr "예약 보증금"
 
 msgid "Appointment details"
 msgstr "예약 세부사항"
@@ -918,22 +918,22 @@ msgid "Appointment has been created."
 msgstr "예약이 생성되었습니다."
 
 msgid "Appointment has been deleted"
-msgstr "약속이 삭제되었습니다"
+msgstr "예약이 삭제되었습니다"
 
 msgid "Appointment has been deleted."
 msgstr "예약이 삭제되었습니다."
 
 msgid "Appointment has been rescheduled"
-msgstr "약속 일정이 변경되었습니다"
+msgstr "예약 일정이 변경되었습니다"
 
 msgid "Appointment has been saved"
-msgstr "약속이 저장되었습니다"
+msgstr "예약이 저장되었습니다"
 
 msgid "Appointment has been updated."
 msgstr "예약이 업데이트되었습니다."
 
 msgid "Appointment information"
-msgstr "약속 정보"
+msgstr "예약 정보"
 
 msgid "Appointment initial date"
 msgstr "예약 시작일"
@@ -948,7 +948,7 @@ msgid "Appointment initial start time"
 msgstr "예약 초기 시작 시간"
 
 msgid "Appointment is removed from the cart."
-msgstr "약속이 장바구니에서 제거되었습니다."
+msgstr "예약이 장바구니에서 제거되었습니다."
 
 msgid "Appointment management guide"
 msgstr "예약 관리 가이드"
@@ -963,10 +963,10 @@ msgid "Appointment note has been updated."
 msgstr "예약 메모가 업데이트되었습니다."
 
 msgid "Appointment notes"
-msgstr "약속 메모"
+msgstr "예약 메모"
 
 msgid "Appointment price"
-msgstr "약속 가격"
+msgstr "예약 가격"
 
 msgid "Appointment repeats"
 msgstr "예약 반복"
@@ -978,40 +978,40 @@ msgid "Appointment start time"
 msgstr "예약 시작 시간"
 
 msgid "Appointment status"
-msgstr "약속 상태"
+msgstr "예약 상태"
 
 msgid "Appointment status has been changed to "
-msgstr "약속 상태가 다음과 같이 변경되었습니다. "
+msgstr "예약 상태가 다음과 같이 변경되었습니다. "
 
 msgid "Appointment status has been updated."
 msgstr "예약 상태가 업데이트되었습니다."
 
 msgid "Appointments"
-msgstr "약속"
+msgstr "예약"
 
 msgid "Appointments booked"
-msgstr "약속 예약됨"
+msgstr "예약 완료"
 
 msgid "Appointments from the first package expire on:"
-msgstr "첫 번째 패키지의 약속이 만료됩니다.:"
+msgstr "첫 번째 패키지의 예약이 만료됩니다.:"
 
 msgid "Appointments in this package"
-msgstr "이 패키지의 약속"
+msgstr "이 패키지의 예약"
 
 msgid "Appointments in this service"
-msgstr "이 서비스의 약속"
+msgstr "이 서비스의 예약"
 
 msgid "Appointments to book"
-msgstr "약속할 일정"
+msgstr "예약할 일정"
 
 msgid "Appointments waiting list"
 msgstr "예약 대기 목록"
 
 msgid "Approve appointment link"
-msgstr "약속 승인 링크"
+msgstr "예약 승인 링크"
 
 msgid "Approved"
-msgstr "약속됨"
+msgstr "예약됨"
 
 msgid "Are you sure? This action can't be undone."
 msgstr "확실합니까? 이 작업은 되돌릴 수 없습니다."
@@ -1047,7 +1047,7 @@ msgid "Are you sure you want to delete these items?"
 msgstr "이 항목들을 삭제하시겠습니까?"
 
 msgid "Are you sure you want to delete this appointment?"
-msgstr "이 예약을 삭제하시겠습니까?"
+msgstr "이 예약을 정말로 삭제하시겠습니까?"
 
 msgid "Are you sure you want to delete this category?"
 msgstr "이 카테고리를 삭제하시겠습니까?"
@@ -1080,7 +1080,7 @@ msgid "Are you sure you want to delete this package booking?"
 msgstr "이 패키지 예약을 삭제하시겠습니까?"
 
 msgid "Are you sure you want to delete this resource?"
-msgstr "이 자원을 삭제하시겠습니까?"
+msgstr "이 리소스를 삭제하시겠습니까?"
 
 msgid "Are you sure you want to delete this service?"
 msgstr "이 서비스를 삭제하시겠습니까?"
@@ -1117,7 +1117,7 @@ msgid "Are you sure you want to duplicate this package?"
 msgstr "이 패키지를 복제하시겠습니까?"
 
 msgid "Are you sure you want to duplicate this resource?"
-msgstr "이 자원을 복제하시겠습니까?"
+msgstr "이 리소스를 복제하시겠습니까?"
 
 msgid "Are you sure you want to duplicate this service?"
 msgstr "이 서비스를 복제하시겠습니까?"
@@ -1138,7 +1138,7 @@ msgid "Are you sure you want to hide this package?"
 msgstr "이 패키지를 숨기시겠습니까?"
 
 msgid "Are you sure you want to hide this resource?"
-msgstr "이 자원을 숨기시겠습니까?"
+msgstr "이 리소스를 숨기시겠습니까?"
 
 msgid "Are you sure you want to hide this service?"
 msgstr "이 서비스를 숨기시겠습니까?"
@@ -1147,7 +1147,7 @@ msgid "Are you sure you want to hide this tax?"
 msgstr "이 세금을 숨기시겠습니까?"
 
 msgid "Are you sure you want to open this event?"
-msgstr "이 이벤트를 열시겠습니까?"
+msgstr "이 이벤트를 여시겠습니까?"
 
 msgid "Are you sure you want to refund this payment?"
 msgstr "이 결제를 환불하시겠습니까?"
@@ -1171,7 +1171,7 @@ msgid "Are you sure you want to show this package?"
 msgstr "이 패키지를 표시하시겠습니까?"
 
 msgid "Are you sure you want to show this resource?"
-msgstr "이 자원을 표시하시겠습니까?"
+msgstr "이 리소스를 표시하시겠습니까?"
 
 msgid "Are you sure you want to show this service?"
 msgstr "이 서비스를 표시하시겠습니까?"
@@ -1272,14 +1272,14 @@ msgstr "WP 사용자에서 아멜리아 고객 사용자 자동 생성하기 "
 msgid ""
 "Automatically create Zoom meetings for bookings and notify customers and "
 "employees."
-msgstr "예약 시 자동으로 Zoom 회의를 생성하고 고객 및 직원에게 알립니다."
+msgstr "예약 시 자동으로 Zoom 회의를 생성하고 고객 및 담당자에게 알립니다."
 
 msgid ""
 "Automatically generate invoices for every booking, making payments easier, "
 "more transparent, and fully streamlined for both you and your clients."
 msgstr ""
-"모든 예약에 대해 자동으로 송장을 생성하여 결제 과정을 더 쉽고 투명하게 하며, "
-"귀사와 고객 모두에게 완벽하게 간소화합니다."
+"모든 예약에 대해 자동으로 인보이스를 생성하여 결제 과정을 더 쉽고 투명하게 하"
+"며, 귀사와 고객 모두에게 완벽하게 간소화합니다."
 
 msgid ""
 "Automatically update the booking status to \"Approved\" after a successful "
@@ -1397,7 +1397,7 @@ msgid ""
 "set, including the service, employee, date, time, and location (if "
 "applicable)."
 msgstr ""
-"반복 옵션을 활성화하기 전에 서비스, 직원, 날짜, 시간 및 위치(해당하는 경우)"
+"반복 옵션을 활성화하기 전에 서비스, 담당자, 날짜, 시간 및 장소(해당하는 경우)"
 "를 포함한 모든 필수 항목이 설정되었는지 확인하십시오."
 
 msgid "Before with space"
@@ -1418,12 +1418,13 @@ msgstr "블록"
 msgid ""
 "Block booking times that overlap with busy events in the employee’s Apple "
 "Calendar."
-msgstr "직원의 애플 캘린더에서 바쁜 일정과 겹치는 시간대를 예약 차단합니다."
+msgstr "담당자의 애플 캘린더에서 바쁜 일정과 겹치는 시간대를 예약 차단합니다."
 
 msgid ""
 "Block booking times that overlap with busy events in the employee’s Outlook "
 "Calendar."
-msgstr "직원의 아웃룩 캘린더에서 바쁜 일정과 겹치는 시간대를 예약 차단합니다."
+msgstr ""
+"담당자의 아웃룩 캘린더에서 바쁜 일정과 겹치는 시간대를 예약 차단합니다."
 
 msgid "Block customer"
 msgstr "고객 차단"
@@ -1438,7 +1439,7 @@ msgid "Book"
 msgstr "예약"
 
 msgid "Book Appointment"
-msgstr "약속 예약"
+msgstr "예약하기"
 
 msgid "Book Now"
 msgstr "지금 예약"
@@ -1456,19 +1457,19 @@ msgid "Book another"
 msgstr "다른 예약"
 
 msgid "Book appointment"
-msgstr "약속 예약"
+msgstr "예약하기"
 
 msgid "Book event"
 msgstr "이벤트 예약"
 
 msgid "Book next appointment"
-msgstr "다음 예약 예약하기"
+msgstr "다음 예약하기"
 
 msgid "Book now"
 msgstr "지금 예약"
 
 msgid "Book option on employee dialog"
-msgstr "직원 대화창의 예약 옵션"
+msgstr "담당자 대화창의 예약 옵션"
 
 msgid "Book package"
 msgstr "예약 패키지"
@@ -1498,7 +1499,7 @@ msgid "Booking #{count}"
 msgstr "예약 #{count}"
 
 msgid "Booking Appointment"
-msgstr "약속 예약"
+msgstr "예약하기"
 
 msgid "Booking Closes"
 msgstr "예약 마감"
@@ -1645,10 +1646,10 @@ msgid "Border color"
 msgstr "테두리 색상"
 
 msgid "Break Hours"
-msgstr "Rest 시간"
+msgstr "휴식 시간"
 
 msgid "Breaks"
-msgstr "Rest 시간"
+msgstr "휴식"
 
 msgid "Bringing Anyone With You"
 msgstr "동행 동반"
@@ -1716,16 +1717,16 @@ msgid ""
 "By booking this time slot you will book appointment on top of existing group "
 "appointment!"
 msgstr ""
-"이 시간대를 예약하면 기존 그룹 약속에 추가하여 약속을 예약할 수 있습니다!"
+"이 시간대를 예약하면 기존 그룹 예약에 추가하여 예약을 예약할 수 있습니다!"
 
 msgid ""
 "By continuing, you will set the appointment to a time slot that already has "
 "an existing appointment!"
-msgstr "계속 진행하면 이미 기존 약속이 있는 시간 슬롯으로 약속이 설정됩니다!"
+msgstr "계속 진행하면 이미 기존 예약이 있는 시간 슬롯으로 예약이 설정됩니다!"
 
 msgid ""
 "By entering your phone number you agree to receive messages via WhatsApp"
-msgstr "휴대폰 번호를 입력하면 와츠앱을 통한 메시지 수신에 동의하는 것입니다"
+msgstr "휴대폰 번호를 입력하면 WhatsApp을 통한 메시지 수신에 동의하는 것입니다"
 
 msgid "Calculated"
 msgstr "계산됨"
@@ -1747,7 +1748,7 @@ msgid "Cancel"
 msgstr "취소"
 
 msgid "Cancel Appointment"
-msgstr "약속 취소"
+msgstr "예약 취소"
 
 msgid "Cancel Event"
 msgstr "이벤트 취소"
@@ -1927,7 +1928,7 @@ msgid ""
 "Check this checkbox if you want your customer to<br/>receive an email about "
 "the scheduled appointment."
 msgstr ""
-"고객이 예정된 약속에 대한 이메일을 받도록 하려면<br/>이 확인란을 선택합니다."
+"고객이 예정된 예약에 대한 이메일을 받도록 하려면<br/>이 확인란을 선택합니다."
 
 msgid ""
 "Check this option if you want the deposit<br> amount to be multiplied by the "
@@ -2017,7 +2018,7 @@ msgid ""
 "collected only for the first one, the remaining appointments are paid on-"
 "site."
 msgstr ""
-"정기 예약에 대한 결제 처리 방식을 선택하세요. 첫 번째 예약에 대해서만 결제를 "
+"반복 예약에 대한 결제 처리 방식을 선택하세요. 첫 번째 예약에 대해서만 결제를 "
 "받는 경우, 나머지 예약은 현장에서 결제됩니다."
 
 msgid ""
@@ -2058,7 +2059,7 @@ msgid ""
 "Click \"Configure\" to edit the text that will appear when this placeholder "
 "is used in notifications."
 msgstr ""
-"\"구성\"을 클릭하면 알림에서 이 자리 표시자가 사용될 때 표시될 텍스트를 편집"
+"\"구성\"을 클릭하면 알림에서 이 자리 표시자가 사용될 때 표시될 텍스트를 수정"
 "할 수 있습니다."
 
 msgid "Click + Service below to get started."
@@ -2083,7 +2084,7 @@ msgid "Client secret"
 msgstr "클라이언트 시크릿"
 
 msgid "Close"
-msgstr "마감"
+msgstr "닫기"
 
 msgid "Close Event"
 msgstr "이벤트 종료"
@@ -2104,7 +2105,7 @@ msgid "Closes on"
 msgstr "마감일"
 
 msgid "Closes on:"
-msgstr "마감:"
+msgstr "마감일:"
 
 msgid "Coaching"
 msgstr "코칭"
@@ -2230,27 +2231,27 @@ msgid ""
 "Connect Apple Calendars to sync your personal and professional events, along "
 "with your employees’."
 msgstr ""
-"애플 캘린더를 연결하여 개인 및 업무 일정과 직원들의 일정을 동기화하세요."
+"애플 캘린더를 연결하여 개인 및 업무 일정과 담당자들의 일정을 동기화하세요."
 
 msgid ""
 "Connect Google Calendars to sync your personal and professional events, "
 "along with your employees’."
 msgstr ""
-"구글 캘린더를 연결하여 개인 및 업무 일정과 직원들의 일정을 동기화하세요."
+"구글 캘린더를 연결하여 개인 및 업무 일정과 담당자들의 일정을 동기화하세요."
 
 msgid ""
 "Connect Outlook Calendars to sync your personal and professional events, "
 "along with your employees’."
 msgstr ""
-"아웃룩 캘린더를 연결하여 개인 및 업무 일정과 직원들의 일정을 동기화하세요."
+"아웃룩 캘린더를 연결하여 개인 및 업무 일정과 담당자들의 일정을 동기화하세요."
 
 msgid ""
 "Connect employee calendars, meeting tools, and other integrations to keep "
 "schedules perfectly synced and communication effortless across your entire "
 "team."
 msgstr ""
-"직원 일정, 회의 도구 및 기타 통합 기능을 연결하여 팀 전체의 일정을 완벽하게 "
-"동기화하고 원활한 커뮤니케이션을 유지하세요."
+"담당자 일정, 회의 도구 및 기타 통합 기능을 연결하여 팀 전체의 일정을 완벽하"
+"게 동기화하고 원활한 커뮤니케이션을 유지하세요."
 
 msgid "Connect to Apple Calendar"
 msgstr "애플 캘린더에 연결"
@@ -2267,7 +2268,7 @@ msgid ""
 "Connect your Google Calendar here so once<br/>the appointment is scheduled "
 "it can be added<br/>to your Google Calendar automatically."
 msgstr ""
-"여기에서 구글 캘린더를 연결하면<br/>약속이 확정될 때 자동으로<br/>구글 캘린더"
+"여기에서 구글 캘린더를 연결하면<br/>예약이 확정될 때 자동으로<br/>구글 캘린더"
 "에 추가될 수 있습니다."
 
 msgid "Connect your personal Zoom account to host virtual meetings and chats."
@@ -2381,7 +2382,7 @@ msgid "Count time from"
 msgstr "시간 계산 시작"
 
 msgid "Country"
-msgstr "금액"
+msgstr "국가"
 
 msgid "Counts one primary customer plus any additional people they add."
 msgstr "주요 고객 1명과 그들이 추가하는 모든 사람을 포함합니다."
@@ -2472,10 +2473,10 @@ msgid ""
 "time."
 msgstr ""
 "예약 상태에 따라 자동으로 발송되거나 일정 알림을 설정하는 맞춤형 알림을 생성"
-"하여 고객과 직원이 정확한 시점에 정보를 받을 수 있도록 합니다."
+"하여 고객과 담당자가 정확한 시점에 정보를 받을 수 있도록 합니다."
 
 msgid "Create meetings for pending appointments"
-msgstr "예정된 약속에 대한 회의를 생성합니다"
+msgstr "예정된 예약에 대한 회의를 생성합니다"
 
 msgid "Create new"
 msgstr "새로 만들기"
@@ -2485,22 +2486,23 @@ msgstr "새로운 배지 만들기"
 
 msgid ""
 "Create online classrooms automatically for each booked appointment or event."
-msgstr "예약된 각 약속이나 이벤트마다 자동으로 온라인 교실을 생성합니다."
+msgstr "예약된 각 예약이나 이벤트마다 자동으로 온라인 교실을 생성합니다."
 
 msgid ""
 "Create resources like rooms or chairs that can be shared across services, "
 "locations, and employees."
 msgstr ""
-"서비스, 위치, 직원 간에 공유할 수 있는 방이나 의자와 같은 자원을 생성하십시"
-"오."
+"서비스, 장소, 담당자 간에 공유할 수 있는 방이나 의자와 같은 리소스를 생성하십"
+"시오."
 
 msgid ""
 "Create rooms, equipment, or other resources that can be shared across "
 "employees, services, or locations, ensuring customers only see time slots "
 "when everything they need is truly available."
 msgstr ""
-"직원, 서비스 또는 위치 간에 공유 가능한 객실, 장비 또는 기타 자원을 생성하여 "
-"고객이 필요한 모든 것이 실제로 이용 가능한 시간대만 확인할 수 있도록 합니다."
+"담당자, 서비스 또는 장소 간에 공유 가능한 객실, 장비 또는 기타 리소스를 생성"
+"하여 고객이 필요한 모든 것이 실제로 이용 가능한 시간대만 확인할 수 있도록 합"
+"니다."
 
 msgid "Create spaces for pending appointments"
 msgstr "보류 중인 예약을 위한 스페이스 만들기"
@@ -2568,7 +2570,7 @@ msgid "Custom currency symbol"
 msgstr "사용자 지정 통화 기호"
 
 msgid "Custom field"
-msgstr ""
+msgstr "사용자 정의 필드"
 
 msgid "Custom field has been added"
 msgstr "사용자 지정 필드가 추가되었습니다"
@@ -2706,7 +2708,7 @@ msgstr "고객이 예약을 확정하면 이 URL로 리디렉션됩니다."
 msgid ""
 "Customer will be redirected to this URL once he schedules the appointment or "
 "package."
-msgstr "고객이 약속 또는 패키지를 예약하면 이 URL로 리디렉션됩니다."
+msgstr "고객이 예약 또는 패키지를 예약하면 이 URL로 리디렉션됩니다."
 
 msgid ""
 "Customer will be redirected to this URL once the payment from the link is "
@@ -2723,7 +2725,7 @@ msgid "Customers imported from file:"
 msgstr "파일에서 가져온 고객:"
 
 msgid "Customers in Waiting list"
-msgstr "대기자 명단에 참여"
+msgstr "대기자 명단에 있는 고객"
 
 msgid ""
 "Customers will be redirected to this URL after scheduling an appointment."
@@ -2755,13 +2757,13 @@ msgid "Daily occupancy"
 msgstr "일일 점유율"
 
 msgid "Danger button background color"
-msgstr ""
+msgstr "위험 버튼 배경색"
 
 msgid "Danger button text color"
-msgstr ""
+msgstr "위험 버튼 텍스트 색상"
 
 msgid "Dark Theme"
-msgstr ""
+msgstr "다크 테마"
 
 msgid "Dashboard"
 msgstr "알림판"
@@ -2788,16 +2790,16 @@ msgid "Date & time periods of the event with Lesson Space join links"
 msgstr "이벤트 날짜 및 시간대별 레슨 스페이스 참여 링크"
 
 msgid "Date Asc"
-msgstr ""
+msgstr "날짜 오름차순"
 
 msgid "Date Desc"
-msgstr ""
+msgstr "날짜 내림차순"
 
 msgid "Date Purchased Asc"
-msgstr ""
+msgstr "구매일 오름차순"
 
 msgid "Date Purchased Desc"
-msgstr ""
+msgstr "구매일 내림차순"
 
 msgid ""
 "Date Ranges that are not defined will use default price from ticket category."
@@ -2813,7 +2815,7 @@ msgid "Date of Birth"
 msgstr "생년월일"
 
 msgid "Date of birth"
-msgstr ""
+msgstr "생일"
 
 msgid ""
 "Date of birth must be in the same format as chosen in your WP settings. If a "
@@ -2826,10 +2828,10 @@ msgid "Date periods of the event with Lesson Space join links"
 msgstr "수업 공간 참여 링크가 있는 이벤트의 날짜 기간"
 
 msgid "Date picker"
-msgstr ""
+msgstr "날짜 선택기"
 
 msgid "Date purchased"
-msgstr ""
+msgstr "구매일"
 
 msgid "Date range"
 msgstr "날짜 범위"
@@ -2852,13 +2854,13 @@ msgid "Day Off name"
 msgstr "휴무일 이름"
 
 msgid "Day of the Week"
-msgstr "이벤트 날짜 기간"
+msgstr "요일"
 
 msgid "Day of the week"
 msgstr "요일"
 
 msgid "Day off name"
-msgstr ""
+msgstr "휴무일 명칭"
 
 msgid "Days"
 msgstr "일"
@@ -2867,7 +2869,7 @@ msgid "Days Off"
 msgstr "휴무일"
 
 msgid "Days off"
-msgstr ""
+msgstr "휴무일"
 
 msgid "Deactivate"
 msgstr "비활성화"
@@ -2889,10 +2891,10 @@ msgid "Deduction"
 msgstr "공제"
 
 msgid "Deduction Asc"
-msgstr ""
+msgstr "공제 오름차순"
 
 msgid "Deduction Desc"
-msgstr ""
+msgstr "공제 내림차순"
 
 msgid "Default Label"
 msgstr "기본 레이블"
@@ -2901,16 +2903,16 @@ msgid "Default Square location"
 msgstr "기본 스퀘어 장소"
 
 msgid "Default appointment status"
-msgstr ""
+msgstr "기본 예약 상태"
 
 msgid "Default back‑end page"
-msgstr ""
+msgstr "기본 백엔드 페이지"
 
 msgid "Default language"
 msgstr "기본 언어"
 
 msgid "Default location"
-msgstr ""
+msgstr "기본 장소"
 
 msgid "Default number of items per page on the back end"
 msgstr "백엔드에서 페이지당 기본 항목 수"
@@ -2919,10 +2921,10 @@ msgid "Default number of items per page on the front end"
 msgstr "프론트엔드에서 페이지당 기본 항목 수"
 
 msgid "Default page"
-msgstr ""
+msgstr "기본 페이지"
 
 msgid "Default payment method"
-msgstr ""
+msgstr "기본 결제 수단"
 
 msgid "Default phone country code"
 msgstr "기본 전화 국가 코드"
@@ -2970,9 +2972,9 @@ msgid ""
 "was used in a previous booking, it will be automatically selected; "
 "otherwise, you can set it manually."
 msgstr ""
-"관리자 또는 직원 패널에서 생성된 예약에 대해 이 고객에게 발송되는 알림에 사용"
-"될 언어를 정의합니다. 이전 예약에서 지원되는 언어가 사용된 경우 자동으로 선택"
-"되며, 그렇지 않은 경우 수동으로 설정할 수 있습니다."
+"관리자 또는 담당자 패널에서 생성된 예약에 대해 이 고객에게 발송되는 알림에 사"
+"용될 언어를 정의합니다. 이전 예약에서 지원되는 언어가 사용된 경우 자동으로 선"
+"택되며, 그렇지 않은 경우 수동으로 설정할 수 있습니다."
 
 msgid "Delete"
 msgstr "삭제"
@@ -3005,13 +3007,13 @@ msgid "Delete coupon"
 msgstr "쿠폰 삭제"
 
 msgid "Delete custom field"
-msgstr ""
+msgstr "사용자 정의 필드 삭제"
 
 msgid "Delete customer"
 msgstr "고객 삭제"
 
 msgid "Delete employee"
-msgstr "직원 삭제"
+msgstr "담당자 삭제"
 
 msgid "Delete event booking"
 msgstr "이벤트 예약 삭제"
@@ -3020,7 +3022,7 @@ msgid "Delete following"
 msgstr "팔로잉 삭제"
 
 msgid "Delete location"
-msgstr "위치 삭제"
+msgstr "장소 삭제"
 
 msgid "Delete package"
 msgstr "패키지 삭제"
@@ -3093,7 +3095,7 @@ msgid "Direct charge"
 msgstr "직접 청구"
 
 msgid "Disable"
-msgstr ""
+msgstr "비활성화"
 
 msgid ""
 "Disable this option to allow only individual customers to book group "
@@ -3115,10 +3117,10 @@ msgid "Disconnect Employee"
 msgstr "담당자 연결 해제"
 
 msgid "Disconnect account"
-msgstr ""
+msgstr "계정 연결 해제"
 
 msgid "Disconnect employee account"
-msgstr ""
+msgstr "담당자 계정 연결 해제"
 
 msgid "Disconnect from Apple"
 msgstr "애플에서 연결 해제"
@@ -3127,16 +3129,16 @@ msgid "Discount"
 msgstr "할인"
 
 msgid "Discount Asc"
-msgstr ""
+msgstr "할인 오름차순"
 
 msgid "Discount Desc"
-msgstr ""
+msgstr "할인 내림차순"
 
 msgid "Discount (%)"
 msgstr "할인(%)"
 
 msgid "Discount type"
-msgstr ""
+msgstr "할인 유형"
 
 msgid "Display Amelia booking forms and panels on BuddyBoss member profiles."
 msgstr "버디보스 회원 프로필에 아멜리아 예약 양식 및 패널을 표시합니다."
@@ -3174,10 +3176,10 @@ msgid "Do you want to update following events?"
 msgstr "팔로잉 이벤트를 업데이트하시겠습니까?"
 
 msgid "Documentation"
-msgstr ""
+msgstr "문서"
 
 msgid "Don't Import"
-msgstr ""
+msgstr "가져오지 마세요"
 
 msgid "Don't have an account?"
 msgstr "계정이 없으신가요?"
@@ -3186,7 +3188,7 @@ msgid "Don't send reminders within the selected time"
 msgstr "선택한 시간 내에 알림을 보내지 마십시오"
 
 msgid "Don't suggest alternatives"
-msgstr ""
+msgstr "대안을 제안하지 마십시오"
 
 msgid ""
 "Don't use Text mode option if you already have HTML code in the description, "
@@ -3196,7 +3198,7 @@ msgstr ""
 "드가 있는 경우 텍스트 모드 옵션을 사용하지 마세요."
 
 msgid "Dot-comma"
-msgstr ""
+msgstr "점-쉼표"
 
 msgid "Download"
 msgstr "다운로드"
@@ -3220,7 +3222,7 @@ msgid "Download .csv"
 msgstr ".csv 다운로드"
 
 msgid "Download invoice"
-msgstr ""
+msgstr "인보이스 다운로드"
 
 msgid ""
 "Download your customer list instantly for reporting, marketing, or external "
@@ -3242,7 +3244,7 @@ msgid "Drop file here or click to upload"
 msgstr "여기에 파일을 드롭하거나 클릭하여 업로드"
 
 msgid "Drop files here or click to upload"
-msgstr ""
+msgstr "여기에 파일을 드래그하거나 클릭하여 업로드하세요"
 
 msgid "Dropdown Color"
 msgstr "드롭다운 색상"
@@ -3260,37 +3262,37 @@ msgid "Due"
 msgstr "기한"
 
 msgid "Duplicate"
-msgstr "중복"
+msgstr "복제"
 
 msgid "Duplicate Event"
-msgstr "중복 이벤트"
+msgstr "이벤트 복제"
 
 msgid "Duplicate appointment"
-msgstr ""
+msgstr "예약 복제"
 
 msgid "Duplicate category"
-msgstr ""
+msgstr "카테고리 복제"
 
 msgid "Duplicate coupon"
-msgstr ""
+msgstr "쿠폰 복제"
 
 msgid "Duplicate employee"
-msgstr ""
+msgstr "담당자 복제"
 
 msgid "Duplicate fields are not allowed."
-msgstr ""
+msgstr "중복 필드는 허용되지 않습니다."
 
 msgid "Duplicate location"
-msgstr ""
+msgstr "장소 복제"
 
 msgid "Duplicate package"
-msgstr ""
+msgstr "패키지 복제"
 
 msgid "Duplicate resource"
-msgstr ""
+msgstr "리소스 복제"
 
 msgid "Duplicate service"
-msgstr ""
+msgstr "서비스 복제"
 
 msgid "Duration"
 msgstr "기간"
@@ -3299,31 +3301,31 @@ msgid "Duration:"
 msgstr "기간:"
 
 msgid "Duration Asc"
-msgstr ""
+msgstr "기간 오름차순"
 
 msgid "Duration Desc"
-msgstr ""
+msgstr "기간 내림차순"
 
 msgid "E-Ticket Scanner"
-msgstr "티켓 이름"
+msgstr "전자 티켓 스캐너"
 
 msgid "E-Tickets"
-msgstr "티켓"
+msgstr "전자 티켓"
 
 msgid "E-ticket"
-msgstr ""
+msgstr "전자 티켓"
 
 msgid "E-ticket QR code"
-msgstr ""
+msgstr "전자 티켓 QR 코드"
 
 msgid "E-ticket scanner"
-msgstr ""
+msgstr "전자 티켓 스캐너"
 
 msgid "Each:"
 msgstr "각:"
 
 msgid "Each spot counts as one attendee."
-msgstr ""
+msgstr "각 자리는 한 명의 참석자로 간주됩니다."
 
 msgid "Easily export your customer data in one click"
 msgstr "고객 데이터를 한 번의 클릭으로 간편하게 내보내세요"
@@ -3337,94 +3339,94 @@ msgstr ""
 "활한 운영과 일관된 예약 경험을 보장합니다."
 
 msgid "Edit"
-msgstr "편집"
+msgstr "수정"
 
 msgid "Edit Appointment"
-msgstr "예약 편집"
+msgstr "예약 수정"
 
 msgid "Edit Attendee"
-msgstr "참석자 편집"
+msgstr "참석자 수정"
 
 msgid "Edit Attendees"
-msgstr "참석자 편집"
+msgstr "참석자 수정"
 
 msgid "Edit Category"
-msgstr "카테고리 편집"
+msgstr "카테고리 수정"
 
 msgid "Edit Coupon"
-msgstr "쿠폰 편집"
+msgstr "쿠폰 수정"
 
 msgid "Edit Customer"
-msgstr "고객 편집"
+msgstr "고객 수정"
 
 msgid "Edit Event"
-msgstr "이벤트 편집"
+msgstr "이벤트 수정"
 
 msgid "Edit Extra"
-msgstr ""
+msgstr "부가 서비스 수정"
 
 msgid "Edit Package Booking"
-msgstr ""
+msgstr "패키지 예약 수정"
 
 msgid "Edit Tax"
-msgstr "세금 편집"
+msgstr "세금 수정"
 
 msgid "Edit Tracking"
-msgstr ""
+msgstr "추적 수정"
 
 msgid "Edit Webhook"
-msgstr ""
+msgstr "웹훅 수정"
 
 msgid "Edit appointment"
-msgstr ""
+msgstr "예약 수정"
 
 msgid "Edit booking"
-msgstr ""
+msgstr "예약 수정"
 
 msgid "Edit custom field"
-msgstr ""
+msgstr "사용자 정의 필드 수정"
 
 msgid "Edit custom notification"
-msgstr ""
+msgstr "사용자 지정 알림 수정"
 
 msgid "Edit customer"
-msgstr ""
+msgstr "고객 수정"
 
 msgid "Edit day off"
-msgstr ""
+msgstr "휴무일 수정"
 
 msgid "Edit employee"
-msgstr ""
+msgstr "담당자 수정"
 
 msgid "Edit event"
-msgstr ""
+msgstr "이벤트 수정"
 
 msgid "Edit event booking"
-msgstr ""
+msgstr "이벤트 예약 수정"
 
 msgid "Edit location"
-msgstr ""
+msgstr "장소 수정"
 
 msgid "Edit package"
-msgstr ""
+msgstr "패키지 수정"
 
 msgid "Edit resource"
-msgstr ""
+msgstr "리소스 수정"
 
 msgid "Edit service"
-msgstr ""
+msgstr "서비스 수정"
 
 msgid "Edit special day"
-msgstr ""
+msgstr "기념일 수정"
 
 msgid "Edit table"
-msgstr ""
+msgstr "테이블 수정"
 
 msgid "Edit transaction"
-msgstr ""
+msgstr "거래 수정"
 
 msgid "Edit work hours"
-msgstr ""
+msgstr "근무 시간 수정"
 
 msgid ""
 "Efficiently manage appointment cancellations by allowing customers to join a "
@@ -3434,7 +3436,7 @@ msgstr ""
 "로 생긴 시간대를 수동으로 채울 수 있습니다."
 
 msgid "Effortless management for every location"
-msgstr "모든 위치에 대한 손쉬운 관리"
+msgstr "모든 장소에 대한 손쉬운 관리"
 
 msgid "Effortless tax management for every booking"
 msgstr "모든 예약에 대한 손쉬운 세금 관리"
@@ -3460,13 +3462,13 @@ msgid "Email Address"
 msgstr "이메일 주소"
 
 msgid "Email address"
-msgstr ""
+msgstr "이메일 주소"
 
 msgid "Email already exists with different name. Please check your name."
 msgstr "이미 다른 이름으로 이메일이 존재합니다. 이름을 확인해 주세요."
 
 msgid "Email copied to clipboard."
-msgstr ""
+msgstr "이메일이 클립보드에 복사되었습니다."
 
 msgid "Email field is required"
 msgstr "이메일 필수"
@@ -3496,44 +3498,44 @@ msgid "Employee Selection"
 msgstr "담당자 선택 로직"
 
 msgid "Employee badges"
-msgstr ""
+msgstr "담당자 배지"
 
 msgid "Employee badges management"
-msgstr ""
+msgstr "담당자 배지 관리"
 
 msgid "Employee calendar disconnected successfully"
-msgstr "직원 캘린더 연결이 성공적으로 해제되었습니다"
+msgstr "담당자 캘린더 연결이 성공적으로 해제되었습니다"
 
 msgid "Employee calendar has been updated successfully."
-msgstr "직원 달력이 성공적으로 업데이트되었습니다."
+msgstr "담당자 캘린더가 성공적으로 업데이트되었습니다."
 
 msgid ""
 "Employee daily appointment limit has been reached. Please choose another "
 "date or employee."
 msgstr ""
-"담당자의 일일 약속 한도에 도달했습니다. 다른 날짜 또는 다른 담당자을 선택해 "
+"담당자의 일일 예약 한도에 도달했습니다. 다른 날짜 또는 다른 담당자을 선택해 "
 "주세요."
 
 msgid "Employee days off"
-msgstr ""
+msgstr "담당자 연월차"
 
 msgid "Employee description"
 msgstr "담당자 설명"
 
 msgid "Employee description popup"
-msgstr ""
+msgstr "담당자 정보 팝업"
 
 msgid "Employee details"
-msgstr ""
+msgstr "담당자 세부 정보"
 
 msgid "Employee dialog"
-msgstr ""
+msgstr "담당자 대화"
 
 msgid "Employee email"
 msgstr "담당자 이메일"
 
 msgid "Employee filter"
-msgstr ""
+msgstr "담당자 필터"
 
 msgid "Employee first name"
 msgstr "담당자 이름"
@@ -3542,22 +3544,22 @@ msgid "Employee full name"
 msgstr "담당자 전체 이름"
 
 msgid "Employee has been created."
-msgstr ""
+msgstr "담당자가 생성되었습니다."
 
 msgid "Employee has been deleted."
-msgstr ""
+msgstr "담당자가 삭제되었습니다."
 
 msgid "Employee has been hidden."
-msgstr ""
+msgstr "담당자가 숨겨졌습니다."
 
 msgid "Employee has been updated."
-msgstr ""
+msgstr "담당자가 업데이트되었습니다."
 
 msgid "Employee information"
 msgstr "담당자 정보"
 
 msgid "Employee is now visible."
-msgstr ""
+msgstr "담당자가 이제 표시됩니다."
 
 msgid "Employee last name"
 msgstr "담당자 성"
@@ -3569,40 +3571,40 @@ msgid "Employee note"
 msgstr "담당자 메모"
 
 msgid "Employee note has been updated."
-msgstr ""
+msgstr "담당자 메모가 업데이트되었습니다."
 
 msgid "Employee panel"
-msgstr ""
+msgstr "담당자 패널"
 
 msgid "Employee panel access link"
-msgstr ""
+msgstr "담당자 패널 접근 링크"
 
 msgid "Employee panel page URL"
-msgstr ""
+msgstr "담당자 패널 페이지 URL"
 
 msgid "Employee panel password"
-msgstr ""
+msgstr "담당자 패널 비밀번호"
 
 msgid "Employee password"
-msgstr ""
+msgstr "담당자 비밀번호"
 
 msgid "Employee phone"
 msgstr "담당자 전화"
 
 msgid "Employee price"
-msgstr ""
+msgstr "담당자 가격"
 
 msgid "Employee profile"
-msgstr ""
+msgstr "담당자 프로필"
 
 msgid "Employee selection"
-msgstr ""
+msgstr "담당자 선발"
 
 msgid "Employee selection logic"
 msgstr "담당자 선택 로직"
 
 msgid "Employee setup"
-msgstr ""
+msgstr "담당자 설정"
 
 msgid "Employees"
 msgstr "담당자"
@@ -3611,10 +3613,10 @@ msgid "Empower your team with seamless integrations"
 msgstr "원활한 통합으로 팀의 역량을 강화하세요"
 
 msgid "Empty state"
-msgstr ""
+msgstr "빈 상태"
 
 msgid "Enable"
-msgstr ""
+msgstr "활성화"
 
 msgid "Enable Amelia"
 msgstr "아멜리아 사용"
@@ -3632,7 +3634,7 @@ msgid "Enable Payment from Link"
 msgstr "링크에서 결제 사용"
 
 msgid "Enable auto-reply message"
-msgstr ""
+msgstr "자동 응답 메시지 활성화"
 
 msgid ""
 "Enable customers to manage their appointments and events efficiently. "
@@ -3664,8 +3666,8 @@ msgid ""
 "Enable this option if you want customers to select at least one extra when "
 "booking. You can also choose how many extras are required."
 msgstr ""
-"고객이 예약 시 최소한 하나의 추가 항목을 선택하도록 하려면 이 옵션을 활성화하"
-"세요. 필요한 추가 항목의 수를 선택할 수도 있습니다."
+"고객이 예약 시 최소한 하나의 부가 서비스를 선택하도록 하려면 이 옵션을 활성화"
+"하세요. 필요한 부가 서비스의 수를 선택할 수도 있습니다."
 
 msgid ""
 "Enable this option if you want to allow your customers to delete their "
@@ -3678,13 +3680,13 @@ msgid ""
 "Enable this option if you want to allow your customers to reschedule their "
 "own appointments."
 msgstr ""
-"고객이 스스로 약속을 변경할 수 있도록 하려면 이 옵션을 사용 설정합니다."
+"고객이 스스로 예약을 변경할 수 있도록 하려면 이 옵션을 사용 설정합니다."
 
 msgid ""
 "Enable this option if you want to count resource quantity usage for each "
 "additional person added during the booking."
 msgstr ""
-"예약 시 추가된 인원마다 자원 사용량을 계산하려면 이 옵션을 활성화하십시오."
+"예약 시 추가된 인원마다 리소스 사용량을 계산하려면 이 옵션을 활성화하십시오."
 
 msgid ""
 "Enable this option if you want to delete plugin tables, roles, files and "
@@ -3718,32 +3720,33 @@ msgid ""
 "Enable this option if you want your employee to receive data from the custom "
 "fields only for the last customer when there is a group booking"
 msgstr ""
-"그룹 예약이 있을 때 직원이 마지막 고객에 대해서만 사용자 지정 필드에서 데이터"
-"를 받도록 하려면 이 옵션을 사용 설정합니다"
+"그룹 예약이 있을 때 담당자가 마지막 고객에 대해서만 사용자 지정 필드에서 데이"
+"터를 받도록 하려면 이 옵션을 사용 설정합니다"
 
 msgid ""
 "Enable this option to add event attendees to employees’ Apple Calendar "
 "events."
 msgstr ""
-"이 옵션을 활성화하면 이벤트 참석자를 직원의 Apple 캘린더 이벤트에 추가할 수 "
+"이 옵션을 활성화하면 이벤트 참석자를 담당자의 애플 캘린더 이벤트에 추가할 수 "
 "있습니다."
 
 msgid ""
 "Enable this option to add event attendees to employees’ Google Calendar "
 "events."
 msgstr ""
-"이 옵션을 활성화하면 직원의 구글 캘린더 이벤트에 이벤트 참석자가 추가됩니다."
+"이 옵션을 활성화하면 담당자의 구글 캘린더 이벤트에 이벤트 참석자가 추가됩니"
+"다."
 
 msgid ""
 "Enable this option to add event attendees to employees’ Outlook Calendar "
 "events."
 msgstr ""
-"이 옵션을 활성화하면 이벤트 참석자를 직원의 Outlook 캘린더 이벤트에 추가할 "
+"이 옵션을 활성화하면 이벤트 참석자를 담당자의 아웃룩 캘린더 이벤트에 추가할 "
 "수 있습니다."
 
 msgid ""
 "Enable this option to create meetings for appointments with pending status."
-msgstr "이 옵션을 활성화하면 대기 중인 약속에 대한 회의를 생성할 수 있습니다."
+msgstr "이 옵션을 활성화하면 대기 중인 예약에 대한 회의를 생성할 수 있습니다."
 
 msgid ""
 "Enable this option to create spaces for appointments with pending status."
@@ -3752,7 +3755,7 @@ msgstr "이 옵션을 활성화하면 보류 중인 상태의 예약을 위한 �
 msgid ""
 "Enable this option to display appointments with pending status in employees' "
 "calendars."
-msgstr "이 옵션을 활성화하면 직원 캘린더에 대기 중인 약속이 표시됩니다."
+msgstr "이 옵션을 활성화하면 담당자 캘린더에 대기 중인 예약이 표시됩니다."
 
 msgid ""
 "Enable this option to ensure that customers using an existing email or phone "
@@ -3765,22 +3768,22 @@ msgid ""
 "Enable this option to include buffer time for scheduled appointments in "
 "Apple Calendar events."
 msgstr ""
-"이 옵션을 활성화하면 Apple 캘린더 이벤트에 예약된 약속에 대한 완충 시간을 포"
-"함합니다."
+"이 옵션을 활성화하면 애플 캘린더 이벤트에 예약된 예약에 대한 완충 시간을 포함"
+"합니다."
 
 msgid ""
 "Enable this option to include buffer time for scheduled appointments in "
 "Google Calendar events."
 msgstr ""
-"이 옵션을 활성화하면 Google 캘린더 이벤트에 예약된 약속에 대한 완충 시간을 포"
-"함합니다."
+"이 옵션을 활성화하면 구글 캘린더 이벤트에 예약된 예약에 대한 완충 시간을 포함"
+"합니다."
 
 msgid ""
 "Enable this option to include buffer time for scheduled appointments in "
 "Outlook Calendar events."
 msgstr ""
-"이 옵션을 활성화하면 Outlook 일정 이벤트에 예약된 약속에 대한 완충 시간을 포"
-"함합니다."
+"이 옵션을 활성화하면 아웃룩 일정 이벤트에 예약된 예약에 대한 완충 시간을 포함"
+"합니다."
 
 msgid ""
 "Enable this option to make sure that the invoice will be sent to the "
@@ -3792,8 +3795,8 @@ msgid ""
 "Enable this option to receive a reminder email when your SMS balance reaches "
 "set minimum"
 msgstr ""
-"SMS 잔액이 설정한 최소 금액에 도달하면 알림 이메일을 받으려면 이 옵션을 사용 "
-"설정하세요"
+"SMS 잔액이 설정된 최소 금액에 도달했을 때 알림 이메일을 받으려면 이 옵션을 활"
+"성화하세요"
 
 msgid "Enable this option to repeat the notification at the defined interval."
 msgstr "이 옵션을 활성화하면 정의된 간격으로 알림을 반복합니다."
@@ -3802,8 +3805,8 @@ msgid ""
 "Enable this option to use this custom field as the location in Google and "
 "Outlook Calendar events, ICS files, and ‘Add to Calendar’ events."
 msgstr ""
-"이 옵션을 활성화하면 Google 및 Outlook 캘린더 이벤트, ICS 파일, '캘린더에 추"
-"가' 이벤트에서 이 사용자 지정 필드를 위치로 사용합니다."
+"이 옵션을 활성화하면 구글 및 아웃룩 캘린더 이벤트, ICS 파일, '캘린더에 추가' "
+"이벤트에서 이 사용자 지정 필드를 위치로 사용합니다."
 
 msgid "Enable to display booking slots based on the client's time zone."
 msgstr "고객의 시간대에 따라 예약 가능 시간을 표시하도록 설정합니다."
@@ -3815,7 +3818,7 @@ msgid "Enabled"
 msgstr "사용"
 
 msgid "End Date"
-msgstr "종료 날짜"
+msgstr "종료일"
 
 msgid "End Time"
 msgstr "종료 시간"
@@ -3824,10 +3827,10 @@ msgid "End Time Visibility:"
 msgstr "종료 시간 가시성:"
 
 msgid "End date"
-msgstr ""
+msgstr "종료일"
 
 msgid "End time"
-msgstr ""
+msgstr "종료 시간"
 
 msgid "Endpoint"
 msgstr "종료 시점"
@@ -3912,7 +3915,7 @@ msgid "Enter email"
 msgstr "이메일 입력"
 
 msgid "Enter email, then press Enter to add"
-msgstr "이메일을 입력한 다음 Enter 키를 눌러 추가합니다"
+msgstr "이메일을 입력한 다음 엔터 키를 눌러 추가합니다"
 
 msgid "Enter first name"
 msgstr "이름 입력"
@@ -3931,15 +3934,15 @@ msgid ""
 "to send it to your employees in notifications. Make sure to also add the "
 "placeholder in notification so the URL can be sent."
 msgstr ""
-"직원들에게 알림으로 보내려면 [ameliaemployeepanel] 단축코드가 포함된 페이지"
+"담당자들에게 알림으로 보내려면 [ameliaemployeepanel] 단축코드가 포함된 페이지"
 "의 URL을 여기에 입력하세요. URL이 전송될 수 있도록 알림에 자리 표시자도 추가"
 "해야 합니다."
 
 msgid "Enter here an endpoint if you are using Mailgun from EU countries"
-msgstr "EU 국가에서 Mailgun을 사용하는 경우 여기에 엔드포인트를 입력하세요"
+msgstr "EU 국가에서 메일건을 사용하는 경우 여기에 엔드포인트를 입력하세요"
 
 msgid "Enter holiday or day off name"
-msgstr "휴일 또는 휴무일 이름 입력"
+msgstr "공휴일 또는 휴무일 이름 입력"
 
 msgid "Enter last name"
 msgstr "성을 입력하세요"
@@ -3980,19 +3983,19 @@ msgid "Error while generating CSV."
 msgstr "CSV 생성 중 오류가 발생했습니다."
 
 msgid "Estimated price"
-msgstr ""
+msgstr "예상 가격"
 
 msgid "Event"
 msgstr "이벤트"
 
 msgid "Event Asc"
-msgstr ""
+msgstr "이벤트 오름차순"
 
 msgid "Event Available"
 msgstr "이벤트 사용 가능"
 
 msgid "Event Booking Details"
-msgstr ""
+msgstr "이벤트 예약 상세 정보"
 
 msgid ""
 "Event Booking is shortcode that gives your customers the option to book one "
@@ -4023,7 +4026,7 @@ msgid "Event Day"
 msgstr "이벤트 요일"
 
 msgid "Event Desc"
-msgstr ""
+msgstr "이벤트 내림차순"
 
 msgid "Event Employee"
 msgstr "이벤트 담당자"
@@ -4059,55 +4062,55 @@ msgid "Event Type"
 msgstr "이벤트 유형"
 
 msgid "Event available"
-msgstr ""
+msgstr "이벤트 이용 가능"
 
 msgid "Event booking has been created."
-msgstr ""
+msgstr "이벤트 예약이 생성되었습니다."
 
 msgid "Event booking has been deleted."
-msgstr ""
+msgstr "이벤트 예약이 삭제되었습니다."
 
 msgid "Event booking has been updated."
-msgstr ""
+msgstr "이벤트 예약이 업데이트되었습니다."
 
 msgid "Event booking is unavailable"
 msgstr "이벤트 예약을 사용할 수 없습니다"
 
 msgid "Event calendar booking from"
-msgstr ""
+msgstr "다음에서 예약된 이벤트 캘린더"
 
 msgid "Event card"
-msgstr ""
+msgstr "이벤트 카드"
 
 msgid "Event date & time period"
-msgstr ""
+msgstr "이벤트 날짜 및 기간"
 
 msgid "Event date & time periods with Google Meet join links"
-msgstr "Google Meet 참여 링크가 포함된 이벤트 날짜 및 시간대"
+msgstr "구글 Meet 참여 링크가 포함된 이벤트 날짜 및 시간대"
 
 msgid "Event date & time periods with Microsoft Teams join links"
-msgstr "이벤트 날짜 및 시간대별 Microsoft Teams 참여 링크"
+msgstr "이벤트 날짜 및 시간대별 마이크로소프트 팀 참여 링크"
 
 msgid "Event date & time periods with Zoom join links"
-msgstr "행사 날짜 및 시간대별 Zoom 참여 링크"
+msgstr "이벤트 날짜 및 시간대별 Zoom 참여 링크"
 
 msgid "Event date & time periods with Zoom start links"
-msgstr "행사 날짜 및 시간대별 Zoom 시작 링크"
+msgstr "이벤트 날짜 및 시간대별 Zoom 시작 링크"
 
 msgid "Event date period"
-msgstr ""
+msgstr "이벤트 기간"
 
 msgid "Event date periods with Google Meet join links"
-msgstr "Google Meet 참여 링크가 포함된 이벤트 일정 기간"
+msgstr "구글 Meet 참여 링크가 포함된 이벤트 일정 기간"
 
 msgid "Event date periods with Microsoft Teams join links"
-msgstr "Microsoft Teams 참여 링크가 포함된 이벤트 날짜 기간"
+msgstr "마이크로소프트 팀 참여 링크가 포함된 이벤트 날짜 기간"
 
 msgid "Event date periods with Zoom join links"
-msgstr "행사 일정 기간 및 Zoom 참여 링크"
+msgstr "이벤트 일정 기간 및 Zoom 참여 링크"
 
 msgid "Event date periods with Zoom start links"
-msgstr "줌 시작 링크가 포함된 이벤트 날짜 기간"
+msgstr "Zoom 시작 링크가 포함된 이벤트 날짜 기간"
 
 msgid "Event deposit"
 msgstr "이벤트 입금"
@@ -4116,79 +4119,79 @@ msgid "Event description"
 msgstr "이벤트 설명"
 
 msgid "Event details"
-msgstr ""
+msgstr "이벤트 세부 정보"
 
 msgid "Event e-ticket"
-msgstr ""
+msgstr "이벤트 전자 티켓"
 
 msgid "Event employee"
-msgstr ""
+msgstr "이벤트 담당자"
 
 msgid "Event employees"
-msgstr ""
+msgstr "이벤트 담당자"
 
 msgid "Event end date"
-msgstr ""
+msgstr "이벤트 종료일"
 
 msgid "Event end date & time"
-msgstr ""
+msgstr "이벤트 종료일 및 시간"
 
 msgid "Event end time"
-msgstr ""
+msgstr "이벤트 종료 시간"
 
 msgid "Event ends"
-msgstr ""
+msgstr "이벤트 종료"
 
 msgid "Event filter"
-msgstr ""
+msgstr "이벤트 필터"
 
 msgid "Event gallery"
-msgstr ""
+msgstr "이벤트 갤러리"
 
 msgid "Event has been canceled"
 msgstr "이벤트가 취소되었습니다"
 
 msgid "Event has been canceled."
-msgstr ""
+msgstr "이벤트가 취소되었습니다."
 
 msgid "Event has been created."
-msgstr ""
+msgstr "이벤트가 생성되었습니다."
 
 msgid "Event has been deleted"
 msgstr "이벤트가 삭제되었습니다"
 
 msgid "Event has been deleted."
-msgstr ""
+msgstr "이벤트가 삭제되었습니다."
 
 msgid "Event has been hidden."
-msgstr ""
+msgstr "이벤트가 숨겨졌습니다."
 
 msgid "Event has been opened"
 msgstr "이벤트가 열렸습니다"
 
 msgid "Event has been opened."
-msgstr ""
+msgstr "이벤트가 시작되었습니다."
 
 msgid "Event has been saved"
 msgstr "이벤트가 저장되었습니다"
 
 msgid "Event has been updated."
-msgstr ""
+msgstr "이벤트가 업데이트되었습니다."
 
 msgid "Event info"
-msgstr ""
+msgstr "이벤트 정보"
 
 msgid "Event initial start date"
-msgstr ""
+msgstr "이벤트 최초 시작일"
 
 msgid "Event is now visible."
-msgstr ""
+msgstr "이벤트가 이제 표시됩니다."
 
 msgid "Event list booking from"
-msgstr ""
+msgstr "다음에서 예약된 이벤트 목록"
 
 msgid "Event location"
-msgstr ""
+msgstr "이벤트 장소"
 
 msgid "Event name"
 msgstr "이벤트 이름"
@@ -4197,31 +4200,31 @@ msgid "Event price"
 msgstr "이벤트 가격"
 
 msgid "Event slots capacity"
-msgstr ""
+msgstr "이벤트 슬롯 수용량"
 
 msgid "Event space name"
-msgstr ""
+msgstr "이벤트 공간 이름"
 
 msgid "Event start date"
-msgstr ""
+msgstr "이벤트 시작일"
 
 msgid "Event start date & time"
-msgstr ""
+msgstr "이벤트 시작일 및 시간"
 
 msgid "Event start date and time"
-msgstr "이벤트 시작 날짜 및 시간"
+msgstr "이벤트 시작일 및 시간"
 
 msgid "Event start time"
-msgstr ""
+msgstr "이벤트 시작 시간"
 
 msgid "Event starts"
-msgstr ""
+msgstr "이벤트 시작"
 
 msgid "Event status"
-msgstr ""
+msgstr "이벤트 상태"
 
 msgid "Event ticketing"
-msgstr ""
+msgstr "이벤트 티켓팅"
 
 msgid "Event tickets"
 msgstr "이벤트 티켓"
@@ -4230,10 +4233,10 @@ msgid "Event title"
 msgstr "이벤트 제목"
 
 msgid "Event title and description"
-msgstr ""
+msgstr "이벤트 제목 및 설명"
 
 msgid "Event type"
-msgstr ""
+msgstr "이벤트 유형"
 
 msgid "Events"
 msgstr "이벤트"
@@ -4251,28 +4254,28 @@ msgid "Events List Booking"
 msgstr "이벤트 목록 예약"
 
 msgid "Events available"
-msgstr ""
+msgstr "사용 가능한 이벤트"
 
 msgid "Events calendar"
-msgstr ""
+msgstr "이벤트 캘린더"
 
 msgid "Events custom pricing"
-msgstr ""
+msgstr "이벤트 맞춤 가격"
 
 msgid "Events list"
-msgstr ""
+msgstr "이벤트 목록"
 
 msgid "Events list view"
-msgstr ""
+msgstr "이벤트 목록 보기"
 
 msgid "Events pricing"
-msgstr ""
+msgstr "이벤트 가격"
 
 msgid "Events setup"
-msgstr ""
+msgstr "이벤트 설정"
 
 msgid "Events waiting list"
-msgstr ""
+msgstr "이벤트 대기자 명단"
 
 msgid "Every"
 msgstr "모든"
@@ -4287,10 +4290,10 @@ msgid "Exclude Taxes"
 msgstr "세금 제외"
 
 msgid "Expand all"
-msgstr ""
+msgstr "모두 펼치기"
 
 msgid "Expand your capacity by adding as many employees as your business needs"
-msgstr "사업에 필요한 만큼 직원을 추가하여 역량을 확장하세요"
+msgstr "사업에 필요한 만큼 담당자를 추가하여 역량을 확장하세요"
 
 msgid "Expiration date"
 msgstr "만료일"
@@ -4315,22 +4318,22 @@ msgstr ""
 "와의 공유가 간편해집니다."
 
 msgid "Export appointment data with ease"
-msgstr "약속 데이터를 손쉽게 내보내기"
+msgstr "예약 데이터를 손쉽게 내보내기"
 
 msgid "Export bookings"
-msgstr ""
+msgstr "예약 내보내기"
 
 msgid "Express Account"
 msgstr "익스프레스 계정"
 
 msgid "Express account capabilities"
-msgstr ""
+msgstr "익스프레스 계정 기능"
 
 msgid "Extra"
 msgstr "추가"
 
 msgid "Extra:"
-msgstr "추가 사항:"
+msgstr "부가 서비스:"
 
 msgid "Extra people limit cannot exceed waiting list capacity"
 msgstr "추가 인원 제한은 대기 명단 수용 인원을 초과할 수 없습니다"
@@ -4339,49 +4342,49 @@ msgid "Extra people limit must be 0 or greater"
 msgstr "추가 인원 제한은 0 이상이어야 합니다"
 
 msgid "Extras"
-msgstr "추가"
+msgstr "부가 서비스"
 
 msgid "Extras Cost:"
-msgstr "추가 비용:"
+msgstr "부가 서비스 비용:"
 
 msgid "Extras Description"
-msgstr "추가 비용 설명"
+msgstr "부가 서비스 설명"
 
 msgid "Extras Duration"
-msgstr "추가 시간"
+msgstr "부가 서비스 시간"
 
 msgid "Extras Heading"
-msgstr "추가 제목"
+msgstr "부가 서비스 제목"
 
 msgid "Extras Subtotal"
-msgstr "추가 소계"
+msgstr "부가 서비스 소계"
 
 msgid "Extras are included in the deposit amount."
-msgstr "추가 비용은 보증금 금액에 포함됩니다."
+msgstr "부가 서비스는 보증금 금액에 포함됩니다."
 
 msgid "Extras are not included in the deposit amount."
-msgstr "추가 비용은 보증금 금액에 포함되지 않습니다."
+msgstr "부가 서비스는 보증금 금액에 포함되지 않습니다."
 
 msgid "Extras available"
-msgstr "추가 기능 사용 가능"
+msgstr "부가 서비스 사용 가능"
 
 msgid "Extras cost:"
-msgstr ""
+msgstr "부가 서비스 비용:"
 
 msgid "Extras subtotal"
-msgstr ""
+msgstr "부가 서비스 소계"
 
 msgid "Extras total price"
-msgstr "추가 요금 총액"
+msgstr "부가 서비스 요금 총액"
 
 msgid "Facebook app ID"
-msgstr ""
+msgstr "페이스북 앱 ID"
 
 msgid "Facebook app secret"
-msgstr ""
+msgstr "페이스북 앱 비밀번호"
 
 msgid "Facebook social login"
-msgstr ""
+msgstr "페이스북 소셜 로그인"
 
 msgid "Failed"
 msgstr "실패"
@@ -4397,31 +4400,31 @@ msgstr ""
 "패키지 세부 정보를 불러오는 데 실패했습니다. 나중에 다시 시도해 주세요."
 
 msgid "Failed to reorder packages."
-msgstr ""
+msgstr "패키지 재정렬에 실패했습니다."
 
 msgid "Failed to reorder services."
-msgstr ""
+msgstr "서비스 재정렬에 실패했습니다."
 
 msgid "Failed to send invoice."
-msgstr ""
+msgstr "인보이스 발송에 실패했습니다."
 
 msgid "Failed to send test SMS."
-msgstr ""
+msgstr "테스트 SMS 전송에 실패했습니다."
 
 msgid "Failed to send test WhatsApp message."
 msgstr "테스트 WhatsApp 메시지 전송에 실패했습니다."
 
 msgid "Failed to send test email."
-msgstr ""
+msgstr "테스트 이메일 전송에 실패했습니다."
 
 msgid "Failed to update category positions."
-msgstr ""
+msgstr "카테고리 위치 업데이트에 실패했습니다."
 
 msgid "Features"
-msgstr ""
+msgstr "기능"
 
 msgid "Features & Integrations"
-msgstr ""
+msgstr "기능 및 통합"
 
 msgid "Female"
 msgstr "여성"
@@ -4430,7 +4433,7 @@ msgid "Field Order"
 msgstr "필드 순서"
 
 msgid "Field order"
-msgstr ""
+msgstr "필드 순서"
 
 msgid "Field order, mandatory fields, labels and display options"
 msgstr "필드 순서, 필수 필드, 레이블 및 표시 옵션"
@@ -4442,7 +4445,7 @@ msgid "Filled"
 msgstr "채워짐"
 
 msgid "Filter"
-msgstr ""
+msgstr "필터"
 
 msgid "Filter by Employee"
 msgstr "담당자별 필터링"
@@ -4451,10 +4454,10 @@ msgid "Filter by Location"
 msgstr "장소별 필터링"
 
 msgid "Filter by employee"
-msgstr ""
+msgstr "담당자별로 필터링"
 
 msgid "Filter by location"
-msgstr ""
+msgstr "장소별 필터링"
 
 msgid "Filterable Field:"
 msgstr "필터링 가능한 필드:"
@@ -4463,7 +4466,7 @@ msgid "Filters"
 msgstr "필터"
 
 msgid "Filters block"
-msgstr ""
+msgstr "필터 블록"
 
 msgid "Finance"
 msgstr "재정"
@@ -4490,13 +4493,13 @@ msgid "First booking only"
 msgstr "첫 예약에 한함"
 
 msgid "First name"
-msgstr ""
+msgstr "이름"
 
 msgid "First {day}"
-msgstr ""
+msgstr "첫째 {day}"
 
 msgid "Fixed"
-msgstr ""
+msgstr "수정됨"
 
 msgid "Fixed amount"
 msgstr "고정 금액"
@@ -4515,7 +4518,7 @@ msgstr ""
 "수 있습니다"
 
 msgid "Follow up"
-msgstr ""
+msgstr "후속 조치"
 
 msgid "Font"
 msgstr "글꼴"
@@ -4524,7 +4527,7 @@ msgid "Font URL"
 msgstr "글꼴 URL"
 
 msgid "Font family"
-msgstr ""
+msgstr "글꼴 패밀리"
 
 msgid "Fonts"
 msgstr "글꼴"
@@ -4536,10 +4539,10 @@ msgid "Footer"
 msgstr "푸터"
 
 msgid "Footer buttons"
-msgstr ""
+msgstr "푸터 버튼"
 
 msgid "Footer content"
-msgstr ""
+msgstr "푸터 콘텐츠"
 
 msgid "For multiselect: hold CTRL / Command (⌘)."
 msgstr "다중 선택의 경우: CTRL / Command(⌘)를 길게 누릅니다."
@@ -4548,14 +4551,14 @@ msgid ""
 "For this field to work correctly, please add your Google Maps API key in the "
 "General Settings. Otherwise, it will function as a simple text field."
 msgstr ""
-"이 필드가 정상적으로 작동하려면 일반 설정에서 Google Maps API 키를 추가해 주"
-"세요. 그렇지 않으면 단순 텍스트 필드로 작동합니다."
+"이 필드가 정상적으로 작동하려면 일반 설정에서 구글 Maps API 키를 추가해 주세"
+"요. 그렇지 않으면 단순 텍스트 필드로 작동합니다."
 
 msgid "Forgot Password?"
 msgstr "비밀번호를 잊으셨나요?"
 
 msgid "Forgot password?"
-msgstr ""
+msgstr "비밀번호를 잊으셨나요?"
 
 msgid "Forgot your password?"
 msgstr "비밀번호를 잊으셨나요?"
@@ -4570,19 +4573,19 @@ msgid "Form colors"
 msgstr "양식 색상"
 
 msgid "Forms"
-msgstr ""
+msgstr "양식"
 
 msgid "Fourth"
 msgstr "넷째"
 
 msgid "Fourth {day}"
-msgstr ""
+msgstr "넷째 {day}"
 
 msgid "Free"
 msgstr "무료"
 
 msgid "Fri"
-msgstr ""
+msgstr "금"
 
 msgid "Friday"
 msgstr "금요일"
@@ -4609,7 +4612,7 @@ msgid ""
 "possibility to search for appointment by selecting several filters so that "
 "they could find the best time slots and services for their needs."
 msgstr ""
-"프론트엔드 약속 검색은 고객이 여러 필터를 선택하여 예약을 검색할 수 있는 단축"
+"프론트엔드 예약 검색은 고객이 여러 필터를 선택하여 예약을 검색할 수 있는 단축"
 "코드로, 고객이 자신의 필요에 가장 적합한 시간대와 서비스를 찾을 수 있도록 도"
 "와줍니다."
 
@@ -4625,26 +4628,26 @@ msgid ""
 "possibility to manage their bookings, working hours, days off, assigned "
 "services and profile information."
 msgstr ""
-"프론트엔드 직원 패널은 직원들이 예약, 근무 시간, 휴무일, 할당된 서비스 및 프"
-"로필 정보를 관리할 수 있는 단축코드입니다."
+"프론트엔드 담당자 패널은 담당자들이 예약, 근무 시간, 휴무일, 할당된 서비스 "
+"및 프로필 정보를 관리할 수 있는 단축코드입니다."
 
 msgid "Front-end customer panel"
-msgstr ""
+msgstr "프론트엔드 고객 패널"
 
 msgid "Front-end employee panel"
-msgstr ""
+msgstr "프론트엔드 담당자 패널"
 
 msgid "Frontend"
-msgstr ""
+msgstr "프론트엔드"
 
 msgid "Frontend & Backend"
-msgstr ""
+msgstr "프론트엔드 및 백엔드"
 
 msgid "Full"
 msgstr "전체"
 
 msgid "Full events"
-msgstr ""
+msgstr "전체 이벤트"
 
 msgid "Fully booked"
 msgstr "예약이 꽉 찼습니다"
@@ -4685,7 +4688,7 @@ msgid "Get in Touch"
 msgstr "연락하기"
 
 msgid "Get in touch"
-msgstr ""
+msgstr "연락 주세요"
 
 msgid "Global Settings"
 msgstr "글로벌 설정"
@@ -4701,61 +4704,61 @@ msgid "Go Back"
 msgstr "뒤로 가기"
 
 msgid "Go back"
-msgstr ""
+msgstr "뒤로 가기"
 
 msgid "Go to Catalog form"
-msgstr ""
+msgstr "카탈로그 양식으로 이동"
 
 msgid "Go to Custom Fields"
-msgstr ""
+msgstr "사용자 정의 필드로 이동"
 
 msgid "Go to Notifications"
 msgstr "알림"
 
 msgid "Go to Step-by-step form"
-msgstr ""
+msgstr "단계별 양식으로 이동"
 
 msgid "Google"
-msgstr ""
+msgstr "구글"
 
 msgid "Google/Outlook location"
-msgstr ""
+msgstr "구글/아웃룩 장소"
 
 msgid "Google Analytics"
 msgstr "구글 애널리틱스"
 
 msgid "Google Analytics setup"
-msgstr ""
+msgstr "구글 애널리틱스 설정"
 
 msgid "Google Calendar"
 msgstr "구글 캘린더"
 
 msgid "Google Calendar & Google Meet"
-msgstr ""
+msgstr "구글 캘린더 및 구글 미트"
 
 msgid "Google Calendar setup"
-msgstr ""
+msgstr "구글 캘린더 설정"
 
 msgid "Google Map API key"
-msgstr ""
+msgstr "구글 지도 API 키"
 
 msgid "Google Maps failed to load. Check your API key and restrictions."
-msgstr "Google 지도 로드에 실패했습니다. API 키와 제한 사항을 확인하세요."
+msgstr "구글 지도 로드에 실패했습니다. API 키와 제한 사항을 확인하세요."
 
 msgid "Google Meet"
-msgstr ""
+msgstr "구글 미트"
 
 msgid "Google Meet Link"
 msgstr "구글 미트 링크"
 
 msgid "Google Meet join link"
-msgstr ""
+msgstr "구글 미트 참가 링크"
 
 msgid "Google Meet link"
-msgstr ""
+msgstr "구글 미트 링크"
 
 msgid "Google Meet setup"
-msgstr ""
+msgstr "구글 미트 설정"
 
 msgid "Google reCAPTCHA v2 secret key"
 msgstr "구글 리캡챠 v2 시크릿 키"
@@ -4764,25 +4767,25 @@ msgid "Google reCAPTCHA v2 site key"
 msgstr "구글 리캡챠 v2 사이트 키"
 
 msgid "Google social login"
-msgstr ""
+msgstr "구글 소셜 로그인"
 
 msgid "Green"
 msgstr "녹색"
 
 msgid "Grid view"
-msgstr ""
+msgstr "그리드 보기"
 
 msgid "Group Ticket"
 msgstr "단체 티켓"
 
 msgid "Group appointment details"
-msgstr "그룹 약속 세부 정보"
+msgstr "그룹 예약 세부 정보"
 
 msgid "Group booking"
-msgstr ""
+msgstr "단체 예약"
 
 msgid "Group booking export format"
-msgstr ""
+msgstr "단체 예약 내보내기 형식"
 
 msgid "Group event details"
 msgstr "그룹 이벤트 세부 정보"
@@ -4791,10 +4794,10 @@ msgid "Group ticket has already been scanned"
 msgstr "서비스가 저장되었습니다"
 
 msgid "Grow your team with unlimited employee management"
-msgstr "무제한 직원 관리로 팀을 확장하세요"
+msgstr "무제한 담당자 관리로 팀을 확장하세요"
 
 msgid "Gyms"
-msgstr ""
+msgstr "체육관"
 
 msgid "HTML"
 msgstr ""
@@ -4810,17 +4813,20 @@ msgstr "모드 전환 시 HTML 서식이 일반 텍스트 서식으로 덮어쓰
 msgid "Header"
 msgstr "헤더"
 
+msgid "Heading"
+msgstr "헤딩"
+
 msgid "Heading Text Color"
 msgstr "헤딩 텍스트 색상"
 
 msgid "Heading content"
-msgstr ""
+msgstr "헤딩 콘텐츠"
 
 msgid "Heading title"
-msgstr ""
+msgstr "헤딩 제목"
 
 msgid "Healthcare"
-msgstr ""
+msgstr "의료 서비스"
 
 msgid ""
 "Here, you can connect your personal Apple Calendar,<br/>so once the booking "
@@ -4835,7 +4841,7 @@ msgid ""
 "event"
 msgstr ""
 "여기에서 자신을 구글/아웃룩 이벤트의 주최자로 지정할 수 있습니다.<br> 그렇지 "
-"않으면 직원으로 지정되어 이벤트에 게스트로 추가됩니다"
+"않으면 담당자로 지정되어 이벤트에 게스트로 추가됩니다"
 
 msgid ""
 "Here you can choose the product that will be used for WooCommerce "
@@ -4846,16 +4852,16 @@ msgid ""
 "Here you can connect employee with Apple Calendar,<br/>so once the booking "
 "is scheduled it will be<br/>automatically added to employee's calendar."
 msgstr ""
-"여기에서 직원을 애플 캘린더와 연결할 수 있으므로<br/>예약이 잡히면 직원의 캘"
-"린더에 자동으로 추가됩니다."
+"여기에서 담당자를 애플 캘린더와 연결할 수 있으므로<br/>예약이 잡히면 담당자"
+"의 캘린더에 자동으로 추가됩니다."
 
 msgid ""
 "Here you can connect employee with Outlook Calendar,<br/>so once the "
 "appointment is scheduled it will be<br/>automatically added to employee's "
 "calendar."
 msgstr ""
-"여기에서 아웃룩 캘린더에 직원을 연결할 수 있으므로<br/>약속이 확정되면 직원"
-"의 캘린더에<br/>자동으로 추가됩니다."
+"여기에서 아웃룩 캘린더에 담당자를 연결할 수 있으므로<br/>예약이 확정되면 담당"
+"자의 캘린더에<br/>자동으로 추가됩니다."
 
 msgid ""
 "Here you can define languages that you want to have in the plugin for "
@@ -4868,8 +4874,8 @@ msgid ""
 "Here you can define the charge type that will be used for employees with "
 "\"Stripe Connected Account\""
 msgstr ""
-"여기에서 \"스트라이프 커넥티드 계정\"을 사용하는 직원에게 사용할 청구 유형을"
-"정의할 수 있습니다."
+"여기에서 \"스트라이프 커넥티드 계정\"을 사용하는 담당자에게 사용할 청구 유형"
+"을정의할 수 있습니다."
 
 msgid ""
 "Here you can enter additional email addresses where all notifications will "
@@ -4889,8 +4895,8 @@ msgid ""
 "Here you can select Zoom User,<br/>so once the appointment is scheduled,<br/"
 ">zoom meeting will be automatically created."
 msgstr ""
-"여기에서 줌 사용자를 선택하고<br/>약속이 확정되면<br/>자동으로 줌 미팅이 만들"
-"어집니다."
+"여기에서 Zoom 사용자를 선택하고<br/>예약이 확정되면<br/>자동으로 Zoom 미팅이 "
+"만들어집니다."
 
 msgid "Hey, there are special packages with this service, check them out!"
 msgstr "이 서비스가 포함된 특별 패키지가 있으니 확인해 보세요!"
@@ -4905,7 +4911,7 @@ msgstr ""
 "<b>%company_name%</b>"
 
 msgid "Hidden"
-msgstr ""
+msgstr "숨김"
 
 msgid "Hide"
 msgstr "숨기기"
@@ -4917,46 +4923,46 @@ msgid "Hide WooCommerce cart when price is 0"
 msgstr "가격이 0일 때 우커머스 카트 숨기기"
 
 msgid "Hide coupon"
-msgstr ""
+msgstr "쿠폰 숨기기"
 
 msgid "Hide employee"
-msgstr ""
+msgstr "담당자 숨기기"
 
 msgid "Hide event"
-msgstr ""
+msgstr "이벤트 숨기기"
 
 msgid "Hide location"
-msgstr ""
+msgstr "장소 숨기기"
 
 msgid "Hide locked features"
-msgstr ""
+msgstr "잠긴 기능 숨기기"
 
 msgid "Hide package"
-msgstr ""
+msgstr "패키지 숨기기"
 
 msgid "Hide resource"
-msgstr ""
+msgstr "리소스 숨기기"
 
 msgid "Hide service"
-msgstr ""
+msgstr "서비스 숨기기"
 
 msgid "Hide tax"
-msgstr ""
+msgstr "세금 숨기기"
 
 msgid "Hide tips & suggestions"
-msgstr ""
+msgstr "팁 및 제안 숨기기"
 
 msgid "Higher price background"
-msgstr ""
+msgstr "높은 가격 배경"
 
 msgid "Higher price text"
-msgstr ""
+msgstr "더 높은 가격 텍스트"
 
 msgid "Highest price"
 msgstr "최고 가격"
 
 msgid "Host link"
-msgstr ""
+msgstr "호스트 링크"
 
 msgid "Hosted by:"
 msgstr "주최자:"
@@ -4974,19 +4980,19 @@ msgid "How many people are coming?"
 msgstr "얼마나 많은 사람이 오나요?"
 
 msgid "How to"
-msgstr ""
+msgstr "방법"
 
 msgid "How to get your"
-msgstr ""
+msgstr "얻는 방법"
 
 msgid "ID"
 msgstr ""
 
 msgid "ID Asc"
-msgstr ""
+msgstr "ID 오름차순"
 
 msgid "ID Desc"
-msgstr ""
+msgstr "ID 내림차순"
 
 msgid "I want to pay full amount"
 msgstr "전액 결제하겠습니다"
@@ -5061,7 +5067,7 @@ msgid ""
 "booking for others. If enabled, multiple customers will be able to book the "
 "same time slot, without having to fill in the minimum capacity."
 msgstr ""
-"이 기능이 비활성화된 경우, 프런트엔드 고객은 최소 서비스 수용 인원을 입력하"
+"이 기능이 비활성화된 경우, 프론트엔드 고객은 최소 서비스 수용 인원을 입력하"
 "지 않으면 예약을 제출할 수 없습니다. 그러나 최소 인원 이상의 수용 인원으로 예"
 "약하면 해당 시간대는 다른 고객이 예약할 수 없게 됩니다. 활성화된 경우, 여러 "
 "고객이 최소 수용 인원을 입력하지 않고도 동일한 시간대를 예약할 수 있습니다."
@@ -5069,7 +5075,8 @@ msgstr ""
 msgid ""
 "If this option is disabled, the employee will only be available for booking "
 "through the back-end"
-msgstr "이 옵션이 비활성화된 경우, 직원은 백엔드를 통해서만 예약이 가능합니다."
+msgstr ""
+"이 옵션이 비활성화된 경우, 담당자는 백엔드를 통해서만 예약이 가능합니다."
 
 msgid ""
 "If this option is disabled, the service will be bookable only from the back "
@@ -5139,7 +5146,7 @@ msgid ""
 "time (working hours, special days and days off for all employees will be "
 "ignored)."
 msgstr ""
-"이 옵션을 활성화하면 관리자는 언제든지 예약을 할 수 있습니다(모든 직원의 근"
+"이 옵션을 활성화하면 관리자는 언제든지 예약을 할 수 있습니다(모든 담당자의 근"
 "무 시간, 특별 휴일 및 휴무일은 무시됩니다)."
 
 msgid ""
@@ -5158,31 +5165,31 @@ msgstr ""
 "용자 역할이 부여되며, 로그인 정보가 포함된 자동 이메일이 발송됩니다."
 
 msgid "Image"
-msgstr ""
+msgstr "이미지"
 
 msgid "Image Color"
 msgstr "이미지 색상"
 
 msgid "Image thumbs"
-msgstr ""
+msgstr "이미지 썸네일"
 
 msgid "Import"
 msgstr "가져오기"
 
 msgid "Import Failed"
-msgstr ""
+msgstr "가져오기 실패"
 
 msgid "Import Partially Successful"
-msgstr ""
+msgstr "가져오기가 부분적으로 성공했습니다"
 
 msgid "Import Rules"
-msgstr ""
+msgstr "가져오기 규칙"
 
 msgid "Import successful"
 msgstr "가져오기 성공"
 
 msgid "Importing customers"
-msgstr ""
+msgstr "고객 가져오기"
 
 msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
@@ -5193,8 +5200,8 @@ msgid ""
 "Improve customer choice by letting clients book with the employee that suits "
 "them best"
 msgstr ""
-"고객이 자신에게 가장 적합한 직원을 선택해 예약할 수 있도록 하여 고객 선택의 "
-"폭을 넓히십시오."
+"고객이 자신에게 가장 적합한 담당자를 선택해 예약할 수 있도록 하여 고객 선택"
+"의 폭을 넓히십시오."
 
 msgid ""
 "Improve customer convenience by offering predictable, easy-to-book recurring "
@@ -5206,7 +5213,7 @@ msgid ""
 "Improve customer experience by letting clients choose the location that "
 "suits them best"
 msgstr ""
-"고객이 자신에게 가장 적합한 위치를 선택할 수 있도록 하여 고객 경험을 개선하십"
+"고객이 자신에게 가장 적합한 장소를 선택할 수 있도록 하여 고객 경험을 개선하십"
 "시오."
 
 msgid ""
@@ -5223,7 +5230,7 @@ msgid "In Package"
 msgstr "패키지 내"
 
 msgid "In package"
-msgstr ""
+msgstr "패키지 내"
 
 msgid "Incl. VAT"
 msgstr "부가가치세 포함"
@@ -5235,7 +5242,7 @@ msgid "Include buffer time in calendar events"
 msgstr "캘린더 이벤트에 여유 시간을 포함시키세요"
 
 msgid "Include in invoice"
-msgstr ""
+msgstr "인보이스에 포함"
 
 msgid "Include service buffer time in time slots"
 msgstr "시간 슬롯에 서비스 버퍼 시간 포함하기"
@@ -5265,16 +5272,16 @@ msgid ""
 msgstr "선택한 날짜 범위의<br/>신규 및 재방문 고객 수를 나타냅니다."
 
 msgid "Industries"
-msgstr ""
+msgstr "산업"
 
 msgid "Info"
 msgstr "정보"
 
 msgid "Info text"
-msgstr ""
+msgstr "정보 텍스트"
 
 msgid "Initial end date & time of the event"
-msgstr "이벤트의 초기 종료 날짜 및 시간"
+msgstr "이벤트의 초기 종료일 및 시간"
 
 msgid "Initial end date of the event"
 msgstr "이벤트의 초기 종료일"
@@ -5283,7 +5290,7 @@ msgid "Initial end time of the event"
 msgstr "이벤트의 초기 종료 시간"
 
 msgid "Initial start date & time of the event"
-msgstr "이벤트의 초기 시작 날짜 및 시간"
+msgstr "이벤트의 초기 시작일 및 시간"
 
 msgid "Initial start time of the event"
 msgstr "이벤트의 초기 시작 시간"
@@ -5295,10 +5302,10 @@ msgid "Input Text Color"
 msgstr "입력 텍스트 색상"
 
 msgid "Input field"
-msgstr ""
+msgstr "입력 필드"
 
 msgid "Input fields"
-msgstr ""
+msgstr "입력 필드"
 
 msgid "Insert Amelia Booking Shortcode"
 msgstr "아멜리아 예약 단축코드 삽입"
@@ -5307,7 +5314,7 @@ msgid "Insert pending appointments"
 msgstr "예약 대기 중인 일정 삽입"
 
 msgid "Integrate with WooCommerce to enable advanced e-commerce capabilities."
-msgstr "WooCommerce와 통합하여 고급 전자상거래 기능을 활성화하세요."
+msgstr "우커머스와 통합하여 고급 전자상거래 기능을 활성화하세요."
 
 msgid "Integrations"
 msgstr "통합"
@@ -5316,37 +5323,37 @@ msgid "Interested in unlocking this feature?"
 msgstr "이 기능을 잠금 해제하고 싶으신가요?"
 
 msgid "Invisible reCAPTCHA badge"
-msgstr ""
+msgstr "보이지 않는 리캡챠 배지"
 
 msgid "Invoice"
 msgstr "인보이스"
 
 msgid "Invoice #"
-msgstr ""
+msgstr "인보이스 #"
 
 msgid "Invoice #{count}"
-msgstr ""
+msgstr "인보이스 #{count}"
 
 msgid "Invoice Format"
 msgstr "인보이스 총액"
 
 msgid "Invoice Number Asc"
-msgstr ""
+msgstr "인보이스 발행일 오름차순"
 
 msgid "Invoice Number Desc"
-msgstr ""
+msgstr "인보이스 발행일 내림차순"
 
 msgid "Invoice date"
-msgstr ""
+msgstr "인보이스 발행일"
 
 msgid "Invoice details"
 msgstr "인보이스 세부 정보"
 
 msgid "Invoice has been sent."
-msgstr ""
+msgstr "인보이스가 발송되었습니다."
 
 msgid "Invoice not found."
-msgstr ""
+msgstr "발행된 인보이스를 찾을 수 없습니다."
 
 msgid "Invoice total"
 msgstr "인보이스 총액"
@@ -5355,7 +5362,7 @@ msgid "Invoices"
 msgstr "인보이스"
 
 msgid "Invoices setup"
-msgstr ""
+msgstr "인보이스 설정"
 
 msgid "Issued"
 msgstr "발행"
@@ -5371,7 +5378,8 @@ msgid ""
 "It seems like there are no employees or services created, or no  employees "
 "are assigned to the service, at this moment."
 msgstr ""
-"현재 생성된 직원이나 서비스가 없거나 서비스에 할당된 직원이 없는 것 같습니다."
+"현재 생성된 담당자가나 서비스가 없거나 서비스에 할당된 담당자가 없는 것 같습"
+"니다."
 
 msgid ""
 "It seems that Envato API is currently busy (please try again) or you don't "
@@ -5384,7 +5392,7 @@ msgid "Item"
 msgstr "항목"
 
 msgid "Item status"
-msgstr ""
+msgstr "아이템 상태"
 
 msgid "Jane Doe"
 msgstr "신원 미상"
@@ -5393,7 +5401,7 @@ msgid "John Doe"
 msgstr "신원 미상"
 
 msgid "Join"
-msgstr ""
+msgstr "가입"
 
 msgid "Join Google Meeting"
 msgstr "구글 미팅에 참여"
@@ -5405,34 +5413,34 @@ msgid "Join With Microsoft Teams"
 msgstr "마이크로소프트 팀으로 참여"
 
 msgid "Join Zoom"
-msgstr ""
+msgstr "Zoom 참여"
 
 msgid "Join Zoom Meeting"
-msgstr "줌 미팅에 참여"
+msgstr "Zoom 미팅에 참여"
 
 msgid "Join link"
-msgstr ""
+msgstr "참여 링크"
 
 msgid "Join waiting list"
 msgstr "대기자 명단에 참여"
 
 msgid "Join with Google Meet"
-msgstr ""
+msgstr "구글 미트에 참여하세요"
 
 msgid "Join with Microsoft Teams"
-msgstr ""
+msgstr "마이크로소프트 팀에 참여하세요"
 
 msgid "Keep Individual"
-msgstr ""
+msgstr "개별 유지"
 
 msgid ""
 "Keep customers and employees informed by sending appointment and event "
 "notifications directly through WhatsApp - choose predefined messages or "
 "customize your own for a personal touch."
 msgstr ""
-"WhatsApp을 통해 직접 예약 및 이벤트 알림을 보내 고객과 직원에게 정보를 전달하"
-"세요. 미리 정의된 메시지를 선택하거나 개인화된 느낌을 위해 직접 맞춤 설정할 "
-"수 있습니다."
+"WhatsApp을 통해 직접 예약 및 이벤트 알림을 보내 고객과 담당자에게 정보를 전달"
+"하세요. 미리 정의된 메시지를 선택하거나 개인화된 느낌을 위해 직접 맞춤 설정"
+"할 수 있습니다."
 
 msgid ""
 "Keep everyone on track using scheduled reminders that reduce no-shows and "
@@ -5443,7 +5451,7 @@ msgstr ""
 msgid ""
 "Keep operations aligned with unified settings, availability, and resource "
 "control"
-msgstr "운영을 통합 설정, 가용성 및 자원 관리와 일치시켜 유지하십시오"
+msgstr "운영을 통합 설정, 가용성 및 리소스 관리와 일치시켜 유지하십시오"
 
 msgid ""
 "Keep your data organized and meaningful with structured fields that "
@@ -5465,28 +5473,28 @@ msgid "Language"
 msgstr "언어"
 
 msgid "Languages"
-msgstr ""
+msgstr "언어"
 
 msgid "Last"
 msgstr "성"
 
 msgid "Last Booking Asc"
-msgstr ""
+msgstr "지난 예약 오름차순"
 
 msgid "Last Booking Desc"
-msgstr ""
+msgstr "지난 예약 내림차순"
 
 msgid "Last Name:"
 msgstr "성:"
 
 msgid "Last booking"
-msgstr ""
+msgstr "지난 예약"
 
 msgid "Last name"
-msgstr ""
+msgstr "성"
 
 msgid "Last on {date}"
-msgstr ""
+msgstr "마지막으로 {date}에"
 
 msgid "Latitude"
 msgstr "위도"
@@ -5510,13 +5518,13 @@ msgid "Left to pay"
 msgstr "남은 결제 금액"
 
 msgid "Less options"
-msgstr ""
+msgstr "더 적은 옵션"
 
 msgid "Lesson Space"
 msgstr "레슨 스페이스"
 
 msgid "Lesson Space API key"
-msgstr ""
+msgstr "Lesson Space API 키"
 
 msgid "Lesson Space Link"
 msgstr "레슨 스페이스 링크"
@@ -5525,22 +5533,22 @@ msgid "Lesson Space Links"
 msgstr "레슨 스페이스 링크"
 
 msgid "Lesson Space link"
-msgstr ""
+msgstr "Lesson Space 링크"
 
 msgid "Lesson Space link to join space"
-msgstr ""
+msgstr "Lesson Space 링크를 클릭하여 스페이스에 참여하세요"
 
 msgid "Lesson Space setup"
-msgstr ""
+msgstr "Lesson Space 설정"
 
 msgid "Light Theme"
-msgstr ""
+msgstr "라이트 테마"
 
 msgid "Limit"
 msgstr "제한"
 
 msgid "Limit additional people"
-msgstr ""
+msgstr "추가 인원 제한"
 
 msgid "Limit appointments per customer"
 msgstr "고객당 예약 제한"
@@ -5555,7 +5563,7 @@ msgid "Limit package purchases per customer"
 msgstr "고객당 패키지 구매 제한"
 
 msgid "Limit per customer"
-msgstr ""
+msgstr "고객당 한도"
 
 msgid "Limit the additional number of people"
 msgstr "추가 인원 수 제한"
@@ -5564,7 +5572,7 @@ msgid "Limit the number of people that one customer can add during the booking"
 msgstr "예약 중 한 고객이 추가할 수 있는 인원 수 제한하기"
 
 msgid "Link copied to clipboard."
-msgstr ""
+msgstr "링크가 클립보드에 복사되었습니다."
 
 msgid ""
 "Link this customer to a WordPress user so they can log in and view their "
@@ -5593,7 +5601,7 @@ msgstr ""
 "행하세요."
 
 msgid "List view"
-msgstr ""
+msgstr "목록 보기"
 
 msgid "Live API key"
 msgstr "라이브 API 키"
@@ -5620,7 +5628,7 @@ msgid "Load booking form manually"
 msgstr "예약 양식 수동으로 로드"
 
 msgid "Load page"
-msgstr ""
+msgstr "페이지 불러오기"
 
 msgid "Loading..."
 msgstr "로드 중..."
@@ -5632,10 +5640,10 @@ msgid "Local Time:"
 msgstr "현지 시간:"
 
 msgid "Local time"
-msgstr ""
+msgstr "현지 시간"
 
 msgid "Local time:"
-msgstr ""
+msgstr "현지 시간:"
 
 msgid "Location"
 msgstr "장소"
@@ -5656,7 +5664,7 @@ msgid "Location Selection"
 msgstr "장소 설명"
 
 msgid "Location WP Hooks"
-msgstr ""
+msgstr "장소 WP 후크"
 
 msgid "Location address"
 msgstr "장소 주소"
@@ -5665,34 +5673,34 @@ msgid "Location description"
 msgstr "장소 설명"
 
 msgid "Location details"
-msgstr ""
+msgstr "장소 상세 정보"
 
 msgid "Location filter"
-msgstr ""
+msgstr "장소 필터"
 
 msgid "Location has been added."
-msgstr ""
+msgstr "장소가 추가되었습니다."
 
 msgid "Location has been deleted."
-msgstr ""
+msgstr "장소가 삭제되었습니다."
 
 msgid "Location has been hidden."
-msgstr ""
+msgstr "장소가 숨겨졌습니다."
 
 msgid "Location has been updated."
-msgstr ""
+msgstr "장소가 업데이트되었습니다."
 
 msgid "Location information"
 msgstr "장소 설명"
 
 msgid "Location is now visible."
-msgstr ""
+msgstr "장소가 이제 표시됩니다."
 
 msgid "Location latitude"
-msgstr ""
+msgstr "장소 위도"
 
 msgid "Location longitude"
-msgstr ""
+msgstr "장소 경도"
 
 msgid "Location name"
 msgstr "장소 이름"
@@ -5701,7 +5709,7 @@ msgid "Location phone"
 msgstr "장소 전화"
 
 msgid "Location selection"
-msgstr ""
+msgstr "장소 선택"
 
 msgid "Locations"
 msgstr "장소"
@@ -5710,7 +5718,7 @@ msgid "Locations must be active and have card processing enabled"
 msgstr "장소가 활성화되어 있고 카드 처리가 활성화되어 있어야 합니다"
 
 msgid "Locations setup"
-msgstr ""
+msgstr "장소 설정"
 
 msgid "Log In"
 msgstr "로그인"
@@ -5728,16 +5736,16 @@ msgid "Longitude"
 msgstr "경도"
 
 msgid "Lower price background"
-msgstr ""
+msgstr "낮은 가격 배경"
 
 msgid "Lower price text"
-msgstr ""
+msgstr "낮은 가격 텍스트"
 
 msgid "Lowest price"
 msgstr "최저 가격"
 
 msgid "Mail service"
-msgstr ""
+msgstr "메일 서비스"
 
 msgid "Mailchimp"
 msgstr "메일침프"
@@ -5746,41 +5754,41 @@ msgid "Mailchimp List"
 msgstr "메일침프 리스트"
 
 msgid "Mailchimp setup"
-msgstr ""
+msgstr "메일침프 설정"
 
 msgid "Mailgun"
-msgstr ""
+msgstr "메일건"
 
 msgid "Mailgun API Key"
-msgstr "Mailgun API 키"
+msgstr "메일건 API 키"
 
 msgid "Mailgun Domain"
-msgstr "Mailgun 도메인"
+msgstr "메일건 도메인"
 
 msgid "Main category button"
-msgstr ""
+msgstr "주요 카테고리 버튼"
 
 msgid "Main content"
-msgstr ""
+msgstr "본문"
 
 msgid ""
 "Maintain consistent scheduling with customizable frequencies and patterns"
 msgstr "사용자 정의 가능한 빈도와 패턴으로 일관된 일정 관리를 유지하세요"
 
 msgid "Make extra mandatory"
-msgstr ""
+msgstr "부가 서비스를 필수 항목으로 지정"
 
 msgid "Male"
 msgstr "남성"
 
 msgid "Manage badges"
-msgstr ""
+msgstr "배지 관리"
 
 msgid "Manage bookings"
-msgstr ""
+msgstr "예약 관리"
 
 msgid "Manage company days off"
-msgstr ""
+msgstr "회사 휴무일 관리"
 
 msgid ""
 "Manage event cancellations efficiently by allowing customers to join waiting "
@@ -5793,16 +5801,16 @@ msgid "Manage languages"
 msgstr "언어 관리"
 
 msgid "Manage personal schedule"
-msgstr ""
+msgstr "개인 일정 관리"
 
 msgid "Manage shared resources with ease"
-msgstr ""
+msgstr "공유 리소스를 간편하게 관리하세요"
 
 msgid "Managing assigned services"
-msgstr ""
+msgstr "할당된 서비스 관리"
 
 msgid "Managing packages"
-msgstr ""
+msgstr "패키지 관리"
 
 msgid "Mandatory Field:"
 msgstr "필수 필드:"
@@ -5811,20 +5819,20 @@ msgid ""
 "Map a WordPress user to this employee to give them access to view their "
 "appointments in the plugin’s back-end."
 msgstr ""
-"이 직원에 해당하는 워드프레스 사용자를 매핑하여 플러그인 백엔드에서 자신의 예"
-"약을 조회할 수 있는 권한을 부여하십시오."
+"이 담당자에 해당하는 워드프레스 사용자를 매핑하여 플러그인 백엔드에서 자신의 "
+"예약을 조회할 수 있는 권한을 부여하십시오."
 
 msgid "Max"
-msgstr ""
+msgstr "최대"
 
 msgid "Max. Capacity"
 msgstr "최대 수용 인원"
 
 msgid "Max Capacity Asc"
-msgstr ""
+msgstr "최대 수용량 오름차순"
 
 msgid "Max Capacity Desc"
-msgstr ""
+msgstr "최대 수용량 내림차순"
 
 msgid "Maximum Quantity:"
 msgstr "최대 수량:"
@@ -5833,13 +5841,13 @@ msgid "Maximum allowed spots"
 msgstr "최대 허용 좌석 수"
 
 msgid "Maximum bookings allowed"
-msgstr ""
+msgstr "허용되는 최대 예약 수"
 
 msgid "Maximum bookings reached"
 msgstr "최대 예약 달성"
 
 msgid "Maximum capacity"
-msgstr ""
+msgstr "최대 수용량"
 
 msgid "Maximum capacity is reached"
 msgstr "최대 수용 인원에 도달함"
@@ -5851,34 +5859,34 @@ msgid "Maximum number of places is"
 msgstr "최대 장소 수는 다음과 같습니다"
 
 msgid "Maximum quantity"
-msgstr ""
+msgstr "최대 수량"
 
 msgid "Maximum spots"
-msgstr ""
+msgstr "최대 스팟"
 
 msgid "Maximum usage per customer"
-msgstr ""
+msgstr "고객당 최대 사용량"
 
 msgid "Measurement ID"
 msgstr "측정 ID"
 
 msgid "Meeting agenda"
-msgstr ""
+msgstr "회의 안건"
 
 msgid "Meeting title"
-msgstr ""
+msgstr "회의 제목"
 
 msgid "Menu"
 msgstr "메뉴"
 
 msgid "Message"
-msgstr ""
+msgstr "메시지"
 
 msgid "Message content"
-msgstr ""
+msgstr "메시지 내용"
 
 msgid "Message template"
-msgstr ""
+msgstr "메시지 템플릿"
 
 msgid ""
 "Messages sent through WhatsApp are without a reply option, so we advise "
@@ -5888,34 +5896,34 @@ msgstr ""
 "를 설정하시길 권장합니다"
 
 msgid "Meta"
-msgstr ""
+msgstr "메타"
 
 msgid "Meta Pixel"
-msgstr ""
+msgstr "메타 픽셀"
 
 msgid "Meta Pixel setup"
-msgstr ""
+msgstr "메타 픽셀 설정"
 
 msgid "Method"
 msgstr "방법"
 
 msgid "Microsoft"
-msgstr ""
+msgstr "마이크로소프트"
 
 msgid "Microsoft Teams"
-msgstr ""
+msgstr "마이크로소프트 팀"
 
 msgid "Microsoft Teams Link"
 msgstr "마이크로소프트 팀 링크"
 
 msgid "Microsoft Teams join link"
-msgstr ""
+msgstr "마이크로소프트 팀 참여 링크"
 
 msgid "Microsoft Teams link"
-msgstr ""
+msgstr "마이크로소프트 팀 링크"
 
 msgid "Microsoft Teams setup"
-msgstr ""
+msgstr "마이크로소프트 팀 설정"
 
 msgid "Min. Capacity"
 msgstr "최소. 용량"
@@ -5924,16 +5932,16 @@ msgid "Minimum bookings required"
 msgstr "최소 예약 필요"
 
 msgid "Minimum capacity"
-msgstr ""
+msgstr "최소 용량"
 
 msgid "Minimum number of attendees"
-msgstr ""
+msgstr "최소 참석 인원"
 
 msgid "Minimum number of bookings"
-msgstr ""
+msgstr "최소 예약 건수"
 
 msgid "Minimum number of required extras"
-msgstr "필요한 최소 추가 인원"
+msgstr "필수 부가 서비스 최소 갯수"
 
 msgid "Minimum of attendees"
 msgstr "최소 참석자 수"
@@ -5942,10 +5950,10 @@ msgid "Minimum of bookings"
 msgstr "최소 예약 인원"
 
 msgid "Minimum required extras"
-msgstr "최소 추가 인원"
+msgstr "최소 필수 부가 서비스"
 
 msgid "Minimum required extras:"
-msgstr "최소 추가 인원:"
+msgstr "최소 필수 부가 서비스:"
 
 msgid "Minimum time required before booking"
 msgstr "예약 전 최소 소요 시간"
@@ -5960,7 +5968,7 @@ msgid "Minutes"
 msgstr "분"
 
 msgid "Missing required fields:"
-msgstr ""
+msgstr "필수 입력란 누락:"
 
 msgid "Mobile menu"
 msgstr "모바일 메뉴"
@@ -5969,10 +5977,10 @@ msgid "Mollie"
 msgstr "몰리"
 
 msgid "Mollie payment link"
-msgstr ""
+msgstr "Mollie 결제 링크"
 
 msgid "Mon"
-msgstr ""
+msgstr "월"
 
 msgid "Monday"
 msgstr "월요일"
@@ -5987,13 +5995,13 @@ msgid "Months"
 msgstr "월"
 
 msgid "More Features Zero Limits"
-msgstr ""
+msgstr "Zero Limits의 더 많은 기능"
 
 msgid "More options"
-msgstr ""
+msgstr "추가 옵션"
 
 msgid "Multiple"
-msgstr ""
+msgstr "다중"
 
 msgid "Multiple Emails"
 msgstr "여러 이메일"
@@ -6002,7 +6010,7 @@ msgid "Multiple Locations"
 msgstr "여러 장소"
 
 msgid "Multiple locations"
-msgstr "여러 위치"
+msgstr "여러 장소"
 
 msgid "Multiple packages purchased."
 msgstr "여러 패키지 구매."
@@ -6023,7 +6031,7 @@ msgid "My Profile"
 msgstr "내 프로필"
 
 msgid "My profile"
-msgstr ""
+msgstr "내 프로필"
 
 msgid "Name"
 msgstr "이름"
@@ -6032,13 +6040,13 @@ msgid "Name:"
 msgstr "이름:"
 
 msgid "Name Asc"
-msgstr ""
+msgstr "이름 오름차순"
 
 msgid "Name Ascending"
 msgstr "이름 오름차순"
 
 msgid "Name Desc"
-msgstr ""
+msgstr "이름 내림차순"
 
 msgid "Name Descending"
 msgstr "이름 내림차순"
@@ -6055,7 +6063,7 @@ msgid "Need additional fields?"
 msgstr "추가 필드가 필요하신가요?"
 
 msgid "Need help?"
-msgstr ""
+msgstr "도움이 필요하신가요?"
 
 msgid "Need to update your company's days off?"
 msgstr "회사 휴무일을 업데이트해야 하나요?"
@@ -6067,7 +6075,7 @@ msgid "New Appointment"
 msgstr "새 예약"
 
 msgid "New Attendee"
-msgstr ""
+msgstr "신규 참석자"
 
 msgid "New Customer"
 msgstr "신규 고객"
@@ -6079,16 +6087,16 @@ msgid "New Location"
 msgstr "새 장소"
 
 msgid "New Password"
-msgstr ""
+msgstr "새 비밀번호"
 
 msgid "New Space"
 msgstr "새 공간"
 
 msgid "New Update"
-msgstr ""
+msgstr "새로운 업데이트"
 
 msgid "New appointment"
-msgstr ""
+msgstr "새로운 약소"
 
 msgid "New category"
 msgstr "새로운 카테고리"
@@ -6109,25 +6117,25 @@ msgid "New event booking"
 msgstr "새로운 이벤트 예약"
 
 msgid "New language"
-msgstr ""
+msgstr "새로운 언어"
 
 msgid "New package"
-msgstr ""
+msgstr "새로운 패키지"
 
 msgid "New package booking"
-msgstr ""
+msgstr "새로운 패키지 예약"
 
 msgid "New password"
-msgstr ""
+msgstr "새 비밀번호"
 
 msgid "New resource"
-msgstr ""
+msgstr "신규 리소스"
 
 msgid "New service"
-msgstr ""
+msgstr "신규 서비스"
 
 msgid "New tax"
-msgstr ""
+msgstr "신규 세금"
 
 msgid "Next"
 msgstr "다음"
@@ -6136,7 +6144,7 @@ msgid "Next Service"
 msgstr "다음 서비스"
 
 msgid "Next day reminder"
-msgstr ""
+msgstr "다음 날 알림"
 
 msgid "No"
 msgstr "아니요"
@@ -6151,25 +6159,25 @@ msgid "No-show"
 msgstr "노쇼"
 
 msgid "No-show tag"
-msgstr ""
+msgstr "노쇼 태그"
 
 msgid "No Employees Assigned to This Location"
-msgstr "이 위치에 배정된 직원이 없습니다"
+msgstr "이 장소에 배정된 담당자가 없습니다"
 
 msgid "No Packages"
-msgstr ""
+msgstr "패키지 없음"
 
 msgid "No Show"
-msgstr ""
+msgstr "노쇼"
 
 msgid "No Show (1)"
-msgstr ""
+msgstr "노쇼 (1)"
 
 msgid "No Show (2)"
-msgstr ""
+msgstr "노쇼 (2)"
 
 msgid "No Show (3+)"
-msgstr ""
+msgstr "노쇼 (3+)"
 
 msgid "No Tags. Create a new one."
 msgstr "태그가 없습니다. 새 태그를 만드세요."
@@ -6178,118 +6186,118 @@ msgid "No WordPress users with the Amelia Customer role are available."
 msgstr "아멜리아 고객 역할의 워드프레스 사용자가 없습니다."
 
 msgid "No WordPress users with the Amelia Employee role are available."
-msgstr "아멜리아 직원 역할의 워드프레스 사용자가 없습니다."
+msgstr "아멜리아 담당자 역할의 워드프레스 사용자가 없습니다."
 
 msgid "No appointments found"
 msgstr "일정을 찾을 수 없습니다."
 
 msgid "No appointments yet"
-msgstr ""
+msgstr "아직 예약된 일정이 없습니다"
 
 msgid "No attendees found"
-msgstr ""
+msgstr "참석자를 찾을 수 없습니다."
 
 msgid "No booked appointments"
-msgstr ""
+msgstr "예약된 예약 없음"
 
 msgid "No bookings found"
-msgstr ""
+msgstr "예약이 없습니다"
 
 msgid "No camera found on this device."
 msgstr "이 장치에서 카메라를 찾을 수 없습니다."
 
 msgid "No coupons yet"
-msgstr ""
+msgstr "아직 쿠폰이 없습니다"
 
 msgid "No custom fields yet"
-msgstr ""
+msgstr "아직 사용자 정의 필드가 없습니다"
 
 msgid "No customers were imported to your customer list."
 msgstr "고객 목록에 고객이 하나도 가져오지 않았습니다."
 
 msgid "No customers yet"
-msgstr ""
+msgstr "아직 고객이 없습니다"
 
 msgid "No employees yet"
-msgstr ""
+msgstr "아직 담당자가 없습니다"
 
 msgid "No event bookings yet"
-msgstr ""
+msgstr "아직 예약된 이벤트가 없습니다"
 
 msgid "No events found"
 msgstr "이벤트를 찾을 수 없음"
 
 msgid "No events yet"
-msgstr ""
+msgstr "아직 이벤트가 없습니다"
 
 msgid "No extras yet"
-msgstr ""
+msgstr "아직 부가 서비스가 없습니다"
 
 msgid "No invoices yet"
-msgstr ""
+msgstr "아직 인보이스가 없습니다"
 
 msgid "No limit per customer"
-msgstr ""
+msgstr "고객당 제한 없음"
 
 msgid "No locations yet"
-msgstr ""
+msgstr "아직 장소가 없습니다"
 
 msgid "No matching data"
 msgstr "일치하는 데이터가 없습니다"
 
 msgid "No package bookings yet"
-msgstr ""
+msgstr "아직 예약된 패키지가 없습니다"
 
 msgid "No packages found"
 msgstr "패키지를 찾을 수 없음"
 
 msgid "No packages yet"
-msgstr ""
+msgstr "아직 패키지가 없습니다"
 
 msgid "No resources yet"
-msgstr ""
+msgstr "아직 리소스가 없습니다"
 
 msgid "No results"
 msgstr "결과 없음"
 
 msgid "No results found"
-msgstr ""
+msgstr "검색 결과가 없습니다"
 
 msgid "No results found..."
 msgstr "결과가 없습니다."
 
 msgid "No results found for"
-msgstr ""
+msgstr "해당 검색어에 대한 결과가 없습니다"
 
 msgid "No services or employees available"
-msgstr "이용 가능한 서비스나 직원이 없습니다"
+msgstr "이용 가능한 서비스나 담당자가 없습니다"
 
 msgid "No services yet"
-msgstr ""
+msgstr "아직 서비스가 없습니다"
 
 msgid "No spots left"
 msgstr "남은 스팟이 없습니다"
 
 msgid "No taxes yet"
-msgstr ""
+msgstr "아직 세금이 없습니다"
 
 msgid "No top trends"
-msgstr ""
+msgstr "인기 트렌드 없음"
 
 msgid "No transactions yet"
-msgstr ""
+msgstr "아직 거래 내역이 없습니다"
 
 msgid "No upcoming events"
-msgstr ""
+msgstr "예정된 이벤트가 없습니다"
 
 msgid "No usage limit"
-msgstr ""
+msgstr "사용 제한 없음"
 
 msgid "Not available"
-msgstr ""
+msgstr "사용 불가"
 
 msgid "Not connected"
-msgstr ""
+msgstr "연결되지 않음"
 
 msgid "Not match to your current password"
 msgstr "현재 비밀번호와 일치하지 않음"
@@ -6301,7 +6309,7 @@ msgid "Note (Internal)"
 msgstr "참고 (내부)"
 
 msgid "Note (internal)"
-msgstr ""
+msgstr "참고 (내부용)"
 
 msgid "Notice: Please select at least one panel."
 msgstr "공지사항: 패널을 하나 이상 선택해 주세요."
@@ -6328,13 +6336,13 @@ msgid "Notification interval"
 msgstr "알림 간격"
 
 msgid "Notification language"
-msgstr ""
+msgstr "알림 언어"
 
 msgid "Notification name"
 msgstr "알림 이름"
 
 msgid "Notification settings"
-msgstr ""
+msgstr "알림 설정"
 
 msgid "Notification status has been updated."
 msgstr "알림 상태가 업데이트되었습니다."
@@ -6343,16 +6351,16 @@ msgid "Notification status has not been updated."
 msgstr "알림 상태가 업데이트되지 않았습니다."
 
 msgid "Notification template"
-msgstr ""
+msgstr "알림 템플릿"
 
 msgid "Notification type"
-msgstr ""
+msgstr "알림 유형"
 
 msgid "Notifications"
 msgstr "알림"
 
 msgid "Notifications in Amelia"
-msgstr ""
+msgstr "아멜리아의 알림"
 
 msgid "Notify attendees by email when event information is updated."
 msgstr "이벤트 정보가 업데이트될 때 참석자에게 이메일로 알림을 보내십시오."
@@ -6364,7 +6372,7 @@ msgid "Notify the attendee(s)"
 msgstr "참석자에게 알림"
 
 msgid "Notify the attendees"
-msgstr ""
+msgstr "참석자들에게 알리십시오"
 
 msgid "Notify the customer(s)"
 msgstr "고객에게 알림"
@@ -6382,7 +6390,7 @@ msgid "Number of Recurrences:"
 msgstr "반복 횟수:"
 
 msgid "Number of Tickets"
-msgstr ""
+msgstr "티켓 수"
 
 msgid "Number of adjusted time slots: "
 msgstr "조정된 시간대 수입니다.: "
@@ -6406,22 +6414,22 @@ msgid "Number of people"
 msgstr "인원 수"
 
 msgid "Number of people on waiting list"
-msgstr ""
+msgstr "대기자 명단 인원 수"
 
 msgid "Number of people that are coming with you."
 msgstr "동반 인원 수."
 
 msgid "Number of recurrences:"
-msgstr ""
+msgstr "재발 횟수:"
 
 msgid "Number of tickets"
 msgstr "티켓 수"
 
 msgid "Occupancy rate"
-msgstr ""
+msgstr "점유율"
 
 msgid "Occupied"
-msgstr ""
+msgstr "점유됨"
 
 msgid "Occurrences"
 msgstr "발생 횟수"
@@ -6444,18 +6452,19 @@ msgid ""
 "additional services, products, or experiences to enhance appointments and "
 "delight your customers."
 msgstr ""
-"예약 과정에서 선택적 또는 필수 추가 항목을 제공하세요 - 추가 서비스, 상품 또"
-"는 경험을 업셀링하여 예약을 향상시키고 고객 만족도를 높이세요."
+"예약 과정에서 선택적 또는 필수 부가 서비스을 제공하세요 - 추가 서비스, 상품 "
+"또는 경험을 추가 판매하여 예약을 향상시키고 고객 만족도를 높이세요."
 
 msgid ""
 "Offer services with multiple duration options for customers to choose from."
 msgstr "고객이 선택할 수 있도록 여러 기간 옵션이 있는 서비스를 제공하십시오."
 
 msgid "Offer upsells or additional benefits within a service using extras."
-msgstr "서비스 내에서 추가 옵션을 통해 업셀링 또는 추가 혜택을 제공하십시오."
+msgstr ""
+"서비스 내에서 부가 서비스를 통해 추가 판매 또는 추가 혜택을 제공하십시오."
 
 msgid "Oliver"
-msgstr ""
+msgstr "올리버"
 
 msgid "On"
 msgstr "켜짐"
@@ -6470,7 +6479,7 @@ msgid "On-site"
 msgstr "현장 방문"
 
 msgid "On-site payment"
-msgstr ""
+msgstr "현장 결제"
 
 msgid "OnBoard"
 msgstr "온보드"
@@ -6479,10 +6488,10 @@ msgid "On:"
 msgstr "켜짐:"
 
 msgid "On Break"
-msgstr "Rest 중"
+msgstr "휴식중"
 
 msgid "On hold"
-msgstr ""
+msgstr "보류 중"
 
 msgid "On the same day"
 msgstr "같은 날"
@@ -6511,8 +6520,8 @@ msgid ""
 "Once you add your first employee, it will appear here. Click + Employee "
 "below to get started."
 msgstr ""
-"첫 직원을 추가하면 여기에 표시됩니다. 시작하려면 아래의 + 직원 버튼을 클릭하"
-"세요."
+"첫 담당자를 추가하면 여기에 표시됩니다. 시작하려면 아래의 + 담당자 버튼을 클"
+"릭하세요."
 
 msgid ""
 "Once you add your first event, it will appear here. Click + Event below to "
@@ -6577,7 +6586,7 @@ msgid ""
 "Once you start adding locations, they will appear here. You can also get "
 "started by clicking the Add button below."
 msgstr ""
-"위치를 추가하기 시작하면 여기에 표시됩니다. 아래의 '추가' 버튼을 클릭하여 시"
+"장소를 추가하기 시작하면 여기에 표시됩니다. 아래의 '추가' 버튼을 클릭하여 시"
 "작할 수도 있습니다."
 
 msgid "Once you start receiving bookings, invoices will be displayed here."
@@ -6603,7 +6612,7 @@ msgid "Online"
 msgstr "온라인"
 
 msgid "Online meetings"
-msgstr ""
+msgstr "온라인 회의"
 
 msgid ""
 "Only templates in the default language will be displayed in the back-end. If "
@@ -6629,22 +6638,22 @@ msgid "Opened"
 msgstr "열림"
 
 msgid "Opens at"
-msgstr ""
+msgstr "오픈 시간"
 
 msgid "Opens on"
-msgstr ""
+msgstr "오픈 예정"
 
 msgid "Opens on:"
 msgstr "다음에 열립니다.:"
 
 msgid "Option {number}"
-msgstr ""
+msgstr "옵션 {number}"
 
 msgid "Options"
 msgstr "옵션"
 
 msgid "Options:"
-msgstr ""
+msgstr "옵션:"
 
 msgid "Or"
 msgstr "또는"
@@ -6674,25 +6683,25 @@ msgid "Organizer"
 msgstr "주최자"
 
 msgid "Organizers"
-msgstr ""
+msgstr "주최자"
 
 msgid "Other"
 msgstr "기타"
 
 msgid "Outline"
-msgstr ""
+msgstr "개요"
 
 msgid "Outlook Calendar"
 msgstr "아웃룩 일정"
 
 msgid "Outlook Calendar & Microsoft Teams"
-msgstr "Outlook 캘린더 및 Microsoft Teams"
+msgstr "아웃룩 캘린더 및 마이크로소프트 팀"
 
 msgid "Outlook Calendar WP hooks"
-msgstr "Outlook 캘린더 WP 훅"
+msgstr "아웃룩 캘린더 WP 훅"
 
 msgid "Outlook Calendar setup"
-msgstr "Outlook 캘린더 설정"
+msgstr "아웃룩 캘린더 설정"
 
 msgid "Outlook Mailer"
 msgstr "아웃룩 메일러"
@@ -6729,16 +6738,16 @@ msgid "Package:"
 msgstr "패키지:"
 
 msgid "Package Asc"
-msgstr ""
+msgstr "패키지 오름차순"
 
 msgid "Package Canceled"
 msgstr "패키지 취소됨"
 
 msgid "Package Desc"
-msgstr ""
+msgstr "패키지 내림차순"
 
 msgid "Package ID"
-msgstr ""
+msgstr "패키지 ID"
 
 msgid "Package Info"
 msgstr "패키지 정보"
@@ -6756,7 +6765,7 @@ msgid "Package appointments details"
 msgstr "패키지 예약 세부 정보"
 
 msgid "Package badge"
-msgstr ""
+msgstr "패키지 배지"
 
 msgid "Package booking details"
 msgstr "패키지 예약 세부사항"
@@ -6777,13 +6786,13 @@ msgid "Package canceled"
 msgstr "패키지 취소됨"
 
 msgid "Package capacity"
-msgstr ""
+msgstr "패키지 용량"
 
 msgid "Package category"
-msgstr ""
+msgstr "패키지 카테고리"
 
 msgid "Package count"
-msgstr ""
+msgstr "패키지 수"
 
 msgid "Package deal"
 msgstr "패키지 거래"
@@ -6801,76 +6810,76 @@ msgid "Package duration"
 msgstr "패키지 기간"
 
 msgid "Package filter"
-msgstr ""
+msgstr "패키지 필터"
 
 msgid "Package has been created."
-msgstr ""
+msgstr "패키지가 생성되었습니다."
 
 msgid "Package has been deleted."
-msgstr ""
+msgstr "패키지가 삭제되었습니다."
 
 msgid "Package has been hidden."
-msgstr ""
+msgstr "패키지가 숨겨졌습니다."
 
 msgid "Package has been updated."
-msgstr ""
+msgstr "패키지가 업데이트되었습니다."
 
 msgid "Package includes"
 msgstr "패키지 포함 사항"
 
 msgid "Package info"
-msgstr ""
+msgstr "패키지 정보"
 
 msgid "Package is now visible."
-msgstr ""
+msgstr "패키지가 이제 표시됩니다."
 
 msgid "Package location"
-msgstr ""
+msgstr "패키지 장소"
 
 msgid "Package management"
-msgstr ""
+msgstr "패키지 관리"
 
 msgid "Package name"
 msgstr "패키지 이름"
 
 msgid "Package overview"
-msgstr ""
+msgstr "패키지 개요"
 
 msgid "Package price"
 msgstr "패키지 가격"
 
 msgid "Package price:"
-msgstr ""
+msgstr "패키지 가격:"
 
 msgid "Package purchased"
-msgstr ""
+msgstr "구매한 패키지"
 
 msgid "Package rules and description"
 msgstr "패키지 규칙 및 설명"
 
 msgid "Package selection"
-msgstr ""
+msgstr "패키지 선택"
 
 msgid "Package services list"
-msgstr ""
+msgstr "패키지 서비스 목록"
 
 msgid "Packages"
 msgstr "패키지"
 
 msgid "Packages appointments"
-msgstr ""
+msgstr "패키지 예약"
 
 msgid "Packages block"
-msgstr ""
+msgstr "패키지 블록"
 
 msgid "Packages have been reordered."
-msgstr ""
+msgstr "패키지 순서가 재정렬되었습니다."
 
 msgid "Packages overview"
-msgstr ""
+msgstr "패키지 개요"
 
 msgid "Packages popup"
-msgstr ""
+msgstr "패키지 팝업"
 
 msgid "Paddle"
 msgstr "패들"
@@ -6879,19 +6888,19 @@ msgid "Page"
 msgstr "페이지"
 
 msgid "Page card"
-msgstr ""
+msgstr "페이지 카드"
 
 msgid "Page content"
-msgstr ""
+msgstr "페이지 내용"
 
 msgid "Page header"
-msgstr ""
+msgstr "페이지 헤더"
 
 msgid "Page messages"
-msgstr ""
+msgstr "페이지 메시지"
 
 msgid "Page scroll"
-msgstr ""
+msgstr "페이지 스크롤"
 
 msgid "Paid"
 msgstr "결제됨"
@@ -6903,22 +6912,22 @@ msgid "Paid remaining amount"
 msgstr "결제 잔액"
 
 msgid "Panel & access permissions"
-msgstr ""
+msgstr "패널 및 접근 권한"
 
 msgid "Panel Button Type"
 msgstr "패널 버튼 유형"
 
 msgid "Panel access"
-msgstr ""
+msgstr "패널 접근"
 
 msgid "Panel recovery"
-msgstr ""
+msgstr "패널 복구"
 
 msgid "Panel subtab name"
 msgstr "패널 하위 탭 이름"
 
 msgid "Paragraph"
-msgstr ""
+msgstr "단락"
 
 msgid "Partially Paid"
 msgstr "부분 결제됨"
@@ -6927,7 +6936,7 @@ msgid "Partially Refunded"
 msgstr "부분 환불됨"
 
 msgid "Partially paid"
-msgstr ""
+msgstr "부분 지불됨"
 
 msgid "Parts"
 msgstr "부분"
@@ -6957,17 +6966,17 @@ msgid "Passwords do not match"
 msgstr "비밀번호가 일치하지 않습니다"
 
 msgid "Passwords don't match."
-msgstr ""
+msgstr "비밀번호가 일치하지 않습니다."
 
 msgid ""
 "Paste the secret key you received after creating your API key pair in Google "
 "reCAPTCHA."
-msgstr "Google 리캡챠에서 API 키 쌍을 생성한 후 받은 비밀 키를 붙여넣으세요."
+msgstr "구글 리캡챠에서 API 키 쌍을 생성한 후 받은 비밀 키를 붙여넣으세요."
 
 msgid ""
 "Paste the site key you received after generating your API key pair in Google "
 "reCAPTCHA."
-msgstr "Google 리캡챠에서 API 키 쌍을 생성한 후 받은 사이트 키를 붙여넣으세요."
+msgstr "구글 리캡챠에서 API 키 쌍을 생성한 후 받은 사이트 키를 붙여넣으세요."
 
 msgid "Pay"
 msgstr "결제하기"
@@ -6976,7 +6985,7 @@ msgid "PayPal"
 msgstr "페이팔"
 
 msgid "PayPal payment link"
-msgstr ""
+msgstr "페이팔 결제 링크"
 
 msgid "Pay for all appointments at once"
 msgstr "모든 예약을 한 번에 결제하세요"
@@ -6988,7 +6997,7 @@ msgid "Pay only for the first appointment"
 msgstr "첫 예약만 결제하세요"
 
 msgid "Pay with payment link"
-msgstr ""
+msgstr "결제 링크로 결제하기"
 
 msgid "Payee email"
 msgstr "담당자 이메일"
@@ -7024,19 +7033,19 @@ msgid "Payment Type:"
 msgstr "결제 유형:"
 
 msgid "Payment amount"
-msgstr ""
+msgstr "지불 금액"
 
 msgid "Payment created"
 msgstr "결제 생성됨"
 
 msgid "Payment currency"
-msgstr ""
+msgstr "결제 통화"
 
 msgid "Payment date"
 msgstr "결제 날짜"
 
 msgid "Payment details"
-msgstr ""
+msgstr "결제 정보"
 
 msgid "Payment due amount"
 msgstr "결제 예정 금액"
@@ -7045,31 +7054,31 @@ msgid "Payment error"
 msgstr "결제 오류"
 
 msgid "Payment history"
-msgstr ""
+msgstr "결제 내역"
 
 msgid "Payment link for Barion"
 msgstr "스트라이프용 결제 링크"
 
 msgid "Payment method"
-msgstr ""
+msgstr "결제 방법"
 
 msgid "Payment method:"
-msgstr ""
+msgstr "결제 방법:"
 
 msgid "Payment methods"
-msgstr ""
+msgstr "결제 방법"
 
 msgid "Payment protected by policy and powered by"
 msgstr "정책에 의해 보호되고 다음에서 제공하는 결제"
 
 msgid "Payment segment"
-msgstr ""
+msgstr "결제 부문"
 
 msgid "Payment status"
-msgstr ""
+msgstr "결제 상태"
 
 msgid "Payment summary"
-msgstr ""
+msgstr "결제 요약"
 
 msgid "Payment type"
 msgstr "결제 유형"
@@ -7084,31 +7093,31 @@ msgid "Pending"
 msgstr "대기 중"
 
 msgid "Pending appointments"
-msgstr ""
+msgstr "예약 대기 중"
 
 msgid "Pending payment"
-msgstr ""
+msgstr "결제 대기 중"
 
 msgid "People"
 msgstr "사람들"
 
 msgid "People counting logic"
-msgstr ""
+msgstr "인원 카운트 로직"
 
 msgid "Per Location"
-msgstr ""
+msgstr "장소별"
 
 msgid "Per Service"
-msgstr ""
+msgstr "서비스당"
 
 msgid "Per customer"
-msgstr ""
+msgstr "고객당"
 
 msgid "Percentage"
 msgstr "백분율"
 
 msgid "Percentage amount"
-msgstr ""
+msgstr "백분율 금액"
 
 msgid ""
 "Percentage deposit will be calculated on the total booking price<br>and "
@@ -7140,7 +7149,7 @@ msgid "Personal Information"
 msgstr "개인 정보"
 
 msgid "Personal information"
-msgstr ""
+msgstr "개인정보"
 
 msgid "Phone"
 msgstr "전화"
@@ -7155,7 +7164,7 @@ msgid "Phone already exists with different name. Please check your name."
 msgstr "다른 이름의 휴대폰이 이미 존재합니다. 이름을 확인해 주세요."
 
 msgid "Phone number"
-msgstr ""
+msgstr "전화번호"
 
 msgid "Phone number ID"
 msgstr "전화 번호 ID"
@@ -7179,10 +7188,10 @@ msgid "Pick date & time:"
 msgstr "날짜 및 시간을 선택하세요:"
 
 msgid "Pin icon"
-msgstr ""
+msgstr "핀 아이콘"
 
 msgid "Pixel ID"
-msgstr ""
+msgstr "픽셀 ID"
 
 msgid "Placeholder"
 msgstr "플레이스홀더"
@@ -7191,10 +7200,10 @@ msgid "Placeholder Color"
 msgstr "플레이스홀더 색상"
 
 msgid "Placeholder copied to clipboard."
-msgstr ""
+msgstr "임시 텍스트가 클립보드에 복사되었습니다."
 
 msgid "Placeholder text"
-msgstr ""
+msgstr "임시 텍스트"
 
 msgid "Placeholders"
 msgstr "플레이스홀더"
@@ -7203,7 +7212,7 @@ msgid "Plain"
 msgstr "일반"
 
 msgid "Plans"
-msgstr ""
+msgstr "플랜"
 
 msgid "Please Wait"
 msgstr "잠시만 기다려주세요"
@@ -7215,10 +7224,10 @@ msgid "Please check your .csv file and try again."
 msgstr ".csv 파일을 확인하시고 다시 시도해 주세요."
 
 msgid "Please choose appointment date"
-msgstr "약속일를 선택하세요"
+msgstr "예약일를 선택하세요"
 
 msgid "Please choose appointment time"
-msgstr "약속 시간을 선택하세요"
+msgstr "예약 시간을 선택하세요"
 
 msgid "Please confirm you are not a robot"
 msgstr "로봇이 아님을 확인해 주세요"
@@ -7227,14 +7236,14 @@ msgid ""
 "Please ensure that services and employees are created and that services are "
 "assigned to employees."
 msgstr ""
-"서비스와 직원이 생성되었는지, 그리고 서비스가 직원에게 할당되었는지 확인하십"
-"시오."
+"서비스와 담당자가 생성되었는지, 그리고 서비스가 담당자에게 할당되었는지 확인"
+"하십시오."
 
 msgid "Please enter Mailgun API key"
-msgstr "Mailgun API 키를 입력하세요"
+msgstr "메일건 API 키를 입력하세요"
 
 msgid "Please enter Mailgun Domain"
-msgstr "Mailgun 도메인을 입력하세요"
+msgstr "메일건 도메인을 입력하세요"
 
 msgid "Please enter SMTP host"
 msgstr "SMTP 호스트를 입력하세요"
@@ -7249,16 +7258,16 @@ msgid "Please enter SMTP username"
 msgstr "SMTP 사용자 이름을 입력하세요"
 
 msgid "Please enter a code."
-msgstr ""
+msgstr "코드를 입력해 주세요."
 
 msgid "Please enter a content."
-msgstr ""
+msgstr "내용을 입력해 주세요."
 
 msgid "Please enter a first name."
-msgstr ""
+msgstr "이름을 입력해 주세요."
 
 msgid "Please enter a last name"
-msgstr ""
+msgstr "성(姓)을 입력해 주세요"
 
 msgid "Please enter a live publishable key."
 msgstr "실시간으로 게시 가능한 키를 입력해 주세요."
@@ -7267,7 +7276,7 @@ msgid "Please enter a live secret key."
 msgstr "실시간 시크릿 키를 입력하세요."
 
 msgid "Please enter a name."
-msgstr ""
+msgstr "이름을 입력해 주세요."
 
 msgid "Please enter a new password."
 msgstr "새 비밀번호를 입력해 주세요."
@@ -7276,40 +7285,40 @@ msgid "Please enter a new password again."
 msgstr "새 비밀번호를 다시 입력해 주세요."
 
 msgid "Please enter a notification name."
-msgstr ""
+msgstr "알림 이름을 입력해 주세요."
 
 msgid "Please enter a password."
-msgstr ""
+msgstr "비밀번호를 입력해 주세요."
 
 msgid "Please enter a recipient email."
-msgstr ""
+msgstr "수신자 이메일을 입력해 주세요."
 
 msgid "Please enter a recipient phone."
-msgstr ""
+msgstr "수신자 전화번호를 입력해 주세요."
 
 msgid "Please enter a sender email."
-msgstr ""
+msgstr "발신자 이메일을 입력해 주세요."
 
 msgid "Please enter a sender name."
-msgstr ""
+msgstr "발신자 이름을 입력해 주세요."
 
 msgid "Please enter a subject."
-msgstr ""
+msgstr "제목을 입력해 주세요."
 
 msgid "Please enter a tax amount."
-msgstr ""
+msgstr "세금 금액을 입력해 주세요."
 
 msgid "Please enter a test publishable key."
-msgstr ""
+msgstr "테스트용 공개 키를 입력해 주세요."
 
 msgid "Please enter a test secret key."
-msgstr ""
+msgstr "테스트용 비밀 키를 입력하세요."
 
 msgid "Please enter a ticket code."
-msgstr ""
+msgstr "티켓 코드를 입력해 주세요."
 
 msgid "Please enter a ticket name."
-msgstr ""
+msgstr "티켓 이름을 입력해 주세요."
 
 msgid "Please enter a valid URL with protocol (http:// or https://)."
 msgstr "유효한 URL을 프로토콜(http:// 또는 https://)과 함께 입력해 주세요."
@@ -7318,19 +7327,19 @@ msgid "Please enter a valid email address"
 msgstr "유효한 이메일 주소를 입력하세요"
 
 msgid "Please enter a valid email address."
-msgstr ""
+msgstr "유효한 이메일 주소를 입력해 주세요."
 
 msgid "Please enter a valid phone number."
-msgstr ""
+msgstr "유효한 전화번호를 입력해 주세요."
 
 msgid "Please enter an email."
-msgstr ""
+msgstr "이메일을 입력해 주세요."
 
 msgid "Please enter an event."
-msgstr ""
+msgstr "이벤트를 입력해 주세요."
 
 msgid "Please enter appointment date..."
-msgstr "약속일를 입력하세요."
+msgstr "예약일를 입력하세요."
 
 msgid "Please enter coupon"
 msgstr "쿠폰을 입력하세요"
@@ -7390,7 +7399,7 @@ msgid "Please enter password"
 msgstr "비밀번호를 입력하세요"
 
 msgid "Please enter payee email"
-msgstr "이메일을 입력하세요"
+msgstr "수신자 이메일 주소를 입력해 주세요"
 
 msgid "Please enter phone"
 msgstr "전화번호를 입력하세요"
@@ -7405,7 +7414,7 @@ msgid "Please enter start time"
 msgstr "시작 시간을 입력하세요"
 
 msgid "Please enter tax rate name."
-msgstr ""
+msgstr "세율 이름을 입력해 주세요."
 
 msgid "Please enter test API Key"
 msgstr "테스트 API 키를 입력하세요"
@@ -7448,91 +7457,91 @@ msgid "Please select"
 msgstr "선택해 주세요"
 
 msgid "Please select a category."
-msgstr ""
+msgstr "카테고리를 선택해 주세요."
 
 msgid "Please select a closing date."
-msgstr ""
+msgstr "마감일을 선택해 주세요."
 
 msgid "Please select a closing time."
-msgstr ""
+msgstr "마감 시간을 선택해 주세요."
 
 msgid "Please select a color."
-msgstr ""
+msgstr "색상을 선택해 주세요."
 
 msgid "Please select a customer."
-msgstr ""
+msgstr "고객을 선택해 주세요."
 
 msgid "Please select a date."
-msgstr ""
+msgstr "날짜를 선택해 주세요."
 
 msgid "Please select a date range."
-msgstr ""
+msgstr "날짜 범위를 선택해 주세요."
 
 msgid "Please select a date range that is within the period range."
 msgstr "기간 범위 내에 있는 날짜 범위를 선택해 주세요."
 
 msgid "Please select a duration."
-msgstr ""
+msgstr "기간을 선택해 주세요."
 
 msgid "Please select a location"
-msgstr ""
+msgstr "장소를 선택하세요"
 
 msgid "Please select a location."
-msgstr ""
+msgstr "장소를 선택하세요."
 
 msgid "Please select a package."
-msgstr ""
+msgstr "패키지를 선택하십시오."
 
 msgid "Please select a service."
-msgstr ""
+msgstr "서비스를 선택해 주세요."
 
 msgid "Please select a start time."
-msgstr ""
+msgstr "시작 시간을 선택해 주세요."
 
 msgid "Please select a time."
-msgstr ""
+msgstr "시간을 선택해 주세요."
 
 msgid "Please select a type."
 msgstr "유형을 선택하세요."
 
 msgid "Please select an action."
-msgstr ""
+msgstr "작업을 선택해 주세요."
 
 msgid "Please select an attendee."
-msgstr ""
+msgstr "참석자를 선택해 주세요."
 
 msgid "Please select an email template."
-msgstr ""
+msgstr "이메일 템플릿을 선택해 주세요."
 
 msgid "Please select an employee."
-msgstr ""
+msgstr "담당자를 선택해 주세요."
 
 msgid "Please select an end date."
-msgstr ""
+msgstr "종료일을 선택해 주세요."
 
 msgid "Please select an end time."
-msgstr ""
+msgstr "종료 시간을 선택해 주세요."
 
 msgid "Please select an event."
-msgstr ""
+msgstr "이벤트를 선택해 주세요."
 
 msgid "Please select an opening date."
-msgstr ""
+msgstr "영업일을 선택해 주세요."
 
 msgid "Please select an opening time."
-msgstr ""
+msgstr "영업 시간을 선택해 주세요."
 
 msgid "Please select an option."
-msgstr ""
+msgstr "옵션을 선택해 주세요."
 
 msgid "Please select at least one customer"
 msgstr "고객을 한명 이상 선택해 주세요"
 
 msgid "Please select at least one employee."
-msgstr ""
+msgstr "최소 한 명의 담당자를 선택하십시오."
 
 msgid "Please select at least one service."
-msgstr ""
+msgstr "최소 한 가지 서비스를 선택해 주세요."
 
 msgid "Please select customer"
 msgstr "고객을 선택해 주세요"
@@ -7559,7 +7568,7 @@ msgid "Please select service"
 msgstr "서비스를 선택해 주세요"
 
 msgid "Please select the extra:"
-msgstr "추가 사항을 선택해 주세요:"
+msgstr "부가 서비스를 선택해 주세요:"
 
 msgid "Please select time"
 msgstr "시간을 선택해 주세요"
@@ -7587,17 +7596,17 @@ msgid ""
 "Popup Blocker is enabled! To add your appointment to your calendar, please "
 "allow popups and add this site to your exception list."
 msgstr ""
-"팝업 차단이 활성화되었습니다! 캘린더에 약속을 추가하려면 팝업을 허용하고 이 "
+"팝업 차단이 활성화되었습니다! 캘린더에 예약을 추가하려면 팝업을 허용하고 이 "
 "사이트를 예외 목록에 추가하세요."
 
 msgid "Popup Heading"
 msgstr "팝업 제목"
 
 msgid "Popup buttons"
-msgstr ""
+msgstr "팝업 버튼"
 
 msgid "Popup title"
-msgstr ""
+msgstr "팝업 제목"
 
 msgid "Preload entities when page loads"
 msgstr "페이지 로드 시 엔티티를 미리 로드합니다"
@@ -7621,12 +7630,12 @@ msgid ""
 "Prevent bookings during times marked as busy in the employee's Google "
 "Calendar."
 msgstr ""
-"직원의 구글 캘린더에서 바쁜 시간대로 표시된 시간에는 예약을 차단하세요."
+"담당자의 구글 캘린더에서 바쁜 시간대로 표시된 시간에는 예약을 차단하세요."
 
 msgid ""
 "Prevent scheduling conflicts with real-time calendar syncing for every "
 "employee."
-msgstr "모든 직원의 실시간 캘린더 동기화로 일정 충돌을 방지하세요."
+msgstr "모든 담당자의 실시간 캘린더 동기화로 일정 충돌을 방지하세요."
 
 msgid "Preview"
 msgstr "미리보기"
@@ -7635,10 +7644,10 @@ msgid "Preview Invoice"
 msgstr "인보이스 보내기"
 
 msgid "Preview invoice"
-msgstr ""
+msgstr "인보이스 미리 보기"
 
 msgid "Previous range"
-msgstr ""
+msgstr "이전 범위"
 
 msgid "Price"
 msgstr "가격"
@@ -7647,55 +7656,55 @@ msgid "Price:"
 msgstr "가격:"
 
 msgid "Price Asc"
-msgstr ""
+msgstr "가격 오름차순"
 
 msgid "Price Ascending"
 msgstr "가격 오름차순"
 
 msgid "Price Desc"
-msgstr ""
+msgstr "가격 내림차순"
 
 msgid "Price Descending"
 msgstr "가격 내림차순"
 
 msgid "Price indicators"
-msgstr ""
+msgstr "가격 지표"
 
 msgid "Price number of decimals"
-msgstr ""
+msgstr "가격 소수점 자리 수"
 
 msgid "Price per Spot"
 msgstr "스팟당 가격"
 
 msgid "Price separator"
-msgstr ""
+msgstr "가격 구분자"
 
 msgid "Price symbol position"
-msgstr ""
+msgstr "가격 기호 위치"
 
 msgid "Price type"
-msgstr ""
+msgstr "가격 유형"
 
 msgid "Pricing"
 msgstr "가격 책정"
 
 msgid "Pricing & duration "
-msgstr ""
+msgstr "가격 및 기간 "
 
 msgid "Pricing by Date range"
 msgstr "날짜 범위별 가격"
 
 msgid "Pricing by date & time"
-msgstr ""
+msgstr "날짜 및 시간별 가격"
 
 msgid "Pricing by date range"
-msgstr ""
+msgstr "날짜 범위별 가격 책정"
 
 msgid "Pricing by duration"
-msgstr ""
+msgstr "기간별 가격 책정"
 
 msgid "Pricing by number of people"
-msgstr ""
+msgstr "인원 수에 따른 가격 책정"
 
 msgid "Pricing by the number of people"
 msgstr "인원 수에 따른 가격 책정"
@@ -7713,16 +7722,16 @@ msgid "Primary and state colors"
 msgstr "기본 및 상태 색상"
 
 msgid "Primary button style"
-msgstr ""
+msgstr "기본 버튼 스타일"
 
 msgid "Primary color"
-msgstr ""
+msgstr "기본 색상"
 
 msgid "Primary text"
-msgstr ""
+msgstr "기본 텍스트"
 
 msgid "Process payments easily with Square."
-msgstr "Square로 간편하게 결제를 처리하세요."
+msgstr "스퀘어로 간편하게 결제를 처리하세요."
 
 msgid "Processing"
 msgstr "처리 중"
@@ -7740,10 +7749,10 @@ msgid "Profile has been updated"
 msgstr "프로필이 업데이트되었습니다"
 
 msgid "Property name"
-msgstr ""
+msgstr "속성 이름"
 
 msgid "Property value"
-msgstr ""
+msgstr "속성 값"
 
 msgid "Protect your booking system from bots by integrating reCAPTCHA keys."
 msgstr "리캡챠 키를 통합하여 예약 시스템을 봇으로부터 보호하세요."
@@ -7757,7 +7766,7 @@ msgstr ""
 "설정하여 사용성을 개선하고 비즈니스 요구사항에 부합하도록 하세요."
 
 msgid "Publish"
-msgstr ""
+msgstr "공개"
 
 msgid "Publish Form"
 msgstr "게시 양식"
@@ -7784,19 +7793,19 @@ msgid "Quantity"
 msgstr "수량"
 
 msgid "Quantity Asc"
-msgstr ""
+msgstr "수량 오름차순"
 
 msgid "Quantity Desc"
-msgstr ""
+msgstr "수량 내림차순"
 
 msgid "Quantity is shared"
-msgstr ""
+msgstr "수량은 공유됩니다"
 
 msgid "Quantity per location"
-msgstr ""
+msgstr "장소별 수량"
 
 msgid "Quantity per service"
-msgstr ""
+msgstr "서비스당 수량"
 
 msgid "Queued"
 msgstr "대기 중"
@@ -7809,7 +7818,7 @@ msgstr ""
 "를 간편하고 효율적으로 수행하세요."
 
 msgid "Radio button"
-msgstr ""
+msgstr "라디오 버튼"
 
 msgid "Random"
 msgstr "랜덤"
@@ -7821,13 +7830,13 @@ msgid "Razorpay"
 msgstr "레이저페이"
 
 msgid "Razorpay payment link"
-msgstr ""
+msgstr "레이저페이 결제 링크"
 
 msgid "Re-type New Password"
-msgstr ""
+msgstr "새 비밀번호를 다시 입력하세요"
 
 msgid "Re-type new password"
-msgstr ""
+msgstr "새 비밀번호를 다시 입력하세요"
 
 msgid "Read more"
 msgstr "더 읽기"
@@ -7836,13 +7845,13 @@ msgid "Recharge"
 msgstr "충전"
 
 msgid "Recharge balance"
-msgstr ""
+msgstr "잔액 충전"
 
 msgid "Recipient email"
-msgstr ""
+msgstr "수신자 이메일"
 
 msgid "Recipient phone"
-msgstr ""
+msgstr "수신자 전화번호"
 
 msgid "Recurrence"
 msgstr "반복"
@@ -7866,25 +7875,25 @@ msgid "Recurring Summary"
 msgstr "반복 요약"
 
 msgid "Recurring appointment"
-msgstr ""
+msgstr "반복 예약"
 
 msgid "Recurring appointment payment"
-msgstr ""
+msgstr "반복 예약 결제"
 
 msgid "Recurring appointments"
-msgstr ""
+msgstr "반복 예약"
 
 msgid "Recurring appointments:"
-msgstr ""
+msgstr "반복 예약:"
 
 msgid "Recurring appointments details"
 msgstr "반복 예약 세부 정보"
 
 msgid "Recurring appointments setup"
-msgstr ""
+msgstr "반복 예약 설정"
 
 msgid "Recurring events"
-msgstr ""
+msgstr "반복 이벤트"
 
 msgid "Recurring notification"
 msgstr "반복 알림"
@@ -7893,13 +7902,13 @@ msgid "Recurring popup"
 msgstr "반복 팝업"
 
 msgid "Recurring summary"
-msgstr ""
+msgstr "반복 요약"
 
 msgid "Red"
 msgstr "빨간색"
 
 msgid "Redirect"
-msgstr ""
+msgstr "리디렉션"
 
 msgid "Redirect URI"
 msgstr "리디렉션 URI"
@@ -7914,22 +7923,22 @@ msgid "Redirect URL after Payment"
 msgstr "결제 후 리디렉션 URL"
 
 msgid "Redirect URL after booking"
-msgstr ""
+msgstr "예약 후 리디렉션 URL"
 
 msgid "Redirect URL after payment"
 msgstr "결제 후 리디렉션 URL"
 
 msgid "Redirect URL for successfully approved booking"
-msgstr ""
+msgstr "예약 승인 완료 시 리디렉션 URL"
 
 msgid "Redirect URL for successfully rejected booking"
-msgstr ""
+msgstr "예약이 성공적으로 거부된 경우 리디렉션 URL"
 
 msgid "Redirect URL for unsuccessfully approved booking"
-msgstr ""
+msgstr "예약 승인 실패 시 리디렉션 URL"
 
 msgid "Redirect URL for unsuccessfully rejected booking"
-msgstr ""
+msgstr "예약이 거부되었을 때 리디렉션되는 URL"
 
 msgid "Redirect URLs"
 msgstr "리디렉션 URL"
@@ -7938,7 +7947,7 @@ msgid "Redirect page"
 msgstr "리디렉션 페이지"
 
 msgid "Reduce no-shows with timely reminders sent automatically"
-msgstr ""
+msgstr "자동으로 발송되는 시기적절한 알림으로 노쇼를 줄이세요"
 
 msgid "Reflect On"
 msgstr "반영 대상"
@@ -7947,7 +7956,7 @@ msgid "Refund"
 msgstr "환불"
 
 msgid "Refund Transaction"
-msgstr ""
+msgstr "환불 거래"
 
 msgid "Refunded"
 msgstr "환불됨"
@@ -7956,7 +7965,7 @@ msgid "Registration, Telephone Number, Email"
 msgstr "등록, 전화번호, 이메일"
 
 msgid "Reject appointment link"
-msgstr ""
+msgstr "예약 취소 링크"
 
 msgid "Rejected"
 msgstr "거부됨"
@@ -7971,25 +7980,25 @@ msgid "Remind me when my SMS balance is low"
 msgstr "SMS 잔액이 부족할 때 알림"
 
 msgid "Remove Apple Calendar busy slots"
-msgstr ""
+msgstr "애플 캘린더에서 예약된 시간대 제거"
 
 msgid "Remove Attendee"
 msgstr "참석자 제거"
 
 msgid "Remove Google Calendar busy slots"
-msgstr ""
+msgstr "구글 캘린더에서 예약된 시간대 제거"
 
 msgid "Remove Outlook Calendar busy slots"
-msgstr ""
+msgstr "아웃룩 캘린더에서 예약된 시간대 제거"
 
 msgid "Reorder Packages"
-msgstr ""
+msgstr "패키지 재정렬"
 
 msgid "Reorder Services"
-msgstr ""
+msgstr "서비스 재주문"
 
 msgid "Reorder on website"
-msgstr ""
+msgstr "웹사이트에서 재주문하기"
 
 msgid "Reordering packages affects how they are displayed on the website."
 msgstr "패키지 재정렬은 웹사이트에 표시되는 방식에 영향을 미칩니다."
@@ -7998,7 +8007,7 @@ msgid "Reordering services affects how they are displayed on the website."
 msgstr "서비스 재정렬은 웹사이트에 표시되는 방식에 영향을 미칩니다."
 
 msgid "Repeat"
-msgstr ""
+msgstr "반복"
 
 msgid "Repeat:"
 msgstr "반복:"
@@ -8016,19 +8025,19 @@ msgid "Repeat Yearly"
 msgstr "매년 반복"
 
 msgid "Repeat appointment"
-msgstr ""
+msgstr "반복 예약"
 
 msgid "Repeat event"
-msgstr ""
+msgstr "반복 이벤트"
 
 msgid "Repeat every"
 msgstr "매번 반복"
 
 msgid "Repeat every year"
-msgstr ""
+msgstr "매년 반복"
 
 msgid "Repeat new password"
-msgstr ""
+msgstr "새 비밀번호 재입력"
 
 msgid "Repeat on"
 msgstr "다음 날짜에 반복"
@@ -8037,13 +8046,13 @@ msgid "Repeat this appointment"
 msgstr "이 예약 반복"
 
 msgid "Repeat yearly"
-msgstr ""
+msgstr "매년 반복"
 
 msgid "Replace"
-msgstr ""
+msgstr "교체"
 
 msgid "Reply-to email"
-msgstr ""
+msgstr "답장 이메일"
 
 msgid "Require password for login"
 msgstr "로그인 시 비밀번호 필요"
@@ -8052,13 +8061,13 @@ msgid "Required"
 msgstr "필수"
 
 msgid "Required fields: <b>First Name</b> and <b>Last Name</b>."
-msgstr ""
+msgstr "필수 입력 항목:<b>성</b> 그리고<b>이름</b> ."
 
 msgid "Reschedule"
 msgstr "예약 변경"
 
 msgid "Reschedule appointment"
-msgstr ""
+msgstr "예약 변경"
 
 msgid "Rescheduled"
 msgstr "예약 재설정"
@@ -8073,34 +8082,34 @@ msgid "Reset Password"
 msgstr "비밀번호 재설정"
 
 msgid "Reset password"
-msgstr ""
+msgstr "비밀번호 재설정"
 
 msgid "Resource"
-msgstr "자원"
+msgstr "리소스"
 
 msgid "Resource Details"
-msgstr ""
+msgstr "자원 세부 정보"
 
 msgid "Resource booking setup"
-msgstr ""
+msgstr "자원 예약 설정"
 
 msgid "Resource has been added."
-msgstr ""
+msgstr "리소스가 추가되었습니다."
 
 msgid "Resource has been deleted."
-msgstr ""
+msgstr "리소스가 삭제되었습니다."
 
 msgid "Resource has been hidden."
-msgstr ""
+msgstr "리소스가 숨겨졌습니다."
 
 msgid "Resource has been updated."
-msgstr ""
+msgstr "리소스가 업데이트되었습니다."
 
 msgid "Resource is now visible."
-msgstr ""
+msgstr "이제 리소스가 표시됩니다."
 
 msgid "Resources"
-msgstr "자원"
+msgstr "리소스"
 
 msgid "Returning"
 msgstr "반품"
@@ -8109,22 +8118,22 @@ msgid "Revenue"
 msgstr "수익"
 
 msgid "Ribbon"
-msgstr ""
+msgstr "리본"
 
 msgid "Role"
-msgstr ""
+msgstr "역할"
 
 msgid "Roles & permissions"
-msgstr ""
+msgstr "역할 및 권한"
 
 msgid "Roles settings"
-msgstr ""
+msgstr "역할 설정"
 
 msgid "Round-robin"
-msgstr "라운드 로빈"
+msgstr "라운드 로빈 방식"
 
 msgid "Rules"
-msgstr ""
+msgstr "규칙"
 
 msgid "SMS"
 msgstr ""
@@ -8133,13 +8142,13 @@ msgid "SMS History"
 msgstr "SMS 기록"
 
 msgid "SMS Settings"
-msgstr ""
+msgstr "SMS 설정"
 
 msgid "SMS balance"
-msgstr ""
+msgstr "SMS 잔액"
 
 msgid "SMS history"
-msgstr ""
+msgstr "SMS 기록"
 
 msgid "SMTP"
 msgstr ""
@@ -8163,7 +8172,7 @@ msgid "SSL"
 msgstr ""
 
 msgid "Same day"
-msgstr ""
+msgstr "당일"
 
 msgid "Sandbox mode"
 msgstr "샌드박스 모드"
@@ -8172,7 +8181,7 @@ msgid "Sandbox secret key (POSKey)"
 msgstr "샌드박스 비밀 키 (POSKey)"
 
 msgid "Sat"
-msgstr ""
+msgstr "토"
 
 msgid "Saturday"
 msgstr "토요일"
@@ -8187,10 +8196,10 @@ msgid "Save Changes"
 msgstr "변경 사항 저장"
 
 msgid "Save Special Day"
-msgstr "특별한 날 저장"
+msgstr "기념일 저장"
 
 msgid "Save changes"
-msgstr ""
+msgstr "변경 사항 저장"
 
 msgid "Save time and reduce manual work with instant, auto-generated invoices"
 msgstr "시간을 절약하고 수작업을 줄이세요. 즉시 자동 생성되는 청구서로"
@@ -8206,13 +8215,13 @@ msgid "Save time with quick, hassle-free customer data exports"
 msgstr "빠르고 번거로움 없는 고객 데이터 내보내기로 시간을 절약하세요"
 
 msgid "Scan"
-msgstr ""
+msgstr "스캔"
 
 msgid "Scan E-Ticket"
-msgstr "티켓 선택"
+msgstr "전자 티켓 선택"
 
 msgid "Scan e-ticket"
-msgstr ""
+msgstr "전자 티켓 스캔"
 
 msgid "Schedule"
 msgstr "스케줄"
@@ -8221,25 +8230,25 @@ msgid "Schedule:"
 msgstr "스케줄:"
 
 msgid "Schedule setup required"
-msgstr ""
+msgstr "일정 설정이 필요합니다"
 
 msgid "Scheduled"
-msgstr ""
+msgstr "예정"
 
 msgid "Scheduled Before Appointment"
-msgstr ""
+msgstr "예약 전 예정됨"
 
 msgid "Scheduled Before Event"
-msgstr ""
+msgstr "이벤트 전 예정됨"
 
 msgid "Scheduled notification"
 msgstr "예약 알림"
 
 msgid "Scope"
-msgstr ""
+msgstr "범위"
 
 msgid "Scopes"
-msgstr ""
+msgstr "범위"
 
 msgid "Search"
 msgstr "검색"
@@ -8257,7 +8266,7 @@ msgid "Search Input Field"
 msgstr "서비스 입력 필드"
 
 msgid "Search Resources"
-msgstr ""
+msgstr "리소스 검색"
 
 msgid "Search Results"
 msgstr "검색 결과"
@@ -8266,73 +8275,73 @@ msgid "Search Taxes"
 msgstr "세금 검색"
 
 msgid "Search attendees"
-msgstr ""
+msgstr "참석자 검색"
 
 msgid "Search booked appointments"
-msgstr ""
+msgstr "예약된 예약 검색"
 
 msgid "Search bookings"
-msgstr ""
+msgstr "예약 검색"
 
 msgid "Search customers"
-msgstr ""
+msgstr "고객 검색"
 
 msgid "Search employees"
-msgstr ""
+msgstr "담당자 검색"
 
 msgid "Search events"
-msgstr ""
+msgstr "이벤트 검색"
 
 msgid "Search extras"
-msgstr ""
+msgstr "부가 서비스 검색"
 
 msgid "Search features"
-msgstr ""
+msgstr "기능 검색"
 
 msgid "Search for Events"
 msgstr "이벤트 검색"
 
 msgid "Search for events"
-msgstr ""
+msgstr "이벤트 검색"
 
 msgid "Search integrations"
-msgstr ""
+msgstr "통합 검색"
 
 msgid "Search invoices"
-msgstr ""
+msgstr "인보이스 검색"
 
 msgid "Search locations"
-msgstr ""
+msgstr "장소 검색"
 
 msgid "Search notifications"
-msgstr ""
+msgstr "알림 검색"
 
 msgid "Search packages"
-msgstr ""
+msgstr "패키지 검색"
 
 msgid "Search services"
-msgstr ""
+msgstr "서비스 검색"
 
 msgid "Second"
 msgstr "두 번째"
 
 msgid "Second {day}"
-msgstr ""
+msgstr "둘째 {day}"
 
 msgid "Secondary"
-msgstr ""
+msgstr "보조"
 
 msgid "Secondary Button Type"
 msgstr "보조 버튼 유형"
 
 msgid "Secondary button style"
-msgstr ""
+msgstr "보조 버튼 스타일"
 
 msgid "Secondary color"
-msgstr ""
+msgstr "보조 색상"
 
 msgid "Secondary text"
-msgstr ""
+msgstr "보조 텍스트"
 
 msgid "Secret key (POSKey)"
 msgstr "시크릿 키 (POSKey)"
@@ -8341,13 +8350,13 @@ msgid "Section"
 msgstr "섹션"
 
 msgid "Securely process payments using Stripe."
-msgstr "Stripe를 사용하여 안전하게 결제를 처리하세요."
+msgstr "스트라이프를 사용하여 안전하게 결제를 처리하세요."
 
 msgid "Segment:"
 msgstr "세그먼트:"
 
 msgid "Segments"
-msgstr ""
+msgstr "세그먼트"
 
 msgid "Select"
 msgstr "선택"
@@ -8359,7 +8368,7 @@ msgid "Select Apple Calendar"
 msgstr "애플 캘린더 선택"
 
 msgid "Select Box"
-msgstr ""
+msgstr "상자 선택"
 
 msgid "Select Calendar"
 msgstr "캘린더 선택"
@@ -8425,44 +8434,44 @@ msgid "Select WooCommerce product"
 msgstr "우커머스 제품 선택"
 
 msgid "Select Zoom User"
-msgstr "줌 사용자 선택"
+msgstr "Zoom 사용자 선택"
 
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr "커서가 위치한 곳에 삽입할 자리 표시자를 선택하세요."
 
 msgid "Select box"
-msgstr ""
+msgstr "상자 선택"
 
 msgid "Select category"
-msgstr ""
+msgstr "카테고리 선택"
 
 msgid "Select customer, employee and service"
 msgstr "고객, 담당자 및 서비스 선택"
 
 msgid "Select date"
-msgstr ""
+msgstr "날짜 선택"
 
 msgid "Select date and time"
 msgstr "날짜 및 시간 선택"
 
 msgid "Select delimiter"
-msgstr ""
+msgstr "구분 기호 선택"
 
 msgid "Select employee"
-msgstr ""
+msgstr "담당자 선택"
 
 msgid "Select event"
-msgstr ""
+msgstr "이벤트 선택"
 
 msgid "Select location"
-msgstr ""
+msgstr "장소 선택"
 
 msgid ""
 "Select only specific services for this period.<br/>If no services are "
 "selected, then all assigned services for this employee<br/>will be available "
 "for booking in this period."
 msgstr ""
-"이 기간 동안 특정 서비스만 선택합니다.<br/>선택한 서비스가 없으면 이 직원에"
+"이 기간 동안 특정 서비스만 선택합니다.<br/>선택한 서비스가 없으면 이 담당자에"
 "게 할당된<br/>모든 서비스를 이 기간에 예약할 수 있습니다."
 
 msgid "Select or Create New"
@@ -8472,13 +8481,13 @@ msgid "Select or Create Tag"
 msgstr "태그 선택 또는 생성"
 
 msgid "Select package"
-msgstr ""
+msgstr "패키지 선택"
 
 msgid "Select placeholder"
-msgstr ""
+msgstr "자리 표시자 선택"
 
 msgid "Select service"
-msgstr ""
+msgstr "서비스 선택"
 
 msgid "Select specific location for each period."
 msgstr "각 기간에 대한 특정 장소를 선택합니다."
@@ -8490,10 +8499,10 @@ msgid "Select specific services for each period."
 msgstr "각 기간에 대한 특정 서비스를 선택합니다."
 
 msgid "Select the Appointment Time"
-msgstr "약속 시간 선택"
+msgstr "예약 시간 선택"
 
 msgid "Select the Extras you'd like"
-msgstr "원하는 추가 혜택을 선택합니다"
+msgstr "원하는 부가 서비스를 선택합니다"
 
 msgid "Select the WooCommerce product that will be used for this package."
 msgstr "이 패키지에 사용할 우커머스 제품을 선택하세요."
@@ -8505,8 +8514,8 @@ msgid ""
 "Select the employee who will be added as the organizer of the Google/Outlook/"
 "Apple Calendar event. Employees selected under Staff will be added as guests."
 msgstr ""
-"Google/Outlook/Apple 캘린더 이벤트의 주최자로 추가될 직원을 선택하세요. '직"
-"원' 항목에서 선택된 직원은 게스트로 추가됩니다."
+"구글/아웃룩/애플 캘린더 이벤트의 주최자로 추가될 담당자를 선택하세요. '담당"
+"자' 항목에서 선택된 담당자는 게스트로 추가됩니다."
 
 msgid "Select the events this coupon can be used for."
 msgstr "이 쿠폰을 사용할 수 있는 이벤트를 선택하세요."
@@ -8527,7 +8536,7 @@ msgid "Select this employee"
 msgstr "이 담당자 선택"
 
 msgid "Select tickets"
-msgstr ""
+msgstr "티켓 선택"
 
 msgid "Select your Square Location"
 msgstr "스퀘어 장소 선택"
@@ -8539,16 +8548,16 @@ msgid "Selected Customers"
 msgstr "선택된 고객"
 
 msgid "Selected date background"
-msgstr ""
+msgstr "날짜 배경 선택"
 
 msgid "Selected date text"
-msgstr ""
+msgstr "날짜 텍스트 선택"
 
 msgid "Selected extras"
-msgstr "선택된 추가 정보"
+msgstr "선택된 부가 서비스"
 
 msgid "Selected extras details"
-msgstr "선택된 세부 추가 정보"
+msgstr "선택된 부가 서비스 세부 정보"
 
 msgid "Selected services"
 msgstr "선택된 서비스"
@@ -8572,13 +8581,13 @@ msgid "Send Reset Link"
 msgstr "재설정 링크 보내기"
 
 msgid "Send access link"
-msgstr ""
+msgstr "접근 링크 보내기"
 
 msgid "Send after appointment"
 msgstr "예약 후 발송"
 
 msgid "Send after event"
-msgstr ""
+msgstr "이벤트 후 전송"
 
 msgid "Send all SMS messages to additional numbers"
 msgstr "모든 SMS 메시지를 추가 번호로 보내기"
@@ -8590,16 +8599,16 @@ msgid "Send appointment notifications directly via WhatsApp."
 msgstr "WhatsApp을 통해 직접 예약 알림을 보내세요."
 
 msgid "Send at"
-msgstr ""
+msgstr "전송"
 
 msgid "Send custom fields info for each customer separately"
 msgstr "각 고객에 대한 사용자 지정 필드 정보를 개별적으로 보내기"
 
 msgid "Send event invitation email"
-msgstr ""
+msgstr "이벤트 초대 이메일 보내기"
 
 msgid "Send invoice"
-msgstr ""
+msgstr "인보이스 보내기"
 
 msgid "Send invoice to customer by default"
 msgstr "기본적으로 고객에게 인보이스 보내기"
@@ -8615,46 +8624,46 @@ msgid "Send smart, personalized notifications your way"
 msgstr "스마트하고 개인화된 알림을 받아보세요"
 
 msgid "Send test"
-msgstr ""
+msgstr "테스트 전송"
 
 msgid "Send to e-mail"
 msgstr "이메일로 보내기"
 
 msgid "Send your customer data to Mailchimp quickly and effortlessly."
-msgstr "고객 데이터를 빠르고 손쉽게 Mailchimp로 전송하세요."
+msgstr "고객 데이터를 빠르고 손쉽게 메일침프로 전송하세요."
 
 msgid "Sender ID supports up to 11 characters"
 msgstr "발신자 ID는 최대 11자까지 지원"
 
 msgid "Sender email"
-msgstr ""
+msgstr "이메일 보내기"
 
 msgid "Sender name"
-msgstr ""
+msgstr "발송인 이름"
 
 msgid "Sent"
 msgstr "보낸 사람"
 
 msgid "Separate-row export"
-msgstr ""
+msgstr "별도 행 내보내기"
 
 msgid "Service"
 msgstr "서비스"
 
 msgid "Service/Event"
-msgstr ""
+msgstr "서비스/이벤트"
 
 msgid "Service Asc"
-msgstr ""
+msgstr "서비스 오름차순"
 
 msgid "Service Categories"
-msgstr ""
+msgstr "서비스 카테고리"
 
 msgid "Service Category"
 msgstr "서비스 카테고리"
 
 msgid "Service Desc"
-msgstr ""
+msgstr "서비스 내림차순"
 
 msgid "Service ID"
 msgstr "서비스 ID"
@@ -8675,22 +8684,22 @@ msgid "Service Subtotal"
 msgstr "서비스 소계"
 
 msgid "Service badge"
-msgstr ""
+msgstr "서비스 배지"
 
 msgid "Service capacity"
-msgstr ""
+msgstr "서비스 수용 능력"
 
 msgid "Service category"
-msgstr ""
+msgstr "서비스 카테고리"
 
 msgid "Service count"
-msgstr ""
+msgstr "서비스 횟수"
 
 msgid "Service description"
 msgstr "서비스 설명"
 
 msgid "Service details"
-msgstr ""
+msgstr "서비스 세부 사항"
 
 msgid "Service duration"
 msgstr "서비스 기간"
@@ -8699,7 +8708,7 @@ msgid "Service employees list"
 msgstr "서비스 담당자 목록"
 
 msgid "Service filter"
-msgstr ""
+msgstr "서비스 필터"
 
 msgid "Service has been added."
 msgstr "서비스가 추가되었습니다."
@@ -8723,7 +8732,7 @@ msgid "Service is now visible."
 msgstr "서비스가 이제 표시됩니다."
 
 msgid "Service location"
-msgstr ""
+msgstr "서비스 장소"
 
 msgid "Service name"
 msgstr "서비스 이름"
@@ -8741,10 +8750,10 @@ msgid "Service price"
 msgstr "서비스 가격"
 
 msgid "Service selection"
-msgstr ""
+msgstr "서비스 선택"
 
 msgid "Service subtotal"
-msgstr ""
+msgstr "서비스 소계"
 
 msgid "Services"
 msgstr "서비스"
@@ -8759,7 +8768,7 @@ msgid "Services Desc"
 msgstr "서비스 내림차순"
 
 msgid "Services and packages overview"
-msgstr ""
+msgstr "서비스 및 패키지 개요"
 
 msgid "Services have been reordered."
 msgstr "서비스가 재정렬되었습니다."
@@ -8768,13 +8777,13 @@ msgid "Services list, Appointments"
 msgstr "서비스 목록, 예약"
 
 msgid "Services overview"
-msgstr ""
+msgstr "서비스 개요"
 
 msgid "Services setup"
 msgstr "서비스 설정"
 
 msgid "Set ICS file description"
-msgstr ""
+msgstr "ICS 파일 설명 설정"
 
 msgid "Set Limit"
 msgstr "제한 설정"
@@ -8811,23 +8820,23 @@ msgid ""
 "Set individual time zones for employees so availability and bookings are "
 "shown correctly for clients worldwide."
 msgstr ""
-"직원별로 개별 시간대를 설정하여 전 세계 고객에게 정확한 근무 가능 시간과 예"
+"담당자별로 개별 시간대를 설정하여 전 세계 고객에게 정확한 근무 가능 시간과 예"
 "약 현황이 표시되도록 합니다."
 
 msgid "Set metadata and description"
 msgstr "메타데이터 및 설명 설정"
 
 msgid "Set minimum"
-msgstr ""
+msgstr "최소값 설정"
 
 msgid "Set new password"
-msgstr ""
+msgstr "새 비밀번호 설정"
 
 msgid "Set options, colors and labels for booking form"
 msgstr "예약 양식의 옵션, 색상 및 레이블 설정"
 
 msgid "Set password"
-msgstr ""
+msgstr "비밀번호 설정"
 
 msgid "Set pricing based on the number of people in the booking."
 msgstr "예약 인원 수에 따라 가격을 설정하세요."
@@ -8870,7 +8879,7 @@ msgstr ""
 msgid ""
 "Set the time before the appointment when customers<br/>will not be able to "
 "cancel the appointment."
-msgstr "고객이 약속을 취소할 수 없는<br/>약속 전 시간을 설정합니다."
+msgstr "고객이 예약을 취소할 수 없는<br/>예약 전 시간을 설정합니다."
 
 msgid ""
 "Set the title that will appear in the calendar event. You can use "
@@ -8888,7 +8897,7 @@ msgstr ""
 "제한하려면이 옵션을 설정하세요"
 
 msgid "Set up"
-msgstr ""
+msgstr "설정"
 
 msgid "Set up Calendar layout and Recurring popup options"
 msgstr "캘린더 레이아웃 및 반복 팝업 옵션 설정하기"
@@ -8950,7 +8959,7 @@ msgid "Set up labels and buttons"
 msgstr "레이블 및 버튼 설정하기"
 
 msgid "Set up staff, location, gallery and other event information visibility"
-msgstr ""
+msgstr "담당자, 장소, 갤러리 및 기타 이벤트 정보의 표시 여부를 설정합니다"
 
 msgid "Set up visibility, button type and labels"
 msgstr "표시 여부, 버튼 유형 및 레이블 설정하기"
@@ -8965,37 +8974,37 @@ msgid "Set your Google Map API Key in General Settings"
 msgstr "일반 설정에서 구글 지도 API 키 설정하기"
 
 msgid "Setting up days off"
-msgstr ""
+msgstr "휴무일 설정하기"
 
 msgid "Settings"
 msgstr "설정"
 
 msgid "Settings have been saved."
-msgstr ""
+msgstr "설정이 저장되었습니다."
 
 msgid "Shared"
 msgstr "공유"
 
 msgid "Shared Pool"
-msgstr ""
+msgstr "공유 풀"
 
 msgid "Shared capacity across services"
-msgstr ""
+msgstr "서비스 간 공유 용량"
 
 msgid "Shared category capacity"
-msgstr ""
+msgstr "공유 카테고리 용량"
 
 msgid "Show"
-msgstr "표시"
+msgstr "보기"
 
 msgid "Show All"
 msgstr "모두 표시"
 
 msgid "Show All Periods"
-msgstr ""
+msgstr "모든 기간 표시"
 
 msgid "Show Less Periods"
-msgstr ""
+msgstr "간략한 기간 표시"
 
 msgid "Show Type"
 msgstr "유형 표시"
@@ -9025,22 +9034,22 @@ msgid "Show booking slots in client's time zone"
 msgstr "고객의 시간대에 맞춰 예약 가능한 시간대 표시"
 
 msgid "Show bookings"
-msgstr ""
+msgstr "예약 보기"
 
 msgid "Show catalog of all categories"
 msgstr "모든 카테고리 카탈로그 표시"
 
 msgid "Show checkout form"
-msgstr ""
+msgstr "결제 양식 표시"
 
 msgid "Show coupon"
-msgstr ""
+msgstr "쿠폰 표시"
 
 msgid "Show customer information form"
-msgstr ""
+msgstr "고객 정보 양식 표시"
 
 msgid "Show employee"
-msgstr ""
+msgstr "담당자 표시"
 
 msgid "Show event"
 msgstr "이벤트 표시"
@@ -9058,28 +9067,28 @@ msgid "Show less"
 msgstr "적게 표시"
 
 msgid "Show location"
-msgstr ""
+msgstr "장소 표시"
 
 msgid "Show more"
 msgstr "더 보기"
 
 msgid "Show more ({count})"
-msgstr ""
+msgstr "더 보기 ({count})"
 
 msgid "Show on website"
 msgstr "웹사이트에 표시"
 
 msgid "Show package"
-msgstr ""
+msgstr "패키지 표시"
 
 msgid "Show recurring events"
 msgstr "반복 이벤트 표시"
 
 msgid "Show resource"
-msgstr ""
+msgstr "리소스 표시"
 
 msgid "Show service"
-msgstr ""
+msgstr "서비스 표시"
 
 msgid "Show single Event details on the page"
 msgstr "페이지에 단일 이벤트 세부 정보 표시"
@@ -9106,7 +9115,7 @@ msgid "Show tag"
 msgstr "태그 표시"
 
 msgid "Show tax"
-msgstr ""
+msgstr "세금 표시"
 
 msgid "Show waiting list after booking is full"
 msgstr "예약이 꽉 찬 후 대기자 명단 표시"
@@ -9125,10 +9134,10 @@ msgid "Sidebar"
 msgstr "사이드바"
 
 msgid "Sidebar area"
-msgstr ""
+msgstr "사이드바 영역"
 
 msgid "Sidebar visibility"
-msgstr ""
+msgstr "사이드바 표시 여부"
 
 msgid "Sign In"
 msgstr "가입"
@@ -9137,13 +9146,13 @@ msgid "Sign In to Mailchimp"
 msgstr "로그인 버튼 유형"
 
 msgid "Sign Out of Mailchimp"
-msgstr "Mailchimp에서 로그아웃"
+msgstr "메일침프에서 로그아웃"
 
 msgid "Sign in"
-msgstr ""
+msgstr "로그인"
 
 msgid "Sign in as "
-msgstr ""
+msgstr "다음 계정으로 로그인 "
 
 msgid "Sign in with Google"
 msgstr "구글로 로그인"
@@ -9158,7 +9167,7 @@ msgid "Sign out from Outlook"
 msgstr "아웃룩에서 로그아웃"
 
 msgid "Sign up"
-msgstr ""
+msgstr "가입하기"
 
 msgid "Simple, secure payments powered by Barion."
 msgstr "Barion이 제공하는 간편하고 안전한 결제 서비스."
@@ -9166,7 +9175,7 @@ msgstr "Barion이 제공하는 간편하고 안전한 결제 서비스."
 msgid ""
 "Simplify communication with customizable messages for both customers and "
 "employees"
-msgstr "고객과 직원 모두를 위한 맞춤형 메시지로 커뮤니케이션을 간소화하세요"
+msgstr "고객과 담당자 모두를 위한 맞춤형 메시지로 커뮤니케이션을 간소화하세요"
 
 msgid "Simplify financial management with easy, one-click transaction exports"
 msgstr "간편한 원클릭 거래 내역 내보내기로 재무 관리를 간소화하세요"
@@ -9181,46 +9190,47 @@ msgid "Simplify scheduling with recurring events"
 msgstr "반복 이벤트로 일정 관리를 간소화하세요"
 
 msgid "Single-row export"
-msgstr ""
+msgstr "단일 행 내보내기"
 
 msgid "Single Ticket"
 msgstr "단일 티켓"
 
 msgid "Single booking"
-msgstr ""
+msgstr "단일 예약"
 
 msgid "Skip Categories step"
 msgstr "카테고리 건너뛰기 단계"
 
 msgid "Skip Import"
-msgstr ""
+msgstr "가져오기 건너뛰기"
 
 msgid "Skip packages and continue with the selected service"
 msgstr "패키지를 건너뛰고 선택한 서비스를 계속 진행"
 
 msgid "Slot end time"
-msgstr ""
+msgstr "슬롯 종료 시간"
 
 msgid "Social login"
-msgstr ""
+msgstr "소셜 로그인"
 
 msgid "Social login setup"
-msgstr ""
+msgstr "소셜 로그인 설정"
 
 msgid ""
 "Some employees assigned to this event are not connected to Zoom. Please go "
 "to their profiles and connect them to Zoom to use this integration properly."
 msgstr ""
-"이 이벤트에 배정된 일부 직원이 Zoom에 연결되어 있지 않습니다. 해당 통합 기능"
-"을 정상적으로 사용하려면 해당 직원의 프로필로 이동하여 Zoom에 연결해 주십시"
-"오."
+"이 이벤트에 배정된 일부 담당자가 Zoom에 연결되어 있지 않습니다. 해당 통합 기"
+"능을 정상적으로 사용하려면 해당 담당자의 프로필로 이동하여 Zoom에 연결해 주십"
+"시오."
 
 msgid ""
 "Some employees assigned to this service are not connected to Zoom. Please go "
 "to their profiles and connect them to Zoom to use this integration properly."
 msgstr ""
-"이 서비스에 할당된 일부 직원이 Zoom에 연결되어 있지 않습니다. 이 통합 기능을 "
-"정상적으로 사용하려면 해당 직원의 프로필로 이동하여 Zoom에 연결해 주십시오."
+"이 서비스에 할당된 일부 담당자가 Zoom에 연결되어 있지 않습니다. 이 통합 기능"
+"을 정상적으로 사용하려면 해당 담당자의 프로필로 이동하여 Zoom에 연결해 주십시"
+"오."
 
 msgid ""
 "Some of the desired slots are busy. We offered you the nearest time slots "
@@ -9251,22 +9261,22 @@ msgid "Sort"
 msgstr "정렬"
 
 msgid "Space-comma"
-msgstr ""
+msgstr "공백-쉼표"
 
 msgid "Space-dot"
-msgstr ""
+msgstr "공백-점"
 
 msgid "Special Days"
-msgstr "특별한 날"
+msgstr "기념일"
 
 msgid "Special characters are not allowed"
 msgstr "특수 문자는 허용되지 않습니다"
 
 msgid "Special days"
-msgstr ""
+msgstr "기념일"
 
 msgid "Special days setup"
-msgstr ""
+msgstr "기념일 설정"
 
 msgid "Specific Date"
 msgstr "특정 날짜"
@@ -9296,7 +9306,7 @@ msgid "Square account successfully disconnected"
 msgstr "스퀘어 계정 연결이 성공적으로 해제되었습니다"
 
 msgid "Square payment link"
-msgstr ""
+msgstr "스퀘어 결제 링크"
 
 msgid "Staff"
 msgstr "담당자"
@@ -9305,7 +9315,7 @@ msgid "Standard Account"
 msgstr "표준 계정"
 
 msgid "Start"
-msgstr ""
+msgstr "시작"
 
 msgid "Start Date"
 msgstr "시작일"
@@ -9317,22 +9327,22 @@ msgid "Start Time"
 msgstr "시작 시간"
 
 msgid "Start Zoom"
-msgstr ""
+msgstr "Zoom 시작"
 
 msgid "Start Zoom Meeting"
-msgstr "줌 미팅 시작"
+msgstr "Zoom 미팅 시작"
 
 msgid "Start by clicking the add custom field button"
 msgstr "사용자 정의 필드 추가 버튼을 클릭하여 시작하세요"
 
 msgid "Start date"
-msgstr "시작 날짜"
+msgstr "시작일"
 
 msgid "Start scanner"
-msgstr ""
+msgstr "스캐너 시작"
 
 msgid "Start time"
-msgstr ""
+msgstr "시작 시간"
 
 msgid "Status"
 msgstr "상태"
@@ -9341,10 +9351,10 @@ msgid "Status:"
 msgstr "상태:"
 
 msgid "Status Asc"
-msgstr ""
+msgstr "상태 오름차수"
 
 msgid "Status Desc"
-msgstr ""
+msgstr "상태 내림차순"
 
 msgid ""
 "Stay compliant with ease through consistent, reliable tax handling across "
@@ -9373,10 +9383,10 @@ msgid ""
 msgstr "단계별 예약 보기는 고객이 예약을 진행하기 위한 여러 단계를 안내합니다."
 
 msgid "Step-by-step"
-msgstr ""
+msgstr "단계별"
 
 msgid "Step-by-step booking form guide"
-msgstr ""
+msgstr "단계별 예약 양식 안내"
 
 msgid "Step Booking"
 msgstr "단계별 예약"
@@ -9388,42 +9398,42 @@ msgid "Step Popups"
 msgstr "단계 팝업"
 
 msgid "Step content"
-msgstr ""
+msgstr "단계별 내용"
 
 msgid "Step header"
-msgstr ""
+msgstr "단계 헤더"
 
 msgid "Step heading"
-msgstr ""
+msgstr "단계 제목"
 
 msgid "Step info tab"
-msgstr ""
+msgstr "단계 정보 탭"
 
 msgid "Step message"
-msgstr ""
+msgstr "단계 메시지"
 
 msgid "Step pagination"
-msgstr ""
+msgstr "단계별 페이지 매김"
 
 msgid "Step tickets tab"
-msgstr ""
+msgstr "단계별 티켓 탭"
 
 msgid "Steps"
 msgstr "단계"
 
 msgid "Steps order"
-msgstr ""
+msgstr "단계 순서"
 
 msgid "Stop Scanner"
 msgstr "스캐너 중지"
 
 msgid "Stop scanner"
-msgstr ""
+msgstr "스캐너 중지"
 
 msgid ""
 "Streamline operations with one central place to manage all resources across "
 "your business"
-msgstr "비즈니스 전반의 모든 자원을 한 곳에서 관리하여 운영을 간소화하세요"
+msgstr "비즈니스 전반의 모든 리소스를 한 곳에서 관리하여 운영을 간소화하세요"
 
 msgid ""
 "Streamline virtual meetings by integrating popular meeting platforms "
@@ -9441,22 +9451,22 @@ msgid "Stripe Connect"
 msgstr "스트라이프 연결"
 
 msgid "Stripe payment link"
-msgstr ""
+msgstr "스트라이프 결제 링크"
 
 msgid "Studios"
-msgstr ""
+msgstr "스튜디오"
 
 msgid "Sub Steps"
 msgstr "하위 단계"
 
 msgid "Sub step title"
-msgstr ""
+msgstr "하위 단계 제목"
 
 msgid "Subject"
 msgstr "제목"
 
 msgid "Subject placeholders"
-msgstr ""
+msgstr "제목 자리 표시자"
 
 msgid "Subscribe to our mailing list"
 msgstr "메일링 리스트 구독하기"
@@ -9471,19 +9481,19 @@ msgid "Success"
 msgstr "성공"
 
 msgid "Successful cancellation redirect URL"
-msgstr ""
+msgstr "성공적인 취소 리디렉션 URL"
 
 msgid "Successfully added booking"
 msgstr "예약 추가 성공"
 
 msgid "Suggest closest available date"
-msgstr ""
+msgstr "가장 가까운 가능한 날짜를 제안해 주세요"
 
 msgid "Suggest next available date"
-msgstr ""
+msgstr "가능한 가장 빠른 날짜를 제안해 주세요"
 
 msgid "Suggest previous available date"
-msgstr ""
+msgstr "이전에 이용 가능했던 날짜를 제안해 주세요"
 
 msgid "Sum of payments"
 msgstr "결제 합계"
@@ -9492,16 +9502,16 @@ msgid "Summary"
 msgstr "요약"
 
 msgid "Summary segment"
-msgstr ""
+msgstr "요약 부분"
 
 msgid "Sun"
-msgstr ""
+msgstr "일"
 
 msgid "Sunday"
 msgstr "일요일"
 
 msgid "Support"
-msgstr ""
+msgstr "지원"
 
 msgid "Support Amelia by displaying a backlink"
 msgstr "백링크를 표시하여 아멜리아를 지원하세요"
@@ -9520,7 +9530,7 @@ msgid "Switch Camera"
 msgstr "카메라 전환"
 
 msgid "Sync with"
-msgstr ""
+msgstr "동기화"
 
 msgid ""
 "Sync your Stripe Connect account for effortless payments and seamless "
@@ -9532,34 +9542,34 @@ msgid ""
 "Sync your and your employees' personal and professional events by connecting "
 "Google calendars."
 msgstr ""
-"Google 캘린더를 연결하여 본인 및 직원의 개인 및 업무 일정을 동기화하세요."
+"구글 캘린더를 연결하여 본인 및 담당자의 개인 및 업무 일정을 동기화하세요."
 
 msgid ""
 "Sync your schedule with your personal Apple Calendar to prevent double "
 "bookings."
-msgstr "개인 Apple 캘린더와 일정을 동기화하여 중복 예약을 방지하세요."
+msgstr "개인 애플 캘린더와 일정을 동기화하여 중복 예약을 방지하세요."
 
 msgid ""
 "Sync your schedule with your personal Google Calendar to prevent double "
 "bookings."
-msgstr "개인 Google 캘린더와 일정을 동기화하여 중복 예약을 방지하세요."
+msgstr "개인 구글 캘린더와 일정을 동기화하여 중복 예약을 방지하세요."
 
 msgid ""
 "Sync your schedule with your personal Outlook Calendar to prevent double "
 "bookings."
-msgstr "개인 Outlook 캘린더와 일정을 동기화하여 중복 예약을 방지하세요."
+msgstr "개인 아웃룩 캘린더와 일정을 동기화하여 중복 예약을 방지하세요."
 
 msgid "TLS"
 msgstr ""
 
 msgid "Tab title"
-msgstr ""
+msgstr "탭 제목"
 
 msgid "Table settings have been updated."
-msgstr ""
+msgstr "테이블 세팅이 업데이트되었습니다."
 
 msgid "Tabs (All / Packages / Services)"
-msgstr ""
+msgstr "탭 (전체 / 패키지 / 서비스)"
 
 msgid "Tag"
 msgstr "태그"
@@ -9574,31 +9584,31 @@ msgid "Tax amount"
 msgstr "세금 금액"
 
 msgid "Tax details"
-msgstr ""
+msgstr "세금 관련 세부 정보"
 
 msgid "Tax has been added."
-msgstr ""
+msgstr "세금이 추가되었습니다."
 
 msgid "Tax has been deleted."
-msgstr ""
+msgstr "세금 항목이 삭제되었습니다."
 
 msgid "Tax has been hidden."
-msgstr ""
+msgstr "세금이 숨겨졌습니다."
 
 msgid "Tax has been updated."
-msgstr ""
+msgstr "세금이 업데이트되었습니다."
 
 msgid "Tax is now visible."
-msgstr ""
+msgstr "이제 세금이 표시됩니다."
 
 msgid "Tax rate"
 msgstr "세율"
 
 msgid "Tax rate name"
-msgstr ""
+msgstr "세율 명칭"
 
 msgid "Tax setup"
-msgstr ""
+msgstr "세금 설정"
 
 msgid "Tax will be excluded from price calculation and showed separately."
 msgstr "세금은 가격 계산에서 제외되며 별도로 표시됩니다."
@@ -9610,46 +9620,46 @@ msgid "Taxes"
 msgstr "세금"
 
 msgid "Taxes overview"
-msgstr ""
+msgstr "세금 개요"
 
 msgid "Template name"
 msgstr "템플릿 이름"
 
 msgid "Test API key"
-msgstr ""
+msgstr "테스트 API 키"
 
 msgid "Test SMS"
-msgstr ""
+msgstr "테스트 SMS"
 
 msgid "Test SMS sent successfully."
-msgstr ""
+msgstr "테스트 SMS가 성공적으로 발송되었습니다."
 
 msgid "Test WhatsApp"
-msgstr ""
+msgstr "WhatsApp 테스트"
 
 msgid "Test WhatsApp message sent successfully"
 msgstr "테스트 WhatsApp 메시지 전송 성공"
 
 msgid "Test client ID"
-msgstr ""
+msgstr "테스트 클라이언트 ID"
 
 msgid "Test email"
-msgstr ""
+msgstr "테스트 이메일"
 
 msgid "Test email sent successfully."
-msgstr ""
+msgstr "테스트 이메일이 성공적으로 발송되었습니다."
 
 msgid "Test mode"
-msgstr ""
+msgstr "테스트 모드"
 
 msgid "Test publishable key"
-msgstr ""
+msgstr "테스트 게시 가능 키"
 
 msgid "Test secret"
-msgstr ""
+msgstr "테스트 비밀번호"
 
 msgid "Test secret Key"
-msgstr ""
+msgstr "테스트 비밀 키"
 
 msgid "Text"
 msgstr "텍스트"
@@ -9661,16 +9671,16 @@ msgid "Text Mode"
 msgstr "텍스트 모드"
 
 msgid "Text area"
-msgstr ""
+msgstr "텍스트 영역"
 
 msgid "Text color"
-msgstr ""
+msgstr "텍스트 색상"
 
 msgid "Text color on background"
-msgstr ""
+msgstr "배경색 위의 텍스트 색상"
 
 msgid "Text content"
-msgstr ""
+msgstr "텍스트 콘텐츠"
 
 msgid "Thank you! Your booking is completed."
 msgstr "감사합니다! 예약이 완료되었습니다."
@@ -9766,15 +9776,15 @@ msgstr ""
 "적으로 사용됩니다."
 
 msgid "The resource quantity is counted separately for each selected location."
-msgstr "선택된 각 위치별로 자원 수량이 별도로 계산됩니다."
+msgstr "선택된 각 장소별로 리소스 수량이 별도로 계산됩니다."
 
 msgid "The resource quantity is counted separately for each selected service."
-msgstr "선택된 각 서비스별로 자원 수량이 별도로 계산됩니다."
+msgstr "선택된 각 서비스별로 리소스 수량이 별도로 계산됩니다."
 
 msgid ""
 "The resource quantity is shared across all selected services, employees, and "
 "locations. "
-msgstr "자원 수량은 선택된 모든 서비스, 직원 및 위치에 걸쳐 공유됩니다. "
+msgstr "리소스 수량은 선택된 모든 서비스, 담당자 및 장소에 걸쳐 공유됩니다. "
 
 msgid ""
 "The rest of the appointments can be booked later on the Customers panel."
@@ -9817,7 +9827,7 @@ msgid "There are no booked appointments for this package."
 msgstr "이 패키지에 예약된 예약이 없습니다."
 
 msgid "There are no days off yet..."
-msgstr "아직 휴일이 없습니다."
+msgstr "아직 휴무일이 없습니다."
 
 msgid "There are no future events scheduled. Please create a new event."
 msgstr "예정된 미래 이벤트가 없습니다. 새 이벤트를 생성해 주세요."
@@ -9829,7 +9839,7 @@ msgid "There are no results..."
 msgstr "결과가 없습니다."
 
 msgid "There are no special days yet..."
-msgstr "아직 특별한 날이 없습니다."
+msgstr "아직 기념일이 없습니다."
 
 msgid "There are no upcoming events for this period"
 msgstr "이 기간에 예정된 이벤트가 없습니다"
@@ -9841,7 +9851,7 @@ msgid ""
 "There is an event in Google/Outlook Calendar that overlaps this one for a "
 "specific employee, are you sure you want to create another one?"
 msgstr ""
-"구글 / 아웃룩 캘린더에 특정 직원을위한이 이벤트와 겹치는 이벤트가 있는데 다"
+"구글 / 아웃룩 캘린더에 특정 담당자를위한이 이벤트와 겹치는 이벤트가 있는데 다"
 "른 이벤트를 만들시겠습니까?"
 
 msgid ""
@@ -9855,13 +9865,13 @@ msgid "Third"
 msgstr "셋째"
 
 msgid "Third {day}"
-msgstr ""
+msgstr "셋째 {day}"
 
 msgid "This & Future"
-msgstr ""
+msgstr "이것 그리고 미래"
 
 msgid "This Only"
-msgstr ""
+msgstr "이 건만 해당"
 
 msgid "This booking is part of a package deal"
 msgstr "이 예약은 패키지 상품의 일부입니다"
@@ -9886,7 +9896,7 @@ msgid ""
 "employees."
 msgstr ""
 "이 청구 유형은 여러 예약을 예약할 때(장바구니 기능 또는 반복 기능) 또는 여러 "
-"직원과 함께 이벤트를 예약할 때는 사용되지 않습니다."
+"담당자와 함께 이벤트를 예약할 때는 사용되지 않습니다."
 
 msgid "This coupon has expired"
 msgstr "이 쿠폰이 만료되었습니다"
@@ -9898,7 +9908,7 @@ msgid "This email is already in use. Please enter a different email address."
 msgstr "이 이메일 주소는 이미 사용 중입니다. 다른 이메일 주소를 입력해 주세요."
 
 msgid "This employee is the only one assigned to {service}."
-msgstr "이 직원은 {service}에 배정된 유일한 직원입니다."
+msgstr "이 담당자는 {service}에 배정된 유일한 담당자입니다."
 
 msgid "This field is required"
 msgstr "이 필드는 필수 입력 항목입니다"
@@ -9940,8 +9950,8 @@ msgid ""
 "authenticating with Outlook. Add this URI to the 'Redirect URIs' section in "
 "your Outlook application settings."
 msgstr ""
-"이것은 사용자가 Outlook으로 인증한 후 리디렉션될 애플리케이션 내 경로입니다. "
-"이 URI를 Outlook 애플리케이션 설정의 '리디렉션 URI' 섹션에 추가하십시오."
+"이것은 사용자가 아웃룩으로 인증한 후 리디렉션될 애플리케이션 내 경로입니다. "
+"이 URI를 아웃룩 애플리케이션 설정의 '리디렉션 URI' 섹션에 추가하십시오."
 
 msgid "This limit is based on the customer's email address."
 msgstr "이 제한은 고객의 이메일 주소를 기준으로 합니다."
@@ -9950,7 +9960,7 @@ msgid ""
 "This location has {count} service connected to it. | This location has "
 "{count} services connected to it."
 msgstr ""
-"이 위치에는 {count}개의 서비스가 연결되어 있습니다. | 이 위치에는 {count}개"
+"이 장소에는 {count}개의 서비스가 연결되어 있습니다. | 이 장소에는 {count}개"
 "의 서비스가 연결되어 있습니다."
 
 msgid ""
@@ -9992,13 +10002,13 @@ msgstr ""
 "건의 예약이 있습니다."
 
 msgid "This placeholder's content will be applied wherever it is used."
-msgstr "이 자리 표시자의 내용은 사용되는 모든 위치에 적용됩니다."
+msgstr "이 자리 표시자의 내용은 사용되는 모든 장소에 적용됩니다."
 
 msgid "This range"
-msgstr ""
+msgstr "이 범위"
 
 msgid "This service does not have any extras"
-msgstr "이 서비스에는 추가 혜택이 업습니다"
+msgstr "이 서비스에는 부가 서비스가 없습니다"
 
 msgid ""
 "This service has {count} appointment in the past. | This service has {count} "
@@ -10018,7 +10028,7 @@ msgid "This service is available in a Package"
 msgstr "이 서비스는 패키지로 제공됩니다"
 
 msgid "This service is available in a package"
-msgstr ""
+msgstr "이 서비스는 패키지로 제공됩니다"
 
 msgid "This time slot is no longer available. Please select a different time."
 msgstr "해당 시간대는 더 이상 이용하실 수 없습니다. 다른 시간을 선택해 주세요."
@@ -10041,14 +10051,14 @@ msgid ""
 "this user? | This user is an attendee in future events. Are you sure you "
 "want to delete this user?"
 msgstr ""
-"이 사용자는 향후 행사에 참석 예정입니다. 이 사용자를 삭제하시겠습니까? | 이 "
-"사용자는 향후 행사에 참석 예정입니다. 이 사용자를 삭제하시겠습니까?"
+"이 사용자는 향후 이벤트에 참석 예정입니다. 이 사용자를 삭제하시겠습니까? | "
+"이 사용자는 향후 이벤트에 참석 예정입니다. 이 사용자를 삭제하시겠습니까?"
 
 msgid "This widget shows monthly data instead of using the global date range."
 msgstr "이 위젯은 글로벌 날짜 범위를 사용하는 대신 월별 데이터를 표시합니다."
 
 msgid "Thu"
-msgstr ""
+msgstr "목"
 
 msgid "Thursday"
 msgstr "목요일"
@@ -10090,7 +10100,7 @@ msgid "Ticket not valid"
 msgstr "티켓이 유효하지 않습니다"
 
 msgid "Ticket types"
-msgstr ""
+msgstr "티켓 유형"
 
 msgid "Tickets"
 msgstr "티켓"
@@ -10111,10 +10121,10 @@ msgid "Time Range:"
 msgstr "시간 범위:"
 
 msgid "Time Used Asc"
-msgstr ""
+msgstr "사용 시간 오름차수"
 
 msgid "Time Used Desc"
-msgstr ""
+msgstr "사용 시간 내림차순"
 
 msgid "Time frame"
 msgstr "기간"
@@ -10123,39 +10133,39 @@ msgid ""
 "Time needed after the appointment for rest, cleanup, or transition. During "
 "this period, the employee cannot be booked for any service."
 msgstr ""
-"예약 후 휴식, 정리 또는 전환을 위해 필요한 시간. 이 기간 동안 직원은 어떤 서"
-"비스도 예약할 수 없습니다."
+"예약 후 휴식, 정리 또는 전환을 위해 필요한 시간. 이 기간 동안 담당자는 어떤 "
+"서비스도 예약할 수 없습니다."
 
 msgid ""
 "Time needed before the appointment for preparation. During this period, the "
 "employee cannot be booked for any service."
 msgstr ""
-"예약 전 준비에 필요한 시간. 이 기간 동안 해당 직원은 어떤 서비스에도 예약될 "
-"수 없습니다."
+"예약 전 준비에 필요한 시간. 이 기간 동안 해당 담당자는 어떤 서비스에도 예약"
+"될 수 없습니다."
 
 msgid "Time slot is unavailable"
 msgstr "시간 슬롯을 사용할 수 없습니다"
 
 msgid "Time slot price"
-msgstr ""
+msgstr "시간대별 가격"
 
 msgid "Time slots are unavailable"
 msgstr "시간대를 사용할 수 없습니다"
 
 msgid "Time zone"
-msgstr ""
+msgstr "시간대"
 
 msgid "Time zones"
-msgstr ""
+msgstr "시간대"
 
 msgid "Times"
-msgstr ""
+msgstr "시간대"
 
 msgid "Times bought"
 msgstr "구매한 시간"
 
 msgid "Times used"
-msgstr ""
+msgstr "사용 횟수"
 
 msgid "Timetable"
 msgstr "시간표"
@@ -10164,22 +10174,22 @@ msgid "Timezone"
 msgstr "시간대"
 
 msgid "Tips & suggestions"
-msgstr ""
+msgstr "팁 및 제안"
 
 msgid "Title section"
-msgstr ""
+msgstr "제목 섹션"
 
 msgid "Title text"
-msgstr ""
+msgstr "제목 텍스트"
 
 msgid "To"
 msgstr "수신"
 
 msgid "To customer"
-msgstr ""
+msgstr "고객님께"
 
 msgid "To employee"
-msgstr ""
+msgstr "담당자에게"
 
 msgid ""
 "To enable Google Maps, enter your Google Maps API key in the Google General "
@@ -10199,8 +10209,8 @@ msgid ""
 "To reschedule your appointment, select an available date time from the "
 "calendar, then click Confirm."
 msgstr ""
-"약속 일정을 변경하려면 달력에서 사용 가능한 날짜 시간을 선택한 다음 확인을 클"
-"릭합니다."
+"예약 일정을 변경하려면 캘린더에서 사용 가능한 날짜 시간을 선택한 다음 확인을 "
+"클릭합니다."
 
 msgid "To send a test SMS, please recharge your balance."
 msgstr "테스트 SMS를 보내려면 잔액을 충전해 주세요."
@@ -10225,7 +10235,7 @@ msgid "Tomorrow"
 msgstr "내일"
 
 msgid "Top trends"
-msgstr ""
+msgstr "인기 트렌드"
 
 msgid "Torch off"
 msgstr "토치 끄기"
@@ -10255,34 +10265,34 @@ msgid "Total Services Booked"
 msgstr "예약된 총 서비스"
 
 msgid "Total amount"
-msgstr ""
+msgstr "총 금액"
 
 msgid "Total appointments"
-msgstr ""
+msgstr "총 예약 건수"
 
 msgid "Total bookings"
-msgstr ""
+msgstr "총 예약 건수"
 
 msgid "Total capacity"
-msgstr ""
+msgstr "총 용량"
 
 msgid "Total custom fields"
-msgstr ""
+msgstr "총 사용자 정의 필드"
 
 msgid "Total events"
-msgstr ""
+msgstr "총 이벤트 수"
 
 msgid "Total extras"
-msgstr ""
+msgstr "부가 서비스 총계"
 
 msgid "Total number of appointments"
-msgstr ""
+msgstr "총 예약 건수"
 
 msgid "Total number of people:"
-msgstr ""
+msgstr "총 인원:"
 
 msgid "Total payments"
-msgstr ""
+msgstr "총 결제 금액"
 
 msgid "Total people"
 msgstr "총 인원"
@@ -10291,36 +10301,36 @@ msgid "Total price"
 msgstr "총 가격"
 
 msgid "Total services booked"
-msgstr ""
+msgstr "예약된 총 서비스"
 
 msgid "Total tickets"
-msgstr ""
+msgstr "총 티켓 수"
 
 msgid ""
 "Track customers who miss appointments or events without sending "
 "notifications."
-msgstr "알림을 보내지 않고도 약속이나 이벤트를 놓친 고객을 추적하세요."
+msgstr "알림을 보내지 않고도 예약이나 이벤트를 놓친 고객을 추적하세요."
 
 msgid "Trainers"
-msgstr ""
+msgstr "트레이너"
 
 msgid "Transaction"
-msgstr ""
+msgstr "거래 내역"
 
 msgid "Transaction #{count}"
-msgstr ""
+msgstr "거래 #{count}"
 
 msgid "Transaction details"
-msgstr ""
+msgstr "거래 내역 상세"
 
 msgid "Transactions"
-msgstr ""
+msgstr "거래 내역"
 
 msgid "Transfer"
 msgstr "전송"
 
 msgid "Transfer amount (%)"
-msgstr ""
+msgstr "이체 금액 (%)"
 
 msgid "Translate"
 msgstr "번역"
@@ -10343,7 +10353,7 @@ msgid "Try adjusting your search to find what you are looking for."
 msgstr "원하는 내용을 찾으려면 검색어를 조정해 보세요."
 
 msgid "Tue"
-msgstr ""
+msgstr "화"
 
 msgid "Tuesday"
 msgstr "화요일"
@@ -10363,10 +10373,10 @@ msgid "Type:"
 msgstr "유형:"
 
 msgid "Type Asc"
-msgstr ""
+msgstr "유형 오름차순"
 
 msgid "Type Desc"
-msgstr ""
+msgstr "유형 내림차순"
 
 msgid "URL"
 msgstr ""
@@ -10391,19 +10401,19 @@ msgid "Unavailable Time Slots"
 msgstr "사용할 수 없는 시간대"
 
 msgid "Unavailable date background"
-msgstr ""
+msgstr "사용 불가능한 날짜 배경"
 
 msgid "Unavailable date text"
-msgstr ""
+msgstr "날짜 텍스트를 사용할 수 없습니다"
 
 msgid "Unavailable time slots"
-msgstr ""
+msgstr "사용 불가능한 시간대"
 
 msgid "Unblock"
 msgstr "차단 해제"
 
 msgid "Unblock customer"
-msgstr ""
+msgstr "고객 차단 해제"
 
 msgid "Undelivered"
 msgstr "전달되지 않음"
@@ -10412,10 +10422,10 @@ msgid "Unfortunately a server error occurred and your email was not sent."
 msgstr "안타깝게도 서버 오류가 발생하여 이메일이 전송되지 않았습니다."
 
 msgid "Unique (Location)"
-msgstr ""
+msgstr "고유 (장소)"
 
 msgid "Unique (Service)"
-msgstr ""
+msgstr "고유 (서비스)"
 
 msgid "Unit price"
 msgstr "단가"
@@ -10427,7 +10437,7 @@ msgid "Unsuccessful cancellation redirect URL"
 msgstr "취소 실패 리디렉션 URL"
 
 msgid "Until"
-msgstr ""
+msgstr "까지"
 
 msgid "Until:"
 msgstr "시한:"
@@ -10445,13 +10455,13 @@ msgid "Upcoming events"
 msgstr "예정된 이벤트"
 
 msgid "Upcoming events section"
-msgstr ""
+msgstr "다가오는 이벤트 섹션"
 
 msgid "Update"
 msgstr "업데이트"
 
 msgid "Update Service Settings"
-msgstr ""
+msgstr "서비스 설정 업데이트"
 
 msgid "Update booking status automatically"
 msgstr "예약 상태 자동 업데이트"
@@ -10463,31 +10473,31 @@ msgid "Update following"
 msgstr "다음 업데이트"
 
 msgid "Update for All"
-msgstr ""
+msgstr "모두 업데이트"
 
 msgid "Update for all"
 msgstr "전체 업데이트"
 
 msgid "Updates"
-msgstr ""
+msgstr "업데이트"
 
 msgid "Upgrade"
 msgstr "업그레이드"
 
 msgid "Upload"
-msgstr ""
+msgstr "업로드"
 
 msgid "Upload file here"
 msgstr "여기에 파일 업로드"
 
 msgid "Upload image"
-msgstr ""
+msgstr "이미지 업로드"
 
 msgid "Usage"
-msgstr ""
+msgstr "사용법"
 
 msgid "Usage limit"
-msgstr ""
+msgstr "사용 제한"
 
 msgid "Use Global Colors"
 msgstr "글로벌 색상 사용"
@@ -10502,7 +10512,7 @@ msgid "Use service duration for booking a time slot"
 msgstr "시간대별 예약에 서비스 기간 사용"
 
 msgid "Use this placeholder:"
-msgstr ""
+msgstr "이 자리 표시자를 사용하세요:"
 
 msgid "Used"
 msgstr "사용됨"
@@ -10511,19 +10521,19 @@ msgid "Used coupon"
 msgstr "사용한 쿠폰"
 
 msgid "User"
-msgstr ""
+msgstr "사용자"
 
 msgid "User Profile"
 msgstr "사용자 프로필"
 
 msgid "User profile"
-msgstr ""
+msgstr "사용자 프로필"
 
 msgid "VAT"
 msgstr "부가가치세"
 
 msgid "VAT info"
-msgstr ""
+msgstr "부가가치세 정보"
 
 msgid "VAT number"
 msgstr "부가가치세 납부 번호"
@@ -10535,7 +10545,7 @@ msgid "Valid first and last names are required fields."
 msgstr "성명(성+이름)은 필수 입력 항목입니다."
 
 msgid "Valid until"
-msgstr ""
+msgstr "유효기간"
 
 msgid "Validate required custom fields in the backend"
 msgstr "백엔드에서 필수 사용자 정의 필드 유효성 검사"
@@ -10553,10 +10563,10 @@ msgid "Version "
 msgstr "버전 "
 
 msgid "Video tutorials"
-msgstr ""
+msgstr "비디오 튜토리얼"
 
 msgid "Videos"
-msgstr ""
+msgstr "동영상"
 
 msgid "View"
 msgstr "보기"
@@ -10580,49 +10590,49 @@ msgid "View More Packages"
 msgstr "패키지 더 보기"
 
 msgid "View all"
-msgstr ""
+msgstr "모두 보기"
 
 msgid "View all photos"
 msgstr "모든 사진 보기"
 
 msgid "View appointments"
-msgstr ""
+msgstr "예약 보기"
 
 msgid "View booking"
-msgstr ""
+msgstr "예약 보기"
 
 msgid "View employees"
-msgstr ""
+msgstr "담당자 보기"
 
 msgid "View events"
-msgstr ""
+msgstr "이벤트 보기"
 
 msgid "View in Calendar"
-msgstr ""
+msgstr "캘린더에서 보기"
 
 msgid "View in Package"
 msgstr "패키지 더 보기"
 
 msgid "View invoice"
-msgstr ""
+msgstr "인보이스 보기"
 
 msgid "View less packages"
-msgstr ""
+msgstr "패키지 덜 보기"
 
 msgid "View message"
-msgstr ""
+msgstr "메시지 보기"
 
 msgid "View more"
 msgstr "더 보기"
 
 msgid "View more packages"
-msgstr ""
+msgstr "패키지 더 보기"
 
 msgid "View packages"
-msgstr ""
+msgstr "패키지 보기"
 
 msgid "View pricing for"
-msgstr ""
+msgstr "가격 보기"
 
 msgid "Visibility"
 msgstr "가시성"
@@ -10640,10 +10650,10 @@ msgid "Waiting"
 msgstr "대기 중"
 
 msgid "Waiting button background color"
-msgstr ""
+msgstr "대기 중 버튼 배경색"
 
 msgid "Waiting button text color"
-msgstr ""
+msgstr "대기 중 버튼 텍스트 색상"
 
 msgid "Waiting for payment"
 msgstr "결제 대기 중"
@@ -10652,31 +10662,31 @@ msgid "Waiting list"
 msgstr "대기 목록"
 
 msgid "Waiting list availability"
-msgstr ""
+msgstr "대기자 명단 등록 가능 여부"
 
 msgid "Waiting list background"
-msgstr ""
+msgstr "대기 목록 배경"
 
 msgid "Waiting list capacity"
-msgstr ""
+msgstr "대기자 명단 수용 인원"
 
 msgid "Waiting list capacity must be at least 1"
 msgstr "쿠폰 사용 한도는 1 이상이어야 합니다"
 
 msgid "Waiting list confirmation"
-msgstr ""
+msgstr "대기자 명단 확인"
 
 msgid "Waiting list is empty"
 msgstr "대기 목록이 비어 있음"
 
 msgid "Waiting list text"
-msgstr ""
+msgstr "대기 목록 텍스트"
 
 msgid "Warning"
 msgstr "경고"
 
 msgid "Watch on YouTube"
-msgstr ""
+msgstr "유튜브에서 보기"
 
 msgid "We'll notify you if a spot opens up."
 msgstr "자리가 생기고 예약이 승인되면 알려드립니다."
@@ -10701,13 +10711,13 @@ msgid "Webhooks"
 msgstr "웹훅"
 
 msgid "Webhooks setup"
-msgstr ""
+msgstr "웹훅 설정"
 
 msgid "Website"
 msgstr "웹사이트"
 
 msgid "Wed"
-msgstr ""
+msgstr "수"
 
 msgid "Wednesday"
 msgstr "수요일"
@@ -10725,10 +10735,10 @@ msgid "Welcome Back"
 msgstr "다시 오신 것을 환영합니다"
 
 msgid "Welcome back"
-msgstr ""
+msgstr "다시 오신 것을 환영합니다"
 
 msgid "Wellness"
-msgstr ""
+msgstr "웰니스"
 
 msgid "What's New"
 msgstr "새로운 기능"
@@ -10737,22 +10747,22 @@ msgid "WhatsApp"
 msgstr ""
 
 msgid "WhatsApp Not Connected"
-msgstr ""
+msgstr "WhatsApp이 연결되지 않았습니다"
 
 msgid "WhatsApp auto-reply message"
-msgstr ""
+msgstr "WhatsApp 자동 응답 메시지"
 
 msgid "WhatsApp business account ID"
-msgstr ""
+msgstr "WhatsApp 비즈니스 계정 ID"
 
 msgid "WhatsApp history"
-msgstr ""
+msgstr "WhatsApp 기록"
 
 msgid "WhatsApp settings"
-msgstr ""
+msgstr "WhatsApp 설정"
 
 msgid "WhatsApp setup"
-msgstr ""
+msgstr "WhatsApp 설정"
 
 msgid "WhatsApp webhook callback URL"
 msgstr "WhatsApp 웹훅 콜백 URL"
@@ -10764,15 +10774,15 @@ msgid ""
 "When disabled, the employee chosen during the first booking will be used for "
 "this service throughout the entire package."
 msgstr ""
-"이 기능이 비활성화된 경우, 첫 예약 시 선택한 직원이 패키지 전체에 걸쳐 해당 "
-"서비스에 배정됩니다."
+"이 기능이 비활성화된 경우, 첫 예약 시 선택한 담당자가 패키지 전체에 걸쳐 해"
+"당 서비스에 배정됩니다."
 
 msgid ""
 "When enabled, all entities (services, employees, locations, packages, and "
 "tags) load as soon as the page opens, instead of being loaded dynamically "
 "via AJAX."
 msgstr ""
-"이 기능이 활성화되면 모든 엔티티(서비스, 직원, 위치, 패키지, 태그)가 페이지"
+"이 기능이 활성화되면 모든 엔티티(서비스, 담당자, 장소, 패키지, 태그)가 페이지"
 "가 열리자마자 즉시 로드되며, AJAX를 통해 동적으로 로드되지 않습니다."
 
 msgid ""
@@ -10793,8 +10803,8 @@ msgid ""
 "When enabled, reminders will not be sent if a booking is made within the "
 "selected time before the appointment or event."
 msgstr ""
-"이 기능이 활성화된 경우, 예약된 시간 또는 행사 시작 전 선택한 시간 내에 예약"
-"이 이루어지면 알림이 발송되지 않습니다."
+"이 기능이 활성화된 경우, 예약된 시간 또는 이벤트 시작 전 선택한 시간 내에 예"
+"약이 이루어지면 알림이 발송되지 않습니다."
 
 msgid ""
 "When enabled, the total number of appointments is shared across the entire "
@@ -10808,7 +10818,7 @@ msgid ""
 "Customers can manually uncheck it if they do not wish to join your Mailchimp "
 "list."
 msgstr ""
-"활성화 시 \"구독\" 체크박스가 기본적으로 선택됩니다. 고객은 귀하의 Mailchimp "
+"활성화 시 \"구독\" 체크박스가 기본적으로 선택됩니다. 고객은 귀하의 메일침프 "
 "목록에 가입하지 않으려면 수동으로 선택을 해제할 수 있습니다."
 
 msgid "When recurring dates are unavailable"
@@ -10832,7 +10842,7 @@ msgid "WooCommerce Order Id"
 msgstr "우커머스 주문 ID"
 
 msgid "WooCommerce Product"
-msgstr "WooCommerce 제품"
+msgstr "우커머스 제품"
 
 msgid "WooCommerce Service"
 msgstr "우커머스 서비스"
@@ -10841,7 +10851,7 @@ msgid "WooCommerce Thank you page"
 msgstr "우커머스 감사 페이지"
 
 msgid "WooCommerce payment link"
-msgstr "WooCommerce 결제 링크"
+msgstr "우커머스 결제 링크"
 
 msgid "Woo Order Id"
 msgstr "우 주문 ID"
@@ -10850,25 +10860,25 @@ msgid "WordPress User"
 msgstr "워드프레스 사용자"
 
 msgid "WordPress user"
-msgstr ""
+msgstr "워드프레스 사용자"
 
 msgid "Work Hours"
 msgstr "근무 시간"
 
 msgid "Work hours"
-msgstr ""
+msgstr "근무 시간"
 
 msgid "Work hours setup"
-msgstr ""
+msgstr "근무 시간 설정"
 
 msgid "Working Hours"
 msgstr "근무 시간"
 
 msgid "Working hours"
-msgstr ""
+msgstr "근무 시간"
 
 msgid "Wrong address?"
-msgstr ""
+msgstr "주소가 잘못되었나요?"
 
 msgid "XML"
 msgstr ""
@@ -10889,21 +10899,21 @@ msgid "Yes, Reset"
 msgstr "예, 재설정"
 
 msgid "Yoga"
-msgstr ""
+msgstr "요가"
 
 msgid ""
 "You're changing settings that have been individually configured for "
 "employees. Do you want to apply these changes to all employees?"
 msgstr ""
-"직원별로 개별 설정된 설정을 변경 중입니다. 이 변경 사항을 모든 직원에게 적용"
-"하시겠습니까?"
+"담당자별로 개별 설정된 설정을 변경 중입니다. 이 변경 사항을 모든 담당자에게 "
+"적용하시겠습니까?"
 
 msgid ""
 "You're editing a recurring event. Apply changes only to this one, or to this "
 "and all future events? Note: Tickets for events with attendees will not be "
 "updated."
 msgstr ""
-"반복 이벤트를 편집 중입니다. 변경 사항을 이번 이벤트에만 적용하시겠습니까, 아"
+"반복 이벤트를 수정 중입니다. 변경 사항을 이번 이벤트에만 적용하시겠습니까, 아"
 "니면 이번 및 향후 모든 이벤트에 적용하시겠습니까? 참고: 참석자가 있는 이벤트"
 "의 티켓은 업데이트되지 않습니다."
 
@@ -10914,11 +10924,11 @@ msgid ""
 "You are currently connected to Google Calendar by Admin. Overriding Google "
 "Calendar connection is not available."
 msgstr ""
-"현재 관리자에 의해 Google 캘린더에 연결되어 있습니다. Google 캘린더 연결을 재"
-"정의할 수 없습니다."
+"현재 관리자에 의해 구글 캘린더에 연결되어 있습니다. 구글 캘린더 연결을 재정의"
+"할 수 없습니다."
 
 msgid "You are on the waiting list with position"
-msgstr "직급이 있는 대기자 명단에 있습니다"
+msgstr "귀하는 대기 목록에 등록되어 있으며 순위는"
 
 msgid "You are the only provider for this service"
 msgstr "이 서비스에 대한 유일한 제공자입니다"
@@ -10945,13 +10955,13 @@ msgid "You can also open its future events."
 msgstr "또한 향후 이벤트를 열 수 있습니다."
 
 msgid "You can edit or delete each appointment"
-msgstr "각 예약을 편집하거나 삭제할 수 있습니다"
+msgstr "각 예약을 수정하거나 삭제할 수 있습니다"
 
 msgid ""
 "You can find below the appointments you selected for booking. If you want to "
 "book more, click on the button below."
 msgstr ""
-"예약을 위해 선택한 약속은 아래에서 확인할 수 있습니다. 더 예약하려면 아래버튼"
+"예약을 위해 선택한 예약은 아래에서 확인할 수 있습니다. 더 예약하려면 아래버튼"
 "을 클릭하세요."
 
 msgid ""
@@ -11048,13 +11058,13 @@ msgid "Your current changes will be lost."
 msgstr "현재 변경 사항이 손실됩니다."
 
 msgid "Your data will be saved before redirecting to another form."
-msgstr ""
+msgstr "입력하신 정보는 다른 양식으로 이동하기 전에 저장됩니다."
 
 msgid "Your information"
-msgstr ""
+msgstr "귀하의 정보"
 
 msgid "Your name"
-msgstr ""
+msgstr "귀하의 이름"
 
 msgid ""
 "Your password has been changed successfully. Use your new password to log in."
@@ -11068,22 +11078,22 @@ msgid "Your postal code is incomplete"
 msgstr "우편 번호가 불완전합니다"
 
 msgid "Zoom"
-msgstr "줌"
+msgstr ""
 
 msgid "Zoom Join Link (Participants)"
-msgstr "줌 참여 링크(참가자)"
+msgstr "Zoom 참여 링크(참가자)"
 
 msgid "Zoom Link"
-msgstr "줌 링크"
+msgstr "Zoom 링크"
 
 msgid "Zoom Links"
-msgstr "줌 링크"
+msgstr "Zoom 링크"
 
 msgid "Zoom Start Link (Host)"
-msgstr "줌 시작 링크(호스트)"
+msgstr "Zoom 시작 링크(호스트)"
 
 msgid "Zoom User"
-msgstr "줌 사용자"
+msgstr "Zoom 사용자"
 
 msgid "Zoom WP hooks"
 msgstr "Zoom WP 후크"
@@ -11092,7 +11102,7 @@ msgid "Zoom join meeting (participants) link"
 msgstr "Zoom 회의 참여(참가자) 링크"
 
 msgid "Zoom link"
-msgstr ""
+msgstr "Zoom 링크"
 
 msgid "Zoom setup"
 msgstr "Zoom 설정"
@@ -11122,13 +11132,13 @@ msgid "application (client) ID and secret"
 msgstr "애플리케이션(클라이언트) ID 및 시크릿"
 
 msgid "appointment is required to be booked now."
-msgstr "약속은 지금 예약해야 합니다."
+msgstr "예약은 지금 예약해야 합니다."
 
 msgid "appointment slots left to be booked"
-msgstr "약속 가능한 남은 예약 슬롯"
+msgstr "예약 가능한 남은 예약 슬롯"
 
 msgid "appointments are required to be booked now."
-msgstr "약속은 지금 예약해야 합니다."
+msgstr "예약은 지금 예약해야 합니다."
 
 msgid "at"
 msgstr "에서"
@@ -11239,7 +11249,7 @@ msgid "reCAPTCHA on Customer Panel"
 msgstr "고객 패널의 리캡챠"
 
 msgid "reCAPTCHA on Employee Panel"
-msgstr "직원 패널의 리캡챠"
+msgstr "담당자 패널의 리캡챠"
 
 msgid "reCAPTCHA setup"
 msgstr "리캡챠 설정"
@@ -11313,10 +11323,10 @@ msgid "{count} Day | {count} Days"
 msgstr "{count} 일 | {count} 일"
 
 msgid "{count} Employees"
-msgstr "{count} 직원"
+msgstr "{count} 담당자"
 
 msgid "{count} Extras"
-msgstr "{count} 추가 항목"
+msgstr "{count} 부가 서비스"
 
 msgid "{count} Month | {count} Months"
 msgstr "{count} 개월 | {count} 개월"
@@ -11391,14 +11401,14 @@ msgstr "{count}일 | {count}일"
 msgid ""
 "{count} employee has been deleted. | {count} employees have been deleted."
 msgstr ""
-"{count} 명의 직원이 삭제되었습니다. | {count} 명의 직원이 삭제되었습니다."
+"{count} 명의 담당자가 삭제되었습니다. | {count} 명의 담당자가 삭제되었습니다."
 
 msgid ""
 "{count} employee has not been deleted due to future bookings. | {count} "
 "employees have not been deleted due to future bookings."
 msgstr ""
-"{count}명의 직원이 향후 예약으로 인해 삭제되지 않았습니다. | {count}명의 직원"
-"이 향후 예약으로 인해 삭제되지 않았습니다."
+"{count}명의 담당자가 향후 예약으로 인해 삭제되지 않았습니다. | {count}명의 담"
+"당자가 향후 예약으로 인해 삭제되지 않았습니다."
 
 msgid ""
 "{count} event booking has been deleted. | {count} event bookings have been "
@@ -11429,13 +11439,13 @@ msgstr "{count}개 항목 선택됨 | {count}개 항목 선택됨"
 
 msgid ""
 "{count} location has been deleted. | {count} locations have been deleted."
-msgstr "{count} 위치가 삭제되었습니다. | {count} 위치가 삭제되었습니다."
+msgstr "{count} 장소가 삭제되었습니다. | {count} 장소가 삭제되었습니다."
 
 msgid ""
 "{count} location has not been deleted due to future bookings. | {count} "
 "locations have not been deleted due to future bookings."
 msgstr ""
-"{count} 위치는 향후 예약으로 인해 삭제되지 않았습니다. | {count} 위치는 향후 "
+"{count} 장소는 향후 예약으로 인해 삭제되지 않았습니다. | {count} 장소는 향후 "
 "예약으로 인해 삭제되지 않았습니다."
 
 msgid "{count} minute | {count} minutes"
@@ -11516,5 +11526,5 @@ msgid ""
 "start date and time’ will set it based on the event’s start date and time."
 msgstr ""
 "'예약일 및 시간'은 이벤트의 날짜와 시간에 관계없이 예약이 생성된 날짜를 기준"
-"으로 한도를 설정합니다.<br>'이벤트 시작 날짜 및 시간'은 이벤트의 시작 날짜 "
-"및 시간을 기준으로 설정합니다."
+"으로 한도를 설정합니다.<br>'이벤트 시작일 및 시간'은 이벤트의 시작일 및 시간"
+"을 기준으로 설정합니다."

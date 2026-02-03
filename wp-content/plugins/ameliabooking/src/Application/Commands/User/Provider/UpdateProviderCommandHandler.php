@@ -22,6 +22,8 @@ use AmeliaBooking\Infrastructure\Services\Apple\AbstractAppleCalendarService;
 use Exception;
 use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
+use AmeliaBooking\Domain\ValueObjects\String\Name;
+use AmeliaBooking\Domain\ValueObjects\String\Phone;
 
 /**
  * Class UpdateProviderCommandHandler
@@ -118,8 +120,8 @@ class UpdateProviderCommandHandler extends CommandHandler
             /** @var AbstractAppleCalendarService $appleCalendarService */
             $appleCalendarService = $this->container->get('infrastructure.apple.calendar.service');
 
-            $appleId       = $providerData['employeeAppleCalendar'] ['iCloudId'];
-            $applePassword = $providerData['employeeAppleCalendar'] ['appSpecificPassword'];
+            $appleId       = $providerData['employeeAppleCalendar']['iCloudId'];
+            $applePassword = $providerData['employeeAppleCalendar']['appSpecificPassword'];
 
             $credentials = $appleCalendarService->handleAppleCredentials($appleId, $applePassword);
 
@@ -147,6 +149,12 @@ class UpdateProviderCommandHandler extends CommandHandler
 
         /** @var Provider $newUser */
         $newUser = UserFactory::create($newUserData);
+
+        // If the phone is not set and the old phone is set, set the phone and country phone iso to null
+        if (!$providerData['phone'] && $oldUser->getPhone() && $oldUser->getPhone()->getValue()) {
+            $newUser->setPhone(new Phone(null));
+            $newUser->setCountryPhoneIso(new Name(null));
+        }
 
         $newUser->setDayOffList(
             $providerAS->getModifiedDayList(
@@ -225,7 +233,7 @@ class UpdateProviderCommandHandler extends CommandHandler
                 /** @var UserApplicationService $userAS */
                 $userAS = $this->getContainer()->get('application.user.service');
 
-                $userAS->setWpUserIdForNewUser($userId, $newUser, $command->getField('password'));
+                $userAS->setWpUserIdForNewUser($userId, $newUser, Entities::PROVIDER, $command->getField('password'));
             } elseif ($newUser->getExternalId() && $newUser->getExternalId()->getValue()) {
                 add_filter('amelia_user_profile_updated', '__return_true');
                 wp_update_user(
@@ -259,9 +267,10 @@ class UpdateProviderCommandHandler extends CommandHandler
         $result->setData(
             array_merge(
                 $result->getData(),
-                ['sendEmployeePanelAccessEmail' =>
-                     $command->getField('password') && $command->getField('sendEmployeePanelAccessEmail'),
-                 'password'                     => $command->getField('password')
+                [
+                    'sendEmployeePanelAccessEmail' =>
+                    $command->getField('password') && $command->getField('sendEmployeePanelAccessEmail'),
+                    'password'                     => $command->getField('password')
                 ]
             )
         );

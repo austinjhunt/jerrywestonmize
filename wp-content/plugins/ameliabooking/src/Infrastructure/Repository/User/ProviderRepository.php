@@ -181,6 +181,7 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
                     u.zoomUserId AS user_zoom_user_id,
                     u.appleCalendarId as user_apple_calendar_id,
                     u.googleCalendarId as user_google_calendar_id,
+                    u.outlookCalendarId as user_outlook_calendar_id,
                     u.employeeAppleCalendar as user_employee_apple_calendar,
                     u.stripeConnect AS user_stripeConnect,
                     u.translations AS user_translations,
@@ -247,6 +248,7 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
                     u.translations AS user_translations,
                     u.badgeId AS user_badge_id,
                     u.googleCalendarId as user_google_calendar_id,
+                    u.outlookCalendarId as user_outlook_calendar_id,
                     lt.locationId AS user_locationId
                 FROM {$this->table} u
                 LEFT JOIN {$this->providerLocationTable} lt ON lt.userId = u.id
@@ -302,18 +304,33 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
             $where = [];
 
             if (!empty($criteria['search'])) {
-                $params[':search1'] = $params[':search2'] = $params[':search3'] = $params[':search4'] = $params[':search5'] =
-                    "%{$criteria['search']}%";
+                $terms = preg_split('/\s+/', trim($criteria['search']));
+                $termIndex = 0;
+                $where1 = [];
 
+                foreach ($terms as $term) {
+                    $param = ":search{$termIndex}";
+                    $params[$param] = "%{$term}%";
+
+                    $where1[] = "(
+                        u.firstName LIKE {$param}
+                        OR u.lastName LIKE {$param}
+                        OR u.email LIKE {$param}
+                        OR u.phone LIKE {$param}
+                        OR u.note LIKE {$param}
+                        OR wpUser.display_name LIKE {$param}
+                        OR u.id LIKE {$param}
+                    )";
+
+                    $termIndex++;
+                }
+
+                $where1 = implode(' AND ', $where1);
                 $where[] = "u.id IN(
                     SELECT DISTINCT(user.id)
                         FROM {$this->table} user
                         LEFT JOIN {$wpUserTable} wpUser ON user.externalId = wpUser.ID
-                        WHERE (CONCAT(user.firstName, ' ', user.lastName) LIKE :search1
-                            OR wpUser.display_name LIKE :search2
-                            OR user.email LIKE :search3
-                            OR user.note LIKE :search4
-                            OR user.id LIKE :search5)
+                        WHERE ({$where1})
                     )";
             }
 
@@ -520,6 +537,7 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
                     u.zoomUserId AS user_zoom_user_id,
                     u.appleCalendarId AS user_apple_calendar_id,
                     u.googleCalendarId as user_google_calendar_id,
+                    u.outlookCalendarId as user_outlook_calendar_id,
                     u.employeeAppleCalendar AS user_employee_apple_calendar,
                     u.stripeConnect AS user_stripeConnect,
                     u.countryPhoneIso AS user_countryPhoneIso,
@@ -776,18 +794,33 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
             $where = [];
 
             if (!empty($criteria['search'])) {
-                $params[':search1'] = $params[':search2'] = $params[':search3'] = $params[':search4'] = $params[':search5'] =
-                    "%{$criteria['search']}%";
+                $terms = preg_split('/\s+/', trim($criteria['search']));
+                $termIndex = 0;
+                $where1 = [];
 
+                foreach ($terms as $term) {
+                    $param = ":search{$termIndex}";
+                    $params[$param] = "%{$term}%";
+
+                    $where1[] = "(
+                        u.firstName LIKE {$param}
+                        OR u.lastName LIKE {$param}
+                        OR u.email LIKE {$param}
+                        OR u.phone LIKE {$param}
+                        OR u.note LIKE {$param}
+                        OR wpUser.display_name LIKE {$param}
+                        OR u.id LIKE {$param}
+                    )";
+
+                    $termIndex++;
+                }
+
+                $where1 = implode(' AND ', $where1);
                 $where[] = "u.id IN(
                     SELECT DISTINCT(user.id)
                         FROM {$this->table} user
                         LEFT JOIN {$wpUserTable} wpUser ON user.externalId = wpUser.ID
-                        WHERE (CONCAT(user.firstName, ' ', user.lastName) LIKE :search1
-                            OR wpUser.display_name LIKE :search2
-                            OR user.email LIKE :search3
-                            OR user.note LIKE :search4
-                            OR user.id LIKE :search5)
+                        WHERE ({$where1})
                     )";
             }
 
@@ -1497,6 +1530,7 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
                 'badgeId'          => isset($row['badge_id']) ? $row['badge_id'] : null,
                 'appleCalendarId'  => isset($row['user_apple_calendar_id']) ? $row['user_apple_calendar_id'] : null,
                 'googleCalendarId' => isset($row['user_google_calendar_id']) ? $row['user_google_calendar_id'] : null,
+                'outlookCalendarId' => isset($row['user_outlook_calendar_id']) ? $row['user_outlook_calendar_id'] : null,
                 'employeeAppleCalendar' => isset($row['user_employee_apple_calendar']) ? $row['user_employee_apple_calendar'] : null,
                 'show'             => isset($row['user_show']) ? $row['user_show'] : 0,
             ];
@@ -1839,6 +1873,34 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
             return $result;
         } catch (\Exception $e) {
             throw new QueryExecutionException('Unable to batch clear googleCalendarId in ' . __CLASS__, $e->getCode(), $e);
+        }
+    }
+
+    /**
+     * Batch update to clear outlookCalendarId for all providers with a single SQL query
+     *
+     * @return bool
+     * @throws QueryExecutionException
+     */
+    public function clearOutlookCalendarIds()
+    {
+        try {
+            $statement = $this->connection->prepare(
+                "UPDATE {$this->table} 
+                 SET outlookCalendarId = NULL 
+                 WHERE outlookCalendarId IS NOT NULL 
+                 AND type = 'provider'"
+            );
+
+            $result = $statement->execute();
+
+            if (!$result) {
+                throw new QueryExecutionException('Unable to batch clear outlookCalendarId in ' . __CLASS__);
+            }
+
+            return $result;
+        } catch (\Exception $e) {
+            throw new QueryExecutionException('Unable to batch clear outlookCalendarId in ' . __CLASS__, $e->getCode(), $e);
         }
     }
 

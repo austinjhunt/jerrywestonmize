@@ -4665,6 +4665,9 @@ msgstr ""
 msgid "Header"
 msgstr "Otsikko"
 
+msgid "Heading"
+msgstr ""
+
 msgid "Heading Text Color"
 msgstr "Tekstin väri"
 

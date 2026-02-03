@@ -12,13 +12,14 @@ use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Entity\User\Customer;
 use AmeliaBooking\Domain\Factory\User\UserFactory;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
+use AmeliaBooking\Domain\ValueObjects\String\Name;
 use AmeliaBooking\Domain\ValueObjects\String\Password;
+use AmeliaBooking\Domain\ValueObjects\String\Phone;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 use AmeliaBooking\Infrastructure\Services\Mailchimp\AbstractMailchimpService;
-use Interop\Container\Exception\ContainerException;
 
 /**
  * Class UpdateCustomerCommandHandler
@@ -32,7 +33,6 @@ class UpdateCustomerCommandHandler extends CommandHandler
      *
      * @return CommandResult
      *
-     * @throws ContainerException
      * @throws InvalidArgumentException
      * @throws NotFoundException
      * @throws QueryExecutionException
@@ -40,7 +40,6 @@ class UpdateCustomerCommandHandler extends CommandHandler
      */
     public function handle(UpdateCustomerCommand $command)
     {
-        /** @var CommandResult $result */
         $result = new CommandResult();
 
         $this->checkMandatoryFields($command);
@@ -124,6 +123,12 @@ class UpdateCustomerCommandHandler extends CommandHandler
         /** @var Customer $newUser */
         $newUser = UserFactory::create($newUserData);
 
+        // If the phone is not set and the old phone is set, set the phone and country phone iso to null
+        if (!$customerData['phone'] && $oldUser->getPhone() && $oldUser->getPhone()->getValue()) {
+            $newUser->setPhone(new Phone(null));
+            $newUser->setCountryPhoneIso(new Name(null));
+        }
+
         if (
             $userRepository->getByEmail($newUser->getEmail()->getValue()) &&
             $oldUser->getEmail()->getValue() !== $newUser->getEmail()->getValue()
@@ -136,7 +141,6 @@ class UpdateCustomerCommandHandler extends CommandHandler
         }
 
         if ($command->getField('password')) {
-            /** @var Password $newPassword */
             $newPassword = new Password($command->getField('password'));
 
             $userRepository->updateFieldById($command->getArg('id'), $newPassword->getValue(), 'password');
@@ -163,7 +167,7 @@ class UpdateCustomerCommandHandler extends CommandHandler
             /** @var UserApplicationService $userAS */
             $userAS = $this->getContainer()->get('application.user.service');
 
-            $userAS->setWpUserIdForNewUser($command->getArg('id'), $newUser);
+            $userAS->setWpUserIdForNewUser($command->getArg('id'), $newUser, Entities::CUSTOMER);
         } elseif ($newUser->getExternalId() && $newUser->getExternalId()->getValue()) {
             add_filter('amelia_user_profile_updated', '__return_true');
             wp_update_user(
@@ -189,7 +193,11 @@ class UpdateCustomerCommandHandler extends CommandHandler
             $bookingRepository->updateFieldByColumn('info', null, 'customerId', $oldUser->getId()->getValue());
         }
 
-        if ($oldUser->getEmail() && $oldUser->getEmail()->getValue() && $newUser->getEmail() && $newUser->getEmail()->getValue()) {
+        if (
+            $settingsService->isFeatureEnabled('mailchimp') &&
+            $oldUser->getEmail() && $oldUser->getEmail()->getValue() &&
+            $newUser->getEmail() && $newUser->getEmail()->getValue()
+        ) {
             $mailchimpService->addOrUpdateSubscriber($oldUser->getEmail()->getValue(), $newUser->toArray(), false);
         }
 

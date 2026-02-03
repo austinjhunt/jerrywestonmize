@@ -3,7 +3,28 @@
 ### Create subscription
 
 ```php
-$api->subscription->create(array('plan_id' => 'plan_7wAosPWtrkhqZw', 'customer_notify' => 1,'quantity'=>5, 'total_count' => 6, 'start_at' => 1495995837, 'addons' => array(array('item' => array('name' => 'Delivery charges', 'amount' => 30000, 'currency' => 'INR'))),'notes'=> array('key1'=> 'value3','key2'=> 'value2')));
+$api->subscription->create(array(
+    "plan_id" => "plan_Jc7wDk5iZX88wx",
+    "total_count" => 6,
+    "quantity" => 1,
+    "customer_notify" => true,
+    "start_at" => 1580453311,
+    "expire_by" => 1580626111,
+    "addons" => array(
+        array(
+            "item" => array(
+                "name" => "Delivery charges",
+                "amount" => 30000,
+                "currency" => "INR"
+            )
+        )
+    ),
+    "offer_id" => "offer_JCTD1XMlUmzF6Z",
+    "notes" => array(
+        "notes_key_1" => "Tea, Earl Grey, Hot",
+        "notes_key_2" => "Tea, Earl Grey… decaf."
+    )
+));
 ```
 
 **Parameters:**
@@ -13,11 +34,12 @@ $api->subscription->create(array('plan_id' => 'plan_7wAosPWtrkhqZw', 'customer_n
 | plan_id*          | string | The unique identifier for a plan that should be linked to the subscription.|
 | total_count*   | string | The number of billing cycles for which the customer should be charged  |
 | customer_notify    | boolean | Indicates whether the communication to the customer would be handled by you or us |
-| quantity    | integer | The number of times the customer should be charged the plan amount per invoice |
+| quantity      | integer | The number of times the customer should be charged the plan amount per invoice |
 | start_at    | integer | The timestamp, in Unix format, for when the subscription should start. If not passed, the subscription starts immediately after the authorization payment. |
 | expire_by    | integer | The timestamp, in Unix format, till when the customer can make the authorization payment. |
-| addons    | array | Array that contains details of any upfront amount you want to collect as part of the authorization transaction. |
+| addons    | array  | All parameters listed [here](https://razorpay.com/docs/api/payments/subscriptions/#create-a-subscription) are supported |
 | notes          | array | Notes you can enter for the contact for future reference.   |
+| offer_id   | string | The unique identifier of the offer that is linked to the subscription. |
 
 **Response:**
 ```json
@@ -56,7 +78,32 @@ $api->subscription->create(array('plan_id' => 'plan_7wAosPWtrkhqZw', 'customer_n
 ### Create subscription link
 
 ```php
-$api->subscription->create(array('plan_id' => 'plan_HoYg68p5kmuvzD','total_count' => 12,'quantity' => 1,'expire_by' => 1633237807,'customer_notify' => 1, 'addons' => array(array('item'=>array('name' => 'Delivery charges','amount' => 30000,'currency' => 'INR'))),'notes'=>array('notes_key_1'=>'Tea, Earl Grey, Hot','notes_key_2'=>'Tea, Earl Grey… decaf.'),'notify_info'=>array('notify_phone' => '9123456789','notify_email'=> 'gaurav.kumar@example.com')));
+$api->subscription->create(array(
+    "plan_id" => "plan_Jc7wDk5iZX88wx",
+    "total_count" => 12,
+    "quantity" => 1,
+    "start_at" => 1561852800,
+    "expire_by" => 1561939199,
+    "customer_notify" => true,
+    "addons" => array(
+        array(
+            "item" => array(
+                "name" => "Delivery charges",
+                "amount" => 30000,
+                "currency" => "INR"
+            )
+        )
+    ),
+    "offer_id" => "offer_JCTD1XMlUmzF6Z",
+    "notes" => array(
+        "notes_key_1" => "Tea, Earl Grey, Hot",
+        "notes_key_2" => "Tea, Earl Grey… decaf."
+    ),
+    "notify_info" => array(
+        "notify_phone" => "9123456789",
+        "notify_email" => "gaurav.kumar@example.com"
+    )
+));
 ```
 
 **Parameters:**
@@ -69,9 +116,10 @@ $api->subscription->create(array('plan_id' => 'plan_HoYg68p5kmuvzD','total_count
 | quantity    | integer | The number of times the customer should be charged the plan amount per invoice |
 | start_at    | integer | The timestamp, in Unix format, for when the subscription should start. If not passed, the subscription starts immediately after the authorization payment. |
 | expire_by    | integer | The timestamp, in Unix format, till when the customer can make the authorization payment. |
-| addons    | array | Array that contains details of any upfront amount you want to collect as part of the authorization transaction. |
+| addons    | array  | All parameters listed [here](https://razorpay.com/docs/api/payments/subscriptions/#create-a-subscription-link) are supported |
 | notes          | array | Notes you can enter for the contact for future reference.   |
-| notify_info          | array | The customer's email and phone number to which notifications are to be sent. (PN: Use this array only if you have set the `customer_notify` parameter to 1. That is, Razorpay sends notifications to the customer.)  |
+| notify_info    | array  | All parameters listed [here](https://razorpay.com/docs/api/payments/subscriptions/#create-a-subscription-link) are supported |
+| offer_id   | string | The unique identifier of the offer that is linked to the subscription. |
 
 **Response:**
 ```json
@@ -119,8 +167,8 @@ $api->subscription->all($options);
 |-------|-----------|--------------------------------------------------|
 | from  | timestamp | timestamp after which the payments were created  |
 | to    | timestamp | timestamp before which the payments were created |
-| count | integer   | number of payments to fetch (default: 10)        |
-| skip  | integer   | number of payments to be skipped (default: 0)    |
+| count | integer   | number of subscriptions to fetch (default: 10)        |
+| skip  | integer   | number of subscriptions to be skipped (default: 0)    |
 | plan_id  | string   | The unique identifier of the plan for which you want to retrieve all the subscriptions    |
 
 **Response:**
@@ -215,6 +263,7 @@ $api->subscription->fetch($subscriptionId);
 ### Cancel particular subscription
 
 ```php
+$options = array("cancel_at_cycle_end" => true);
 $api->subscription->fetch($subscriptionId)->cancel($options);
 ```
 
@@ -223,7 +272,7 @@ $api->subscription->fetch($subscriptionId)->cancel($options);
 | Name  | Type      | Description                                      |
 |-------|-----------|--------------------------------------------------|
 | subscriptionId*  | string | The id of the subscription to be cancelled  |
-| cancel_at_cycle_end  | boolean | Possible values:<br>0 (default): Cancel the subscription immediately. <br> 1: Cancel the subscription at the end of the current billing cycle.  |
+| cancel_at_cycle_end  | boolean | Possible values:<br>false (default): Cancel the subscription immediately. <br> true: Cancel the subscription at the end of the current billing cycle.  |
 
 **Response:**
 ```json
@@ -263,6 +312,16 @@ $api->subscription->fetch($subscriptionId)->cancel($options);
 ### Update particular subscription
 
 ```php
+$options = array(
+    'plan_id' => 'plan_00000000000002',
+    'offer_id' => 'offer_JHD834hjbxzhd38d',
+    'quantity' => 5,
+    'remaining_count' => 5,
+    'start_at' => 1496000432,
+    'schedule_change_at' => 'now',
+    'customer_notify' => true
+);
+
 $api->subscription->fetch($subscriptionId)->update($options);
 ```
 
@@ -406,7 +465,7 @@ $api->subscription->fetch($subscriptionId)->cancelScheduledChanges();
 ### Pause a subscription
 
 ```php
-$api->subscription->fetch($subscriptionId)->pause(array('pause_at'=>'now'))
+$api->subscription->fetch($subscriptionId)->pause(array('pause_at'=>'now'));
 ```
 
 **Parameters:**
@@ -455,7 +514,7 @@ $api->subscription->fetch($subscriptionId)->pause(array('pause_at'=>'now'))
 ### Resume a subscription
 
 ```php
-$api->subscription->fetch($subscriptionId)->resume(array('resume_at'=>'now'))
+$api->subscription->fetch($subscriptionId)->resume(array('resume_at'=>'now'));
 ```
 
 **Parameters:**
@@ -604,7 +663,9 @@ $api->invoice->all(['subscription_id'=>$subscriptionId]);
 ### Delete offer linked to a subscription
 
 ```php
-$api->subscription->fetch($subscriptionId)->deleteOffer($offerId)
+$offerId = "offer_JCTD1XMlUmzF6Z";
+
+$api->subscription->fetch($subscriptionId)->deleteOffer($offerId);
 ```
 
 **Parameters:**

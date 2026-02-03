@@ -170,6 +170,7 @@ function divi5_amelia_add_inline_data()
             window.ameliaDivi5Data = <?php echo wp_json_encode($ameliaOptions); ?>;
             window.wpAmeliaLabels = <?php echo wp_json_encode(BackendStrings::getAllStrings()); ?>;
             window.isAmeliaLite = <?php echo wp_json_encode(!Licence::$premium); ?>;
+            window.ameliaLicence = <?php echo wp_json_encode(Licence::getLicence()); ?>;
         </script>
         <?php
     }

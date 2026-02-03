@@ -507,10 +507,10 @@ msgid "Add to Calendar"
 msgstr "Dodaj u Kalendar"
 
 msgid "Add to calendar"
-msgstr ""
+msgstr "Dodaj u kalendar"
 
 msgid "Add tracking"
-msgstr ""
+msgstr "Dodaj praćenje"
 
 msgid "Add work hours"
 msgstr ""
@@ -4670,6 +4670,9 @@ msgstr ""
 
 msgid "Header"
 msgstr "Zaglavlje"
+
+msgid "Heading"
+msgstr ""
 
 msgid "Heading Text Color"
 msgstr "Boja Teksta u Naslovu"

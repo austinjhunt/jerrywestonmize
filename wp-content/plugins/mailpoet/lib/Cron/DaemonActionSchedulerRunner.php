@@ -12,6 +12,8 @@ use MailPoet\Cron\ActionScheduler\RemoteExecutorHandler;
 use MailPoet\WP\Functions as WPFunctions;
 
 class DaemonActionSchedulerRunner {
+  public const DEACTIVATION_FLAG_OPTION = 'mailpoet_cron_deactivating';
+
   /** @var ActionScheduler */
   private $actionScheduler;
 
@@ -52,7 +54,17 @@ class DaemonActionSchedulerRunner {
   }
 
   public function deactivate(): void {
+    // Set flag BEFORE unscheduling to prevent race condition with parallel requests
+    $this->wp->updateOption(self::DEACTIVATION_FLAG_OPTION, true);
     $this->actionScheduler->unscheduleAllCronActions();
+  }
+
+  public function clearDeactivationFlag(): void {
+    $this->wp->deleteOption(self::DEACTIVATION_FLAG_OPTION);
+  }
+
+  public function isDeactivating(): bool {
+    return (bool)$this->wp->getOption(self::DEACTIVATION_FLAG_OPTION, false);
   }
 
   /**

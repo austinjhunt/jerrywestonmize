@@ -3,6 +3,7 @@
 namespace AmeliaBooking\Infrastructure\Services\Notification;
 
 use AmeliaBooking\Infrastructure\Common\Container;
+use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarMiddlewareService;
 use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 
 /**
@@ -17,7 +18,7 @@ class MailerFactory
      *
      * @param Container $container
      *
-     * @return MailgunService|PHPMailService|SMTPService|WpMailService|OutlookService
+     * @return MailgunService|PHPMailService|SMTPService|WpMailService|OutlookService|OutlookMiddlewareService
      */
     public static function create(Container $container)
     {
@@ -60,6 +61,19 @@ class MailerFactory
         }
 
         if ($settings['mailService'] === 'outlook' && $outlookSettings['mailEnabled']) {
+            // Check if accessToken exists in outlookCalendar settings, use middleware service
+            if (!empty($outlookSettings['accessToken'])) {
+                /** @var AbstractOutlookCalendarMiddlewareService $outlookCalendarMiddlewareService */
+                $outlookCalendarMiddlewareService = $container->get('infrastructure.outlook.calendar.middleware.service');
+
+                return new OutlookMiddlewareService(
+                    $outlookCalendarMiddlewareService,
+                    $settings['senderEmail'],
+                    $settings['senderName'],
+                    $settings['replyTo']
+                );
+            }
+
             /** @var AbstractOutlookCalendarService $outlookCalendarService */
             $outlookCalendarService = $container->get('infrastructure.outlook.calendar.service');
 

@@ -73,6 +73,23 @@ class GetPackageBookingCommandHandler extends CommandHandler
 
         $packageBookingId = $command->getArg('id');
 
+        /** @var CustomerBookingRepository $bookingRepository */
+        $bookingRepository = $this->container->get('domain.booking.customerBooking.repository');
+
+        $appointmentBooking = [];
+        try {
+            $bookingRows = $bookingRepository->getByPackageCustomerId($packageBookingId);
+
+            foreach ($bookingRows as $row) {
+                $appointmentBooking[$row['appointmentId']] = [
+                    'bookingId' => $row['id'],
+                    'status' => $row['status']
+                ];
+            }
+        } catch (\Exception $e) {
+            throw new QueryExecutionException('Unable to get package bookings');
+        }
+
         /** @var Collection $packageCustomers */
         $packageCustomers = $packageCustomerRepository->getFiltered([$packageBookingId], ['fetchPackageServices' => true]);
 
@@ -129,14 +146,13 @@ class GetPackageBookingCommandHandler extends CommandHandler
             $wcDiscount += !empty($payment['wcItemCouponValue']) ? $payment['wcItemCouponValue'] : 0;
         }
 
-        $bookedCount = !empty($packagePurchase['appointments']) ? count(
-            array_filter(
-                $packagePurchase['appointments'],
-                function ($appointment) {
-                    return in_array($appointment['status'], ['approved', 'pending'], true);
-                }
-            )
-        ) : 0;
+        // Calculate booked count using the actual booking statuses for this package customer
+        $bookedCount = 0;
+        foreach ($appointmentBooking as $appointmentId => $bookingData) {
+            if (in_array($bookingData['status'], ['approved', 'pending'], true)) {
+                $bookedCount++;
+            }
+        }
 
         $packagePurchase = [
             'id' => $packagePurchase['id'],
@@ -181,11 +197,23 @@ class GetPackageBookingCommandHandler extends CommandHandler
         /** @var Appointment $appointment */
         foreach ($appointments->getItems() as $appointment) {
             $date =  $appointment->getBookingStart()->getValue()->format('Y-m-d H:i:s');
+            $appointmentId = $appointment->getId()->getValue();
+
+            // Get booking ID and status from the map created earlier
+            $bookingId = null;
+            $bookingStatus = $appointment->getStatus()->getValue();
+
+            if (isset($appointmentBooking[$appointmentId])) {
+                $bookingId = $appointmentBooking[$appointmentId]['bookingId'];
+                $bookingStatus = $appointmentBooking[$appointmentId]['status'];
+            }
+
             $packagePurchase['appointments'][] = [
-                'id' => $appointment->getId()->getValue(),
+                'id' => $appointmentId,
+                'bookingId' => $bookingId,
                 'startDate' => explode(' ', $date)[0],
                 'startTime' => explode(' ', $date)[1],
-                'status' => $appointment->getStatus()->getValue(),
+                'status' => $bookingStatus,
                 'service' => $appointment->getService() ? [
                     'id' => $appointment->getService()->getId()->getValue(),
                     'name' => $appointment->getService()->getName()->getValue(),

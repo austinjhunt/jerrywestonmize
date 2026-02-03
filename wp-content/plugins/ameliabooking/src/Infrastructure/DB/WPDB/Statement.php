@@ -6,6 +6,9 @@ use wpdb;
 
 class Statement
 {
+    public const FETCH_ASSOC = 'assoc';
+    public const FETCH_COLUMN = 'column';
+
     /** @var wpdb */
     private $wpdb;
 
@@ -114,11 +117,23 @@ class Statement
     }
 
     /**
+     * @param string $fetchMode Fetch mode (FETCH_ASSOC or FETCH_COLUMN)
      * @return array
      */
-    public function fetchAll()
+    public function fetchAll(string $fetchMode = self::FETCH_ASSOC)
     {
-        return $this->results ?: [];
+        if (!$this->results) {
+            return [];
+        }
+
+        // If FETCH_COLUMN, return only the first column from each row
+        if ($fetchMode === self::FETCH_COLUMN) {
+            return array_map(function ($row) {
+                return reset($row); // Get first value from associative array
+            }, $this->results);
+        }
+
+        return $this->results;
     }
 
     /**

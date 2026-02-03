@@ -110,6 +110,22 @@ class GetPackageBookingsCommandHandler extends CommandHandler
             !empty($params['sort']) ? $params['sort'] : null
         );
 
+        /** @var CustomerBookingRepository $bookingRepository */
+        $bookingRepository = $this->container->get('domain.booking.customerBooking.repository');
+
+        $allBookingStatuses = [];
+        foreach ($packageCustomerIds as $packageCustomerId) {
+            try {
+                $bookingRows = $bookingRepository->getByPackageCustomerId($packageCustomerId);
+                $allBookingStatuses[$packageCustomerId] = [];
+                foreach ($bookingRows as $row) {
+                    $allBookingStatuses[$packageCustomerId][$row['appointmentId']] = $row['status'];
+                }
+            } catch (\Exception $e) {
+                $allBookingStatuses[$packageCustomerId] = [];
+            }
+        }
+
         $customersNoShowCountIds = [];
 
         $noShowTagEnabled = $settingsDS->isFeatureEnabled('noShowTag');
@@ -144,14 +160,15 @@ class GetPackageBookingsCommandHandler extends CommandHandler
                 }
             }
 
-            $bookedCount = !empty($packagePurchase['appointments']) ? count(
-                array_filter(
-                    $packagePurchase['appointments'],
-                    function ($appointment) {
-                        return in_array($appointment['status'], ['approved', 'pending'], true);
+            // Calculate booked count using actual booking statuses for this package customer
+            $bookedCount = 0;
+            if (!empty($allBookingStatuses[$packagePurchase['id']])) {
+                foreach ($allBookingStatuses[$packagePurchase['id']] as $appointmentId => $bookingStatus) {
+                    if (in_array($bookingStatus, ['approved', 'pending'], true)) {
+                        $bookedCount++;
                     }
-                )
-            ) : 0;
+                }
+            }
 
             if ($packagePurchase['status'] === 'approved') {
                 if (

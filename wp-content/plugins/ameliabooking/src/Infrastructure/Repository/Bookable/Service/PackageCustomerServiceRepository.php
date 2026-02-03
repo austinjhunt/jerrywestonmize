@@ -305,6 +305,7 @@ class PackageCustomerServiceRepository extends AbstractRepository
                 LEFT JOIN (
                     SELECT packageCustomerServiceId, COUNT(*) as booking_count
                     FROM {$bookingsTable}
+                    WHERE status IN ('approved', 'pending')
                     GROUP BY packageCustomerServiceId
                 ) cb ON cb.packageCustomerServiceId = pcs.id
                 WHERE pcs.packageCustomerId = :packageCustomerId

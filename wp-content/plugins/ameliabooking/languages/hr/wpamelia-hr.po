@@ -4828,6 +4828,9 @@ msgstr ""
 msgid "Header"
 msgstr "Zaglavlje"
 
+msgid "Heading"
+msgstr ""
+
 msgid "Heading Text Color"
 msgstr "Boja teksta naslova"
 

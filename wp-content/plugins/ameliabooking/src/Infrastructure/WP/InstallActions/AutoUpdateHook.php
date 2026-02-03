@@ -100,7 +100,7 @@ class AutoUpdateHook
         $activated = $settingsService->getSetting('activation', 'active');
 
         /** @var string $url */
-        $url = AMELIA_SITE_URL . '/wp-admin/admin.php?page=wpamelia-settings&activeSetting=activation';
+        $url = AMELIA_SITE_URL . '/wp-admin/admin.php?page=wpamelia-settings#/activation';
 
         $redirect = '<a href="' . $url . '" target="_blank">' . BackendStrings::get('settings_lower') . '</a>';
 
@@ -120,7 +120,7 @@ class AutoUpdateHook
      */
     public static function addMessageOnUpdate($reply, $package, $updater)
     {
-        $url = AMELIA_SITE_URL . '/wp-admin/admin.php?page=wpamelia-settings&activeSetting=activation';
+        $url = AMELIA_SITE_URL . '/wp-admin/admin.php?page=wpamelia-settings#/activation';
 
         $redirect = '<a href="' . $url . '" target="_blank">' . BackendStrings::get('settings_lower') . '</a>';
 
@@ -144,7 +144,7 @@ class AutoUpdateHook
      */
     private static function getRemoteInformation($purchaseCode, $envatoTokenEmail)
     {
-        $serverName = (defined('WP_CLI') && WP_CLI) ? php_uname('n') : $_SERVER['SERVER_NAME'];
+        $siteUrl = parse_url(AMELIA_SITE_URL, PHP_URL_HOST);
 
         $request = wp_remote_post(
             AMELIA_STORE_API_URL . 'autoupdate/info',
@@ -153,12 +153,8 @@ class AutoUpdateHook
                     'slug'             => 'ameliabooking',
                     'purchaseCode'     => trim($purchaseCode),
                     'envatoTokenEmail' => trim($envatoTokenEmail),
-                    'domain'           => self::getDomain(
-                        $serverName
-                    ),
-                    'subdomain'        => self::getSubDomain(
-                        $serverName
-                    )
+                    'domain'           => self::getDomain($siteUrl),
+                    'subdomain'        => self::getSubDomain($siteUrl),
                 ]
             ]
         );
@@ -223,15 +219,14 @@ class AutoUpdateHook
      */
     public static function isIP($domain)
     {
-
         if (
             preg_match("/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/", $domain) ||
             preg_match("/^((?:[0-9A-Fa-f]{1,4}))((?::[0-9A-Fa-f]{1,4}))*::((?:[0-9A-Fa-f]{1,4}))((?::[0-9A-Fa-f]{1,4}))*|((?:[0-9A-Fa-f]{1,4}))((?::[0-9A-Fa-f]{1,4})){7}$/", $domain)
         ) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**

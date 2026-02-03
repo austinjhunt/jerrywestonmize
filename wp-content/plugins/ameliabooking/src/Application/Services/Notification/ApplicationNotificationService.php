@@ -276,6 +276,42 @@ class ApplicationNotificationService
         $notifyProvider = true,
         $notifyCustomers = true
     ) {
+        $this->sendAppointmentUpdatedNotificationsForUserType(
+            $appointment,
+            false,
+            $notifyCustomers
+        );
+
+        if ($changedProviderId) {
+            $newProviderId = $appointment->getProviderId()->getValue();
+
+            $appointment->setProviderId(new Id($changedProviderId));
+        }
+
+        $this->sendAppointmentUpdatedNotificationsForUserType(
+            $appointment,
+            $notifyProvider,
+            false
+        );
+
+        if ($changedProviderId) {
+            $appointment->setProviderId(new Id($newProviderId));
+        }
+    }
+
+    /**
+     * @param Appointment $appointment
+     * @param bool        $notifyProvider
+     * @param bool        $notifyCustomers
+     *
+     * @throws QueryExecutionException
+     * @throws InvalidArgumentException
+     */
+    private function sendAppointmentUpdatedNotificationsForUserType(
+        $appointment,
+        $notifyProvider = true,
+        $notifyCustomers = true
+    ) {
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
 
@@ -290,12 +326,6 @@ class ApplicationNotificationService
 
         /** @var AbstractWhatsAppNotificationService $whatsAppNotificationService */
         $whatsAppNotificationService = $this->container->get('application.whatsAppNotification.service');
-
-        if ($changedProviderId) {
-            $newProviderId = $appointment->getProviderId()->getValue();
-
-            $appointment->setProviderId(new Id($changedProviderId));
-        }
 
         $appointmentNotificationService->sendUpdatedNotifications(
             $emailNotificationService,
@@ -320,10 +350,6 @@ class ApplicationNotificationService
                 $notifyProvider,
                 $notifyCustomers
             );
-        }
-
-        if ($changedProviderId) {
-            $appointment->setProviderId(new Id($newProviderId));
         }
     }
 

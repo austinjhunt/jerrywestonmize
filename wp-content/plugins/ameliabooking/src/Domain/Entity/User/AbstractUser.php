@@ -83,6 +83,9 @@ abstract class AbstractUser
     /** @var Name */
     private $googleCalendarId;
 
+    /** @var Name */
+    private $outlookCalendarId;
+
     /**
      * AbstractUser constructor.
      *
@@ -422,29 +425,46 @@ abstract class AbstractUser
     }
 
     /**
+     * @return Name
+     */
+    public function getOutlookCalendarId()
+    {
+        return $this->outlookCalendarId;
+    }
+
+    /**
+     * @param Name $outlookCalendarId
+     */
+    public function setOutlookCalendarId(Name $outlookCalendarId)
+    {
+        $this->outlookCalendarId = $outlookCalendarId;
+    }
+
+    /**
      * @return array
      */
     public function toArray()
     {
         return [
-            'id'               => null !== $this->getId() ? $this->getId()->getValue() : null,
-            'firstName'        => $this->getFirstName()->getValue(),
-            'lastName'         => $this->getLastName()->getValue(),
-            'birthday'         => null !== $this->getBirthday() ? $this->getBirthday()->getValue() : null,
-            'email'            => $this->getEmail() ? $this->getEmail()->getValue() : null,
-            'phone'            => null !== $this->getPhone() ? $this->getPhone()->getValue() : null,
-            'type'             => $this->getType(),
-            'status'           => null !== $this->getStatus() ? $this->getStatus()->getValue() : null,
-            'note'             => null !== $this->getNote() ? $this->getNote()->getValue() : null,
-            'zoomUserId'       => null !== $this->getZoomUserId() ? $this->getZoomUserId()->getValue() : null,
-            'countryPhoneIso'  => null !== $this->getCountryPhoneIso() ? $this->getCountryPhoneIso()->getValue() : null,
-            'externalId'       => null !== $this->getExternalId() ? $this->getExternalId()->getValue() : null,
-            'pictureFullPath'  => null !== $this->getPicture() ? $this->getPicture()->getFullPath() : null,
-            'pictureThumbPath' => null !== $this->getPicture() ? $this->getPicture()->getThumbPath() : null,
-            'translations'     => $this->getTranslations() ? $this->getTranslations()->getValue() : null,
-            'customFields'     => $this->getCustomFields() ? $this->getCustomFields()->getValue() : null,
-            'appleCalendarId'  => null !== $this->getAppleCalendarId() ? $this->getAppleCalendarId()->getValue() : null,
-            'googleCalendarId' => null !== $this->getGoogleCalendarId() ? $this->getGoogleCalendarId()->getValue() : null,
+            'id'                => null !== $this->getId() ? $this->getId()->getValue() : null,
+            'firstName'         => $this->getFirstName()->getValue(),
+            'lastName'          => $this->getLastName()->getValue(),
+            'birthday'          => null !== $this->getBirthday() ? $this->getBirthday()->getValue() : null,
+            'email'             => $this->getEmail() ? $this->getEmail()->getValue() : null,
+            'phone'             => null !== $this->getPhone() ? $this->getPhone()->getValue() : null,
+            'type'              => $this->getType(),
+            'status'            => null !== $this->getStatus() ? $this->getStatus()->getValue() : null,
+            'note'              => null !== $this->getNote() ? $this->getNote()->getValue() : null,
+            'zoomUserId'        => null !== $this->getZoomUserId() ? $this->getZoomUserId()->getValue() : null,
+            'countryPhoneIso'   => null !== $this->getCountryPhoneIso() ? $this->getCountryPhoneIso()->getValue() : null,
+            'externalId'        => null !== $this->getExternalId() ? $this->getExternalId()->getValue() : null,
+            'pictureFullPath'   => null !== $this->getPicture() ? $this->getPicture()->getFullPath() : null,
+            'pictureThumbPath'  => null !== $this->getPicture() ? $this->getPicture()->getThumbPath() : null,
+            'translations'      => $this->getTranslations() ? $this->getTranslations()->getValue() : null,
+            'customFields'      => $this->getCustomFields() ? $this->getCustomFields()->getValue() : null,
+            'appleCalendarId'   => null !== $this->getAppleCalendarId() ? $this->getAppleCalendarId()->getValue() : null,
+            'googleCalendarId'  => null !== $this->getGoogleCalendarId() ? $this->getGoogleCalendarId()->getValue() : null,
+            'outlookCalendarId' => null !== $this->getOutlookCalendarId() ? $this->getOutlookCalendarId()->getValue() : null,
 //            'password'         => null !== $this->getPassword() ? $this->getPassword()->getValue() : null
         ];
     }

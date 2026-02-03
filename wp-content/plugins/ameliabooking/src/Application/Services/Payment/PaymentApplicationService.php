@@ -1977,7 +1977,7 @@ class PaymentApplicationService
 
         $cacheRepository->beginTransaction();
 
-        if ($cacheData['status'] === null && $status === 'paid') {
+        if (($cacheData['status'] === null || $cacheData['status'] === 'pending') && $status === 'paid') {
             $paymentRepository->updateFieldById(
                 $payment->getId()->getValue(),
                 $transactionId,
@@ -2363,7 +2363,7 @@ class PaymentApplicationService
                 $reservationService->runPostBookingActions($result);
             }
         } elseif (
-            $cacheData['status'] === null &&
+            ($cacheData['status'] === null || $cacheData['status'] === 'pending') &&
             ($status === 'canceled' || $status === 'failed' || $status === 'expired')
         ) {
             switch ($type) {

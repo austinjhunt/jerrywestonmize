@@ -183,9 +183,18 @@ class InvoiceApplicationService extends AbstractInvoiceApplicationService
         $invoiceLeftToPay = $invoiceTotal - $invoicePaid;
 
         $filename = !empty($data['company_logo']) ? $data['company_logo'] : null;
+        $mime = null;
+        $img = null;
         if ($filename) {
-            $mime = pathinfo($filename, PATHINFO_EXTENSION);
-            $img  = base64_encode(file_get_contents($filename));
+            $filePath = str_replace(AMELIA_UPLOADS_URL, AMELIA_UPLOADS_PATH, $filename);
+
+            if (file_exists($filePath) && is_readable($filePath)) {
+                $mime = pathinfo($filePath, PATHINFO_EXTENSION);
+                $imgContent = file_get_contents($filePath);
+                if ($imgContent !== false) {
+                    $img = base64_encode($imgContent);
+                }
+            }
         }
 
         $data['customer_custom_fields'] = array_values($data['customer_custom_fields']);
@@ -200,7 +209,7 @@ class InvoiceApplicationService extends AbstractInvoiceApplicationService
             'total' => $invoiceTotal,
             'paid' => $invoicePaid,
             'leftToPay' => $invoiceLeftToPay,
-            'companyLogo' => $filename ? ['filename' => $filename, 'mime' => $mime, 'img' => $img] : null,
+            'companyLogo' => ($img && $mime) ? ['filename' => $filename, 'mime' => $mime, 'img' => $img] : null,
             'placeholders' => $data,
         ];
     }

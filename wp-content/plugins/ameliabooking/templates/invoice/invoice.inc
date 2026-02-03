@@ -250,7 +250,7 @@ switch ($localePrefix) {
 
         <div class="invoice-header-first-line">
             <table class="invoice-header-first-line-company">
-                <tr>$
+                <tr>
                     <?php if (!empty($data['company_name']) && $invoiceData['companyLogo']) : ?>
                         <td class="invoice-header-first-line-company-name">
                             <span><b><?php echo $data['company_name'] ?></b></span>
@@ -258,7 +258,7 @@ switch ($localePrefix) {
                     <?php endif; ?>
                     <?php if ($invoiceData['companyLogo']) : ?>
                         <td>
-                            <img src='data:<?php echo $invoiceData['companyLogo']['mime']; ?>;base64, . <?php echo $invoiceData['companyLogo']['img']; ?>'
+                            <img src='data:<?php echo $invoiceData['companyLogo']['mime']; ?>;base64,<?php echo $invoiceData['companyLogo']['img']; ?>'
                                  alt="logo">
                         </td>
                     <?php endif; ?>

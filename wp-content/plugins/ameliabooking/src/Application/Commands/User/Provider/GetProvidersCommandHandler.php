@@ -12,11 +12,7 @@ use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
-use AmeliaBooking\Infrastructure\Licence\Licence;
-use AmeliaBooking\Infrastructure\Licence\LicenceConstants;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
-use AmeliaBooking\Infrastructure\Services\Google\GoogleCalendarMiddlewareService;
-use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
 
 /**
@@ -32,7 +28,6 @@ class GetProvidersCommandHandler extends CommandHandler
      * @return CommandResult
      * @throws ContainerValueNotFoundException
      * @throws QueryExecutionException
-     * @throws ContainerException
      * @throws AccessDeniedException
      * @throws InvalidArgumentException
      */

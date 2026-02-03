@@ -101,12 +101,9 @@ class AppointmentPlaceholderService extends PlaceholderService
                 '<a href="#">' . BackendStrings::get('zoom_click_to_join') . '</a>' : 'https://join_zoom_link.com',
             'zoom_host_url'           => $type === 'email' ?
                 '<a href="#">' . BackendStrings::get('zoom_click_to_start') . '</a>' : 'https://start_zoom_link.com',
-            'google_meet_url'         => $type === 'email' ?
-                '<a href="#">' . BackendStrings::get('google_meet_join') . '</a>' : 'https://join_google_meet_link.com',
-            'lesson_space_url'        => $type === 'email' ?
-                '<a href="#">' . BackendStrings::get('lesson_space_join') . '</a>' : 'https://lessonspace.com/room-id',
-            'microsoft_teams_url'     => $type === 'email' ?
-                '<a href="#">' . BackendStrings::get('microsoft_teams_join') . '</a>' : 'https://join_microsoft_teams_link.com',
+            'google_meet_url'         => 'https://join_google_meet_link.com',
+            'lesson_space_url'        => 'https://lessonspace.com/room-id',
+            'microsoft_teams_url'     => 'https://join_microsoft_teams_link.com',
             'appointment_duration'    => $helperService->secondsToNiceDuration(1800),
             'appointment_deposit_payment'     => $helperService->getFormattedPrice(20),
             'appointment_status'      => BackendStrings::get('approved'),
@@ -464,9 +461,7 @@ class AppointmentPlaceholderService extends PlaceholderService
 
         $lessonSpaceLink = '';
         if (array_key_exists('lessonSpace', $appointment) && $appointment['lessonSpace']) {
-            $lessonSpaceLink = $type === 'email' ?
-                '<a href="' . $appointment['lessonSpace'] . '">' . BackendStrings::get('lesson_space_join') . '</a>'
-                : $appointment['lessonSpace'];
+            $lessonSpaceLink = $appointment['lessonSpace'];
         }
 
         if (isset($appointment['zoomMeeting']['joinUrl'], $appointment['zoomMeeting']['startUrl'])) {
@@ -476,16 +471,12 @@ class AppointmentPlaceholderService extends PlaceholderService
 
         $googleMeetUrl = '';
         if (array_key_exists('googleMeetUrl', $appointment) && $appointment['googleMeetUrl']) {
-            $googleMeetUrl = $type === 'email' ?
-                '<a href="' . $appointment['googleMeetUrl'] . '">' . BackendStrings::get('google_meet_join') . '</a>'
-                : $appointment['googleMeetUrl'];
+            $googleMeetUrl = $appointment['googleMeetUrl'];
         }
 
         $microsoftTeamsUrl = '';
         if (array_key_exists('microsoftTeamsUrl', $appointment) && $appointment['microsoftTeamsUrl']) {
-            $microsoftTeamsUrl = $type === 'email' ?
-                '<a href="' . $appointment['microsoftTeamsUrl'] . '">' . BackendStrings::get('microsoft_teams_joi') . '</a>'
-                : $appointment['microsoftTeamsUrl'];
+            $microsoftTeamsUrl = $appointment['microsoftTeamsUrl'];
         }
 
         return [

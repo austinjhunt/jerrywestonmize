@@ -17,6 +17,7 @@ use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepos
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
 use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarMiddlewareService;
+use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarMiddlewareService;
 use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
@@ -74,6 +75,10 @@ class GetProviderCommandHandler extends CommandHandler
         $googleCalendarMiddlewareService = $this->container->get(
             'infrastructure.google.calendar.middleware.service'
         );
+        /** @var AbstractOutlookCalendarMiddlewareService $outlookCalendarMiddlewareService */
+        $outlookCalendarMiddlewareService = $this->container->get(
+            'infrastructure.outlook.calendar.middleware.service'
+        );
 
         $companyDaysOff = $settingsService->getCategorySettings('daysOff');
 
@@ -103,6 +108,9 @@ class GetProviderCommandHandler extends CommandHandler
         $providerArray['googleCalendar']['calendarList'] = [];
         $providerArray['googleCalendar']['calendarId'] = null;
 
+        $providerArray['outlookCalendar']['calendarList'] = [];
+        $providerArray['outlookCalendar']['calendarId'] = null;
+
         if ($settingsService->isFeatureEnabled('googleCalendar')) {
             try {
                 $googleCalendar = $settingsService->getCategorySettings('googleCalendar');
@@ -127,21 +135,28 @@ class GetProviderCommandHandler extends CommandHandler
             }
         }
 
-        try {
-            $providerArray['outlookCalendar']['calendarList'] = $outlookCalendarService->listCalendarList($provider);
+        if ($settingsService->isFeatureEnabled('outlookCalendar')) {
+            try {
+                $outlookCalendar = $settingsService->getCategorySettings('outlookCalendar');
+                if (!$outlookCalendar['accessToken']) {
+                    $providerArray['outlookCalendar']['calendarList'] = $outlookCalendarService->listCalendarList($provider);
+                    $providerArray['outlookCalendar']['calendarId'] = $outlookCalendarService->getProviderOutlookCalendarId($provider);
+                } else {
+                    $providerArray['outlookCalendar']['calendarList'] = $outlookCalendarMiddlewareService->getCalendarList($providerArray['outlookCalendar']);
+                    $providerArray['outlookCalendar']['calendarId'] = $provider->getOutlookCalendar() ?
+                        $provider->getOutlookCalendar()->getCalendarId()->getValue() :
+                        null;
+                }
+            } catch (\Exception $e) {
+                $providerArray['outlookCalendar']['calendarId'] = !empty($providerArray['outlookCalendar']['calendarId'])
+                    ? $providerArray['outlookCalendar']['calendarId']
+                    : null;
 
-            $providerArray['outlookCalendar']['calendarId'] = $outlookCalendarService->getProviderOutlookCalendarId(
-                $provider
-            );
-        } catch (\Exception $e) {
-            $providerArray['outlookCalendar']['calendarId'] = !empty($providerArray['outlookCalendar']['calendarId'])
-                ? $providerArray['outlookCalendar']['calendarId']
-                : null;
+                $providerArray['outlookCalendar']['calendarList'] = [];
 
-            $providerArray['outlookCalendar']['calendarList'] = [];
-
-            $providerRepository->updateErrorColumn($providerId, $e->getMessage());
-            $successfulOutlookConnection = false;
+                $providerRepository->updateErrorColumn($providerId, $e->getMessage());
+                $successfulOutlookConnection = false;
+            }
         }
 
         $providerArray['mandatoryServicesIds'] = $providerService->getMandatoryServicesIds($providerId);

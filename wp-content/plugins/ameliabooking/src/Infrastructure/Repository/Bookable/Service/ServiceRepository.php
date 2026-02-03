@@ -389,9 +389,21 @@ class ServiceRepository extends AbstractRepository implements ServiceRepositoryI
         }
 
         if (!empty($criteria['search'])) {
-            $params[':search1'] = $params[':search2'] = $params[':search3'] = "%{$criteria['search']}%";
+            $terms = preg_split('/\s+/', trim($criteria['search']));
+            $termIndex = 0;
 
-            $where[] = "(s.name LIKE :search1 OR s.description LIKE :search2 OR s.id LIKE :search3)";
+            foreach ($terms as $term) {
+                $param = ":search{$termIndex}";
+                $params[$param] = "%{$term}%";
+
+                $where[] = "(
+                        s.name LIKE {$param}
+                        OR s.description LIKE {$param}
+                        OR s.id LIKE {$param}
+                    )";
+
+                $termIndex++;
+            }
         }
 
         if (!empty($criteria['categoryId'])) {
@@ -447,9 +459,21 @@ class ServiceRepository extends AbstractRepository implements ServiceRepositoryI
         $where = [];
 
         if (!empty($criteria['search'])) {
-            $params[':search1'] = $params[':search2'] = $params[':search3'] = "%{$criteria['search']}%";
+            $terms = preg_split('/\s+/', trim($criteria['search']));
+            $termIndex = 0;
 
-            $where[] = "(s.name LIKE :search1 OR s.description LIKE :search2 OR s.id LIKE :search3)";
+            foreach ($terms as $term) {
+                $param = ":search{$termIndex}";
+                $params[$param] = "%{$term}%";
+
+                $where[] = "(
+                        s.name LIKE {$param}
+                        OR s.description LIKE {$param}
+                        OR s.id LIKE {$param}
+                    )";
+
+                $termIndex++;
+            }
         }
 
         if (!empty($criteria['categoryId'])) {
@@ -567,9 +591,19 @@ class ServiceRepository extends AbstractRepository implements ServiceRepositoryI
         }
 
         if (!empty($criteria['search'])) {
-            $params[':search'] = "%{$criteria['search']}%";
+            $terms = preg_split('/\s+/', trim($criteria['search']));
+            $termIndex = 0;
 
-            $where[] = 's.name LIKE :search';
+            foreach ($terms as $term) {
+                $param = ":search{$termIndex}";
+                $params[$param] = "%{$term}%";
+
+                $where[] = "(
+                        s.name LIKE {$param}
+                    )";
+
+                $termIndex++;
+            }
         }
 
         if (!empty($criteria['services'])) {

@@ -50,6 +50,7 @@ class UpdateProviderController extends Controller
         'googleCalendarId',
         'googleCalendar',
         'outlookCalendar',
+        'outlookCalendarId',
         'password',
         'sendEmployeePanelAccessEmail',
         'translations',

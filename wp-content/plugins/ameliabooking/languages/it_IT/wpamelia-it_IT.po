@@ -4889,6 +4889,9 @@ msgstr ""
 msgid "Header"
 msgstr "Intestazione"
 
+msgid "Heading"
+msgstr ""
+
 msgid "Heading Text Color"
 msgstr "Colore Testo dell'Intestazione"
 

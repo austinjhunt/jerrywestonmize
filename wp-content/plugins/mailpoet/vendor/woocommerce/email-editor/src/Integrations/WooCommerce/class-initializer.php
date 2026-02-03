@@ -17,6 +17,7 @@ class Initializer {
  'woocommerce/product-price',
  'woocommerce/product-button',
  'woocommerce/product-sale-badge',
+ 'woocommerce/coupon-code',
  );
  private array $renderers = array();
  public function update_block_settings( array $settings ): array {

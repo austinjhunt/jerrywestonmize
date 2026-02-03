@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Amelia\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 14:46+0000\n"
+"POT-Creation-Date: 2026-01-26 14:28+0100\n"
 "PO-Revision-Date: 2025-11-20 16:11+0100\n"
 "Last-Translator: \n"
 "Language-Team: Amelia\n"
@@ -691,9 +691,6 @@ msgstr ""
 msgid "After"
 msgstr ""
 
-msgid "Amount:"
-msgstr ""
-
 msgid "Before"
 msgstr ""
 
@@ -791,9 +788,6 @@ msgid "Unable to retrieve payments results"
 msgstr ""
 
 msgid "Payment ID"
-msgstr ""
-
-msgid "Payment ID:"
 msgstr ""
 
 msgid "PayPal"
@@ -1069,9 +1063,6 @@ msgstr ""
 msgid "Time"
 msgstr ""
 
-msgid "Type:"
-msgstr ""
-
 msgid "Undelivered"
 msgstr ""
 
@@ -1131,12 +1122,6 @@ msgid "Times bought"
 msgstr ""
 
 msgid "YouTube"
-msgstr ""
-
-msgid "Company days off"
-msgstr ""
-
-msgid "Employee days off"
 msgstr ""
 
 msgid "Delete"
@@ -1423,12 +1408,6 @@ msgid "Make extra mandatory"
 msgstr ""
 
 msgid "Minimum number of required extras"
-msgstr ""
-
-msgid "Birthday"
-msgstr ""
-
-msgid "Don't Import"
 msgstr ""
 
 msgid "Available"
@@ -2124,9 +2103,6 @@ msgstr ""
 msgid "Set the event period first to enable pricing by date range."
 msgstr ""
 
-msgid "Add pricing category"
-msgstr ""
-
 msgid ""
 "Date ranges that are not defined will use the default price from the ticket "
 "category."
@@ -2348,6 +2324,9 @@ msgid "Location 1"
 msgstr ""
 
 msgid "Every Day until"
+msgstr ""
+
+msgid "Birthday"
 msgstr ""
 
 msgid "Payment method:"
@@ -2576,9 +2555,6 @@ msgid "Please select a location"
 msgstr ""
 
 msgid "Bringing anyone with you?"
-msgstr ""
-
-msgid "Additional people"
 msgstr ""
 
 msgid "Number of people that are coming with you."
@@ -3827,9 +3803,6 @@ msgstr ""
 msgid "Edit Package Booking"
 msgstr ""
 
-msgid "Opens at"
-msgstr ""
-
 msgid "Expand all"
 msgstr ""
 
@@ -3883,9 +3856,6 @@ msgid ""
 msgstr ""
 
 msgid "Max"
-msgstr ""
-
-msgid "Maximum spots"
 msgstr ""
 
 msgid "Missing required fields:"
@@ -4052,12 +4022,6 @@ msgstr ""
 msgid "Reorder Packages"
 msgstr ""
 
-msgid "Failed to reorder services."
-msgstr ""
-
-msgid "Services have been reordered."
-msgstr ""
-
 msgid ""
 "The time slot you tried to reschedule to is not available. Please select a "
 "different time slot for the selected date."
@@ -4118,9 +4082,6 @@ msgid "Services Desc"
 msgstr ""
 
 msgid "Shared capacity across services"
-msgstr ""
-
-msgid "Shared category capacity"
 msgstr ""
 
 msgid "Shared Pool"
@@ -4264,18 +4225,6 @@ msgid "Tax details"
 msgstr ""
 
 msgid "Fixed"
-msgstr ""
-
-msgid "Employee note has been updated."
-msgstr ""
-
-msgid "Customer note has been updated."
-msgstr ""
-
-msgid "Need to update your company's days off?"
-msgstr ""
-
-msgid "Manage company days off"
 msgstr ""
 
 msgid "Badge"
@@ -4504,43 +4453,6 @@ msgid "+{count} more"
 msgstr ""
 
 msgid "Package booking has been deleted."
-msgstr ""
-
-msgid "Table settings have been updated."
-msgstr ""
-
-msgid "Booking has been updated."
-msgstr ""
-
-msgid ""
-"{count} appointment has been deleted. | {count} appointments have been "
-"deleted."
-msgstr ""
-
-msgid ""
-"{count} appointment has not been deleted. | {count} appointments have not "
-"been deleted."
-msgstr ""
-
-msgid ""
-"{count} event booking has been deleted. | {count} event bookings have been "
-"deleted."
-msgstr ""
-
-msgid ""
-"{count} event booking has not been deleted. | {count} event bookings have "
-"not been deleted."
-msgstr ""
-
-msgid "{count} event has been deleted. | {count} events have been deleted."
-msgstr ""
-
-msgid "{count} service has been deleted. | {count} services have been deleted."
-msgstr ""
-
-msgid ""
-"{count} service has not been deleted. | {count} services have not been "
-"deleted."
 msgstr ""
 
 msgid ""
@@ -4937,6 +4849,12 @@ msgid "Single Ticket"
 msgstr ""
 
 msgid "Group Ticket"
+msgstr ""
+
+msgid "Heading"
+msgstr ""
+
+msgid "E-Tickets"
 msgstr ""
 
 msgid ""
@@ -5420,6 +5338,9 @@ msgid "No matching data"
 msgstr ""
 
 msgid "Bringing Anyone With You"
+msgstr ""
+
+msgid "Additional people"
 msgstr ""
 
 msgid "Total people"
@@ -6636,9 +6557,6 @@ msgstr ""
 msgid "Booking is canceled"
 msgstr ""
 
-msgid "E-Tickets"
-msgstr ""
-
 msgid "Scan E-Ticket"
 msgstr ""
 
@@ -6673,6 +6591,9 @@ msgid "Admin"
 msgstr ""
 
 msgid "Add period"
+msgstr ""
+
+msgid "Amount:"
 msgstr ""
 
 msgid "Attendee"
@@ -6711,6 +6632,12 @@ msgid "Employee Badge"
 msgstr ""
 
 msgid "Employee badges"
+msgstr ""
+
+msgid "Company days off"
+msgstr ""
+
+msgid "Employee days off"
 msgstr ""
 
 msgid "Please enter an email."
@@ -6795,6 +6722,9 @@ msgid "Partially paid"
 msgstr ""
 
 msgid "Payment amount"
+msgstr ""
+
+msgid "Payment ID:"
 msgstr ""
 
 msgid "Payment method"
@@ -7505,6 +7435,9 @@ msgstr ""
 msgid "Don't have an account?"
 msgstr ""
 
+msgid "Don't Import"
+msgstr ""
+
 msgid "Please enter a recipient phone."
 msgstr ""
 
@@ -7741,6 +7674,9 @@ msgid "To send a test SMS, please recharge your balance."
 msgstr ""
 
 msgid "Text:"
+msgstr ""
+
+msgid "Type:"
 msgstr ""
 
 msgid "To customer"
@@ -9240,10 +9176,47 @@ msgstr ""
 msgid "{count} month | {count} months"
 msgstr ""
 
+msgid "Booking has been updated."
+msgstr ""
+
+msgid ""
+"{count} appointment has been deleted. | {count} appointments have been "
+"deleted."
+msgstr ""
+
+msgid ""
+"{count} appointment has not been deleted. | {count} appointments have not "
+"been deleted."
+msgstr ""
+
+msgid ""
+"{count} event booking has been deleted. | {count} event bookings have been "
+"deleted."
+msgstr ""
+
+msgid ""
+"{count} event booking has not been deleted. | {count} event bookings have "
+"not been deleted."
+msgstr ""
+
+msgid "{count} event has been deleted. | {count} events have been deleted."
+msgstr ""
+
 msgid "{count} Selected"
 msgstr ""
 
+msgid "{count} service has been deleted. | {count} services have been deleted."
+msgstr ""
+
+msgid ""
+"{count} service has not been deleted. | {count} services have not been "
+"deleted."
+msgstr ""
+
 msgid "{count} week | {count} weeks"
+msgstr ""
+
+msgid "Table settings have been updated."
 msgstr ""
 
 msgid "Custom notifications"
@@ -9796,6 +9769,12 @@ msgstr ""
 msgid "Reorder Services"
 msgstr ""
 
+msgid "Failed to reorder services."
+msgstr ""
+
+msgid "Services have been reordered."
+msgstr ""
+
 msgid "Replace"
 msgstr ""
 
@@ -10337,6 +10316,18 @@ msgstr ""
 msgid "Boost team productivity with automated updates and fewer manual tasks."
 msgstr ""
 
+msgid "Employee note has been updated."
+msgstr ""
+
+msgid "Customer note has been updated."
+msgstr ""
+
+msgid "Need to update your company's days off?"
+msgstr ""
+
+msgid "Manage company days off"
+msgstr ""
+
 msgid "No employees yet"
 msgstr ""
 
@@ -10811,6 +10802,18 @@ msgid "Secondary button style"
 msgstr ""
 
 msgid "Font family"
+msgstr ""
+
+msgid "Opens at"
+msgstr ""
+
+msgid "Add pricing category"
+msgstr ""
+
+msgid "Shared category capacity"
+msgstr ""
+
+msgid "Maximum spots"
 msgstr ""
 
 msgid "Add to Calendar"

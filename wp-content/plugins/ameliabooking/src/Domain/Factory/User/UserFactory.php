@@ -191,6 +191,10 @@ class UserFactory
                     $user->setGoogleCalendarId(new Name($data['googleCalendarId']));
                 }
 
+                if (!empty($data['outlookCalendarId'])) {
+                    $user->setOutlookCalendarId(new Name($data['outlookCalendarId']));
+                }
+
                 break;
             case 'manager':
                 $user = new Manager(

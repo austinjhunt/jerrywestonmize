@@ -64,15 +64,25 @@ class CustomerRepository extends UserRepository implements CustomerRepositoryInt
             }
 
             if (!empty($criteria['search'])) {
-                $params[':search1'] = $params[':search2'] = $params[':search3'] = $params[':search4'] = $params[':search5'] = $params[':search6'] =
-                    "%{$criteria['search']}%";
+                $terms = preg_split('/\s+/', trim($criteria['search']));
+                $termIndex = 0;
 
-                $where[] = "((CONCAT(u.firstName, ' ', u.lastName) LIKE :search1
-                            OR wpu.display_name LIKE :search2
-                            OR u.email LIKE :search3
-                            OR u.phone LIKE :search4
-                            OR u.note LIKE :search5
-                            OR u.id LIKE :search6))";
+                foreach ($terms as $term) {
+                    $param = ":search{$termIndex}";
+                    $params[$param] = "%{$term}%";
+
+                    $where[] = "(
+                        u.firstName LIKE {$param}
+                        OR u.lastName LIKE {$param}
+                        OR u.email LIKE {$param}
+                        OR u.phone LIKE {$param}
+                        OR u.note LIKE {$param}
+                        OR wpu.display_name LIKE {$param}
+                        OR u.id LIKE {$param}
+                    )";
+
+                    $termIndex++;
+                }
             }
 
             if (!empty($criteria['customers'])) {
@@ -224,15 +234,25 @@ class CustomerRepository extends UserRepository implements CustomerRepositoryInt
         ];
 
         if (!empty($criteria['search'])) {
-            $params[':search1'] = $params[':search2'] = $params[':search3'] = $params[':search4'] = $params[':search5'] = $params[':search6'] =
-                "%{$criteria['search']}%";
+            $terms = preg_split('/\s+/', trim($criteria['search']));
+            $termIndex = 0;
 
-            $where[] = "((CONCAT(u.firstName, ' ', u.lastName) LIKE :search1
-                            OR wpu.display_name LIKE :search2
-                            OR u.email LIKE :search3
-                            OR u.note LIKE :search4
-                            OR u.phone LIKE :search5
-                            OR u.id LIKE :search6))";
+            foreach ($terms as $term) {
+                $param = ":search{$termIndex}";
+                $params[$param] = "%{$term}%";
+
+                $where[] = "(
+                        u.firstName LIKE {$param}
+                        OR u.lastName LIKE {$param}
+                        OR u.email LIKE {$param}
+                        OR u.phone LIKE {$param}
+                        OR u.note LIKE {$param}
+                        OR wpu.display_name LIKE {$param}
+                        OR u.id LIKE {$param}
+                    )";
+
+                $termIndex++;
+            }
         }
 
         if (!empty($criteria['customers'])) {

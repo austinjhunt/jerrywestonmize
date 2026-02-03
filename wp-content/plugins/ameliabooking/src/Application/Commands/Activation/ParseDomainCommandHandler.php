@@ -28,10 +28,10 @@ class ParseDomainCommandHandler extends CommandHandler
     {
         $result = new CommandResult();
 
-        $fields = $command->getFields();
-
-        $domain    = AutoUpdateHook::getDomain($fields['domain']);
-        $subdomain = AutoUpdateHook::getSubDomain($fields['subdomain']);
+        // Get domain and subdomain from site URL
+        $siteUrl = parse_url(AMELIA_SITE_URL, PHP_URL_HOST);
+        $domain = AutoUpdateHook::getDomain($siteUrl);
+        $subdomain = AutoUpdateHook::getSubDomain($siteUrl);
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully parsed domain');

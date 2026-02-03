@@ -4841,6 +4841,9 @@ msgstr ""
 msgid "Header"
 msgstr "Sidhuvud"
 
+msgid "Heading"
+msgstr ""
+
 msgid "Heading Text Color"
 msgstr "Textfärg"
 

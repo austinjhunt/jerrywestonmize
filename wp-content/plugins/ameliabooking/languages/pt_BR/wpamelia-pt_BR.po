@@ -4874,6 +4874,9 @@ msgstr ""
 msgid "Header"
 msgstr "Cabeçalho"
 
+msgid "Heading"
+msgstr ""
+
 msgid "Heading Text Color"
 msgstr "Cor do texto do título"
 

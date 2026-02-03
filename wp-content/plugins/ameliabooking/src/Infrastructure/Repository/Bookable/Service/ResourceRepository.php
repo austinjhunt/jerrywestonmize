@@ -12,6 +12,7 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Resource;
 use AmeliaBooking\Domain\Factory\Bookable\Service\ResourceFactory;
 use AmeliaBooking\Infrastructure\Connection;
+use AmeliaBooking\Infrastructure\DB\WPDB\Statement;
 use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Bookable\ResourcesToEntitiesTable;
@@ -238,7 +239,7 @@ class ResourceRepository extends AbstractRepository
 
                 $idStmt = $this->connection->prepare($idSql);
                 $idStmt->execute($params);
-                $resourceIds = $idStmt->fetchAll(\PDO::FETCH_COLUMN);
+                $resourceIds = $idStmt->fetchAll(Statement::FETCH_COLUMN);
 
                 if (empty($resourceIds)) {
                     return call_user_func([static::FACTORY, 'createCollection'], []);

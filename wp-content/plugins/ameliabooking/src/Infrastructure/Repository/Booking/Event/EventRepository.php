@@ -460,16 +460,35 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
         }
 
         if (!empty($criteria['search'])) {
-            $params[':search1'] = "%{$criteria['search']}%";
-            $params[':search2'] = "{\"name\":{%{$criteria['search']}%\"description\":{%";
-            $params[':search3'] = "{\"description\":{%\"name\":{%{$criteria['search']}%";
-            $params[':search4'] = "{\"name\":{%{$criteria['search']}%";
+            $terms = preg_split('/\s+/', trim($criteria['search']));
+            $termIndex = 0;
 
-            $where[] = "(e.name LIKE :search1 
-            OR e.translations LIKE :search2
-            OR e.translations LIKE :search3
-            OR (e.translations LIKE :search4 AND e.translations NOT LIKE '%\"description\":{%')
-            OR e.id LIKE '%" . $criteria['search'] . "%')";
+            foreach ($terms as $term) {
+                $p1 = ":search{$termIndex}_1";
+                $p2 = ":search{$termIndex}_2";
+                $p3 = ":search{$termIndex}_3";
+                $p4 = ":search{$termIndex}_4";
+                $p5 = ":search{$termIndex}_5";
+
+                $params[$p1] = "%{$term}%";
+                $params[$p2] = "{\"name\":{%{$term}%\"description\":{%";
+                $params[$p3] = "{\"description\":{%\"name\":{%{$term}%";
+                $params[$p4] = "{\"name\":{%{$term}%";
+                $params[$p5] = "%{$term}%";
+
+                $where[] = "(
+                    e.name LIKE {$p1}
+                    OR e.translations LIKE {$p2}
+                    OR e.translations LIKE {$p3}
+                    OR (
+                        e.translations LIKE {$p4}
+                        AND e.translations NOT LIKE '%\"description\":{%'
+                    )
+                    OR e.id LIKE {$p5}
+                )";
+
+                $termIndex++;
+            }
         }
 
         if (!empty($criteria['status'])) {
@@ -683,241 +702,6 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
         }
 
         return array_column($rows, 'id');
-    }
-
-    /**
-     * @param array $criteria
-     *
-     * @return int
-     * @throws QueryExecutionException
-     * @throws InvalidArgumentException
-     */
-    public function getFilteredIdsCount($criteria)
-    {
-        $eventsPeriodsTable   = EventsPeriodsTable::getTableName();
-        $eventsTagsTable      = EventsTagsTable::getTableName();
-        $eventsProvidersTable = EventsProvidersTable::getTableName();
-        $usersTable           = UsersTable::getTableName();
-
-
-        $params = [];
-        $where  = [];
-
-        if (isset($criteria['parentId'])) {
-            $params[':parentId'] = $criteria['parentId'];
-
-            $params[':originParentId'] = $criteria['parentId'];
-
-            $where[] = 'e.parentId = :parentId OR e.id = :originParentId';
-        }
-
-        if (!empty($criteria['search'])) {
-            $params[':search1'] = "%{$criteria['search']}%";
-            $params[':search2'] = "{\"name\":{%{$criteria['search']}%\"description\":{%";
-            $params[':search3'] = "{\"description\":{%\"name\":{%{$criteria['search']}%";
-            $params[':search4'] = "{\"name\":{%{$criteria['search']}%";
-
-            $where[] = "(e.name LIKE :search1 
-            OR e.translations LIKE :search2
-            OR e.translations LIKE :search3
-            OR (e.translations LIKE :search4 AND e.translations NOT LIKE '%\"description\":{%')
-            OR e.id LIKE '%" . $criteria['search'] . "%')";
-        }
-
-        if (isset($criteria['show'])) {
-            $where[] = 'e.show = 1';
-        }
-
-        if (!empty($criteria['dates'])) {
-            if (isset($criteria['dates'][0], $criteria['dates'][1])) {
-                $where[] = "((ep.periodStart BETWEEN :eventFrom1 AND :eventTo1)
-                OR (ep.periodEnd BETWEEN :eventFrom2 AND :eventTo2)
-                OR (:eventFrom3 BETWEEN ep.periodStart AND ep.periodEnd)
-                OR (:eventTo3  BETWEEN ep.periodStart AND ep.periodEnd))";
-
-                $params[':eventFrom1'] = $params[':eventFrom2'] = $params[':eventFrom3'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
-                $params[':eventTo1']   = $params[':eventTo2']   = $params[':eventTo3']   = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
-            } elseif (isset($criteria['dates'][0])) {
-                $where[] = "(ep.periodStart >= :eventFrom OR (ep.periodEnd >= :eventTo))";
-
-                $params[':eventFrom'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
-
-                $params[':eventTo'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][0]);
-            } elseif (isset($criteria['dates'][1])) {
-                $where[] = "(ep.periodStart <= :eventTo)";
-
-                $params[':eventTo'] = DateTimeService::getCustomDateTimeInUtc($criteria['dates'][1]);
-            } else {
-                $where[] = "(ep.periodStart > :eventFrom)";
-
-                $params[':eventFrom'] = DateTimeService::getNowDateTimeInUtc();
-            }
-        }
-
-        if (!empty($criteria['locationId'])) {
-            $params[':locationId'] = $criteria['locationId'];
-
-            $where[] = 'e.locationId = :locationId';
-        }
-
-        if (!empty($criteria['locations'])) {
-            $queryLocations = [];
-
-            foreach ((array)$criteria['locations'] as $index => $value) {
-                $param            = ':location' . $index;
-                $queryLocations[] = $param;
-                $params[$param]   = $value;
-            }
-
-            $where3 = 'e.locationId IN (' . implode(', ', $queryLocations) . ')';
-
-            $where[] = '(' . $where3 . ')';
-        }
-
-
-        $tagJoin = '';
-
-        if (isset($criteria['tag'])) {
-            $queryTags = [];
-
-            $tags = $criteria['tag'];//explode(',', $criteria['tag']);
-            foreach ((array)$tags as $index => $value) {
-                $param = ':tag' . $index;
-
-                $queryTags[] = $param;
-
-                $params[$param] = $value;//trim($value, '{}');
-            }
-
-            $where[] = 'et.name IN (' . implode(', ', $queryTags) . ')';
-
-            $tagJoin = "INNER JOIN {$eventsTagsTable} et ON et.eventId = e.id";
-        }
-
-        if (!empty($criteria['id'])) {
-            if (!empty($criteria['recurring'])) {
-                $whereOr = [];
-                foreach ((array)$criteria['id'] as $index => $value) {
-                    $param = 'id' . $index;
-
-                    $params[':rec1' . $param] = (int)$value;
-                    $params[':rec2' . $param] = (int)$value;
-                    $params[':rec3' . $param] = (int)$value;
-                    $params[':rec4' . $param] = (int)$value;
-
-                    $whereOr[] = "((e.id = :rec1id" . $index . " AND e.parentId IS NULL) OR 
-                    (e.parentId IN (SELECT parentId FROM {$this->table} WHERE parentId IS NOT NULL AND parentId = :rec2id" . $index . ")) OR
-                    (e.id >= :rec3id" . $index . "  AND e.parentId IN (SELECT parentId FROM {$this->table} WHERE id = :rec4id" . $index . ")))";
-                }
-                $where[] = '(' . implode(' OR ', $whereOr) . ')';
-            } else {
-                $queryIds = [];
-
-                foreach ((array)$criteria['id'] as $index => $value) {
-                    $param = ':id' . $index;
-
-                    $queryIds[] = $param;
-
-                    $params[$param] = (int)$value;
-                }
-
-                $where[] = 'e.id IN (' . implode(', ', $queryIds) . ')';
-            }
-        }
-
-        $providerJoin = '';
-
-        if (!empty($criteria['providers'])) {
-            $providerJoin = "
-            LEFT JOIN {$eventsProvidersTable} epr ON epr.eventId = e.id
-            INNER JOIN {$usersTable} pu ON pu.id = epr.userId OR pu.id = e.organizerId";
-
-            $queryProviders = [];
-
-            foreach ((array)$criteria['providers'] as $index => $value) {
-                $param            = ':provider' . $index;
-                $queryProviders[] = $param;
-                $params[$param]   = $value;
-            }
-            $where1 = 'epr.userId IN (' . implode(', ', $queryProviders) . ')';
-
-            $queryProviders = [];
-            foreach ((array)$criteria['providers'] as $index => $value) {
-                $param            = ':organizer' . $index;
-                $queryProviders[] = $param;
-                $params[$param]   = $value;
-            }
-            $where2 = 'e.organizerId IN (' . implode(', ', $queryProviders) . ')';
-
-            $where[] = '(' . $where1 . ' OR ' . $where2 . ')';
-        }
-
-        $customerJoin = '';
-
-        $customerBookingsTable         = CustomerBookingsTable::getTableName();
-        $customerBookingsEventsPeriods = CustomerBookingsToEventsPeriodsTable::getTableName();
-
-        if (!empty($criteria['customerId']) || !empty($criteria['customerBookingsIds'])) {
-            $customerJoin = "
-            LEFT JOIN {$customerBookingsEventsPeriods} cbe ON cbe.eventPeriodId = ep.id
-            LEFT JOIN {$customerBookingsTable} cb ON cb.id = cbe.customerBookingId";
-
-            if (!empty($criteria['customerId'])) {
-                $params[':customerId'] = $criteria['customerId'];
-
-                $where[] = 'cb.customerId = :customerId';
-            }
-
-            if (!empty($criteria['customerBookingsIds'])) {
-                $queryBookingsIds = [];
-
-                foreach ($criteria['customerBookingsIds'] as $index => $value) {
-                    $param = ':customerBookingId' . $index;
-
-                    $queryBookingsIds[] = $param;
-
-                    $params[$param] = $value;
-                }
-
-                $where[] = 'cb.id IN (' . implode(', ', $queryBookingsIds) . ')';
-            }
-
-            if (!empty($criteria['customerBookingStatus'])) {
-                $params[':customerBookingStatus'] = $criteria['customerBookingStatus'];
-
-                $where[] = 'cb.status = :customerBookingStatus';
-            }
-
-            if (!empty($criteria['customerBookingCouponId'])) {
-                $params[':customerBookingCouponId'] = $criteria['customerBookingCouponId'];
-
-                $where[] = 'cb.couponId = :customerBookingCouponId';
-            }
-        }
-
-        $where = $where ? 'WHERE ' . implode(' AND ', $where) : '';
-
-        try {
-            $statement = $this->connection->prepare(
-                "SELECT e.id
-                FROM {$this->table} e
-                INNER JOIN {$eventsPeriodsTable} ep ON ep.eventId = e.id
-                {$tagJoin}
-                {$providerJoin}
-                {$customerJoin}
-                {$where}
-                GROUP BY e.id
-                ORDER BY ep.periodStart"
-            );
-
-            $statement->execute($params);
-
-            $rows = $statement->fetchAll();
-        } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__, $e->getCode(), $e);
-        }
-
-        return sizeOf($rows);
     }
 
     /**

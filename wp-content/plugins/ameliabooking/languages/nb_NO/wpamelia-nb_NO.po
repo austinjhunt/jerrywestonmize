@@ -4693,6 +4693,9 @@ msgstr ""
 msgid "Header"
 msgstr "Overskrift"
 
+msgid "Heading"
+msgstr ""
+
 msgid "Heading Text Color"
 msgstr "Farget på tekstoverskriften"
 

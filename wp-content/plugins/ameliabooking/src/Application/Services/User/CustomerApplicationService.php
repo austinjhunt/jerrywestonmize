@@ -32,7 +32,6 @@ use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 use AmeliaBooking\Infrastructure\Services\Mailchimp\AbstractMailchimpService;
 use Exception;
-use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
 
 /**
@@ -42,13 +41,9 @@ use Slim\Exception\ContainerValueNotFoundException;
  */
 class CustomerApplicationService extends UserApplicationService
 {
-    private $container;
+    private Container $container;
 
     /**
-     * CustomerApplicationService constructor.
-     *
-     * @param Container $container
-     *
      * @throws \InvalidArgumentException
      */
     public function __construct(Container $container)
@@ -90,7 +85,7 @@ class CustomerApplicationService extends UserApplicationService
                 /** @var UserApplicationService $userAS */
                 $userAS = $this->container->get('application.user.service');
 
-                $userAS->setWpUserIdForNewUser($userId, $user);
+                $userAS->setWpUserIdForNewUser($userId, $user, Entities::CUSTOMER);
             }
 
             $result->setResult(CommandResult::RESULT_SUCCESS);
@@ -237,7 +232,6 @@ class CustomerApplicationService extends UserApplicationService
      * @param bool     $isNewCustomer
      *
      * @return void
-     * @throws ContainerException
      */
     public function setWPUserForCustomer($customer, $isNewCustomer)
     {
@@ -252,10 +246,8 @@ class CustomerApplicationService extends UserApplicationService
 
             try {
                 if ($customer->getExternalId()) {
-                    $userAS->setWpUserIdForExistingUser($customer->getId()->getValue(), $customer);
-                } else {
-                    $userAS->setWpUserIdForNewUser($customer->getId()->getValue(), $customer);
-
+                    $userAS->setWpUserIdForExistingUser($customer->getId()->getValue(), $customer, Entities::CUSTOMER);
+                } elseif ($userAS->setWpUserIdForNewUser($customer->getId()->getValue(), $customer, Entities::CUSTOMER)) {
                     do_action('AmeliaCustomerWPCreated', $customer->toArray(), $this->container);
                     do_action('amelia_customer_wp_created', $customer->toArray(), $this->container);
                 }
@@ -312,7 +304,9 @@ class CustomerApplicationService extends UserApplicationService
         /** @var AbstractMailchimpService $mailchimpService */
         $mailchimpService = $this->container->get('infrastructure.mailchimp.service');
 
-        /** @var Collection $appointments */
+        /** @var SettingsService $settingsService */
+        $settingsService = $this->container->get('domain.settings.service');
+
         $appointments = $appointmentRepository->getFiltered(
             [
                 'customerId' => $customer->getId()->getValue()
@@ -415,7 +409,10 @@ class CustomerApplicationService extends UserApplicationService
             }
         }
 
-        if ($customer->getEmail() && $customer->getEmail()->getValue()) {
+        if (
+            $settingsService->isFeatureEnabled('mailchimp') &&
+            $customer->getEmail() && $customer->getEmail()->getValue()
+        ) {
             $mailchimpService->deleteSubscriber($customer->getEmail()->getValue());
         }
 

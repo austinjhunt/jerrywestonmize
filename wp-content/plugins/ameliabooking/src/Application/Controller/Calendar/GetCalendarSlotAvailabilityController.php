@@ -11,6 +11,7 @@ class GetCalendarSlotAvailabilityController extends Controller
 {
     public $allowedFields = [
         'bookingStart',
+        'timeZone',
         'appointmentId'
     ];
 

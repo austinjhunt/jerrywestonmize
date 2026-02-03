@@ -4835,6 +4835,9 @@ msgstr ""
 msgid "Header"
 msgstr "Hlavička"
 
+msgid "Heading"
+msgstr ""
+
 msgid "Heading Text Color"
 msgstr "Farba textu"
 

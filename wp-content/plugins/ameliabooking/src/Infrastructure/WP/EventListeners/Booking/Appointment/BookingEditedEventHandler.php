@@ -35,6 +35,8 @@ class BookingEditedEventHandler
     /** @var string */
     public const BOOKING_STATUS_UPDATED = 'bookingStatusUpdated';
 
+    public const BOOKING_CANCELED = 'bookingCanceled';
+
     /**
      * @param CommandResult $commandResult
      * @param Container     $container
@@ -131,7 +133,11 @@ class BookingEditedEventHandler
                 $whatsAppNotificationService->sendProviderBookingNotification($appointment, $booking);
             }
 
-            $webHookService->process(self::BOOKING_STATUS_UPDATED, $appointment, [$booking]);
+            if ($booking['status'] === BookingStatus::CANCELED) {
+                $webHookService->process(self::BOOKING_CANCELED, $appointment, [$booking]);
+            } else {
+                $webHookService->process(self::BOOKING_STATUS_UPDATED, $appointment, [$booking]);
+            }
         }
     }
 }

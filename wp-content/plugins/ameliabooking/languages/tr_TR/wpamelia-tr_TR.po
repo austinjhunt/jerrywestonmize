@@ -749,8 +749,8 @@ msgid ""
 "Allow the short description below the booking form to support Amelia Booking "
 "Plugin and spread the word about it."
 msgstr ""
-"Rezervasyon formunun altındaki kısa açıklamayı kullanarak Amelia Rezervasyon "
-"Eklentisini destekleyin ve hakkında bilgi paylaşın."
+"Rezervasyon formunun altındaki kısa açıklamaya Amelia Rezervasyon "
+"Eklentisini desteklemek ve bu eklentiyi tanıtmak için izin verin."
 
 msgid "Alpha sender ID"
 msgstr "Alfa gönderen kimliği"
@@ -2635,7 +2635,7 @@ msgid "Custom currency symbol"
 msgstr "Özel para birimi sembolü"
 
 msgid "Custom field"
-msgstr ""
+msgstr "Özel alan"
 
 msgid "Custom field has been added"
 msgstr "Özel alan eklendi"
@@ -3091,7 +3091,7 @@ msgid "Delete coupon"
 msgstr "Kuponu sil"
 
 msgid "Delete custom field"
-msgstr ""
+msgstr "Özel alanı sil"
 
 msgid "Delete customer"
 msgstr "Müşteriyi sil"
@@ -4953,6 +4953,9 @@ msgstr ""
 "biçimlendirmesi tarafından geçersiz kılınabilir."
 
 msgid "Header"
+msgstr "Başlık"
+
+msgid "Heading"
 msgstr "Başlık"
 
 msgid "Heading Text Color"
@@ -9480,9 +9483,9 @@ msgstr ""
 
 msgid "Sorry, there was an error while adding booking to WooCommerce cart."
 msgstr ""
-"Üzgünüz, WooCommerce sepetine rezervasyon eklenirken bir hata "
-"oluştu.Maalesef, WooCommerce alışveriş sepetine rezervasyon eklenirken bir "
-"hata oluştu."
+"Üzgünüz, WooCommerce sepetine rezervasyon eklenirken bir hata oluştu."
+"Maalesef, WooCommerce alışveriş sepetine rezervasyon eklenirken bir hata "
+"oluştu."
 
 msgid "Sort"
 msgstr "Sırala"

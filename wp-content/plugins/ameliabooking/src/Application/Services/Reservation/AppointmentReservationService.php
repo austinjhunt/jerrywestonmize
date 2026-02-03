@@ -63,6 +63,7 @@ use AmeliaBooking\Infrastructure\Repository\CustomField\CustomFieldRepository;
 use AmeliaBooking\Infrastructure\Repository\Location\LocationRepository;
 use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
 use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
+use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 use AmeliaBooking\Infrastructure\WP\Integrations\WooCommerce\WooCommerceService;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
@@ -750,8 +751,8 @@ class AppointmentReservationService extends AbstractReservationService
 
     /**
      * @param CustomerBooking $booking
-     * @param string          $requestedStatus
-     * @param bool            $inspectCancellationTime
+     * @param string $requestedStatus
+     * @param bool $inspectCancellationTime
      *
      * @return array
      *
@@ -763,6 +764,7 @@ class AppointmentReservationService extends AbstractReservationService
      * @throws QueryExecutionException
      * @throws NotFoundException
      * @throws BookingCancellationException
+     * @throws BookingUnavailableException
      */
     public function updateStatus($booking, $requestedStatus, $inspectCancellationTime = true)
     {
@@ -778,9 +780,16 @@ class AppointmentReservationService extends AbstractReservationService
         $bookableAS = $this->container->get('application.bookable.service');
         /** @var SettingsService $settingsDS */
         $settingsDS = $this->container->get('domain.settings.service');
+        /** @var ProviderRepository $providerRepository */
+        $providerRepository = $this->container->get('domain.users.providers.repository');
 
         /** @var Appointment $appointment */
         $appointment = $appointmentRepository->getById($booking->getAppointmentId()->getValue());
+
+        $capacity = $providerRepository->getMaxCapacityByServiceId(
+            $appointment->getProviderId()->getValue(),
+            $appointment->getServiceId()->getValue()
+        );
 
         /** @var Service $service */
         $service = $bookableAS->getAppointmentService(
@@ -811,6 +820,20 @@ class AppointmentReservationService extends AbstractReservationService
         $booking->setStatus(new BookingStatus($requestedStatus));
 
         $bookingsCount = $appointmentDS->getBookingsStatusesCount($appointment);
+
+        $currentBookedPersons = $bookingsCount['approvedBookings'] +
+            ($settingsDS->getSetting('appointments', 'allowBookingIfPending') ? 0 : $bookingsCount['pendingBookings']);
+
+        $serviceSettings = $service->getSettings() && json_decode($service->getSettings()->getValue(), true) ?
+            json_decode($service->getSettings()->getValue(), true) : null;
+
+        if (
+            $currentBookedPersons > $capacity || (
+            isset($serviceSettings['waitingList']['enabled']) && $serviceSettings['waitingList']['enabled'] &&
+            $bookingsCount['waitingBookings'] > $serviceSettings['waitingList']['maxCapacity'])
+        ) {
+            throw new BookingUnavailableException();
+        }
 
         $appointmentStatus = $appointmentDS->getAppointmentStatusWhenChangingBookingStatus(
             $service,
@@ -862,6 +885,11 @@ class AppointmentReservationService extends AbstractReservationService
             ) || (
                 ($requestedStatus === BookingStatus::CANCELED || $requestedStatus === BookingStatus::REJECTED) &&
                 ($oldBookingStatus === BookingStatus::PENDING || $oldBookingStatus === BookingStatus::APPROVED)
+            ) || $this->shouldFlagPendingApprovedTransition(
+                $appStatusChanged,
+                $appointmentStatus,
+                $oldBookingStatus,
+                $requestedStatus
             )
         ) {
             $booking->setChangedStatus(new BooleanValueObject(true));
@@ -883,6 +911,23 @@ class AppointmentReservationService extends AbstractReservationService
             'appointmentStatusChanged' => $appStatusChanged,
             Entities::BOOKING          => $booking->toArray()
         ];
+    }
+
+    /**
+     * Determines if a pending<->approved transition should be flagged in group appointments
+     * when the appointment status doesn't change.
+     *
+     */
+    private function shouldFlagPendingApprovedTransition(
+        bool $appStatusChanged,
+        string $appointmentStatus,
+        string $oldBookingStatus,
+        string $requestedStatus
+    ): bool {
+        return !$appStatusChanged && $appointmentStatus === BookingStatus::APPROVED &&
+            ($oldBookingStatus === BookingStatus::PENDING || $oldBookingStatus === BookingStatus::APPROVED) &&
+            ($requestedStatus === BookingStatus::PENDING || $requestedStatus === BookingStatus::APPROVED) &&
+            $oldBookingStatus !== $requestedStatus;
     }
 
     /**

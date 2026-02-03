@@ -56,6 +56,10 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Starter\Licence
                 Commands\Outlook\GetOutlookAuthURLCommand::class                   => new Commands\Outlook\GetOutlookAuthURLCommandHandler($c),
                 Commands\Outlook\FetchAccessTokenWithAuthCodeOutlookCommand::class =>
                     new Commands\Outlook\FetchAccessTokenWithAuthCodeOutlookCommandHandler($c),
+                Commands\Outlook\GetOutlookMiddlewareAuthURLCommand::class         => new Commands\Outlook\GetOutlookMiddlewareAuthURLCommandHandler($c),
+                Commands\Outlook\FetchOutlookMiddlewareAccessTokenCommand::class   => new Commands\Outlook\FetchOutlookMiddlewareAccessTokenCommandHandler($c),
+                Commands\Outlook\DisconnectFromOutlookMiddlewareAccountCommand::class =>
+                    new Commands\Outlook\DisconnectFromOutlookMiddlewareAccountCommandHandler($c),
                 // Mailchimp
                 Commands\Mailchimp\GetMailchimpAuthURLCommand::class               => new Commands\Mailchimp\GetMailchimpAuthURLCommandHandler($c),
                 Commands\Mailchimp\FetchAccessTokenMailchimpCommand::class         => new Commands\Mailchimp\FetchAccessTokenMailchimpCommandHandler($c),

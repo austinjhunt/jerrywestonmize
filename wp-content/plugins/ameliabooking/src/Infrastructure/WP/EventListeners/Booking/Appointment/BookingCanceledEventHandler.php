@@ -68,8 +68,13 @@ class BookingCanceledEventHandler
         /** @var BookingApplicationService $bookingApplicationService */
         $bookingApplicationService = $container->get('application.booking.booking.service');
 
+        $data = $commandResult->getData();
 
-        $appointment = $commandResult->getData()[$commandResult->getData()['type']];
+        if (empty($data)) {
+            return;
+        }
+
+        $appointment = $data[$data['type']];
 
         if ($commandResult->getData()['type'] === Entities::APPOINTMENT) {
             $reservationObject = AppointmentFactory::create($appointment);

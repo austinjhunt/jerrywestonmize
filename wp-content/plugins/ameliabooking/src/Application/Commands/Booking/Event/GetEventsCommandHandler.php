@@ -16,7 +16,6 @@ use AmeliaBooking\Domain\Entity\Booking\Event\Event;
 use AmeliaBooking\Domain\Entity\Booking\Event\EventPeriod;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
-use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Domain\Factory\Booking\Event\EventPeriodFactory;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
@@ -169,16 +168,9 @@ class GetEventsCommandHandler extends CommandHandler
                 ($isFrontEnd && $settingsDS->getSetting('general', 'showClientTimeZone')) ||
                 $isCabinetPage || ($user && $user->getType() === AbstractUser::USER_ROLE_PROVIDER)
             ) {
-                $timeZone = 'UTC';
-
-                if (!empty($params['timeZone'])) {
-                    $timeZone = $params['timeZone'];
-                } elseif (
-                    $user instanceof Provider &&
-                    empty($user->getTimeZone()) && !empty(get_option('timezone_string'))
-                ) {
-                    $timeZone = get_option('timezone_string');
-                }
+                $timeZone = !empty($params['timeZone'])
+                    ? $params['timeZone']
+                    : ($user && $user->getType() === Entities::PROVIDER ? $providerAS->getTimeZone($user) : 'UTC');
 
                 /** @var EventPeriod $period */
                 foreach ($event->getPeriods()->getItems() as $period) {

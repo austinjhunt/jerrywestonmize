@@ -204,22 +204,9 @@ class ActivationSettingsHook
      */
     private static function initDBSettings()
     {
-        $settings = [
-            'mysqliEnabled'      => false,
-            'pdoEmulatePrepares' => false,
-            'pdoBigSelect'       => true,
-            'ssl' => [
-                'enable'      => false,
-                'key'         => null,
-                'cert'        => null,
-                'ca'          => null,
-                'verify_cert' => null,
-            ],
-            'wpTablesPrefix'     => '',
-            'port'               => 3306
-        ];
-
-        self::initSettings('db', $settings);
+        self::initSettings('db', [
+            'wpTablesPrefix' => '',
+        ]);
     }
 
     /**
@@ -443,6 +430,8 @@ This message does not have an option for responding. If you need additional info
             ],
             'mailEnabled'                      => false,
             'token'                            => null,
+            'accessToken'                      => '',
+            'outlookAccountData'               => null
         ];
 
         self::initSettings('outlookCalendar', $settings);
@@ -1806,7 +1795,6 @@ This message does not have an option for responding. If you need additional info
                 'skipGetItemDataProcessing'      => !isset($savedSettings['wc']),
                 'redirectPage' => 1,
                 'bookMultiple' => false,
-                'bookUnpaid'   => empty($savedSettings['wc']),
                 'rules'        =>
                 isset($savedSettings['wc']['rules']) ? $savedSettings['wc']['rules'] : [
                     'appointment' => [
@@ -2055,7 +2043,6 @@ This message does not have an option for responding. If you need additional info
                 ['wc', 'rules'],
                 ['wc', 'redirectPage'],
                 ['wc', 'bookMultiple'],
-                ['wc', 'bookUnpaid'],
                 ['wc', 'checkoutData'],
                 ['wc', 'checkoutData', 'package'],
                 ['wc', 'checkoutData', 'cart'],
@@ -2106,6 +2093,7 @@ This message does not have an option for responding. If you need additional info
             'deleteTables'                  => false,
             'showAmeliaPromoCustomizePopup' => true,
             'showAmeliaSurvey'              => true,
+            'showWelcomePage'               => true,
             'stash'                         => false,
             'responseErrorAsConflict'       => $savedSettings ? false : true,
             'hideTipsAndSuggestions'        => false,

@@ -88,13 +88,9 @@ class FetchGoogleMiddlewareAccessTokenCommandHandler extends CommandHandler
         $result->setMessage('Successfully fetched access token');
         $result->setData($googleAccountData);
 
-        if ($isBackend !== null) {
-            $result->setUrl(
-                AMELIA_SITE_URL . '/wp-admin/admin.php?page=wpamelia-features-integrations#/integrations/google/general'
-            );
-        } else {
-            $result->setUrl(AMELIA_SITE_URL . '/wp-admin/admin.php?page=wpamelia-settings');
-        }
+        $result->setUrl(
+            AMELIA_SITE_URL . '/wp-admin/admin.php?page=wpamelia-features-integrations#/integrations/google/general'
+        );
 
         return $result;
     }

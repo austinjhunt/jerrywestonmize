@@ -4910,6 +4910,9 @@ msgstr ""
 msgid "Header"
 msgstr "Überschrift"
 
+msgid "Heading"
+msgstr ""
+
 msgid "Heading Text Color"
 msgstr "Textfarbe"
 

@@ -76,6 +76,8 @@ class QueryWithCompare extends Query {
     $orderBy = $query['orderBy'] ?? '';
     $orderDirection = $query['orderDirection'] ?? 'asc';
     $page = $query['page'] ?? 0;
+    $filter = $query['filter'] ?? [];
+    $search = $query['search'] ?? null;
 
     return new self(
       new \DateTimeImmutable($primaryAfter),
@@ -85,7 +87,9 @@ class QueryWithCompare extends Query {
       $limit,
       $orderBy,
       $orderDirection,
-      $page
+      $page,
+      $filter,
+      $search
     );
   }
 

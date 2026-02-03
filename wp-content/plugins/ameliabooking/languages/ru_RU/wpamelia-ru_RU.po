@@ -4704,8 +4704,8 @@ msgid ""
 "Cyrillic, emoji, non-standard symbols) contain 70 characters, etc."
 msgstr ""
 "Сегменты GSM (стандартный латинский) содержат 160 символов, тогда как UCS-2 "
-"(не-GSM - кириллица, эмодзи, нестандартные символы) содержат 70 символов и "
-"т.д."
+"(не-GSM - кириллица, эмодзи, нестандартные символы) содержат 70 символов и т."
+"д."
 
 msgid "Gallery"
 msgstr "Фотогалерея"
@@ -4864,6 +4864,9 @@ msgstr ""
 
 msgid "Header"
 msgstr "Заголовок"
+
+msgid "Heading"
+msgstr ""
 
 msgid "Heading Text Color"
 msgstr "Цвет текста"

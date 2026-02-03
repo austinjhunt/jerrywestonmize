@@ -245,6 +245,7 @@ class PackageCustomerFactory
             if ($appointmentId && empty($packageCustomers[$packageCustomerId]['appointments'][$appointmentId])) {
                 $packageCustomers[$packageCustomerId]['appointments'][$appointmentId] = [
                     'id'   => $appointmentId,
+                    'customerBookingId' => !empty($row['booking_id']) ? $row['booking_id'] : null,
                     'providerId' => $row['appointment_providerId'],
                     'serviceId' => $row['appointment_serviceId'],
                     'provider' => !empty($row['provider_id']) ? [

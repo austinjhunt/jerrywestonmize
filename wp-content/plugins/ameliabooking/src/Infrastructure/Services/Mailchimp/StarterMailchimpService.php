@@ -27,7 +27,7 @@ class StarterMailchimpService extends AbstractMailchimpService
      *
      * @return string
      */
-    public function createAuthUrl()
+    public function createAuthUrl(): string
     {
         return '';
     }
@@ -37,7 +37,7 @@ class StarterMailchimpService extends AbstractMailchimpService
      *
      * @return array
      */
-    public function getLists()
+    public function getLists(): array
     {
         return [];
     }
@@ -49,7 +49,7 @@ class StarterMailchimpService extends AbstractMailchimpService
      *
      * @return string|null
      */
-    public function getMetadataServerName($accessToken)
+    public function getMetadataServerName(string $accessToken)
     {
         return '';
     }
@@ -59,11 +59,11 @@ class StarterMailchimpService extends AbstractMailchimpService
      *
      *
      * @param string $email
-     * @param $customer
+     * @param array $customer
      * @param bool $add
      * @return void
      */
-    public function addOrUpdateSubscriber($email, $customer, $add = true)
+    public function addOrUpdateSubscriber($email, array $customer, bool $add = true): void
     {
     }
 

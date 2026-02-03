@@ -112,17 +112,17 @@ class Menu
             ],
             [
                 'parentSlug' => 'amelia',
-                'pageTitle'  => BackendStrings::get('red_features_integrations'),
-                'menuTitle'  => BackendStrings::get('red_features_integrations'),
-                'capability' => 'amelia_read_settings',
-                'menuSlug'   => 'wpamelia-features-integrations',
-            ],
-            [
-                'parentSlug' => 'amelia',
                 'pageTitle'  => BackendStrings::get('custom_fields_title'),
                 'menuTitle'  => BackendStrings::get('custom_fields_title'),
                 'capability' => 'amelia_read_custom_fields',
                 'menuSlug'   => 'wpamelia-customfields',
+            ],
+            [
+                'parentSlug' => 'amelia',
+                'pageTitle'  => BackendStrings::get('red_features_integrations'),
+                'menuTitle'  => BackendStrings::get('red_features_integrations'),
+                'capability' => 'amelia_read_settings',
+                'menuSlug'   => 'wpamelia-features-integrations',
             ],
             [
                 'parentSlug' => 'amelia',

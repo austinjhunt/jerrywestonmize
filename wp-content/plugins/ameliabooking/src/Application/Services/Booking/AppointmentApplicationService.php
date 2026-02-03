@@ -318,7 +318,10 @@ class AppointmentApplicationService
 
                 /** @var CustomerBooking $booking */
                 foreach ($appointment->getBookings()->getItems() as $booking) {
-                    if ($booking->getCustomerId()->getValue() === $newBooking->getCustomerId()->getValue()) {
+                    if (
+                        $booking->getStatus()->getValue() !== BookingStatus::CANCELED &&
+                        $booking->getCustomerId()->getValue() === $newBooking->getCustomerId()->getValue()
+                    ) {
                         throw new CustomerBookedException(FrontendStrings::getCommonStrings()['customer_already_booked_app']);
                     }
                 }

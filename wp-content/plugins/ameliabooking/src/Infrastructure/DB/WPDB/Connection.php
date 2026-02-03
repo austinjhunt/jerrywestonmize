@@ -17,13 +17,14 @@ class Connection implements ConnectionInterface
     private $wpdb;
 
     /**
-     * Connection constructor.
-     *
      * @param wpdb $wpdb
      */
     public function __construct($wpdb)
     {
         $this->wpdb = $wpdb;
+
+        // Enable SQL_BIG_SELECTS to handle complex JOINs on restrictive hosting
+        $this->wpdb->query('SET SESSION SQL_BIG_SELECTS=1');
     }
 
     /**

@@ -69,7 +69,6 @@ use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingAd
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
 use DateTime;
 use Exception;
-use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
 
 /**
@@ -186,7 +185,6 @@ abstract class AbstractReservationService implements ReservationServiceInterface
      * @throws ContainerValueNotFoundException
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
-     * @throws ContainerException
      * @throws Exception
      */
     public function processRequest($data, $reservation, $save)
@@ -206,8 +204,8 @@ abstract class AbstractReservationService implements ReservationServiceInterface
             $apiKeysGenerated = $settingsService->getSetting('apiKeys', 'apiKeys');
             /** @var BasicApiService $apiService */
             $apiService = $this->container->get('domain.api.service');
-            $isValidAPIRequest = getallheaders() && !empty(getallheaders()['Amelia']) &&
-                $apiService->checkApiKeys(getallheaders()['Amelia'], $apiKeysGenerated);
+            $isValidAPIRequest = !empty($_SERVER['HTTP_AMELIA']) &&
+                $apiService->checkApiKeys($_SERVER['HTTP_AMELIA'], $apiKeysGenerated);
 
             $googleRecaptchaSettings = $settingsService->getSetting(
                 'general',
@@ -305,7 +303,6 @@ abstract class AbstractReservationService implements ReservationServiceInterface
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      * @throws Exception
-     * @throws ContainerException
      */
     public function processBooking($result, $appointmentData, $reservation, $save)
     {
@@ -542,7 +539,6 @@ abstract class AbstractReservationService implements ReservationServiceInterface
      * @param bool          $isCart
      *
      * @throws ContainerValueNotFoundException
-     * @throws ContainerException
      * @throws ForbiddenFileUploadException
      * @throws InvalidArgumentException
      */
@@ -964,7 +960,6 @@ abstract class AbstractReservationService implements ReservationServiceInterface
      * @return CommandResult
      *
      * @throws InvalidArgumentException
-     * @throws ContainerException
      * @throws QueryExecutionException
      */
     public function getSuccessBookingResponse(
@@ -1075,7 +1070,6 @@ abstract class AbstractReservationService implements ReservationServiceInterface
      * @param CommandResult $result
      *
      * @return void
-     * @throws ContainerException
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      * @throws NotFoundException
@@ -1281,7 +1275,7 @@ abstract class AbstractReservationService implements ReservationServiceInterface
      */
     protected function getCommonPaymentSummary($booking, $bookable, $data, $invoices)
     {
-        $paymentAmountData = $this->getPaymentAmount($booking, $bookable, $invoices);
+        $paymentAmountData = $this->getPaymentAmount($booking, $bookable, true);
 
         $summary[$data['bookingId']] = [
             'bookable'   => $paymentAmountData['bookable'],

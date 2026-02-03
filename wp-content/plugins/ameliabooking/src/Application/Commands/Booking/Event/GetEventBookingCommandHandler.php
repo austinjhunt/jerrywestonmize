@@ -234,13 +234,14 @@ class GetEventBookingCommandHandler extends CommandHandler
             }
         }
 
-        $bookingPaymentAmount = $reservationService->getPaymentAmount(CustomerBookingFactory::create($booking), $event);
+        $bookingPaymentAmount = $reservationService->getPaymentAmount(CustomerBookingFactory::create($booking), $event, true);
 
         $wcTax = 0;
         $wcDiscount = 0;
 
         $bookingPaidPrice = 0;
         $paymentMethods   = [];
+        $wcOrderUrls      = [];
         foreach ($booking['payments'] as $payment) {
             $paymentMethods[] = $payment['gateway'];
 
@@ -253,6 +254,10 @@ class GetEventBookingCommandHandler extends CommandHandler
             $wcTax += !empty($payment['wcItemTaxValue']) ? $payment['wcItemTaxValue'] : 0;
 
             $wcDiscount += !empty($payment['wcItemCouponValue']) ? $payment['wcItemCouponValue'] : 0;
+
+            if (!empty($payment['wcOrderId'])) {
+                $wcOrderUrls[$payment['wcOrderId']] = $payment['wcOrderUrl'];
+            }
         }
 
         $total = $bookingPaymentAmount['subtotal']
@@ -278,6 +283,7 @@ class GetEventBookingCommandHandler extends CommandHandler
             'event' => $eventArray,
             'payment' => [
                 'paymentMethods' => $paymentMethods,
+                'wcOrderUrls' => $wcOrderUrls,
                 'status' => $paymentAS->getFullStatus($booking, BookableType::EVENT),
                 'total' => $total,
                 'tax' => $bookingPaymentAmount['total_tax'],

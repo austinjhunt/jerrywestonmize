@@ -79,6 +79,7 @@ class ButtonService
         HelperService::exportJSVar('wpAmeliaPluginURL', AMELIA_URL);
         HelperService::exportJSVar('wpAmeliaSiteURL', AMELIA_SITE_URL);
         HelperService::exportJSVar('wpAmeliaPluginStoreURL', AMELIA_STORE_API_URL);
+        HelperService::exportJSVar('wpAmeliaPluginAjaxURL', AMELIA_ACTION_URL);
 
         wp_enqueue_script('wp-deactivation-amelia', AMELIA_URL . 'public/js/plugins/delete-plugin.js', []);
 

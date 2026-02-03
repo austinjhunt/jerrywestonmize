@@ -36,13 +36,10 @@ class DeactivatePluginCommandHandler extends CommandHandler
             $settingsService->getSetting('activation', 'purchaseCodeStore')
         );
 
-        // Get the base domain from query string
-        $domain = $command->getField('params')['domain'];
-        $domain = AutoUpdateHook::getDomain($domain);
-
-        // Get the subdomain from query string
-        $subdomain = $command->getField('params')['subdomain'];
-        $subdomain = AutoUpdateHook::getSubDomain($subdomain);
+        // Get domain and subdomain from site URL
+        $siteUrl = parse_url(AMELIA_SITE_URL, PHP_URL_HOST);
+        $domain = AutoUpdateHook::getDomain($siteUrl);
+        $subdomain = AutoUpdateHook::getSubDomain($siteUrl);
 
         // Call the Melograno Store API to check if purchase code is valid
         $ch = curl_init(

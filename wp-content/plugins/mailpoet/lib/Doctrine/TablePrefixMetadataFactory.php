@@ -32,8 +32,9 @@ class TablePrefixMetadataFactory extends ClassMetadataFactory {
     if (Env::$dbPrefix === null) {
       throw new \RuntimeException('DB table prefix not initialized');
     }
+    global $wpdb;
     $this->prefix = Env::$dbPrefix;
-    $this->wpDbPrefix = Env::$wpDbPrefix;
+    $this->wpDbPrefix = $wpdb->prefix ?? ''; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
     $this->setProxyClassNameResolver(new ProxyClassNameResolver());
   }
 

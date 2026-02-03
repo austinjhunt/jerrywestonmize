@@ -48,7 +48,22 @@ class Submenu
             $this->handleMenuItem($menu);
         }
 
+        $this->addSubmenuPage(
+            'amelia',
+            'Welcome',
+            'Welcome',
+            'amelia_read_menu',
+            'wpamelia-welcome',
+            function () {
+                $this->submenuHandler->render('wpamelia-welcome');
+            }
+        );
+
         remove_submenu_page('amelia', 'amelia');
+
+        add_action('admin_head', function () {
+            remove_submenu_page('amelia', 'wpamelia-welcome');
+        });
     }
 
     /**

@@ -8,12 +8,14 @@ use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Factory\Booking\Appointment\CustomerBookingFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
+use AmeliaBooking\Infrastructure\DB\WPDB\Statement;
 use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking\CustomerBookingsToEventsPeriodsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking\CustomerBookingToEventsTicketsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking\EventsPeriodsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking\EventsProvidersTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking\EventsTable;
+use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Bookable\PackagesCustomersServicesTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Coupon\CouponsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Payment\PaymentsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\User\UsersTable;
@@ -612,9 +614,20 @@ class CustomerBookingRepository extends AbstractRepository
         }
 
         if (!empty($criteria['search'])) {
-            $params[':search1'] = $params[':search2'] = "%{$criteria['search']}%";
+            $terms = preg_split('/\s+/', trim($criteria['search']));
+            $termIndex = 0;
 
-            $where[] = '(e.name LIKE :search1 OR SUBSTR(cb.token, 1, 5) LIKE :search2)';
+            foreach ($terms as $term) {
+                $param = ":search{$termIndex}";
+                $params[$param] = "%{$term}%";
+
+                $where[] = "(
+                        e.name LIKE {$param}
+                        OR SUBSTR(cb.token, 1, 5) LIKE {$param}
+                    )";
+
+                $termIndex++;
+            }
         }
 
         if (!empty($criteria['providers'])) {
@@ -732,7 +745,7 @@ class CustomerBookingRepository extends AbstractRepository
 
             $statement->execute($params);
 
-            $rows = $statement->fetchAll(\PDO::FETCH_COLUMN);
+            $rows = $statement->fetchAll(Statement::FETCH_COLUMN);
         } catch (\Exception $e) {
             throw new QueryExecutionException('Unable to find event by id in ' . __CLASS__, $e->getCode(), $e);
         }
@@ -928,5 +941,34 @@ class CustomerBookingRepository extends AbstractRepository
         }
 
         return CustomerBookingFactory::reformat($rows);
+    }
+
+    /**
+     * Get appointment bookings by package customer ID
+     *
+     * @throws QueryExecutionException|InvalidArgumentException
+     */
+    public function getByPackageCustomerId(int $packageCustomerId): array
+    {
+        $packagesCustomersServicesTable = PackagesCustomersServicesTable::getTableName();
+
+        try {
+            $statement = $this->connection->prepare(
+                "SELECT 
+                    cb.appointmentId as appointmentId,
+                    cb.id as id,
+                    cb.status as status
+                FROM {$this->table} cb
+                INNER JOIN {$packagesCustomersServicesTable} pcs ON pcs.id = cb.packageCustomerServiceId
+                WHERE pcs.packageCustomerId = :packageCustomerId
+                AND cb.appointmentId IS NOT NULL"
+            );
+
+            $statement->execute([':packageCustomerId' => $packageCustomerId]);
+
+            return $statement->fetchAll();
+        } catch (\Exception $e) {
+            throw new QueryExecutionException('Unable to get bookings by package customer id in ' . __CLASS__, $e->getCode(), $e);
+        }
     }
 }

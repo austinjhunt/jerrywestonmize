@@ -3,9 +3,8 @@
 namespace AmeliaBooking\Infrastructure\Services\Mailchimp;
 
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
-use AmeliaBooking\Domain\Services\Settings\SettingsService;
+use AmeliaBooking\Domain\Services\Logger\LoggerInterface;
 use AmeliaBooking\Infrastructure\Common\Container;
-use AmeliaVendor\MailchimpMarketing\ApiClient;
 
 /**
  * Class MailchimpService
@@ -14,22 +13,18 @@ use AmeliaVendor\MailchimpMarketing\ApiClient;
  */
 class MailchimpService extends AbstractMailchimpService
 {
-    /** @var SettingsService */
-    private $settings;
+    private array $settings;
+    private LoggerInterface $logger;
 
-    /**
-     * MailchimpService constructor.
-     *
-     * @param Container $container
-     *
-     */
     public function __construct(Container $container)
     {
         $this->container = $container;
+        $this->logger = $container->getLoggerService();
 
         $this->settings = $this->container->get('domain.settings.service')->getCategorySettings('mailchimp');
     }
-    public function createAuthUrl()
+
+    public function createAuthUrl(): string
     {
         return 'https://login.mailchimp.com/oauth2/authorize?' .
             http_build_query([
@@ -40,78 +35,114 @@ class MailchimpService extends AbstractMailchimpService
             ]);
     }
 
-    private function getClient()
+    private function makeRequest(string $endpoint, string $method = 'GET', ?array $body = null): array
     {
         $mailchimpAccessToken = $this->settings['accessToken'];
         $mailchimpServer = $this->settings['server'];
 
-        if (!$mailchimpAccessToken) {
-            return null;
+        if (!$mailchimpAccessToken || !$mailchimpServer) {
+            // Missing configuration; keep prior behavior to avoid noisy exceptions
+            return [];
         }
 
-        $client = new ApiClient();
-        $client->setConfig([
-            'accessToken' => $mailchimpAccessToken,
-            'server'      => $mailchimpServer,
-        ]);
+        $url = 'https://' . $mailchimpServer . '.api.mailchimp.com/3.0' . $endpoint;
 
-        return $client;
+        $args = [
+            'method'  => $method,
+            'headers' => [
+                'Authorization' => 'Bearer ' . $mailchimpAccessToken,
+                'Content-Type'  => 'application/json',
+            ],
+            'timeout' => 30,
+        ];
+
+        if ($body !== null) {
+            $args['body'] = wp_json_encode($body);
+        }
+
+        $response = wp_remote_request($url, $args);
+
+        if (is_wp_error($response)) {
+            $message = $response instanceof \WP_Error ? $response->get_error_message() : 'WP HTTP error';
+            throw new MailchimpRequestException(
+                $message,
+                $endpoint,
+                $method,
+                0,
+                null
+            );
+        }
+
+        $responseBody = wp_remote_retrieve_body($response);
+        $responseCode = (int) wp_remote_retrieve_response_code($response);
+        if ($responseCode < 200 || $responseCode >= 300) {
+            if ($responseCode === 404) {
+                throw new MailchimpNotFoundException(
+                    'Mailchimp resource not found',
+                    $endpoint,
+                    $method,
+                    $responseCode,
+                    $responseBody
+                );
+            }
+
+            throw new MailchimpRequestException(
+                'Mailchimp request failed',
+                $endpoint,
+                $method,
+                $responseCode,
+                $responseBody
+            );
+        }
+
+        return json_decode($responseBody, true);
     }
 
-    public function getLists()
+    public function getLists(): array
     {
         try {
-            $client = $this->getClient();
+            $response = $this->makeRequest('/lists', 'GET');
 
-            if (!$client) {
+            if (!$response || !isset($response['lists'])) {
                 return [];
             }
 
-            $lists = $client->lists->getAllLists()->lists;
-
             return array_map(function ($list) {
                 return [
-                    'id'   => $list->id,
-                    'name' => $list->name,
+                    'id'   => $list['id'],
+                    'name' => $list['name'],
                 ];
-            }, $lists);
+            }, $response['lists']);
         } catch (\Exception $e) {
+            $this->logger->error('Failed to fetch Mailchimp lists', [
+                'error' => $e->getMessage(),
+            ]);
             return [];
         }
     }
 
-    /**
-     * Get the metadata server name from Mailchimp.
-     *
-     * @param string $accessToken
-     *
-     * @return string|null
-     */
-    public function getMetadataServerName($accessToken)
+    public function getMetadataServerName(string $accessToken): ?string
     {
         try {
-            $ch = curl_init('https://login.mailchimp.com/oauth2/metadata');
+            $response = wp_remote_get('https://login.mailchimp.com/oauth2/metadata', [
+                'headers' => [
+                    'Authorization' => 'OAuth ' . $accessToken,
+                ],
+                'timeout' => 30,
+            ]);
 
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-            curl_setopt(
-                $ch,
-                CURLOPT_HTTPHEADER,
-                [
-                    'Authorization: OAuth ' . $accessToken,
-                ]
-            );
-
-            $response = curl_exec($ch);
-
-            curl_close($ch);
-
-            if ($response) {
-                $response = json_decode($response, true);
+            if (is_wp_error($response)) {
+                return null;
             }
 
-            return $response['dc'];
+            $responseBody = wp_remote_retrieve_body($response);
+            $data = json_decode($responseBody, true);
+
+            return $data['dc'] ?? null;
         } catch (\Exception $e) {
+            $this->logger->error('Failed to get Mailchimp metadata server name', [
+                'error' => $e->getMessage(),
+            ]);
             return null;
         }
     }
@@ -120,19 +151,14 @@ class MailchimpService extends AbstractMailchimpService
     /**
      * Add subscriber to the mailing list or update existing subscriber.
      *
-     * @param array $customer
      * @param string $email
-     * @param bool $add
+     * @param array  $customer
+     * @param bool   $add
      *
      * @return void
      */
-    public function addOrUpdateSubscriber($email, $customer, $add = true)
+    public function addOrUpdateSubscriber($email, array $customer, bool $add = true): void
     {
-        $client = $this->getClient();
-        if (!$client) {
-            return;
-        }
-
         $mailchimpList = $this->settings['list'];
 
         if (!$mailchimpList) {
@@ -156,37 +182,51 @@ class MailchimpService extends AbstractMailchimpService
         ];
 
         try {
+            $subscriberHash = md5(strtolower($add ? $customer['email'] : $email));
+            $endpoint = '/lists/' . $mailchimpList . '/members/' . $subscriberHash;
+
             if ($add) {
-                $client->lists->setListMember($mailchimpList, md5(strtolower($customer['email'])), [
+                $this->makeRequest($endpoint, 'PUT', [
                     'email_address' => $customer['email'],
                     'status' => 'subscribed',
                     'merge_fields'  => $mergeFields
                 ]);
-            } else {
-                $client->lists->updateListMember($mailchimpList, md5(strtolower($email)), [
-                    'email_address' => $customer['email'],
-                    'merge_fields' => $mergeFields
-                ]);
+
+                return;
             }
+
+            $this->makeRequest($endpoint, 'PATCH', [
+                'email_address' => $customer['email'],
+                'merge_fields' => $mergeFields
+            ]);
         } catch (\Exception $e) {
+            $this->logger->error('Failed to add or update Mailchimp subscriber', [
+                'email' => $email,
+                'add' => $add,
+                'error' => $e->getMessage(),
+            ]);
         }
     }
 
     public function deleteSubscriber($email)
     {
-        $client = $this->getClient();
-        if (!$client) {
-            return;
-        }
-
         $mailchimpList = $this->settings['list'];
         if (!$mailchimpList) {
             return;
         }
 
         try {
-            $client->lists->deleteListMember($mailchimpList, md5(strtolower($email)));
+            $subscriberHash = md5(strtolower($email));
+            $endpoint = '/lists/' . $mailchimpList . '/members/' . $subscriberHash;
+            $this->makeRequest($endpoint, 'DELETE');
+        } catch (MailchimpNotFoundException $e) {
+            // Intentionally ignore 404 Not Found when deleting non-existent subscriber
+            return;
         } catch (\Exception $e) {
+            $this->logger->error('Failed to delete Mailchimp subscriber', [
+                'email' => $email,
+                'error' => $e->getMessage(),
+            ]);
         }
     }
 }

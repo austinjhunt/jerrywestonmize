@@ -93,9 +93,9 @@ abstract class AbstractBooking
     }
 
     /**
-     * @return Description
+     * @return ?Description
      */
-    public function getInternalNotes()
+    public function getInternalNotes(): ?Description
     {
         return $this->internalNotes;
     }

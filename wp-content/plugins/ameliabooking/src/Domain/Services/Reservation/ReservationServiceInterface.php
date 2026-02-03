@@ -55,6 +55,7 @@ interface ReservationServiceInterface
      * @throws QueryExecutionException
      * @throws NotFoundException
      * @throws BookingCancellationException
+     * @throws BookingUnavailableException
      */
     public function updateStatus($booking, $requestedStatus, $inspectCancellationTime = true);
 

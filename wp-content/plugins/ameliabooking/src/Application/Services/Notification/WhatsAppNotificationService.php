@@ -84,23 +84,19 @@ class WhatsAppNotificationService extends AbstractWhatsAppNotificationService
      */
     private function addTemplates($whatsAppTemplates)
     {
-        /** @var HelperService $helperService */
-        $helperService = $this->container->get('application.helper.service');
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
 
         $defaultLanguage = $settingsService->getSetting('notifications', 'whatsAppLanguage');
 
-        $usedLanguages     = $settingsService->getSetting('general', 'usedLanguages');
-        $defaultWpLanguage = AMELIA_LOCALE;
-        if (!in_array($defaultWpLanguage, $usedLanguages)) {
-            $usedLanguages[] = $defaultWpLanguage;
-        }
+        $defaultBase = $defaultLanguage
+            ? explode('_', $defaultLanguage)[0]
+            : null;
 
         $whatsAppTemplatesLang = [];
         foreach ($whatsAppTemplates['data'] as $item) {
-            $similarLanguages = $helperService->getLocaleLanguage($usedLanguages, $item['language']);
-            if (!$defaultLanguage || $item['language'] === $defaultLanguage || in_array($defaultLanguage, $similarLanguages)) {
+            $itemBase = explode('_', $item['language'])[0];
+            if (!$defaultLanguage || $item['language'] === $defaultLanguage || $itemBase === $defaultBase) {
                 $whatsAppTemplatesLang[] = $item;
             }
         }

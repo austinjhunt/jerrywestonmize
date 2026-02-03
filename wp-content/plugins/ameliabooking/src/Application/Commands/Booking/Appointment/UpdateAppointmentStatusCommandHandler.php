@@ -23,6 +23,7 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
+use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
 use Interop\Container\Exception\ContainerException;
@@ -92,6 +93,8 @@ class UpdateAppointmentStatusCommandHandler extends CommandHandler
         $appointmentAS = $this->container->get('application.booking.appointment.service');
         /** @var BookableApplicationService $bookableAS */
         $bookableAS = $this->container->get('application.bookable.service');
+        /** @var ProviderRepository $providerRepo */
+        $providerRepo = $this->container->get('domain.users.providers.repository');
 
         $appointmentId   = (int)$command->getArg('id');
         $requestedStatus = $command->getField('status');
@@ -211,6 +214,20 @@ class UpdateAppointmentStatusCommandHandler extends CommandHandler
 
         $appointmentArray          = $appointment->toArray();
         $bookingsWithChangedStatus = $bookingAS->getBookingsWithChangedStatus($appointmentArray, $oldAppointmentArray);
+
+        // Ensure provider's zoomUserId is included for Zoom integration
+        if (
+            $oldStatus === BookingStatus::PENDING && $requestedStatus === BookingStatus::APPROVED &&
+            $appointment->getProvider() && !$appointment->getProvider()->getZoomUserId()
+        ) {
+            $provider = $providerRepo->getById($appointment->getProvider()->getId()->getValue());
+            if ($provider && $provider->getZoomUserId()) {
+                if (!isset($appointmentArray['provider'])) {
+                    $appointmentArray['provider'] = [];
+                }
+                $appointmentArray['provider']['zoomUserId'] = $provider->getZoomUserId()->getValue();
+            }
+        }
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully updated appointment status');

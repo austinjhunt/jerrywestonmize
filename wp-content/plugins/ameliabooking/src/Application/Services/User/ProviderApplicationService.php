@@ -321,7 +321,7 @@ class ProviderApplicationService
             $userId = $this->add($user);
 
             if ($fields['externalId'] === 0) {
-                $userAS->setWpUserIdForNewUser($userId, $user, $fields['password']);
+                $userAS->setWpUserIdForNewUser($userId, $user, Entities::PROVIDER, $fields['password']);
             }
 
             if (!empty($fields['password'])) {
@@ -1508,7 +1508,6 @@ class ProviderApplicationService
      * @throws InvalidArgumentException
      * @throws ContainerValueNotFoundException
      * @throws QueryExecutionException
-     * @throws ContainerException
      */
     public function delete($provider)
     {
@@ -1710,5 +1709,27 @@ class ProviderApplicationService
             : null;
 
         return !empty($badge) ? array_values($badge)[0] : null;
+    }
+
+    /**
+     * @param AbstractUser $user
+     *
+     * @return string
+     */
+    public function getTimeZone($user)
+    {
+        if (
+            ($user instanceof Provider) &&
+            empty($user->getTimeZone()) && !empty(get_option('timezone_string'))
+        ) {
+            return get_option('timezone_string');
+        } elseif (
+            ($user instanceof Provider) &&
+            !empty($user->getTimeZone())
+        ) {
+            return $user->getTimeZone()->getValue();
+        }
+
+        return 'UTC';
     }
 }

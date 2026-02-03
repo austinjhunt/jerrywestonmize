@@ -12,6 +12,7 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Package;
 use AmeliaBooking\Domain\Factory\Bookable\Service\PackageFactory;
 use AmeliaBooking\Infrastructure\Connection;
+use AmeliaBooking\Infrastructure\DB\WPDB\Statement;
 use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Bookable\PackagesServicesLocationsTable;
@@ -264,8 +265,20 @@ class PackageRepository extends AbstractRepository
         }
 
         if (!empty($criteria['search'])) {
-            $params[':search1'] = $params[':search2'] = "%{$criteria['search']}%";
-            $where[] = '(p.name LIKE :search1 OR p.id LIKE :search2)';
+            $terms = preg_split('/\s+/', trim($criteria['search']));
+            $termIndex = 0;
+
+            foreach ($terms as $term) {
+                $param = ":search{$termIndex}";
+                $params[$param] = "%{$term}%";
+
+                $where[] = "(
+                        p.name LIKE {$param}
+                        OR p.id LIKE {$param}
+                    )";
+
+                $termIndex++;
+            }
         }
 
         if (!empty($criteria['services'])) {
@@ -394,7 +407,7 @@ class PackageRepository extends AbstractRepository
 
                 $idStmt = $this->connection->prepare($idSql);
                 $idStmt->execute($params);
-                $packageIds = $idStmt->fetchAll(\PDO::FETCH_COLUMN);
+                $packageIds = $idStmt->fetchAll(Statement::FETCH_COLUMN);
 
                 if (empty($packageIds)) {
                     return call_user_func([static::FACTORY, 'createCollection'], []);
@@ -549,8 +562,20 @@ class PackageRepository extends AbstractRepository
         // Only add filters if criteria is not empty
         if (!empty($criteria)) {
             if (!empty($criteria['search'])) {
-                $params[':search1'] = $params[':search2'] = "%{$criteria['search']}%";
-                $where[] = "(p.name LIKE :search1 OR p.id LIKE :search2)";
+                $terms = preg_split('/\s+/', trim($criteria['search']));
+                $termIndex = 0;
+
+                foreach ($terms as $term) {
+                    $param = ":search{$termIndex}";
+                    $params[$param] = "%{$term}%";
+
+                    $where[] = "(
+                        p.name LIKE {$param}
+                        OR p.id LIKE {$param}
+                    )";
+
+                    $termIndex++;
+                }
             }
 
             if (!empty($criteria['services'])) {

@@ -4760,6 +4760,9 @@ msgstr ""
 msgid "Header"
 msgstr "العنوان"
 
+msgid "Heading"
+msgstr ""
+
 msgid "Heading Text Color"
 msgstr "لون الخط"
 

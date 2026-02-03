@@ -6,6 +6,7 @@ use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Domain\Common\Exceptions\BookingCancellationException;
+use AmeliaBooking\Domain\Common\Exceptions\BookingUnavailableException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Entities;
@@ -13,6 +14,7 @@ use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
+use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
 
 /**
@@ -56,6 +58,8 @@ class UpdateBookingStatusCommandHandler extends CommandHandler
 
         do_action('amelia_before_booking_' . $command->getField('status'), $booking->toArray());
 
+        $oldStatus = $booking->getStatus()->getValue();
+
         try {
             $bookingData = $reservationService->updateStatus($booking, $command->getField('status'), false);
         } catch (BookingCancellationException $e) {
@@ -68,6 +72,35 @@ class UpdateBookingStatusCommandHandler extends CommandHandler
             );
 
             return $result;
+        } catch (BookingUnavailableException $e) {
+            $result->setResult(CommandResult::RESULT_ERROR);
+            $result->setMessage('Maximum capacity reached');
+            $result->setData(
+                [
+                    'updateBookingUnavailable' => true,
+                    'oldStatus' => $oldStatus,
+                    'message' =>
+                        BackendStrings::get('maximum_capacity_reached')
+                ]
+            );
+
+            return $result;
+        }
+
+        // Ensure provider's zoomUserId is included for Zoom integration
+        if ($type === Entities::APPOINTMENT && isset($bookingData[Entities::APPOINTMENT])) {
+            $appointment = &$bookingData[Entities::APPOINTMENT];
+
+            if (isset($appointment['providerId']) && empty($appointment['provider']['zoomUserId'])) {
+                /** @var ProviderRepository $providerRepository */
+                $providerRepository = $this->container->get('domain.users.providers.repository');
+
+                $provider = $providerRepository->getById($appointment['providerId']);
+
+                if ($provider && $provider->getZoomUserId()) {
+                    $appointment['provider']['zoomUserId'] = $provider->getZoomUserId()->getValue();
+                }
+            }
         }
 
         $result->setResult(CommandResult::RESULT_SUCCESS);

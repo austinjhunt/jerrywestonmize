@@ -269,6 +269,7 @@ class LiteFrontendStrings
             'heading_service'                    => __('Service', 'wpamelia'),
             'heading_services'                   => __('Services', 'wpamelia'),
             'no_search_data'                     => __('No results', 'wpamelia'),
+            'filter_all'                         => __('All', 'wpamelia'),
         ];
     }
 

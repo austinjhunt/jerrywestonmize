@@ -116,6 +116,7 @@ class Assets_Manager {
  'listings' => admin_url( 'admin.php?page=wc-settings&tab=email' ),
  'send' => admin_url( 'admin.php?page=wc-settings&tab=email' ),
  'back' => admin_url( 'admin.php?page=wc-settings&tab=email' ),
+ 'createCoupon' => admin_url( 'post-new.php?post_type=shop_coupon' ),
  ),
  );
  wp_localize_script(

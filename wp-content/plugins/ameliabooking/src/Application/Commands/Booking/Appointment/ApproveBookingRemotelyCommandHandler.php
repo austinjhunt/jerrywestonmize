@@ -5,7 +5,9 @@ namespace AmeliaBooking\Application\Commands\Booking\Appointment;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
+use AmeliaBooking\Application\Services\Booking\BookingFallbackService;
 use AmeliaBooking\Application\Services\User\CustomerApplicationService;
+use AmeliaBooking\Domain\Common\Exceptions\BookingCancellationException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Entities;
@@ -40,9 +42,6 @@ class ApproveBookingRemotelyCommandHandler extends CommandHandler
     ];
 
     /**
-     * @param ApproveBookingRemotelyCommand $command
-     *
-     * @return CommandResult
      * @throws UnexpectedValueException
      * @throws ContainerException
      * @throws \InvalidArgumentException
@@ -51,8 +50,9 @@ class ApproveBookingRemotelyCommandHandler extends CommandHandler
      * @throws InvalidArgumentException
      * @throws AccessDeniedException
      * @throws NotFoundException
+     * @throws BookingCancellationException
      */
-    public function handle(ApproveBookingRemotelyCommand $command)
+    public function handle(ApproveBookingRemotelyCommand $command): CommandResult
     {
         $this->checkMandatoryFields($command);
 
@@ -78,9 +78,12 @@ class ApproveBookingRemotelyCommandHandler extends CommandHandler
         $notificationSettings = $settingsService->getCategorySettings('notifications');
 
         if ($booking === null) {
-            $result->setUrl($notificationSettings['approveErrorUrl']);
-            $result->setMessage('This booking does not exist!');
-            return $result;
+            if (!empty($notificationSettings['approveErrorUrl'])) {
+                $result->setUrl($notificationSettings['approveErrorUrl']);
+                return $result;
+            }
+
+            return $result->setHtml(BookingFallbackService::getFallbackHtml('failed'));
         }
 
         $token = $bookingRepository->getToken((int)$command->getArg('id'));
@@ -99,9 +102,24 @@ class ApproveBookingRemotelyCommandHandler extends CommandHandler
         }
 
         if ($booking->getStatus()->getValue() === BookingStatus::WAITING) {
-            $waitingListResult = $this->validateWaitingListCapacity($booking, $settingsService, $notificationSettings);
-            if ($waitingListResult !== null) {
-                return $waitingListResult;
+            try {
+                $this->validateWaitingListCapacity($booking);
+            } catch (BookingCancellationException $e) {
+                $appointmentSettings = $settingsService->getCategorySettings('appointments');
+                $waitingListDeniedUrl = !empty($appointmentSettings['waitingListAppointments']['redirectUrlDenied']) ?
+                    $appointmentSettings['waitingListAppointments']['redirectUrlDenied'] : '';
+
+                if (!empty($waitingListDeniedUrl)) {
+                    $result->setUrl($waitingListDeniedUrl);
+                    return $result;
+                }
+
+                if (!empty($notificationSettings['approveErrorUrl'])) {
+                    $result->setUrl($notificationSettings['approveErrorUrl']);
+                    return $result;
+                }
+
+                return $result->setHtml(BookingFallbackService::getFallbackHtml('failed'));
             }
         }
 
@@ -131,34 +149,31 @@ class ApproveBookingRemotelyCommandHandler extends CommandHandler
             $result->setUrl($notificationSettings['approveSuccessUrl']);
 
             do_action('amelia_after_booking_approved_link', $booking ? $booking->toArray() : null);
-        } elseif ($notificationSettings['approveErrorUrl'] && $result->getResult() === CommandResult::RESULT_ERROR) {
-            $result->setUrl(
-                !empty($notificationSettings['approveErrorUrl']) ?
-                    $notificationSettings['approveErrorUrl'] : home_url()
-            );
-        } else {
-            $result->setUrl(home_url());
+            return $result;
         }
 
-        return $result;
+        if ($notificationSettings['approveErrorUrl'] && $result->getResult() === CommandResult::RESULT_ERROR) {
+            $result->setUrl($notificationSettings['approveErrorUrl']);
+
+            return $result;
+        }
+        // No redirect URL defined - show fallback page
+        if ($result->getResult() === CommandResult::RESULT_SUCCESS) {
+            return $result->setHtml(BookingFallbackService::getFallbackHtml('approved'));
+        }
+        return $result->setHtml(BookingFallbackService::getFallbackHtml('approved_with_issues'));
     }
 
     /**
      * Validates waiting list appointment capacity
      *
-     * @param CustomerBooking $booking
-     * @param SettingsService $settingsService
-     * @param array $notificationSettings
-     * @return CommandResult|null Returns CommandResult if validation fails, null if validation passes
      * @throws ContainerValueNotFoundException
      * @throws ContainerException
+     * @throws BookingCancellationException
+     * @throws NotFoundException
      */
-    private function validateWaitingListCapacity(CustomerBooking $booking, SettingsService $settingsService, array $notificationSettings)
+    private function validateWaitingListCapacity(CustomerBooking $booking): void
     {
-        $appointmentSettings = $settingsService->getCategorySettings('appointments');
-        $waitingListDeniedUrl = !empty($appointmentSettings['waitingListAppointments']['redirectUrlDenied']) ?
-            $appointmentSettings['waitingListAppointments']['redirectUrlDenied'] : home_url();
-
         /** @var AppointmentRepository $appointmentRepo */
         $appointmentRepo = $this->container->get('domain.booking.appointment.repository');
 
@@ -166,10 +181,7 @@ class ApproveBookingRemotelyCommandHandler extends CommandHandler
         $appointment = $appointmentRepo->getById($booking->getAppointmentId()->getValue());
 
         if ($appointment === null) {
-            $result = new CommandResult();
-            $result->setUrl($notificationSettings['approveErrorUrl']);
-            $result->setMessage('This appointment does not exist!');
-            return $result;
+            throw new NotFoundException('This appointment does not exist!');
         }
 
         /** @var ProviderRepository $providerRepository */
@@ -181,25 +193,19 @@ class ApproveBookingRemotelyCommandHandler extends CommandHandler
         );
 
         $currentBookedPersons = $this->calculateCurrentBookedPersons($appointment);
+        $availableCapacity = $capacity - $currentBookedPersons;
 
-        if (($capacity - $currentBookedPersons) < $booking->getPersons()->getValue()) {
-            $result = new CommandResult();
-            $result->setResult(CommandResult::RESULT_ERROR);
-            $result->setUrl($waitingListDeniedUrl);
-            $result->setMessage('This slot is already taken!');
-            return $result;
+        if ($availableCapacity < $booking->getPersons()->getValue()) {
+            throw new BookingCancellationException(
+                'This slot is already taken! Available capacity: ' . $availableCapacity . ', requested: ' . $booking->getPersons()->getValue()
+            );
         }
-
-        return null;
     }
 
     /**
      * Calculates the total number of persons currently booked for an appointment
-     *
-     * @param Appointment $appointment
-     * @return int
      */
-    private function calculateCurrentBookedPersons(Appointment $appointment)
+    private function calculateCurrentBookedPersons(Appointment $appointment): int
     {
         $persons = 0;
         $approvedStatuses = [BookingStatus::APPROVED, BookingStatus::PENDING];

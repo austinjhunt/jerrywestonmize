@@ -233,9 +233,23 @@ class LocationRepository extends AbstractRepository implements LocationRepositor
 
         $search = '';
         if (!empty($criteria['search'])) {
-            $params[':search1'] = $params[':search2'] = $params[':search3'] = "%{$criteria['search']}%";
+            $terms = preg_split('/\s+/', trim($criteria['search']));
+            $termIndex = 0;
+            $where = [];
 
-            $search = ' AND (l.name LIKE :search1 OR l.address LIKE :search2 OR l.id LIKE :search3)';
+            foreach ($terms as $term) {
+                $param = ":search{$termIndex}";
+                $params[$param] = "%{$term}%";
+
+                $where[] = "(
+                        l.name LIKE {$param}
+                        OR l.address LIKE {$param}
+                        OR l.id LIKE {$param}
+                    )";
+
+                $termIndex++;
+            }
+            $search = ' AND (' . implode(' AND ', $where) . ')';
         }
 
         $services = '';
@@ -318,9 +332,23 @@ class LocationRepository extends AbstractRepository implements LocationRepositor
 
         $search = '';
         if (!empty($criteria['search'])) {
-            $params[':search1'] = $params[':search2'] = $params[':search3'] = "%{$criteria['search']}%";
+            $terms = preg_split('/\s+/', trim($criteria['search']));
+            $termIndex = 0;
+            $where = [];
 
-            $search = ' AND (l.name LIKE :search1 OR l.address LIKE :search2 OR l.id LIKE :search3)';
+            foreach ($terms as $term) {
+                $param = ":search{$termIndex}";
+                $params[$param] = "%{$term}%";
+
+                $where[] = "(
+                        l.name LIKE {$param}
+                        OR l.address LIKE {$param}
+                        OR l.id LIKE {$param}
+                    )";
+
+                $termIndex++;
+            }
+            $search = ' AND (' . implode(' AND ', $where) . ')';
         }
 
         $services = '';

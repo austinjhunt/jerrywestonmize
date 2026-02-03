@@ -231,9 +231,22 @@ class PackageCustomerRepository extends AbstractRepository
 
 
         if (!empty($criteria['search'])) {
-            $params[':search1'] = $params[':search2'] = $params[':search3'] = "%{$criteria['search']}%";
+            $terms = preg_split('/\s+/', trim($criteria['search']));
+            $termIndex = 0;
 
-            $where[] = "(p.name LIKE :search1 OR CONCAT(u.firstName, ' ', u.lastName) LIKE :search2 OR pc.id LIKE :search3)";
+            foreach ($terms as $term) {
+                $param = ":search{$termIndex}";
+                $params[$param] = "%{$term}%";
+
+                $where[] = "(
+                        p.name LIKE {$param}
+                        OR u.firstName LIKE {$param}
+                        OR u.lastName LIKE {$param}
+                        OR pc.id LIKE {$param}
+                    )";
+
+                $termIndex++;
+            }
 
             $joins .= "
                 INNER JOIN {$usersTable} u ON u.id = pc.customerId

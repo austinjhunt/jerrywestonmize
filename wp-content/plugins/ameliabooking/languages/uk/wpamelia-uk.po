@@ -4863,6 +4863,9 @@ msgstr ""
 msgid "Header"
 msgstr "Заголовок"
 
+msgid "Heading"
+msgstr ""
+
 msgid "Heading Text Color"
 msgstr "Колір тексту"
 

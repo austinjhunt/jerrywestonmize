@@ -11,6 +11,7 @@ use AmeliaBooking\Domain\Repository\Booking\Appointment\AppointmentRepositoryInt
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Connection;
+use AmeliaBooking\Infrastructure\DB\WPDB\Statement;
 use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Location\LocationsTable;
 
@@ -1943,7 +1944,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
 
             $statement->execute($params);
 
-            $rows = $statement->fetchAll(\PDO::FETCH_COLUMN);
+            $rows = $statement->fetchAll(Statement::FETCH_COLUMN);
         } catch (\Exception $e) {
             throw new QueryExecutionException('Unable to find by id in ' . __CLASS__, $e->getCode(), $e);
         }

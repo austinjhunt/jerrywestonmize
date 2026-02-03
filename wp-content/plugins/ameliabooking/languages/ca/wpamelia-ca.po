@@ -4883,6 +4883,9 @@ msgstr ""
 msgid "Header"
 msgstr "Capçalera"
 
+msgid "Heading"
+msgstr ""
+
 msgid "Heading Text Color"
 msgstr "Color del text"
 

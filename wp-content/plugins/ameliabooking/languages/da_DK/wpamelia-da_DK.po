@@ -4845,6 +4845,9 @@ msgstr ""
 msgid "Header"
 msgstr "Overskrift"
 
+msgid "Heading"
+msgstr ""
+
 msgid "Heading Text Color"
 msgstr "Tekstfarve"
 
@@ -11595,5 +11598,5 @@ msgid ""
 "start date and time’ will set it based on the event’s start date and time."
 msgstr ""
 "‘Bookingdato og -tid’ vil sætte grænsen baseret på datoen, hvor bookingen "
-"oprettes, uanset begivenhedens dato og tid.<br>‘Begivenhedens startdato og "
-"-tid’ vil sætte den baseret på begivenhedens startdato og -tid."
+"oprettes, uanset begivenhedens dato og tid.<br>‘Begivenhedens startdato og -"
+"tid’ vil sætte den baseret på begivenhedens startdato og -tid."

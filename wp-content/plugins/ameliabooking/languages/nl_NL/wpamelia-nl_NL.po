@@ -4861,6 +4861,9 @@ msgstr ""
 msgid "Header"
 msgstr "Koptekst"
 
+msgid "Heading"
+msgstr ""
+
 msgid "Heading Text Color"
 msgstr "Tekst kleur"
 

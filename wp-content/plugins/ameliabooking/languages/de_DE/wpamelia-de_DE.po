@@ -805,7 +805,7 @@ msgid "Apple"
 msgstr ""
 
 msgid "Apple Calendar"
-msgstr "Google-Kalender"
+msgstr "Apple-Kalender"
 
 msgid "Apple Calendar (Personal)"
 msgstr ""
@@ -4693,6 +4693,9 @@ msgid ""
 msgstr ""
 
 msgid "Header"
+msgstr ""
+
+msgid "Heading"
 msgstr ""
 
 msgid "Heading Text Color"

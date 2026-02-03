@@ -8,6 +8,8 @@ use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Bookable\AbstractPackageApplicationService;
 use AmeliaBooking\Application\Services\Booking\AppointmentApplicationService;
 use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
+use AmeliaBooking\Application\Services\Helper\HelperService;
+use AmeliaBooking\Application\Services\User\ProviderApplicationService;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
@@ -17,7 +19,6 @@ use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
-use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
@@ -25,6 +26,7 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ServiceRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
+use DateTimeZone;
 use Interop\Container\Exception\ContainerException;
 
 /**
@@ -48,6 +50,9 @@ class GetAppointmentsCommandHandler extends CommandHandler
     {
         $result = new CommandResult();
 
+        /** @var HelperService $helperService */
+        $helperService = $this->container->get('application.helper.service');
+
         /** @var AppointmentRepository $appointmentRepository */
         $appointmentRepository = $this->container->get('domain.booking.appointment.repository');
 
@@ -68,6 +73,9 @@ class GetAppointmentsCommandHandler extends CommandHandler
 
         /** @var AppointmentApplicationService $appointmentAS */
         $appointmentAS = $this->container->get('application.booking.appointment.service');
+
+        /** @var ProviderApplicationService $providerAS */
+        $providerAS = $this->container->get('application.user.provider.service');
 
         $params = $command->getField('params');
 
@@ -114,21 +122,7 @@ class GetAppointmentsCommandHandler extends CommandHandler
             $params['customers'] = [$user->getId()->getValue()];
         }
 
-        if (!empty($params['dates'])) {
-            !empty($params['dates'][0]) ? $params['dates'][0] .= ' 00:00:00' : null;
-            !empty($params['dates'][1]) ? $params['dates'][1] .= ' 23:59:59' : null;
-
-            if ($isCabinetPage && !empty($params['timeZone'])) {
-                foreach ([0, 1] as $index) {
-                    if (!empty($params['dates'][$index])) {
-                        $params['dates'][$index] = DateTimeService::getDateTimeObjectInTimeZone(
-                            $params['dates'][$index],
-                            $params['timeZone']
-                        )->setTimezone(DateTimeService::getTimeZone())->format('Y-m-d H:i:s');
-                    }
-                }
-            }
-        }
+        $helperService->convertDates($params);
 
         $entitiesIds = !empty($params['search']) && !$isCabinetPackageRequest ?
             $appointmentAS->getAppointmentEntitiesIdsBySearchString($params['search']) : [];
@@ -344,19 +338,13 @@ class GetAppointmentsCommandHandler extends CommandHandler
 
 
             if ($isCabinetPage || ($user && $user->getType() === Entities::PROVIDER)) {
-                $timeZone = 'UTC';
+                $timeZone = !empty($params['timeZone'])
+                    ? $params['timeZone']
+                    : ($user && $user->getType() === Entities::PROVIDER ? $providerAS->getTimeZone($user) : 'UTC');
 
-                if (!empty($params['timeZone'])) {
-                    $timeZone = $params['timeZone'];
-                } elseif (
-                    ($user instanceof Provider) &&
-                    empty($user->getTimeZone()) && !empty(get_option('timezone_string'))
-                ) {
-                    $timeZone = get_option('timezone_string');
-                }
+                $appointment->getBookingStart()->getValue()->setTimezone(new DateTimeZone($timeZone));
 
-                $appointment->getBookingStart()->getValue()->setTimezone(new \DateTimeZone($timeZone));
-                $appointment->getBookingEnd()->getValue()->setTimezone(new \DateTimeZone($timeZone));
+                $appointment->getBookingEnd()->getValue()->setTimezone(new DateTimeZone($timeZone));
 
                 $date = $appointment->getBookingStart()->getValue()->format('Y-m-d');
 

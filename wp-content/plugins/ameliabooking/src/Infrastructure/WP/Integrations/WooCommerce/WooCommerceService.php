@@ -2326,17 +2326,19 @@ class WooCommerceService
         );
 
         if ($requestedStatus !== false) {
+            $runActions = $payment->getActionsCompleted() && $payment->getActionsCompleted()->getValue();
+
             switch ($type) {
                 case (Entities::APPOINTMENT):
-                    self::bookingAppointmentUpdated($payment, $requestedStatus, true);
+                    self::bookingAppointmentUpdated($payment, $requestedStatus, $runActions);
                     break;
 
                 case (Entities::EVENT):
-                    self::bookingEventUpdated($payment, $requestedStatus, true);
+                    self::bookingEventUpdated($payment, $requestedStatus, $runActions);
                     break;
 
                 case (Entities::PACKAGE):
-                    self::bookingPackageUpdated($payment, $requestedStatus, true);
+                    self::bookingPackageUpdated($payment, $requestedStatus, $runActions);
                     break;
             }
         }
@@ -2695,6 +2697,7 @@ class WooCommerceService
                 if ($ameliaMetaData && is_array($ameliaMetaData)) {
                     $appointmentData = $ameliaMetaData;
                     unset($appointmentData['processed']);
+                    unset($appointmentData['booked']);
                     $appointmentData['payment'] = $data['payment'];
                     break;
                 }
@@ -2890,7 +2893,6 @@ class WooCommerceService
         if (
             self::isAmeliaOrder($order) &&
             self::isAmeliaOrderValidForBooking($order) &&
-            !self::isAmeliaOrderPrePaid() &&
             !self::isAmeliaOrderFromPaymentLink($order)
         ) {
             self::createBookings($order, false, false);
@@ -2916,8 +2918,6 @@ class WooCommerceService
             } elseif (self::isAmeliaOrderValidForBooking($order)) {
                 if (self::isAmeliaOrderFromPaymentLink($order)) {
                     self::managePaymentCreatedFromPaymentLink($order);
-                } elseif (self::isAmeliaOrderPrePaid()) {
-                    self::createBookings($order, true, true);
                 } else {
                     self::completeBookings($order);
                 }
@@ -3024,16 +3024,6 @@ class WooCommerceService
         }
 
         return false;
-    }
-
-    /**
-     * @return bool
-     */
-    private static function isAmeliaOrderPrePaid()
-    {
-        $wcSettings = self::$settingsService->getSetting('payments', 'wc');
-
-        return empty($wcSettings['bookUnpaid']);
     }
 
     /**
@@ -3463,9 +3453,7 @@ class WooCommerceService
 
                 wc_update_order_item_meta($item_id, self::AMELIA, $data);
 
-                if (!self::isAmeliaOrderPrePaid()) {
-                    self::manageOrderUpdateStatus($order);
-                }
+                self::manageOrderUpdateStatus($order);
 
                 if (isset($data['result']) && self::shouldAmeliaActionsRun($data['cacheData'])) {
                     /** @var ReservationServiceInterface $reservationService */
