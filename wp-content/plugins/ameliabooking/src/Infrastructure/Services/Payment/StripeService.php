@@ -122,6 +122,8 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
 
             if ($data['description']) {
                 $stripeData['description'] = $data['description'];
+            } else if (!empty($data['metaData']['Customer Name'])) {
+                $stripeData['description'] = 'Payment for ' . $data['metaData']['Customer Name'] . ' - ' . $data['metaData']['Customer Email'] . ' - ' . $data['metaData']['Service'] . '';
             }
 
             $customerId = $this->createCustomer($data, $additionalStripeData);
@@ -132,6 +134,8 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
 
             if (!empty($data['customerData']) && !empty($data['customerData']['email'])) {
                 $stripeData['receipt_email'] = $data['customerData']['email'];
+            }  else if (!empty($data['metaData']['Customer Email'])) {
+                $stripeData['receipt_email'] = $data['metaData']['Customer Email'];
             }
 
             $stripeData = apply_filters(
