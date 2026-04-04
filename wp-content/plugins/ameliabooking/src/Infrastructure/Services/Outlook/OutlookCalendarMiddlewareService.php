@@ -10,6 +10,7 @@ use Microsoft\Graph\Graph;
 use Microsoft\Graph\Model\Calendar;
 use Microsoft\Graph\Model\FileAttachment;
 use Microsoft\Graph\Model\Message;
+use Microsoft\Graph\Model\User;
 
 class OutlookCalendarMiddlewareService extends AbstractOutlookCalendarMiddlewareService
 {
@@ -61,8 +62,6 @@ class OutlookCalendarMiddlewareService extends AbstractOutlookCalendarMiddleware
             $response = json_decode($response, true);
             $url      = $response['result'];
         }
-
-        curl_close($ch);
 
         return $url;
     }
@@ -200,7 +199,6 @@ class OutlookCalendarMiddlewareService extends AbstractOutlookCalendarMiddleware
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode(['refresh_token' => $refreshToken]));
 
         $response = curl_exec($ch);
-        curl_close($ch);
 
         if ($response) {
             $responseData = json_decode($response, true);
@@ -220,27 +218,81 @@ class OutlookCalendarMiddlewareService extends AbstractOutlookCalendarMiddleware
      */
     public function getUserInfo(string $accessToken): array
     {
-        $token = json_decode($accessToken, true);
+        // $accessToken may be a JSON envelope {"access_token":"...", ...} or a plain bearer string.
+        $decoded = json_decode($accessToken, true);
+        $bearer  = (is_array($decoded) && isset($decoded['access_token']))
+            ? $decoded['access_token']
+            : $accessToken;
 
-        $url = $this->outlookUserInfoUrl;
-
-        $args = [
+        $oidcResponse = wp_remote_get($this->outlookUserInfoUrl, [
             'headers' => [
-                'Authorization' => 'Bearer ' . ($token['access_token'] ?? ''),
+                'Authorization' => 'Bearer ' . $bearer,
                 'Accept'        => 'application/json',
             ],
             'timeout' => 15,
-        ];
+        ]);
 
-        $response = wp_remote_get($url, $args);
+        $oidcData = [];
+        if (!is_wp_error($oidcResponse)) {
+            $oidcData = json_decode(wp_remote_retrieve_body($oidcResponse), true) ?? [];
+        }
 
-        $body = wp_remote_retrieve_body($response);
-        $data = json_decode($body, true);
+        $name    = $oidcData['name'] ?? null;
+        $email   = $oidcData['email'] ?? $oidcData['preferred_username'] ?? null;
+        $picture = $oidcData['picture'] ?? null;
+
+        if (!$name || !$email) {
+            $graph = new Graph();
+            $graph->setAccessToken($bearer);
+
+            // Attempt 1: /me — lightweight, requires User.Read scope.
+            try {
+                $me = $graph->createRequest('GET', '/me')
+                    ->setReturnType(User::class)
+                    ->execute();
+
+                if (!$name && $me->getDisplayName()) {
+                    $name = $me->getDisplayName();
+                }
+                if (!$email && ($me->getMail() ?? $me->getUserPrincipalName())) {
+                    $email = $me->getMail() ?? $me->getUserPrincipalName();
+                }
+            } catch (\Exception $e) {
+                error_log('OutlookCalendar: /me failed (token may lack User.Read), trying /me/calendars - ' . $e->getMessage());
+            }
+
+            // Attempt 2: /me/calendars — works with Calendars.ReadWrite scope alone.
+            if (!$name || !$email) {
+                try {
+                    $calendars = $graph->createCollectionRequest('GET', '/me/calendars')
+                        ->setReturnType(Calendar::class)
+                        ->setPageSize(10)
+                        ->getPage();
+
+                    foreach ($calendars as $calendar) {
+                        $owner = $calendar->getOwner();
+                        if ($owner) {
+                            if (!$name && $owner->getName()) {
+                                $name = $owner->getName();
+                            }
+                            if (!$email && $owner->getAddress()) {
+                                $email = $owner->getAddress();
+                            }
+                            if ($name && $email) {
+                                break;
+                            }
+                        }
+                    }
+                } catch (\Exception $e) {
+                    error_log('OutlookCalendar: Failed to get user info from /me/calendars - ' . $e->getMessage());
+                }
+            }
+        }
 
         return [
-            'email' => $data['email'] ?? $data['preferred_username'] ?? null,
-            'name'  => $data['name'] ?? null,
-            'picture' => $data['picture'] ?? null
+            'email'   => $email,
+            'name'    => $name,
+            'picture' => $picture,
         ];
     }
 

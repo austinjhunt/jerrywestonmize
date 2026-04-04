@@ -295,8 +295,7 @@ final class WPEL_Front extends WPRun_Base_1x0x0
         if ( $title_format ) {
             $title = $link->get_attr( 'title' );
             $text = $link->get_content();
-            $new_title = str_replace( array( '{title}', '{text}', '{text_clean}' ), array( esc_attr( $title ), esc_attr( $text ), esc_attr( $text ) ), $title_format );
-
+            $new_title = str_replace( array( '{title}', '{text}', '{text_clean}' ), array( wp_strip_all_tags( $title ), wp_strip_all_tags( $text ), wp_strip_all_tags( $text ) ), $title_format );
             if ( $new_title ) {
                 $link->set_attr( 'title', $new_title );
             }

@@ -37,6 +37,16 @@ abstract class AbstractRecaptchaService
     abstract public function verify($value);
 
     /**
+     * Verify recaptcha with provided secret and token
+     *
+     * @param string $secret
+     * @param string $token
+     *
+     * @return array
+     */
+    abstract public function verifyWithSecret($secret, $token);
+
+    /**
      * @param string $value
      * @param string $cabinetType
      *

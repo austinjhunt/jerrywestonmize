@@ -128,12 +128,9 @@ class LocationRepository extends AbstractRepository implements LocationRepositor
                  )"
             );
 
-            $res = $statement->execute($params);
-            if (!$res) {
-                throw new QueryExecutionException('Unable to add data in ' . __CLASS__);
-            }
+            $statement->execute($params);
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to add data in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to add data in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return $this->connection->lastInsertId();
@@ -176,14 +173,11 @@ class LocationRepository extends AbstractRepository implements LocationRepositor
                 WHERE id = :id"
             );
 
-            $res = $statement->execute($params);
-            if (!$res) {
-                throw new QueryExecutionException('Unable to save data in ' . __CLASS__);
-            }
+            $statement->execute($params);
 
-            return $res;
+            return true;
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to save data in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to save data in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
     }
 
@@ -201,7 +195,7 @@ class LocationRepository extends AbstractRepository implements LocationRepositor
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to get data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         $items = new Collection();
@@ -226,9 +220,9 @@ class LocationRepository extends AbstractRepository implements LocationRepositor
 
         $order = '';
         if (!empty($criteria['sort'])) {
-            $orderColumn    = $criteria['sort'][0] === '-' ? substr($criteria['sort'], 1) : $criteria['sort'];
-            $orderDirection = $criteria['sort'][0] === '-' ? 'DESC' : 'ASC';
-            $order          = "ORDER BY {$orderColumn} {$orderDirection}";
+            $orderColumn = $criteria['sort']['field'];
+            $orderDirection = $criteria['sort']['order'];
+            $order = "ORDER BY {$orderColumn} {$orderDirection}";
         }
 
         $search = '';
@@ -304,7 +298,7 @@ class LocationRepository extends AbstractRepository implements LocationRepositor
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to get data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         $items = [];
@@ -384,7 +378,7 @@ class LocationRepository extends AbstractRepository implements LocationRepositor
 
             $rows = $statement->fetch()['count'];
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to get data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return $rows;
@@ -419,7 +413,7 @@ class LocationRepository extends AbstractRepository implements LocationRepositor
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to get data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         $items = [];
@@ -479,7 +473,7 @@ class LocationRepository extends AbstractRepository implements LocationRepositor
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to get data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         $result = [];
@@ -538,7 +532,7 @@ class LocationRepository extends AbstractRepository implements LocationRepositor
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to get data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         $result = [];
@@ -595,13 +589,9 @@ class LocationRepository extends AbstractRepository implements LocationRepositor
                 );
             }
 
-            $response = $statement->execute($params);
+            $statement->execute($params);
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to add data in ' . __CLASS__, $e->getCode(), $e);
-        }
-
-        if (!$response) {
-            throw new QueryExecutionException('Unable to add data in ' . __CLASS__);
+            throw new QueryExecutionException('Unable to add data in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return true;
@@ -624,9 +614,10 @@ class LocationRepository extends AbstractRepository implements LocationRepositor
                 "DELETE FROM {$this->locationViewsTable} WHERE locationId = :locationId"
             );
 
-            return $statement->execute($params);
+            $statement->execute($params);
+            return true;
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to delete data from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to delete data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
     }
 
@@ -711,7 +702,7 @@ class LocationRepository extends AbstractRepository implements LocationRepositor
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to get data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return call_user_func([static::FACTORY, 'createCollection'], $rows);

@@ -1981,6 +1981,22 @@ abstract class Forminator_Field {
 	}
 
 	/**
+	 * Get calculable number format
+	 *
+	 * @since 1.52.0
+	 *
+	 * @param mixed $field_settings Field settings.
+	 * @param mixed $value Value.
+	 * @return string
+	 */
+	public static function get_calculable_number_format( $field_settings, $value ) {
+		$precision = self::get_calculable_precision( $field_settings );
+		$value     = number_format( floatval( $value ), $precision, '.', '' );
+
+		return $value;
+	}
+
+	/**
 	 * Return if field has pre-fill value filled
 	 *
 	 * @since 1.10
@@ -2183,7 +2199,8 @@ abstract class Forminator_Field {
 		$precision  = self::get_calculable_precision( $field );
 		$separator  = self::get_property( 'separators', $field, 'blank' );
 		$separators = self::forminator_separators( $separator, $field );
-		$data_value = (float) str_replace( $separators['point'], '.', $number );
+		// All unformatted numbers use either a comma or a dot as the decimal point. We need to convert commas to dots.
+		$data_value = (float) str_replace( ',', '.', $number );
 		$formatted  = number_format( $data_value, $precision, $separators['point'], $separators['separator'] );
 
 		if ( ! empty( $field['prefix'] ) || ! empty( $field['suffix'] ) ) {
@@ -2414,5 +2431,50 @@ abstract class Forminator_Field {
 			$html .= '</div>';
 		}
 		return $html;
+	}
+
+	/**
+	 * * Get formatted amount for Stripe and PayPal fields
+	 *
+	 * @param array        $field Field.
+	 * @param string|array $amount_data Amount Data.
+	 * @param object       $module Module.
+	 * @return string
+	 */
+	public static function get_formatted_amount( $field, $amount_data, $module = null ) {
+		if ( is_array( $amount_data ) ) {
+			$amount = $amount_data['amount'];
+			// find the selected payment plan.
+			if ( ! empty( $field['payments'] ) && ! empty( $amount_data['product_name'] ) ) {
+				foreach ( $field['payments'] as $payment ) {
+					if ( $payment['plan_name'] === $amount_data['product_name'] ) {
+						$field = $payment;
+						break;
+					}
+				}
+			}
+		} else {
+			$amount = $amount_data;
+		}
+
+		$amount_type     = self::get_property( 'amount_type', $field, 'fixed' );
+		$amount_variable = self::get_property( 'variable', $field, '' );
+		if ( empty( $amount_variable ) || 'fixed' === $amount_type ) {
+			return $amount;
+		}
+		if ( null === $module ) {
+			if ( empty( Forminator_Front_Action::$module_object ) ) {
+				return $amount;
+			}
+			$module = Forminator_Front_Action::$module_object;
+		}
+		$field          = $module->get_field( $amount_variable, false );
+		$field_settings = $field->to_formatted_array();
+		if ( ! $field_settings ) {
+			return $amount;
+		}
+		// Remove the currency key since it's displayed separately.
+		unset( $field_settings['currency'] );
+		return self::forminator_number_formatting( $field_settings, $amount );
 	}
 }

@@ -74,15 +74,11 @@ class ResourceRepository extends AbstractRepository
                 )"
             );
 
-            $result = $statement->execute($params);
-
-            if (!$result) {
-                throw new QueryExecutionException('Unable to add data in ' . __CLASS__);
-            }
+            $statement->execute($params);
 
             return $this->connection->lastInsertId();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to add data in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to add data in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
     }
 
@@ -119,13 +115,9 @@ class ResourceRepository extends AbstractRepository
                 id = :id"
             );
 
-            $result = $statement->execute($params);
-
-            if (!$result) {
-                throw new QueryExecutionException('Unable to save data in ' . __CLASS__);
-            }
+            $statement->execute($params);
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to save data in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to save data in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
     }
 
@@ -269,7 +261,7 @@ class ResourceRepository extends AbstractRepository
                 $rows = $statement->fetchAll();
             }
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to find by criteria in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to find by criteria in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return call_user_func([static::FACTORY, 'createCollection'], $rows);
@@ -312,7 +304,7 @@ class ResourceRepository extends AbstractRepository
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return call_user_func([static::FACTORY, 'createCollection'], $rows)->getItem($id);
@@ -336,15 +328,15 @@ class ResourceRepository extends AbstractRepository
             $statement = $this->connection->prepare(
                 "DELETE FROM {$this->table} WHERE id = :id"
             );
-            $success1  = $statement->execute($params);
+            $statement->execute($params);
             $statement = $this->connection->prepare(
                 "DELETE FROM {$resourceToEntities} WHERE resourceId = :id"
             );
-            $success2  = $statement->execute($params);
+            $statement->execute($params);
 
-            return $success1 && $success2;
+            return true;
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to delete data from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to delete data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
     }
 
@@ -409,7 +401,7 @@ class ResourceRepository extends AbstractRepository
 
             $row = $statement->fetch()['count'];
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to get data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return $row;

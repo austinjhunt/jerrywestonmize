@@ -264,7 +264,7 @@ class AppointmentEditedEventHandler
         }
 
         if ($appointmentRescheduled === true) {
-            $webHookService->process(self::TIME_UPDATED, $appointment, []);
+            $webHookService->process(self::TIME_UPDATED, $appointment, $appointment['bookings']);
         }
 
         if ($bookings) {

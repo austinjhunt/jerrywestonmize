@@ -74,12 +74,9 @@ class PackageCustomerServiceRepository extends AbstractRepository
                 (:packageCustomerId, :serviceId, :providerId, :locationId, :bookingsCount)"
             );
 
-            $res = $statement->execute($params);
-            if (!$res) {
-                throw new QueryExecutionException('Unable to add data in ' . __CLASS__);
-            }
+            $statement->execute($params);
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to add data in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to add data in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return $this->connection->lastInsertId();
@@ -266,6 +263,7 @@ class PackageCustomerServiceRepository extends AbstractRepository
                     cu.lastName AS customer_lastName,
                     cu.email AS customer_email,
                     cu.phone AS customer_phone,
+                    cu.countryPhoneIso AS customer_countryPhoneIso,
                     cu.status AS customer_status
                 FROM {$this->table} pcs
                 INNER JOIN {$this->packagesCustomersTable} pc ON pcs.packageCustomerId = pc.id
@@ -279,7 +277,7 @@ class PackageCustomerServiceRepository extends AbstractRepository
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return call_user_func([static::FACTORY, 'createCollection'], $rows);
@@ -296,20 +294,26 @@ class PackageCustomerServiceRepository extends AbstractRepository
     {
         $bookingsTable = CustomerBookingsTable::getTableName();
 
+        $packagesCustomersTable = PackagesCustomersTable::getTableName();
+
         try {
             $statement = $this->connection->prepare(
                 "SELECT 
                     pcs.id,
                     pcs.serviceId
-                FROM {$this->table} pcs
+                FROM {$packagesCustomersTable} pc
+                INNER JOIN {$this->table} pcs ON pc.id = pcs.packageCustomerId
                 LEFT JOIN (
                     SELECT packageCustomerServiceId, COUNT(*) as booking_count
                     FROM {$bookingsTable}
                     WHERE status IN ('approved', 'pending')
                     GROUP BY packageCustomerServiceId
                 ) cb ON cb.packageCustomerServiceId = pcs.id
-                WHERE pcs.packageCustomerId = :packageCustomerId
-                AND (cb.booking_count IS NULL OR cb.booking_count < pcs.bookingsCount)"
+                WHERE pc.id = :packageCustomerId AND (
+                    (pc.bookingsCount = 0 AND (cb.booking_count IS NULL OR cb.booking_count < pcs.bookingsCount)) OR
+                    (pc.bookingsCount != 0 AND (cb.booking_count IS NULL OR cb.booking_count < pc.bookingsCount))
+                )
+                GROUP BY pcs.id, pcs.serviceId"
             );
 
             $params = [
@@ -323,7 +327,7 @@ class PackageCustomerServiceRepository extends AbstractRepository
             // Convert results to associative array with id as key and serviceId as value
             return array_column($results, 'serviceId', 'id');
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get available service ids in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to get available service ids in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
     }
 }

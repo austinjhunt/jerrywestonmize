@@ -4,7 +4,7 @@ Contributors:      google
 Requires at least: 5.2
 Tested up to:      6.9
 Requires PHP:      7.4
-Stable tag:        1.171.0
+Stable tag:        1.175.0
 License:           Apache License 2.0
 License URI:       https://www.apache.org/licenses/LICENSE-2.0
 Tags:              google, search-console, analytics, adsense, pagespeed-insights
@@ -109,28 +109,31 @@ Please create a new topic on our [WordPress.org support forum](https://wordpress
 
 == Changelog ==
 
-= 1.171.0 =
+= 1.175.0 =
 
 **Enhanced**
 
-* Update generated PHP client library for Reader Revenue Manager. See [#12035](https://github.com/google/site-kit-wp/issues/12035).
-* Add Reader Revenue Manager policy violation information to the Site Health screen. See [#12018](https://github.com/google/site-kit-wp/issues/12018).
-* Add support for custom module connection status in the Settings screen. See [#12016](https://github.com/google/site-kit-wp/issues/12016).
-* Add periodic synchronization for Reader Revenue Manager publication content policy status. See [#12004](https://github.com/google/site-kit-wp/issues/12004).
-* Add data store configuration for RRM policy violation status retrieval. See [#12003](https://github.com/google/site-kit-wp/issues/12003).
-* Add necessary module settings for Reader Revenue Manager policy violations. See [#12000](https://github.com/google/site-kit-wp/issues/12000).
-* Migrate to generated Google API client libraries. See [#11983](https://github.com/google/site-kit-wp/issues/11983).
-* Update the user menu component to close the user tooltip when the menu is opened. See [#11956](https://github.com/google/site-kit-wp/issues/11956).
-* Add "Data gathering complete" Welcome modal variant to notify users when Analytics data gathering is finished. See [#11909](https://github.com/google/site-kit-wp/issues/11909).
-* Update tour tooltip styles as part of the new setup flow. See [#11812](https://github.com/google/site-kit-wp/issues/11812).
-* Update the dashboard to display the welcome modal. See [#11809](https://github.com/google/site-kit-wp/issues/11809).
+* Fix bug that caused admins without module access to get emails for modules. See [#12200](https://github.com/google/site-kit-wp/issues/12200).
+* Prevent the shared Key Metrics feature tour and Audience Segmentation introductory overlay from appearing when the Welcome modal is present for secondary admins and view-only users. See [#12066](https://github.com/google/site-kit-wp/issues/12066).
+* Update the Email Reporting settings panel to show the preview state while data is being loaded. See [#12065](https://github.com/google/site-kit-wp/issues/12065).
+* Add GA event tracking for user interaction with the updated help menu. See [#12032](https://github.com/google/site-kit-wp/issues/12032).
+* Add GA event tracking for user interaction with the "connect more services" notification. See [#12029](https://github.com/google/site-kit-wp/issues/12029).
+* Improve user filtering and requests for subscriptions. See [#11889](https://github.com/google/site-kit-wp/issues/11889).
+* Include user analytics in email reporting feature. See [#11863](https://github.com/google/site-kit-wp/issues/11863).
+* Add support for conversion events in email reports. See [#11844](https://github.com/google/site-kit-wp/issues/11844).
+* Add in-email notices support for Email Reporting emails. See [#11843](https://github.com/google/site-kit-wp/issues/11843).
+* Send emails to site admins when entire batches of emails fail to send. See [#11841](https://github.com/google/site-kit-wp/issues/11841).
+* Add dark mode support to email templates. See [#11833](https://github.com/google/site-kit-wp/issues/11833).
+* Improve Reader Revenue Manager publication data synchronization efficiency. See [#10518](https://github.com/google/site-kit-wp/issues/10518).
+* Fix bug with ad blocking banner overlapping other elements on some screen sizes. See [#10415](https://github.com/google/site-kit-wp/issues/10415).
 
 **Fixed**
 
-* Fix issue in Email Reports when reporting on pages with increased page clicks. See [#12033](https://github.com/google/site-kit-wp/issues/12033).
-* Update the Email Reporting logic to avoid sending emails with no data. See [#11964](https://github.com/google/site-kit-wp/issues/11964).
-* Fix FrequencySelector component on small screens and add "Current subscription" badge. See [#11959](https://github.com/google/site-kit-wp/issues/11959).
-* Fix bugs with email reporting panel in various states. See [#11957](https://github.com/google/site-kit-wp/issues/11957).
-* Update Notices and NoticeNotifications components to follow mobile styles in tablet viewport. See [#9215](https://github.com/google/site-kit-wp/issues/9215).
+* Fix styling for the "Start a feature tour" help menu item. See [#12240](https://github.com/google/site-kit-wp/issues/12240).
+* Fix the Search Console-only dashboard tour to include the "Activate Analytics" step based on whether the notification is present. See [#12235](https://github.com/google/site-kit-wp/issues/12235).
+* Adjust/improve email template styles. Props 04cb. See [#12202](https://github.com/google/site-kit-wp/issues/12202).
+* Fix Analytics account creation in the new setup flow. Props fresh3nough. See [#12194](https://github.com/google/site-kit-wp/issues/12194).
+* Fix positioning bug on some panels when using mobile viewports. See [#12053](https://github.com/google/site-kit-wp/issues/12053).
+* Scroll to Email reporting settings from the "Edit settings" link. See [#12025](https://github.com/google/site-kit-wp/issues/12025).
 
 [See changelog for all versions](https://raw.githubusercontent.com/google/site-kit-wp/main/changelog.txt).

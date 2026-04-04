@@ -6,6 +6,7 @@ use AmeliaBooking\Application\Services\Location\AbstractCurrentLocation;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsStorageInterface;
 use AmeliaBooking\Infrastructure\Licence;
+use AmeliaBooking\Plugin;
 
 /**
  * Class SettingsStorage
@@ -30,6 +31,10 @@ class SettingsStorage implements SettingsStorageInterface
 
     public function __construct()
     {
+        if (!defined('AMELIA_LOCALE')) {
+            define('AMELIA_LOCALE', get_user_locale());
+        }
+
         $this->locationService = Licence\ApplicationService::getCurrentLocationService();
 
         $this->settingsCache = self::getSavedSettings();
@@ -38,8 +43,9 @@ class SettingsStorage implements SettingsStorageInterface
 
         foreach (self::$wpSettings as $ameliaSetting => $wpSetting) {
             $this->settingsCache['wordpress'][$ameliaSetting] = get_option($wpSetting);
-            $this->settingsCache['wordpress']['locale']       = get_user_locale();
         }
+
+        $this->settingsCache['wordpress']['locale'] = AMELIA_LOCALE;
 
         DateTimeService::setTimeZone($this->getAllSettings());
     }
@@ -231,19 +237,31 @@ class SettingsStorage implements SettingsStorageInterface
             ],
             'googleCalendar'         => [
                 'enabled'           =>
-                $this->getSetting('googleCalendar', 'clientID') &&
-                    $this->getSetting('googleCalendar', 'clientSecret') &&
-                    Licence\Licence::isFeatureEnabledWithLicense(
-                        'googleCalendar',
-                        $this->getSetting('featuresIntegrations', 'googleCalendar')
-                    ),
+                (
+                    (
+                        $this->getSetting('googleCalendar', 'clientID') &&
+                        $this->getSetting('googleCalendar', 'clientSecret')
+                    ) ||
+                    !empty($this->getSetting('googleCalendar', 'accessToken')) &&
+                    $this->getSetting('googleCalendar', 'accessToken') !== 'null'
+                ) &&
+                Licence\Licence::isFeatureEnabledWithLicense(
+                    'googleCalendar',
+                    $this->getSetting('featuresIntegrations', 'googleCalendar')
+                ),
                 'googleMeetEnabled' => $this->getSetting('googleCalendar', 'enableGoogleMeet'),
                 'accessToken' => $this->getSetting('googleCalendar', 'accessToken'),
             ],
             'outlookCalendar'        => [
                 'enabled'               =>
-                $this->getSetting('outlookCalendar', 'clientID') &&
-                    $this->getSetting('outlookCalendar', 'clientSecret') &&
+                    (
+                        (
+                            $this->getSetting('outlookCalendar', 'clientID') &&
+                            $this->getSetting('outlookCalendar', 'clientSecret')
+                        ) ||
+                        !empty($this->getSetting('outlookCalendar', 'accessToken')) &&
+                        $this->getSetting('outlookCalendar', 'accessToken') !== 'null'
+                    ) &&
                     Licence\Licence::isFeatureEnabledWithLicense(
                         'outlookCalendar',
                         $this->getSetting('featuresIntegrations', 'outlookCalendar')
@@ -325,7 +343,6 @@ class SettingsStorage implements SettingsStorageInterface
                 'senderName'          => $this->getSetting('notifications', 'senderName'),
                 'replyTo'             => $this->getSetting('notifications', 'replyTo'),
                 'senderEmail'         => $this->getSetting('notifications', 'senderEmail'),
-                'notifyCustomers'     => $this->getSetting('notifications', 'notifyCustomers'),
                 'invoiceFormat'       => $this->getSetting('notifications', 'invoiceFormat'),
                 'sendAllCF'           => $this->getSetting('notifications', 'sendAllCF'),
                 'cancelSuccessUrl'    => $this->getSetting('notifications', 'cancelSuccessUrl'),

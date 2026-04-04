@@ -9,6 +9,7 @@ namespace AmeliaBooking\Application\Commands\Tax;
 
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
+use AmeliaBooking\Application\Commands\SortParamsTrait;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Tax\TaxApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
@@ -29,6 +30,8 @@ use Slim\Exception\ContainerValueNotFoundException;
  */
 class GetTaxesCommandHandler extends CommandHandler
 {
+    use SortParamsTrait;
+
     /**
      * @param GetTaxesCommand $command
      *
@@ -61,14 +64,7 @@ class GetTaxesCommandHandler extends CommandHandler
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
 
-        $sort = !empty($params['sort']) ? $params['sort'] : null;
-        if ($sort) {
-            $isDescending   = substr($sort, 0, 1) === '-';
-            $params['sort'] = [
-                'field' => $isDescending ? substr($sort, 1) : $sort,
-                'order' => $isDescending ? 'DESC' : 'ASC',
-            ];
-        }
+        $params = $this->parseSortParams($params, ['name', 'type']);
 
         /** @var Collection $taxes */
         $taxes = $taxRepository->getFiltered(

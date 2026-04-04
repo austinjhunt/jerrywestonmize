@@ -701,8 +701,11 @@
 
 					setTimeout(
 						function() {
-							if ( ! window.paypalHasCondition.includes( self.$el.data( 'form-id' ) ) ) {
+							const $stripe_element = self.$form.find('.forminator-field-stripe-ocs:not(.forminator-hidden), .forminator-field-stripe:not(.forminator-hidden)');
+							if ( ! window.paypalHasCondition.includes( self.$el.data( 'form-id' ) )  ) {
+							if( $stripe_element.length === 0 ){
 								submitButton.addClass('forminator-hidden');
+							}
 								forminatorPayment.removeClass( 'forminator-hidden' );
 							}
 						},

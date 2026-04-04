@@ -5,7 +5,10 @@ namespace Google\Site_Kit_Dependencies\ParagonIE\ConstantTime;
 
 use InvalidArgumentException;
 use RangeException;
+use SensitiveParameter;
 use TypeError;
+use function pack;
+use function unpack;
 /**
  *  Copyright (c) 2016 - 2022 Paragon Initiative Enterprises.
  *  Copyright (c) 2014 Steve "Sc00bz" Thomas (steve at tobtu dot com)
@@ -44,7 +47,7 @@ abstract class Base32 implements \Google\Site_Kit_Dependencies\ParagonIE\Constan
      * @return string
      */
     public static function decode(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $encodedString,
         bool $strictPadding = \false
     ) : string
@@ -59,7 +62,7 @@ abstract class Base32 implements \Google\Site_Kit_Dependencies\ParagonIE\Constan
      * @return string
      */
     public static function decodeUpper(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $src,
         bool $strictPadding = \false
     ) : string
@@ -74,7 +77,7 @@ abstract class Base32 implements \Google\Site_Kit_Dependencies\ParagonIE\Constan
      * @throws TypeError
      */
     public static function encode(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $binString
     ) : string
     {
@@ -88,7 +91,7 @@ abstract class Base32 implements \Google\Site_Kit_Dependencies\ParagonIE\Constan
      * @throws TypeError
      */
     public static function encodeUnpadded(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $src
     ) : string
     {
@@ -102,7 +105,7 @@ abstract class Base32 implements \Google\Site_Kit_Dependencies\ParagonIE\Constan
      * @throws TypeError
      */
     public static function encodeUpper(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $src
     ) : string
     {
@@ -116,7 +119,7 @@ abstract class Base32 implements \Google\Site_Kit_Dependencies\ParagonIE\Constan
      * @throws TypeError
      */
     public static function encodeUpperUnpadded(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $src
     ) : string
     {
@@ -192,7 +195,7 @@ abstract class Base32 implements \Google\Site_Kit_Dependencies\ParagonIE\Constan
      * @return string
      */
     public static function decodeNoPadding(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $encodedString,
         bool $upper = \false
     ) : string
@@ -221,7 +224,7 @@ abstract class Base32 implements \Google\Site_Kit_Dependencies\ParagonIE\Constan
      * @throws TypeError
      */
     protected static function doDecode(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $src,
         bool $upper = \false,
         bool $strictPadding = \false
@@ -378,7 +381,7 @@ abstract class Base32 implements \Google\Site_Kit_Dependencies\ParagonIE\Constan
      * @throws TypeError
      */
     protected static function doEncode(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $src,
         bool $upper = \false,
         $pad = \true

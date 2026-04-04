@@ -107,6 +107,12 @@ class SMSNotificationService extends AbstractNotificationService
         );
 
         foreach ($users as $user) {
+            if (!empty($user['phone_country'])) {
+                $allowedCountries = apply_filters('amelia_whitelists_sms_countries', []);
+                if (!empty($allowedCountries) && !in_array(strtoupper($user['phone_country']), $allowedCountries)) {
+                    continue;
+                }
+            }
             if ($user['phone']) {
                 if (!$isCustomerPackage && !empty($data['providersAppointments'][$user['id']])) {
                     $text = $placeholderService->applyPlaceholders(
@@ -311,7 +317,7 @@ class SMSNotificationService extends AbstractNotificationService
 
                         if (empty($smsData['skipSending'])) {
                             $apiResponse = $smsApiService->send(
-                                $smsData['customer_phone'],
+                                $smsData['to'],
                                 $smsData['text'],
                                 AMELIA_ACTION_URL . '/notifications/sms/history/' . $historyId
                             );

@@ -22,6 +22,8 @@ class CustomerBookingToEventsTicketsTable extends AbstractDatabaseTable
     {
         $table = self::getTableName();
 
+        $charsetCollate = self::getCharsetCollate();
+
         return "CREATE TABLE {$table} (
                     `id` INT(11) NOT NULL AUTO_INCREMENT,
                     `customerBookingId` bigint(20) NOT NULL,
@@ -29,6 +31,6 @@ class CustomerBookingToEventsTicketsTable extends AbstractDatabaseTable
                     `price` double DEFAULT 0,
                     `persons` int(11) NOT NULL,
                     PRIMARY KEY (`id`)
-                ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
+                ) {$charsetCollate};";
     }
 }

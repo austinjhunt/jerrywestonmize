@@ -11,6 +11,7 @@ use AmeliaBooking\Application\Controller\Activation\ActivatePluginController;
 use AmeliaBooking\Application\Controller\Activation\DeactivatePluginController;
 use AmeliaBooking\Application\Controller\Activation\DeactivatePluginEnvatoController;
 use AmeliaBooking\Application\Controller\Activation\ParseDomainController;
+use AmeliaBooking\Application\Controller\Activation\ValidateActivationController;
 use Slim\App;
 
 /**
@@ -25,6 +26,8 @@ class Activation
      */
     public static function routes(App $app)
     {
+        $app->get('/activation/validate', ValidateActivationController::class);
+
         $app->get('/activation/code', ActivatePluginController::class);
 
         $app->get('/activation/code/deactivate', DeactivatePluginController::class);

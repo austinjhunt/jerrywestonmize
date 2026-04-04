@@ -32,7 +32,7 @@ class NotificationsToEntitiesRepository extends AbstractRepository
 
             $entityRows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get entities in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to get entities in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return array_column($entityRows, 'entityId');
@@ -60,9 +60,10 @@ class NotificationsToEntitiesRepository extends AbstractRepository
                 "DELETE FROM {$this->table} WHERE notificationId = :notificationId AND entity = :entity AND entityId = :entityId"
             );
 
-            return $statement->execute($params);
+            $statement->execute($params);
+            return true;
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to delete data from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to delete data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
     }
 
@@ -89,17 +90,17 @@ class NotificationsToEntitiesRepository extends AbstractRepository
                 ':id' => $entityId
             ];
 
-            $success1 = $statement->execute($params);
+            $statement->execute($params);
 
             $statement = $this->connection->prepare(
                 "DELETE FROM {$this->table} WHERE entityId = :id"
             );
 
-            $success2 = $statement->execute($params);
+            $statement->execute($params);
 
-            return $success1 && $success2;
+            return true;
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get entities in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to get entities in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
     }
 
@@ -125,9 +126,10 @@ class NotificationsToEntitiesRepository extends AbstractRepository
                 "INSERT INTO {$this->table} (`notificationId`, `entity`, `entityId`) VALUES (:notificationId, :entity, :entityId)"
             );
 
-            return $statement->execute($params);
+            $statement->execute($params);
+            return true;
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to add data from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to add data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
     }
 }

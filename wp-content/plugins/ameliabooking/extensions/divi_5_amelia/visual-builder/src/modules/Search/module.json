@@ -3,7 +3,7 @@
   "d4Shortcode": "divi_search",
   "title": "Amelia - Search (Legacy)",
   "titles": "Amelia Searches",
-  "category": null,
+  "category": "module",
   "moduleClassName": "divi5_amelia_search",
   "moduleOrderClassName": "divi5_amelia_search",
   "moduleIcon": "amelia/step-booking",

@@ -385,13 +385,6 @@ class AppointmentReservationService extends AbstractReservationService
             );
         }
 
-        /** @var Appointment $existingAppointment */
-        $existingAppointment = $appointmentAS->getAlreadyBookedAppointment(
-            $appointmentData,
-            empty($appointmentData['packageBookingFromBackend']),
-            $service
-        );
-
         $bookingStatus = $settingsDS
             ->getEntitySettings($service->getSettings())
             ->getGeneralSettings()
@@ -401,6 +394,13 @@ class AppointmentReservationService extends AbstractReservationService
             isset($appointmentData['bookings'][0]['status']) &&
             $appointmentData['bookings'][0]['status'] === BookingStatus::WAITING) ?
             $appointmentData['bookings'][0]['status'] : $bookingStatus;
+
+        /** @var Appointment $existingAppointment */
+        $existingAppointment = $appointmentAS->getAlreadyBookedAppointment(
+            $appointmentData,
+            empty($appointmentData['packageBookingFromBackend']),
+            $service
+        );
 
         if (!empty($appointmentData['payment']['gateway']) && !empty($appointmentData['payment']['orderStatus'])) {
             $appointmentData['bookings'][0]['status'] = $this->getWcStatus(
@@ -1177,7 +1177,10 @@ class AppointmentReservationService extends AbstractReservationService
         $service = $reservation['bookable'];
 
         /** @var array $customer */
-        $customer = $reservation['customer'];
+        $customer = !empty($reservation['customer'])
+            ? $reservation['customer']
+            : (!empty($reservation['appointment']['bookings'][0]['customer']) ? $reservation['appointment']['bookings'][0]['customer'] : null);
+
 
         /** @var array $booking */
         $booking = $reservation['booking'];
@@ -1507,8 +1510,8 @@ class AppointmentReservationService extends AbstractReservationService
             'unit_price' => (float)$bookable->getPrice()->getValue(),
             'qty'        => $this->isAggregatedPrice($bookable) ? $persons : 1,
             'extra_total' => $extraTotal,
-            'bookable'   => $serviceAmountWithoutDiscount,
-            'subtotal'   => $serviceAmountWithoutDiscount + $extrasAmountWithoutDiscount,
+            'bookable'   => round($serviceAmountWithoutDiscount, 4),
+            'subtotal'   => round($serviceAmountWithoutDiscount + $extrasAmountWithoutDiscount, 4),
             'tax'        => $serviceTax ? $this->getTaxAmount($serviceTax, $serviceAmountWithoutDiscount) : 0,
             'tax_rate'   => $serviceTax ? $this->getTaxRate($serviceTax) : '',
             'tax_type'   => $serviceTax ? $serviceTax->getType()->getValue() : '',

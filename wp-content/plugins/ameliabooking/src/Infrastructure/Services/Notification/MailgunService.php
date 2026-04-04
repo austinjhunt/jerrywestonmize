@@ -9,7 +9,6 @@ namespace AmeliaBooking\Infrastructure\Services\Notification;
 
 use AmeliaBooking\Domain\Services\Notification\AbstractMailService;
 use AmeliaBooking\Domain\Services\Notification\MailServiceInterface;
-use Mailgun\Mailgun;
 
 /**
  * Class MailgunService
@@ -55,14 +54,11 @@ class MailgunService extends AbstractMailService implements MailServiceInterface
      */
     public function send($to, $subject, $body, $bccEmails = [], $attachments = [])
     {
-        $mgClient = $this->endpoint ? Mailgun::create($this->apiKey, $this->endpoint) : Mailgun::create($this->apiKey);
-
         $mgArgs = [
             'from'       => "{$this->fromName} <{$this->from}>",
             'to'         => $to,
             'subject'    => $subject,
             'html'       => $body,
-            'attachment' => [],
             'h:Reply-To' => !empty($this->replyTo) ? $this->replyTo : $this->from
         ];
 
@@ -70,6 +66,7 @@ class MailgunService extends AbstractMailService implements MailServiceInterface
             $mgArgs['bcc'] = implode(', ', $bccEmails);
         }
 
+        $attachmentIndex = 0;
         foreach ($attachments as $attachment) {
             if (!empty($attachment['content'])) {
                 $extension = pathinfo($attachment['name'], PATHINFO_EXTENSION);
@@ -80,11 +77,30 @@ class MailgunService extends AbstractMailService implements MailServiceInterface
                     file_put_contents($tmpFile, $attachment['content']) !== false &&
                     @rename($tmpFile, $tmpFile .= '.' . $extension) !== false
                 ) {
-                    $mgArgs['attachment'][] = ['filePath' => $tmpFile, 'filename' => $tmpFile];
+                    $mgArgs["attachment[$attachmentIndex]"] = new \CURLFile($tmpFile, mime_content_type($tmpFile), $attachment['name']);
+                    $attachmentIndex++;
                 }
             }
         }
 
-        $mgClient->messages()->send($this->domain, $mgArgs);
+        $endpoint = $this->endpoint ?: 'https://api.mailgun.net/';
+
+        $url = $endpoint . "v3/{$this->domain}/messages";
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        curl_setopt($ch, CURLOPT_USERPWD, 'api:' . $this->apiKey);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $mgArgs);
+
+        $response = curl_exec($ch);
+
+        if ($response === false) {
+            throw new \RuntimeException('Mailgun error: ' . curl_error($ch));
+        }
     }
 }

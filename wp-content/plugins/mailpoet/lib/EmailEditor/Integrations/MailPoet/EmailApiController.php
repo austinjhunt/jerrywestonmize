@@ -60,6 +60,7 @@ class EmailApiController {
    */
   public function getEmailData($postEmailData): array {
     $newsletter = $this->newsletterRepository->findOneBy(['wpPost' => $postEmailData['id']]);
+    $isAutomationNewsletter = $newsletter && ($newsletter->isAutomation() || $newsletter->isAutomationTransactional());
     return [
       'id' => $newsletter ? $newsletter->getId() : null,
       'subject' => $newsletter ? $newsletter->getSubject() : '',
@@ -69,6 +70,7 @@ class EmailApiController {
       'scheduled_at' => $newsletter ? $newsletter->getOptionValue(NewsletterOptionFieldEntity::NAME_SCHEDULED_AT) : null,
       'utm_campaign' => $newsletter ? $newsletter->getGaCampaign() : '',
       'segment_ids' => $newsletter ? $newsletter->getSegmentIds() : [],
+      'is_automation_newsletter' => $isAutomationNewsletter,
     ];
   }
 
@@ -228,6 +230,7 @@ class EmailApiController {
       'scheduled_at' => Builder::string()->nullable(),
       'utm_campaign' => Builder::string(),
       'segment_ids' => Builder::array(),
+      'is_automation_newsletter' => Builder::boolean(),
     ])->toArray();
   }
 }

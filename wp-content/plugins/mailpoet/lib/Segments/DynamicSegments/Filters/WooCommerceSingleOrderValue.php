@@ -8,7 +8,6 @@ if (!defined('ABSPATH')) exit;
 use MailPoet\Entities\DynamicSegmentFilterData;
 use MailPoet\Entities\DynamicSegmentFilterEntity;
 use MailPoet\Util\Security;
-use MailPoetVendor\Carbon\Carbon;
 use MailPoetVendor\Doctrine\DBAL\Query\QueryBuilder;
 
 class WooCommerceSingleOrderValue implements Filter {
@@ -17,10 +16,15 @@ class WooCommerceSingleOrderValue implements Filter {
   /** @var WooFilterHelper */
   private $wooFilterHelper;
 
+  /** @var FilterHelper */
+  private $filterHelper;
+
   public function __construct(
-    WooFilterHelper $wooFilterHelper
+    WooFilterHelper $wooFilterHelper,
+    FilterHelper $filterHelper
   ) {
     $this->wooFilterHelper = $wooFilterHelper;
+    $this->filterHelper = $filterHelper;
   }
 
   public function apply(QueryBuilder $queryBuilder, DynamicSegmentFilterEntity $filter): QueryBuilder {
@@ -37,7 +41,7 @@ class WooCommerceSingleOrderValue implements Filter {
       if (!is_string($days)) {
         $days = '1'; // Default to last day
       }
-      $date = Carbon::now()->subDays((int)$days);
+      $date = $this->filterHelper->getDateNDaysAgo(intval($days));
       $dateParam = "date_$parameterSuffix";
       $queryBuilder
         ->andWhere("$orderStatsAlias.date_created >= :$dateParam")

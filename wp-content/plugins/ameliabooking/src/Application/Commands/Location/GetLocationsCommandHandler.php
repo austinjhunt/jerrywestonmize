@@ -4,6 +4,7 @@ namespace AmeliaBooking\Application\Commands\Location;
 
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Commands\CommandHandler;
+use AmeliaBooking\Application\Commands\SortParamsTrait;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Domain\Collection\AbstractCollection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
@@ -18,6 +19,8 @@ use AmeliaBooking\Infrastructure\Repository\Location\LocationRepository;
  */
 class GetLocationsCommandHandler extends CommandHandler
 {
+    use SortParamsTrait;
+
     /**
      * @param GetLocationsCommand $command
      *
@@ -36,6 +39,8 @@ class GetLocationsCommandHandler extends CommandHandler
         $result = new CommandResult();
 
         $params = $command->getField('params');
+
+        $params = $this->parseSortParams($params, ['name']);
 
         $itemsPerPage = !empty($params['limit']) ? $params['limit'] : 10;
 

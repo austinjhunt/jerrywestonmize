@@ -126,7 +126,7 @@ abstract class Forminator_Base_Form_Model {
 						$post_data[ $map['field'] ] = $map['default'];
 					}
 				} elseif ( 'fields' === $map['field'] ) {
-						$meta_data[ $map['field'] ] = $this->get_fields_as_array();
+					$meta_data[ $map['field'] ] = forminator_sort_fields_with_groups( $this->get_fields_as_array() );
 				} else {
 					$meta_data[ $map['field'] ] = $this->{$attribute};
 				}
@@ -325,6 +325,17 @@ abstract class Forminator_Base_Form_Model {
 				}
 				$last_page_break_id = $field->element_id;
 			} elseif ( $collecting ) {
+				if ( ! empty( $field->parent_group ) ) {
+					continue;
+				}
+				// If the field is a group, get its fields.
+				if ( 'group' === $field->type ) {
+					$group_fields = $this->get_grouped_fields( $field->element_id );
+					foreach ( $group_fields as $group_field ) {
+						$page_fields[] = $group_field;
+					}
+					continue;
+				}
 				$page_fields[] = $field;
 			}
 		}
@@ -595,10 +606,11 @@ abstract class Forminator_Base_Form_Model {
 	/**
 	 * Get all paginated
 	 *
-	 * @param int      $current_page Current page.
-	 * @param null|int $per_page Limit per page.
-	 * @param string   $status Status.
-	 * @param null|int $pdf_parent_id PDF parent Id.
+	 * @param int         $current_page Current page.
+	 * @param null|int    $per_page Limit per page.
+	 * @param string      $status Status.
+	 * @param null|int    $pdf_parent_id PDF parent Id.
+	 * @param null|string $search Optional search. Added in 1.52.
 	 *
 	 * @return array
 	 * @since 1.5.4 add optional param per_page
@@ -606,7 +618,7 @@ abstract class Forminator_Base_Form_Model {
 	 *
 	 * @since 1.2
 	 */
-	public function get_all_paged( $current_page = 1, $per_page = null, $status = '', $pdf_parent_id = null ) {
+	public function get_all_paged( $current_page = 1, $per_page = null, $status = '', $pdf_parent_id = null, $search = '' ) {
 		if ( is_null( $per_page ) ) {
 			$per_page = forminator_form_view_per_page();
 		}
@@ -616,6 +628,12 @@ abstract class Forminator_Base_Form_Model {
 			'posts_per_page' => $per_page,
 			'paged'          => $current_page,
 		);
+
+		if ( ! empty( $search ) ) {
+			add_filter( 'posts_search', array( $this, 'filter_multi_search' ), 10, 2 );
+			$args['s']                       = $search;
+			$args['forminator_multi_search'] = true;
+		}
 
 		if ( ! empty( $status ) ) {
 			$args['post_status'] = $status;
@@ -642,7 +660,12 @@ abstract class Forminator_Base_Form_Model {
 			}
 		}
 
-		$query  = new WP_Query( $args );
+		$query = new WP_Query( $args );
+
+		if ( ! empty( $search ) ) {
+			remove_filter( 'posts_search', array( $this, 'filter_multi_search' ) );
+		}
+
 		$models = array();
 
 		foreach ( $query->posts as $post ) {
@@ -653,6 +676,7 @@ abstract class Forminator_Base_Form_Model {
 			'totalPages'   => $query->max_num_pages,
 			'totalRecords' => $query->post_count,
 			'models'       => $models,
+			'foundPosts'   => $query->found_posts,
 		);
 	}
 
@@ -1414,6 +1438,11 @@ abstract class Forminator_Base_Form_Model {
 			$meta['settings']['form_id']         = $post_id;
 			$meta['settings']['previous_status'] = 'draft';
 
+			// Sort fields to ensure grouped fields appear after their parent group.
+			if ( ! empty( $meta['fields'] ) && is_array( $meta['fields'] ) ) {
+				$meta['fields'] = forminator_sort_fields_with_groups( $meta['fields'] );
+			}
+
 			update_post_meta( $post_id, self::META_KEY, $meta );
 
 			/**
@@ -1824,19 +1853,30 @@ abstract class Forminator_Base_Form_Model {
 			}
 		}
 
-		// Disable submit if submit button is hidden by conditions.
-		if ( $can_show['can_submit'] && 'form' === static::$module_slug && true === Forminator_Field::is_hidden( $form_settings['submitData'] ) ) {
-			$invalid_form_message = esc_html__( 'Error: Your form is not valid, please fix the errors!', 'forminator' );
-			if ( ! empty( $form_settings['submitData']['custom-invalid-form-message'] ) ) {
-				$invalid_form_message = $form_settings['submitData']['custom-invalid-form-message'];
+		return apply_filters( 'forminator_cform_' . static::$module_slug . '_is_submittable', $can_show, $this->id, $form_settings );
+	}
+
+	/**
+	 * Check if form has active PayPal field
+	 *
+	 * @return bool
+	 * @since 1.51.0
+	 */
+	public function has_active_paypal() {
+		$is_enabled = forminator_has_paypal_settings();
+		$active     = 0;
+		$fields     = $this->get_fields_as_array();
+
+		if ( ! empty( $fields ) ) {
+			foreach ( $fields as $field ) {
+				if ( 'paypal' === $field['type'] && ! Forminator_Field::is_hidden( $field ) ) {
+					++$active;
+					break;
+				}
 			}
-			$can_show = array(
-				'can_submit' => false,
-				'error'      => $invalid_form_message,
-			);
 		}
 
-		return apply_filters( 'forminator_cform_' . static::$module_slug . '_is_submittable', $can_show, $this->id, $form_settings );
+		return ( $is_enabled && $active > 0 ) ? true : false;
 	}
 
 	/**
@@ -1897,6 +1937,32 @@ abstract class Forminator_Base_Form_Model {
 	}
 
 	/**
+	 * Filter multi search.
+	 * This filter is used to search for multiple words in post titles (OR logic).
+	 *
+	 * @param string   $search The existing SQL WHERE clause for search.
+	 * @param WP_Query $query  The WP_Query instance.
+	 *
+	 * @since 1.52
+	 * @return string Modified SQL WHERE clause for search.
+	 */
+	public function filter_multi_search( $search, $query ) {
+		global $wpdb;
+		if ( empty( $query->query_vars['s'] ) || ! isset( $query->query_vars['forminator_multi_search'] ) ) {
+			return $search;
+		}
+		$terms = explode( ' ', $query->query_vars['s'] );
+		$likes = array();
+		foreach ( $terms as $term ) {
+			$likes[] = $wpdb->prepare(
+				"{$wpdb->posts}.post_title LIKE %s",
+				'%' . $wpdb->esc_like( $term ) . '%'
+			);
+		}
+		return ' AND (' . implode( ' OR ', $likes ) . ') ';
+	}
+
+	/**
 	 * Call do action when module update
 	 *
 	 * @param string $type module type.
@@ -1937,5 +2003,21 @@ abstract class Forminator_Base_Form_Model {
 			// Ignore errors coming from the add-on for now.
 			// TODO: Display an appropriate error message.
 		}
+	}
+
+	/**
+	 * Check if model is publishable
+	 *
+	 * @return true|WP_Error
+	 */
+	public function is_publishable() {
+		if ( empty( $this->name ) ) {
+			return new WP_Error(
+				'form_error',
+				__( 'Please, enter a valid name.', 'forminator' )
+			);
+		}
+
+		return true;
 	}
 }

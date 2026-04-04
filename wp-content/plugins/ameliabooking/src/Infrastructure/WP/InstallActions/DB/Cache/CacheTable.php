@@ -27,12 +27,14 @@ class CacheTable extends AbstractDatabaseTable
     {
         $table = self::getTableName();
 
+        $charsetCollate = self::getCharsetCollate();
+
         return "CREATE TABLE {$table} (
                    `id` int(11) NOT NULL AUTO_INCREMENT,
                    `name` VARCHAR(255) NOT NULL,
                    `paymentId` INT(11) DEFAULT NULL,
                    `data` TEXT NULL DEFAULT NULL,
                     PRIMARY KEY (`id`)
-                ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
+                ) {$charsetCollate};";
     }
 }

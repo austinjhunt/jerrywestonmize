@@ -53,7 +53,13 @@ class CreateWPUser
 
         $this->setRole($role, $userId);
 
-        wp_new_user_notification($userId, null, 'user');
+        // Wrapped in try/catch because wp_new_user_notification() calls wp_mail() which uses
+        // WordPress's own PHPMailer with the mail() transport. On servers where mail() is disabled,
+        // this throws a fatal Error that would otherwise abort the entire booking process.
+        try {
+            wp_new_user_notification($userId, null, 'user');
+        } catch (\Throwable $e) {
+        }
 
         return (int)$userId;
     }

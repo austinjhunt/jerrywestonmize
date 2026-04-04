@@ -4,11 +4,14 @@ namespace Automattic\WooCommerce\EmailEditor\Engine\Renderer\ContentRenderer\Pre
 if (!defined('ABSPATH')) exit;
 class Spacing_Preprocessor implements Preprocessor {
  public function preprocess( array $parsed_blocks, array $layout, array $styles ): array {
- $parsed_blocks = $this->add_block_gaps( $parsed_blocks, $styles['spacing']['blockGap'] ?? '', null );
+ $root_padding = $this->get_root_padding( $styles );
+ $parsed_blocks = $this->add_block_gaps( $parsed_blocks, $styles['spacing']['blockGap'] ?? '', null, $root_padding );
  return $parsed_blocks;
  }
- private function add_block_gaps( array $parsed_blocks, string $gap = '', $parent_block = null ): array {
+ private const CONTAINER_BLOCKS = array( 'core/group', 'core/post-content' );
+ private function add_block_gaps( array $parsed_blocks, string $gap = '', $parent_block = null, array $root_padding = array(), bool $apply_root_padding = false ): array {
  foreach ( $parsed_blocks as $key => $block ) {
+ $block_name = $block['blockName'] ?? '';
  $parent_block_name = $parent_block['blockName'] ?? '';
  // Ensure that email_attrs are set.
  $block['email_attrs'] = $block['email_attrs'] ?? array();
@@ -22,10 +25,80 @@ class Spacing_Preprocessor implements Preprocessor {
  $block['email_attrs']['padding-left'] = $columns_gap;
  }
  }
- $block['innerBlocks'] = $this->add_block_gaps( $block['innerBlocks'] ?? array(), $gap, $block );
+ // Distribute root horizontal padding.
+ // Container blocks (group, post-content) at root level do NOT get padding;
+ // they delegate it to their children. Non-container blocks at root level
+ // (e.g., columns, paragraph) get padding directly.
+ // Blocks flagged with $apply_root_padding (children of root containers)
+ // also get padding, unless they are post-content or a container wrapping
+ // post-content (both delegate further down the tree).
+ // Blocks that explicitly define their own horizontal padding are managing
+ // their own layout and skip root padding entirely. Containers with explicit
+ // padding also stop delegation so their children follow the container's padding.
+ $is_root_level = null === $parent_block;
+ $is_container = in_array( $block_name, self::CONTAINER_BLOCKS, true );
+ $alignment = $block['attrs']['align'] ?? null;
+ $has_own_padding = $this->has_explicit_horizontal_padding( $block );
+ $wraps_post_content = $apply_root_padding && $is_container && ! $has_own_padding && $this->contains_post_content( $block );
+ $should_apply = $apply_root_padding || ( $is_root_level && ! $is_container );
+ if ( $should_apply && ! $has_own_padding && 'full' !== $alignment && 'core/post-content' !== $block_name && ! $wraps_post_content && ! empty( $root_padding ) ) {
+ $block['email_attrs']['padding-left'] = $root_padding['left'];
+ $block['email_attrs']['padding-right'] = $root_padding['right'];
+ }
+ // Determine whether children should receive root padding delegation.
+ // Root-level containers delegate to their children.
+ // Post-content blocks that received delegation also pass it through.
+ // Containers wrapping post-content that received delegation also delegate,
+ // so that user blocks inside post-content get padding individually.
+ // Containers with explicit horizontal padding stop delegation — they
+ // manage their own layout.
+ $children_apply = false;
+ if ( $is_root_level && $is_container && ! $has_own_padding ) {
+ $children_apply = true;
+ } elseif ( $apply_root_padding && 'core/post-content' === $block_name ) {
+ $children_apply = true;
+ } elseif ( $wraps_post_content ) {
+ $children_apply = true;
+ }
+ $block['innerBlocks'] = $this->add_block_gaps( $block['innerBlocks'] ?? array(), $gap, $block, $root_padding, $children_apply );
  $parsed_blocks[ $key ] = $block;
  }
  return $parsed_blocks;
+ }
+ private function contains_post_content( array $block ): bool {
+ foreach ( $block['innerBlocks'] ?? array() as $inner_block ) {
+ $name = $inner_block['blockName'] ?? '';
+ if ( 'core/post-content' === $name ) {
+ return true;
+ }
+ if ( in_array( $name, self::CONTAINER_BLOCKS, true ) && $this->contains_post_content( $inner_block ) ) {
+ return true;
+ }
+ }
+ return false;
+ }
+ private function has_explicit_horizontal_padding( array $block ): bool {
+ $padding = $block['attrs']['style']['spacing']['padding'] ?? array();
+ return isset( $padding['left'] ) || isset( $padding['right'] );
+ }
+ private function get_root_padding( array $styles ): array {
+ $padding = $styles['spacing']['padding'] ?? array();
+ $has_left = isset( $padding['left'] );
+ $has_right = isset( $padding['right'] );
+ // If neither horizontal padding key is defined, skip root padding entirely.
+ if ( ! $has_left && ! $has_right ) {
+ return array();
+ }
+ $left = $has_left ? $padding['left'] : '0px';
+ $right = $has_right ? $padding['right'] : '0px';
+ // Validate against potentially malicious values.
+ if ( ! is_string( $left ) || ! is_string( $right ) || preg_match( '/[<>"\']/', $left . $right ) ) {
+ return array();
+ }
+ return array(
+ 'left' => $left,
+ 'right' => $right,
+ );
  }
  private function get_columns_block_gap( array $columns_block, string $default_gap = '' ): ?string {
  $block_gap = $columns_block['attrs']['style']['spacing']['blockGap'] ?? null;

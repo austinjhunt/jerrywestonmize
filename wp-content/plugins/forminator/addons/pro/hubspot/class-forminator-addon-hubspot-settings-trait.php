@@ -31,6 +31,55 @@ trait Forminator_Hubspot_Settings_Trait {
 	}
 
 	/**
+	 * Migrate old list_id to new list_id if needed
+	 *
+	 * @since 1.52.0
+	 *
+	 * @param array $settings Settings.
+	 *
+	 * @return mixed
+	 */
+	public function migrate_list_id( $settings ) {
+		if ( ! empty( $settings ) ) {
+			foreach ( $settings as $key => $setting ) {
+				if ( ! empty( $setting['list_id'] )
+				&& ( empty( $setting['list_api_version'] ) || 'v3' !== $setting['list_api_version'] ) ) {
+					try {
+						$api     = $this->addon->get_api();
+						$v3_list = $api->get_v3_list_id( $setting['list_id'] );
+						if ( ! empty( $v3_list->listId ) ) { //phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+							$settings[ $key ]['list_id']          = $v3_list->listId; //phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+							$settings[ $key ]['list_api_version'] = 'v3';
+							$this->save_multi_id_setting_values(
+								$key,
+								$settings[ $key ]
+							);
+						}
+					} catch ( Forminator_Integration_Settings_Exception $e ) {
+						continue;
+					}
+				}
+			}
+		}
+		return $settings;
+	}
+
+	/**
+	 * Get list id
+	 *
+	 * @param mixed $multi_id Multi id.
+	 * @return mixed
+	 */
+	public function get_list_id( $multi_id ) {
+		$settings = $this->get_settings_values();
+		$settings = $this->migrate_list_id( $settings );
+		if ( ! empty( $settings ) && ! empty( $settings[ $multi_id ] ) && ! empty( $settings[ $multi_id ]['list_id'] ) ) {
+			return $settings[ $multi_id ]['list_id'];
+		}
+		return '';
+	}
+
+	/**
 	 * Setup Connection Name
 	 *
 	 * @param array $submitted_data Submitted data.
@@ -64,7 +113,7 @@ trait Forminator_Hubspot_Settings_Trait {
 			'fields'            => $fields,
 			'form_fields'       => $form_fields,
 			'email_fields'      => $this->get_fields_for_type( 'email' ),
-			'list_id'           => $this->get_multi_id_settings( $multi_id, 'list_id' ),
+			'list_id'           => $this->get_list_id( $multi_id ),
 			'list_name'         => $this->get_multi_id_settings( $multi_id, 'list_name' ),
 			'custom_fields_map' => $this->get_multi_id_settings( $multi_id, 'custom_fields_map', array() ),
 		);
@@ -142,6 +191,7 @@ trait Forminator_Hubspot_Settings_Trait {
 						'custom_fields_map' => $custom_field_map,
 						'list_id'           => $list_id,
 						'list_name'         => $list_name,
+						'list_api_version'  => 'v3',
 					)
 				);
 

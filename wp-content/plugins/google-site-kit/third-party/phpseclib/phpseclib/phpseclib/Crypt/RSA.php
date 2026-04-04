@@ -319,10 +319,9 @@ abstract class RSA extends \Google\Site_Kit_Dependencies\phpseclib3\Crypt\Common
                 if ($i != $num_primes) {
                     $primes[$i] = \Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger::randomPrime($regSize);
                 } else {
-                    \extract(\Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger::minMaxBits($bits));
-                    /** @var BigInteger $min
-                     *  @var BigInteger $max
-                     */
+                    $minMax = \Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger::minMaxBits($bits);
+                    $min = $minMax['min'];
+                    $max = $minMax['max'];
                     list($min) = $min->divide($n);
                     $min = $min->add(self::$one);
                     list($max) = $max->divide($n);

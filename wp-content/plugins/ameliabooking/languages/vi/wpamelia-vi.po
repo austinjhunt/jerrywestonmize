@@ -9,10 +9,10 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 msgid "\"Book now\" Button Type"
-msgstr ""
+msgstr "Loại nút \"Đặt ngay\""
 
 msgid "\"Go back\" Button Type"
-msgstr ""
+msgstr "Loại nút \"Quay lại\""
 
 msgid "\"I'm not a robot\" checkbox"
 msgstr "Hộp kiểm \"Tôi không phải là rô-bốt\""
@@ -33,16 +33,16 @@ msgid "# of bookings"
 msgstr "Số lượng đặt chỗ"
 
 msgid "'Back' button style"
-msgstr ""
+msgstr "Kiểu nút 'Back'"
 
 msgid "'Book' button style"
-msgstr ""
+msgstr "Kiểu nút 'Sách'"
 
 msgid "'Book another' button style"
-msgstr ""
+msgstr "Kiểu nút 'Đặt thêm'"
 
 msgid "'Book now' button style"
-msgstr ""
+msgstr "Kiểu nút 'Đặt ngay'"
 
 msgid ""
 "'Booking Date and Time' sets the limit based on when the booking is made, "
@@ -53,79 +53,85 @@ msgstr ""
 "hẹn. 'Ngày và giờ hẹn' đặt giới hạn dựa trên chính lịch hẹn."
 
 msgid "'Bringing anyone with you' popup"
-msgstr ""
+msgstr "'Mang theo bất kỳ ai' popup"
 
 msgid "'Cancel' button style"
-msgstr ""
+msgstr "Kiểu nút 'Hủy'"
 
 msgid "'Change password' button style"
-msgstr ""
+msgstr "Kiểu nút 'Thay đổi mật khẩu'"
 
 msgid "'Close' button style"
-msgstr ""
+msgstr "Kiểu nút 'Đóng'"
 
 msgid "'Confirm' button style"
-msgstr ""
+msgstr "Kiểu nút 'Xác nhận'"
 
 msgid "'Continue' button style"
-msgstr ""
+msgstr "Kiểu nút 'Tiếp tục'"
 
 msgid "'Customer panel' button style"
-msgstr ""
+msgstr "Kiểu nút 'Bảng điều khiển khách hàng'"
 
 msgid "'Delete' button style"
-msgstr ""
+msgstr "Kiểu nút 'Xóa'"
 
 msgid "'Filter' button style"
-msgstr ""
+msgstr "Kiểu nút 'Filter'"
 
 msgid "'Finish' button style"
-msgstr ""
+msgstr "Kiểu nút 'Hoàn tất'"
 
 msgid "'Join waiting list' button style"
-msgstr ""
+msgstr "Phong cách nút 'Tham gia danh sách chờ'"
 
 msgid "'Learn more' button"
-msgstr ""
+msgstr "Nút 'Tìm hiểu thêm'"
 
 msgid "'Learn more' button style"
-msgstr ""
+msgstr "Kiểu nút 'Tìm hiểu thêm'"
 
 msgid "'New Event' button style"
-msgstr ""
+msgstr "Kiểu nút 'Sự kiện mới'"
 
 msgid "'New appointment' button style"
-msgstr ""
+msgstr "Kiểu nút 'Lịch hẹn mới'"
 
 msgid "'Read more' button style"
-msgstr ""
+msgstr "Kiểu nút 'Đọc thêm'"
 
 msgid "'Save changes' button style"
-msgstr ""
+msgstr "Kiểu nút 'Lưu thay đổi'"
 
 msgid "'Scan e-ticket' button"
-msgstr ""
+msgstr "Nút 'Quét vé điện tử'"
 
 msgid "'Send' button style"
-msgstr ""
+msgstr "Kiểu nút 'Gửi'"
 
 msgid "'Set password' button style"
-msgstr ""
+msgstr "Kiểu nút 'Đặt mật khẩu'"
 
 msgid "'Sign in' button style"
-msgstr ""
+msgstr "Kiểu nút 'Đăng nhập'"
 
 msgid "'View employee' button style"
-msgstr ""
+msgstr "Kiểu nút 'Xem nhân viên'"
 
 msgid "'View in package' button"
-msgstr ""
+msgstr "Nút 'Xem trong gói'"
 
 msgid "+more"
 msgstr "(Cộng) thêm "
 
 msgid "+{count} more"
 msgstr "+{count} thêm"
+
+msgid "1/1 width"
+msgstr "1/1 chiều rộng"
+
+msgid "1/2 width"
+msgstr "1/2 chiều rộng"
 
 msgid "10h"
 msgstr "10 giờ"
@@ -281,7 +287,7 @@ msgid "API base URL: "
 msgstr "URL cơ sở API: "
 
 msgid "API setup"
-msgstr ""
+msgstr "Cấu hình API"
 
 msgid ""
 "A percentage deposit is calculated based on the total booking price. A fixed "
@@ -311,25 +317,25 @@ msgid "About Service"
 msgstr "Về Dịch Vụ"
 
 msgid "About event"
-msgstr ""
+msgstr "Về sự kiện"
 
 msgid "About package"
-msgstr ""
+msgstr "Về gói"
 
 msgid "About service"
-msgstr ""
+msgstr "Về dịch vụ"
 
 msgid "About this Event"
 msgstr "Về Sự kiện này"
 
 msgid "About this event"
-msgstr ""
+msgstr "Về sự kiện này"
 
 msgid "Accent"
-msgstr ""
+msgstr "Dấu"
 
 msgid "Accent text"
-msgstr ""
+msgstr "Văn bản có dấu"
 
 msgid "Accept payments for bookings and services via PayPal."
 msgstr "Chấp nhận thanh toán cho các đặt chỗ và dịch vụ qua PayPal."
@@ -341,13 +347,13 @@ msgid "Accept payments via Razorpay, ideal for Indian businesses."
 msgstr "Chấp nhận thanh toán qua Razorpay, lý tưởng cho doanh nghiệp Ấn Độ."
 
 msgid "Access link"
-msgstr ""
+msgstr "Liên kết truy cập"
 
 msgid "Access link success"
-msgstr ""
+msgstr "Liên kết truy cập thành công"
 
 msgid "Access your financial data in seconds"
-msgstr ""
+msgstr "Tra cứu dữ liệu tài chính của bạn chỉ trong vài giây"
 
 msgid "Account ID"
 msgstr "ID Tài khoản"
@@ -377,7 +383,7 @@ msgid "Activation"
 msgstr "Kích hoạt"
 
 msgid "Activation settings"
-msgstr ""
+msgstr "Cài đặt kích hoạt"
 
 msgid "Active"
 msgstr "Hoạt động"
@@ -416,6 +422,8 @@ msgstr ""
 
 msgid "Add Meta Pixel to track ad conversions and optimize marketing."
 msgstr ""
+"Thêm Meta Pixel để theo dõi chuyển đổi quảng cáo và tối ưu hóa chiến dịch "
+"marketing."
 
 msgid "Add Period"
 msgstr "Thêm Kỳ nghỉ"
@@ -427,7 +435,7 @@ msgid "Add Special Day"
 msgstr "Thêm Ngày đặc biệt"
 
 msgid "Add Stripe address fields"
-msgstr ""
+msgstr "Thêm các trường địa chỉ Stripe"
 
 msgid "Add Webhook"
 msgstr "Thêm Webhook"
@@ -449,32 +457,41 @@ msgstr ""
 msgid "Add appointment"
 msgstr "Thêm cuộc hẹn"
 
+msgid "Add booking"
+msgstr "Thêm đặt chỗ"
+
 msgid "Add category"
 msgstr "Thêm danh mục"
 
 msgid "Add custom field"
-msgstr ""
+msgstr "Thêm trường tùy chỉnh"
 
 msgid "Add custom notification"
-msgstr ""
+msgstr "Thêm thông báo tùy chỉnh"
+
+msgid "Add customer"
+msgstr "Thêm khách hàng"
 
 msgid "Add date range"
-msgstr ""
+msgstr "Thêm khoảng thời gian"
 
 msgid "Add day(s)"
-msgstr ""
+msgstr "Thêm ngày (ngày)"
 
 msgid "Add day off"
 msgstr "Thêm ngày nghỉ"
 
 msgid "Add duration"
-msgstr ""
+msgstr "Thêm thời gian"
 
 msgid ""
 "Add element (button, link...) ID, that will manually load amelia shortcode "
 "content"
 msgstr ""
 "Thêm yếu tố (nút, liên kết...) ID, sẽ thủ công tải nội dung mã rút gọn Amelia"
+
+msgid "Add event"
+msgstr "Thêm sự kiện"
 
 msgid "Add event attendees"
 msgstr "Thêm người tham dự sự kiện"
@@ -486,22 +503,28 @@ msgid "Add more Appointments"
 msgstr "Thêm cuộc hẹn"
 
 msgid "Add more appointments"
-msgstr ""
+msgstr "Thêm nhiều cuộc hẹn"
 
 msgid ""
 "Add multiple employees to your booking system, manage their schedules, and "
 "assign them to services or events, making it easy to scale your business and "
 "coordinate your team."
 msgstr ""
+"Thêm nhiều nhân viên vào hệ thống đặt lịch của bạn, quản lý lịch trình của "
+"họ và phân công họ cho các dịch vụ hoặc sự kiện, giúp bạn dễ dàng mở rộng "
+"quy mô kinh doanh và điều phối đội ngũ của mình."
 
 msgid "Add option"
 msgstr "Thêm tùy chọn"
+
+msgid "Add package"
+msgstr "Thêm gói"
 
 msgid "Add period"
 msgstr "Thêm khoảng thời gian"
 
 msgid "Add pricing category"
-msgstr ""
+msgstr "Thêm danh mục giá"
 
 msgid "Add rule"
 msgstr "Thêm quy tắc"
@@ -525,7 +548,7 @@ msgid "Add work hours"
 msgstr "Thêm giờ làm việc"
 
 msgid "Additional information"
-msgstr ""
+msgstr "Thông tin bổ sung"
 
 msgid "Additional people"
 msgstr "Người thêm"
@@ -537,7 +560,7 @@ msgid "Admin"
 msgstr "Quản trị viên"
 
 msgid "Advanced"
-msgstr ""
+msgstr "Nâng cao"
 
 msgid "After"
 msgstr "Sau"
@@ -555,10 +578,10 @@ msgid "Agencies"
 msgstr "Các cơ quan"
 
 msgid "Alert content"
-msgstr ""
+msgstr "Nội dung cảnh báo"
 
 msgid "Alert message"
-msgstr ""
+msgstr "Thông báo cảnh báo"
 
 msgid "All"
 msgstr "Tất cả"
@@ -606,7 +629,7 @@ msgid "All services"
 msgstr "Tất cả dịch vụ"
 
 msgid "All services are booked separately"
-msgstr ""
+msgstr "Tất cả các dịch vụ đều được đặt riêng biệt."
 
 msgid "All services are booked separately."
 msgstr "Tất cả các dịch vụ đều được đặt riêng lẻ."
@@ -628,9 +651,6 @@ msgstr "Cho phép quản trị viên đặt lịch hẹn bất kỳ lúc nào"
 
 msgid "Allow booking above maximum capacity"
 msgstr "Cho phép đặt hẹn vượt quá dung lượng tối đa"
-
-msgid "Allow booking below minimum capacity"
-msgstr "Cho phép đặt hẹn dưới mức tối thiểu"
 
 msgid "Allow booking without a prior login"
 msgstr "Cho phép đặt lịch mà không cần đăng nhập trước đó"
@@ -699,25 +719,25 @@ msgstr ""
 "màu sắc để phù hợp với thương hiệu của bạn và cải thiện khả năng sử dụng."
 
 msgid "Allow employees to manage customers"
-msgstr ""
+msgstr "Cho phép nhân viên quản lý khách hàng"
 
 msgid "Allow employees to manage their appointments"
-msgstr ""
+msgstr "Cho phép nhân viên quản lý lịch hẹn của họ"
 
 msgid "Allow employees to manage their days off"
-msgstr ""
+msgstr "Cho phép nhân viên quản lý ngày nghỉ của mình"
 
 msgid "Allow employees to manage their events"
-msgstr ""
+msgstr "Cho phép nhân viên quản lý các sự kiện của họ"
 
 msgid "Allow employees to manage their schedule"
-msgstr ""
+msgstr "Cho phép nhân viên quản lý lịch trình của họ"
 
 msgid "Allow employees to manage their services"
-msgstr ""
+msgstr "Cho phép nhân viên quản lý các dịch vụ của họ"
 
 msgid "Allow employees to manage their special days"
-msgstr ""
+msgstr "Cho phép nhân viên quản lý các ngày đặc biệt của họ"
 
 msgid "Allow multiple bookings per customer"
 msgstr "Cho phép khách hàng đặt nhiều lần"
@@ -732,12 +752,14 @@ msgid ""
 "Allow the short description below the booking form to support Amelia Booking "
 "Plugin and spread the word about it."
 msgstr ""
+"Cho phép hiển thị mô tả ngắn bên dưới biểu mẫu đặt chỗ để hỗ trợ plugin đặt "
+"chỗ Amelia và quảng bá về nó."
 
 msgid "Alpha sender ID"
 msgstr "ID người gửi Alpha"
 
 msgid "Alpha sender ID can't be empty"
-msgstr ""
+msgstr "ID người gửi Alpha không được để trống"
 
 msgid "Already have an account?"
 msgstr "Đã có tài khoản?"
@@ -799,9 +821,6 @@ msgstr "Cài đặt người dùng Amelia"
 msgid "Amount"
 msgstr "Số Tiền"
 
-msgid "Amount:"
-msgstr "Số tiền:"
-
 msgid "An email with details of your booking has been sent to you."
 msgstr "Một email với chi tiết đặt lịch của bạn đã được gửi đến bạn."
 
@@ -830,7 +849,7 @@ msgid "Apple Calendar (Personal)"
 msgstr "Lịch Apple (Cá nhân)"
 
 msgid "Apple Calendar setup"
-msgstr ""
+msgstr "Cài đặt Lịch Apple"
 
 msgid "Application (client) ID"
 msgstr "ID Ứng dụng (khách hàng)"
@@ -893,13 +912,13 @@ msgid "Appointment can't be rescheduled"
 msgstr "Cuộc hẹn không thể được sắp xếp lại"
 
 msgid "Appointment canceled"
-msgstr ""
+msgstr "Cuộc hẹn đã bị hủy"
 
 msgid "Appointment date"
-msgstr ""
+msgstr "Ngày hẹn"
 
 msgid "Appointment date & time"
-msgstr ""
+msgstr "Ngày và giờ hẹn"
 
 msgid "Appointment deposit"
 msgstr "Khoản đặt cọc của cuộc hẹn"
@@ -908,10 +927,10 @@ msgid "Appointment details"
 msgstr "Chi tiết cuộc hẹn"
 
 msgid "Appointment duration"
-msgstr ""
+msgstr "Thời gian cuộc hẹn"
 
 msgid "Appointment end time"
-msgstr ""
+msgstr "Thời gian kết thúc cuộc hẹn"
 
 msgid "Appointment has been created."
 msgstr "Cuộc hẹn đã được tạo."
@@ -935,22 +954,22 @@ msgid "Appointment information"
 msgstr "Thông tin cuộc hẹn"
 
 msgid "Appointment initial date"
-msgstr ""
+msgstr "Ngày hẹn ban đầu"
 
 msgid "Appointment initial date & time"
-msgstr ""
+msgstr "Ngày và giờ ban đầu của cuộc hẹn"
 
 msgid "Appointment initial end time"
-msgstr ""
+msgstr "Thời gian kết thúc ban đầu của cuộc hẹn"
 
 msgid "Appointment initial start time"
-msgstr ""
+msgstr "Thời gian bắt đầu ban đầu của cuộc hẹn"
 
 msgid "Appointment is removed from the cart."
 msgstr "Cuộc hẹn đã được xóa khỏi giỏ hàng."
 
 msgid "Appointment management guide"
-msgstr ""
+msgstr "Hướng dẫn quản lý lịch hẹn"
 
 msgid "Appointment not found."
 msgstr "Không tìm thấy cuộc hẹn."
@@ -968,13 +987,13 @@ msgid "Appointment price"
 msgstr "Giá cuộc hẹn"
 
 msgid "Appointment repeats"
-msgstr ""
+msgstr "Lịch hẹn lặp lại"
 
 msgid "Appointment space name"
 msgstr "Tên không gian cuộc hẹn"
 
 msgid "Appointment start time"
-msgstr ""
+msgstr "Thời gian bắt đầu cuộc hẹn"
 
 msgid "Appointment status"
 msgstr "Trạng thái cuộc hẹn"
@@ -983,7 +1002,10 @@ msgid "Appointment status has been changed to "
 msgstr "Trạng thái đặt hẹn đã được thay đổi thành"
 
 msgid "Appointment status has been updated."
-msgstr ""
+msgstr "Trạng thái cuộc hẹn đã được cập nhật."
+
+msgid "Appointment title"
+msgstr "Tiêu đề cuộc hẹn"
 
 msgid "Appointments"
 msgstr "Lịch hẹn"
@@ -1004,10 +1026,10 @@ msgid "Appointments to book"
 msgstr "Cuộc hẹn để đặt lịch"
 
 msgid "Appointments waiting list"
-msgstr ""
+msgstr "Danh sách chờ lịch hẹn"
 
 msgid "Approve appointment link"
-msgstr ""
+msgstr "Liên kết xác nhận lịch hẹn"
 
 msgid "Approved"
 msgstr "Đã duyệt"
@@ -1162,7 +1184,7 @@ msgid "Are you sure you want to show this employee?"
 msgstr "Bạn có chắc chắn muốn hiển thị nhân viên này không?"
 
 msgid "Are you sure you want to show this event?"
-msgstr ""
+msgstr "Bạn có chắc chắn muốn hiển thị sự kiện này không?"
 
 msgid "Are you sure you want to show this location?"
 msgstr "Bạn có chắc chắn muốn hiển thị địa điểm này không?"
@@ -1178,6 +1200,14 @@ msgstr "Bạn có chắc chắn muốn hiển thị dịch vụ này không?"
 
 msgid "Are you sure you want to show this tax?"
 msgstr "Bạn có chắc chắn muốn hiển thị gói này không?"
+
+msgid ""
+"Are you sure you want to skip the setup? Once skipped, the guided setup will "
+"no longer be available. All settings will need to be configured later."
+msgstr ""
+"Bạn có chắc chắn muốn bỏ qua quá trình cài đặt không? Sau khi bỏ qua, quá "
+"trình cài đặt hướng dẫn sẽ không còn khả dụng. Tất cả các thiết lập sẽ cần "
+"được cấu hình sau này."
 
 msgid "Are you sure you want to unblock this customer?"
 msgstr "Bạn có chắc chắn muốn xóa khách hàng này không?"
@@ -1230,11 +1260,11 @@ msgstr "Người tham dự đã được xóa"
 msgid "Attendees have not been deleted"
 msgstr "Người tham dự không bị xóa"
 
-msgid "Auto-Approve Booking After Payment"
-msgstr "Tự động phê duyệt đặt chỗ sau khi thanh toán"
-
 msgid "Auto-Reply Message"
 msgstr "Tin nhắn trả lời tự động"
+
+msgid "Auto-approve booking after payment"
+msgstr "Tự động phê duyệt đặt chỗ sau khi thanh toán"
 
 msgid "Auto-fill your details using:"
 msgstr "Tự động điền thông tin của bạn bằng cách sử dụng:"
@@ -1243,9 +1273,11 @@ msgid ""
 "Automate communication with notifications triggered by booking status, time, "
 "or custom rules"
 msgstr ""
+"Tự động hóa giao tiếp thông qua thông báo được kích hoạt bởi trạng thái đặt "
+"chỗ, thời gian hoặc quy tắc tùy chỉnh."
 
 msgid "Automated invoices for a smoother payment experience"
-msgstr ""
+msgstr "Hóa đơn tự động cho trải nghiệm thanh toán thuận tiện hơn"
 
 msgid ""
 "Automatically calculate and apply taxes for hassle-free compliance and "
@@ -1258,6 +1290,9 @@ msgid ""
 "Automatically calculate and apply taxes to your services and events, "
 "ensuring accurate billing and hassle-free compliance with every transaction."
 msgstr ""
+"Tự động tính toán và áp dụng thuế cho các dịch vụ và sự kiện của bạn, đảm "
+"bảo tính chính xác trong việc tính phí và tuân thủ quy định một cách thuận "
+"tiện cho mỗi giao dịch."
 
 msgid "Automatically create Amelia Customer user"
 msgstr "Tự động tạo Người dùng Khách hàng Amelia"
@@ -1276,6 +1311,9 @@ msgid ""
 "Automatically generate invoices for every booking, making payments easier, "
 "more transparent, and fully streamlined for both you and your clients."
 msgstr ""
+"Tự động tạo hóa đơn cho mỗi đơn đặt hàng, giúp việc thanh toán trở nên dễ "
+"dàng hơn, minh bạch hơn và hoàn toàn được tối ưu hóa cho cả bạn và khách "
+"hàng của bạn."
 
 msgid ""
 "Automatically update the booking status to \"Approved\" after a successful "
@@ -1291,10 +1329,10 @@ msgid "Available"
 msgstr "Có Sẵn"
 
 msgid "Available date background"
-msgstr ""
+msgstr "Ngày có sẵn nền"
 
 msgid "Available date text"
-msgstr ""
+msgstr "Ngày có sẵn"
 
 msgid "Available from Pro license"
 msgstr "Hình Ảnh Có Sẵn"
@@ -1315,6 +1353,8 @@ msgid ""
 "Avoid double-booking by automatically coordinating shared rooms, equipment, "
 "or tools"
 msgstr ""
+"Tránh đặt chỗ trùng lặp bằng cách tự động phối hợp các phòng, thiết bị hoặc "
+"công cụ chung."
 
 msgid "Away"
 msgstr "Vắng Mặt"
@@ -1326,7 +1366,7 @@ msgid "Back"
 msgstr "Quay lại"
 
 msgid "Back button"
-msgstr ""
+msgstr "Nút Quay lại"
 
 msgid "Back to"
 msgstr "Quay lại"
@@ -1341,10 +1381,10 @@ msgid "Back to recurring settings"
 msgstr "Hiển thị sự kiện định kỳ"
 
 msgid "Backend"
-msgstr ""
+msgstr "Hậu trường"
 
 msgid "Background"
-msgstr ""
+msgstr "Nền tảng"
 
 msgid "Background Color"
 msgstr "Màu Nền"
@@ -1368,7 +1408,7 @@ msgid "Badge label"
 msgstr "Nhãn huy hiệu"
 
 msgid "Badges setup"
-msgstr ""
+msgstr "Cài đặt huy hiệu"
 
 msgid "Balance"
 msgstr "Số dư"
@@ -1380,7 +1420,7 @@ msgid "Base Price:"
 msgstr "Giá cơ bản:"
 
 msgid "Basic"
-msgstr ""
+msgstr "Cơ bản"
 
 msgid "Beauty"
 msgstr "Vẻ đẹp"
@@ -1407,7 +1447,7 @@ msgid "Birthday"
 msgstr "Sinh nhật"
 
 msgid "Birthday greeting"
-msgstr ""
+msgstr "Lời chúc mừng sinh nhật"
 
 msgid "Block"
 msgstr "Chặn"
@@ -1416,11 +1456,15 @@ msgid ""
 "Block booking times that overlap with busy events in the employee’s Apple "
 "Calendar."
 msgstr ""
+"Chặn các khung giờ đặt lịch trùng với các sự kiện bận rộn trong lịch Apple "
+"của nhân viên."
 
 msgid ""
 "Block booking times that overlap with busy events in the employee’s Outlook "
 "Calendar."
 msgstr ""
+"Chặn các khung giờ đặt lịch trùng lặp với các sự kiện bận rộn trong lịch "
+"Outlook của nhân viên."
 
 msgid "Block customer"
 msgstr "Chặn khách hàng"
@@ -1429,7 +1473,7 @@ msgid "Blog"
 msgstr ""
 
 msgid "Body text"
-msgstr ""
+msgstr "Nội dung chính"
 
 msgid "Book"
 msgstr "Đặt lịch"
@@ -1453,7 +1497,7 @@ msgid "Book another"
 msgstr "Đặt ngay"
 
 msgid "Book appointment"
-msgstr ""
+msgstr "Đặt lịch hẹn"
 
 msgid "Book event"
 msgstr "Đặt sự kiện"
@@ -1465,10 +1509,10 @@ msgid "Book now"
 msgstr "Đặt ngay"
 
 msgid "Book option on employee dialog"
-msgstr ""
+msgstr "Tùy chọn sách trong hộp thoại nhân viên"
 
 msgid "Book package"
-msgstr ""
+msgstr "Gói sách"
 
 msgid "Book subtab name"
 msgstr "Tên tiểu tab Đặt lịch"
@@ -1477,7 +1521,14 @@ msgid "Book this event"
 msgstr "Đặt sự kiện này"
 
 msgid "Book this service"
+msgstr "Đặt dịch vụ này"
+
+msgid ""
+"Book time-based appointments with configurable durations, prices, and "
+"availability."
 msgstr ""
+"Đặt lịch hẹn theo thời gian với thời lượng, giá cả và tính khả dụng có thể "
+"tùy chỉnh."
 
 msgid "Booked"
 msgstr "Đã đặt"
@@ -1486,7 +1537,7 @@ msgid "Booked Appointments"
 msgstr "Cuộc hẹn đã đặt"
 
 msgid "Booked customer (full name, email, phone)"
-msgstr ""
+msgstr "Khách hàng đã đặt chỗ (họ tên đầy đủ, email, số điện thoại)"
 
 msgid "Booking"
 msgstr "Đặt lịch"
@@ -1497,6 +1548,12 @@ msgstr "Đặt chỗ #{count}"
 msgid "Booking Appointment"
 msgstr "Đặt lịch sự kiện"
 
+msgid "Booking Approved with Issues"
+msgstr "Đặt chỗ đã được phê duyệt với các vấn đề"
+
+msgid "Booking Canceled"
+msgstr "Đặt chỗ đã bị hủy"
+
 msgid "Booking Closes"
 msgstr "Đặt lịch sẽ đóng"
 
@@ -1506,8 +1563,14 @@ msgstr "Đặt chỗ đóng tăng dần"
 msgid "Booking Closes Desc"
 msgstr "Đặt chỗ đóng giảm dần"
 
+msgid "Booking Confirmed"
+msgstr "Đặt chỗ đã được xác nhận"
+
 msgid "Booking Details"
 msgstr "Chi tiết đặt chỗ"
+
+msgid "Booking Failed"
+msgstr "Đặt chỗ không thành công"
 
 msgid "Booking Form"
 msgstr "Biểu mẫu Đặt lịch"
@@ -1530,6 +1593,12 @@ msgstr "Mở đặt chỗ giảm dần"
 msgid "Booking Overview"
 msgstr "Tổng quan Đặt hẹn"
 
+msgid "Booking Processed"
+msgstr "Quá trình đặt chỗ đã hoàn tất"
+
+msgid "Booking Rejected"
+msgstr "Đặt chỗ bị từ chối"
+
 msgid "Booking added"
 msgstr "Đã thêm đặt chỗ"
 
@@ -1546,7 +1615,7 @@ msgid "Booking closes when event starts"
 msgstr "Đóng lịch hẹn khi sự kiện bắt đầu"
 
 msgid "Booking date"
-msgstr ""
+msgstr "Ngày đặt chỗ"
 
 msgid "Booking form on customer profile enabled"
 msgstr "Biểu mẫu đặt lịch hẹn  trên hồ sơ khách hàng được bật"
@@ -1567,7 +1636,7 @@ msgid "Booking has been updated."
 msgstr "Đặt chỗ đã được cập nhật."
 
 msgid "Booking invoice"
-msgstr ""
+msgstr "Hóa đơn đặt chỗ"
 
 msgid "Booking is canceled"
 msgstr "Đặt lịch đã hủy"
@@ -1615,7 +1684,7 @@ msgid "Booking tab name"
 msgstr "Tên tab đặt lịch"
 
 msgid "Booking time slots will depend on the service duration"
-msgstr ""
+msgstr "Thời gian đặt lịch sẽ phụ thuộc vào thời gian dịch vụ."
 
 msgid "Booking type"
 msgstr "Loại đặt chỗ"
@@ -1627,18 +1696,22 @@ msgid ""
 "Boost engagement by reaching clients instantly on a platform they use every "
 "day"
 msgstr ""
+"Tăng cường tương tác bằng cách tiếp cận khách hàng ngay lập tức trên nền "
+"tảng mà họ sử dụng hàng ngày."
 
 msgid "Boost revenue with bundled service packages"
-msgstr ""
+msgstr "Tăng doanh thu với các gói dịch vụ kết hợp"
 
 msgid "Boost revenue with valuable extras"
-msgstr ""
+msgstr "Tăng doanh thu với các tiện ích giá trị"
 
 msgid "Boost team productivity with automated updates and fewer manual tasks."
 msgstr ""
+"Tăng năng suất làm việc của đội ngũ với các bản cập nhật tự động và giảm "
+"thiểu các tác vụ thủ công."
 
 msgid "Border color"
-msgstr ""
+msgstr "Màu viền"
 
 msgid "Break Hours"
 msgstr "Giờ Nghỉ"
@@ -1650,7 +1723,7 @@ msgid "Bringing Anyone With You"
 msgstr "Mang theo ai đó cùng bạn"
 
 msgid "Bringing anyone with you"
-msgstr ""
+msgstr "Đưa bất kỳ ai đi cùng bạn"
 
 msgid "Bringing anyone with you?"
 msgstr "Mang theo ai đó cùng bạn?"
@@ -1679,6 +1752,10 @@ msgid ""
 "areas, and more, turning every booking and registration into a powerful "
 "intake process."
 msgstr ""
+"Tạo các biểu mẫu tùy chỉnh cho các dịch vụ, sự kiện và hồ sơ khách hàng bằng "
+"cách sử dụng các trường tùy chỉnh. Thu thập chính xác các thông tin cần "
+"thiết với các ô chọn, ô nhập văn bản và nhiều tính năng khác, biến mỗi lượt "
+"đặt chỗ và đăng ký thành một quy trình thu thập thông tin mạnh mẽ."
 
 msgid ""
 "Bundle multiple appointments or services at discounted rates to encourage "
@@ -1691,16 +1768,16 @@ msgid "Busy"
 msgstr "Bận Rộn"
 
 msgid "Busy slots"
-msgstr ""
+msgstr "Các khung giờ bận rộn"
 
 msgid "Button"
-msgstr ""
+msgstr "Nút"
 
 msgid "Button Type"
 msgstr "Loại nút"
 
 msgid "Button style"
-msgstr ""
+msgstr "Kiểu nút"
 
 msgid "Buttons"
 msgstr "Nút"
@@ -1757,22 +1834,22 @@ msgid "Cancel and Delete"
 msgstr "Hủy và Xóa"
 
 msgid "Cancel appointment"
-msgstr ""
+msgstr "Hủy lịch hẹn"
 
 msgid "Cancel appointment link"
-msgstr ""
+msgstr "Liên kết hủy lịch hẹn"
 
 msgid "Cancel event"
-msgstr ""
+msgstr "Hủy sự kiện"
 
 msgid "Cancel event link"
-msgstr ""
+msgstr "Liên kết hủy sự kiện"
 
 msgid "Cancel following"
 msgstr "Hủy theo sau"
 
 msgid "Cancel package"
-msgstr ""
+msgstr "Hủy gói"
 
 msgid "Canceled"
 msgstr "Đã hủy"
@@ -1784,10 +1861,13 @@ msgid "Canceled By Attendee"
 msgstr "Hủy bởi Người tham gia"
 
 msgid "Canceled by admin"
-msgstr ""
+msgstr "Đã hủy bởi quản trị viên"
 
 msgid "Canceled by attendee"
-msgstr ""
+msgstr "Được hủy bởi người tham dự"
+
+msgid "Cancellation Failed"
+msgstr "Hủy bỏ không thành công"
 
 msgid "Cancelled"
 msgstr "Đã hủy"
@@ -1802,13 +1882,13 @@ msgid "Card"
 msgstr "Thẻ"
 
 msgid "Card color"
-msgstr ""
+msgstr "Màu thẻ"
 
 msgid "Card content"
-msgstr ""
+msgstr "Nội dung thẻ"
 
 msgid "Card field"
-msgstr ""
+msgstr "Trường thẻ"
 
 msgid "Card number"
 msgstr "Số thẻ"
@@ -1820,10 +1900,10 @@ msgid "Cards"
 msgstr "Thẻ"
 
 msgid "Cards and buttons"
-msgstr ""
+msgstr "Thẻ và nút"
 
-msgid "Carrier:"
-msgstr "Nhà mạng:"
+msgid "Carrier"
+msgstr "Nhà cung cấp"
 
 msgid "Cart"
 msgstr "Giỏ hàng"
@@ -1835,7 +1915,7 @@ msgid "Cart description"
 msgstr "Mô tả sự kiện"
 
 msgid "Cart purchased"
-msgstr ""
+msgstr "Giỏ hàng đã mua"
 
 msgid "Catalog"
 msgstr "Danh mục"
@@ -1859,7 +1939,7 @@ msgid "Categories positions updated successfully."
 msgstr "Vị trí danh mục đã được cập nhật thành công."
 
 msgid "Categories sidebar"
-msgstr ""
+msgstr "Bảng điều khiển danh mục"
 
 msgid "Category"
 msgstr "Thể loại"
@@ -1888,18 +1968,20 @@ msgstr "Tên danh mục"
 msgid ""
 "Centralize scheduling across all branches for clearer, simpler management"
 msgstr ""
+"Tập trung lịch trình trên tất cả các chi nhánh để quản lý rõ ràng và đơn "
+"giản hơn."
 
 msgid "Change Password"
 msgstr "Thay đổi Mật khẩu"
 
 msgid "Change colors"
-msgstr ""
+msgstr "Thay đổi màu sắc"
 
 msgid "Change group status"
 msgstr "Thay đổi trạng thái nhóm"
 
 msgid "Change password"
-msgstr ""
+msgstr "Thay đổi mật khẩu"
 
 msgid "Charge type"
 msgstr "Loại kích hoạt"
@@ -1987,6 +2069,10 @@ msgstr "Chọn Dịch vụ"
 msgid "Choose a Form"
 msgstr "Chọn một biểu mẫu"
 
+msgid "Choose a currency that will be used for all price based settings."
+msgstr ""
+"Chọn loại tiền tệ sẽ được sử dụng cho tất cả các cài đặt liên quan đến giá."
+
 msgid ""
 "Choose a form you want to customize. The Step-by-Step 2.0 form is the new "
 "and improved version which provides you with better design and user "
@@ -1999,8 +2085,15 @@ msgstr ""
 msgid "Choose a group service"
 msgstr "Chọn một dịch vụ nhóm"
 
-msgid "Choose date and time"
+msgid ""
+"Choose a time interval that will be used when defining all time based "
+"settings."
 msgstr ""
+"Chọn khoảng thời gian sẽ được sử dụng khi định nghĩa tất cả các cài đặt dựa "
+"trên thời gian."
+
+msgid "Choose date and time"
+msgstr "Chọn ngày và giờ"
 
 msgid ""
 "Choose how Amelia suggests an alternative date when the selected recurring "
@@ -2045,6 +2138,9 @@ msgstr "Chọn thời gian bạn muốn lặp lại cuộc hẹn"
 msgid "Choose when the repeating ends"
 msgstr "Chọn khi nào lặp lại kết thúc"
 
+msgid "Choose whether you want to manage services, events, or both."
+msgstr "Chọn xem bạn muốn quản lý dịch vụ, sự kiện hay cả hai."
+
 msgid "Choosing layout of first step in step by step form"
 msgstr "Chọn bố cục của bước đầu tiên trong biểu mẫu từng bước"
 
@@ -2077,7 +2173,7 @@ msgid "Client ID"
 msgstr "ID Khách hàng"
 
 msgid "Client ID and secret"
-msgstr ""
+msgstr "ID khách hàng và khóa bí mật"
 
 msgid "Client Time:"
 msgstr "Thời gian của khách hàng:"
@@ -2122,7 +2218,7 @@ msgid "Collapse menu"
 msgstr "Thu gọn menu"
 
 msgid "Collect the information your business truly needs"
-msgstr ""
+msgstr "Thu thập thông tin mà doanh nghiệp của bạn thực sự cần"
 
 msgid "Color"
 msgstr "Màu sắc"
@@ -2185,7 +2281,7 @@ msgid "Completed"
 msgstr "Hoàn thành"
 
 msgid "Configuration"
-msgstr ""
+msgstr "Cấu hình"
 
 msgid "Configure"
 msgstr "Cấu hình"
@@ -2212,7 +2308,7 @@ msgid "Configure the recurring appointments details placeholder."
 msgstr "Cấu hình chỗ giữ chỗ chi tiết cuộc hẹn định kỳ."
 
 msgid "Configure waiting list for appointments"
-msgstr ""
+msgstr "Cấu hình danh sách chờ cho các cuộc hẹn"
 
 msgid "Confirm"
 msgstr "Xác nhận"
@@ -2255,6 +2351,9 @@ msgid ""
 "schedules perfectly synced and communication effortless across your entire "
 "team."
 msgstr ""
+"Kết nối lịch làm việc của nhân viên, công cụ họp và các tích hợp khác để đảm "
+"bảo lịch trình luôn đồng bộ hoàn hảo và giao tiếp thuận tiện trên toàn bộ "
+"đội ngũ của bạn."
 
 msgid "Connect to Apple Calendar"
 msgstr "Kết nối với Lịch Apple"
@@ -2320,10 +2419,10 @@ msgid "Consulting"
 msgstr "Tư vấn"
 
 msgid "Contact message"
-msgstr ""
+msgstr "Thông báo liên hệ"
 
 msgid "Contact support."
-msgstr ""
+msgstr "Liên hệ bộ phận hỗ trợ."
 
 msgid "Content"
 msgstr "Nội dung"
@@ -2332,7 +2431,7 @@ msgid "Content Text Color"
 msgstr "Màu chữ Nội dung"
 
 msgid "Content area"
-msgstr ""
+msgstr "Khu vực nội dung"
 
 msgid "Content placeholders"
 msgstr "Chỗ dành cho nội dung"
@@ -2343,11 +2442,14 @@ msgstr "Tiếp tục"
 msgid "Continue Booking"
 msgstr "Tiếp tục Đặt lịch"
 
+msgid "Continue setup"
+msgstr "Tiếp tục cài đặt"
+
 msgid "Copy your API key now, as it won't be visible again."
 msgstr "Hãy sao chép khóa API của bạn ngay, vì nó sẽ không hiển thị lại."
 
-msgid "Cost:"
-msgstr "Chi phí:"
+msgid "Cost"
+msgstr "Chi phí"
 
 msgid ""
 "Could not delete category. This category has services available for booking "
@@ -2395,10 +2497,12 @@ msgstr "Số Tiền"
 
 msgid "Counts one primary customer plus any additional people they add."
 msgstr ""
+"Tính số lượng một khách hàng chính cộng với bất kỳ người nào khác mà họ thêm "
+"vào."
 
 msgid ""
 "Counts the total number of people entered, including the primary customer."
-msgstr ""
+msgstr "Đếm tổng số người đã nhập, bao gồm cả khách hàng chính."
 
 msgid "Coupon"
 msgstr "Mã giảm giá"
@@ -2413,7 +2517,7 @@ msgid "Coupon code"
 msgstr "Mã giảm giá"
 
 msgid "Coupon field"
-msgstr ""
+msgstr "Trường mã giảm giá"
 
 msgid "Coupon has been created."
 msgstr "Phiếu giảm giá đã được tạo."
@@ -2431,22 +2535,22 @@ msgid "Coupon is now visible."
 msgstr "Phiếu giảm giá hiện đã được hiển thị."
 
 msgid "Coupon limit reached"
-msgstr ""
+msgstr "Giới hạn phiếu giảm giá đã đạt đến"
 
 msgid "Coupon needs to have discount or deduction"
 msgstr "Mã giảm giá cần có ưu đãi hoặc giảm trừ"
 
 msgid "Coupon segment"
-msgstr ""
+msgstr "Phần mã giảm giá"
 
 msgid "Coupons"
 msgstr "Mã giảm giá"
 
 msgid "Coupons overview"
-msgstr ""
+msgstr "Tổng quan về phiếu giảm giá"
 
 msgid "Coupons setup"
-msgstr ""
+msgstr "Cài đặt phiếu giảm giá"
 
 msgid "Create Amelia Customers"
 msgstr "Tạo Khách hàng Amelia"
@@ -2483,12 +2587,21 @@ msgid ""
 "reminders, keeping customers and employees informed at exactly the right "
 "time."
 msgstr ""
+"Tạo thông báo tùy chỉnh được kích hoạt dựa trên trạng thái đặt chỗ hoặc lời "
+"nhắc lịch trình, giúp khách hàng và nhân viên luôn được thông báo đúng thời "
+"điểm."
+
+msgid "Create employee"
+msgstr "Tạo nhân viên"
+
+msgid "Create event"
+msgstr "Tạo sự kiện"
 
 msgid "Create meetings for pending appointments"
 msgstr "Tạo cuộc họp cho các cuộc hẹn đang chờ xử lý"
 
 msgid "Create new"
-msgstr ""
+msgstr "Tạo mới"
 
 msgid "Create new badge"
 msgstr "Tạo huy hiệu mới"
@@ -2509,6 +2622,15 @@ msgid ""
 "employees, services, or locations, ensuring customers only see time slots "
 "when everything they need is truly available."
 msgstr ""
+"Tạo phòng, thiết bị hoặc các tài nguyên khác có thể chia sẻ giữa các nhân "
+"viên, dịch vụ hoặc địa điểm, đảm bảo khách hàng chỉ thấy các khung giờ trống "
+"khi tất cả các tài nguyên cần thiết thực sự có sẵn."
+
+msgid "Create scheduled events with fixed dates, prices and capacities."
+msgstr "Tạo các sự kiện được lên lịch với ngày cố định, giá cả và sức chứa."
+
+msgid "Create service"
+msgstr "Tạo dịch vụ"
 
 msgid "Create spaces for pending appointments"
 msgstr "Tạo không gian cho các cuộc hẹn đang chờ"
@@ -2518,9 +2640,15 @@ msgid ""
 "discounts or even free appointments to boost engagement, satisfaction, and "
 "sales."
 msgstr ""
+"Tạo mã giảm giá duy nhất mà khách hàng có thể sử dụng khi đặt chỗ để nhận ưu "
+"đãi giảm giá hoặc thậm chí là các cuộc hẹn miễn phí, nhằm tăng cường tương "
+"tác, sự hài lòng và doanh số bán hàng."
 
 msgid "Created On"
 msgstr "Được Tạo Vào"
+
+msgid "Created on"
+msgstr "Được tạo vào"
 
 msgid "Credit Card"
 msgstr "Thẻ Tín dụng"
@@ -2575,7 +2703,7 @@ msgid "Custom currency symbol"
 msgstr "Ký hiệu tiền tệ tùy chỉnh"
 
 msgid "Custom field"
-msgstr ""
+msgstr "Trường tùy chỉnh"
 
 msgid "Custom field has been added"
 msgstr "Trường tùy chỉnh đã được thêm"
@@ -2596,13 +2724,13 @@ msgid "Custom fields have been updated."
 msgstr "Các trường tùy chỉnh đã được cập nhật."
 
 msgid "Custom fields setup"
-msgstr ""
+msgstr "Cài đặt trường tùy chỉnh"
 
 msgid "Custom font family"
-msgstr ""
+msgstr "Gia đình phông chữ tùy chỉnh"
 
 msgid "Custom notification"
-msgstr ""
+msgstr "Thông báo tùy chỉnh"
 
 msgid "Custom notifications"
 msgstr "Thông báo tùy chỉnh"
@@ -2614,7 +2742,7 @@ msgid "Custom pricing spots will override Maximum allowed spots value."
 msgstr "Chỗ ngồi có giá tùy chỉnh sẽ ghi đè giá trị Chỗ tối đa cho phép."
 
 msgid "Custom service duration"
-msgstr ""
+msgstr "Thời gian dịch vụ tùy chỉnh"
 
 msgid "Customer"
 msgstr "Khách hàng"
@@ -2628,9 +2756,6 @@ msgstr "Khách hàng Tăng dần"
 msgid "Customer Desc"
 msgstr "Khách hàng Giảm dần"
 
-msgid "Customer Name"
-msgstr "Tên Khách Hàng"
-
 msgid "Customer Panel"
 msgstr "Bảng điều khiển Khách hàng"
 
@@ -2641,7 +2766,7 @@ msgid "Customer Profile "
 msgstr "Hồ sơ khách hàng"
 
 msgid "Customer configuration"
-msgstr ""
+msgstr "Cấu hình khách hàng"
 
 msgid "Customer details"
 msgstr "Chi tiết khách hàng"
@@ -2650,7 +2775,7 @@ msgid "Customer email"
 msgstr "Email khách hàng"
 
 msgid "Customer filter"
-msgstr ""
+msgstr "Bộ lọc khách hàng"
 
 msgid "Customer first name"
 msgstr "Tên khách hàng đầu tiên"
@@ -2677,10 +2802,13 @@ msgid "Customer has been updated."
 msgstr "Khách hàng đã được cập nhật."
 
 msgid "Customer information"
-msgstr ""
+msgstr "Thông tin khách hàng"
 
 msgid "Customer last name"
 msgstr "Tên khách hàng cuối cùng"
+
+msgid "Customer name"
+msgstr "Tên khách hàng"
 
 msgid "Customer note"
 msgstr "Ghi chú của khách hàng"
@@ -2692,10 +2820,10 @@ msgid "Customer note has been updated."
 msgstr "Ghi chú khách hàng đã được cập nhật."
 
 msgid "Customer panel"
-msgstr ""
+msgstr "Bảng điều khiển khách hàng"
 
 msgid "Customer panel access link"
-msgstr ""
+msgstr "Liên kết truy cập bảng điều khiển khách hàng"
 
 msgid "Customer phone"
 msgstr "Điện thoại của khách hàng"
@@ -2736,6 +2864,10 @@ msgstr "Khách hàng được nhập từ tệp:"
 msgid "Customers in Waiting list"
 msgstr "Khách hàng trong danh sách chờ"
 
+msgid "Customers will be redirected to this URL after booking an event."
+msgstr ""
+"Khách hàng sẽ được chuyển hướng đến URL này sau khi đặt chỗ cho sự kiện."
+
 msgid ""
 "Customers will be redirected to this URL after scheduling an appointment."
 msgstr "Khách hàng sẽ được chuyển hướng đến URL này sau khi đặt lịch hẹn."
@@ -2752,22 +2884,26 @@ msgid ""
 "Customize every interaction by gathering the right information for services, "
 "events, and customer records"
 msgstr ""
+"Tùy chỉnh mọi tương tác bằng cách thu thập thông tin phù hợp cho dịch vụ, sự "
+"kiện và hồ sơ khách hàng."
 
 msgid ""
 "Customize offerings to match specific services and meet diverse client needs"
 msgstr ""
+"Tùy chỉnh các gói dịch vụ để phù hợp với các dịch vụ cụ thể và đáp ứng nhu "
+"cầu đa dạng của khách hàng."
 
 msgid "Daily"
 msgstr "Hàng ngày"
 
 msgid "Daily occupancy"
-msgstr ""
+msgstr "Tỷ lệ lấp đầy hàng ngày"
 
 msgid "Danger button background color"
-msgstr ""
+msgstr "Màu nền nút Cảnh báo"
 
 msgid "Danger button text color"
-msgstr ""
+msgstr "Màu văn bản nút Cảnh báo"
 
 msgid "Dark Theme"
 msgstr "Chế độ tối"
@@ -2795,6 +2931,8 @@ msgstr "Ngày & giờ"
 
 msgid "Date & time periods of the event with Lesson Space join links"
 msgstr ""
+"Thời gian và khoảng thời gian của sự kiện kèm theo các liên kết tham gia "
+"Lesson Space"
 
 msgid "Date Asc"
 msgstr "Ngày tăng dần"
@@ -2817,7 +2955,7 @@ msgid "Date and Time"
 msgstr "Ngày và Giờ"
 
 msgid "Date and time"
-msgstr ""
+msgstr "Ngày và giờ"
 
 msgid "Date of Birth"
 msgstr "Ngày Sinh"
@@ -2914,8 +3052,8 @@ msgstr "Vị trí Square mặc định"
 msgid "Default appointment status"
 msgstr "Trạng thái cuộc hẹn mặc định"
 
-msgid "Default back‑end page"
-msgstr ""
+msgid "Default back end page"
+msgstr "Trang quản trị mặc định"
 
 msgid "Default language"
 msgstr "Ngôn ngữ mặc định"
@@ -2924,7 +3062,7 @@ msgid "Default location"
 msgstr "Vị trí mặc định"
 
 msgid "Default number of items per page on the back end"
-msgstr ""
+msgstr "Số lượng mục mặc định hiển thị trên mỗi trang trong giao diện quản trị"
 
 msgid "Default number of items per page on the front end"
 msgstr "Số lượng mục mặc định trên mỗi trang ở giao diện người dùng"
@@ -2977,6 +3115,7 @@ msgid ""
 "Define which capabilities will be requested when creating an Express "
 "connected account"
 msgstr ""
+"Xác định các quyền hạn sẽ được yêu cầu khi tạo tài khoản Express kết nối."
 
 msgid ""
 "Defines the language used for notifications sent to this customer for "
@@ -3020,7 +3159,7 @@ msgid "Delete coupon"
 msgstr "Xóa mã giảm giá"
 
 msgid "Delete custom field"
-msgstr ""
+msgstr "Xóa trường tùy chỉnh"
 
 msgid "Delete customer"
 msgstr "Xóa khách hàng"
@@ -3060,11 +3199,15 @@ msgid ""
 "Deliver a smoother booking experience by showing customers only real, "
 "available time slots"
 msgstr ""
+"Cung cấp trải nghiệm đặt chỗ mượt mà hơn bằng cách chỉ hiển thị cho khách "
+"hàng các khung giờ thực tế và còn trống."
 
 msgid ""
 "Deliver personalized messages tailored to your business tone, branding, and "
 "workflow"
 msgstr ""
+"Gửi các thông điệp cá nhân hóa được tùy chỉnh theo phong cách kinh doanh, "
+"thương hiệu và quy trình làm việc của bạn."
 
 msgid "Delivered"
 msgstr "Đã gửi"
@@ -3082,7 +3225,7 @@ msgid "Deposit only"
 msgstr "Chỉ đặt cọc"
 
 msgid "Deposit payment"
-msgstr ""
+msgstr "Thanh toán tiền gửi"
 
 msgid "Deposit type"
 msgstr "Loại đặt cọc"
@@ -3128,10 +3271,10 @@ msgid "Disconnect Employee"
 msgstr "Ngắt kết nối nhân viên"
 
 msgid "Disconnect account"
-msgstr ""
+msgstr "Ngắt kết nối tài khoản"
 
 msgid "Disconnect employee account"
-msgstr ""
+msgstr "Ngắt kết nối tài khoản nhân viên"
 
 msgid "Disconnect from Apple"
 msgstr "Ngắt Kết Nối"
@@ -3236,12 +3379,15 @@ msgid "Download .csv"
 msgstr "Tải xuống .csv"
 
 msgid "Download invoice"
-msgstr ""
+msgstr "Tải xuống hóa đơn"
 
 msgid ""
 "Download your customer list instantly for reporting, marketing, or external "
 "system use, making data management faster and more convenient than ever."
 msgstr ""
+"Tải xuống danh sách khách hàng của bạn ngay lập tức để sử dụng cho báo cáo, "
+"tiếp thị hoặc tích hợp với hệ thống bên ngoài, giúp quản lý dữ liệu nhanh "
+"chóng và thuận tiện hơn bao giờ hết."
 
 msgid "Draft"
 msgstr "Bản nháp"
@@ -3250,7 +3396,7 @@ msgid "Drag to rearrange columns and/or choose which ones to display."
 msgstr "Kéo để sắp xếp lại các cột và/hoặc chọn cột nào để hiển thị."
 
 msgid "Drive bookings with irresistible coupon offers"
-msgstr ""
+msgstr "Tăng doanh số đặt chỗ với các ưu đãi coupon hấp dẫn"
 
 msgid "Drop file here or click to upload"
 msgstr "Thả file vào đây hoặc nhấn để tải lên"
@@ -3331,7 +3477,7 @@ msgid "E-ticket QR code"
 msgstr "Mã QR vé điện tử"
 
 msgid "E-ticket scanner"
-msgstr ""
+msgstr "Máy quét vé điện tử"
 
 msgid "Each:"
 msgstr "Mỗi:"
@@ -3340,13 +3486,16 @@ msgid "Each spot counts as one attendee."
 msgstr "Mỗi chỗ ngồi được tính là một người tham dự."
 
 msgid "Easily export your customer data in one click"
-msgstr ""
+msgstr "Dễ dàng xuất dữ liệu khách hàng chỉ với một cú nhấp chuột"
 
 msgid ""
 "Easily organize multiple business locations in one place, ensuring smooth "
 "operations and a consistent booking experience no matter where your services "
 "are offered."
 msgstr ""
+"Dễ dàng quản lý nhiều địa điểm kinh doanh tại một nơi duy nhất, đảm bảo hoạt "
+"động trơn tru và trải nghiệm đặt chỗ nhất quán dù dịch vụ của bạn được cung "
+"cấp ở đâu."
 
 msgid "Edit"
 msgstr "Chỉnh sửa"
@@ -3394,10 +3543,10 @@ msgid "Edit booking"
 msgstr "Chỉnh sửa đặt chỗ"
 
 msgid "Edit custom field"
-msgstr ""
+msgstr "Chỉnh sửa trường tùy chỉnh"
 
 msgid "Edit custom notification"
-msgstr ""
+msgstr "Chỉnh sửa thông báo tùy chỉnh"
 
 msgid "Edit customer"
 msgstr "Chỉnh sửa khách hàng"
@@ -3412,7 +3561,7 @@ msgid "Edit event"
 msgstr "Chỉnh sửa sự kiện"
 
 msgid "Edit event booking"
-msgstr ""
+msgstr "Chỉnh sửa đặt chỗ sự kiện"
 
 msgid "Edit location"
 msgstr "Chỉnh sửa địa điểm"
@@ -3424,7 +3573,7 @@ msgid "Edit resource"
 msgstr "Chỉnh sửa tài nguyên"
 
 msgid "Edit service"
-msgstr ""
+msgstr "Chỉnh sửa dịch vụ"
 
 msgid "Edit special day"
 msgstr "Chỉnh sửa ngày đặc biệt"
@@ -3433,7 +3582,7 @@ msgid "Edit table"
 msgstr "Chỉnh sửa bảng"
 
 msgid "Edit transaction"
-msgstr ""
+msgstr "Chỉnh sửa giao dịch"
 
 msgid "Edit work hours"
 msgstr "Chỉnh sửa giờ làm việc"
@@ -3442,21 +3591,27 @@ msgid ""
 "Efficiently manage appointment cancellations by allowing customers to join a "
 "waiting list and manually fill newly opened time slots."
 msgstr ""
+"Quản lý hiệu quả việc hủy lịch hẹn bằng cách cho phép khách hàng tham gia "
+"danh sách chờ và tự động điền vào các khung giờ trống mới mở."
 
 msgid "Effortless management for every location"
-msgstr ""
+msgstr "Quản lý dễ dàng cho mọi vị trí"
 
 msgid "Effortless tax management for every booking"
-msgstr ""
+msgstr "Quản lý thuế dễ dàng cho mọi đặt phòng"
 
 msgid ""
 "Effortlessly set up and manage events that repeat on your preferred schedule-"
 "offering flexibility, consistency, and a smooth experience for both your "
 "business and your customers."
 msgstr ""
+"Dễ dàng thiết lập và quản lý các sự kiện lặp lại theo lịch trình ưa thích "
+"của bạn - mang lại sự linh hoạt, nhất quán và trải nghiệm mượt mà cho cả "
+"doanh nghiệp và khách hàng của bạn."
 
 msgid "Eliminate manual calculations with smart, automated tax application"
 msgstr ""
+"Loại bỏ các tính toán thủ công bằng cách áp dụng thuế tự động thông minh."
 
 msgid "Email"
 msgstr ""
@@ -3468,7 +3623,7 @@ msgid "Email Address"
 msgstr "Địa chỉ email"
 
 msgid "Email address"
-msgstr ""
+msgstr "Địa chỉ email"
 
 msgid "Email already exists with different name. Please check your name."
 msgstr "Email đã tồn tại với tên khác nhau. Vui lòng kiểm tra tên của bạn."
@@ -3504,10 +3659,10 @@ msgid "Employee Selection"
 msgstr "Logic lựa chọn Nhân viên"
 
 msgid "Employee badges"
-msgstr ""
+msgstr "Thẻ nhân viên"
 
 msgid "Employee badges management"
-msgstr ""
+msgstr "Quản lý thẻ nhân viên"
 
 msgid "Employee calendar disconnected successfully"
 msgstr "Lịch của nhân viên đã được ngắt kết nối thành công"
@@ -3529,19 +3684,19 @@ msgid "Employee description"
 msgstr "Mô tả nhân viên"
 
 msgid "Employee description popup"
-msgstr ""
+msgstr "Hộp thoại mô tả nhân viên"
 
 msgid "Employee details"
 msgstr "Chi tiết nhân viên"
 
 msgid "Employee dialog"
-msgstr ""
+msgstr "Hộp thoại nhân viên"
 
 msgid "Employee email"
 msgstr "Email nhân viên"
 
 msgid "Employee filter"
-msgstr ""
+msgstr "Bộ lọc nhân viên"
 
 msgid "Employee first name"
 msgstr "Tên nhân viên đầu tiên"
@@ -3570,6 +3725,9 @@ msgstr "Nhân viên hiện đã hiển thị."
 msgid "Employee last name"
 msgstr "Tên nhân viên cuối cùng"
 
+msgid "Employee name"
+msgstr "Tên nhân viên"
+
 msgid "Employee name, email & phone"
 msgstr "Tên, email & điện thoại của nhân viên"
 
@@ -3580,46 +3738,46 @@ msgid "Employee note has been updated."
 msgstr "Ghi chú của nhân viên đã được cập nhật."
 
 msgid "Employee panel"
-msgstr ""
+msgstr "Bảng điều khiển nhân viên"
 
 msgid "Employee panel access link"
-msgstr ""
+msgstr "Liên kết truy cập bảng điều khiển nhân viên"
 
 msgid "Employee panel page URL"
-msgstr ""
+msgstr "URL trang bảng điều khiển nhân viên"
 
 msgid "Employee panel password"
 msgstr "Mật khẩu bảng điều khiển nhân viên"
 
 msgid "Employee password"
-msgstr ""
+msgstr "Mật khẩu nhân viên"
 
 msgid "Employee phone"
 msgstr "Điện thoại của nhân viên"
 
 msgid "Employee price"
-msgstr ""
+msgstr "Giá cho nhân viên"
 
 msgid "Employee profile"
-msgstr ""
+msgstr "Hồ sơ nhân viên"
 
 msgid "Employee selection"
-msgstr ""
+msgstr "Chọn nhân viên"
 
 msgid "Employee selection logic"
 msgstr "Logic lựa chọn Nhân viên"
 
 msgid "Employee setup"
-msgstr ""
+msgstr "Cài đặt nhân viên"
 
 msgid "Employees"
 msgstr "Nhân viên"
 
 msgid "Empower your team with seamless integrations"
-msgstr ""
+msgstr "Tăng cường khả năng làm việc của đội ngũ với các tích hợp mượt mà"
 
 msgid "Empty state"
-msgstr ""
+msgstr "Trạng thái trống"
 
 msgid "Enable"
 msgstr "Kích hoạt"
@@ -3739,6 +3897,8 @@ msgid ""
 "Enable this option to add event attendees to employees’ Apple Calendar "
 "events."
 msgstr ""
+"Bật tùy chọn này để thêm người tham dự sự kiện vào các sự kiện lịch Apple "
+"của nhân viên."
 
 msgid ""
 "Enable this option to add event attendees to employees’ Google Calendar "
@@ -3751,6 +3911,8 @@ msgid ""
 "Enable this option to add event attendees to employees’ Outlook Calendar "
 "events."
 msgstr ""
+"Bật tùy chọn này để thêm người tham dự sự kiện vào các sự kiện lịch Outlook "
+"của nhân viên."
 
 msgid ""
 "Enable this option to create meetings for appointments with pending status."
@@ -3789,11 +3951,15 @@ msgid ""
 "Enable this option to include buffer time for scheduled appointments in "
 "Google Calendar events."
 msgstr ""
+"Bật tùy chọn này để bao gồm thời gian đệm cho các cuộc hẹn đã lên lịch trong "
+"sự kiện Google Calendar."
 
 msgid ""
 "Enable this option to include buffer time for scheduled appointments in "
 "Outlook Calendar events."
 msgstr ""
+"Bật tùy chọn này để bao gồm thời gian đệm cho các cuộc hẹn đã lên lịch trong "
+"sự kiện Lịch Outlook."
 
 msgid ""
 "Enable this option to make sure that the invoice will be sent to the "
@@ -3816,6 +3982,8 @@ msgid ""
 "Enable this option to use this custom field as the location in Google and "
 "Outlook Calendar events, ICS files, and ‘Add to Calendar’ events."
 msgstr ""
+"Bật tùy chọn này để sử dụng trường tùy chỉnh này làm vị trí trong các sự "
+"kiện lịch Google và Outlook, tệp ICS và các sự kiện 'Thêm vào Lịch'."
 
 msgid "Enable to display booking slots based on the client's time zone."
 msgstr "Bật để hiển thị các khung giờ đặt chỗ dựa trên múi giờ của khách hàng."
@@ -3863,32 +4031,45 @@ msgid ""
 "Enhance client trust by providing transparent, documented payment details "
 "for every booking"
 msgstr ""
+"Tăng cường niềm tin của khách hàng bằng cách cung cấp thông tin thanh toán "
+"minh bạch và được ghi chép chi tiết cho mỗi đặt phòng."
 
 msgid ""
 "Enhance customer loyalty by rewarding clients with exclusive, personalized "
 "offers"
 msgstr ""
+"Tăng cường sự trung thành của khách hàng bằng cách thưởng cho khách hàng "
+"những ưu đãi độc quyền và cá nhân hóa."
 
 msgid ""
 "Enhance flexibility with customer information ready for marketing tools or "
 "external platforms"
 msgstr ""
+"Tăng cường tính linh hoạt với thông tin khách hàng sẵn sàng cho các công cụ "
+"tiếp thị hoặc nền tảng bên ngoài."
 
 msgid ""
 "Enhance the customer experience with clear, intuitive forms designed around "
 "your business needs"
 msgstr ""
+"Nâng cao trải nghiệm khách hàng với các biểu mẫu rõ ràng, trực quan được "
+"thiết kế dựa trên nhu cầu kinh doanh của bạn."
 
 msgid ""
 "Enhance the customer experience with tailored add-ons that add convenience "
 "and value"
 msgstr ""
+"Nâng cao trải nghiệm khách hàng với các tiện ích mở rộng được tùy chỉnh, "
+"mang lại sự tiện lợi và giá trị."
 
 msgid "Ensure accurate billing by applying the correct tax rates every time"
 msgstr ""
+"Đảm bảo tính chính xác của hóa đơn bằng cách áp dụng đúng tỷ lệ thuế mỗi lần."
 
 msgid "Ensure accurate bookkeeping with clear, organized financial data"
 msgstr ""
+"Đảm bảo sổ sách kế toán chính xác với dữ liệu tài chính rõ ràng và được tổ "
+"chức khoa học."
 
 msgid "Enter, and re-enter your new password to continue"
 msgstr "Vui lòng nhập mật khẩu mới lần nữa"
@@ -3988,11 +4169,14 @@ msgstr "Nhập mật khẩu của bạn"
 msgid "Error"
 msgstr "Lỗi"
 
+msgid "Error occurred"
+msgstr "Lỗi đã xảy ra"
+
 msgid "Error while generating CSV."
 msgstr "Lỗi khi tạo CSV."
 
 msgid "Estimated price"
-msgstr ""
+msgstr "Giá ước tính"
 
 msgid "Event"
 msgstr "Sự kiện"
@@ -4072,7 +4256,7 @@ msgid "Event Type"
 msgstr "Loại Sự kiện"
 
 msgid "Event available"
-msgstr ""
+msgstr "Sự kiện có sẵn"
 
 msgid "Event booking has been created."
 msgstr "Đặt chỗ sự kiện đã được tạo."
@@ -4090,37 +4274,39 @@ msgid "Event calendar booking from"
 msgstr "Đặt chỗ từ lịch sự kiện"
 
 msgid "Event card"
-msgstr ""
+msgstr "Thẻ sự kiện"
 
 msgid "Event date & time period"
-msgstr ""
+msgstr "Thời gian và khoảng thời gian của sự kiện"
 
 msgid "Event date & time periods with Google Meet join links"
-msgstr ""
+msgstr "Thời gian và ngày giờ sự kiện kèm theo liên kết tham gia Google Meet"
 
 msgid "Event date & time periods with Microsoft Teams join links"
 msgstr ""
+"Thời gian sự kiện và các khoảng thời gian kèm theo liên kết tham gia "
+"Microsoft Teams"
 
 msgid "Event date & time periods with Zoom join links"
-msgstr ""
+msgstr "Thời gian và khoảng thời gian sự kiện kèm theo liên kết tham gia Zoom"
 
 msgid "Event date & time periods with Zoom start links"
-msgstr ""
+msgstr "Thời gian sự kiện và khoảng thời gian với liên kết bắt đầu của Zoom"
 
 msgid "Event date period"
-msgstr ""
+msgstr "Thời gian diễn ra sự kiện"
 
 msgid "Event date periods with Google Meet join links"
-msgstr ""
+msgstr "Thời gian sự kiện kèm theo liên kết tham gia Google Meet"
 
 msgid "Event date periods with Microsoft Teams join links"
-msgstr ""
+msgstr "Thời gian sự kiện kèm theo liên kết tham gia Microsoft Teams"
 
 msgid "Event date periods with Zoom join links"
-msgstr ""
+msgstr "Thời gian sự kiện kèm theo liên kết tham gia Zoom"
 
 msgid "Event date periods with Zoom start links"
-msgstr ""
+msgstr "Thời gian sự kiện với liên kết bắt đầu của Zoom"
 
 msgid "Event deposit"
 msgstr "Tiền đặt cọc sự kiện"
@@ -4132,31 +4318,31 @@ msgid "Event details"
 msgstr "Chi tiết sự kiện"
 
 msgid "Event e-ticket"
-msgstr ""
+msgstr "Vé sự kiện điện tử"
 
 msgid "Event employee"
-msgstr ""
+msgstr "Sự kiện nhân viên"
 
 msgid "Event employees"
-msgstr ""
+msgstr "Nhân viên sự kiện"
 
 msgid "Event end date"
-msgstr ""
+msgstr "Ngày kết thúc sự kiện"
 
 msgid "Event end date & time"
-msgstr ""
+msgstr "Ngày và giờ kết thúc sự kiện"
 
 msgid "Event end time"
-msgstr ""
+msgstr "Thời gian kết thúc sự kiện"
 
 msgid "Event ends"
-msgstr ""
+msgstr "Sự kiện kết thúc"
 
 msgid "Event filter"
-msgstr ""
+msgstr "Bộ lọc sự kiện"
 
 msgid "Event gallery"
-msgstr ""
+msgstr "Thư viện sự kiện"
 
 msgid "Event has been canceled"
 msgstr "Sự kiện đã được hủy"
@@ -4189,10 +4375,10 @@ msgid "Event has been updated."
 msgstr "Sự kiện đã được cập nhật."
 
 msgid "Event info"
-msgstr ""
+msgstr "Thông tin sự kiện"
 
 msgid "Event initial start date"
-msgstr ""
+msgstr "Ngày bắt đầu ban đầu của sự kiện"
 
 msgid "Event is now visible."
 msgstr "Sự kiện hiện đã hiển thị."
@@ -4201,7 +4387,7 @@ msgid "Event list booking from"
 msgstr "Danh sách đặt chỗ sự kiện từ"
 
 msgid "Event location"
-msgstr ""
+msgstr "Địa điểm sự kiện"
 
 msgid "Event name"
 msgstr "Tên sự kiện"
@@ -4210,31 +4396,31 @@ msgid "Event price"
 msgstr "Giá sự kiện"
 
 msgid "Event slots capacity"
-msgstr ""
+msgstr "Khả năng chứa của các khe sự kiện"
 
 msgid "Event space name"
 msgstr "Tên không gian sự kiện"
 
 msgid "Event start date"
-msgstr ""
+msgstr "Ngày bắt đầu sự kiện"
 
 msgid "Event start date & time"
-msgstr ""
+msgstr "Ngày và giờ bắt đầu sự kiện"
 
 msgid "Event start date and time"
 msgstr "Ngày và giờ bắt đầu sự kiện"
 
 msgid "Event start time"
-msgstr ""
+msgstr "Thời gian bắt đầu sự kiện"
 
 msgid "Event starts"
-msgstr ""
+msgstr "Sự kiện bắt đầu"
 
 msgid "Event status"
-msgstr ""
+msgstr "Trạng thái sự kiện"
 
 msgid "Event ticketing"
-msgstr ""
+msgstr "Vé sự kiện"
 
 msgid "Event tickets"
 msgstr "Vé sự kiện"
@@ -4246,7 +4432,7 @@ msgid "Event title and description"
 msgstr "Tiêu đề và mô tả sự kiện"
 
 msgid "Event type"
-msgstr ""
+msgstr "Loại sự kiện"
 
 msgid "Events"
 msgstr "Sự kiện"
@@ -4264,28 +4450,28 @@ msgid "Events List Booking"
 msgstr "Danh sách sự kiện đặt lịch hẹn "
 
 msgid "Events available"
-msgstr ""
+msgstr "Các sự kiện có sẵn"
 
 msgid "Events calendar"
-msgstr ""
+msgstr "Lịch sự kiện"
 
 msgid "Events custom pricing"
-msgstr ""
+msgstr "Giá cả tùy chỉnh cho sự kiện"
 
 msgid "Events list"
-msgstr ""
+msgstr "Danh sách sự kiện"
 
 msgid "Events list view"
-msgstr ""
+msgstr "Danh sách sự kiện"
 
 msgid "Events pricing"
 msgstr "Giá sự kiện"
 
 msgid "Events setup"
-msgstr ""
+msgstr "Cài đặt sự kiện"
 
 msgid "Events waiting list"
-msgstr ""
+msgstr "Danh sách chờ sự kiện"
 
 msgid "Every"
 msgstr "Mỗi"
@@ -4304,6 +4490,8 @@ msgstr "Mở rộng tất cả"
 
 msgid "Expand your capacity by adding as many employees as your business needs"
 msgstr ""
+"Mở rộng khả năng của bạn bằng cách thêm nhiều nhân viên như nhu cầu kinh "
+"doanh của bạn yêu cầu."
 
 msgid "Expiration date"
 msgstr "Ngày hết hạn"
@@ -4324,9 +4512,11 @@ msgid ""
 "Export all transaction records from the Finance page for effortless "
 "accounting, reconciliation, or sharing with your finance tools."
 msgstr ""
+"Xuất tất cả các bản ghi giao dịch từ trang Tài chính để thực hiện kế toán, "
+"đối chiếu hoặc chia sẻ với các công cụ tài chính của bạn một cách dễ dàng."
 
 msgid "Export appointment data with ease"
-msgstr ""
+msgstr "Xuất dữ liệu lịch hẹn một cách dễ dàng"
 
 msgid "Export bookings"
 msgstr "Xuất đặt chỗ"
@@ -4377,10 +4567,10 @@ msgid "Extras available"
 msgstr "Dịch vụ bổ sung có sẵn"
 
 msgid "Extras cost:"
-msgstr ""
+msgstr "Chi phí phụ:"
 
 msgid "Extras subtotal"
-msgstr ""
+msgstr "Tổng cộng phụ"
 
 msgid "Extras total price"
 msgstr "Tổng giá các mục phụ"
@@ -4416,10 +4606,10 @@ msgid "Failed to send invoice."
 msgstr "Không thể gửi hóa đơn."
 
 msgid "Failed to send test SMS."
-msgstr ""
+msgstr "Không thể gửi tin nhắn SMS thử nghiệm."
 
 msgid "Failed to send test WhatsApp message."
-msgstr ""
+msgstr "Không thể gửi tin nhắn WhatsApp thử nghiệm."
 
 msgid "Failed to send test email."
 msgstr "Không thể gửi email thử nghiệm."
@@ -4440,7 +4630,7 @@ msgid "Field Order"
 msgstr "Thứ tự trường"
 
 msgid "Field order"
-msgstr ""
+msgstr "Thứ tự trường"
 
 msgid "Field order, mandatory fields, labels and display options"
 msgstr "Thứ tự trường, trường bắt buộc, nhãn và tùy chọn hiển thị"
@@ -4461,10 +4651,10 @@ msgid "Filter by Location"
 msgstr "Lọc theo Địa điểm"
 
 msgid "Filter by employee"
-msgstr ""
+msgstr "Lọc theo nhân viên"
 
 msgid "Filter by location"
-msgstr ""
+msgstr "Lọc theo vị trí"
 
 msgid "Filterable Field:"
 msgstr "Hiển thị Trường:"
@@ -4473,7 +4663,7 @@ msgid "Filters"
 msgstr "Bộ Lọc"
 
 msgid "Filters block"
-msgstr ""
+msgstr "Khối bộ lọc"
 
 msgid "Finance"
 msgstr "Tài Chính"
@@ -4515,14 +4705,18 @@ msgid ""
 "Flexible discount options let you set custom values or offer full-price "
 "waivers"
 msgstr ""
+"Các tùy chọn giảm giá linh hoạt cho phép bạn đặt giá trị tùy chỉnh hoặc miễn "
+"phí hoàn toàn."
 
 msgid ""
 "Flexible pricing lets you set a fixed package price and offer attractive "
 "discounts"
 msgstr ""
+"Giá linh hoạt cho phép bạn thiết lập giá gói cố định và cung cấp các ưu đãi "
+"hấp dẫn."
 
 msgid "Follow up"
-msgstr ""
+msgstr "Theo dõi"
 
 msgid "Font"
 msgstr "Phông chữ"
@@ -4531,7 +4725,7 @@ msgid "Font URL"
 msgstr "URL Phông chữ"
 
 msgid "Font family"
-msgstr ""
+msgstr "Gia đình phông chữ"
 
 msgid "Fonts"
 msgstr "Phông chữ"
@@ -4543,10 +4737,10 @@ msgid "Footer"
 msgstr "Chân trang"
 
 msgid "Footer buttons"
-msgstr ""
+msgstr "Các nút ở chân trang"
 
 msgid "Footer content"
-msgstr ""
+msgstr "Nội dung chân trang"
 
 msgid "For multiselect: hold CTRL / Command (⌘)."
 msgstr "Để chọn nhiều mục: giữ phím CTRL / Command (⌘)."
@@ -4562,7 +4756,7 @@ msgid "Forgot Password?"
 msgstr "Quên mật khẩu?"
 
 msgid "Forgot password?"
-msgstr ""
+msgstr "Quên mật khẩu?"
 
 msgid "Forgot your password?"
 msgstr "Quên mật khẩu?"
@@ -4577,7 +4771,7 @@ msgid "Form colors"
 msgstr "Màu sắc biểu mẫu"
 
 msgid "Forms"
-msgstr ""
+msgstr "Biểu mẫu"
 
 msgid "Fourth"
 msgstr "Thứ tư"
@@ -4640,7 +4834,7 @@ msgid "Front-end customer panel"
 msgstr "Bảng điều khiển khách hàng giao diện người dùng"
 
 msgid "Front-end employee panel"
-msgstr ""
+msgstr "Bảng điều khiển nhân viên phía trước"
 
 msgid "Frontend"
 msgstr "Giao diện người dùng"
@@ -4693,7 +4887,7 @@ msgid "Get in Touch"
 msgstr "Liên hệ"
 
 msgid "Get in touch"
-msgstr ""
+msgstr "Liên hệ với chúng tôi"
 
 msgid "Global Settings"
 msgstr "Cài đặt toàn cầu"
@@ -4710,10 +4904,10 @@ msgid "Go Back"
 msgstr "Quay lại"
 
 msgid "Go back"
-msgstr ""
+msgstr "Quay lại"
 
 msgid "Go to Catalog form"
-msgstr ""
+msgstr "Đi đến biểu mẫu Danh mục"
 
 msgid "Go to Custom Fields"
 msgstr "Đi tới Trường tùy chỉnh"
@@ -4722,7 +4916,7 @@ msgid "Go to Notifications"
 msgstr "Đi tới Thông báo"
 
 msgid "Go to Step-by-step form"
-msgstr ""
+msgstr "Đi đến biểu mẫu từng bước"
 
 msgid "Google"
 msgstr ""
@@ -4734,16 +4928,16 @@ msgid "Google Analytics"
 msgstr ""
 
 msgid "Google Analytics setup"
-msgstr ""
+msgstr "Cài đặt Google Analytics"
 
 msgid "Google Calendar"
 msgstr "Lịch Google"
 
 msgid "Google Calendar & Google Meet"
-msgstr ""
+msgstr "Google Calendar &amp; Google Meet"
 
 msgid "Google Calendar setup"
-msgstr ""
+msgstr "Cài đặt Google Calendar"
 
 msgid "Google Map API key"
 msgstr "Khóa API Google Map"
@@ -4758,13 +4952,13 @@ msgid "Google Meet Link"
 msgstr "Liên kết Google Meet"
 
 msgid "Google Meet join link"
-msgstr ""
+msgstr "Liên kết tham gia Google Meet"
 
 msgid "Google Meet link"
-msgstr ""
+msgstr "Liên kết Google Meet"
 
 msgid "Google Meet setup"
-msgstr ""
+msgstr "Cài đặt Google Meet"
 
 msgid "Google reCAPTCHA v2 secret key"
 msgstr "Khóa bí mật Google reCAPTCHA v2"
@@ -4779,7 +4973,7 @@ msgid "Green"
 msgstr "Màu Xanh Lá Cây"
 
 msgid "Grid view"
-msgstr ""
+msgstr "Chế độ xem lưới"
 
 msgid "Group Ticket"
 msgstr "Vé nhóm"
@@ -4800,7 +4994,7 @@ msgid "Group ticket has already been scanned"
 msgstr "Dịch vụ đã được lưu"
 
 msgid "Grow your team with unlimited employee management"
-msgstr ""
+msgstr "Phát triển đội ngũ của bạn với quản lý nhân viên không giới hạn"
 
 msgid "Gyms"
 msgstr "Phòng tập thể hình"
@@ -4821,17 +5015,20 @@ msgstr ""
 msgid "Header"
 msgstr "Đầu trang"
 
+msgid "Header Image URL"
+msgstr "Đường dẫn hình ảnh tiêu đề"
+
 msgid "Heading"
-msgstr ""
+msgstr "Tiêu đề"
 
 msgid "Heading Text Color"
 msgstr "Màu chữ Tiêu đề"
 
 msgid "Heading content"
-msgstr ""
+msgstr "Nội dung tiêu đề"
 
 msgid "Heading title"
-msgstr ""
+msgstr "Tiêu đề"
 
 msgid "Healthcare"
 msgstr "Chăm sóc sức khỏe"
@@ -4960,13 +5157,13 @@ msgid "Hide tax"
 msgstr "Ẩn thuế"
 
 msgid "Hide tips & suggestions"
-msgstr ""
+msgstr "Ẩn các gợi ý và đề xuất"
 
 msgid "Higher price background"
-msgstr ""
+msgstr "Nền giá cao hơn"
 
 msgid "Higher price text"
-msgstr ""
+msgstr "Văn bản giá cao hơn"
 
 msgid "Highest price"
 msgstr "Giá cao nhất"
@@ -4990,10 +5187,13 @@ msgid "How many people are coming?"
 msgstr "Bao nhiêu người sẽ tham gia?"
 
 msgid "How to"
-msgstr ""
+msgstr "Cách thực hiện"
 
 msgid "How to get your"
 msgstr "Cách để lấy"
+
+msgid "How will you use Amelia?"
+msgstr "Bạn sẽ sử dụng Amelia như thế nào?"
 
 msgid "ID"
 msgstr ""
@@ -5021,11 +5221,25 @@ msgstr ""
 "phương thức thanh toán mặc định sẽ được sử dụng."
 
 msgid ""
+"If disabled, booking must meet the minimum capacity, and the time slot "
+"closes after the first booking."
+msgstr ""
+"Nếu bị vô hiệu hóa, đặt chỗ phải đáp ứng dung lượng tối thiểu và khung giờ "
+"sẽ đóng sau khi có đặt chỗ đầu tiên."
+
+msgid ""
 "If disabled, the price will remain the same regardless of how many people "
 "are included in the group appointment."
 msgstr ""
 "Nếu bị vô hiệu hóa, giá sẽ giữ nguyên bất kể có bao nhiêu người được bao gồm "
 "trong cuộc hẹn nhóm."
+
+msgid ""
+"If enabled, customers can book with Pending status even after maximum "
+"capacity is reached."
+msgstr ""
+"Nếu tính năng này được kích hoạt, khách hàng có thể đặt chỗ với trạng thái "
+"\"Đang chờ xử lý\" ngay cả khi đã đạt đến công suất tối đa."
 
 msgid ""
 "If enabled, customers can complete their payment using the link in their "
@@ -5064,42 +5278,11 @@ msgstr ""
 "nhập."
 
 msgid ""
-"If this is disabled, your front-end customers won't be able to book "
-"appointment with Pending status above the maximum capacity. Once the maximum "
-"capacity is reached appointment will close and time slot will become "
-"unavailable."
+"If this option is disabled, the item will be available only for booking from "
+"the backend."
 msgstr ""
-"Nếu tùy chọn này bị vô hiệu hóa, khách hàng trên giao diện người dùng sẽ "
-"không thể đặt lịch hẹn với trạng thái Đang chờ vượt quá sức chứa tối đa. Khi "
-"đạt đến sức chứa tối đa, lịch hẹn sẽ đóng và khung giờ sẽ không còn khả dụng."
-
-msgid ""
-"If this is disabled, your front-end customers won't be able to submit a "
-"booking unless they fill in the minimum service capacity, but once they book "
-"for any capacity above minimum, the time slot will become unavailable for "
-"booking for others. If enabled, multiple customers will be able to book the "
-"same time slot, without having to fill in the minimum capacity."
-msgstr ""
-"Nếu tùy chọn này bị vô hiệu hóa, khách hàng trên giao diện người dùng sẽ "
-"không thể gửi đặt chỗ trừ khi họ điền vào sức chứa dịch vụ tối thiểu, nhưng "
-"một khi họ đặt cho bất kỳ sức chứa nào trên mức tối thiểu, khung giờ đó sẽ "
-"không còn khả dụng cho người khác đặt chỗ. Nếu được kích hoạt, nhiều khách "
-"hàng sẽ có thể đặt cùng một khung giờ mà không cần phải điền vào sức chứa "
-"tối thiểu."
-
-msgid ""
-"If this option is disabled, the employee will only be available for booking "
-"through the back-end"
-msgstr ""
-"Nếu tùy chọn này bị vô hiệu hóa, nhân viên sẽ chỉ có thể được đặt lịch thông "
-"qua phần quản trị."
-
-msgid ""
-"If this option is disabled, the service will be bookable only from the back "
-"end."
-msgstr ""
-"Nếu tùy chọn này bị vô hiệu hóa, dịch vụ sẽ chỉ có thể được đặt từ phía quản "
-"trị."
+"Nếu tùy chọn này bị vô hiệu hóa, mục này chỉ có thể được đặt chỗ từ giao "
+"diện quản trị."
 
 msgid ""
 "If this option is enabled customers will be able to pay via email "
@@ -5107,11 +5290,6 @@ msgid ""
 msgstr ""
 "Nếu tùy chọn này được kích hoạt, khách hàng sẽ có thể thanh toán qua thông "
 "báo email hoặc thông qua Bảng điều khiển Khách hàng của họ."
-
-msgid ""
-"If this option is enabled time slots will be shown with included service "
-"buffer time."
-msgstr ""
 
 msgid ""
 "If this option is not checked the plugin will calculate the time <br> for "
@@ -5163,11 +5341,16 @@ msgid ""
 "time (working hours, special days and days off for all employees will be "
 "ignored)."
 msgstr ""
+"Nếu bạn kích hoạt tùy chọn này, quản trị viên sẽ có thể đặt lịch hẹn vào bất "
+"kỳ thời gian nào (giờ làm việc, ngày lễ và ngày nghỉ của tất cả nhân viên sẽ "
+"bị bỏ qua)."
 
 msgid ""
 "If you enable this option, Admin will be able to book appointment over or "
 "during another appointment."
 msgstr ""
+"Nếu bạn kích hoạt tùy chọn này, quản trị viên có thể đặt lịch hẹn trong hoặc "
+"sau một lịch hẹn khác."
 
 msgid ""
 "If you enable this option every time a new customer schedules the "
@@ -5179,13 +5362,13 @@ msgstr ""
 "đăng nhập."
 
 msgid "Image"
-msgstr ""
+msgstr "Hình ảnh"
 
 msgid "Image Color"
 msgstr "Màu Hình ảnh"
 
 msgid "Image thumbs"
-msgstr ""
+msgstr "Hình thu nhỏ"
 
 msgid "Import"
 msgstr "Nhập"
@@ -5209,36 +5392,79 @@ msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
 "billing"
 msgstr ""
+"Nâng cao độ chính xác và chuyên nghiệp với hóa đơn được định dạng nhất quán "
+"và rõ ràng."
 
 msgid ""
 "Improve customer choice by letting clients book with the employee that suits "
 "them best"
 msgstr ""
+"Nâng cao sự lựa chọn của khách hàng bằng cách cho phép khách hàng đặt lịch "
+"với nhân viên phù hợp nhất với họ."
 
 msgid ""
 "Improve customer convenience by offering predictable, easy-to-book recurring "
 "options"
 msgstr ""
+"Nâng cao sự tiện lợi cho khách hàng bằng cách cung cấp các tùy chọn định kỳ "
+"dễ dàng đặt lịch và dự đoán được."
 
 msgid ""
 "Improve customer experience by letting clients choose the location that "
 "suits them best"
 msgstr ""
+"Nâng cao trải nghiệm khách hàng bằng cách cho phép khách hàng lựa chọn vị "
+"trí phù hợp nhất với họ."
 
 msgid ""
 "Improve reporting accuracy by accessing complete appointment data instantly"
 msgstr ""
+"Nâng cao độ chính xác của báo cáo bằng cách truy cập dữ liệu lịch hẹn đầy đủ "
+"ngay lập tức"
 
 msgid ""
 "Improved customer retention as clients return to use the remaining sessions "
 "in their package"
 msgstr ""
+"Tăng cường khả năng giữ chân khách hàng khi khách hàng quay lại sử dụng các "
+"phiên còn lại trong gói dịch vụ của họ."
+
+msgid ""
+"In Amelia, a “service” is a specific appointment-type offering your business "
+"provides to clients - such as consultations, treatments, or classes - that "
+"can be fully customized with its own name, duration, price, capacity, "
+"availability, and extras, and booked online with assigned employees."
+msgstr ""
+"Trong Amelia, \"dịch vụ\" là một loại dịch vụ cụ thể mà doanh nghiệp của bạn "
+"cung cấp cho khách hàng - chẳng hạn như tư vấn, điều trị hoặc lớp học - có "
+"thể được tùy chỉnh hoàn toàn với tên riêng, thời lượng, giá cả, sức chứa, "
+"tính khả dụng và các tùy chọn bổ sung, và có thể đặt lịch trực tuyến với "
+"nhân viên được phân công."
+
+msgid ""
+"In Amelia, an employee is a team member who provides services or hosts "
+"events, with their own schedule, working hours, and assigned offerings."
+msgstr ""
+"Trong Amelia, nhân viên là thành viên của đội ngũ cung cấp dịch vụ hoặc tổ "
+"chức sự kiện, có lịch trình, giờ làm việc và các dịch vụ được phân công "
+"riêng."
+
+msgid ""
+"In Amelia, an event is a booking-type offering designed for group activities "
+"or multi-day occasions - such as workshops, conferences, tours, or training "
+"series - that can be configured with its own schedule, capacity, pricing "
+"structure and assigned staff."
+msgstr ""
+"Trong Amelia, sự kiện là một loại dịch vụ đặt chỗ được thiết kế cho các hoạt "
+"động nhóm hoặc các sự kiện kéo dài nhiều ngày - như hội thảo, hội nghị, tour "
+"du lịch hoặc chuỗi đào tạo - có thể được cấu hình với lịch trình riêng, công "
+"suất, cấu trúc giá cả và nhân viên được phân công."
 
 msgid "In Package"
 msgstr "Trong Gói"
 
 msgid "In package"
-msgstr ""
+msgstr "Trong gói"
 
 msgid "Incl. VAT"
 msgstr "Bao gồm VAT"
@@ -5249,8 +5475,15 @@ msgstr "bao gồm"
 msgid "Include buffer time in calendar events"
 msgstr "Bao gồm thời gian đệm trong các sự kiện lịch"
 
-msgid "Include in invoice"
+msgid ""
+"Include buffer time in slot calculation. When disabled, slots are based only "
+"on service duration."
 msgstr ""
+"Bao gồm thời gian đệm trong tính toán khe thời gian. Khi tắt, các khe thời "
+"gian chỉ dựa trên thời gian dịch vụ."
+
+msgid "Include in invoice"
+msgstr "Thêm vào hóa đơn"
 
 msgid "Include service buffer time in time slots"
 msgstr "Bao gồm thời gian chờ dịch vụ trong các khung thời gian"
@@ -5262,16 +5495,22 @@ msgid ""
 "Increase conversions by motivating customers with attractive, limited-time "
 "deals"
 msgstr ""
+"Tăng tỷ lệ chuyển đổi bằng cách khuyến khích khách hàng với các ưu đãi hấp "
+"dẫn và có thời hạn."
 
 msgid ""
 "Increase revenue by encouraging customers to purchase additional services or "
 "products"
 msgstr ""
+"Tăng doanh thu bằng cách khuyến khích khách hàng mua thêm dịch vụ hoặc sản "
+"phẩm."
 
 msgid ""
 "Increase sales volume by encouraging customers to book more appointments at "
 "once"
 msgstr ""
+"Tăng doanh số bán hàng bằng cách khuyến khích khách hàng đặt nhiều lịch hẹn "
+"cùng lúc."
 
 msgid ""
 "Indicates the number of new and returning customers<br/>for the selected "
@@ -5287,22 +5526,22 @@ msgid "Info"
 msgstr "Thông tin"
 
 msgid "Info text"
-msgstr ""
+msgstr "Thông tin văn bản"
 
 msgid "Initial end date & time of the event"
-msgstr ""
+msgstr "Ngày và giờ kết thúc ban đầu của sự kiện"
 
 msgid "Initial end date of the event"
-msgstr ""
+msgstr "Ngày kết thúc ban đầu của sự kiện"
 
 msgid "Initial end time of the event"
-msgstr ""
+msgstr "Thời gian kết thúc ban đầu của sự kiện"
 
 msgid "Initial start date & time of the event"
-msgstr ""
+msgstr "Ngày và giờ bắt đầu ban đầu của sự kiện"
 
 msgid "Initial start time of the event"
-msgstr ""
+msgstr "Thời gian bắt đầu ban đầu của sự kiện"
 
 msgid "Input Color"
 msgstr "Màu Đầu vào"
@@ -5311,10 +5550,10 @@ msgid "Input Text Color"
 msgstr "Màu Văn bản Đầu vào"
 
 msgid "Input field"
-msgstr ""
+msgstr "Trường nhập liệu"
 
 msgid "Input fields"
-msgstr ""
+msgstr "Các trường nhập liệu"
 
 msgid "Insert Amelia Booking Shortcode"
 msgstr "Chèn Mã rút gọn Đặt lịch Amelia"
@@ -5332,6 +5571,9 @@ msgstr "Tích hợp"
 
 msgid "Interested in unlocking this feature?"
 msgstr "Quan tâm đến việc mở khóa tính năng này?"
+
+msgid "Invalid Stripe secret key."
+msgstr "Khóa bí mật Stripe không hợp lệ."
 
 msgid "Invisible reCAPTCHA badge"
 msgstr "Biểu tượng reCAPTCHA ẩn"
@@ -5373,10 +5615,17 @@ msgid "Invoices"
 msgstr "Hóa đơn"
 
 msgid "Invoices setup"
-msgstr ""
+msgstr "Cài đặt hóa đơn"
 
 msgid "Issued"
 msgstr "Đã phát hành"
+
+msgid ""
+"It looks like this is your first time here, so let’s walk through a few "
+"simple steps to help you get started."
+msgstr ""
+"Trông có vẻ như đây là lần đầu tiên bạn đến đây, vì vậy chúng ta hãy cùng "
+"nhau thực hiện một số bước đơn giản để giúp bạn bắt đầu."
 
 msgid ""
 "It seems like there are no available or visible services assigned to the "
@@ -5403,7 +5652,7 @@ msgid "Item"
 msgstr "Mục"
 
 msgid "Item status"
-msgstr ""
+msgstr "Trạng thái mục"
 
 msgid "Jane Doe"
 msgstr ""
@@ -5436,10 +5685,10 @@ msgid "Join waiting list"
 msgstr "Tham gia danh sách chờ"
 
 msgid "Join with Google Meet"
-msgstr ""
+msgstr "Tham gia qua Google Meet"
 
 msgid "Join with Microsoft Teams"
-msgstr ""
+msgstr "Kết nối với Microsoft Teams"
 
 msgid "Keep Individual"
 msgstr "Giữ cá nhân"
@@ -5449,21 +5698,33 @@ msgid ""
 "notifications directly through WhatsApp - choose predefined messages or "
 "customize your own for a personal touch."
 msgstr ""
+"Giữ khách hàng và nhân viên luôn cập nhật bằng cách gửi thông báo về lịch "
+"hẹn và sự kiện trực tiếp qua WhatsApp - bạn có thể chọn các tin nhắn có sẵn "
+"hoặc tùy chỉnh tin nhắn của riêng mình để thêm phần cá nhân hóa."
 
 msgid ""
 "Keep everyone on track using scheduled reminders that reduce no-shows and "
 "confusion"
 msgstr ""
+"Giữ mọi người đúng tiến độ bằng cách sử dụng các lời nhắc được lên lịch để "
+"giảm thiểu việc vắng mặt và nhầm lẫn."
 
 msgid ""
 "Keep operations aligned with unified settings, availability, and resource "
 "control"
 msgstr ""
+"Đảm bảo các hoạt động tuân thủ các cài đặt thống nhất, tính khả dụng và kiểm "
+"soát tài nguyên."
+
+msgid "Keep slot available after first booking"
+msgstr "Giữ chỗ trống sau lần đặt chỗ đầu tiên"
 
 msgid ""
 "Keep your data organized and meaningful with structured fields that "
 "standardize the information you collect"
 msgstr ""
+"Giữ cho dữ liệu của bạn được tổ chức và có ý nghĩa với các trường dữ liệu có "
+"cấu trúc giúp tiêu chuẩn hóa thông tin bạn thu thập."
 
 msgid "Label"
 msgstr "Nhãn"
@@ -5478,7 +5739,7 @@ msgid "Language"
 msgstr "Ngôn ngữ"
 
 msgid "Languages"
-msgstr ""
+msgstr "Ngôn ngữ"
 
 msgid "Last"
 msgstr "Cuối cùng"
@@ -5538,13 +5799,13 @@ msgid "Lesson Space Links"
 msgstr "Liên kết không gian bài giảng"
 
 msgid "Lesson Space link"
-msgstr ""
+msgstr "Liên kết không gian bài học"
 
 msgid "Lesson Space link to join space"
-msgstr ""
+msgstr "Liên kết không gian bài học để tham gia không gian"
 
 msgid "Lesson Space setup"
-msgstr ""
+msgstr "Cài đặt không gian học tập"
 
 msgid "Light Theme"
 msgstr "Chủ đề sáng"
@@ -5607,7 +5868,7 @@ msgstr ""
 "bằng cách nhấn nút Lưu."
 
 msgid "List view"
-msgstr ""
+msgstr "Chế độ xem danh sách"
 
 msgid "Live API key"
 msgstr "Khóa API hoạt động"
@@ -5646,10 +5907,7 @@ msgid "Local Time:"
 msgstr "Giờ địa phương:"
 
 msgid "Local time"
-msgstr ""
-
-msgid "Local time:"
-msgstr ""
+msgstr "Giờ địa phương"
 
 msgid "Location"
 msgstr "Địa điểm"
@@ -5679,10 +5937,10 @@ msgid "Location description"
 msgstr "Mô tả địa điểm"
 
 msgid "Location details"
-msgstr ""
+msgstr "Chi tiết vị trí"
 
 msgid "Location filter"
-msgstr ""
+msgstr "Bộ lọc vị trí"
 
 msgid "Location has been added."
 msgstr "Vị trí đã được thêm."
@@ -5703,10 +5961,10 @@ msgid "Location is now visible."
 msgstr "Vị trí hiện đã hiển thị."
 
 msgid "Location latitude"
-msgstr ""
+msgstr "Vĩ độ vị trí"
 
 msgid "Location longitude"
-msgstr ""
+msgstr "Vĩ độ"
 
 msgid "Location name"
 msgstr "Tên địa điểm"
@@ -5715,7 +5973,7 @@ msgid "Location phone"
 msgstr "Điện thoại địa điểm"
 
 msgid "Location selection"
-msgstr ""
+msgstr "Lựa chọn vị trí"
 
 msgid "Locations"
 msgstr "Địa điểm"
@@ -5724,7 +5982,7 @@ msgid "Locations must be active and have card processing enabled"
 msgstr "Địa điểm phải hoạt động và có bật xử lý thẻ"
 
 msgid "Locations setup"
-msgstr ""
+msgstr "Cài đặt vị trí"
 
 msgid "Log In"
 msgstr "Đăng nhập"
@@ -5742,16 +6000,16 @@ msgid "Longitude"
 msgstr "Kinh Độ"
 
 msgid "Lower price background"
-msgstr ""
+msgstr "Giảm giá nền"
 
 msgid "Lower price text"
-msgstr ""
+msgstr "Giá thấp hơn"
 
 msgid "Lowest price"
 msgstr "Giá thấp nhất"
 
 msgid "Mail service"
-msgstr ""
+msgstr "Dịch vụ email"
 
 msgid "Mailchimp"
 msgstr ""
@@ -5760,7 +6018,7 @@ msgid "Mailchimp List"
 msgstr "Danh sách Mailchimp"
 
 msgid "Mailchimp setup"
-msgstr ""
+msgstr "Cài đặt Mailchimp"
 
 msgid "Mailgun"
 msgstr ""
@@ -5772,23 +6030,27 @@ msgid "Mailgun Domain"
 msgstr "Tên Miền Mailgun"
 
 msgid "Main category button"
-msgstr ""
+msgstr "Nút danh mục chính"
 
 msgid "Main content"
-msgstr ""
+msgstr "Nội dung chính"
 
 msgid ""
 "Maintain consistent scheduling with customizable frequencies and patterns"
-msgstr ""
+msgstr "Giữ lịch trình nhất quán với tần suất và mẫu tùy chỉnh."
 
 msgid "Make extra mandatory"
 msgstr "Bắt buộc thêm tùy chọn"
+
+msgid "Make sure you are using the correct WhatsApp credentials."
+msgstr ""
+"Hãy đảm bảo rằng bạn đang sử dụng thông tin đăng nhập WhatsApp chính xác."
 
 msgid "Male"
 msgstr "Nam"
 
 msgid "Manage badges"
-msgstr ""
+msgstr "Quản lý huy hiệu"
 
 msgid "Manage bookings"
 msgstr "Quản lý đặt chỗ"
@@ -5807,16 +6069,16 @@ msgid "Manage languages"
 msgstr "Quản lý Ngôn ngữ"
 
 msgid "Manage personal schedule"
-msgstr ""
+msgstr "Quản lý lịch cá nhân"
 
 msgid "Manage shared resources with ease"
-msgstr ""
+msgstr "Quản lý tài nguyên chung một cách dễ dàng"
 
 msgid "Managing assigned services"
-msgstr ""
+msgstr "Quản lý các dịch vụ được giao"
 
 msgid "Managing packages"
-msgstr ""
+msgstr "Quản lý gói phần mềm"
 
 msgid "Mandatory Field:"
 msgstr "Trường Bắt buộc:"
@@ -5868,7 +6130,7 @@ msgid "Maximum quantity"
 msgstr "Số lượng tối đa"
 
 msgid "Maximum spots"
-msgstr ""
+msgstr "Số lượng vị trí tối đa"
 
 msgid "Maximum usage per customer"
 msgstr "Số lần sử dụng tối đa mỗi khách hàng"
@@ -5889,7 +6151,7 @@ msgid "Message"
 msgstr "Tin nhắn"
 
 msgid "Message content"
-msgstr ""
+msgstr "Nội dung tin nhắn"
 
 msgid "Message template"
 msgstr "Mẫu tin nhắn"
@@ -5898,15 +6160,17 @@ msgid ""
 "Messages sent through WhatsApp are without a reply option, so we advise "
 "setting the “Auto-reply” message"
 msgstr ""
+"Các tin nhắn gửi qua WhatsApp không có tùy chọn trả lời, vì vậy chúng tôi "
+"khuyên bạn nên thiết lập tin nhắn \"Trả lời tự động\"."
 
 msgid "Meta"
-msgstr ""
+msgstr "Thông tin meta"
 
 msgid "Meta Pixel"
-msgstr ""
+msgstr "Pixel Meta"
 
 msgid "Meta Pixel setup"
-msgstr ""
+msgstr "Cài đặt Meta Pixel"
 
 msgid "Method"
 msgstr "Phương Thức"
@@ -5921,13 +6185,13 @@ msgid "Microsoft Teams Link"
 msgstr "Liên kết Microsoft Teams"
 
 msgid "Microsoft Teams join link"
-msgstr ""
+msgstr "Liên kết tham gia Microsoft Teams"
 
 msgid "Microsoft Teams link"
-msgstr ""
+msgstr "Liên kết Microsoft Teams"
 
 msgid "Microsoft Teams setup"
-msgstr ""
+msgstr "Cài đặt Microsoft Teams"
 
 msgid "Min. Capacity"
 msgstr "Sức chứa tối thiểu"
@@ -5981,7 +6245,7 @@ msgid "Mollie"
 msgstr ""
 
 msgid "Mollie payment link"
-msgstr ""
+msgstr "Liên kết thanh toán Mollie"
 
 msgid "Mon"
 msgstr "Thứ Hai"
@@ -6014,7 +6278,7 @@ msgid "Multiple Locations"
 msgstr "Nhiều Địa điểm"
 
 msgid "Multiple locations"
-msgstr ""
+msgstr "Nhiều vị trí"
 
 msgid "Multiple packages purchased."
 msgstr "Nhiều gói được mua."
@@ -6026,7 +6290,7 @@ msgid "Multiply deposit amount by the number of people in one booking."
 msgstr "Nhân số tiền đặt cọc với số lượng người trong một lần đặt."
 
 msgid "Multiply deposit by number of people"
-msgstr ""
+msgstr "Nhân số tiền gửi với số lượng người"
 
 msgid "Multiply price by number of people"
 msgstr "Nhân giá với số lượng người"
@@ -6035,7 +6299,7 @@ msgid "My Profile"
 msgstr "Hồ sơ của tôi"
 
 msgid "My profile"
-msgstr ""
+msgstr "Hồ sơ của tôi"
 
 msgid "Name"
 msgstr "Tên"
@@ -6068,7 +6332,7 @@ msgid "Need additional fields?"
 msgstr "Cần thêm trường bổ sung?"
 
 msgid "Need help?"
-msgstr ""
+msgstr "Cần trợ giúp?"
 
 msgid "Need to update your company's days off?"
 msgstr "Cần cập nhật ngày nghỉ của công ty?"
@@ -6101,46 +6365,46 @@ msgid "New Update"
 msgstr "Cập nhật mới"
 
 msgid "New appointment"
-msgstr ""
+msgstr "Lịch hẹn mới"
 
 msgid "New category"
-msgstr ""
+msgstr "Danh mục mới"
 
 msgid "New coupon"
-msgstr ""
+msgstr "Phiếu giảm giá mới"
 
 msgid "New customer"
-msgstr ""
+msgstr "Khách hàng mới"
 
 msgid "New employee"
-msgstr ""
+msgstr "Nhân viên mới"
 
 msgid "New event"
-msgstr ""
+msgstr "Sự kiện mới"
 
 msgid "New event booking"
-msgstr ""
+msgstr "Đặt lịch sự kiện mới"
 
 msgid "New language"
 msgstr "Ngôn ngữ mới"
 
 msgid "New package"
-msgstr ""
+msgstr "Gói mới"
 
 msgid "New package booking"
-msgstr ""
+msgstr "Đặt chỗ gói mới"
 
 msgid "New password"
 msgstr "Mật khẩu mới"
 
 msgid "New resource"
-msgstr ""
+msgstr "Tài nguyên mới"
 
 msgid "New service"
-msgstr ""
+msgstr "Dịch vụ mới"
 
 msgid "New tax"
-msgstr ""
+msgstr "Thuế mới"
 
 msgid "Next"
 msgstr "Tiếp theo"
@@ -6149,13 +6413,10 @@ msgid "Next Service"
 msgstr "Dịch vụ tiếp theo"
 
 msgid "Next day reminder"
-msgstr ""
+msgstr "Nhắc nhở vào ngày hôm sau"
 
 msgid "No"
 msgstr "Không"
-
-msgid "No, Cancel"
-msgstr "Không, Hủy bỏ"
 
 msgid "No, just this one"
 msgstr "Không, chỉ có một cái"
@@ -6164,7 +6425,7 @@ msgid "No-show"
 msgstr "Không xuất hiện"
 
 msgid "No-show tag"
-msgstr ""
+msgstr "Thẻ không hiển thị"
 
 msgid "No Employees Assigned to This Location"
 msgstr "Chưa có nhân viên nào được phân công cho địa điểm này"
@@ -6198,7 +6459,7 @@ msgid "No appointments found"
 msgstr "Không tìm thấy cuộc hẹn nào"
 
 msgid "No appointments yet"
-msgstr ""
+msgstr "Chưa có lịch hẹn nào."
 
 msgid "No attendees found"
 msgstr "Không tìm thấy người tham dự nào"
@@ -6213,55 +6474,55 @@ msgid "No camera found on this device."
 msgstr "Không tìm thấy camera trên thiết bị này."
 
 msgid "No coupons yet"
-msgstr ""
+msgstr "Chưa có phiếu giảm giá nào."
 
 msgid "No custom fields yet"
-msgstr ""
+msgstr "Chưa có trường tùy chỉnh nào."
 
 msgid "No customers were imported to your customer list."
 msgstr "Không có khách hàng nào được nhập vào danh sách khách hàng của bạn."
 
 msgid "No customers yet"
-msgstr ""
+msgstr "Chưa có khách hàng nào"
 
 msgid "No employees yet"
-msgstr ""
+msgstr "Chưa có nhân viên nào."
 
 msgid "No event bookings yet"
-msgstr ""
+msgstr "Chưa có đặt chỗ sự kiện nào."
 
 msgid "No events found"
 msgstr "Không tìm thấy sự kiện nào"
 
 msgid "No events yet"
-msgstr ""
+msgstr "Chưa có sự kiện nào."
 
 msgid "No extras yet"
-msgstr ""
+msgstr "Chưa có phần bổ sung nào."
 
 msgid "No invoices yet"
-msgstr ""
+msgstr "Chưa có hóa đơn nào."
 
 msgid "No limit per customer"
 msgstr "Không giới hạn cho mỗi khách hàng"
 
 msgid "No locations yet"
-msgstr ""
+msgstr "Chưa có vị trí nào"
 
 msgid "No matching data"
 msgstr "Không có dữ liệu khớp"
 
 msgid "No package bookings yet"
-msgstr ""
+msgstr "Chưa có đặt chỗ gói dịch vụ nào."
 
 msgid "No packages found"
 msgstr "Không tìm thấy gói nào"
 
 msgid "No packages yet"
-msgstr ""
+msgstr "Chưa có gói nào"
 
 msgid "No resources yet"
-msgstr ""
+msgstr "Chưa có tài nguyên nào"
 
 msgid "No results"
 msgstr "Không có kết quả"
@@ -6276,7 +6537,7 @@ msgid "No results found for"
 msgstr "Không tìm thấy kết quả cho"
 
 msgid "No services or employees available"
-msgstr ""
+msgstr "Không có dịch vụ hoặc nhân viên nào có sẵn."
 
 msgid "No services yet"
 msgstr "Chưa có dịch vụ nào"
@@ -6285,16 +6546,16 @@ msgid "No spots left"
 msgstr "Hết chỗ"
 
 msgid "No taxes yet"
-msgstr ""
+msgstr "Chưa có thuế nào"
 
 msgid "No top trends"
-msgstr ""
+msgstr "Không có xu hướng hàng đầu"
 
 msgid "No transactions yet"
-msgstr ""
+msgstr "Chưa có giao dịch nào."
 
 msgid "No upcoming events"
-msgstr ""
+msgstr "Không có sự kiện sắp tới"
 
 msgid "No usage limit"
 msgstr "Không giới hạn sử dụng"
@@ -6315,7 +6576,7 @@ msgid "Note (Internal)"
 msgstr "Ghi chú (Nội bộ)"
 
 msgid "Note (internal)"
-msgstr ""
+msgstr "Ghi chú (nội bộ)"
 
 msgid "Notice: Please select at least one panel."
 msgstr "Lưu ý: Vui lòng chọn ít nhất một bảng điều khiển."
@@ -6348,7 +6609,7 @@ msgid "Notification name"
 msgstr "Tên thông báo"
 
 msgid "Notification settings"
-msgstr ""
+msgstr "Cài đặt thông báo"
 
 msgid "Notification status has been updated."
 msgstr "Trạng thái thông báo đã được cập nhật."
@@ -6379,13 +6640,10 @@ msgid "Notify the attendee(s)"
 msgstr "Thông báo cho người tham dự"
 
 msgid "Notify the attendees"
-msgstr ""
+msgstr "Thông báo cho các đại biểu"
 
 msgid "Notify the customer(s)"
 msgstr "Thông báo cho khách hàng"
-
-msgid "Notify the customer(s) by default"
-msgstr "Thông báo cho khách hàng mặc định"
 
 msgid "Number of Additional People"
 msgstr "Số lượng Người Phụ Thuộc"
@@ -6421,19 +6679,19 @@ msgid "Number of people"
 msgstr "Số người"
 
 msgid "Number of people on waiting list"
-msgstr ""
+msgstr "Số người trong danh sách chờ"
 
 msgid "Number of people that are coming with you."
 msgstr "Số lượng người đang đi cùng bạn."
 
 msgid "Number of recurrences:"
-msgstr ""
+msgstr "Số lần lặp lại:"
 
 msgid "Number of tickets"
 msgstr "Số vé"
 
 msgid "Occupancy rate"
-msgstr ""
+msgstr "Tỷ lệ lấp đầy"
 
 msgid "Occupied"
 msgstr "Đang bận"
@@ -6460,6 +6718,9 @@ msgid ""
 "additional services, products, or experiences to enhance appointments and "
 "delight your customers."
 msgstr ""
+"Cung cấp các tùy chọn bổ sung tùy chọn hoặc bắt buộc trong quá trình đặt "
+"lịch - giới thiệu các dịch vụ, sản phẩm hoặc trải nghiệm bổ sung để nâng cao "
+"chất lượng cuộc hẹn và mang lại sự hài lòng cho khách hàng."
 
 msgid ""
 "Offer services with multiple duration options for customers to choose from."
@@ -6498,13 +6759,13 @@ msgid "On Break"
 msgstr "Nghỉ Giải Lao"
 
 msgid "On hold"
-msgstr ""
+msgstr "Đang tạm dừng"
 
 msgid "On the same day"
 msgstr "Cùng một ngày"
 
 msgid "On the same day each month"
-msgstr ""
+msgstr "Vào cùng ngày mỗi tháng"
 
 msgid "Once Off"
 msgstr "Một lần"
@@ -6520,31 +6781,43 @@ msgid ""
 "Once you add your first custom field, it will appear here. Click + Custom "
 "Field below to get started."
 msgstr ""
+"Sau khi bạn thêm trường tùy chỉnh đầu tiên, nó sẽ xuất hiện ở đây. Nhấp vào "
+"+ Trường tùy chỉnh bên dưới để bắt đầu."
 
 msgid ""
 "Once you add your first employee, it will appear here. Click + Employee "
 "below to get started."
 msgstr ""
+"Sau khi bạn thêm nhân viên đầu tiên, nó sẽ xuất hiện ở đây. Nhấp vào + Nhân "
+"viên bên dưới để bắt đầu."
 
 msgid ""
 "Once you add your first event, it will appear here. Click + Event below to "
 "get started."
 msgstr ""
+"Sau khi bạn thêm sự kiện đầu tiên, nó sẽ xuất hiện ở đây. Nhấp vào + Sự kiện "
+"bên dưới để bắt đầu."
 
 msgid ""
 "Once you add your first extra, it will appear here. Click + Extra above to "
 "get started."
 msgstr ""
+"Sau khi bạn thêm mục đầu tiên, nó sẽ xuất hiện ở đây. Nhấp vào + Extra ở "
+"trên để bắt đầu."
 
 msgid ""
 "Once you add your first package, it will appear here. Click + Package below "
 "to get started."
 msgstr ""
+"Sau khi bạn thêm gói đầu tiên, nó sẽ xuất hiện ở đây. Nhấp vào + Gói bên "
+"dưới để bắt đầu."
 
 msgid ""
 "Once you add your first resource, it will appear here. Click + Resource "
 "below to get started."
 msgstr ""
+"Sau khi bạn thêm tài nguyên đầu tiên, nó sẽ xuất hiện ở đây. Nhấp vào + Tài "
+"nguyên bên dưới để bắt đầu."
 
 msgid "Once you add your first service, it will appear here."
 msgstr "Khi bạn thêm dịch vụ đầu tiên, nó sẽ xuất hiện ở đây."
@@ -6553,6 +6826,8 @@ msgid ""
 "Once you add your first tax, it will appear here. Click + Tax below to get "
 "started."
 msgstr ""
+"Sau khi bạn thêm thuế đầu tiên, nó sẽ xuất hiện ở đây. Nhấp vào + Thuế bên "
+"dưới để bắt đầu."
 
 msgid ""
 "Once you receive bookings, your appointments will be displayed here. You can "
@@ -6590,10 +6865,10 @@ msgstr "Khi bạn bắt đầu nhận đặt chỗ, giao dịch sẽ được hi
 
 msgid ""
 "Once you start receiving bookings, your customers will be displayed here. "
-"You can also get started by clicking the Add button below."
+"You can also get started by clicking the Add or Import button below."
 msgstr ""
-"Khi bạn bắt đầu nhận được các đặt chỗ, khách hàng của bạn sẽ được hiển thị ở "
-"đây. Bạn cũng có thể bắt đầu bằng cách nhấp vào nút Thêm bên dưới."
+"Khi bạn bắt đầu nhận đặt chỗ, khách hàng của bạn sẽ được hiển thị tại đây. "
+"Bạn cũng có thể bắt đầu bằng cách nhấp vào nút Thêm hoặc Nhập bên dưới."
 
 msgid "One booking can have multiple attendees/spots in it."
 msgstr "Một lịch hẹn có thể có nhiều người tham dự/chỗ trong đó."
@@ -6652,9 +6927,6 @@ msgstr "Tùy chọn:"
 msgid "Or"
 msgstr "Hoặc"
 
-msgid "Or Enter details below"
-msgstr "Nhập email"
-
 msgid "Or enter details below"
 msgstr "Chi tiết về sự kiện nhóm"
 
@@ -6683,7 +6955,7 @@ msgid "Other"
 msgstr "Khác"
 
 msgid "Outline"
-msgstr ""
+msgstr "Tóm tắt"
 
 msgid "Outlook Calendar"
 msgstr "Lịch Outlook"
@@ -6692,10 +6964,10 @@ msgid "Outlook Calendar & Microsoft Teams"
 msgstr "Lịch Outlook & Microsoft Teams"
 
 msgid "Outlook Calendar WP hooks"
-msgstr ""
+msgstr "Các hook của Outlook Calendar WP"
 
 msgid "Outlook Calendar setup"
-msgstr ""
+msgstr "Cài đặt Lịch Outlook"
 
 msgid "Outlook Mailer"
 msgstr "Lịch Outlook"
@@ -6753,13 +7025,13 @@ msgid "Package appointment has been updated."
 msgstr "Cuộc hẹn gói đã được cập nhật."
 
 msgid "Package appointments"
-msgstr ""
+msgstr "Lịch hẹn gói dịch vụ"
 
 msgid "Package appointments details"
 msgstr "Chi tiết về các cuộc hẹn gói"
 
 msgid "Package badge"
-msgstr ""
+msgstr "Biểu tượng gói"
 
 msgid "Package booking details"
 msgstr "Chi tiết đặt gói"
@@ -6780,13 +7052,13 @@ msgid "Package canceled"
 msgstr "Gói đã bị hủy"
 
 msgid "Package capacity"
-msgstr ""
+msgstr "Dung lượng gói"
 
 msgid "Package category"
-msgstr ""
+msgstr "Danh mục gói"
 
 msgid "Package count"
-msgstr ""
+msgstr "Số lượng gói"
 
 msgid "Package deal"
 msgstr "Ưu đãi gói"
@@ -6804,7 +7076,7 @@ msgid "Package duration"
 msgstr "Thời lượng gói"
 
 msgid "Package filter"
-msgstr ""
+msgstr "Bộ lọc gói"
 
 msgid "Package has been created."
 msgstr "Gói đã được tạo."
@@ -6822,28 +7094,28 @@ msgid "Package includes"
 msgstr "Gói bao gồm"
 
 msgid "Package info"
-msgstr ""
+msgstr "Thông tin gói"
 
 msgid "Package is now visible."
 msgstr "Gói hàng hiện đã hiển thị."
 
 msgid "Package location"
-msgstr ""
+msgstr "Vị trí gói"
 
 msgid "Package management"
-msgstr ""
+msgstr "Quản lý gói"
 
 msgid "Package name"
 msgstr "Tên gói"
 
 msgid "Package overview"
-msgstr ""
+msgstr "Tổng quan về gói"
 
 msgid "Package price"
 msgstr "Giá gói"
 
 msgid "Package price:"
-msgstr ""
+msgstr "Giá gói:"
 
 msgid "Package purchased"
 msgstr "Gói đã mua"
@@ -6852,28 +7124,28 @@ msgid "Package rules and description"
 msgstr "Quy tắc và mô tả gói"
 
 msgid "Package selection"
-msgstr ""
+msgstr "Lựa chọn gói"
 
 msgid "Package services list"
-msgstr ""
+msgstr "Danh sách dịch vụ gói"
 
 msgid "Packages"
 msgstr "Gói dịch vụ"
 
 msgid "Packages appointments"
-msgstr ""
+msgstr "Lịch hẹn gói dịch vụ"
 
 msgid "Packages block"
-msgstr ""
+msgstr "Khối gói"
 
 msgid "Packages have been reordered."
 msgstr "Các gói dịch vụ đã được sắp xếp lại."
 
 msgid "Packages overview"
-msgstr ""
+msgstr "Tổng quan về các gói"
 
 msgid "Packages popup"
-msgstr ""
+msgstr "Cửa sổ popup gói"
 
 msgid "Paddle"
 msgstr ""
@@ -6882,19 +7154,19 @@ msgid "Page"
 msgstr "Trang"
 
 msgid "Page card"
-msgstr ""
+msgstr "Thẻ trang"
 
 msgid "Page content"
-msgstr ""
+msgstr "Nội dung trang"
 
 msgid "Page header"
-msgstr ""
+msgstr "Đầu trang"
 
 msgid "Page messages"
-msgstr ""
+msgstr "Thông báo trang"
 
 msgid "Page scroll"
-msgstr ""
+msgstr "Cuộn trang"
 
 msgid "Paid"
 msgstr "Đã thanh toán"
@@ -6912,10 +7184,10 @@ msgid "Panel Button Type"
 msgstr "Loại nút bảng điều khiển"
 
 msgid "Panel access"
-msgstr ""
+msgstr "Quyền truy cập bảng điều khiển"
 
 msgid "Panel recovery"
-msgstr ""
+msgstr "Khôi phục bảng điều khiển"
 
 msgid "Panel subtab name"
 msgstr "Tên tiểu tab của bảng điều khiển"
@@ -6966,11 +7238,15 @@ msgid ""
 "Paste the secret key you received after creating your API key pair in Google "
 "reCAPTCHA."
 msgstr ""
+"Dán khóa bí mật mà bạn đã nhận được sau khi tạo cặp khóa API trong Google "
+"reCAPTCHA."
 
 msgid ""
 "Paste the site key you received after generating your API key pair in Google "
 "reCAPTCHA."
 msgstr ""
+"Dán khóa trang web mà bạn đã nhận được sau khi tạo cặp khóa API trong Google "
+"reCAPTCHA."
 
 msgid "Pay"
 msgstr "Thanh toán"
@@ -6979,7 +7255,7 @@ msgid "PayPal"
 msgstr ""
 
 msgid "PayPal payment link"
-msgstr ""
+msgstr "Liên kết thanh toán PayPal"
 
 msgid "Pay for all appointments at once"
 msgstr "Thanh toán cho tất cả các cuộc hẹn cùng một lúc"
@@ -7010,9 +7286,6 @@ msgstr "Lịch sử thanh toán"
 
 msgid "Payment ID"
 msgstr "ID Thanh toán"
-
-msgid "Payment ID:"
-msgstr "ID Thanh toán:"
 
 msgid "Payment Method"
 msgstr "Phương thức thanh toán"
@@ -7048,7 +7321,7 @@ msgid "Payment error"
 msgstr "Lỗi thanh toán"
 
 msgid "Payment history"
-msgstr ""
+msgstr "Lịch sử thanh toán"
 
 msgid "Payment link for Barion"
 msgstr "Liên kết thanh toán cho Stripe"
@@ -7066,19 +7339,22 @@ msgid "Payment protected by policy and powered by"
 msgstr "Thanh toán được bảo vệ bởi chính sách và được hỗ trợ bởi"
 
 msgid "Payment segment"
-msgstr ""
+msgstr "Phần thanh toán"
 
 msgid "Payment status"
 msgstr "Trạng thái thanh toán"
 
 msgid "Payment summary"
-msgstr ""
+msgstr "Tổng kết thanh toán"
 
 msgid "Payment type"
 msgstr "Loại thanh toán"
 
 msgid "Payment type, deposit payment..."
 msgstr "Hình thức thanh toán, thanh toán đặt cọc..."
+
+msgid "Payment was canceled."
+msgstr "Thanh toán đã bị hủy."
 
 msgid "Payments"
 msgstr "Thanh toán"
@@ -7096,7 +7372,7 @@ msgid "People"
 msgstr "Người"
 
 msgid "People counting logic"
-msgstr ""
+msgstr "Logic đếm người"
 
 msgid "Per Location"
 msgstr "Theo địa điểm"
@@ -7144,7 +7420,7 @@ msgid "Personal Information"
 msgstr "Thông tin của bạn"
 
 msgid "Personal information"
-msgstr ""
+msgstr "Thông tin cá nhân"
 
 msgid "Phone"
 msgstr "Điện thoại"
@@ -7198,10 +7474,17 @@ msgid "Placeholder copied to clipboard."
 msgstr "Chỗ giữ chỗ đã được sao chép vào bảng tạm."
 
 msgid "Placeholder text"
-msgstr ""
+msgstr "Nội dung tạm thời"
 
 msgid "Placeholders"
 msgstr "Chỗ trống"
+
+msgid ""
+"Places API (New) is required but not enabled. Please enable it in Google "
+"Cloud Console."
+msgstr ""
+"API Places (Mới) là bắt buộc nhưng chưa được kích hoạt. Vui lòng kích hoạt "
+"nó trong Google Cloud Console."
 
 msgid "Plain"
 msgstr "Thường"
@@ -7262,7 +7545,7 @@ msgid "Please enter a first name."
 msgstr "Vui lòng nhập tên."
 
 msgid "Please enter a last name"
-msgstr ""
+msgstr "Vui lòng nhập họ."
 
 msgid "Please enter a live publishable key."
 msgstr "Vui lòng nhập khóa công khai hoạt động."
@@ -7310,7 +7593,7 @@ msgid "Please enter a test secret key."
 msgstr "Vui lòng nhập khóa bí mật thử nghiệm."
 
 msgid "Please enter a ticket code."
-msgstr ""
+msgstr "Vui lòng nhập mã vé."
 
 msgid "Please enter a ticket name."
 msgstr "Vui lòng nhập tên vé."
@@ -7366,20 +7649,20 @@ msgstr "Vui lòng nhập họ"
 msgid "Please enter live API Key"
 msgstr "Vui lòng nhập Khóa API trực tiếp"
 
-msgid "Please enter live ClientId"
-msgstr "Vui lòng nhập ClientId trực tiếp"
-
 msgid "Please enter live POSKey"
 msgstr "Vui lòng nhập Khóa API trực tiếp"
 
-msgid "Please enter live Secret"
-msgstr "Vui lòng nhập Mã bí mật trực tiếp"
+msgid "Please enter live client ID"
+msgstr "Vui lòng nhập ID khách hàng trực tiếp."
 
-msgid "Please enter live key id"
-msgstr "Vui lòng nhập key id trực tiếp"
+msgid "Please enter live key ID"
+msgstr "Vui lòng nhập ID khóa hoạt động."
 
 msgid "Please enter live key secret"
 msgstr "Vui lòng nhập key secret trực tiếp"
+
+msgid "Please enter live secret"
+msgstr "Vui lòng nhập khóa bí mật trực tiếp"
 
 msgid "Please enter name"
 msgstr "Vui lòng nhập tên"
@@ -7414,17 +7697,17 @@ msgstr "Vui lòng nhập tên thuế suất."
 msgid "Please enter test API Key"
 msgstr "Vui lòng nhập Khóa API thử nghiệm"
 
-msgid "Please enter test ClientId"
-msgstr "Vui lòng nhập ClientId thử nghiệm"
+msgid "Please enter test client ID"
+msgstr "Vui lòng nhập ID khách hàng thử nghiệm"
 
-msgid "Please enter test Secret"
-msgstr "Vui lòng nhập Mã bí mật thử nghiệm"
-
-msgid "Please enter test key id"
-msgstr "Vui lòng nhập key id thử nghiệm"
+msgid "Please enter test key ID"
+msgstr "Vui lòng nhập ID khóa thử nghiệm"
 
 msgid "Please enter test key secret"
 msgstr "Vui lòng nhập key secret thử nghiệm"
+
+msgid "Please enter test secret"
+msgstr "Vui lòng nhập khóa bí mật thử nghiệm"
 
 msgid "Please enter waiting list capacity"
 msgstr "Vui lòng nhập sức chứa danh sách chờ"
@@ -7479,7 +7762,7 @@ msgid "Please select a duration."
 msgstr "Vui lòng chọn một khoảng thời gian."
 
 msgid "Please select a location"
-msgstr ""
+msgstr "Vui lòng chọn vị trí"
 
 msgid "Please select a location."
 msgstr "Vui lòng chọn một địa điểm."
@@ -7527,7 +7810,7 @@ msgid "Please select an opening time."
 msgstr "Vui lòng chọn giờ mở cửa."
 
 msgid "Please select an option."
-msgstr ""
+msgstr "Vui lòng chọn một tùy chọn."
 
 msgid "Please select at least one customer"
 msgstr "Vui lòng chọn ít nhất một khách hàng"
@@ -7598,10 +7881,10 @@ msgid "Popup Heading"
 msgstr "Tiêu đề Popup"
 
 msgid "Popup buttons"
-msgstr ""
+msgstr "Nút popup"
 
 msgid "Popup title"
-msgstr ""
+msgstr "Tiêu đề cửa sổ popup"
 
 msgid "Preload entities when page loads"
 msgstr "Tải trước các thực thể khi trang được tải"
@@ -7632,6 +7915,8 @@ msgid ""
 "Prevent scheduling conflicts with real-time calendar syncing for every "
 "employee."
 msgstr ""
+"Ngăn chặn xung đột lịch trình bằng cách đồng bộ hóa lịch thời gian thực cho "
+"từng nhân viên."
 
 msgid "Preview"
 msgstr "Xem trước"
@@ -7640,10 +7925,10 @@ msgid "Preview Invoice"
 msgstr "Xem trước"
 
 msgid "Preview invoice"
-msgstr ""
+msgstr "Xem trước hóa đơn"
 
 msgid "Previous range"
-msgstr ""
+msgstr "Phạm vi trước đó"
 
 msgid "Price"
 msgstr "Giá"
@@ -7664,7 +7949,7 @@ msgid "Price Descending"
 msgstr "Giá giảm dần"
 
 msgid "Price indicators"
-msgstr ""
+msgstr "Chỉ báo giá"
 
 msgid "Price number of decimals"
 msgstr "Số chữ số thập phân của giá"
@@ -7718,13 +8003,13 @@ msgid "Primary and state colors"
 msgstr "Màu chủ đạo "
 
 msgid "Primary button style"
-msgstr ""
+msgstr "Kiểu nút chính"
 
 msgid "Primary color"
-msgstr ""
+msgstr "Màu chính"
 
 msgid "Primary text"
-msgstr ""
+msgstr "Nội dung chính"
 
 msgid "Process payments easily with Square."
 msgstr "Xử lý thanh toán dễ dàng với Square."
@@ -7765,7 +8050,7 @@ msgstr ""
 "nhu cầu kinh doanh của bạn."
 
 msgid "Publish"
-msgstr ""
+msgstr "Đăng"
 
 msgid "Publish Form"
 msgstr "Xuất bản Biểu mẫu"
@@ -7813,6 +8098,9 @@ msgid ""
 "Quickly download all appointment details from the Bookings page, making "
 "reporting, analysis, and record-keeping simple and efficient."
 msgstr ""
+"Tải xuống nhanh chóng tất cả thông tin chi tiết về lịch hẹn từ trang Đặt "
+"lịch, giúp việc báo cáo, phân tích và lưu trữ hồ sơ trở nên đơn giản và hiệu "
+"quả."
 
 msgid "Radio button"
 msgstr "Nút radio"
@@ -7827,13 +8115,13 @@ msgid "Razorpay"
 msgstr ""
 
 msgid "Razorpay payment link"
-msgstr ""
+msgstr "Liên kết thanh toán Razorpay"
 
 msgid "Re-type New Password"
 msgstr "Nhập lại mật khẩu mới"
 
 msgid "Re-type new password"
-msgstr ""
+msgstr "Nhập lại mật khẩu mới"
 
 msgid "Read more"
 msgstr "Đọc thêm"
@@ -7842,13 +8130,13 @@ msgid "Recharge"
 msgstr "Nạp tiền"
 
 msgid "Recharge balance"
-msgstr ""
+msgstr "Nạp lại số dư"
 
 msgid "Recipient email"
-msgstr ""
+msgstr "Địa chỉ email của người nhận"
 
 msgid "Recipient phone"
-msgstr ""
+msgstr "Số điện thoại của người nhận"
 
 msgid "Recurrence"
 msgstr "Lặp lại"
@@ -7872,7 +8160,7 @@ msgid "Recurring Summary"
 msgstr "Tóm lược Định kỳ"
 
 msgid "Recurring appointment"
-msgstr ""
+msgstr "Lịch hẹn định kỳ"
 
 msgid "Recurring appointment payment"
 msgstr "Thanh toán cuộc hẹn định kỳ"
@@ -7881,13 +8169,13 @@ msgid "Recurring appointments"
 msgstr "Cuộc hẹn định kỳ"
 
 msgid "Recurring appointments:"
-msgstr ""
+msgstr "Lịch hẹn định kỳ:"
 
 msgid "Recurring appointments details"
 msgstr "Chi tiết về cuộc hẹn định kỳ"
 
 msgid "Recurring appointments setup"
-msgstr ""
+msgstr "Cài đặt lịch hẹn định kỳ"
 
 msgid "Recurring events"
 msgstr "Sự kiện định kỳ"
@@ -7899,13 +8187,13 @@ msgid "Recurring popup"
 msgstr "Cửa sổ hiển thị"
 
 msgid "Recurring summary"
-msgstr ""
+msgstr "Tóm tắt định kỳ"
 
 msgid "Red"
 msgstr "Màu Đỏ"
 
 msgid "Redirect"
-msgstr ""
+msgstr "Chuyển hướng"
 
 msgid "Redirect URI"
 msgstr "URI Chuyển hướng"
@@ -7945,6 +8233,7 @@ msgstr "Trang chuyển hướng"
 
 msgid "Reduce no-shows with timely reminders sent automatically"
 msgstr ""
+"Giảm tỷ lệ vắng mặt bằng cách gửi các lời nhắc nhở kịp thời một cách tự động."
 
 msgid "Reflect On"
 msgstr "Phản ánh trên"
@@ -7962,7 +8251,7 @@ msgid "Registration, Telephone Number, Email"
 msgstr "Đăng ký, Số điện thoại, Email"
 
 msgid "Reject appointment link"
-msgstr ""
+msgstr "Từ chối liên kết đặt lịch hẹn"
 
 msgid "Rejected"
 msgstr "Từ chối"
@@ -7977,7 +8266,7 @@ msgid "Remind me when my SMS balance is low"
 msgstr "Nhắc nhở tôi khi số dư SMS của tôi thấp"
 
 msgid "Remove Apple Calendar busy slots"
-msgstr ""
+msgstr "Xóa các khung thời gian bận rộn trong Lịch Apple"
 
 msgid "Remove Attendee"
 msgstr "Xóa Người tham dự"
@@ -7986,7 +8275,7 @@ msgid "Remove Google Calendar busy slots"
 msgstr "Xóa các khung giờ bận trên Google Calendar"
 
 msgid "Remove Outlook Calendar busy slots"
-msgstr ""
+msgstr "Xóa các khung thời gian bận trong Lịch Outlook"
 
 msgid "Reorder Packages"
 msgstr "Sắp xếp lại các gói"
@@ -8036,7 +8325,7 @@ msgid "Repeat every year"
 msgstr "Lặp lại mỗi năm"
 
 msgid "Repeat new password"
-msgstr ""
+msgstr "Nhập lại mật khẩu mới"
 
 msgid "Repeat on"
 msgstr "Lặp lại vào"
@@ -8051,7 +8340,7 @@ msgid "Replace"
 msgstr "Thay thế"
 
 msgid "Reply-to email"
-msgstr ""
+msgstr "Địa chỉ email để trả lời"
 
 msgid "Require password for login"
 msgstr "Yêu cầu mật khẩu để đăng nhập"
@@ -8066,7 +8355,7 @@ msgid "Reschedule"
 msgstr "Đặt lại"
 
 msgid "Reschedule appointment"
-msgstr ""
+msgstr "Lên lịch lại cuộc hẹn"
 
 msgid "Rescheduled"
 msgstr "Lên lịch lại"
@@ -8080,8 +8369,11 @@ msgstr "Đặt lại Biểu mẫu"
 msgid "Reset Password"
 msgstr "Đặt lại Mật khẩu"
 
+msgid "Reset form settings"
+msgstr "Đặt lại cài đặt biểu mẫu"
+
 msgid "Reset password"
-msgstr ""
+msgstr "Đặt lại mật khẩu"
 
 msgid "Resource"
 msgstr "Nguồn lực"
@@ -8090,7 +8382,7 @@ msgid "Resource Details"
 msgstr "Chi tiết tài nguyên"
 
 msgid "Resource booking setup"
-msgstr ""
+msgstr "Cài đặt đặt chỗ tài nguyên"
 
 msgid "Resource has been added."
 msgstr "Tài nguyên đã được thêm."
@@ -8110,6 +8402,9 @@ msgstr "Tài nguyên hiện đã hiển thị."
 msgid "Resources"
 msgstr "Nguồn lực"
 
+msgid "Return to Home"
+msgstr "Trở về Trang chủ"
+
 msgid "Returning"
 msgstr "Quay lại"
 
@@ -8117,7 +8412,7 @@ msgid "Revenue"
 msgstr "Doanh thu"
 
 msgid "Ribbon"
-msgstr ""
+msgstr "Dải băng"
 
 msgid "Role"
 msgstr "Vai trò"
@@ -8126,7 +8421,7 @@ msgid "Roles & permissions"
 msgstr "Vai trò & quyền hạn"
 
 msgid "Roles settings"
-msgstr ""
+msgstr "Cài đặt vai trò"
 
 msgid "Round-robin"
 msgstr "Vòng tròn luân phiên"
@@ -8144,10 +8439,10 @@ msgid "SMS Settings"
 msgstr "Cài đặt SMS"
 
 msgid "SMS balance"
-msgstr ""
+msgstr "Số dư tin nhắn SMS"
 
 msgid "SMS history"
-msgstr ""
+msgstr "Lịch sử tin nhắn SMS"
 
 msgid "SMTP"
 msgstr ""
@@ -8167,6 +8462,11 @@ msgstr "Bảo mật SMTP"
 msgid "SMTP Username"
 msgstr "Tên người dùng SMTP"
 
+msgid "SMTP credentials validation failed. Please check your settings."
+msgstr ""
+"Xác thực thông tin đăng nhập SMTP không thành công. Vui lòng kiểm tra lại "
+"cài đặt của bạn."
+
 msgid "SSL"
 msgstr ""
 
@@ -8177,7 +8477,7 @@ msgid "Sandbox mode"
 msgstr "Chế độ thử nghiệm"
 
 msgid "Sandbox secret key (POSKey)"
-msgstr ""
+msgstr "Khóa bí mật Sandbox (POSKey)"
 
 msgid "Sat"
 msgstr "Thứ Bảy"
@@ -8198,20 +8498,28 @@ msgid "Save Special Day"
 msgstr "Lưu Ngày Đặc Biệt"
 
 msgid "Save changes"
-msgstr ""
+msgstr "Lưu thay đổi"
 
 msgid "Save time and reduce manual work with instant, auto-generated invoices"
 msgstr ""
+"Tiết kiệm thời gian và giảm bớt công việc thủ công với hóa đơn được tạo tự "
+"động ngay lập tức."
 
 msgid ""
 "Save time by automating repeating events instead of creating them manually"
 msgstr ""
+"Tiết kiệm thời gian bằng cách tự động hóa các sự kiện lặp lại thay vì tạo "
+"chúng thủ công."
 
 msgid "Save time with fast, one-click appointment exports"
 msgstr ""
+"Tiết kiệm thời gian với tính năng xuất lịch hẹn nhanh chóng chỉ với một cú "
+"nhấp chuột."
 
 msgid "Save time with quick, hassle-free customer data exports"
 msgstr ""
+"Tiết kiệm thời gian với việc xuất dữ liệu khách hàng nhanh chóng và thuận "
+"tiện."
 
 msgid "Scan"
 msgstr "Quét"
@@ -8220,7 +8528,7 @@ msgid "Scan E-Ticket"
 msgstr "Chọn Vé"
 
 msgid "Scan e-ticket"
-msgstr ""
+msgstr "Quét vé điện tử"
 
 msgid "Schedule"
 msgstr "Lịch trình"
@@ -8229,7 +8537,7 @@ msgid "Schedule:"
 msgstr "Lịch trình:"
 
 msgid "Schedule setup required"
-msgstr ""
+msgstr "Cần thiết lập lịch trình"
 
 msgid "Scheduled"
 msgstr "Đã lên lịch"
@@ -8292,7 +8600,7 @@ msgid "Search events"
 msgstr "Tìm kiếm sự kiện"
 
 msgid "Search extras"
-msgstr ""
+msgstr "Tìm kiếm các tùy chọn bổ sung"
 
 msgid "Search features"
 msgstr "Tìm kiếm tính năng"
@@ -8301,7 +8609,7 @@ msgid "Search for Events"
 msgstr "Tìm kiếm Sự kiện"
 
 msgid "Search for events"
-msgstr ""
+msgstr "Tìm kiếm sự kiện"
 
 msgid "Search integrations"
 msgstr "Tìm kiếm tích hợp"
@@ -8310,7 +8618,7 @@ msgid "Search invoices"
 msgstr "Tìm kiếm hóa đơn"
 
 msgid "Search locations"
-msgstr ""
+msgstr "Tìm kiếm vị trí"
 
 msgid "Search notifications"
 msgstr "Tìm kiếm thông báo"
@@ -8328,19 +8636,19 @@ msgid "Second {day}"
 msgstr "Giây {day}"
 
 msgid "Secondary"
-msgstr ""
+msgstr "Phụ"
 
 msgid "Secondary Button Type"
 msgstr "Loại nút phụ"
 
 msgid "Secondary button style"
-msgstr ""
+msgstr "Kiểu nút phụ"
 
 msgid "Secondary color"
-msgstr ""
+msgstr "Màu phụ"
 
 msgid "Secondary text"
-msgstr ""
+msgstr "Nội dung phụ"
 
 msgid "Secret key (POSKey)"
 msgstr "Khóa bí mật (POSKey)"
@@ -8351,8 +8659,8 @@ msgstr "Phần"
 msgid "Securely process payments using Stripe."
 msgstr "Xử lý thanh toán an toàn bằng Stripe."
 
-msgid "Segment:"
-msgstr "Đoạn:"
+msgid "Segment"
+msgstr "Phân đoạn"
 
 msgid "Segments"
 msgstr "Phân đoạn"
@@ -8438,6 +8746,9 @@ msgstr "Chọn Người Dùng Zoom"
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr "Chọn một chỗ giữ chỗ để chèn vào vị trí con trỏ của bạn."
 
+msgid "Select at least one option."
+msgstr "Chọn ít nhất một tùy chọn."
+
 msgid "Select box"
 msgstr "Hộp chọn"
 
@@ -8448,7 +8759,7 @@ msgid "Select customer, employee and service"
 msgstr "Chọn khách hàng, nhân viên và dịch vụ"
 
 msgid "Select date"
-msgstr ""
+msgstr "Chọn ngày"
 
 msgid "Select date and time"
 msgstr "Chọn ngày và giờ"
@@ -8484,7 +8795,7 @@ msgid "Select package"
 msgstr "Chọn gói"
 
 msgid "Select placeholder"
-msgstr ""
+msgstr "Chọn văn bản giữ chỗ"
 
 msgid "Select service"
 msgstr "Chọn dịch vụ"
@@ -8514,6 +8825,9 @@ msgid ""
 "Select the employee who will be added as the organizer of the Google/Outlook/"
 "Apple Calendar event. Employees selected under Staff will be added as guests."
 msgstr ""
+"Chọn nhân viên sẽ được thêm làm người tổ chức sự kiện trên Google/Outlook/"
+"Apple Calendar. Các nhân viên được chọn trong mục Nhân viên sẽ được thêm làm "
+"khách mời."
 
 msgid "Select the events this coupon can be used for."
 msgstr "Chọn các sự kiện mà phiếu giảm giá này có thể được sử dụng cho."
@@ -8534,7 +8848,7 @@ msgid "Select this employee"
 msgstr "Chọn nhân viên này"
 
 msgid "Select tickets"
-msgstr ""
+msgstr "Chọn vé"
 
 msgid "Select your Square Location"
 msgstr "Chọn địa điểm Square của bạn"
@@ -8546,10 +8860,10 @@ msgid "Selected Customers"
 msgstr "Khách hàng Đã Chọn"
 
 msgid "Selected date background"
-msgstr ""
+msgstr "Nền của ngày đã chọn"
 
 msgid "Selected date text"
-msgstr ""
+msgstr "Văn bản ngày đã chọn"
 
 msgid "Selected extras"
 msgstr "Các mục extra đã chọn"
@@ -8570,22 +8884,22 @@ msgid "Send Access Link"
 msgstr "Gửi liên kết truy cập"
 
 msgid "Send ICS file for approved bookings"
-msgstr ""
+msgstr "Gửi tệp ICS cho các đặt chỗ đã được phê duyệt"
 
 msgid "Send ICS file for pending bookings"
-msgstr ""
+msgstr "Gửi tệp ICS cho các đặt chỗ đang chờ xử lý"
 
 msgid "Send Reset Link"
 msgstr "Gửi Liên kết Đặt lại"
 
 msgid "Send access link"
-msgstr ""
+msgstr "Gửi liên kết truy cập"
 
 msgid "Send after appointment"
-msgstr ""
+msgstr "Gửi sau cuộc hẹn"
 
 msgid "Send after event"
-msgstr ""
+msgstr "Gửi sau sự kiện"
 
 msgid "Send all SMS messages to additional numbers"
 msgstr "Gửi tất cả tin nhắn SMS đến các số bổ sung"
@@ -8597,7 +8911,7 @@ msgid "Send appointment notifications directly via WhatsApp."
 msgstr "Gửi thông báo cuộc hẹn trực tiếp qua WhatsApp."
 
 msgid "Send at"
-msgstr ""
+msgstr "Gửi tại"
 
 msgid "Send custom fields info for each customer separately"
 msgstr "Gửi thông tin trường tùy chỉnh cho mỗi khách hàng riêng lẻ"
@@ -8620,10 +8934,10 @@ msgstr ""
 "Gửi thông báo email và SMS cá nhân hóa phù hợp với doanh nghiệp của bạn."
 
 msgid "Send smart, personalized notifications your way"
-msgstr ""
+msgstr "Gửi thông báo thông minh và cá nhân hóa đến bạn."
 
 msgid "Send test"
-msgstr ""
+msgstr "Gửi thử nghiệm"
 
 msgid "Send to e-mail"
 msgstr "Gửi đến email"
@@ -8631,14 +8945,14 @@ msgstr "Gửi đến email"
 msgid "Send your customer data to Mailchimp quickly and effortlessly."
 msgstr "Gửi dữ liệu khách hàng của bạn đến Mailchimp nhanh chóng và dễ dàng."
 
-msgid "Sender ID supports up to 11 characters"
-msgstr "ID Người gửi hỗ trợ tối đa 11 ký tự"
+msgid "Sender ID must be between 3 and 11 characters"
+msgstr "ID người gửi phải có độ dài từ 3 đến 11 ký tự."
 
 msgid "Sender email"
-msgstr ""
+msgstr "Địa chỉ email người gửi"
 
 msgid "Sender name"
-msgstr ""
+msgstr "Tên người gửi"
 
 msgid "Sent"
 msgstr "Đã gửi"
@@ -8683,16 +8997,16 @@ msgid "Service Subtotal"
 msgstr "Tổng cộng dịch vụ"
 
 msgid "Service badge"
-msgstr ""
+msgstr "Biểu tượng dịch vụ"
 
 msgid "Service capacity"
-msgstr ""
+msgstr "Khả năng cung cấp dịch vụ"
 
 msgid "Service category"
-msgstr ""
+msgstr "Danh mục dịch vụ"
 
 msgid "Service count"
-msgstr ""
+msgstr "Số lượng dịch vụ"
 
 msgid "Service description"
 msgstr "Mô tả Dịch vụ"
@@ -8707,7 +9021,7 @@ msgid "Service employees list"
 msgstr "Danh sách Nhân viên Dịch vụ"
 
 msgid "Service filter"
-msgstr ""
+msgstr "Bộ lọc dịch vụ"
 
 msgid "Service has been added."
 msgstr "Dịch vụ đã được thêm."
@@ -8731,34 +9045,34 @@ msgid "Service is now visible."
 msgstr "Dịch vụ hiện đã hiển thị."
 
 msgid "Service location"
-msgstr ""
+msgstr "Vị trí dịch vụ"
 
 msgid "Service name"
 msgstr "Tên Dịch vụ"
 
 msgid "Service or event description"
-msgstr ""
+msgstr "Mô tả dịch vụ hoặc sự kiện"
 
 msgid "Service or event name"
-msgstr ""
+msgstr "Tên dịch vụ hoặc sự kiện"
 
 msgid "Service packages overview"
-msgstr ""
+msgstr "Tổng quan về các gói dịch vụ"
 
 msgid "Service price"
 msgstr "Giá Dịch vụ"
 
 msgid "Service selection"
-msgstr ""
+msgstr "Lựa chọn dịch vụ"
 
 msgid "Service subtotal"
-msgstr ""
+msgstr "Tổng phụ phí dịch vụ"
 
 msgid "Services"
 msgstr "Dịch vụ"
 
 msgid "Services & categories setup"
-msgstr ""
+msgstr "Cài đặt dịch vụ và danh mục"
 
 msgid "Services Asc"
 msgstr "Dịch vụ Tăng dần"
@@ -8767,7 +9081,7 @@ msgid "Services Desc"
 msgstr "Dịch vụ Giảm dần"
 
 msgid "Services and packages overview"
-msgstr ""
+msgstr "Tổng quan về dịch vụ và gói"
 
 msgid "Services have been reordered."
 msgstr "Dịch vụ đã được sắp xếp lại."
@@ -8776,13 +9090,13 @@ msgid "Services list, Appointments"
 msgstr "Danh sách Dịch vụ, Các cuộc hẹn"
 
 msgid "Services overview"
-msgstr ""
+msgstr "Tổng quan về dịch vụ"
 
 msgid "Services setup"
-msgstr ""
+msgstr "Cài đặt dịch vụ"
 
 msgid "Set ICS file description"
-msgstr ""
+msgstr "Đặt mô tả tệp ICS"
 
 msgid "Set Limit"
 msgstr "Đặt Giới hạn"
@@ -8815,10 +9129,15 @@ msgstr ""
 "Thiết lập giá vé linh hoạt với các danh mục và phạm vi theo ngày để tối đa "
 "hóa khả năng tiếp cận và doanh thu."
 
+msgid "Set general settings"
+msgstr "Đặt các thiết lập chung"
+
 msgid ""
 "Set individual time zones for employees so availability and bookings are "
 "shown correctly for clients worldwide."
 msgstr ""
+"Cài đặt múi giờ riêng cho từng nhân viên để thông tin về thời gian làm việc "
+"và đặt lịch được hiển thị chính xác cho khách hàng trên toàn thế giới."
 
 msgid "Set metadata and description"
 msgstr "Đặt siêu dữ liệu và mô tả"
@@ -8827,13 +9146,13 @@ msgid "Set minimum"
 msgstr "Đặt giá trị tối thiểu"
 
 msgid "Set new password"
-msgstr ""
+msgstr "Đặt mật khẩu mới"
 
 msgid "Set options, colors and labels for booking form"
 msgstr "Thiết lập tùy chọn, màu sắc và nhãn cho biểu mẫu đặt lịch"
 
 msgid "Set password"
-msgstr ""
+msgstr "Đặt mật khẩu"
 
 msgid "Set pricing based on the number of people in the booking."
 msgstr "Đặt giá dựa trên số lượng người trong đặt chỗ."
@@ -8863,6 +9182,7 @@ msgstr "Đặt số lượng người tối đa được phép cho mỗi cuộc 
 msgid ""
 "Set the minimum number of people required per appointment for this service."
 msgstr ""
+"Đặt số lượng người tối thiểu cần thiết cho mỗi lịch hẹn đối với dịch vụ này."
 
 msgid ""
 "Set the number of approved bookings after which the customer will "
@@ -8960,6 +9280,8 @@ msgstr "Thiết lập nhãn và nút"
 
 msgid "Set up staff, location, gallery and other event information visibility"
 msgstr ""
+"Cài đặt quyền hiển thị thông tin nhân viên, địa điểm, gallery và các thông "
+"tin sự kiện khác."
 
 msgid "Set up visibility, button type and labels"
 msgstr "Thiết lập hiển thị, loại nút và nhãn"
@@ -8972,6 +9294,14 @@ msgstr "Thiết lập tùy chọn hiển thị và nhãn chọn vé"
 
 msgid "Set your Google Map API Key in General Settings"
 msgstr "Đặt Khóa API Bản đồ Google của bạn trong Cài đặt Chung"
+
+msgid ""
+"Set your company working hours. This schedule will be used for all new "
+"employees, however you can customize schedule for each employee later."
+msgstr ""
+"Đặt giờ làm việc của công ty. Lịch trình này sẽ được áp dụng cho tất cả nhân "
+"viên mới, tuy nhiên bạn có thể tùy chỉnh lịch trình cho từng nhân viên sau "
+"này."
 
 msgid "Setting up days off"
 msgstr "Thiết lập ngày nghỉ"
@@ -8992,10 +9322,13 @@ msgid "Shared capacity across services"
 msgstr "Sức chứa chung cho các dịch vụ"
 
 msgid "Shared category capacity"
-msgstr ""
+msgstr "Dung lượng danh mục chung"
 
 msgid "Show"
 msgstr "Hiển thị"
+
+msgid "Show Add To Calendar option to customers"
+msgstr "Hiển thị tùy chọn \"Thêm vào Lịch\" cho khách hàng"
 
 msgid "Show All"
 msgstr "Hiện tất cả"
@@ -9073,7 +9406,7 @@ msgid "Show more"
 msgstr "Xem thêm"
 
 msgid "Show more ({count})"
-msgstr ""
+msgstr "Xem thêm ({count})"
 
 msgid "Show on website"
 msgstr "Hiển thị trên trang web"
@@ -9134,10 +9467,10 @@ msgid "Sidebar"
 msgstr "Thanh bên"
 
 msgid "Sidebar area"
-msgstr ""
+msgstr "Khu vực thanh bên"
 
 msgid "Sidebar visibility"
-msgstr ""
+msgstr "Hiển thị thanh bên"
 
 msgid "Sign In"
 msgstr "Đăng Nhập"
@@ -9149,13 +9482,16 @@ msgid "Sign Out of Mailchimp"
 msgstr "Đăng xuất khỏi Mailchimp"
 
 msgid "Sign in"
-msgstr ""
+msgstr "Đăng nhập"
 
 msgid "Sign in as "
 msgstr "Đăng nhập với tư cách"
 
 msgid "Sign in with Google"
 msgstr "Đăng nhập bằng Google"
+
+msgid "Sign in with Microsoft"
+msgstr "Đăng nhập bằng Microsoft"
 
 msgid "Sign in with Outlook"
 msgstr "Đăng nhập bằng Outlook"
@@ -9167,7 +9503,7 @@ msgid "Sign out from Outlook"
 msgstr "Đăng xuất khỏi Outlook"
 
 msgid "Sign up"
-msgstr ""
+msgstr "Đăng ký"
 
 msgid "Simple, secure payments powered by Barion."
 msgstr "Thanh toán đơn giản, an toàn được hỗ trợ bởi Barion."
@@ -9176,17 +9512,23 @@ msgid ""
 "Simplify communication with customizable messages for both customers and "
 "employees"
 msgstr ""
+"Tối ưu hóa giao tiếp với các thông điệp tùy chỉnh dành cho cả khách hàng và "
+"nhân viên."
 
 msgid "Simplify financial management with easy, one-click transaction exports"
 msgstr ""
+"Tối ưu hóa quản lý tài chính với tính năng xuất giao dịch chỉ với một cú "
+"nhấp chuột."
 
 msgid ""
 "Simplify scheduling with individual availability, working hours, and "
 "assignments"
 msgstr ""
+"Tối ưu hóa lịch trình với thông tin sẵn sàng cá nhân, giờ làm việc và phân "
+"công công việc."
 
 msgid "Simplify scheduling with recurring events"
-msgstr ""
+msgstr "Tối ưu hóa lịch trình với các sự kiện lặp lại"
 
 msgid "Single-row export"
 msgstr "Xuất một hàng"
@@ -9206,14 +9548,17 @@ msgstr "Bỏ qua nhập khẩu"
 msgid "Skip packages and continue with the selected service"
 msgstr "Bỏ qua các gói và tiếp tục với dịch vụ đã chọn"
 
+msgid "Skip setup"
+msgstr "Bỏ qua cài đặt"
+
 msgid "Slot end time"
-msgstr ""
+msgstr "Thời gian kết thúc slot"
 
 msgid "Social login"
-msgstr ""
+msgstr "Đăng nhập bằng tài khoản mạng xã hội"
 
 msgid "Social login setup"
-msgstr ""
+msgstr "Cài đặt đăng nhập xã hội"
 
 msgid ""
 "Some employees assigned to this event are not connected to Zoom. Please go "
@@ -9277,7 +9622,7 @@ msgid "Special days"
 msgstr "Ngày đặc biệt"
 
 msgid "Special days setup"
-msgstr ""
+msgstr "Cài đặt ngày lễ đặc biệt"
 
 msgid "Specific Date"
 msgstr "Ngày Cụ thể"
@@ -9307,7 +9652,7 @@ msgid "Square account successfully disconnected"
 msgstr "Tài khoản Square đã ngắt kết nối thành công"
 
 msgid "Square payment link"
-msgstr ""
+msgstr "Liên kết thanh toán Square"
 
 msgid "Staff"
 msgstr "Nhân viên"
@@ -9334,22 +9679,19 @@ msgid "Start Zoom Meeting"
 msgstr "Bắt đầu Cuộc họp Zoom"
 
 msgid "Start by clicking the add custom field button"
-msgstr ""
+msgstr "Bắt đầu bằng cách nhấp vào nút \"Thêm trường tùy chỉnh\"."
 
 msgid "Start date"
 msgstr "Ngày bắt đầu"
 
 msgid "Start scanner"
-msgstr ""
+msgstr "Bắt đầu quét"
 
 msgid "Start time"
 msgstr "Thời gian bắt đầu"
 
 msgid "Status"
 msgstr "Trạng thái"
-
-msgid "Status:"
-msgstr "Trạng thái:"
 
 msgid "Status Asc"
 msgstr "Trạng thái tăng dần"
@@ -9361,12 +9703,16 @@ msgid ""
 "Stay compliant with ease through consistent, reliable tax handling across "
 "your business"
 msgstr ""
+"Dễ dàng tuân thủ các quy định thuế thông qua việc xử lý thuế nhất quán và "
+"đáng tin cậy trên toàn bộ hoạt động kinh doanh của bạn."
 
 msgid "Stay connected with WhatsApp notifications"
-msgstr ""
+msgstr "Giữ kết nối với thông báo WhatsApp"
 
 msgid "Stay organized with export files ready for analysis or external tools"
 msgstr ""
+"Giữ mọi thứ gọn gàng với các tệp xuất sẵn sàng cho phân tích hoặc công cụ "
+"bên ngoài."
 
 msgid ""
 "Step-By-Step Booking Wizard gives your customers the option to choose "
@@ -9383,10 +9729,22 @@ msgstr ""
 "thực hiện đặt lịch hẹn  của họ."
 
 msgid "Step-by-step"
-msgstr ""
+msgstr "Bước từng bước"
 
 msgid "Step-by-step booking form guide"
-msgstr ""
+msgstr "Hướng dẫn từng bước cho biểu mẫu đặt chỗ"
+
+msgid "Step 1"
+msgstr "Bước 1"
+
+msgid "Step 2"
+msgstr "Bước 2"
+
+msgid "Step 3"
+msgstr "Bước 3"
+
+msgid "Step 4"
+msgstr "Bước 4"
 
 msgid "Step Booking"
 msgstr "Bước đặt lịch hẹn "
@@ -9398,47 +9756,51 @@ msgid "Step Popups"
 msgstr "Bước"
 
 msgid "Step content"
-msgstr ""
+msgstr "Nội dung bước"
 
 msgid "Step header"
-msgstr ""
+msgstr "Tiêu đề bước"
 
 msgid "Step heading"
-msgstr ""
+msgstr "Tiêu đề bước"
 
 msgid "Step info tab"
-msgstr ""
+msgstr "Thông tin bước"
 
 msgid "Step message"
-msgstr ""
+msgstr "Thông báo bước"
 
 msgid "Step pagination"
-msgstr ""
+msgstr "Trang phân trang"
 
 msgid "Step tickets tab"
-msgstr ""
+msgstr "Tab vé bước"
 
 msgid "Steps"
 msgstr "Bước"
 
 msgid "Steps order"
-msgstr ""
+msgstr "Thứ tự các bước"
 
 msgid "Stop Scanner"
 msgstr "Dừng Máy Quét"
 
 msgid "Stop scanner"
-msgstr ""
+msgstr "Dừng trình quét"
 
 msgid ""
 "Streamline operations with one central place to manage all resources across "
 "your business"
 msgstr ""
+"Tối ưu hóa hoạt động bằng cách quản lý tất cả tài nguyên trên toàn bộ doanh "
+"nghiệp của bạn từ một nơi trung tâm."
 
 msgid ""
 "Streamline virtual meetings by integrating popular meeting platforms "
 "directly into bookings."
 msgstr ""
+"Tối ưu hóa các cuộc họp trực tuyến bằng cách tích hợp các nền tảng họp phổ "
+"biến trực tiếp vào hệ thống đặt lịch."
 
 msgid "Stripe"
 msgstr ""
@@ -9450,7 +9812,7 @@ msgid "Stripe Connect"
 msgstr "Nội dung bước"
 
 msgid "Stripe payment link"
-msgstr ""
+msgstr "Liên kết thanh toán Stripe"
 
 msgid "Studios"
 msgstr "Studio"
@@ -9459,7 +9821,7 @@ msgid "Sub Steps"
 msgstr "Các bước phụ"
 
 msgid "Sub step title"
-msgstr ""
+msgstr "Tiêu đề bước con"
 
 msgid "Subject"
 msgstr "Chủ đề"
@@ -9488,6 +9850,13 @@ msgstr "Đã thêm đặt chỗ thành công"
 msgid "Suggest closest available date"
 msgstr "Đề xuất ngày gần nhất có sẵn"
 
+msgid ""
+"Suggest customers to add an appointment to their calendar when booking is "
+"finalized."
+msgstr ""
+"Khuyến nghị khách hàng thêm lịch hẹn vào lịch của họ khi đặt lịch đã được "
+"xác nhận."
+
 msgid "Suggest next available date"
 msgstr "Đề xuất ngày có sẵn tiếp theo"
 
@@ -9501,7 +9870,7 @@ msgid "Summary"
 msgstr "Tóm lược"
 
 msgid "Summary segment"
-msgstr ""
+msgstr "Phần tóm tắt"
 
 msgid "Sun"
 msgstr "Chủ Nhật"
@@ -9518,11 +9887,15 @@ msgstr "Hỗ trợ Amelia bằng cách hiển thị liên kết ngược"
 msgid ""
 "Support deeper insights by using exported data for analysis and reporting"
 msgstr ""
+"Hỗ trợ phân tích sâu hơn bằng cách sử dụng dữ liệu đã xuất để phân tích và "
+"báo cáo."
 
 msgid ""
 "Support external workflows by seamlessly moving financial records into other "
 "systems"
 msgstr ""
+"Hỗ trợ các quy trình làm việc bên ngoài bằng cách chuyển đổi mượt mà các hồ "
+"sơ tài chính sang các hệ thống khác."
 
 msgid "Switch Camera"
 msgstr "Chuyển đổi camera"
@@ -9536,6 +9909,13 @@ msgid ""
 msgstr ""
 "Đồng bộ tài khoản Stripe Connect của bạn để thanh toán dễ dàng và chi trả "
 "liền mạch."
+
+msgid ""
+"Sync your and your employee's personal and professional events by connection "
+"Outlook calendars."
+msgstr ""
+"Đồng bộ hóa các sự kiện cá nhân và chuyên nghiệp của bạn và nhân viên bằng "
+"cách kết nối lịch Outlook."
 
 msgid ""
 "Sync your and your employees' personal and professional events by connecting "
@@ -9563,13 +9943,13 @@ msgid "TLS"
 msgstr ""
 
 msgid "Tab title"
-msgstr ""
+msgstr "Tiêu đề tab"
 
 msgid "Table settings have been updated."
 msgstr "Cài đặt bảng đã được cập nhật."
 
 msgid "Tabs (All / Packages / Services)"
-msgstr ""
+msgstr "Thẻ (Tất cả / Gói / Dịch vụ)"
 
 msgid "Tag"
 msgstr "Thẻ"
@@ -9584,7 +9964,7 @@ msgid "Tax amount"
 msgstr "Số tiền thuế"
 
 msgid "Tax details"
-msgstr ""
+msgstr "Chi tiết thuế"
 
 msgid "Tax has been added."
 msgstr "Thuế đã được thêm."
@@ -9608,7 +9988,7 @@ msgid "Tax rate name"
 msgstr "Tên tỷ lệ thuế"
 
 msgid "Tax setup"
-msgstr ""
+msgstr "Cài đặt thuế"
 
 msgid "Tax will be excluded from price calculation and showed separately."
 msgstr "Thuế sẽ được loại trừ khỏi tính toán giá và hiển thị riêng biệt."
@@ -9620,7 +10000,7 @@ msgid "Taxes"
 msgstr "Thuế"
 
 msgid "Taxes overview"
-msgstr ""
+msgstr "Tổng quan về thuế"
 
 msgid "Template name"
 msgstr "Tên mẫu"
@@ -9632,13 +10012,13 @@ msgid "Test SMS"
 msgstr "Kiểm tra SMS"
 
 msgid "Test SMS sent successfully."
-msgstr ""
+msgstr "Thử nghiệm tin nhắn SMS đã được gửi thành công."
 
 msgid "Test WhatsApp"
-msgstr ""
+msgstr "Kiểm tra WhatsApp"
 
 msgid "Test WhatsApp message sent successfully"
-msgstr ""
+msgstr "Thông báo WhatsApp đã được gửi thành công"
 
 msgid "Test client ID"
 msgstr "Kiểm tra ID khách hàng"
@@ -9664,9 +10044,6 @@ msgstr "Khóa bí mật kiểm tra"
 msgid "Text"
 msgstr "Văn bản"
 
-msgid "Text:"
-msgstr "Văn bản:"
-
 msgid "Text Mode"
 msgstr "Chế độ Văn bản"
 
@@ -9674,10 +10051,10 @@ msgid "Text area"
 msgstr "Khu vực văn bản"
 
 msgid "Text color"
-msgstr ""
+msgstr "Màu văn bản"
 
 msgid "Text color on background"
-msgstr ""
+msgstr "Màu văn bản trên nền"
 
 msgid "Text content"
 msgstr "Nội dung văn bản"
@@ -9828,6 +10205,8 @@ msgid ""
 "The total number of persons ({waitingPersonsCount}) exceeds the maximum "
 "waiting list capacity of {waitingListMaxCapacity}."
 msgstr ""
+"Số lượng người tổng cộng ({waitingPersonsCount}) vượt quá dung lượng tối đa "
+"của danh sách chờ ( {waitingListMaxCapacity})."
 
 msgid "There are no attendees yet..."
 msgstr "Chưa có người tham dự nào..."
@@ -9884,8 +10263,14 @@ msgstr "Cái này & Tương lai"
 msgid "This Only"
 msgstr "Chỉ cái này"
 
+msgid "This appointment is a part of a package."
+msgstr "Cuộc hẹn này là một phần của gói dịch vụ."
+
 msgid "This booking is part of a package deal"
 msgstr "lịch hẹn này là một phần của một gói ưu đãi"
+
+msgid "This category cannot be deleted because it is included in a package."
+msgstr "Danh mục này không thể xóa vì nó được bao gồm trong một gói."
 
 msgid ""
 "This category has services with {count} past appointment. | This category "
@@ -9929,6 +10314,13 @@ msgstr "Trường này là bắt buộc."
 
 msgid "This file is forbidden for upload"
 msgstr "Tệp này bị cấm tải lên"
+
+msgid ""
+"This is a temporary WhatsApp token and will automatically expire after 24 "
+"hours. Make sure to complete the setup before it expires."
+msgstr ""
+"Đây là mã thông báo WhatsApp tạm thời và sẽ tự động hết hạn sau 24 giờ. Hãy "
+"đảm bảo hoàn tất quá trình cài đặt trước khi mã thông báo hết hạn."
 
 msgid ""
 "This is a unique security token. Copy it into the 'Verify token' field in "
@@ -10024,7 +10416,10 @@ msgstr ""
 "dụng."
 
 msgid "This range"
-msgstr ""
+msgstr "Khoảng này"
+
+msgid "This service cannot be deleted because it is included in a package."
+msgstr "Dịch vụ này không thể bị xóa vì nó được bao gồm trong một gói."
 
 msgid "This service does not have any extras"
 msgstr "Dịch vụ này không có bất kỳ mục phụ trợ nào"
@@ -10047,7 +10442,7 @@ msgid "This service is available in a Package"
 msgstr "Dịch vụ này có sẵn trong một Gói"
 
 msgid "This service is available in a package"
-msgstr ""
+msgstr "Dịch vụ này có sẵn trong gói"
 
 msgid "This time slot is no longer available. Please select a different time."
 msgstr "Khung giờ này không còn khả dụng. Vui lòng chọn thời gian khác."
@@ -10123,7 +10518,7 @@ msgid "Ticket not valid"
 msgstr "Vé không hợp lệ"
 
 msgid "Ticket types"
-msgstr ""
+msgstr "Loại vé"
 
 msgid "Tickets"
 msgstr "Vé"
@@ -10170,7 +10565,7 @@ msgid "Time slot is unavailable"
 msgstr "Khoảng thời gian không khả dụng"
 
 msgid "Time slot price"
-msgstr ""
+msgstr "Giá khung giờ"
 
 msgid "Time slots are unavailable"
 msgstr "khung giờ không khả dụng"
@@ -10179,7 +10574,7 @@ msgid "Time zone"
 msgstr "Múi giờ"
 
 msgid "Time zones"
-msgstr ""
+msgstr "Múi giờ"
 
 msgid "Times"
 msgstr "Thời điểm"
@@ -10200,10 +10595,10 @@ msgid "Tips & suggestions"
 msgstr "Mẹo và đề xuất"
 
 msgid "Title section"
-msgstr ""
+msgstr "Phần tiêu đề"
 
 msgid "Title text"
-msgstr ""
+msgstr "Tiêu đề văn bản"
 
 msgid "To"
 msgstr "Đến"
@@ -10263,7 +10658,7 @@ msgid "Tomorrow"
 msgstr "Ngày mai"
 
 msgid "Top trends"
-msgstr ""
+msgstr "Các xu hướng hàng đầu"
 
 msgid "Torch off"
 msgstr "Tắt đèn pin"
@@ -10293,7 +10688,7 @@ msgid "Total Services Booked"
 msgstr "Sắp xếp Dịch vụ:"
 
 msgid "Total amount"
-msgstr ""
+msgstr "Tổng số tiền"
 
 msgid "Total appointments"
 msgstr "Tổng số cuộc hẹn"
@@ -10317,7 +10712,7 @@ msgid "Total number of appointments"
 msgstr "Tổng số cuộc hẹn"
 
 msgid "Total number of people:"
-msgstr ""
+msgstr "Tổng số người:"
 
 msgid "Total payments"
 msgstr "Tổng số thanh toán"
@@ -10329,7 +10724,7 @@ msgid "Total price"
 msgstr "Tổng giá"
 
 msgid "Total services booked"
-msgstr ""
+msgstr "Tổng số dịch vụ đã đặt"
 
 msgid "Total tickets"
 msgstr "Tổng số vé"
@@ -10350,7 +10745,7 @@ msgid "Transaction #{count}"
 msgstr "Giao dịch #{count}"
 
 msgid "Transaction details"
-msgstr ""
+msgstr "Chi tiết giao dịch"
 
 msgid "Transactions"
 msgstr "Giao dịch"
@@ -10378,7 +10773,7 @@ msgstr ""
 "bạn cần."
 
 msgid "Try adjusting your search or filters."
-msgstr ""
+msgstr "Hãy thử điều chỉnh tìm kiếm hoặc bộ lọc của bạn."
 
 msgid "Try adjusting your search to find what you are looking for."
 msgstr ""
@@ -10395,12 +10790,12 @@ msgid ""
 "multiple appointments into a single, discounted offer that drives bigger, "
 "more confident purchases."
 msgstr ""
+"Biến các dịch vụ của bạn thành các gói dịch vụ giá trị cao mà khách hàng yêu "
+"thích. Kết hợp nhiều lịch hẹn thành một gói ưu đãi giảm giá duy nhất để thúc "
+"đẩy các giao dịch mua sắm lớn hơn và tự tin hơn."
 
 msgid "Type"
 msgstr "Loại"
-
-msgid "Type:"
-msgstr "Loại:"
 
 msgid "Type Asc"
 msgstr "Loại tăng dần"
@@ -10415,6 +10810,8 @@ msgid ""
 "URL on which will user be redirected if appointment can't be canceled "
 "because of 'Minimum time required before canceling' value"
 msgstr ""
+"URL mà người dùng sẽ được chuyển hướng đến nếu không thể hủy lịch hẹn do giá "
+"trị 'Thời gian tối thiểu cần thiết trước khi hủy'"
 
 msgid "Unable to deactivate plugin. Please try again later."
 msgstr "Không thể vô hiệu hóa plugin. Vui lòng thử lại sau."
@@ -10429,13 +10826,13 @@ msgid "Unavailable Time Slots"
 msgstr "Khe trống không sẵn"
 
 msgid "Unavailable date background"
-msgstr ""
+msgstr "Ngày không khả dụng (nền)"
 
 msgid "Unavailable date text"
-msgstr ""
+msgstr "Văn bản ngày không khả dụng"
 
 msgid "Unavailable time slots"
-msgstr ""
+msgstr "Các khung giờ không khả dụng"
 
 msgid "Unblock"
 msgstr "Bỏ chặn"
@@ -10484,7 +10881,7 @@ msgid "Upcoming events"
 msgstr "Sự kiện sắp diễn ra"
 
 msgid "Upcoming events section"
-msgstr ""
+msgstr "Phần Sự kiện sắp tới"
 
 msgid "Update"
 msgstr "Cập nhật"
@@ -10559,13 +10956,13 @@ msgid "User Profile"
 msgstr "Hồ Sơ Người Dùng"
 
 msgid "User profile"
-msgstr ""
+msgstr "Hồ sơ người dùng"
 
 msgid "VAT"
 msgstr "Thuế GTGT"
 
 msgid "VAT info"
-msgstr ""
+msgstr "Thông tin về thuế VAT"
 
 msgid "VAT number"
 msgstr "Số VAT"
@@ -10595,7 +10992,7 @@ msgid "Version "
 msgstr "Phiên bản"
 
 msgid "Video tutorials"
-msgstr ""
+msgstr "Hướng dẫn video"
 
 msgid "Videos"
 msgstr "Video"
@@ -10622,7 +11019,7 @@ msgid "View More Packages"
 msgstr "Xem Thêm Gói"
 
 msgid "View all"
-msgstr ""
+msgstr "Xem tất cả"
 
 msgid "View all photos"
 msgstr "Xem tất cả ảnh"
@@ -10634,13 +11031,13 @@ msgid "View booking"
 msgstr "Xem đặt chỗ"
 
 msgid "View employees"
-msgstr ""
+msgstr "Xem nhân viên"
 
 msgid "View events"
 msgstr "Xem sự kiện"
 
 msgid "View in Calendar"
-msgstr ""
+msgstr "Xem trong Lịch"
 
 msgid "View in Package"
 msgstr "Xem Thêm Gói"
@@ -10649,16 +11046,16 @@ msgid "View invoice"
 msgstr "Xem hóa đơn"
 
 msgid "View less packages"
-msgstr ""
+msgstr "Xem ít gói hơn"
 
 msgid "View message"
-msgstr ""
+msgstr "Xem thông báo"
 
 msgid "View more"
 msgstr "Xem thêm"
 
 msgid "View more packages"
-msgstr ""
+msgstr "Xem thêm các gói"
 
 msgid "View packages"
 msgstr "Xem gói dịch vụ"
@@ -10682,10 +11079,10 @@ msgid "Waiting"
 msgstr "Đang chờ"
 
 msgid "Waiting button background color"
-msgstr ""
+msgstr "Màu nền của nút \"Đang chờ\""
 
 msgid "Waiting button text color"
-msgstr ""
+msgstr "Màu văn bản nút \"Đang chờ\""
 
 msgid "Waiting for payment"
 msgstr "Chờ thanh toán"
@@ -10694,10 +11091,10 @@ msgid "Waiting list"
 msgstr "Danh sách chờ"
 
 msgid "Waiting list availability"
-msgstr ""
+msgstr "Tình trạng sẵn có của danh sách chờ"
 
 msgid "Waiting list background"
-msgstr ""
+msgstr "Nền của danh sách chờ"
 
 msgid "Waiting list capacity"
 msgstr "Sức chứa danh sách chờ"
@@ -10706,13 +11103,13 @@ msgid "Waiting list capacity must be at least 1"
 msgstr "Sức chứa danh sách chờ phải ít nhất là 1"
 
 msgid "Waiting list confirmation"
-msgstr ""
+msgstr "Xác nhận danh sách chờ"
 
 msgid "Waiting list is empty"
 msgstr "Danh sách chờ đang trống"
 
 msgid "Waiting list text"
-msgstr ""
+msgstr "Nội dung danh sách chờ"
 
 msgid "Warning"
 msgstr "Cảnh báo"
@@ -10735,6 +11132,20 @@ msgstr ""
 "Chúng tôi đã chuẩn bị một tệp .csv với các khách hàng chưa được nhập. Sau "
 "khi khắc phục các vấn đề, bạn có thể thử lại."
 
+msgid ""
+"We were unable to cancel your booking. Please contact admin for assistance "
+"with canceling this booking."
+msgstr ""
+"Chúng tôi không thể hủy đặt chỗ của bạn. Vui lòng liên hệ với bộ phận quản "
+"trị để được hỗ trợ hủy đặt chỗ này."
+
+msgid ""
+"We were unable to process your booking, and it was rejected. Please contact "
+"admin if you need help or want to try booking again."
+msgstr ""
+"Chúng tôi không thể xử lý đơn đặt chỗ của bạn và đơn đã bị từ chối. Vui lòng "
+"liên hệ với quản trị viên nếu bạn cần hỗ trợ hoặc muốn thử đặt chỗ lại."
+
 msgid "Web"
 msgstr ""
 
@@ -10745,7 +11156,7 @@ msgid "Webhooks"
 msgstr ""
 
 msgid "Webhooks setup"
-msgstr ""
+msgstr "Cấu hình Webhooks"
 
 msgid "Website"
 msgstr "Trang web"
@@ -10769,7 +11180,10 @@ msgid "Welcome Back"
 msgstr "Quay lại"
 
 msgid "Welcome back"
-msgstr ""
+msgstr "Chào mừng bạn quay lại"
+
+msgid "Welcome to Amelia!"
+msgstr "Chào mừng đến với Amelia!"
 
 msgid "Wellness"
 msgstr "Sức khỏe"
@@ -10796,7 +11210,7 @@ msgid "WhatsApp settings"
 msgstr "Cài đặt WhatsApp"
 
 msgid "WhatsApp setup"
-msgstr ""
+msgstr "Cài đặt WhatsApp"
 
 msgid "WhatsApp webhook callback URL"
 msgstr "URL callback webhook WhatsApp"
@@ -10816,6 +11230,9 @@ msgid ""
 "tags) load as soon as the page opens, instead of being loaded dynamically "
 "via AJAX."
 msgstr ""
+"Khi được kích hoạt, tất cả các thực thể (dịch vụ, nhân viên, địa điểm, gói "
+"dịch vụ và thẻ) sẽ được tải ngay khi trang mở, thay vì được tải động qua "
+"AJAX."
 
 msgid ""
 "When enabled, customers will receive a Google Calendar invitation for the "
@@ -10884,7 +11301,7 @@ msgid "WooCommerce Thank you page"
 msgstr "Trang cảm ơn WooCommerce"
 
 msgid "WooCommerce payment link"
-msgstr ""
+msgstr "Liên kết thanh toán WooCommerce"
 
 msgid "Woo Order Id"
 msgstr "ID Đơn Hàng Woo"
@@ -10902,7 +11319,7 @@ msgid "Work hours"
 msgstr "Giờ làm việc"
 
 msgid "Work hours setup"
-msgstr ""
+msgstr "Cài đặt giờ làm việc"
 
 msgid "Working Hours"
 msgstr "Giờ làm việc"
@@ -10927,9 +11344,6 @@ msgstr "Năm"
 
 msgid "Yes"
 msgstr "Có"
-
-msgid "Yes, Reset"
-msgstr "Có, Đặt lại"
 
 msgid "Yoga"
 msgstr ""
@@ -10959,6 +11373,13 @@ msgid ""
 msgstr ""
 "Hiện tại bạn đang được kết nối với Google Calendar bởi Admin. Không thể ghi "
 "đè kết nối Google Calendar."
+
+msgid ""
+"You are currently connected to Outlook Calendar by Admin. Overriding Outlook "
+"Calendar connection is not available."
+msgstr ""
+"Bạn hiện đang kết nối với Lịch Outlook qua Admin. Việc ghi đè kết nối Lịch "
+"Outlook không khả dụng."
 
 msgid "You are on the waiting list with position"
 msgstr "Bạn đang ở trong danh sách chờ với vị trí"
@@ -11054,6 +11475,13 @@ msgstr "Bạn đã nhập sai mật khẩu."
 msgid "You have reached maximum number of registered domains"
 msgstr "Bạn đã đạt đến số lượng tên miền đăng ký tối đa"
 
+msgid ""
+"You have successfully declined this booking request. The status has been "
+"updated in the system."
+msgstr ""
+"Bạn đã từ chối yêu cầu đặt chỗ này thành công. Trạng thái đã được cập nhật "
+"trong hệ thống."
+
 msgid "You will be redirected to the payment checkout."
 msgstr "Bạn sẽ được chuyển hướng đến cổng thanh toán."
 
@@ -11071,6 +11499,35 @@ msgstr "Tên của bạn"
 
 msgid "Your balance has been recharged."
 msgstr "Số dư của bạn đã được nạp lại."
+
+msgid ""
+"Your booking has been successfully canceled. If you have any questions or "
+"wish to reschedule, please contact admin."
+msgstr ""
+"Đặt chỗ của bạn đã được hủy thành công. Nếu bạn có bất kỳ câu hỏi nào hoặc "
+"muốn đặt lại lịch, vui lòng liên hệ với admin."
+
+msgid ""
+"Your booking has been successfully completed and approved. You're all set "
+"and can expect everything to proceed smoothly."
+msgstr ""
+"Đặt chỗ của bạn đã được hoàn tất và phê duyệt thành công. Bạn đã sẵn sàng và "
+"có thể mong đợi mọi việc sẽ diễn ra suôn sẻ."
+
+msgid ""
+"Your booking was approved, but there was an issue completing the process. "
+"Please reach out to admin to ensure everything is properly recorded."
+msgstr ""
+"Đơn đặt hàng của bạn đã được phê duyệt, nhưng quá trình hoàn tất đã gặp sự "
+"cố. Vui lòng liên hệ với quản trị viên để đảm bảo mọi thông tin được ghi "
+"nhận chính xác."
+
+msgid ""
+"Your booking was successfully processed, but it could not be approved. "
+"Please contact admin if you need assistance."
+msgstr ""
+"Đơn đặt hàng của bạn đã được xử lý thành công, nhưng không thể được phê "
+"duyệt. Vui lòng liên hệ với quản trị viên nếu bạn cần hỗ trợ."
 
 msgid "Your card's expiration date is incomplete"
 msgstr "Ngày hết hạn thẻ của bạn không đầy đủ"
@@ -11092,12 +11549,13 @@ msgstr "Những thay đổi hiện tại của bạn sẽ bị mất."
 
 msgid "Your data will be saved before redirecting to another form."
 msgstr ""
+"Dữ liệu của bạn sẽ được lưu trữ trước khi chuyển hướng đến một biểu mẫu khác."
 
 msgid "Your information"
-msgstr ""
+msgstr "Thông tin của bạn"
 
 msgid "Your name"
-msgstr ""
+msgstr "Tên của bạn"
 
 msgid ""
 "Your password has been changed successfully. Use your new password to log in."
@@ -11128,22 +11586,22 @@ msgid "Zoom User"
 msgstr "Người Dùng Zoom"
 
 msgid "Zoom WP hooks"
-msgstr ""
+msgstr "Các hook của Zoom WP"
 
 msgid "Zoom join meeting (participants) link"
-msgstr ""
+msgstr "Liên kết tham gia cuộc họp Zoom (cho người tham gia)"
 
 msgid "Zoom link"
-msgstr ""
+msgstr "Liên kết Zoom"
 
 msgid "Zoom setup"
-msgstr ""
+msgstr "Cài đặt Zoom"
 
 msgid "Zoom start meeting (hosts) link"
-msgstr ""
+msgstr "Liên kết bắt đầu cuộc họp Zoom (cho người tổ chức)"
 
 msgid "Zoom user"
-msgstr ""
+msgstr "Người dùng Zoom"
 
 msgid "(+ Woo Tax)"
 msgstr "(+ Thuế Woo)"
@@ -11158,10 +11616,10 @@ msgid "and"
 msgstr "và"
 
 msgid "application ID, client ID and client secret"
-msgstr ""
+msgstr "ID ứng dụng, ID khách hàng và khóa bí mật khách hàng"
 
 msgid "application (client) ID and secret"
-msgstr ""
+msgstr "ID ứng dụng (client) và khóa bí mật"
 
 msgid "appointment is required to be booked now."
 msgstr "cuộc hẹn cần phải được đặt ngay bây giờ."
@@ -11277,6 +11735,15 @@ msgstr ""
 msgid "reCAPTCHA Type"
 msgstr "Loại reCAPTCHA"
 
+msgid "reCAPTCHA challenge expired. Please try again."
+msgstr "Thử thách reCAPTCHA đã hết hạn. Vui lòng thử lại."
+
+msgid "reCAPTCHA configuration is invalid."
+msgstr "Cấu hình reCAPTCHA không hợp lệ."
+
+msgid "reCAPTCHA could not be loaded."
+msgstr "reCAPTCHA không thể được tải."
+
 msgid "reCAPTCHA on Customer Panel"
 msgstr "reCAPTCHA trên Bảng điều khiển Khách hàng"
 
@@ -11284,7 +11751,10 @@ msgid "reCAPTCHA on Employee Panel"
 msgstr "reCAPTCHA trên Bảng điều khiển Nhân viên"
 
 msgid "reCAPTCHA setup"
-msgstr ""
+msgstr "Cài đặt reCAPTCHA"
+
+msgid "reCAPTCHA validation failed."
+msgstr "Xác minh reCAPTCHA không thành công."
 
 msgid "results"
 msgstr "kết quả"
@@ -11434,6 +11904,8 @@ msgid ""
 "{count} employee has not been deleted due to future bookings. | {count} "
 "employees have not been deleted due to future bookings."
 msgstr ""
+"{count} Nhân viên chưa bị xóa do có các đặt chỗ trong tương lai. | {count} "
+"Nhân viên chưa bị xóa do có các đặt chỗ trong tương lai."
 
 msgid ""
 "{count} event booking has been deleted. | {count} event bookings have been "
@@ -11467,6 +11939,8 @@ msgid ""
 "{count} location has not been deleted due to future bookings. | {count} "
 "locations have not been deleted due to future bookings."
 msgstr ""
+"{count} Vị trí chưa được xóa do có đặt chỗ trong tương lai. | {count} Vị trí "
+"chưa được xóa do có đặt chỗ trong tương lai."
 
 msgid "{count} minute | {count} minutes"
 msgstr "{count} phút | {count} phút"
@@ -11491,6 +11965,8 @@ msgid ""
 "{count} package has not been deleted due to future bookings. | {count} "
 "packages have not been deleted due to future bookings."
 msgstr ""
+"{count} Gói chưa được xóa do có các đặt chỗ trong tương lai. | {count} Các "
+"gói chưa được xóa do có các đặt chỗ trong tương lai."
 
 msgid ""
 "{count} resource has been deleted. | {count} resources have been deleted."

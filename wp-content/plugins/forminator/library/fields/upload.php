@@ -193,7 +193,13 @@ class Forminator_Upload extends Forminator_Field {
 			$rounded_max_size                 = $this->byte_to_size( $max_size );
 			$upload_attr['data-size-message'] = /* translators: %s: Maximum size */ sprintf( esc_html__( 'Maximum file size allowed is %s. ', 'forminator' ), $rounded_max_size );
 			if ( $custom_file_type ) {
-				$upload_attr['data-filetype']         = implode( '|', array_values( $mime_types ) );
+				$upload_attr['data-filetype'] = implode( '|', array_values( $mime_types ) );
+			} elseif ( 'submission' === $upload_method ) {
+				// If custom file type is not enabled, we will use all allowed mime types in WP as validation.
+				$mime_types                   = forminator_allowed_mime_types( array(), false );
+				$upload_attr['data-filetype'] = ! empty( $mime_types ) ? implode( '|', array_keys( $mime_types ) ) : '';
+			}
+			if ( $custom_file_type || 'submission' === $upload_method ) {
 				$upload_attr['data-filetype-message'] = esc_html__( 'file extension is not allowed.', 'forminator' );
 			}
 
@@ -284,6 +290,16 @@ class Forminator_Upload extends Forminator_Field {
 
 		if ( 'multiple' !== $file_type && $custom_file_type ) {
 			$rules .= '"extension": "' . $allowed_mime_types . '",';
+		} elseif ( 'multiple' !== $file_type ) {
+			// If custom file type is not enabled, we will use all allowed mime types in WP as validation.
+			$mime_types         = forminator_allowed_mime_types( array(), false );
+			$allowed_mime_types = ! empty( $mime_types ) ? implode( '|', array_keys( $mime_types ) ) : '';
+
+			$rules .= '"extension": "' . $allowed_mime_types . '",';
+		}
+
+		if ( 'multiple' === $file_type ) {
+			$rules .= '"multiFileValid": true,';
 		}
 
 		$rules .= '},' . "\n";

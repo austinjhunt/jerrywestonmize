@@ -24,6 +24,8 @@ class ExtrasTable extends AbstractDatabaseTable
     {
         $table = self::getTableName();
 
+        $charsetCollate = self::getCharsetCollate();
+
         $name        = Name::MAX_LENGTH;
         $description = Description::MAX_LENGTH;
 
@@ -39,6 +41,6 @@ class ExtrasTable extends AbstractDatabaseTable
                    `aggregatedPrice` TINYINT(1) DEFAULT NULL,
                    `translations` TEXT NULL DEFAULT NULL,
                     PRIMARY KEY (`id`)
-                ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
+                ) {$charsetCollate};";
     }
 }

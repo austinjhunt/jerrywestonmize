@@ -25,7 +25,6 @@
   "skins/ui/oxide/skin.css": "skins/ui/oxide/skin.css",
   "skins/ui/oxide/skin.js": "skins/ui/oxide/skin.js",
   "skins/ui/oxide/skin.min.css": "skins/ui/oxide/skin.min.css",
-  "email-editor/assets/rich-text.js": "email-editor/assets/rich-text.js",
   "skins/ui/oxide/content.css": "skins/ui/oxide/content.css",
   "skins/ui/oxide/content.inline.css": "skins/ui/oxide/content.inline.css",
   "skins/ui/oxide/content.js": "skins/ui/oxide/content.js",
@@ -37,6 +36,5 @@
   "skins/ui/oxide/skin.shadowdom.css": "skins/ui/oxide/skin.shadowdom.css",
   "skins/ui/oxide/skin.shadowdom.js": "skins/ui/oxide/skin.shadowdom.js",
   "skins/ui/oxide/skin.shadowdom.min.css": "skins/ui/oxide/skin.shadowdom.min.css",
-  "email-editor/assets/rich-text.asset.php": "email-editor/assets/rich-text.asset.php",
   "email-editor/style/style.asset.php": "email-editor/style/style.asset.php"
 }

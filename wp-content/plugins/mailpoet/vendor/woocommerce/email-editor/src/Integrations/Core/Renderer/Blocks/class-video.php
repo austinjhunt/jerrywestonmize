@@ -4,6 +4,7 @@ namespace Automattic\WooCommerce\EmailEditor\Integrations\Core\Renderer\Blocks;
 if (!defined('ABSPATH')) exit;
 use Automattic\WooCommerce\EmailEditor\Engine\Renderer\ContentRenderer\Rendering_Context;
 use Automattic\WooCommerce\EmailEditor\Integrations\Utils\Dom_Document_Helper;
+use Automattic\WooCommerce\EmailEditor\Integrations\Utils\Html_Processing_Helper;
 class Video extends Cover {
  protected function render_content( string $block_content, array $parsed_block, Rendering_Context $rendering_context ): string {
  $block_attrs = $parsed_block['attrs'] ?? array();
@@ -42,8 +43,8 @@ class Video extends Cover {
  // Get the inner HTML content from the wrapper div.
  $inner_html = $dom_helper->get_element_inner_html( $wrapper_element );
  // Look for HTTP/HTTPS URLs in the inner HTML content.
- if ( preg_match( '/(?<![a-zA-Z0-9.-])https?:\/\/[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}[a-zA-Z0-9\/?=&%-]*(?![a-zA-Z0-9.-])/', $inner_html, $matches ) ) {
- $url = $matches[0];
+ $url = Html_Processing_Helper::extract_url_from_text( $inner_html );
+ if ( ! empty( $url ) ) {
  // Decode HTML entities and validate URL.
  $url = html_entity_decode( $url, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
  // Validate the URL.
@@ -56,9 +57,11 @@ class Video extends Cover {
  private function transform_to_cover_block( array $video_block, string $poster_url ): array {
  $block_attrs = $video_block['attrs'] ?? array();
  $block_content = $video_block['innerHTML'] ?? '';
- // Extract video URL from block content, fall back to post URL.
- // Priority: 1) Video URL (if found), 2) Post permalink (fallback).
+ // Extract video URL: 1) From attrs (e.g., passed by Embed renderer), 2) From content, 3) Post permalink.
+ $video_url = $block_attrs['videoUrl'] ?? '';
+ if ( empty( $video_url ) ) {
  $video_url = $this->extract_video_url( $block_content );
+ }
  $link_url = ! empty( $video_url ) ? $video_url : $this->get_current_post_url();
  return array(
  'blockName' => 'core/cover',

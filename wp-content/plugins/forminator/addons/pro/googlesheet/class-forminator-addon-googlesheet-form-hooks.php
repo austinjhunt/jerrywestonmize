@@ -56,6 +56,7 @@ class Forminator_Googlesheet_Form_Hooks extends Forminator_Integration_Form_Hook
 
 		$form_id                = $this->module_id;
 		$form_settings_instance = $this->settings_instance;
+		$module                 = $form_settings_instance->get_module();
 
 		try {
 			/**
@@ -128,6 +129,7 @@ class Forminator_Googlesheet_Form_Hooks extends Forminator_Integration_Form_Hook
 			$values = array();
 			foreach ( $header_fields as $element_id => $header_field ) {
 				$field_type = Forminator_Core::get_field_type( $element_id );
+				$field      = $module->get_field( $element_id );
 
 				$meta_value = '';
 				// take from entry fields (to be saved).
@@ -139,7 +141,12 @@ class Forminator_Googlesheet_Form_Hooks extends Forminator_Integration_Form_Hook
 				}
 				forminator_addon_maybe_log( __METHOD__, $field_type, $meta_value );
 
-				$form_value = Forminator_Form_Entry_Model::meta_value_to_string( $field_type, $meta_value, false );
+				if ( in_array( $field_type, array( 'paypal', 'stripe', 'stripe-ocs' ), true ) ) {
+					if ( isset( $meta_value['amount'] ) ) {
+						$meta_value['amount'] = Forminator_Field::get_formatted_amount( $field, $meta_value, $module );
+					}
+				}
+				$form_value = Forminator_Form_Entry_Model::meta_value_to_string( $field_type, $meta_value, false, PHP_INT_MAX, $field );
 
 				// Replace custom_option with actual custom value.
 				if ( false !== strpos( $form_value, 'custom_option' ) && isset( $submitted_data[ 'custom-' . $element_id ] ) ) {
@@ -227,18 +234,38 @@ class Forminator_Googlesheet_Form_Hooks extends Forminator_Integration_Form_Hook
 	 * @return array
 	 */
 	private static function maybe_add_group_cloned_fields( $form_fields ) {
-		if ( empty( Forminator_CForm_Front_Action::$prepared_data ) ) {
+		$prepared_data = Forminator_CForm_Front_Action::$prepared_data;
+		if ( empty( $prepared_data ) ) {
 			return $form_fields;
 		}
 
-		foreach ( $form_fields as $field ) {
-			$i = 1;
-			while ( isset( Forminator_CForm_Front_Action::$prepared_data[ $field['element_id'] . '-' . ( ++$i ) ] ) ) {
-				$form_fields[] = array_merge( $field, array( 'element_id' => $field['element_id'] . '-' . $i ) );
+		$result       = array();
+		$group_fields = array();
+
+		foreach ( $form_fields as $key => $field ) {
+			$parent      = $field['parent_group'] ?? '';
+			$next_parent = $form_fields[ $key + 1 ]['parent_group'] ?? '';
+
+			$result[] = $field;
+
+			if ( $parent ) {
+				$group_fields[ $parent ][] = $field;
+
+				// When leaving a group, append all clones for that group.
+				if ( $next_parent !== $parent ) {
+					for ( $i = 2; isset( $prepared_data[ $group_fields[ $parent ][0]['element_id'] . '-' . $i ] ); $i++ ) {
+						foreach ( $group_fields[ $parent ] as $gf ) {
+							$cloned_id = $gf['element_id'] . '-' . $i;
+							if ( isset( $prepared_data[ $cloned_id ] ) ) {
+								$result[] = array_merge( $gf, array( 'element_id' => $cloned_id ) );
+							}
+						}
+					}
+				}
 			}
 		}
 
-		return $form_fields;
+		return $result;
 	}
 
 	/**
@@ -255,6 +282,16 @@ class Forminator_Googlesheet_Form_Hooks extends Forminator_Integration_Form_Hook
 	public function get_sheet_headers( $file_id, $worksheet_id = 0 ) {
 		$form_fields = $this->settings_instance->get_form_fields();
 		$form_fields = self::maybe_add_group_cloned_fields( $form_fields );
+
+		/**
+		 * Filter form fields to be sent to Google Sheets integration
+		 *
+		 * @since 1.51
+		 *
+		 * @param array $form_fields Form fields.
+		 * @param int $module_id Current Module ID.
+		 */
+		$form_fields = apply_filters( 'forminator_addon_googlesheet_form_fields', $form_fields, $this->module_id );
 
 		$google_client = $this->addon->get_google_client();
 		$google_client->setAccessToken( $this->addon->get_client_access_token() );

@@ -45,14 +45,13 @@ class LessonSpaceService extends AbstractLessonSpaceService
         $placeholderService = $this->container->get('application.placeholder.' . $entity . '.service');
 
         $lessonSpaceApiKey  = $this->settingsService->getSetting('lessonSpace', 'apiKey');
-        $lessonSpaceEnabled = $this->settingsService->getSetting('lessonSpace', 'enabled');
 
         $enabledForEntity = $this->settingsService
             ->getEntitySettings($entity === Entities::APPOINTMENT ? $appointment->getService()->getSettings() : $appointment->getSettings())
             ->getLessonSpaceSettings()
             ->getEnabled();
 
-        if (!$lessonSpaceEnabled || empty($lessonSpaceApiKey) || !$enabledForEntity) {
+        if (empty($lessonSpaceApiKey) || !$enabledForEntity) {
             return;
         }
 
@@ -276,8 +275,6 @@ class LessonSpaceService extends AbstractLessonSpaceService
         if ($result === false) {
             return ['message' => curl_error($ch)];
         }
-
-        curl_close($ch);
 
         return json_decode($result, true);
     }

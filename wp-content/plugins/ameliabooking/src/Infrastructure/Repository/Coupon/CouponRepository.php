@@ -151,13 +151,9 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
             );
 
 
-            $response = $statement->execute($params);
+            $statement->execute($params);
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to add data in ' . __CLASS__, $e->getCode(), $e);
-        }
-
-        if (!$response) {
-            throw new QueryExecutionException('Unable to add data in ' . __CLASS__);
+            throw new QueryExecutionException('Unable to add data in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return $this->connection->lastInsertId();
@@ -212,16 +208,12 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
                 id = :id"
             );
 
-            $response = $statement->execute($params);
+            $statement->execute($params);
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to save data in ' . __CLASS__ . $e->getMessage());
+            throw new QueryExecutionException('Unable to save data in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
-        if (!$response) {
-            throw new QueryExecutionException('Unable to save data in ' . __CLASS__);
-        }
-
-        return $response;
+        return true;
     }
 
     /**
@@ -287,7 +279,7 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         if (!$rows) {
@@ -418,7 +410,7 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to get data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return call_user_func([static::FACTORY, 'createCollection'], $rows);
@@ -498,7 +490,7 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
 
             $row = $statement->fetch()['count'];
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to get data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return $row;
@@ -582,7 +574,7 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         /** @var Collection $coupons */
@@ -631,7 +623,7 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         foreach ($rows as $row) {
@@ -687,7 +679,7 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
 
             return $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to get data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
     }
 
@@ -734,7 +726,7 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
 
             return $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to get data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
     }
 
@@ -781,7 +773,7 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
 
             return $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to get data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
     }
 }

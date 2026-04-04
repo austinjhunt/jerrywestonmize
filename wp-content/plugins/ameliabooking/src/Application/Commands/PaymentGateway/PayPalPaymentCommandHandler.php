@@ -133,7 +133,7 @@ class PayPalPaymentCommandHandler extends CommandHandler
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setData(
             [
-                'paymentID'            => $response->getData()['id'],
+                'paymentID'            => $response->getData()['id'] ?? '',
                 'transactionReference' => $response->getTransactionReference(),
             ]
         );

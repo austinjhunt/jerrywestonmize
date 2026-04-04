@@ -14,12 +14,5 @@ namespace AmeliaBooking\Domain\Services\Report;
  */
 interface ReportServiceInterface
 {
-    /**
-     * @param array  $rows
-     * @param String $name
-     * @param String $delimiter
-     *
-     * @return mixed
-     */
-    public function generateReport($rows, $name, $delimiter);
+    public function generateReport(array $rows, string $name, string $delimiter);
 }

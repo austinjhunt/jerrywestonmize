@@ -310,11 +310,11 @@ class Forminator_Core {
 		include_once forminator_plugin_dir() . 'library/render/class-assets-enqueue.php';
 		/* @noinspection PhpIncludeInspection */
 
-		if ( version_compare( PHP_VERSION, '5.3.0', 'ge' ) && file_exists( forminator_plugin_dir() . 'library/gateways/class-paypal-express.php' ) ) {
+		if ( file_exists( forminator_plugin_dir() . 'library/gateways/class-paypal-express.php' ) ) {
 			include_once forminator_plugin_dir() . 'library/gateways/class-paypal-express.php';
 		}
 
-		if ( version_compare( PHP_VERSION, '5.6.0', 'ge' ) && file_exists( forminator_plugin_dir() . 'library/gateways/class-stripe.php' ) ) {
+		if ( file_exists( forminator_plugin_dir() . 'library/gateways/class-stripe.php' ) ) {
 			/* @noinspection PhpIncludeInspection */
 			include_once forminator_plugin_dir() . 'library/gateways/class-stripe.php';
 		}
@@ -353,10 +353,8 @@ class Forminator_Core {
 		/* @noinspection PhpIncludeInspection */
 		include_once forminator_plugin_dir() . 'library/helpers/helper-calculator.php';
 
-		if ( version_compare( PHP_VERSION, '5.6.0', 'ge' ) ) {
-			/* @noinspection PhpIncludeInspection */
-			include_once forminator_plugin_dir() . 'library/helpers/helper-payment.php';
-		}
+		/* @noinspection PhpIncludeInspection */
+		include_once forminator_plugin_dir() . 'library/helpers/helper-payment.php';
 
 		// Model.
 		/* @noinspection PhpIncludeInspection */

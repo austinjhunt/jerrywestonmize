@@ -128,6 +128,12 @@ msgstr "+více"
 msgid "+{count} more"
 msgstr "+{count} více"
 
+msgid "1/1 width"
+msgstr "Šířka 1/1"
+
+msgid "1/2 width"
+msgstr "1/2 šířky"
+
 msgid "10h"
 msgstr "10 h"
 
@@ -451,6 +457,9 @@ msgstr ""
 msgid "Add appointment"
 msgstr "Přidat termín"
 
+msgid "Add booking"
+msgstr "Přidat rezervaci"
+
 msgid "Add category"
 msgstr "Přidat kategorii"
 
@@ -459,6 +468,9 @@ msgstr "Přidat vlastní pole"
 
 msgid "Add custom notification"
 msgstr "Přidat vlastní upozornění"
+
+msgid "Add customer"
+msgstr "Přidat zákazníka"
 
 msgid "Add date range"
 msgstr "Přidat období"
@@ -477,6 +489,9 @@ msgid ""
 "content"
 msgstr ""
 "Přidat ID prvku (tlačítko, odkaz...), který načte obsah Amelia shortcode"
+
+msgid "Add event"
+msgstr "Přidat událost"
 
 msgid "Add event attendees"
 msgstr "Přidat účastníky akce"
@@ -501,6 +516,9 @@ msgstr ""
 
 msgid "Add option"
 msgstr "Přidat volbu"
+
+msgid "Add package"
+msgstr "Přidat balíček"
 
 msgid "Add period"
 msgstr "Přidat období"
@@ -632,9 +650,6 @@ msgstr "Povolit správci provést rezervaci přes existující rezervaci"
 
 msgid "Allow booking above maximum capacity"
 msgstr "Povolit rezervaci nad maximální kapacitu"
-
-msgid "Allow booking below minimum capacity"
-msgstr "Povolit rezervaci pod minimální kapacitu"
 
 msgid "Allow booking without a prior login"
 msgstr "Povolit rezervaci bez předchozího přihlášení"
@@ -805,9 +820,6 @@ msgstr "Amelia Nastavení uživatelů"
 
 msgid "Amount"
 msgstr "Množství"
-
-msgid "Amount:"
-msgstr "Množství:"
 
 msgid "An email with details of your booking has been sent to you."
 msgstr "Email s informacemi o rezervaci vám byl zaslán."
@@ -991,6 +1003,9 @@ msgstr "Stav rezervace byl změněn na "
 
 msgid "Appointment status has been updated."
 msgstr "Stav termínu byl aktualizován."
+
+msgid "Appointment title"
+msgstr "Název termínu"
 
 msgid "Appointments"
 msgstr "Rezervace"
@@ -1185,6 +1200,13 @@ msgstr "Opravdu chcete zobrazit tuto službu?"
 msgid "Are you sure you want to show this tax?"
 msgstr "Opravdu chcete zobrazit tuto daň?"
 
+msgid ""
+"Are you sure you want to skip the setup? Once skipped, the guided setup will "
+"no longer be available. All settings will need to be configured later."
+msgstr ""
+"Opravdu chcete přeskočit nastavení? Po přeskočení již nebude průvodce "
+"nastavením k dispozici. Veškerá nastavení bude nutné provést později."
+
 msgid "Are you sure you want to unblock this customer?"
 msgstr "Opravdu chcete odblokovat tohoto zákazníka?"
 
@@ -1236,11 +1258,11 @@ msgstr "Účastníci byli vymazáni"
 msgid "Attendees have not been deleted"
 msgstr "Účastníci nebyli vymazáni"
 
-msgid "Auto-Approve Booking After Payment"
-msgstr "Automatické schválení rezervace po zaplacení"
-
 msgid "Auto-Reply Message"
 msgstr "Automatická odpověď"
+
+msgid "Auto-approve booking after payment"
+msgstr "Automaticky schválit rezervaci po zaplacení"
 
 msgid "Auto-fill your details using:"
 msgstr "Automaticky vyplnit údaje pomocí:"
@@ -1498,6 +1520,11 @@ msgstr "Rezervovat akci"
 msgid "Book this service"
 msgstr "Rezervovat tuto službu"
 
+msgid ""
+"Book time-based appointments with configurable durations, prices, and "
+"availability."
+msgstr "Rezervujte si termíny s flexibilní délkou, cenou a dostupností."
+
 msgid "Booked"
 msgstr "Rezervováno"
 
@@ -1516,6 +1543,12 @@ msgstr "Rezervace #{count}"
 msgid "Booking Appointment"
 msgstr "Provedení rezervace"
 
+msgid "Booking Approved with Issues"
+msgstr "Rezervace potvrzena s výhradami"
+
+msgid "Booking Canceled"
+msgstr "Rezervace zrušena"
+
 msgid "Booking Closes"
 msgstr "Možnost rezervace končí"
 
@@ -1525,8 +1558,14 @@ msgstr "Možnost rezervace končí vzestupně"
 msgid "Booking Closes Desc"
 msgstr "Možnost rezervace končí sestupně"
 
+msgid "Booking Confirmed"
+msgstr "Rezervace potvrzena"
+
 msgid "Booking Details"
 msgstr "Podrobnosti o rezervaci"
+
+msgid "Booking Failed"
+msgstr "Rezervace se nezdařila"
 
 msgid "Booking Form"
 msgstr "Rezervační formulář"
@@ -1548,6 +1587,12 @@ msgstr "Možnost rezervace začíná sestupně"
 
 msgid "Booking Overview"
 msgstr "Zobrazení rezervací"
+
+msgid "Booking Processed"
+msgstr "Rezervace zpracována"
+
+msgid "Booking Rejected"
+msgstr "Rezervace odmítnuta"
 
 msgid "Booking added"
 msgstr "Rezervace přidána"
@@ -1815,6 +1860,9 @@ msgstr "Zrušeno správcem"
 msgid "Canceled by attendee"
 msgstr "Zrušeno účastníkem"
 
+msgid "Cancellation Failed"
+msgstr "Zrušení se nezdařilo"
+
 msgid "Cancelled"
 msgstr "Zrušeno"
 
@@ -1848,8 +1896,8 @@ msgstr "Karty"
 msgid "Cards and buttons"
 msgstr "Karty a tlačítka"
 
-msgid "Carrier:"
-msgstr "Nositel:"
+msgid "Carrier"
+msgstr "Dopravce"
 
 msgid "Cart"
 msgstr "Košík"
@@ -2016,6 +2064,9 @@ msgstr "Zvolte službu"
 msgid "Choose a Form"
 msgstr "Zvolte formulář"
 
+msgid "Choose a currency that will be used for all price based settings."
+msgstr "Zvolte měnu, která se použije pro všechna nastavení cen."
+
 msgid ""
 "Choose a form you want to customize. The Step-by-Step 2.0 form is the new "
 "and improved version which provides you with better design and user "
@@ -2027,6 +2078,13 @@ msgstr ""
 
 msgid "Choose a group service"
 msgstr "Zvolte skupinovou službu"
+
+msgid ""
+"Choose a time interval that will be used when defining all time based "
+"settings."
+msgstr ""
+"Zvolte časový interval, který se použije při nastavování všech časových "
+"parametrů."
 
 msgid "Choose date and time"
 msgstr "Zvolte datum a čas"
@@ -2075,6 +2133,9 @@ msgstr "Zvolte frekvenci opakování rezervace"
 
 msgid "Choose when the repeating ends"
 msgstr "Zvolte, kdy opakování skončí"
+
+msgid "Choose whether you want to manage services, events, or both."
+msgstr "Zvolte si, jestli chcete spravovat služby, akce, nebo obojí."
 
 msgid "Choosing layout of first step in step by step form"
 msgstr "Výběr rozvržení prvního kroku ve formuláři Krok za krokem"
@@ -2374,11 +2435,14 @@ msgstr "Pokračovat"
 msgid "Continue Booking"
 msgstr "Pokračovat v rezervaci"
 
+msgid "Continue setup"
+msgstr "Pokračovat v nastavení"
+
 msgid "Copy your API key now, as it won't be visible again."
 msgstr "Zkopírujte si teď API klíč, protože už nebude znovu zobrazen."
 
-msgid "Cost:"
-msgstr "Cena:"
+msgid "Cost"
+msgstr "Náklady"
 
 msgid ""
 "Could not delete category. This category has services available for booking "
@@ -2519,6 +2583,12 @@ msgstr ""
 "podle naplánovaných připomínek, aby zákazníci i pracovníci dostávali "
 "informace přesně včas."
 
+msgid "Create employee"
+msgstr "Založit pracovníka"
+
+msgid "Create event"
+msgstr "Založit akci"
+
 msgid "Create meetings for pending appointments"
 msgstr "Vytvořit schůzky pro nepotvrzené rezervace"
 
@@ -2549,6 +2619,12 @@ msgstr ""
 "pracovníky, službami nebo místy, a tak zajistěte, že zákazníci uvidí pouze "
 "časové sloty, ve kterých je vše, co potřebují, skutečně k dispozici."
 
+msgid "Create scheduled events with fixed dates, prices and capacities."
+msgstr "Vytvořit naplánované akce s pevnými termíny, cenami a kapacitami."
+
+msgid "Create service"
+msgstr "Založit službu"
+
 msgid "Create spaces for pending appointments"
 msgstr "Vytvořit prostor pro nepotvrzené rezervace"
 
@@ -2563,6 +2639,9 @@ msgstr ""
 
 msgid "Created On"
 msgstr "Vytvořeno"
+
+msgid "Created on"
+msgstr "Vytvořeno dne"
 
 msgid "Credit Card"
 msgstr "Kreditní karta"
@@ -2670,9 +2749,6 @@ msgstr "Zákazník vzestupně"
 msgid "Customer Desc"
 msgstr "Zákazník sestupně"
 
-msgid "Customer Name"
-msgstr "Jméno zákazníka"
-
 msgid "Customer Panel"
 msgstr "Zákaznický panel"
 
@@ -2723,6 +2799,9 @@ msgstr "Informace o zákazníkovi"
 
 msgid "Customer last name"
 msgstr "Příjmení zákazníka"
+
+msgid "Customer name"
+msgstr "Jméno zákazníka"
 
 msgid "Customer note"
 msgstr "Poznámka zákazníka"
@@ -2777,6 +2856,9 @@ msgstr "Zákazníci importováni ze souboru:"
 
 msgid "Customers in Waiting list"
 msgstr "Zákazníci na čekací listině"
+
+msgid "Customers will be redirected to this URL after booking an event."
+msgstr "Po rezervaci akce budou zákazníci přesměrováni na tuto adresu URL."
 
 msgid ""
 "Customers will be redirected to this URL after scheduling an appointment."
@@ -2960,8 +3042,8 @@ msgstr "Výchozí místo Square"
 msgid "Default appointment status"
 msgstr "Výchozí stav rezervace"
 
-msgid "Default back‑end page"
-msgstr "Výchozí stránka v administraci"
+msgid "Default back end page"
+msgstr "Výchozí stránka backendu"
 
 msgid "Default language"
 msgstr "Výchozí jazyk"
@@ -3641,6 +3723,9 @@ msgstr "Pracovník je nyní viditelný."
 msgid "Employee last name"
 msgstr "Příjmení pracovníka"
 
+msgid "Employee name"
+msgstr "Jméno pracovníka"
+
 msgid "Employee name, email & phone"
 msgstr "Jméno, email a telefon pracovníka"
 
@@ -4080,6 +4165,9 @@ msgstr "Zadejte heslo"
 
 msgid "Error"
 msgstr "Chyba"
+
+msgid "Error occurred"
+msgstr "Vyskytla se chyba"
 
 msgid "Error while generating CSV."
 msgstr "Chyba při generování souboru CSV."
@@ -4919,6 +5007,9 @@ msgstr ""
 msgid "Header"
 msgstr "Záhlaví"
 
+msgid "Header Image URL"
+msgstr "URL obrázku hlavičky"
+
 msgid "Heading"
 msgstr "Nadpis"
 
@@ -5092,6 +5183,9 @@ msgstr "Jak na"
 msgid "How to get your"
 msgstr "Jak získat své"
 
+msgid "How will you use Amelia?"
+msgstr "Jak budete používat Amelii?"
+
 msgid "ID"
 msgstr ""
 
@@ -5118,11 +5212,25 @@ msgstr ""
 "výchozí platební metoda."
 
 msgid ""
+"If disabled, booking must meet the minimum capacity, and the time slot "
+"closes after the first booking."
+msgstr ""
+"Pokud je tato možnost zakázána, rezervace musí splňovat minimální kapacitu a "
+"časový úsek se po první rezervaci uzavře."
+
+msgid ""
 "If disabled, the price will remain the same regardless of how many people "
 "are included in the group appointment."
 msgstr ""
 "Pokud vypnuto, cena zůstane stejná bez ohledu na to, kolik osob je zahrnuto "
 "do skupinové rezervace."
+
+msgid ""
+"If enabled, customers can book with Pending status even after maximum "
+"capacity is reached."
+msgstr ""
+"Pokud je tato možnost povolena, zákazníci si mohou rezervaci provést se "
+"stavem Čeká na vyřízení i po dosažení maximální kapacity."
 
 msgid ""
 "If enabled, customers can complete their payment using the link in their "
@@ -5159,39 +5267,11 @@ msgstr ""
 "první z nich."
 
 msgid ""
-"If this is disabled, your front-end customers won't be able to book "
-"appointment with Pending status above the maximum capacity. Once the maximum "
-"capacity is reached appointment will close and time slot will become "
-"unavailable."
+"If this option is disabled, the item will be available only for booking from "
+"the backend."
 msgstr ""
-"Pokud vypnete tuto volbu, zákazníci nemůžou provádět rezervace se stavem "
-"Nepotvrzeno nad maximální limit kapacity služby. Po překročení maximální "
-"kapacitym se termín uzavře a časový slot nebude k dispozici."
-
-msgid ""
-"If this is disabled, your front-end customers won't be able to submit a "
-"booking unless they fill in the minimum service capacity, but once they book "
-"for any capacity above minimum, the time slot will become unavailable for "
-"booking for others. If enabled, multiple customers will be able to book the "
-"same time slot, without having to fill in the minimum capacity."
-msgstr ""
-"Pokud vypnete tuto volbu, zákazník nemůže provést rezervaci, pokud nenaplní "
-"minimální kapacitu služby (v jedné rezervaci). Pokud ale rezervuje alespoň "
-"minimální kapacitu, časový slot se uzavře a bude nedostupný pro ostatní "
-"zákazníky. Pokud povolíte tuto volbu, může zákazník provést rezervaci pod "
-"minimální kapacitu služby."
-
-msgid ""
-"If this option is disabled, the employee will only be available for booking "
-"through the back-end"
-msgstr ""
-"Pokud vypnuto, bude pracovník k dispozici pro rezervaci pouze v administraci."
-
-msgid ""
-"If this option is disabled, the service will be bookable only from the back "
-"end."
-msgstr ""
-"Pokud vypnuto, bude služba k dispozici pro rezervaci pouze v administraci."
+"Pokud je tato možnost zakázána, položka bude k dispozici pouze pro rezervaci "
+"z backendu."
 
 msgid ""
 "If this option is enabled customers will be able to pay via email "
@@ -5199,13 +5279,6 @@ msgid ""
 msgstr ""
 "Pokud povolíte tuto volbu, zákazníci budou moci platit prostřednictvím "
 "emailu nebo v panelu zákazníka."
-
-msgid ""
-"If this option is enabled time slots will be shown with included service "
-"buffer time."
-msgstr ""
-"Pokud povolíte tuto volbu, časové úseky budou obsahovat i časovou rezervu "
-"pro službu."
 
 msgid ""
 "If this option is not checked the plugin will calculate the time <br> for "
@@ -5344,6 +5417,36 @@ msgstr ""
 "Zlepšená zákaznická retence, protože se zákazníci vracejí, aby využili "
 "zbývající sezení ve svém balíčku"
 
+msgid ""
+"In Amelia, a “service” is a specific appointment-type offering your business "
+"provides to clients - such as consultations, treatments, or classes - that "
+"can be fully customized with its own name, duration, price, capacity, "
+"availability, and extras, and booked online with assigned employees."
+msgstr ""
+"Služba v Amelii představuje nabídku na bázi schůzky, kterou vaše společnost "
+"nabízí zákazníkům – jako jsou konzultace, procedury nebo lekce. Každou "
+"službu lze plně nastavit s vlastním názvem, trváním, cenou, kapacitou, "
+"dostupností a extra funkcemi, a rezervovat online s konkrétními pracovníky."
+
+msgid ""
+"In Amelia, an employee is a team member who provides services or hosts "
+"events, with their own schedule, working hours, and assigned offerings."
+msgstr ""
+"V aplikaci Amelia je pracovník členem týmu, který poskytuje služby nebo "
+"pořádá akce, má svůj vlastní pracovní rozvrh, pracovní dobu a přiřazené "
+"nabídky."
+
+msgid ""
+"In Amelia, an event is a booking-type offering designed for group activities "
+"or multi-day occasions - such as workshops, conferences, tours, or training "
+"series - that can be configured with its own schedule, capacity, pricing "
+"structure and assigned staff."
+msgstr ""
+"Událost v Amelii představuje rezervovatelnou nabídku určenou pro skupinové "
+"nebo vícedenní aktivity, jako jsou workshopy, konference, zájezdy či školicí "
+"cykly. Lze ji přizpůsobit vlastním rozvrhem, kapacitou, cenami a přiřazeným "
+"personálem."
+
 msgid "In Package"
 msgstr "V balíčku"
 
@@ -5358,6 +5461,13 @@ msgstr "Zahrnuje daně"
 
 msgid "Include buffer time in calendar events"
 msgstr "Zahrnout čas přípravy do akcí v kalendáři"
+
+msgid ""
+"Include buffer time in slot calculation. When disabled, slots are based only "
+"on service duration."
+msgstr ""
+"Zahrnout časovou rezervu do výpočtu slotů. Pokud je tato funkce vypnutá, "
+"sloty se počítají pouze na základě délky služby."
 
 msgid "Include in invoice"
 msgstr "Zobrazit ve faktuře"
@@ -5445,6 +5555,9 @@ msgstr "Integrace"
 msgid "Interested in unlocking this feature?"
 msgstr "Máte zájem o odemknutí této funkce?"
 
+msgid "Invalid Stripe secret key."
+msgstr "Neplatný tajný klíč Stripe."
+
 msgid "Invisible reCAPTCHA badge"
 msgstr ""
 
@@ -5489,6 +5602,13 @@ msgstr "Nastavení faktur"
 
 msgid "Issued"
 msgstr "Vydáno"
+
+msgid ""
+"It looks like this is your first time here, so let’s walk through a few "
+"simple steps to help you get started."
+msgstr ""
+"Vypadá to, že jste tu poprvé, takže si projdeme několik jednoduchých kroků, "
+"které vám pomohou začít."
 
 msgid ""
 "It seems like there are no available or visible services assigned to the "
@@ -5578,6 +5698,9 @@ msgid ""
 msgstr ""
 "Udržujte operace v souladu s jednotným nastavením, dostupností a řízením "
 "zdrojů"
+
+msgid "Keep slot available after first booking"
+msgstr "Ponechat slot volný i po první rezervaci"
 
 msgid ""
 "Keep your data organized and meaningful with structured fields that "
@@ -5767,9 +5890,6 @@ msgstr "Místní čas:"
 msgid "Local time"
 msgstr "Místní čas"
 
-msgid "Local time:"
-msgstr "Místní čas:"
-
 msgid "Location"
 msgstr "Místo"
 
@@ -5903,6 +6023,9 @@ msgstr ""
 
 msgid "Make extra mandatory"
 msgstr "Udělat doplněk povinným"
+
+msgid "Make sure you are using the correct WhatsApp credentials."
+msgstr "Ujistěte se, že používáte správné přihlašovací údaje pro WhatsApp."
 
 msgid "Male"
 msgstr "Muž"
@@ -6276,9 +6399,6 @@ msgstr "Připomínka zítřejší akce"
 msgid "No"
 msgstr "Žádné"
 
-msgid "No, Cancel"
-msgstr "Ne, zrušit"
-
 msgid "No, just this one"
 msgstr "Ne, pouze toto"
 
@@ -6504,9 +6624,6 @@ msgstr "Upozornit účastníky"
 msgid "Notify the customer(s)"
 msgstr "Upozornit zákazníky"
 
-msgid "Notify the customer(s) by default"
-msgstr "Výchozí nastavení upozornění zákazníků"
-
 msgid "Number of Additional People"
 msgstr "Počet dalších osob"
 
@@ -6725,10 +6842,10 @@ msgstr "Jakmile obdržíte rezervace, transakce se zobrazí zde."
 
 msgid ""
 "Once you start receiving bookings, your customers will be displayed here. "
-"You can also get started by clicking the Add button below."
+"You can also get started by clicking the Add or Import button below."
 msgstr ""
-"Jakmile obdržíte rezervace termínů, zákazníci se zobrazí zde. Můžete také "
-"začít kliknutím na tlačítko Přidat níže."
+"Jakmile začnete přijímat rezervace, vaši zákazníci se zde zobrazí. Můžete "
+"také začít kliknutím na tlačítko Přidat nebo Importovat níže."
 
 msgid "One booking can have multiple attendees/spots in it."
 msgstr "Jedna rezervace může mít více účastníků / míst."
@@ -6786,9 +6903,6 @@ msgstr "Volby:"
 
 msgid "Or"
 msgstr "Nebo"
-
-msgid "Or Enter details below"
-msgstr "Nebo zadejte podrobnosti níže"
 
 msgid "Or enter details below"
 msgstr "Nebo zadejte podrobnosti níže"
@@ -7150,9 +7264,6 @@ msgstr "Historie plateb"
 msgid "Payment ID"
 msgstr "ID platby"
 
-msgid "Payment ID:"
-msgstr "ID platby:"
-
 msgid "Payment Method"
 msgstr "Způsob platby"
 
@@ -7218,6 +7329,9 @@ msgstr "Typ platby"
 
 msgid "Payment type, deposit payment..."
 msgstr "Typ platby, platba zálohy…"
+
+msgid "Payment was canceled."
+msgstr "Platba byla zrušena."
 
 msgid "Payments"
 msgstr "Platby"
@@ -7343,6 +7457,13 @@ msgstr "Zástupný text"
 
 msgid "Placeholders"
 msgstr "Zástupné texty"
+
+msgid ""
+"Places API (New) is required but not enabled. Please enable it in Google "
+"Cloud Console."
+msgstr ""
+"API Places (nové) je vyžadováno, ale není povoleno. Povolte jej v konzoli "
+"Google Cloud."
 
 msgid "Plain"
 msgstr "Prostý"
@@ -7507,20 +7628,20 @@ msgstr "Zadejte příjmení"
 msgid "Please enter live API Key"
 msgstr "Zadejte live API Key"
 
-msgid "Please enter live ClientId"
-msgstr "Zadejte live ClientId"
-
 msgid "Please enter live POSKey"
 msgstr "Zadejte live POSKey"
 
-msgid "Please enter live Secret"
-msgstr "Zadejte live Secret"
+msgid "Please enter live client ID"
+msgstr "Zadejte live client ID"
 
-msgid "Please enter live key id"
-msgstr "Zadejte live key id"
+msgid "Please enter live key ID"
+msgstr "Zadejte live key ID"
 
 msgid "Please enter live key secret"
 msgstr "Zadejte live key secret"
+
+msgid "Please enter live secret"
+msgstr "Zadejte live secret"
 
 msgid "Please enter name"
 msgstr "Zadejte název"
@@ -7555,17 +7676,17 @@ msgstr "Zadejte název daňové sazby."
 msgid "Please enter test API Key"
 msgstr "Zadejte testovací klíč rozhraní API"
 
-msgid "Please enter test ClientId"
-msgstr "Zadejte test ClientId"
+msgid "Please enter test client ID"
+msgstr "Zadejte test client ID"
 
-msgid "Please enter test Secret"
-msgstr "Zadejte test Secret"
-
-msgid "Please enter test key id"
-msgstr "Zadejte test key id"
+msgid "Please enter test key ID"
+msgstr "Zadejte test key ID"
 
 msgid "Please enter test key secret"
 msgstr "Zadejte test key secret"
+
+msgid "Please enter test secret"
+msgstr "Zadejte test secret"
 
 msgid "Please enter waiting list capacity"
 msgstr "Zadejte kapacitu čekací listiny"
@@ -8223,6 +8344,9 @@ msgstr "Resetovat formulář"
 msgid "Reset Password"
 msgstr "Obnovit heslo"
 
+msgid "Reset form settings"
+msgstr "Resetovat nastavení formuláře"
+
 msgid "Reset password"
 msgstr "Obnovit heslo"
 
@@ -8252,6 +8376,9 @@ msgstr "Zdroj je nyní viditelný."
 
 msgid "Resources"
 msgstr "Zdroje"
+
+msgid "Return to Home"
+msgstr "Vrátit se domů"
 
 msgid "Returning"
 msgstr "Vracející se"
@@ -8309,6 +8436,11 @@ msgstr "SMTP zabezpečení"
 
 msgid "SMTP Username"
 msgstr "SMTP uživatelské jméno"
+
+msgid "SMTP credentials validation failed. Please check your settings."
+msgstr ""
+"Ověření přihlašovacích údajů SMTP se nezdařilo. Zkontrolujte prosím "
+"nastavení."
 
 msgid "SSL"
 msgstr ""
@@ -8497,7 +8629,7 @@ msgstr "Sekce"
 msgid "Securely process payments using Stripe."
 msgstr "Bezpečně zpracovat platby s využitím Stripe."
 
-msgid "Segment:"
+msgid "Segment"
 msgstr ""
 
 msgid "Segments"
@@ -8583,6 +8715,9 @@ msgstr "Zvolit Zoom uživatele"
 
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr "Zvolte zástupný text a vložte ho na místo kurzoru."
+
+msgid "Select at least one option."
+msgstr "Zvolte alespoň jednu možnost."
 
 msgid "Select box"
 msgstr "Rozbalovací nabídka"
@@ -8781,8 +8916,8 @@ msgstr "Poslat na email"
 msgid "Send your customer data to Mailchimp quickly and effortlessly."
 msgstr "Odesílejte data o zákazníkovi do Mailchimpu rychle a snadno."
 
-msgid "Sender ID supports up to 11 characters"
-msgstr "ID odesílatele podporuje až 11 znaků"
+msgid "Sender ID must be between 3 and 11 characters"
+msgstr "ID odesílatele musí mít 3 až 11 znaků."
 
 msgid "Sender email"
 msgstr "Email odesílatele"
@@ -8966,6 +9101,9 @@ msgstr ""
 "Nastavte flexibilní ceny vstupenek podle kategorií a časových intervalů, aby "
 "byly vstupenky co nejdostupnější a zároveň maximalizovaly tržby."
 
+msgid "Set general settings"
+msgstr "Nastavit obecná nastavení"
+
 msgid ""
 "Set individual time zones for employees so availability and bookings are "
 "shown correctly for clients worldwide."
@@ -9128,6 +9266,14 @@ msgstr "Nastavení viditelnosti a popisků výběru vstupenek"
 msgid "Set your Google Map API Key in General Settings"
 msgstr "Zadat Google Map API Key v obecných nastaveních"
 
+msgid ""
+"Set your company working hours. This schedule will be used for all new "
+"employees, however you can customize schedule for each employee later."
+msgstr ""
+"Nastavte pracovní dobu vaší společnosti. Tento rozvrh bude použit pro "
+"všechny nové pracovníky, ale později můžete rozvrh pro každého pracovníka "
+"upravit."
+
 msgid "Setting up days off"
 msgstr "Nastavení dnů volna"
 
@@ -9151,6 +9297,9 @@ msgstr "Kapacita sdílené kategorie"
 
 msgid "Show"
 msgstr "Zobrazit"
+
+msgid "Show Add To Calendar option to customers"
+msgstr "Ukázat zákazníkům možnost Přidat do kalendáře"
 
 msgid "Show All"
 msgstr "Zobrazit vše"
@@ -9312,6 +9461,9 @@ msgstr "Přihlásit se jako "
 msgid "Sign in with Google"
 msgstr "Přihlásit se pomocí Google"
 
+msgid "Sign in with Microsoft"
+msgstr "Přihlásit se pomocí Microsoftu"
+
 msgid "Sign in with Outlook"
 msgstr "Přihlásit se pomocí Outlook"
 
@@ -9365,6 +9517,9 @@ msgstr "Přeskočit import"
 
 msgid "Skip packages and continue with the selected service"
 msgstr "Přeskočit balíčky a pokračovat s vybranou službou"
+
+msgid "Skip setup"
+msgstr "Přeskočit nastavení"
 
 msgid "Slot end time"
 msgstr "Čas ukončení slotu"
@@ -9509,9 +9664,6 @@ msgstr "Čas zahájení"
 msgid "Status"
 msgstr "Stav"
 
-msgid "Status:"
-msgstr "Stav:"
-
 msgid "Status Asc"
 msgstr "Stav vzestupně"
 
@@ -9552,6 +9704,18 @@ msgstr "Krok za krokem"
 
 msgid "Step-by-step booking form guide"
 msgstr "Průvodce rezervačním formulářem krok za krokem"
+
+msgid "Step 1"
+msgstr "Krok 1"
+
+msgid "Step 2"
+msgstr "Krok 2"
+
+msgid "Step 3"
+msgstr "Krok 3"
+
+msgid "Step 4"
+msgstr "Krok 4"
 
 msgid "Step Booking"
 msgstr "Rezervační formulář krok za krokem"
@@ -9657,6 +9821,13 @@ msgstr "Úspěšně přidaná rezervace"
 msgid "Suggest closest available date"
 msgstr "Navrhnout nejbližší dostupné datum"
 
+msgid ""
+"Suggest customers to add an appointment to their calendar when booking is "
+"finalized."
+msgstr ""
+"Vyzvat zákazníky, aby si přidali rezervaci do kalendáře po dokončení "
+"rezervace."
+
 msgid "Suggest next available date"
 msgstr "Navrhnout nejbližší volný termín"
 
@@ -9708,6 +9879,13 @@ msgid ""
 "payouts."
 msgstr ""
 "Synchronizujte svůj účet Stripe Connect pro snadné platby a plynulé výplaty."
+
+msgid ""
+"Sync your and your employee's personal and professional events by connection "
+"Outlook calendars."
+msgstr ""
+"Synchronizujte osobní a pracovní události své i svých pracovníků připojením "
+"kalendářů Outlook."
 
 msgid ""
 "Sync your and your employees' personal and professional events by connecting "
@@ -9840,9 +10018,6 @@ msgid "Test secret Key"
 msgstr ""
 
 msgid "Text"
-msgstr ""
-
-msgid "Text:"
 msgstr ""
 
 msgid "Text Mode"
@@ -10057,8 +10232,14 @@ msgstr "Teď & v budoucnu"
 msgid "This Only"
 msgstr "Pouze toto"
 
+msgid "This appointment is a part of a package."
+msgstr "Tento termín je součástí balíčku."
+
 msgid "This booking is part of a package deal"
 msgstr "Tato rezervace je součástí balíčku"
+
+msgid "This category cannot be deleted because it is included in a package."
+msgstr "Tuto kategorii nelze smazat, protože je součástí balíčku."
 
 msgid ""
 "This category has services with {count} past appointment. | This category "
@@ -10103,6 +10284,13 @@ msgstr "Toto pole je povinné."
 
 msgid "This file is forbidden for upload"
 msgstr "Tento typ souboru je zakázán"
+
+msgid ""
+"This is a temporary WhatsApp token and will automatically expire after 24 "
+"hours. Make sure to complete the setup before it expires."
+msgstr ""
+"Toto je dočasný token WhatsApp, který automaticky vyprší po 24 hodinách. "
+"Dokončete nastavení před jeho vypršením."
 
 msgid ""
 "This is a unique security token. Copy it into the 'Verify token' field in "
@@ -10197,6 +10385,9 @@ msgstr "Obsah tohoto zástupného textu bude použit všude, kde je použitý."
 
 msgid "This range"
 msgstr "Toto rozmezí"
+
+msgid "This service cannot be deleted because it is included in a package."
+msgstr "Tuto službu nelze smazat, protože je součástí balíčku."
 
 msgid "This service does not have any extras"
 msgstr "Tato služba nemá žádné doplňky"
@@ -10570,9 +10761,6 @@ msgstr ""
 msgid "Type"
 msgstr "Typ"
 
-msgid "Type:"
-msgstr "Typ:"
-
 msgid "Type Asc"
 msgstr "Typ vzestupně"
 
@@ -10903,6 +11091,20 @@ msgstr ""
 "Připravili jsme soubor .csv se zákazníky, kteří se nepodařilo importovat. Po "
 "opravě problémů to můžete zkusit znovu."
 
+msgid ""
+"We were unable to cancel your booking. Please contact admin for assistance "
+"with canceling this booking."
+msgstr ""
+"Nepodařilo se nám stornovat vaši rezervaci. Pro asistenci se stornováním se "
+"prosím obraťte na správce."
+
+msgid ""
+"We were unable to process your booking, and it was rejected. Please contact "
+"admin if you need help or want to try booking again."
+msgstr ""
+"Vaši rezervaci se nepodařilo dokončit a byla odmítnuta. Pro další kroky nebo "
+"opakování rezervace kontaktujte prosím administrátora."
+
 msgid "Web"
 msgstr ""
 
@@ -10938,6 +11140,9 @@ msgstr "Vítejte zpět"
 
 msgid "Welcome back"
 msgstr "Vítejte zpět"
+
+msgid "Welcome to Amelia!"
+msgstr "Vítejte v Amelii!"
 
 msgid "Wellness"
 msgstr ""
@@ -11099,9 +11304,6 @@ msgstr "Roky"
 msgid "Yes"
 msgstr "Ano"
 
-msgid "Yes, Reset"
-msgstr "Ano, obnovit"
-
 msgid "Yoga"
 msgstr "Jóga"
 
@@ -11130,6 +11332,13 @@ msgid ""
 msgstr ""
 "Momentálně jste ke kalendáři Google připojeni administrátorem. Přepsání "
 "připojení ke kalendáři Google není možné."
+
+msgid ""
+"You are currently connected to Outlook Calendar by Admin. Overriding Outlook "
+"Calendar connection is not available."
+msgstr ""
+"Jste připojeni k Outlook kalendáři prostřednictvím správce. Změna tohoto "
+"připojení není možná."
 
 msgid "You are on the waiting list with position"
 msgstr "Jste na čekací listině na pozici"
@@ -11223,6 +11432,12 @@ msgstr "Zadali jste nesprávné heslo."
 msgid "You have reached maximum number of registered domains"
 msgstr "Dosáhli jste maximálního počtu aktivovaných domén"
 
+msgid ""
+"You have successfully declined this booking request. The status has been "
+"updated in the system."
+msgstr ""
+"Žádost o rezervaci byla úspěšně zamítnuta. Stav byl v systému aktualizován."
+
 msgid "You will be redirected to the payment checkout."
 msgstr "Budete přesměrováni na pokladnu platby."
 
@@ -11240,6 +11455,34 @@ msgstr "Jméno"
 
 msgid "Your balance has been recharged."
 msgstr "Zůstatek byl obnoven."
+
+msgid ""
+"Your booking has been successfully canceled. If you have any questions or "
+"wish to reschedule, please contact admin."
+msgstr ""
+"Vaše rezervace byla úspěšně zrušena. V případě dotazů nebo zájmu o změnu "
+"termínu se prosím obraťte na administrátora."
+
+msgid ""
+"Your booking has been successfully completed and approved. You're all set "
+"and can expect everything to proceed smoothly."
+msgstr ""
+"Vaše rezervace byla úspěšně dokončena a potvrzena. Vše je v pořádku a můžete "
+"očekávat hladký průběh."
+
+msgid ""
+"Your booking was approved, but there was an issue completing the process. "
+"Please reach out to admin to ensure everything is properly recorded."
+msgstr ""
+"Vaše rezervace byla potvrzena, ale proces se nepodařilo zcela dokončit. "
+"Kontaktujte prosím administrátora, aby se ujistil, že je vše v pořádku."
+
+msgid ""
+"Your booking was successfully processed, but it could not be approved. "
+"Please contact admin if you need assistance."
+msgstr ""
+"Vaše rezervace byla úspěšně zpracována, ale nebyla potvrzena. Pro pomoc se "
+"obraťte na administrátora."
 
 msgid "Your card's expiration date is incomplete"
 msgstr "Datum expirace platební karty není kompletní"
@@ -11446,6 +11689,15 @@ msgstr ""
 msgid "reCAPTCHA Type"
 msgstr "Typ reCAPTCHA"
 
+msgid "reCAPTCHA challenge expired. Please try again."
+msgstr "Výzva reCAPTCHA vypršela. Zkuste to znovu."
+
+msgid "reCAPTCHA configuration is invalid."
+msgstr "Konfigurace reCAPTCHA je neplatná."
+
+msgid "reCAPTCHA could not be loaded."
+msgstr "reCAPTCHA se nepodařilo načíst."
+
 msgid "reCAPTCHA on Customer Panel"
 msgstr "reCAPTCHA na zákaznickém panelu"
 
@@ -11454,6 +11706,9 @@ msgstr "reCAPTCHA na panelu pracovníka"
 
 msgid "reCAPTCHA setup"
 msgstr "Nastavení reCAPTCHA"
+
+msgid "reCAPTCHA validation failed."
+msgstr "Ověření reCAPTCHA se nezdařilo."
 
 msgid "results"
 msgstr "výsledky"

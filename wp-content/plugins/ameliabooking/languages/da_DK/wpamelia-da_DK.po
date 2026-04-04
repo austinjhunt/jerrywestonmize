@@ -9,10 +9,10 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n==1) ? 0 : 1;\n"
 
 msgid "\"Book now\" Button Type"
-msgstr ""
+msgstr "\"Book nu\"-knaptype"
 
 msgid "\"Go back\" Button Type"
-msgstr ""
+msgstr "\"Gå tilbage\"-knap Type"
 
 msgid "\"I'm not a robot\" checkbox"
 msgstr "\"Jeg er ikke en robot\" afkrydsningsfelt"
@@ -33,16 +33,16 @@ msgid "# of bookings"
 msgstr "# af bookinger"
 
 msgid "'Back' button style"
-msgstr ""
+msgstr "'Tilbage'-knapstil"
 
 msgid "'Book' button style"
-msgstr ""
+msgstr "'Bog'-knapstil"
 
 msgid "'Book another' button style"
-msgstr ""
+msgstr "'Book another'-knapstil"
 
 msgid "'Book now' button style"
-msgstr ""
+msgstr "'Book nu'-knapstil"
 
 msgid ""
 "'Booking Date and Time' sets the limit based on when the booking is made, "
@@ -54,79 +54,85 @@ msgstr ""
 "på selve den planlagte aftale."
 
 msgid "'Bringing anyone with you' popup"
-msgstr ""
+msgstr "Pop op-vindue 'Tag nogen med dig'"
 
 msgid "'Cancel' button style"
-msgstr ""
+msgstr "'Annuller'-knapstil"
 
 msgid "'Change password' button style"
-msgstr ""
+msgstr "'Skift adgangskode'-knapstil"
 
 msgid "'Close' button style"
-msgstr ""
+msgstr "'Luk'-knapstil"
 
 msgid "'Confirm' button style"
-msgstr ""
+msgstr "'Bekræft'-knapstil"
 
 msgid "'Continue' button style"
-msgstr ""
+msgstr "'Fortsæt'-knapstil"
 
 msgid "'Customer panel' button style"
-msgstr ""
+msgstr "'Kundepanel'-knapstil"
 
 msgid "'Delete' button style"
-msgstr ""
+msgstr "'Slet'-knapstil"
 
 msgid "'Filter' button style"
-msgstr ""
+msgstr "'Filter'-knapstil"
 
 msgid "'Finish' button style"
-msgstr ""
+msgstr "'Afslut'-knapstil"
 
 msgid "'Join waiting list' button style"
-msgstr ""
+msgstr "Knappen \"Tilmeld venteliste\""
 
 msgid "'Learn more' button"
-msgstr ""
+msgstr "'Lær mere'-knap"
 
 msgid "'Learn more' button style"
-msgstr ""
+msgstr "'Lær mere'-knapstil"
 
 msgid "'New Event' button style"
-msgstr ""
+msgstr "'Ny begivenhed'-knapstil"
 
 msgid "'New appointment' button style"
-msgstr ""
+msgstr "'Ny aftale'-knapstil"
 
 msgid "'Read more' button style"
-msgstr ""
+msgstr "'Læs mere'-knapstil"
 
 msgid "'Save changes' button style"
-msgstr ""
+msgstr "'Gem ændringer'-knapstil"
 
 msgid "'Scan e-ticket' button"
-msgstr ""
+msgstr "Knappen 'Scan e-billet'"
 
 msgid "'Send' button style"
-msgstr ""
+msgstr "'Send'-knapstil"
 
 msgid "'Set password' button style"
-msgstr ""
+msgstr "'Indstil adgangskode'-knapstil"
 
 msgid "'Sign in' button style"
-msgstr ""
+msgstr "'Log ind'-knapstil"
 
 msgid "'View employee' button style"
-msgstr ""
+msgstr "'Vis medarbejder'-knapstil"
 
 msgid "'View in package' button"
-msgstr ""
+msgstr "Knappen 'Vis i pakke'"
 
 msgid "+more"
 msgstr "Se mere"
 
 msgid "+{count} more"
 msgstr "+{count} mere"
+
+msgid "1/1 width"
+msgstr "1/1 bredde"
+
+msgid "1/2 width"
+msgstr "1/2 bredde"
 
 msgid "10h"
 msgstr "10t"
@@ -141,10 +147,10 @@ msgid "12h"
 msgstr "12t"
 
 msgid "12min"
-msgstr ""
+msgstr "12 min"
 
 msgid "15min"
-msgstr ""
+msgstr "15 min"
 
 msgid "1 day"
 msgstr "1 dag"
@@ -283,7 +289,7 @@ msgid "API base URL: "
 msgstr "API-basis-URL: "
 
 msgid "API setup"
-msgstr ""
+msgstr "API-opsætning"
 
 msgid ""
 "A percentage deposit is calculated based on the total booking price. A fixed "
@@ -313,25 +319,25 @@ msgid "About Service"
 msgstr "Tilføj Service"
 
 msgid "About event"
-msgstr ""
+msgstr "Om begivenheden"
 
 msgid "About package"
-msgstr ""
+msgstr "Om pakken"
 
 msgid "About service"
-msgstr ""
+msgstr "Om tjenesten"
 
 msgid "About this Event"
 msgstr "Om denne begivenhed"
 
 msgid "About this event"
-msgstr ""
+msgstr "Om denne begivenhed"
 
 msgid "Accent"
 msgstr ""
 
 msgid "Accent text"
-msgstr ""
+msgstr "Accenttekst"
 
 msgid "Accept payments for bookings and services via PayPal."
 msgstr "Accepter betalinger for reservationer og tjenester via PayPal."
@@ -343,13 +349,13 @@ msgid "Accept payments via Razorpay, ideal for Indian businesses."
 msgstr "Accepter betalinger via Razorpay, ideelt for indiske virksomheder."
 
 msgid "Access link"
-msgstr ""
+msgstr "Adgangslink"
 
 msgid "Access link success"
-msgstr ""
+msgstr "Adgangslink succes"
 
 msgid "Access your financial data in seconds"
-msgstr ""
+msgstr "Få adgang til dine økonomiske data på få sekunder"
 
 msgid "Account ID"
 msgstr "Beløb"
@@ -379,7 +385,7 @@ msgid "Activation"
 msgstr "Aktivering"
 
 msgid "Activation settings"
-msgstr ""
+msgstr "Aktiveringsindstillinger"
 
 msgid "Active"
 msgstr "Aktiv"
@@ -418,6 +424,8 @@ msgstr ""
 
 msgid "Add Meta Pixel to track ad conversions and optimize marketing."
 msgstr ""
+"Tilføj Meta Pixel for at spore annoncekonverteringer og optimere "
+"markedsføringen."
 
 msgid "Add Period"
 msgstr "Tilføj periode"
@@ -429,7 +437,7 @@ msgid "Add Special Day"
 msgstr "Tilføj Speciel Dag"
 
 msgid "Add Stripe address fields"
-msgstr ""
+msgstr "Tilføj Stripe-adressefelter"
 
 msgid "Add Webhook"
 msgstr "Tilføj webhook"
@@ -451,26 +459,32 @@ msgstr ""
 msgid "Add appointment"
 msgstr "Tilføj aftale"
 
+msgid "Add booking"
+msgstr "Tilføj reservation"
+
 msgid "Add category"
 msgstr "Tilføj kategori"
 
 msgid "Add custom field"
-msgstr ""
+msgstr "Tilføj brugerdefineret felt"
 
 msgid "Add custom notification"
-msgstr ""
+msgstr "Tilføj brugerdefineret meddelelse"
+
+msgid "Add customer"
+msgstr "Tilføj kunde"
 
 msgid "Add date range"
-msgstr ""
+msgstr "Tilføj datointerval"
 
 msgid "Add day(s)"
-msgstr ""
+msgstr "Tilføj dag(e)"
 
 msgid "Add day off"
 msgstr "Tilføj fridag"
 
 msgid "Add duration"
-msgstr ""
+msgstr "Tilføj varighed"
 
 msgid ""
 "Add element (button, link...) ID, that will manually load amelia shortcode "
@@ -478,6 +492,9 @@ msgid ""
 msgstr ""
 "Tilføj element (knap, link...) ID, der manuelt vil indlæse amelia shortcode-"
 "indhold"
+
+msgid "Add event"
+msgstr "Tilføj begivenhed"
 
 msgid "Add event attendees"
 msgstr "Tilføj begivenhedsdeltagere"
@@ -489,22 +506,28 @@ msgid "Add more Appointments"
 msgstr "Tilføj flere aftaler"
 
 msgid "Add more appointments"
-msgstr ""
+msgstr "Tilføj flere aftaler"
 
 msgid ""
 "Add multiple employees to your booking system, manage their schedules, and "
 "assign them to services or events, making it easy to scale your business and "
 "coordinate your team."
 msgstr ""
+"Tilføj flere medarbejdere til dit reservationssystem, administrer deres "
+"tidsplaner og tildel dem tjenester eller begivenheder, så det bliver nemt at "
+"skalere din virksomhed og koordinere dit team."
 
 msgid "Add option"
 msgstr "Tilføj mulighed"
+
+msgid "Add package"
+msgstr "Tilføj pakke"
 
 msgid "Add period"
 msgstr "Tilføj periode"
 
 msgid "Add pricing category"
-msgstr ""
+msgstr "Tilføj priskategori"
 
 msgid "Add rule"
 msgstr "Tilføj regel"
@@ -528,7 +551,7 @@ msgid "Add work hours"
 msgstr "Tilføj arbejdstimer"
 
 msgid "Additional information"
-msgstr ""
+msgstr "Yderligere oplysninger"
 
 msgid "Additional people"
 msgstr "Yderligere personer"
@@ -540,7 +563,7 @@ msgid "Admin"
 msgstr ""
 
 msgid "Advanced"
-msgstr ""
+msgstr "Avanceret"
 
 msgid "After"
 msgstr "Efter"
@@ -557,10 +580,10 @@ msgid "Agencies"
 msgstr "Bureauer"
 
 msgid "Alert content"
-msgstr ""
+msgstr "Advarselsindhold"
 
 msgid "Alert message"
-msgstr ""
+msgstr "Advarselsmeddelelse"
 
 msgid "All"
 msgstr "Alle"
@@ -608,7 +631,7 @@ msgid "All services"
 msgstr "Alle ydelser"
 
 msgid "All services are booked separately"
-msgstr ""
+msgstr "Alle tjenester bookes separat"
 
 msgid "All services are booked separately."
 msgstr "Alle tjenester bookes separat."
@@ -630,9 +653,6 @@ msgstr "Tillad administrator at booke over en eksisterende aftale"
 
 msgid "Allow booking above maximum capacity"
 msgstr "Tillad Booking ved under min. antal"
-
-msgid "Allow booking below minimum capacity"
-msgstr "Tillad booking under minimum kapacitet"
 
 msgid "Allow booking without a prior login"
 msgstr "Tillad booking uden forudgående login"
@@ -700,25 +720,25 @@ msgstr ""
 "Tilpas farverne, så de matcher din branding og forbedrer brugervenligheden."
 
 msgid "Allow employees to manage customers"
-msgstr ""
+msgstr "Tillad medarbejdere at administrere kunder"
 
 msgid "Allow employees to manage their appointments"
-msgstr ""
+msgstr "Giv medarbejderne mulighed for at administrere deres aftaler"
 
 msgid "Allow employees to manage their days off"
-msgstr ""
+msgstr "Giv medarbejderne mulighed for at administrere deres fridage"
 
 msgid "Allow employees to manage their events"
-msgstr ""
+msgstr "Giv medarbejderne mulighed for at administrere deres begivenheder"
 
 msgid "Allow employees to manage their schedule"
-msgstr ""
+msgstr "Giv medarbejderne mulighed for at administrere deres tidsplan"
 
 msgid "Allow employees to manage their services"
-msgstr ""
+msgstr "Giv medarbejderne mulighed for at administrere deres tjenester"
 
 msgid "Allow employees to manage their special days"
-msgstr ""
+msgstr "Giv medarbejderne mulighed for at administrere deres særlige dage"
 
 msgid "Allow multiple bookings per customer"
 msgstr "Tillad flere bookinger pr. kunde"
@@ -733,12 +753,14 @@ msgid ""
 "Allow the short description below the booking form to support Amelia Booking "
 "Plugin and spread the word about it."
 msgstr ""
+"Tillad den korte beskrivelse under reservationsformularen for at understøtte "
+"Amelia Booking Plugin og sprede budskabet om det."
 
 msgid "Alpha sender ID"
 msgstr "Alpha-afsender-ID"
 
 msgid "Alpha sender ID can't be empty"
-msgstr ""
+msgstr "Alpha-afsender-ID må ikke være tomt"
 
 msgid "Already have an account?"
 msgstr "Har du allerede en konto?"
@@ -800,9 +822,6 @@ msgstr "Amelia Brugers indstillinger"
 msgid "Amount"
 msgstr "Beløb"
 
-msgid "Amount:"
-msgstr "Beløb:"
-
 msgid "An email with details of your booking has been sent to you."
 msgstr "Der er sendt en e-mail med oplysninger om din reservation."
 
@@ -831,7 +850,7 @@ msgid "Apple Calendar (Personal)"
 msgstr "Apple Kalender (Personlig)"
 
 msgid "Apple Calendar setup"
-msgstr ""
+msgstr "Opsætning af Apple Kalender"
 
 msgid "Application (client) ID"
 msgstr "Applikations-ID (klient)"
@@ -896,13 +915,13 @@ msgid "Appointment can't be rescheduled"
 msgstr "Aftalen kan ikke omplanlægges"
 
 msgid "Appointment canceled"
-msgstr ""
+msgstr "Aftale aflyst"
 
 msgid "Appointment date"
-msgstr ""
+msgstr "Aftaledato"
 
 msgid "Appointment date & time"
-msgstr ""
+msgstr "Aftaletidspunkt"
 
 msgid "Appointment deposit"
 msgstr "Aftaledepositum"
@@ -911,10 +930,10 @@ msgid "Appointment details"
 msgstr "Aftaledetaljer"
 
 msgid "Appointment duration"
-msgstr ""
+msgstr "Aftalens varighed"
 
 msgid "Appointment end time"
-msgstr ""
+msgstr "Aftalens sluttidspunkt"
 
 msgid "Appointment has been created."
 msgstr "Aftalen er blevet oprettet."
@@ -938,22 +957,22 @@ msgid "Appointment information"
 msgstr "Aftaleinformation"
 
 msgid "Appointment initial date"
-msgstr ""
+msgstr "Aftalens startdato"
 
 msgid "Appointment initial date & time"
-msgstr ""
+msgstr "Aftalens startdato og -tidspunkt"
 
 msgid "Appointment initial end time"
-msgstr ""
+msgstr "Aftalens oprindelige sluttidspunkt"
 
 msgid "Appointment initial start time"
-msgstr ""
+msgstr "Aftalens oprindelige starttidspunkt"
 
 msgid "Appointment is removed from the cart."
 msgstr "Aftalen fjernes fra kurven."
 
 msgid "Appointment management guide"
-msgstr ""
+msgstr "Vejledning til aftalehåndtering"
 
 msgid "Appointment not found."
 msgstr "Aftale ikke fundet."
@@ -971,13 +990,13 @@ msgid "Appointment price"
 msgstr "Aftalepris"
 
 msgid "Appointment repeats"
-msgstr ""
+msgstr "Aftaler gentages"
 
 msgid "Appointment space name"
 msgstr "Navn på aftaleområde"
 
 msgid "Appointment start time"
-msgstr ""
+msgstr "Starttidspunkt for aftalen"
 
 msgid "Appointment status"
 msgstr "Udnævnelsesstatus er ændret til "
@@ -986,7 +1005,10 @@ msgid "Appointment status has been changed to "
 msgstr "Udnævnelsesstatus er ændret til "
 
 msgid "Appointment status has been updated."
-msgstr ""
+msgstr "Aftalestatus er blevet opdateret."
+
+msgid "Appointment title"
+msgstr "Titel på aftale"
 
 msgid "Appointments"
 msgstr "Aftaler"
@@ -1007,10 +1029,10 @@ msgid "Appointments to book"
 msgstr "Aftaler til booking"
 
 msgid "Appointments waiting list"
-msgstr ""
+msgstr "Venteliste for aftaler"
 
 msgid "Approve appointment link"
-msgstr ""
+msgstr "Godkend aftalelink"
 
 msgid "Approved"
 msgstr "Godkendt"
@@ -1164,7 +1186,7 @@ msgid "Are you sure you want to show this employee?"
 msgstr "Er du sikker på, at du vil vise denne medarbejder?"
 
 msgid "Are you sure you want to show this event?"
-msgstr ""
+msgstr "Er du sikker på, at du vil vise denne begivenhed?"
 
 msgid "Are you sure you want to show this location?"
 msgstr "Er du sikker på, at du vil vise dette sted?"
@@ -1180,6 +1202,14 @@ msgstr "Er du sikker på, at du vil vise denne service?"
 
 msgid "Are you sure you want to show this tax?"
 msgstr "Er du sikker på, at du vil vise dette sted?"
+
+msgid ""
+"Are you sure you want to skip the setup? Once skipped, the guided setup will "
+"no longer be available. All settings will need to be configured later."
+msgstr ""
+"Er du sikker på, at du vil springe opsætningen over? Når du har sprunget den "
+"over, vil den guidede opsætning ikke længere være tilgængelig. Alle "
+"indstillinger skal konfigureres senere."
 
 msgid "Are you sure you want to unblock this customer?"
 msgstr "Er du sikker på, at du vil slette kunden?"
@@ -1232,11 +1262,11 @@ msgstr "Deltagere er blevet slettet"
 msgid "Attendees have not been deleted"
 msgstr "Deltagere er ikke blevet slettet"
 
-msgid "Auto-Approve Booking After Payment"
-msgstr "Automatisk godkend booking efter betaling"
-
 msgid "Auto-Reply Message"
 msgstr "Automatisk svarbesked"
+
+msgid "Auto-approve booking after payment"
+msgstr "Automatisk godkendelse af reservation efter betaling"
 
 msgid "Auto-fill your details using:"
 msgstr "Udfyld dine oplysninger automatisk ved hjælp af:"
@@ -1245,9 +1275,11 @@ msgid ""
 "Automate communication with notifications triggered by booking status, time, "
 "or custom rules"
 msgstr ""
+"Automatiser kommunikation med meddelelser, der udløses af "
+"reservationsstatus, tid eller brugerdefinerede regler"
 
 msgid "Automated invoices for a smoother payment experience"
-msgstr ""
+msgstr "Automatiske fakturaer for en smidigere betalingsoplevelse"
 
 msgid ""
 "Automatically calculate and apply taxes for hassle-free compliance and "
@@ -1260,6 +1292,9 @@ msgid ""
 "Automatically calculate and apply taxes to your services and events, "
 "ensuring accurate billing and hassle-free compliance with every transaction."
 msgstr ""
+"Beregn og pålæg automatisk skatter på dine tjenester og begivenheder, så du "
+"sikrer nøjagtig fakturering og problemfri overholdelse af reglerne ved hver "
+"transaktion."
 
 msgid "Automatically create Amelia Customer user"
 msgstr "Opret automatisk Amelia kundebruger"
@@ -1278,6 +1313,8 @@ msgid ""
 "Automatically generate invoices for every booking, making payments easier, "
 "more transparent, and fully streamlined for both you and your clients."
 msgstr ""
+"Generer automatisk fakturaer for hver booking, så betalinger bliver nemmere, "
+"mere gennemsigtige og fuldt strømlinede for både dig og dine kunder."
 
 msgid ""
 "Automatically update the booking status to \"Approved\" after a successful "
@@ -1293,10 +1330,10 @@ msgid "Available"
 msgstr "Tilgængelig"
 
 msgid "Available date background"
-msgstr ""
+msgstr "Tilgængelig dato baggrund"
 
 msgid "Available date text"
-msgstr ""
+msgstr "Tekst om tilgængelig dato"
 
 msgid "Available from Pro license"
 msgstr "Tilgængelige Billeder"
@@ -1317,6 +1354,8 @@ msgid ""
 "Avoid double-booking by automatically coordinating shared rooms, equipment, "
 "or tools"
 msgstr ""
+"Undgå dobbeltbookinger ved automatisk at koordinere delte rum, udstyr eller "
+"værktøjer"
 
 msgid "Away"
 msgstr "Væk"
@@ -1328,7 +1367,7 @@ msgid "Back"
 msgstr "Tilbage"
 
 msgid "Back button"
-msgstr ""
+msgstr "Tilbage-knap"
 
 msgid "Back to"
 msgstr "Tilbage til"
@@ -1346,7 +1385,7 @@ msgid "Backend"
 msgstr ""
 
 msgid "Background"
-msgstr ""
+msgstr "Baggrund"
 
 msgid "Background Color"
 msgstr "Baggrundsfarve"
@@ -1370,7 +1409,7 @@ msgid "Badge label"
 msgstr "Badgemærkat"
 
 msgid "Badges setup"
-msgstr ""
+msgstr "Opsætning af badges"
 
 msgid "Balance"
 msgstr "Saldo"
@@ -1382,7 +1421,7 @@ msgid "Base Price:"
 msgstr "Basispris:"
 
 msgid "Basic"
-msgstr ""
+msgstr "Grundlæggende"
 
 msgid "Beauty"
 msgstr "Skønhed"
@@ -1409,7 +1448,7 @@ msgid "Birthday"
 msgstr "Fødselsdag"
 
 msgid "Birthday greeting"
-msgstr ""
+msgstr "Fødselsdagshilsen"
 
 msgid "Block"
 msgstr "Blok"
@@ -1418,11 +1457,15 @@ msgid ""
 "Block booking times that overlap with busy events in the employee’s Apple "
 "Calendar."
 msgstr ""
+"Blokér bookingstider, der overlapper med travle begivenheder i "
+"medarbejderens Apple-kalender."
 
 msgid ""
 "Block booking times that overlap with busy events in the employee’s Outlook "
 "Calendar."
 msgstr ""
+"Blokér bookingtidspunkter, der overlapper med travle begivenheder i "
+"medarbejderens Outlook-kalender."
 
 msgid "Block customer"
 msgstr "Bloker kunde"
@@ -1431,7 +1474,7 @@ msgid "Blog"
 msgstr ""
 
 msgid "Body text"
-msgstr ""
+msgstr "Brødtekst"
 
 msgid "Book"
 msgstr "Bog"
@@ -1455,7 +1498,7 @@ msgid "Book another"
 msgstr "Book"
 
 msgid "Book appointment"
-msgstr ""
+msgstr "Book aftale"
 
 msgid "Book event"
 msgstr "Book begivenhed"
@@ -1467,10 +1510,10 @@ msgid "Book now"
 msgstr "Book"
 
 msgid "Book option on employee dialog"
-msgstr ""
+msgstr "Bogoption i medarbejderdialog"
 
 msgid "Book package"
-msgstr ""
+msgstr "Bogpakke"
 
 msgid "Book subtab name"
 msgstr "Book underfanenavn"
@@ -1479,7 +1522,14 @@ msgid "Book this event"
 msgstr "Book denne begivenhed"
 
 msgid "Book this service"
+msgstr "Book denne service"
+
+msgid ""
+"Book time-based appointments with configurable durations, prices, and "
+"availability."
 msgstr ""
+"Book tidsbaserede aftaler med konfigurerbare varigheder, priser og "
+"tilgængelighed."
 
 msgid "Booked"
 msgstr "Book aftale"
@@ -1488,16 +1538,22 @@ msgid "Booked Appointments"
 msgstr "Book aftale"
 
 msgid "Booked customer (full name, email, phone)"
-msgstr ""
+msgstr "Reserveret kunde (fulde navn, e-mail, telefonnummer)"
 
 msgid "Booking"
 msgstr ""
 
 msgid "Booking #{count}"
-msgstr ""
+msgstr "Reservation nr.{count}"
 
 msgid "Booking Appointment"
 msgstr "Book aftale"
+
+msgid "Booking Approved with Issues"
+msgstr "Reservation godkendt med problemer"
+
+msgid "Booking Canceled"
+msgstr "Reservation annulleret"
 
 msgid "Booking Closes"
 msgstr "Booking lukker:"
@@ -1508,8 +1564,14 @@ msgstr "Booking lukker stigende"
 msgid "Booking Closes Desc"
 msgstr "Booking lukker faldende"
 
+msgid "Booking Confirmed"
+msgstr "Reservation bekræftet"
+
 msgid "Booking Details"
 msgstr "Bookingdetaljer"
+
+msgid "Booking Failed"
+msgstr "Booking mislykkedes"
 
 msgid "Booking Form"
 msgstr "Booking"
@@ -1532,6 +1594,12 @@ msgstr "Booking åbner faldende"
 msgid "Booking Overview"
 msgstr "Bookingoversigt"
 
+msgid "Booking Processed"
+msgstr "Reservation behandlet"
+
+msgid "Booking Rejected"
+msgstr "Reservation afvist"
+
 msgid "Booking added"
 msgstr "Booking tilføjet"
 
@@ -1548,7 +1616,7 @@ msgid "Booking closes when event starts"
 msgstr "Booking lukkes, når arrangementet starter"
 
 msgid "Booking date"
-msgstr ""
+msgstr "Reservationsdato"
 
 msgid "Booking form on customer profile enabled"
 msgstr "Bookingformular på kundens profil aktiveret"
@@ -1569,7 +1637,7 @@ msgid "Booking has been updated."
 msgstr "Booking er blevet opdateret."
 
 msgid "Booking invoice"
-msgstr ""
+msgstr "Reservationsfaktura"
 
 msgid "Booking is canceled"
 msgstr "Reservation annulleret"
@@ -1617,7 +1685,7 @@ msgid "Booking tab name"
 msgstr "Bookingfanenavn"
 
 msgid "Booking time slots will depend on the service duration"
-msgstr ""
+msgstr "Reservation af tidsintervaller afhænger af tjenestens varighed."
 
 msgid "Booking type"
 msgstr "Bookingtype"
@@ -1629,18 +1697,22 @@ msgid ""
 "Boost engagement by reaching clients instantly on a platform they use every "
 "day"
 msgstr ""
+"Øg engagementet ved at nå ud til kunderne med det samme på en platform, de "
+"bruger hver dag."
 
 msgid "Boost revenue with bundled service packages"
-msgstr ""
+msgstr "Øg omsætningen med samlede servicepakker"
 
 msgid "Boost revenue with valuable extras"
-msgstr ""
+msgstr "Øg omsætningen med værdifulde ekstrafunktioner"
 
 msgid "Boost team productivity with automated updates and fewer manual tasks."
 msgstr ""
+"Øg teamets produktivitet med automatiske opdateringer og færre manuelle "
+"opgaver."
 
 msgid "Border color"
-msgstr ""
+msgstr "Kantfarve"
 
 msgid "Break Hours"
 msgstr "Pauser"
@@ -1652,7 +1724,7 @@ msgid "Bringing Anyone With You"
 msgstr "Tager du nogen med dig?"
 
 msgid "Bringing anyone with you"
-msgstr ""
+msgstr "Tag alle med dig"
 
 msgid "Bringing anyone with you?"
 msgstr "Tager du nogen med dig?"
@@ -1681,6 +1753,10 @@ msgid ""
 "areas, and more, turning every booking and registration into a powerful "
 "intake process."
 msgstr ""
+"Skab skræddersyede formularer på tværs af tjenester, begivenheder og "
+"kundeprofiler ved hjælp af brugerdefinerede felter. Indsaml præcis de "
+"oplysninger, du har brug for, med afkrydsningsfelter, tekstfelter og mere, "
+"så hver booking og registrering bliver en effektiv indtastningsproces."
 
 msgid ""
 "Bundle multiple appointments or services at discounted rates to encourage "
@@ -1693,16 +1769,16 @@ msgid "Busy"
 msgstr "Optaget"
 
 msgid "Busy slots"
-msgstr ""
+msgstr "Optagede tidsrum"
 
 msgid "Button"
-msgstr ""
+msgstr "Knap"
 
 msgid "Button Type"
 msgstr "Radioknapper"
 
 msgid "Button style"
-msgstr ""
+msgstr "Knappestil"
 
 msgid "Buttons"
 msgstr "Knapper"
@@ -1759,22 +1835,22 @@ msgid "Cancel and Delete"
 msgstr "Annuller og slet"
 
 msgid "Cancel appointment"
-msgstr ""
+msgstr "Annuller aftale"
 
 msgid "Cancel appointment link"
-msgstr ""
+msgstr "Annuller aftale-link"
 
 msgid "Cancel event"
-msgstr ""
+msgstr "Annuller begivenhed"
 
 msgid "Cancel event link"
-msgstr ""
+msgstr "Annuller begivenhedslink"
 
 msgid "Cancel following"
 msgstr "Annuller efterfølgende"
 
 msgid "Cancel package"
-msgstr ""
+msgstr "Annuller pakke"
 
 msgid "Canceled"
 msgstr "Annulleret"
@@ -1786,10 +1862,13 @@ msgid "Canceled By Attendee"
 msgstr "Arrangement annulleret af deltager"
 
 msgid "Canceled by admin"
-msgstr ""
+msgstr "Annulleret af administrator"
 
 msgid "Canceled by attendee"
-msgstr ""
+msgstr "Aflyst af deltager"
+
+msgid "Cancellation Failed"
+msgstr "Annullering mislykkedes"
 
 msgid "Cancelled"
 msgstr "Annulleret"
@@ -1804,13 +1883,13 @@ msgid "Card"
 msgstr "Radioknapper"
 
 msgid "Card color"
-msgstr ""
+msgstr "Kortfarve"
 
 msgid "Card content"
-msgstr ""
+msgstr "Kortindhold"
 
 msgid "Card field"
-msgstr ""
+msgstr "Kortfelt"
 
 msgid "Card number"
 msgstr "Kortnummer"
@@ -1822,10 +1901,10 @@ msgid "Cards"
 msgstr "Kort"
 
 msgid "Cards and buttons"
-msgstr ""
+msgstr "Kort og knapper"
 
-msgid "Carrier:"
-msgstr "Transportør:"
+msgid "Carrier"
+msgstr ""
 
 msgid "Cart"
 msgstr "Vogn"
@@ -1837,7 +1916,7 @@ msgid "Cart description"
 msgstr "Service beskrivelse"
 
 msgid "Cart purchased"
-msgstr ""
+msgstr "Indkøbskurv købt"
 
 msgid "Catalog"
 msgstr "Katalog"
@@ -1861,7 +1940,7 @@ msgid "Categories positions updated successfully."
 msgstr "Kategoriernes positioner blev opdateret med succes."
 
 msgid "Categories sidebar"
-msgstr ""
+msgstr "Kategorier sidebjælke"
 
 msgid "Category"
 msgstr "Kategori"
@@ -1890,18 +1969,20 @@ msgstr "Kategori navn"
 msgid ""
 "Centralize scheduling across all branches for clearer, simpler management"
 msgstr ""
+"Centraliser planlægningen på tværs af alle afdelinger for en klarere og "
+"enklere administration"
 
 msgid "Change Password"
 msgstr "Skift adgangskode"
 
 msgid "Change colors"
-msgstr ""
+msgstr "Skift farver"
 
 msgid "Change group status"
 msgstr "Skift gruppestatus"
 
 msgid "Change password"
-msgstr ""
+msgstr "Skift adgangskode"
 
 msgid "Charge type"
 msgstr "Gebyrtype"
@@ -1994,6 +2075,9 @@ msgstr "Vælg tjeneste"
 msgid "Choose a Form"
 msgstr "Vælg en formular"
 
+msgid "Choose a currency that will be used for all price based settings."
+msgstr "Vælg en valuta, der skal bruges til alle prisbaserede indstillinger."
+
 msgid ""
 "Choose a form you want to customize. The Step-by-Step 2.0 form is the new "
 "and improved version which provides you with better design and user "
@@ -2006,8 +2090,15 @@ msgstr ""
 msgid "Choose a group service"
 msgstr "Vælg en gruppetjeneste"
 
-msgid "Choose date and time"
+msgid ""
+"Choose a time interval that will be used when defining all time based "
+"settings."
 msgstr ""
+"Vælg et tidsinterval, der skal bruges ved definition af alle tidsbaserede "
+"indstillinger."
+
+msgid "Choose date and time"
+msgstr "Vælg dato og klokkeslæt"
 
 msgid ""
 "Choose how Amelia suggests an alternative date when the selected recurring "
@@ -2053,6 +2144,9 @@ msgstr "Vælg tidspunkt for gentagelse af aftale"
 msgid "Choose when the repeating ends"
 msgstr "Vælg hvornår gentagelsen slutter"
 
+msgid "Choose whether you want to manage services, events, or both."
+msgstr "Vælg, om du vil administrere tjenester, begivenheder eller begge dele."
+
 msgid "Choosing layout of first step in step by step form"
 msgstr "Valg af layout for første trin i trin-for-trin-formular"
 
@@ -2085,7 +2179,7 @@ msgid "Client ID"
 msgstr "Klient-ID"
 
 msgid "Client ID and secret"
-msgstr ""
+msgstr "Klient-ID og hemmelighed"
 
 msgid "Client Time:"
 msgstr "Klienttid:"
@@ -2130,7 +2224,7 @@ msgid "Collapse menu"
 msgstr "Skjul menu"
 
 msgid "Collect the information your business truly needs"
-msgstr ""
+msgstr "Indsaml de oplysninger, din virksomhed virkelig har brug for"
 
 msgid "Color"
 msgstr "Farve"
@@ -2193,7 +2287,7 @@ msgid "Completed"
 msgstr "Denne betaling kan ikke gennemføres"
 
 msgid "Configuration"
-msgstr ""
+msgstr "Konfiguration"
 
 msgid "Configure"
 msgstr "Bekræft"
@@ -2220,7 +2314,7 @@ msgid "Configure the recurring appointments details placeholder."
 msgstr "Konfigurer pladsholderen for tilbagevendende aftaledetaljer"
 
 msgid "Configure waiting list for appointments"
-msgstr ""
+msgstr "Konfigurer venteliste for aftaler"
 
 msgid "Confirm"
 msgstr "Bekræft"
@@ -2263,6 +2357,9 @@ msgid ""
 "schedules perfectly synced and communication effortless across your entire "
 "team."
 msgstr ""
+"Forbind medarbejderkalendere, mødeværktøjer og andre integrationer for at "
+"holde tidsplaner perfekt synkroniserede og kommunikationen problemfri på "
+"tværs af hele dit team."
 
 msgid "Connect to Apple Calendar"
 msgstr "Forbind til Apple Kalender"
@@ -2328,10 +2425,10 @@ msgid "Consulting"
 msgstr "Rådgivning"
 
 msgid "Contact message"
-msgstr ""
+msgstr "Kontaktmeddelelse"
 
 msgid "Contact support."
-msgstr ""
+msgstr "Kontakt support."
 
 msgid "Content"
 msgstr "Tekstfarve"
@@ -2340,7 +2437,7 @@ msgid "Content Text Color"
 msgstr "Tekstfarve"
 
 msgid "Content area"
-msgstr ""
+msgstr "Indholdsområde"
 
 msgid "Content placeholders"
 msgstr "Indholdspladsholdere"
@@ -2351,11 +2448,14 @@ msgstr "Fortsæt"
 msgid "Continue Booking"
 msgstr "Fortsæt booking"
 
+msgid "Continue setup"
+msgstr "Fortsæt opsætning"
+
 msgid "Copy your API key now, as it won't be visible again."
 msgstr "Kopiér din API-nøgle nu, da den ikke vil være synlig igen."
 
-msgid "Cost:"
-msgstr "Omkostninger:"
+msgid "Cost"
+msgstr "Omkostninger"
 
 msgid ""
 "Could not delete category. This category has services available for booking "
@@ -2402,10 +2502,14 @@ msgstr "Beløb"
 
 msgid "Counts one primary customer plus any additional people they add."
 msgstr ""
+"Tæller én primær kunde plus eventuelle yderligere personer, som denne "
+"tilføjer."
 
 msgid ""
 "Counts the total number of people entered, including the primary customer."
 msgstr ""
+"Tæller det samlede antal personer, der er indtastet, inklusive den primære "
+"kunde."
 
 msgid "Coupon"
 msgstr "Den indtastede kupon er ikke gyldig"
@@ -2420,7 +2524,7 @@ msgid "Coupon code"
 msgstr "Rabatkoder"
 
 msgid "Coupon field"
-msgstr ""
+msgstr "Kuponfelt"
 
 msgid "Coupon has been created."
 msgstr "Kupon er blevet oprettet."
@@ -2438,22 +2542,22 @@ msgid "Coupon is now visible."
 msgstr "Kuponen er nu synlig."
 
 msgid "Coupon limit reached"
-msgstr ""
+msgstr "Kuponbegrænsning nået"
 
 msgid "Coupon needs to have discount or deduction"
 msgstr "Kuponen skal have rabat eller fradrag"
 
 msgid "Coupon segment"
-msgstr ""
+msgstr "Kupon-segment"
 
 msgid "Coupons"
 msgstr "Rabatkoder"
 
 msgid "Coupons overview"
-msgstr ""
+msgstr "Oversigt over kuponer"
 
 msgid "Coupons setup"
-msgstr ""
+msgstr "Opsætning af kuponer"
 
 msgid "Create Amelia Customers"
 msgstr "Opret kunde"
@@ -2490,12 +2594,21 @@ msgid ""
 "reminders, keeping customers and employees informed at exactly the right "
 "time."
 msgstr ""
+"Opret brugerdefinerede meddelelser, der udløses baseret på "
+"reservationsstatus eller planlagte påmindelser, så kunder og medarbejdere "
+"holdes informeret på det helt rigtige tidspunkt."
+
+msgid "Create employee"
+msgstr "Opret medarbejder"
+
+msgid "Create event"
+msgstr "Opret begivenhed"
 
 msgid "Create meetings for pending appointments"
 msgstr "Opret møder for afventende aftaler"
 
 msgid "Create new"
-msgstr ""
+msgstr "Opret nyt"
 
 msgid "Create new badge"
 msgstr "Opret nyt badge"
@@ -2518,6 +2631,15 @@ msgid ""
 "employees, services, or locations, ensuring customers only see time slots "
 "when everything they need is truly available."
 msgstr ""
+"Opret rum, udstyr eller andre ressourcer, der kan deles mellem medarbejdere, "
+"tjenester eller lokationer, så kunderne kun ser tidsintervaller, hvor alt, "
+"hvad de har brug for, virkelig er tilgængeligt."
+
+msgid "Create scheduled events with fixed dates, prices and capacities."
+msgstr "Opret planlagte begivenheder med faste datoer, priser og kapaciteter."
+
+msgid "Create service"
+msgstr "Opret service"
 
 msgid "Create spaces for pending appointments"
 msgstr "Opret pladser til afventende aftaler"
@@ -2527,12 +2649,18 @@ msgid ""
 "discounts or even free appointments to boost engagement, satisfaction, and "
 "sales."
 msgstr ""
+"Opret unikke kuponkoder, som kunderne kan indløse under booking-tilbud, "
+"rabatter eller endda gratis aftaler for at øge engagement, tilfredshed og "
+"salg."
 
 msgid "Created On"
 msgstr ""
 "Begivenhedsreservation er en kort kode, der giver dine kunder mulighed for "
 "at booke en af de begivenheder, som du har oprettet på bagsiden i en simpel "
 "begivenhedslistevisning."
+
+msgid "Created on"
+msgstr "Oprettet den"
 
 msgid "Credit Card"
 msgstr "Kreditkort"
@@ -2587,7 +2715,7 @@ msgid "Custom currency symbol"
 msgstr "Brugerdefineret valutasymbol"
 
 msgid "Custom field"
-msgstr ""
+msgstr "Brugerdefineret felt"
 
 msgid "Custom field has been added"
 msgstr "Brugerdefineret felt er blevet tilføjet"
@@ -2608,13 +2736,13 @@ msgid "Custom fields have been updated."
 msgstr "Brugerdefinerede felter er blevet opdateret."
 
 msgid "Custom fields setup"
-msgstr ""
+msgstr "Opsætning af brugerdefinerede felter"
 
 msgid "Custom font family"
-msgstr ""
+msgstr "Brugerdefineret skrifttypefamilie"
 
 msgid "Custom notification"
-msgstr ""
+msgstr "Brugerdefineret meddelelse"
 
 msgid "Custom notifications"
 msgstr "Brugerdefinerede meddelelser"
@@ -2628,7 +2756,7 @@ msgstr ""
 "pladsværdi."
 
 msgid "Custom service duration"
-msgstr ""
+msgstr "Brugerdefineret servicelængde"
 
 msgid "Customer"
 msgstr "Kunde"
@@ -2642,9 +2770,6 @@ msgstr "Kunde stigende"
 msgid "Customer Desc"
 msgstr "Kunde faldende"
 
-msgid "Customer Name"
-msgstr "Kundens navn"
-
 msgid "Customer Panel"
 msgstr "Aktivér kundepanel"
 
@@ -2655,7 +2780,7 @@ msgid "Customer Profile "
 msgstr "Kundeprofil"
 
 msgid "Customer configuration"
-msgstr ""
+msgstr "Kundekonfiguration"
 
 msgid "Customer details"
 msgstr "Kundedetaljer"
@@ -2664,7 +2789,7 @@ msgid "Customer email"
 msgstr "Kundens mail"
 
 msgid "Customer filter"
-msgstr ""
+msgstr "Kundefilter"
 
 msgid "Customer first name"
 msgstr "Kunde fornavn"
@@ -2691,10 +2816,13 @@ msgid "Customer has been updated."
 msgstr "Kunden er blevet opdateret."
 
 msgid "Customer information"
-msgstr ""
+msgstr "Kundeoplysninger"
 
 msgid "Customer last name"
 msgstr "Kunde efter navn"
+
+msgid "Customer name"
+msgstr "Kundens navn"
 
 msgid "Customer note"
 msgstr "Besked fra køber"
@@ -2706,10 +2834,10 @@ msgid "Customer note has been updated."
 msgstr "Kundenote er blevet opdateret."
 
 msgid "Customer panel"
-msgstr ""
+msgstr "Kundepanel"
 
 msgid "Customer panel access link"
-msgstr ""
+msgstr "Link til adgang til kundepanel"
 
 msgid "Customer phone"
 msgstr "Kundetelefon"
@@ -2752,6 +2880,10 @@ msgstr "Kunder importeret fra filen:"
 msgid "Customers in Waiting list"
 msgstr "Kunder på ventelisten"
 
+msgid "Customers will be redirected to this URL after booking an event."
+msgstr ""
+"Kunderne bliver omdirigeret til denne URL efter at have booket en begivenhed."
+
 msgid ""
 "Customers will be redirected to this URL after scheduling an appointment."
 msgstr ""
@@ -2770,22 +2902,26 @@ msgid ""
 "Customize every interaction by gathering the right information for services, "
 "events, and customer records"
 msgstr ""
+"Tilpas hver interaktion ved at indsamle de rigtige oplysninger om tjenester, "
+"begivenheder og kunderegistreringer."
 
 msgid ""
 "Customize offerings to match specific services and meet diverse client needs"
 msgstr ""
+"Tilpas tilbud, så de passer til specifikke tjenester og imødekommer "
+"forskellige kundebehov"
 
 msgid "Daily"
 msgstr "Daglig"
 
 msgid "Daily occupancy"
-msgstr ""
+msgstr "Daglig belægning"
 
 msgid "Danger button background color"
-msgstr ""
+msgstr "Farve på baggrunden for fare-knappen"
 
 msgid "Danger button text color"
-msgstr ""
+msgstr "Farve på tekst på fare-knap"
 
 msgid "Dark Theme"
 msgstr "Mørkt tema"
@@ -2812,7 +2948,7 @@ msgid "Date & time"
 msgstr "Dato & tid"
 
 msgid "Date & time periods of the event with Lesson Space join links"
-msgstr ""
+msgstr "Dato og tidsperioder for begivenheden med links til Lesson Space"
 
 msgid "Date Asc"
 msgstr "Dato stigende"
@@ -2836,7 +2972,7 @@ msgid "Date and Time"
 msgstr "Vælg kunde og service"
 
 msgid "Date and time"
-msgstr ""
+msgstr "Dato og klokkeslæt"
 
 msgid "Date of Birth"
 msgstr "Fødselsdato"
@@ -2934,8 +3070,8 @@ msgstr "Standard Square-placering"
 msgid "Default appointment status"
 msgstr "Standard aftalestatus"
 
-msgid "Default back‑end page"
-msgstr ""
+msgid "Default back end page"
+msgstr "Standard bagside"
 
 msgid "Default language"
 msgstr "Standardsprog"
@@ -2944,7 +3080,7 @@ msgid "Default location"
 msgstr "Standardplacering"
 
 msgid "Default number of items per page on the back end"
-msgstr ""
+msgstr "Standardantal elementer pr. side i backend"
 
 msgid "Default number of items per page on the front end"
 msgstr "Standardantal elementer pr. side på forsiden"
@@ -2995,6 +3131,8 @@ msgid ""
 "Define which capabilities will be requested when creating an Express "
 "connected account"
 msgstr ""
+"Definer, hvilke funktioner der skal anmodes om, når der oprettes en Express-"
+"forbundet konto"
 
 msgid ""
 "Defines the language used for notifications sent to this customer for "
@@ -3038,7 +3176,7 @@ msgid "Delete coupon"
 msgstr "Slet kupon"
 
 msgid "Delete custom field"
-msgstr ""
+msgstr "Slet brugerdefineret felt"
 
 msgid "Delete customer"
 msgstr "Slet kunde"
@@ -3079,11 +3217,15 @@ msgid ""
 "Deliver a smoother booking experience by showing customers only real, "
 "available time slots"
 msgstr ""
+"Giv kunderne en mere smidig bookingoplevelse ved kun at vise dem reelle, "
+"ledige tidsintervaller."
 
 msgid ""
 "Deliver personalized messages tailored to your business tone, branding, and "
 "workflow"
 msgstr ""
+"Lever personlige beskeder, der er tilpasset din virksomheds tone, branding "
+"og arbejdsgang"
 
 msgid "Delivered"
 msgstr "Leveret"
@@ -3101,7 +3243,7 @@ msgid "Deposit only"
 msgstr "Kun depositum"
 
 msgid "Deposit payment"
-msgstr ""
+msgstr "Indbetaling af depositum"
 
 msgid "Deposit type"
 msgstr "Depositumstype"
@@ -3147,10 +3289,10 @@ msgid "Disconnect Employee"
 msgstr "Afbryd medarbejder"
 
 msgid "Disconnect account"
-msgstr ""
+msgstr "Afbryd forbindelse til konto"
 
 msgid "Disconnect employee account"
-msgstr ""
+msgstr "Afbryd medarbejderkonto"
 
 msgid "Disconnect from Apple"
 msgstr "Afbryd"
@@ -3254,12 +3396,15 @@ msgid "Download .csv"
 msgstr ""
 
 msgid "Download invoice"
-msgstr ""
+msgstr "Download faktura"
 
 msgid ""
 "Download your customer list instantly for reporting, marketing, or external "
 "system use, making data management faster and more convenient than ever."
 msgstr ""
+"Download din kundeliste med det samme til rapportering, markedsføring eller "
+"brug i eksterne systemer, så datastyringen bliver hurtigere og mere bekvem "
+"end nogensinde."
 
 msgid "Draft"
 msgstr "Kladde"
@@ -3268,7 +3413,7 @@ msgid "Drag to rearrange columns and/or choose which ones to display."
 msgstr "Træk for at omarrangere kolonner og/eller vælg hvilke der skal vises."
 
 msgid "Drive bookings with irresistible coupon offers"
-msgstr ""
+msgstr "Fremme bookinger med uimodståelige kupontilbud"
 
 msgid "Drop file here or click to upload"
 msgstr "Slip filen her, eller klik for at uploade"
@@ -3286,7 +3431,7 @@ msgid "Dropdown layout"
 msgstr "Dropdown-layout"
 
 msgid "Dropdowns"
-msgstr ""
+msgstr "Dropdown-menuer"
 
 msgid "Due"
 msgstr "Betalings Dato"
@@ -3349,7 +3494,7 @@ msgid "E-ticket QR code"
 msgstr "E-billet QR-kode"
 
 msgid "E-ticket scanner"
-msgstr ""
+msgstr "E-billet-scanner"
 
 msgid "Each:"
 msgstr "Er du sikker på, at du vil slette denne aftale?"
@@ -3358,13 +3503,16 @@ msgid "Each spot counts as one attendee."
 msgstr "Hver plads tæller som én deltager."
 
 msgid "Easily export your customer data in one click"
-msgstr ""
+msgstr "Eksporter nemt dine kundedata med et enkelt klik"
 
 msgid ""
 "Easily organize multiple business locations in one place, ensuring smooth "
 "operations and a consistent booking experience no matter where your services "
 "are offered."
 msgstr ""
+"Organiser nemt flere forretningssteder på ét sted, så du sikrer en "
+"problemfri drift og en ensartet bookingoplevelse, uanset hvor dine tjenester "
+"tilbydes."
 
 msgid "Edit"
 msgstr "Rediger"
@@ -3412,10 +3560,10 @@ msgid "Edit booking"
 msgstr "Rediger booking"
 
 msgid "Edit custom field"
-msgstr ""
+msgstr "Rediger brugerdefineret felt"
 
 msgid "Edit custom notification"
-msgstr ""
+msgstr "Rediger brugerdefineret meddelelse"
 
 msgid "Edit customer"
 msgstr "Rediger kunde"
@@ -3430,7 +3578,7 @@ msgid "Edit event"
 msgstr "Rediger begivenhed"
 
 msgid "Edit event booking"
-msgstr ""
+msgstr "Rediger begivenhedsbooking"
 
 msgid "Edit location"
 msgstr "Rediger placering"
@@ -3442,7 +3590,7 @@ msgid "Edit resource"
 msgstr "Rediger ressource"
 
 msgid "Edit service"
-msgstr ""
+msgstr "Rediger tjeneste"
 
 msgid "Edit special day"
 msgstr "Rediger speciel dag"
@@ -3451,7 +3599,7 @@ msgid "Edit table"
 msgstr "Rediger tabel"
 
 msgid "Edit transaction"
-msgstr ""
+msgstr "Rediger transaktion"
 
 msgid "Edit work hours"
 msgstr "Rediger arbejdstider"
@@ -3460,21 +3608,27 @@ msgid ""
 "Efficiently manage appointment cancellations by allowing customers to join a "
 "waiting list and manually fill newly opened time slots."
 msgstr ""
+"Administrer effektivt aflysninger af aftaler ved at give kunderne mulighed "
+"for at komme på venteliste og manuelt udfylde nye ledige tidsrum."
 
 msgid "Effortless management for every location"
-msgstr ""
+msgstr "Nem administration for alle lokationer"
 
 msgid "Effortless tax management for every booking"
-msgstr ""
+msgstr "Nem skatteadministration for alle bookinger"
 
 msgid ""
 "Effortlessly set up and manage events that repeat on your preferred schedule-"
 "offering flexibility, consistency, and a smooth experience for both your "
 "business and your customers."
 msgstr ""
+"Opsæt og administrer nemt begivenheder, der gentages efter din foretrukne "
+"tidsplan – det giver fleksibilitet, konsistens og en problemfri oplevelse "
+"for både din virksomhed og dine kunder."
 
 msgid "Eliminate manual calculations with smart, automated tax application"
 msgstr ""
+"Eliminer manuelle beregninger med smart, automatiseret skatteanvendelse"
 
 msgid "Email"
 msgstr "E-mail"
@@ -3486,7 +3640,7 @@ msgid "Email Address"
 msgstr "Indtast venligst en gyldig e-mailadresse"
 
 msgid "Email address"
-msgstr ""
+msgstr "E-mailadresse"
 
 msgid "Email already exists with different name. Please check your name."
 msgstr "E-mail findes allerede med andet navn. Kontroller dit navn."
@@ -3522,10 +3676,10 @@ msgid "Employee Selection"
 msgstr "Medarbejders e-mail"
 
 msgid "Employee badges"
-msgstr ""
+msgstr "Medarbejderbadges"
 
 msgid "Employee badges management"
-msgstr ""
+msgstr "Administration af medarbejderbadges"
 
 msgid "Employee calendar disconnected successfully"
 msgstr "Medarbejderkalender frakoblet med succes"
@@ -3547,19 +3701,19 @@ msgid "Employee description"
 msgstr "Medarbejderbeskrivelse"
 
 msgid "Employee description popup"
-msgstr ""
+msgstr "Pop op-vindue med medarbejderbeskrivelse"
 
 msgid "Employee details"
 msgstr "Medarbejderoplysninger"
 
 msgid "Employee dialog"
-msgstr ""
+msgstr "Medarbejderdialog"
 
 msgid "Employee email"
 msgstr "Medarbejders e-mail"
 
 msgid "Employee filter"
-msgstr ""
+msgstr "Medarbejderfilter"
 
 msgid "Employee first name"
 msgstr "Medarbejderens fornavn"
@@ -3588,6 +3742,9 @@ msgstr "Medarbejderen er nu synlig."
 msgid "Employee last name"
 msgstr "Medarbejderens efternavn"
 
+msgid "Employee name"
+msgstr "Medarbejderens navn"
+
 msgid "Employee name, email & phone"
 msgstr "Medarbejderens navn, e-mail og telefon"
 
@@ -3598,46 +3755,46 @@ msgid "Employee note has been updated."
 msgstr "Medarbejdernotat er blevet opdateret."
 
 msgid "Employee panel"
-msgstr ""
+msgstr "Medarbejderpanel"
 
 msgid "Employee panel access link"
-msgstr ""
+msgstr "Link til adgang til medarbejderpanel"
 
 msgid "Employee panel page URL"
-msgstr ""
+msgstr "URL til medarbejderpanelets side"
 
 msgid "Employee panel password"
 msgstr "Medarbejderpanel adgangskode"
 
 msgid "Employee password"
-msgstr ""
+msgstr "Medarbejderadgangskode"
 
 msgid "Employee phone"
 msgstr "Medarbejderens telefon"
 
 msgid "Employee price"
-msgstr ""
+msgstr "Medarbejderpris"
 
 msgid "Employee profile"
-msgstr ""
+msgstr "Medarbejderprofil"
 
 msgid "Employee selection"
-msgstr ""
+msgstr "Medarbejderudvælgelse"
 
 msgid "Employee selection logic"
 msgstr "Medarbejders e-mail"
 
 msgid "Employee setup"
-msgstr ""
+msgstr "Medarbejderopsætning"
 
 msgid "Employees"
 msgstr "Medarbejdere"
 
 msgid "Empower your team with seamless integrations"
-msgstr ""
+msgstr "Giv dit team mulighed for problemfri integration"
 
 msgid "Empty state"
-msgstr ""
+msgstr "Tom tilstand"
 
 msgid "Enable"
 msgstr "Aktiver"
@@ -3760,6 +3917,8 @@ msgid ""
 "Enable this option to add event attendees to employees’ Apple Calendar "
 "events."
 msgstr ""
+"Aktivér denne indstilling for at tilføje deltagere i begivenheder til "
+"medarbejdernes Apple Kalender-begivenheder."
 
 msgid ""
 "Enable this option to add event attendees to employees’ Google Calendar "
@@ -3772,6 +3931,8 @@ msgid ""
 "Enable this option to add event attendees to employees’ Outlook Calendar "
 "events."
 msgstr ""
+"Aktivér denne indstilling for at tilføje deltagere i begivenheder til "
+"medarbejdernes Outlook-kalenderbegivenheder."
 
 msgid ""
 "Enable this option to create meetings for appointments with pending status."
@@ -3810,11 +3971,15 @@ msgid ""
 "Enable this option to include buffer time for scheduled appointments in "
 "Google Calendar events."
 msgstr ""
+"Aktivér denne indstilling for at inkludere buffertid for planlagte aftaler i "
+"Google Kalender-begivenheder."
 
 msgid ""
 "Enable this option to include buffer time for scheduled appointments in "
 "Outlook Calendar events."
 msgstr ""
+"Aktivér denne indstilling for at inkludere buffertid for planlagte aftaler i "
+"Outlook-kalenderbegivenheder."
 
 msgid ""
 "Enable this option to make sure that the invoice will be sent to the "
@@ -3839,6 +4004,9 @@ msgid ""
 "Enable this option to use this custom field as the location in Google and "
 "Outlook Calendar events, ICS files, and ‘Add to Calendar’ events."
 msgstr ""
+"Aktivér denne indstilling for at bruge dette brugerdefinerede felt som "
+"placering i Google- og Outlook-kalenderbegivenheder, ICS-filer og \"Føj til "
+"kalender\"-begivenheder."
 
 msgid "Enable to display booking slots based on the client's time zone."
 msgstr "Aktivér for at vise bookingtider baseret på kundens tidszone."
@@ -3885,32 +4053,43 @@ msgid ""
 "Enhance client trust by providing transparent, documented payment details "
 "for every booking"
 msgstr ""
+"Styrk kundernes tillid ved at give gennemsigtige, dokumenterede "
+"betalingsoplysninger for hver booking."
 
 msgid ""
 "Enhance customer loyalty by rewarding clients with exclusive, personalized "
 "offers"
 msgstr ""
+"Forbedr kundeloyaliteten ved at belønne kunder med eksklusive, personlige "
+"tilbud"
 
 msgid ""
 "Enhance flexibility with customer information ready for marketing tools or "
 "external platforms"
 msgstr ""
+"Forbedr fleksibiliteten med kundeoplysninger, der er klar til "
+"marketingværktøjer eller eksterne platforme"
 
 msgid ""
 "Enhance the customer experience with clear, intuitive forms designed around "
 "your business needs"
 msgstr ""
+"Forbedr kundeoplevelsen med klare, intuitive formularer, der er designet til "
+"dine forretningsbehov."
 
 msgid ""
 "Enhance the customer experience with tailored add-ons that add convenience "
 "and value"
 msgstr ""
+"Forbedr kundeoplevelsen med skræddersyede tilføjelser, der giver ekstra "
+"bekvemmelighed og værdi."
 
 msgid "Ensure accurate billing by applying the correct tax rates every time"
 msgstr ""
+"Sørg for nøjagtig fakturering ved altid at anvende de korrekte skattesatser."
 
 msgid "Ensure accurate bookkeeping with clear, organized financial data"
-msgstr ""
+msgstr "Sørg for nøjagtig bogføring med klare, velorganiserede økonomiske data"
 
 msgid "Enter, and re-enter your new password to continue"
 msgstr "Indtast nyt kodeord igen"
@@ -4010,11 +4189,14 @@ msgstr "Indtast din adgangskode"
 msgid "Error"
 msgstr "Fejl"
 
+msgid "Error occurred"
+msgstr "Der opstod en fejl"
+
 msgid "Error while generating CSV."
 msgstr "Fejl under generering af CSV."
 
 msgid "Estimated price"
-msgstr ""
+msgstr "Anslået pris"
 
 msgid "Event"
 msgstr "Begivenhed"
@@ -4095,7 +4277,7 @@ msgid "Event Type"
 msgstr "Arrangement type"
 
 msgid "Event available"
-msgstr ""
+msgstr "Begivenhed tilgængelig"
 
 msgid "Event booking has been created."
 msgstr "Begivenhedsbooking er blevet oprettet."
@@ -4113,37 +4295,37 @@ msgid "Event calendar booking from"
 msgstr "Begivenhedskalenderbooking fra"
 
 msgid "Event card"
-msgstr ""
+msgstr "Begivenhedskort"
 
 msgid "Event date & time period"
-msgstr ""
+msgstr "Begivenhedsdato og -periode"
 
 msgid "Event date & time periods with Google Meet join links"
-msgstr ""
+msgstr "Begivenhedsdato og -tidspunkter med Google Meet-deltagelseslinks"
 
 msgid "Event date & time periods with Microsoft Teams join links"
-msgstr ""
+msgstr "Begivenhedsdato og -tidspunkter med Microsoft Teams-deltagelseslinks"
 
 msgid "Event date & time periods with Zoom join links"
-msgstr ""
+msgstr "Begivenhedsdato og -tidspunkter med Zoom-deltagelseslinks"
 
 msgid "Event date & time periods with Zoom start links"
-msgstr ""
+msgstr "Begivenhedsdato og -tidspunkter med Zoom-startlinks"
 
 msgid "Event date period"
-msgstr ""
+msgstr "Begivenhedsdato periode"
 
 msgid "Event date periods with Google Meet join links"
-msgstr ""
+msgstr "Begivenhedsdatoer med Google Meet-deltagelseslinks"
 
 msgid "Event date periods with Microsoft Teams join links"
-msgstr ""
+msgstr "Begivenhedsdatoer med Microsoft Teams-deltagelseslinks"
 
 msgid "Event date periods with Zoom join links"
-msgstr ""
+msgstr "Begivenhedsdatoer med Zoom-deltagelseslinks"
 
 msgid "Event date periods with Zoom start links"
-msgstr ""
+msgstr "Begivenhedsdatoer med Zoom-startlinks"
 
 msgid "Event deposit"
 msgstr "Begivenhedsdepositum"
@@ -4155,31 +4337,31 @@ msgid "Event details"
 msgstr "Begivenhedsdetaljer"
 
 msgid "Event e-ticket"
-msgstr ""
+msgstr "E-billet til begivenhed"
 
 msgid "Event employee"
-msgstr ""
+msgstr "Begivenhed medarbejder"
 
 msgid "Event employees"
-msgstr ""
+msgstr "Begivenhedsmedarbejdere"
 
 msgid "Event end date"
-msgstr ""
+msgstr "Begivenhedens slutdato"
 
 msgid "Event end date & time"
-msgstr ""
+msgstr "Begivenhedens slutdato og -tid"
 
 msgid "Event end time"
-msgstr ""
+msgstr "Begivenhedens sluttidspunkt"
 
 msgid "Event ends"
-msgstr ""
+msgstr "Begivenheden slutter"
 
 msgid "Event filter"
-msgstr ""
+msgstr "Begivenhedsfilter"
 
 msgid "Event gallery"
-msgstr ""
+msgstr "Begivenhedsgalleri"
 
 msgid "Event has been canceled"
 msgstr "Begivenheden er aflyst"
@@ -4212,10 +4394,10 @@ msgid "Event has been updated."
 msgstr "Begivenheden er blevet opdateret."
 
 msgid "Event info"
-msgstr ""
+msgstr "Begivenhedsoplysninger"
 
 msgid "Event initial start date"
-msgstr ""
+msgstr "Begivenhedens startdato"
 
 msgid "Event is now visible."
 msgstr "Begivenheden er nu synlig."
@@ -4224,7 +4406,7 @@ msgid "Event list booking from"
 msgstr "Booking fra begivenhedsliste"
 
 msgid "Event location"
-msgstr ""
+msgstr "Begivenhedens placering"
 
 msgid "Event name"
 msgstr "Arrangementsnavn"
@@ -4233,31 +4415,31 @@ msgid "Event price"
 msgstr "Arrangementspris"
 
 msgid "Event slots capacity"
-msgstr ""
+msgstr "Begivenhedsslots kapacitet"
 
 msgid "Event space name"
 msgstr "Navn på begivenhedslokale"
 
 msgid "Event start date"
-msgstr ""
+msgstr "Begivenhedens startdato"
 
 msgid "Event start date & time"
-msgstr ""
+msgstr "Begivenhedens startdato og -tid"
 
 msgid "Event start date and time"
 msgstr "Vælg kunde og service"
 
 msgid "Event start time"
-msgstr ""
+msgstr "Begivenhedens starttidspunkt"
 
 msgid "Event starts"
-msgstr ""
+msgstr "Begivenheden starter"
 
 msgid "Event status"
-msgstr ""
+msgstr "Begivenhedsstatus"
 
 msgid "Event ticketing"
-msgstr ""
+msgstr "Begivenhedsbilletter"
 
 msgid "Event tickets"
 msgstr "Begivenhedsbilletter"
@@ -4269,7 +4451,7 @@ msgid "Event title and description"
 msgstr "Begivenhedstitel og beskrivelse"
 
 msgid "Event type"
-msgstr ""
+msgstr "Begivenhedstype"
 
 msgid "Events"
 msgstr "Begivenheder"
@@ -4287,28 +4469,28 @@ msgid "Events List Booking"
 msgstr "Arrangementet er reserveret"
 
 msgid "Events available"
-msgstr ""
+msgstr "Tilgængelige begivenheder"
 
 msgid "Events calendar"
-msgstr ""
+msgstr "Begivenhedskalender"
 
 msgid "Events custom pricing"
-msgstr ""
+msgstr "Begivenheder tilpassede priser"
 
 msgid "Events list"
-msgstr ""
+msgstr "Begivenhedsliste"
 
 msgid "Events list view"
-msgstr ""
+msgstr "Visning af begivenhedsliste"
 
 msgid "Events pricing"
 msgstr "Prissætning af begivenheder"
 
 msgid "Events setup"
-msgstr ""
+msgstr "Opsætning af begivenheder"
 
 msgid "Events waiting list"
-msgstr ""
+msgstr "Venteliste for begivenheder"
 
 msgid "Every"
 msgstr "Begivenhedsgalleri:"
@@ -4327,6 +4509,8 @@ msgstr "Udvid alle"
 
 msgid "Expand your capacity by adding as many employees as your business needs"
 msgstr ""
+"Udvid din kapacitet ved at tilføje så mange medarbejdere, som din virksomhed "
+"har brug for."
 
 msgid "Expiration date"
 msgstr "Udløbsdato"
@@ -4347,9 +4531,11 @@ msgid ""
 "Export all transaction records from the Finance page for effortless "
 "accounting, reconciliation, or sharing with your finance tools."
 msgstr ""
+"Eksporter alle transaktionsposter fra siden Finans for nem regnskabsføring, "
+"afstemning eller deling med dine finansværktøjer."
 
 msgid "Export appointment data with ease"
-msgstr ""
+msgstr "Eksporter aftaledata med lethed"
 
 msgid "Export bookings"
 msgstr "Eksporter bookinger"
@@ -4400,10 +4586,10 @@ msgid "Extras available"
 msgstr "Ekstra tilgængelige"
 
 msgid "Extras cost:"
-msgstr ""
+msgstr "Ekstraomkostninger:"
 
 msgid "Extras subtotal"
-msgstr ""
+msgstr "Ekstra subtotal"
 
 msgid "Extras total price"
 msgstr "Ekstra omkostninger:"
@@ -4439,10 +4625,10 @@ msgid "Failed to send invoice."
 msgstr "Kunne ikke sende faktura."
 
 msgid "Failed to send test SMS."
-msgstr ""
+msgstr "Det lykkedes ikke at sende test-SMS."
 
 msgid "Failed to send test WhatsApp message."
-msgstr ""
+msgstr "Det lykkedes ikke at sende test-WhatsApp-besked."
 
 msgid "Failed to send test email."
 msgstr "Kunne ikke sende test-e-mail."
@@ -4463,7 +4649,7 @@ msgid "Field Order"
 msgstr "Feltorden"
 
 msgid "Field order"
-msgstr ""
+msgstr "Feltrækkefølge"
 
 msgid "Field order, mandatory fields, labels and display options"
 msgstr "Feltorden, obligatoriske felter, etiketter og visningsmuligheder"
@@ -4484,10 +4670,10 @@ msgid "Filter by Location"
 msgstr "Rediger placering"
 
 msgid "Filter by employee"
-msgstr ""
+msgstr "Filtrer efter medarbejder"
 
 msgid "Filter by location"
-msgstr ""
+msgstr "Filtrer efter placering"
 
 msgid "Filterable Field:"
 msgstr "Filterbart felt:"
@@ -4496,7 +4682,7 @@ msgid "Filters"
 msgstr "Filtre"
 
 msgid "Filters block"
-msgstr ""
+msgstr "Filtre blokerer"
 
 msgid "Finance"
 msgstr "Finans"
@@ -4538,14 +4724,18 @@ msgid ""
 "Flexible discount options let you set custom values or offer full-price "
 "waivers"
 msgstr ""
+"Fleksible rabatmuligheder giver dig mulighed for at indstille "
+"brugerdefinerede værdier eller tilbyde fuld prisnedslag."
 
 msgid ""
 "Flexible pricing lets you set a fixed package price and offer attractive "
 "discounts"
 msgstr ""
+"Fleksibel prisfastsættelse giver dig mulighed for at fastsætte en fast "
+"pakkepris og tilbyde attraktive rabatter."
 
 msgid "Follow up"
-msgstr ""
+msgstr "Opfølgning"
 
 msgid "Font"
 msgstr "Skrifttype"
@@ -4554,7 +4744,7 @@ msgid "Font URL"
 msgstr "Skrift-URL"
 
 msgid "Font family"
-msgstr ""
+msgstr "Skrifttypefamilie"
 
 msgid "Fonts"
 msgstr "Skrifttyper"
@@ -4566,10 +4756,10 @@ msgid "Footer"
 msgstr "Sidefod"
 
 msgid "Footer buttons"
-msgstr ""
+msgstr "Knapper i sidefoden"
 
 msgid "Footer content"
-msgstr ""
+msgstr "Indhold i sidefod"
 
 msgid "For multiselect: hold CTRL / Command (⌘)."
 msgstr "For multivælg: hold CTRL / Command (⌘)."
@@ -4586,7 +4776,7 @@ msgid "Forgot Password?"
 msgstr "Glemt adgangskode?"
 
 msgid "Forgot password?"
-msgstr ""
+msgstr "Glemt adgangskode?"
 
 msgid "Forgot your password?"
 msgstr "Glemt adgangskode?"
@@ -4601,7 +4791,7 @@ msgid "Form colors"
 msgstr "Formularfarver"
 
 msgid "Forms"
-msgstr ""
+msgstr "Formularer"
 
 msgid "Fourth"
 msgstr "Fjerde"
@@ -4613,7 +4803,7 @@ msgid "Free"
 msgstr "Gratis"
 
 msgid "Fri"
-msgstr ""
+msgstr "Fre"
 
 msgid "Friday"
 msgstr "Fredag"
@@ -4664,13 +4854,13 @@ msgid "Front-end customer panel"
 msgstr "Front-end kundepanel"
 
 msgid "Front-end employee panel"
-msgstr ""
+msgstr "Front-end medarbejderpanel"
 
 msgid "Frontend"
 msgstr ""
 
 msgid "Frontend & Backend"
-msgstr ""
+msgstr "Frontend og backend"
 
 msgid "Full"
 msgstr "Reserveret kunde (fuldt navn, mail, telefon)"
@@ -4717,7 +4907,7 @@ msgid "Get in Touch"
 msgstr "Kontakt os"
 
 msgid "Get in touch"
-msgstr ""
+msgstr "Kontakt os"
 
 msgid "Global Settings"
 msgstr "Globale indstillinger"
@@ -4734,10 +4924,10 @@ msgid "Go Back"
 msgstr "Gå tilbage"
 
 msgid "Go back"
-msgstr ""
+msgstr "Gå tilbage"
 
 msgid "Go to Catalog form"
-msgstr ""
+msgstr "Gå til katalogformular"
 
 msgid "Go to Custom Fields"
 msgstr "Gå til brugerdefinerede felter"
@@ -4746,7 +4936,7 @@ msgid "Go to Notifications"
 msgstr "Gå til meddelelser"
 
 msgid "Go to Step-by-step form"
-msgstr ""
+msgstr "Gå til trin-for-trin-formularen"
 
 msgid "Google"
 msgstr ""
@@ -4758,7 +4948,7 @@ msgid "Google Analytics"
 msgstr ""
 
 msgid "Google Analytics setup"
-msgstr ""
+msgstr "Opsætning af Google Analytics"
 
 msgid "Google Calendar"
 msgstr "Google Kalender"
@@ -4767,7 +4957,7 @@ msgid "Google Calendar & Google Meet"
 msgstr "Google Kalender & Google Meet"
 
 msgid "Google Calendar setup"
-msgstr ""
+msgstr "Opsætning af Google Kalender"
 
 msgid "Google Map API key"
 msgstr "Google Map API-nøgle"
@@ -4782,19 +4972,19 @@ msgid "Google Meet Link"
 msgstr "Google Meet-link"
 
 msgid "Google Meet join link"
-msgstr ""
+msgstr "Google Meet-deltagelseslink"
 
 msgid "Google Meet link"
-msgstr ""
+msgstr "Google Meet-link"
 
 msgid "Google Meet setup"
-msgstr ""
+msgstr "Opsætning af Google Meet"
 
 msgid "Google reCAPTCHA v2 secret key"
-msgstr ""
+msgstr "Google reCAPTCHA v2 hemmelig nøgle"
 
 msgid "Google reCAPTCHA v2 site key"
-msgstr ""
+msgstr "Google reCAPTCHA v2-webstedsnøgle"
 
 msgid "Google social login"
 msgstr ""
@@ -4803,7 +4993,7 @@ msgid "Green"
 msgstr "Grøn"
 
 msgid "Grid view"
-msgstr ""
+msgstr "Gittervisning"
 
 msgid "Group Ticket"
 msgstr "Gruppebillet"
@@ -4824,7 +5014,7 @@ msgid "Group ticket has already been scanned"
 msgstr "Servicen er blevet gemt"
 
 msgid "Grow your team with unlimited employee management"
-msgstr ""
+msgstr "Udvid dit team med ubegrænset medarbejderadministration"
 
 msgid "Gyms"
 msgstr "Fitnesscentre"
@@ -4845,17 +5035,20 @@ msgstr ""
 msgid "Header"
 msgstr "Overskrift"
 
+msgid "Header Image URL"
+msgstr "URL til header-billede"
+
 msgid "Heading"
-msgstr ""
+msgstr "Overskrift"
 
 msgid "Heading Text Color"
 msgstr "Tekstfarve"
 
 msgid "Heading content"
-msgstr ""
+msgstr "Overskriftsindhold"
 
 msgid "Heading title"
-msgstr ""
+msgstr "Overskriftstitel"
 
 msgid "Healthcare"
 msgstr "Sundhedsvæsen"
@@ -4984,13 +5177,13 @@ msgid "Hide tax"
 msgstr "Skjul moms"
 
 msgid "Hide tips & suggestions"
-msgstr ""
+msgstr "Skjul tip og forslag"
 
 msgid "Higher price background"
-msgstr ""
+msgstr "Højere prisbaggrund"
 
 msgid "Higher price text"
-msgstr ""
+msgstr "Tekst om højere pris"
 
 msgid "Highest price"
 msgstr "Arrangementspris"
@@ -5014,10 +5207,13 @@ msgid "How many people are coming?"
 msgstr "Hvor mange personer kommer?"
 
 msgid "How to"
-msgstr ""
+msgstr "Sådan gør du"
 
 msgid "How to get your"
 msgstr "Hvordan får du din"
+
+msgid "How will you use Amelia?"
+msgstr "Hvordan vil du bruge Amelia?"
 
 msgid "ID"
 msgstr "Skift Alpha sender-ID"
@@ -5045,11 +5241,25 @@ msgstr ""
 "standardbetalingsmetoden blive brugt."
 
 msgid ""
+"If disabled, booking must meet the minimum capacity, and the time slot "
+"closes after the first booking."
+msgstr ""
+"Hvis denne funktion er deaktiveret, skal bookingen opfylde "
+"minimumskapaciteten, og tidsintervallet lukkes efter den første booking."
+
+msgid ""
 "If disabled, the price will remain the same regardless of how many people "
 "are included in the group appointment."
 msgstr ""
 "Hvis deaktiveret, vil prisen forblive den samme, uanset hvor mange personer "
 "der er inkluderet i gruppeaftalen."
+
+msgid ""
+"If enabled, customers can book with Pending status even after maximum "
+"capacity is reached."
+msgstr ""
+"Hvis denne funktion er aktiveret, kan kunder booke med status "
+"\"Afventende\", selv efter at den maksimale kapacitet er nået."
 
 msgid ""
 "If enabled, customers can complete their payment using the link in their "
@@ -5091,41 +5301,10 @@ msgstr ""
 "importeret."
 
 msgid ""
-"If this is disabled, your front-end customers won't be able to book "
-"appointment with Pending status above the maximum capacity. Once the maximum "
-"capacity is reached appointment will close and time slot will become "
-"unavailable."
+"If this option is disabled, the item will be available only for booking from "
+"the backend."
 msgstr ""
-"Hvis dette er deaktiveret, vil dine front-end kunder ikke kunne booke en "
-"aftale med status 'Afventer' over den maksimale kapacitet. Når den maksimale "
-"kapacitet er nået, vil aftalen lukke, og tidsrummet vil blive utilgængeligt."
-
-msgid ""
-"If this is disabled, your front-end customers won't be able to submit a "
-"booking unless they fill in the minimum service capacity, but once they book "
-"for any capacity above minimum, the time slot will become unavailable for "
-"booking for others. If enabled, multiple customers will be able to book the "
-"same time slot, without having to fill in the minimum capacity."
-msgstr ""
-"Hvis dette er deaktiveret, vil dine front-end kunder ikke kunne indsende en "
-"booking, medmindre de opfylder minimumskapaciteten for tjenesten, men når de "
-"booker for enhver kapacitet over minimum, vil tidsrummet blive utilgængeligt "
-"for andre. Hvis det er aktiveret, vil flere kunder kunne booke det samme "
-"tidsrum uden at skulle opfylde minimumskapaciteten."
-
-msgid ""
-"If this option is disabled, the employee will only be available for booking "
-"through the back-end"
-msgstr ""
-"Hvis denne mulighed er deaktiveret, vil medarbejderen kun være tilgængelig "
-"for booking gennem back-end."
-
-msgid ""
-"If this option is disabled, the service will be bookable only from the back "
-"end."
-msgstr ""
-"Hvis denne mulighed er deaktiveret, vil tjenesten kun kunne bookes fra back-"
-"end."
+"Hvis denne indstilling er deaktiveret, kan varen kun reserveres fra backend."
 
 msgid ""
 "If this option is enabled customers will be able to pay via email "
@@ -5133,11 +5312,6 @@ msgid ""
 msgstr ""
 "Hvis denne indstilling er deaktiveret, er service kun tilgængelig til "
 "reservation fra back-end-sider."
-
-msgid ""
-"If this option is enabled time slots will be shown with included service "
-"buffer time."
-msgstr ""
 
 msgid ""
 "If this option is not checked the plugin will calculate the time <br> for "
@@ -5189,11 +5363,16 @@ msgid ""
 "time (working hours, special days and days off for all employees will be "
 "ignored)."
 msgstr ""
+"Hvis du aktiverer denne indstilling, kan administratoren booke aftaler når "
+"som helst (arbejdstid, særlige dage og fridage for alle medarbejdere "
+"ignoreres)."
 
 msgid ""
 "If you enable this option, Admin will be able to book appointment over or "
 "during another appointment."
 msgstr ""
+"Hvis du aktiverer denne indstilling, kan administratoren booke aftaler over "
+"eller under en anden aftale."
 
 msgid ""
 "If you enable this option every time a new customer schedules the "
@@ -5204,13 +5383,13 @@ msgstr ""
 "få Amelia-kundebrugerrollen og en automatisk e-mail med loginoplysninger."
 
 msgid "Image"
-msgstr ""
+msgstr "Billede"
 
 msgid "Image Color"
 msgstr "Billedfarve"
 
 msgid "Image thumbs"
-msgstr ""
+msgstr "Billedminiaturer"
 
 msgid "Import"
 msgstr "Importér"
@@ -5234,36 +5413,77 @@ msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
 "billing"
 msgstr ""
+"Forbedr nøjagtigheden og professionalismen med ensartet, klart formateret "
+"fakturering"
 
 msgid ""
 "Improve customer choice by letting clients book with the employee that suits "
 "them best"
 msgstr ""
+"Forbedr kundernes valgmuligheder ved at lade dem booke den medarbejder, der "
+"passer dem bedst"
 
 msgid ""
 "Improve customer convenience by offering predictable, easy-to-book recurring "
 "options"
 msgstr ""
+"Forbedr kundernes komfort ved at tilbyde forudsigelige, nemme at booke "
+"tilbagevendende muligheder"
 
 msgid ""
 "Improve customer experience by letting clients choose the location that "
 "suits them best"
 msgstr ""
+"Forbedr kundeoplevelsen ved at lade kunderne vælge den placering, der passer "
+"dem bedst"
 
 msgid ""
 "Improve reporting accuracy by accessing complete appointment data instantly"
 msgstr ""
+"Forbedr rapporteringens nøjagtighed ved at få øjeblikkelig adgang til "
+"komplette aftaledata"
 
 msgid ""
 "Improved customer retention as clients return to use the remaining sessions "
 "in their package"
 msgstr ""
+"Forbedret kundefastholdelse, da kunder vender tilbage for at bruge de "
+"resterende sessioner i deres pakke"
+
+msgid ""
+"In Amelia, a “service” is a specific appointment-type offering your business "
+"provides to clients - such as consultations, treatments, or classes - that "
+"can be fully customized with its own name, duration, price, capacity, "
+"availability, and extras, and booked online with assigned employees."
+msgstr ""
+"I Amelia er en \"service\" en specifik aftaletype, som din virksomhed "
+"tilbyder sine kunder – f.eks. konsultationer, behandlinger eller kurser – "
+"som kan tilpasses fuldstændigt med eget navn, varighed, pris, kapacitet, "
+"tilgængelighed og ekstraydelser og bookes online med tildelte medarbejdere."
+
+msgid ""
+"In Amelia, an employee is a team member who provides services or hosts "
+"events, with their own schedule, working hours, and assigned offerings."
+msgstr ""
+"I Amelia er en medarbejder et teammedlem, der leverer tjenester eller "
+"afholder arrangementer med sin egen tidsplan, arbejdstid og tildelte tilbud."
+
+msgid ""
+"In Amelia, an event is a booking-type offering designed for group activities "
+"or multi-day occasions - such as workshops, conferences, tours, or training "
+"series - that can be configured with its own schedule, capacity, pricing "
+"structure and assigned staff."
+msgstr ""
+"I Amelia er en begivenhed et tilbud af bookingtypen, der er designet til "
+"gruppeaktiviteter eller flerdagesarrangementer – såsom workshops, "
+"konferencer, ture eller træningsserier – som kan konfigureres med sin egen "
+"tidsplan, kapacitet, prisstruktur og tildelte personale."
 
 msgid "In Package"
 msgstr "Gennemsnitlige bookinger"
 
 msgid "In package"
-msgstr ""
+msgstr "I pakken"
 
 msgid "Incl. VAT"
 msgstr "Inkl. moms"
@@ -5274,8 +5494,15 @@ msgstr "Inkluder skatter"
 msgid "Include buffer time in calendar events"
 msgstr "Inkluder buffertid i kalenderbegivenheder"
 
-msgid "Include in invoice"
+msgid ""
+"Include buffer time in slot calculation. When disabled, slots are based only "
+"on service duration."
 msgstr ""
+"Inkluder buffertid i slotberegningen. Når denne funktion er deaktiveret, "
+"baseres slots kun på servicens varighed."
+
+msgid "Include in invoice"
+msgstr "Medtag i faktura"
 
 msgid "Include service buffer time in time slots"
 msgstr "Inkluder servicebuffertid i tidsintervaller"
@@ -5287,16 +5514,21 @@ msgid ""
 "Increase conversions by motivating customers with attractive, limited-time "
 "deals"
 msgstr ""
+"Øg konverteringerne ved at motivere kunderne med attraktive, tidsbegrænsede "
+"tilbud"
 
 msgid ""
 "Increase revenue by encouraging customers to purchase additional services or "
 "products"
 msgstr ""
+"Øg omsætningen ved at tilskynde kunderne til at købe yderligere tjenester "
+"eller produkter"
 
 msgid ""
 "Increase sales volume by encouraging customers to book more appointments at "
 "once"
 msgstr ""
+"Øg salget ved at opfordre kunderne til at booke flere aftaler på én gang."
 
 msgid ""
 "Indicates the number of new and returning customers<br/>for the selected "
@@ -5312,22 +5544,22 @@ msgid "Info"
 msgstr ""
 
 msgid "Info text"
-msgstr ""
+msgstr "Info-tekst"
 
 msgid "Initial end date & time of the event"
-msgstr ""
+msgstr "Begivenhedens oprindelige slutdato og -tidspunkt"
 
 msgid "Initial end date of the event"
-msgstr ""
+msgstr "Begivenhedens oprindelige slutdato"
 
 msgid "Initial end time of the event"
-msgstr ""
+msgstr "Begivenhedens oprindelige sluttidspunkt"
 
 msgid "Initial start date & time of the event"
-msgstr ""
+msgstr "Begivenhedens startdato og -tidspunkt"
 
 msgid "Initial start time of the event"
-msgstr ""
+msgstr "Begyndelsestidspunkt for begivenheden"
 
 msgid "Input Color"
 msgstr "Indtastningsfarve"
@@ -5336,10 +5568,10 @@ msgid "Input Text Color"
 msgstr "Indtastningstekstfarve"
 
 msgid "Input field"
-msgstr ""
+msgstr "Indtastningsfelt"
 
 msgid "Input fields"
-msgstr ""
+msgstr "Indtastningsfelter"
 
 msgid "Insert Amelia Booking Shortcode"
 msgstr "Indsæt Amelia Booking genvejskode"
@@ -5356,6 +5588,9 @@ msgstr "Integrationer"
 
 msgid "Interested in unlocking this feature?"
 msgstr "Interesseret i at låse denne funktion op?"
+
+msgid "Invalid Stripe secret key."
+msgstr "Ugyldig Stripe-hemmelig nøgle."
 
 msgid "Invisible reCAPTCHA badge"
 msgstr "Usynlig reCAPTCHA-badge"
@@ -5397,10 +5632,17 @@ msgid "Invoices"
 msgstr "Fakturaer"
 
 msgid "Invoices setup"
-msgstr ""
+msgstr "Opsætning af fakturaer"
 
 msgid "Issued"
 msgstr "Udstedt"
+
+msgid ""
+"It looks like this is your first time here, so let’s walk through a few "
+"simple steps to help you get started."
+msgstr ""
+"Det ser ud til, at det er første gang, du er her, så lad os gennemgå et par "
+"enkle trin for at hjælpe dig i gang."
 
 msgid ""
 "It seems like there are no available or visible services assigned to the "
@@ -5427,7 +5669,7 @@ msgid "Item"
 msgstr "Vare"
 
 msgid "Item status"
-msgstr ""
+msgstr "Vare status"
 
 msgid "Jane Doe"
 msgstr ""
@@ -5460,10 +5702,10 @@ msgid "Join waiting list"
 msgstr "Deltag i venteliste"
 
 msgid "Join with Google Meet"
-msgstr ""
+msgstr "Deltag med Google Meet"
 
 msgid "Join with Microsoft Teams"
-msgstr ""
+msgstr "Deltag med Microsoft Teams"
 
 msgid "Keep Individual"
 msgstr "Behold individuel"
@@ -5473,21 +5715,33 @@ msgid ""
 "notifications directly through WhatsApp - choose predefined messages or "
 "customize your own for a personal touch."
 msgstr ""
+"Hold kunder og medarbejdere informeret ved at sende aftale- og "
+"begivenhedsmeddelelser direkte via WhatsApp – vælg foruddefinerede beskeder "
+"eller tilpas dine egne for at give dem et personligt præg."
 
 msgid ""
 "Keep everyone on track using scheduled reminders that reduce no-shows and "
 "confusion"
 msgstr ""
+"Hold alle på sporet ved hjælp af planlagte påmindelser, der reducerer "
+"udeblivelser og forvirring."
 
 msgid ""
 "Keep operations aligned with unified settings, availability, and resource "
 "control"
 msgstr ""
+"Sørg for, at driften er i overensstemmelse med ensartede indstillinger, "
+"tilgængelighed og ressourcekontrol."
+
+msgid "Keep slot available after first booking"
+msgstr "Hold plads ledig efter første reservation"
 
 msgid ""
 "Keep your data organized and meaningful with structured fields that "
 "standardize the information you collect"
 msgstr ""
+"Hold dine data organiserede og meningsfulde med strukturerede felter, der "
+"standardiserer de oplysninger, du indsamler."
 
 msgid "Label"
 msgstr "Etiket"
@@ -5502,7 +5756,7 @@ msgid "Language"
 msgstr "Sprog"
 
 msgid "Languages"
-msgstr ""
+msgstr "Sprog"
 
 msgid "Last"
 msgstr "Efternavn"
@@ -5562,13 +5816,13 @@ msgid "Lesson Space Links"
 msgstr "Links til lektionsområde"
 
 msgid "Lesson Space link"
-msgstr ""
+msgstr "Link til lektionsrum"
 
 msgid "Lesson Space link to join space"
-msgstr ""
+msgstr "Lektion Space-link for at tilmelde sig space"
 
 msgid "Lesson Space setup"
-msgstr ""
+msgstr "Opsætning af undervisningslokale"
 
 msgid "Light Theme"
 msgstr "Lyst tema"
@@ -5630,7 +5884,7 @@ msgstr ""
 "klikke på Gem-knappen."
 
 msgid "List view"
-msgstr ""
+msgstr "Listevisning"
 
 msgid "Live API key"
 msgstr "Live API-nøgle"
@@ -5669,10 +5923,7 @@ msgid "Local Time:"
 msgstr "Lokal tid:"
 
 msgid "Local time"
-msgstr ""
-
-msgid "Local time:"
-msgstr ""
+msgstr "Lokal tid"
 
 msgid "Location"
 msgstr "Lokation"
@@ -5702,10 +5953,10 @@ msgid "Location description"
 msgstr "Placeringsbeskrivelse"
 
 msgid "Location details"
-msgstr ""
+msgstr "Placeringsoplysninger"
 
 msgid "Location filter"
-msgstr ""
+msgstr "Placeringsfilter"
 
 msgid "Location has been added."
 msgstr "Placering er blevet tilføjet."
@@ -5726,10 +5977,10 @@ msgid "Location is now visible."
 msgstr "Placering er nu synlig."
 
 msgid "Location latitude"
-msgstr ""
+msgstr "Placering breddegrad"
 
 msgid "Location longitude"
-msgstr ""
+msgstr "Placering længdegrad"
 
 msgid "Location name"
 msgstr "Lokationsnavn"
@@ -5738,7 +5989,7 @@ msgid "Location phone"
 msgstr "Placeringstelefon"
 
 msgid "Location selection"
-msgstr ""
+msgstr "Valg af placering"
 
 msgid "Locations"
 msgstr "Lokationer"
@@ -5747,7 +5998,7 @@ msgid "Locations must be active and have card processing enabled"
 msgstr "Lokationer skal være aktive og have kortbehandling aktiveret"
 
 msgid "Locations setup"
-msgstr ""
+msgstr "Opsætning af placeringer"
 
 msgid "Log In"
 msgstr "Log ind"
@@ -5765,16 +6016,16 @@ msgid "Longitude"
 msgstr "Længdegrad"
 
 msgid "Lower price background"
-msgstr ""
+msgstr "Lavere prisbaggrund"
 
 msgid "Lower price text"
-msgstr ""
+msgstr "Tekst om lavere pris"
 
 msgid "Lowest price"
 msgstr "Arrangementspris"
 
 msgid "Mail service"
-msgstr ""
+msgstr "Mail-tjeneste"
 
 msgid "Mailchimp"
 msgstr ""
@@ -5783,7 +6034,7 @@ msgid "Mailchimp List"
 msgstr "Mailchimp-liste"
 
 msgid "Mailchimp setup"
-msgstr ""
+msgstr "Mailchimp-opsætning"
 
 msgid "Mailgun"
 msgstr ""
@@ -5795,23 +6046,26 @@ msgid "Mailgun Domain"
 msgstr "Mailgun-domæne"
 
 msgid "Main category button"
-msgstr ""
+msgstr "Hovedkategoriknap"
 
 msgid "Main content"
-msgstr ""
+msgstr "Hovedindhold"
 
 msgid ""
 "Maintain consistent scheduling with customizable frequencies and patterns"
-msgstr ""
+msgstr "Oprethold en ensartet planlægning med tilpassede frekvenser og mønstre"
 
 msgid "Make extra mandatory"
 msgstr "Gør ekstra obligatorisk"
+
+msgid "Make sure you are using the correct WhatsApp credentials."
+msgstr "Sørg for, at du bruger de korrekte WhatsApp-loginoplysninger."
 
 msgid "Male"
 msgstr "Mand"
 
 msgid "Manage badges"
-msgstr ""
+msgstr "Administrer badges"
 
 msgid "Manage bookings"
 msgstr "Administrer bookinger"
@@ -5830,16 +6084,16 @@ msgid "Manage languages"
 msgstr "Administrer sprog"
 
 msgid "Manage personal schedule"
-msgstr ""
+msgstr "Administrer personlig tidsplan"
 
 msgid "Manage shared resources with ease"
-msgstr ""
+msgstr "Administrer delte ressourcer med lethed"
 
 msgid "Managing assigned services"
-msgstr ""
+msgstr "Administration af tildelte tjenester"
 
 msgid "Managing packages"
-msgstr ""
+msgstr "Administration af pakker"
 
 msgid "Mandatory Field:"
 msgstr "Angive et telefonnummer som obligatorisk felt"
@@ -5891,7 +6145,7 @@ msgid "Maximum quantity"
 msgstr "Maksimal mængde"
 
 msgid "Maximum spots"
-msgstr ""
+msgstr "Maksimalt antal pladser"
 
 msgid "Maximum usage per customer"
 msgstr "Maksimal brug pr. kunde"
@@ -5912,7 +6166,7 @@ msgid "Message"
 msgstr "Besked"
 
 msgid "Message content"
-msgstr ""
+msgstr "Meddelelsens indhold"
 
 msgid "Message template"
 msgstr "Beskedskabelon"
@@ -5921,6 +6175,8 @@ msgid ""
 "Messages sent through WhatsApp are without a reply option, so we advise "
 "setting the “Auto-reply” message"
 msgstr ""
+"Beskeder sendt via WhatsApp har ingen svarfunktion, så vi anbefaler at "
+"indstille en \"Automatisk svar\"-besked."
 
 msgid "Meta"
 msgstr ""
@@ -5929,7 +6185,7 @@ msgid "Meta Pixel"
 msgstr ""
 
 msgid "Meta Pixel setup"
-msgstr ""
+msgstr "Meta Pixel-opsætning"
 
 msgid "Method"
 msgstr "Metode"
@@ -5944,13 +6200,13 @@ msgid "Microsoft Teams Link"
 msgstr "Microsoft Teams-link"
 
 msgid "Microsoft Teams join link"
-msgstr ""
+msgstr "Microsoft Teams-deltagelseslink"
 
 msgid "Microsoft Teams link"
-msgstr ""
+msgstr "Microsoft Teams-link"
 
 msgid "Microsoft Teams setup"
-msgstr ""
+msgstr "Opsætning af Microsoft Teams"
 
 msgid "Min. Capacity"
 msgstr "Min. kapacitet"
@@ -6004,7 +6260,7 @@ msgid "Mollie"
 msgstr ""
 
 msgid "Mollie payment link"
-msgstr ""
+msgstr "Mollie-betalingslink"
 
 msgid "Mon"
 msgstr "Man"
@@ -6037,7 +6293,7 @@ msgid "Multiple Locations"
 msgstr "Flere lokationer"
 
 msgid "Multiple locations"
-msgstr ""
+msgstr "Flere placeringer"
 
 msgid "Multiple packages purchased."
 msgstr "Flere pakker købt."
@@ -6049,7 +6305,7 @@ msgid "Multiply deposit amount by the number of people in one booking."
 msgstr "Gang depositumbeløbet med antallet af personer i én booking."
 
 msgid "Multiply deposit by number of people"
-msgstr ""
+msgstr "Gang depositum med antallet af personer"
 
 msgid "Multiply price by number of people"
 msgstr "Gang prisen med antallet af personer"
@@ -6058,7 +6314,7 @@ msgid "My Profile"
 msgstr "Min profil"
 
 msgid "My profile"
-msgstr ""
+msgstr "Min profil"
 
 msgid "Name"
 msgstr "Navn"
@@ -6091,7 +6347,7 @@ msgid "Need additional fields?"
 msgstr "Brug for ekstra felter?"
 
 msgid "Need help?"
-msgstr ""
+msgstr "Brug for hjælp?"
 
 msgid "Need to update your company's days off?"
 msgstr "Skal du opdatere virksomhedens fridage?"
@@ -6124,46 +6380,46 @@ msgid "New Update"
 msgstr "Ny opdatering"
 
 msgid "New appointment"
-msgstr ""
+msgstr "Ny aftale"
 
 msgid "New category"
-msgstr ""
+msgstr "Ny kategori"
 
 msgid "New coupon"
-msgstr ""
+msgstr "Ny kupon"
 
 msgid "New customer"
-msgstr ""
+msgstr "Ny kunde"
 
 msgid "New employee"
-msgstr ""
+msgstr "Ny medarbejder"
 
 msgid "New event"
-msgstr ""
+msgstr "Ny begivenhed"
 
 msgid "New event booking"
-msgstr ""
+msgstr "Ny begivenhedsbooking"
 
 msgid "New language"
 msgstr "Nyt sprog"
 
 msgid "New package"
-msgstr ""
+msgstr "Ny pakke"
 
 msgid "New package booking"
-msgstr ""
+msgstr "Ny pakkebestilling"
 
 msgid "New password"
 msgstr "Nyt kodeord"
 
 msgid "New resource"
-msgstr ""
+msgstr "Ny ressource"
 
 msgid "New service"
-msgstr ""
+msgstr "Ny tjeneste"
 
 msgid "New tax"
-msgstr ""
+msgstr "Ny skat"
 
 msgid "Next"
 msgstr "Næste"
@@ -6172,13 +6428,10 @@ msgid "Next Service"
 msgstr "Næste service"
 
 msgid "Next day reminder"
-msgstr ""
+msgstr "Påmindelse næste dag"
 
 msgid "No"
 msgstr "Nej"
-
-msgid "No, Cancel"
-msgstr "Annuller"
 
 msgid "No, just this one"
 msgstr "Nej, bare denne"
@@ -6187,7 +6440,7 @@ msgid "No-show"
 msgstr "Udeblevet"
 
 msgid "No-show tag"
-msgstr ""
+msgstr "No-show-tag"
 
 msgid "No Employees Assigned to This Location"
 msgstr "Ingen medarbejdere tildelt denne lokation"
@@ -6220,7 +6473,7 @@ msgid "No appointments found"
 msgstr "Ingen aftaler fundet"
 
 msgid "No appointments yet"
-msgstr ""
+msgstr "Ingen aftaler endnu"
 
 msgid "No attendees found"
 msgstr "Ingen deltagere fundet"
@@ -6235,55 +6488,55 @@ msgid "No camera found on this device."
 msgstr "Ingen kamera fundet på denne enhed."
 
 msgid "No coupons yet"
-msgstr ""
+msgstr "Ingen kuponer endnu"
 
 msgid "No custom fields yet"
-msgstr ""
+msgstr "Ingen brugerdefinerede felter endnu"
 
 msgid "No customers were imported to your customer list."
 msgstr "Ingen kunder blev importeret til din kundeliste."
 
 msgid "No customers yet"
-msgstr ""
+msgstr "Ingen kunder endnu"
 
 msgid "No employees yet"
-msgstr ""
+msgstr "Ingen medarbejdere endnu"
 
 msgid "No event bookings yet"
-msgstr ""
+msgstr "Ingen begivenhedsbookinger endnu"
 
 msgid "No events found"
 msgstr "Ingen begivenheder fundet"
 
 msgid "No events yet"
-msgstr ""
+msgstr "Ingen begivenheder endnu"
 
 msgid "No extras yet"
-msgstr ""
+msgstr "Ingen ekstramateriale endnu"
 
 msgid "No invoices yet"
-msgstr ""
+msgstr "Ingen fakturaer endnu"
 
 msgid "No limit per customer"
 msgstr "Ingen grænse pr. kunde"
 
 msgid "No locations yet"
-msgstr ""
+msgstr "Ingen placeringer endnu"
 
 msgid "No matching data"
 msgstr "Ingen matchende data"
 
 msgid "No package bookings yet"
-msgstr ""
+msgstr "Ingen pakkerejser endnu"
 
 msgid "No packages found"
 msgstr "Ingen pakker fundet"
 
 msgid "No packages yet"
-msgstr ""
+msgstr "Ingen pakker endnu"
 
 msgid "No resources yet"
-msgstr ""
+msgstr "Ingen ressourcer endnu"
 
 msgid "No results"
 msgstr "resultater"
@@ -6298,7 +6551,7 @@ msgid "No results found for"
 msgstr "Ingen resultater fundet for"
 
 msgid "No services or employees available"
-msgstr ""
+msgstr "Ingen tjenester eller medarbejdere tilgængelige"
 
 msgid "No services yet"
 msgstr "Ingen tjenester endnu"
@@ -6307,16 +6560,16 @@ msgid "No spots left"
 msgstr "Ingen pladser tilbage"
 
 msgid "No taxes yet"
-msgstr ""
+msgstr "Ingen skatter endnu"
 
 msgid "No top trends"
-msgstr ""
+msgstr "Ingen top-trends"
 
 msgid "No transactions yet"
-msgstr ""
+msgstr "Ingen transaktioner endnu"
 
 msgid "No upcoming events"
-msgstr ""
+msgstr "Ingen kommende begivenheder"
 
 msgid "No usage limit"
 msgstr "Ingen brugsbegrænsning"
@@ -6331,13 +6584,13 @@ msgid "Not match to your current password"
 msgstr "Indtast venligst den nuværende adgangskode"
 
 msgid "Note"
-msgstr ""
+msgstr "Bemærk"
 
 msgid "Note (Internal)"
 msgstr "Bemærkninger (intern)"
 
 msgid "Note (internal)"
-msgstr ""
+msgstr "Bemærkning (intern)"
 
 msgid "Notice: Please select at least one panel."
 msgstr "Bemærk: Vælg venligst mindst ét panel."
@@ -6370,7 +6623,7 @@ msgid "Notification name"
 msgstr "Notifikationsnavn"
 
 msgid "Notification settings"
-msgstr ""
+msgstr "Indstillinger for meddelelser"
 
 msgid "Notification status has been updated."
 msgstr "Notifikationsstatus er blevet opdateret."
@@ -6401,13 +6654,10 @@ msgid "Notify the attendee(s)"
 msgstr "Underret kunden / kunderne"
 
 msgid "Notify the attendees"
-msgstr ""
+msgstr "Underret deltagerne"
 
 msgid "Notify the customer(s)"
 msgstr "Underret kunden / kunderne"
-
-msgid "Notify the customer(s) by default"
-msgstr "Underret kunde(r) som standard"
 
 msgid "Number of Additional People"
 msgstr "Antal ekstra personer"
@@ -6443,19 +6693,19 @@ msgid "Number of people"
 msgstr "Prisen ganges med antallet af mennesker"
 
 msgid "Number of people on waiting list"
-msgstr ""
+msgstr "Antal personer på ventelisten"
 
 msgid "Number of people that are coming with you."
 msgstr "Antal personer, der kommer med dig."
 
 msgid "Number of recurrences:"
-msgstr ""
+msgstr "Antal gentagelser:"
 
 msgid "Number of tickets"
 msgstr "Antal billetter"
 
 msgid "Occupancy rate"
-msgstr ""
+msgstr "Belægningsprocent"
 
 msgid "Occupied"
 msgstr "Optaget"
@@ -6481,6 +6731,9 @@ msgid ""
 "additional services, products, or experiences to enhance appointments and "
 "delight your customers."
 msgstr ""
+"Tilbyd valgfri eller obligatorisk ekstraudstyr under bookingprocessen – sælg "
+"yderligere tjenester, produkter eller oplevelser for at forbedre aftaler og "
+"glæde dine kunder."
 
 msgid ""
 "Offer services with multiple duration options for customers to choose from."
@@ -6521,13 +6774,13 @@ msgid "On Break"
 msgstr "Har pause"
 
 msgid "On hold"
-msgstr ""
+msgstr "På hold"
 
 msgid "On the same day"
 msgstr "Samme dag"
 
 msgid "On the same day each month"
-msgstr ""
+msgstr "Samme dag hver måned"
 
 msgid "Once Off"
 msgstr "Når slukket"
@@ -6543,31 +6796,43 @@ msgid ""
 "Once you add your first custom field, it will appear here. Click + Custom "
 "Field below to get started."
 msgstr ""
+"Når du har tilføjet dit første brugerdefinerede felt, vises det her. Klik på "
+"+ Brugerdefineret felt nedenfor for at komme i gang."
 
 msgid ""
 "Once you add your first employee, it will appear here. Click + Employee "
 "below to get started."
 msgstr ""
+"Når du har tilføjet din første medarbejder, vises vedkommende her. Klik på + "
+"Medarbejder nedenfor for at komme i gang."
 
 msgid ""
 "Once you add your first event, it will appear here. Click + Event below to "
 "get started."
 msgstr ""
+"Når du har tilføjet din første begivenhed, vises den her. Klik på + "
+"Begivenhed nedenfor for at komme i gang."
 
 msgid ""
 "Once you add your first extra, it will appear here. Click + Extra above to "
 "get started."
 msgstr ""
+"Når du har tilføjet din første ekstra, vises den her. Klik på + Ekstra "
+"ovenfor for at komme i gang."
 
 msgid ""
 "Once you add your first package, it will appear here. Click + Package below "
 "to get started."
 msgstr ""
+"Når du har tilføjet din første pakke, vises den her. Klik på + Pakke "
+"nedenfor for at komme i gang."
 
 msgid ""
 "Once you add your first resource, it will appear here. Click + Resource "
 "below to get started."
 msgstr ""
+"Når du har tilføjet din første ressource, vises den her. Klik på + Ressource "
+"nedenfor for at komme i gang."
 
 msgid "Once you add your first service, it will appear here."
 msgstr "Når du tilføjer din første tjeneste, vil den blive vist her."
@@ -6576,6 +6841,8 @@ msgid ""
 "Once you add your first tax, it will appear here. Click + Tax below to get "
 "started."
 msgstr ""
+"Når du har tilføjet din første skat, vises den her. Klik på + Skat nedenfor "
+"for at komme i gang."
 
 msgid ""
 "Once you receive bookings, your appointments will be displayed here. You can "
@@ -6614,10 +6881,10 @@ msgstr ""
 
 msgid ""
 "Once you start receiving bookings, your customers will be displayed here. "
-"You can also get started by clicking the Add button below."
+"You can also get started by clicking the Add or Import button below."
 msgstr ""
-"Når du begynder at modtage bookinger, vil dine kunder blive vist her. Du kan "
-"også komme i gang ved at klikke på Tilføj-knappen nedenfor."
+"Når du begynder at modtage bookinger, vises dine kunder her. Du kan også "
+"komme i gang ved at klikke på knappen Tilføj eller Importer nedenfor."
 
 msgid "One booking can have multiple attendees/spots in it."
 msgstr "En booking kan have flere deltagere/pladser."
@@ -6676,9 +6943,6 @@ msgstr "Muligheder:"
 msgid "Or"
 msgstr "Eller"
 
-msgid "Or Enter details below"
-msgstr "Indtast venligst e-mail"
-
 msgid "Or enter details below"
 msgstr "Event detaljer"
 
@@ -6707,7 +6971,7 @@ msgid "Other"
 msgstr "Andet"
 
 msgid "Outline"
-msgstr ""
+msgstr "Oversigt"
 
 msgid "Outlook Calendar"
 msgstr "Outlook Kalender"
@@ -6716,10 +6980,10 @@ msgid "Outlook Calendar & Microsoft Teams"
 msgstr "Outlook Kalender & Microsoft Teams"
 
 msgid "Outlook Calendar WP hooks"
-msgstr ""
+msgstr "Outlook-kalender WP-hooks"
 
 msgid "Outlook Calendar setup"
-msgstr ""
+msgstr "Opsætning af Outlook-kalender"
 
 msgid "Outlook Mailer"
 msgstr ""
@@ -6777,13 +7041,13 @@ msgid "Package appointment has been updated."
 msgstr "Pakkeaftale er blevet opdateret."
 
 msgid "Package appointments"
-msgstr ""
+msgstr "Pakkeaftaler"
 
 msgid "Package appointments details"
 msgstr "Detaljer om pakkeaftaler"
 
 msgid "Package badge"
-msgstr ""
+msgstr "Pakke-badge"
 
 msgid "Package booking details"
 msgstr "Detaljer om pakkebooking"
@@ -6804,13 +7068,13 @@ msgid "Package canceled"
 msgstr "Pakke annulleret"
 
 msgid "Package capacity"
-msgstr ""
+msgstr "Pakke kapacitet"
 
 msgid "Package category"
-msgstr ""
+msgstr "Pakke kategori"
 
 msgid "Package count"
-msgstr ""
+msgstr "Antal pakker"
 
 msgid "Package deal"
 msgstr "Pakkeløsning"
@@ -6828,7 +7092,7 @@ msgid "Package duration"
 msgstr "Varighed"
 
 msgid "Package filter"
-msgstr ""
+msgstr "Pakkefilter"
 
 msgid "Package has been created."
 msgstr "Pakke er blevet oprettet."
@@ -6846,28 +7110,28 @@ msgid "Package includes"
 msgstr "Pakken inkluderer"
 
 msgid "Package info"
-msgstr ""
+msgstr "Pakkeinfo"
 
 msgid "Package is now visible."
 msgstr "Pakken er nu synlig."
 
 msgid "Package location"
-msgstr ""
+msgstr "Pakkeplacering"
 
 msgid "Package management"
-msgstr ""
+msgstr "Pakkehåndtering"
 
 msgid "Package name"
 msgstr "Pakkenavn"
 
 msgid "Package overview"
-msgstr ""
+msgstr "Pakkeoversigt"
 
 msgid "Package price"
 msgstr "Pakkepris"
 
 msgid "Package price:"
-msgstr ""
+msgstr "Pakkepris:"
 
 msgid "Package purchased"
 msgstr "Pakke købt"
@@ -6876,28 +7140,28 @@ msgid "Package rules and description"
 msgstr "Pakkeregler og beskrivelse"
 
 msgid "Package selection"
-msgstr ""
+msgstr "Valg af pakke"
 
 msgid "Package services list"
-msgstr ""
+msgstr "Liste over pakketjenester"
 
 msgid "Packages"
 msgstr "Vis alle tags"
 
 msgid "Packages appointments"
-msgstr ""
+msgstr "Pakker aftaler"
 
 msgid "Packages block"
-msgstr ""
+msgstr "Pakker blokerer"
 
 msgid "Packages have been reordered."
 msgstr "Pakkerne er blevet omarrangeret."
 
 msgid "Packages overview"
-msgstr ""
+msgstr "Pakkeoversigt"
 
 msgid "Packages popup"
-msgstr ""
+msgstr "Pop op-vindue med pakker"
 
 msgid "Paddle"
 msgstr ""
@@ -6906,19 +7170,19 @@ msgid "Page"
 msgstr "Side"
 
 msgid "Page card"
-msgstr ""
+msgstr "Sidekort"
 
 msgid "Page content"
-msgstr ""
+msgstr "Sideindhold"
 
 msgid "Page header"
-msgstr ""
+msgstr "Sidehoved"
 
 msgid "Page messages"
-msgstr ""
+msgstr "Sidemeddelelser"
 
 msgid "Page scroll"
-msgstr ""
+msgstr "Sidegulning"
 
 msgid "Paid"
 msgstr "Betalt"
@@ -6936,10 +7200,10 @@ msgid "Panel Button Type"
 msgstr "Panelknaptype"
 
 msgid "Panel access"
-msgstr ""
+msgstr "Adgang til panelet"
 
 msgid "Panel recovery"
-msgstr ""
+msgstr "Panelgendannelse"
 
 msgid "Panel subtab name"
 msgstr "Panel underfanenavn"
@@ -6990,11 +7254,15 @@ msgid ""
 "Paste the secret key you received after creating your API key pair in Google "
 "reCAPTCHA."
 msgstr ""
+"Indsæt den hemmelige nøgle, du modtog efter oprettelsen af dit API-nøglepar "
+"i Google reCAPTCHA."
 
 msgid ""
 "Paste the site key you received after generating your API key pair in Google "
 "reCAPTCHA."
 msgstr ""
+"Indsæt den webstedsnøgle, du modtog efter at have genereret dit API-nøglepar "
+"i Google reCAPTCHA."
 
 msgid "Pay"
 msgstr "Dag"
@@ -7003,7 +7271,7 @@ msgid "PayPal"
 msgstr ""
 
 msgid "PayPal payment link"
-msgstr ""
+msgstr "PayPal-betalingslink"
 
 msgid "Pay for all appointments at once"
 msgstr "Betal for alle aftaler på én gang"
@@ -7034,9 +7302,6 @@ msgstr "Betalingshistorik"
 
 msgid "Payment ID"
 msgstr "Betalings-ID"
-
-msgid "Payment ID:"
-msgstr "Betalings ID:"
 
 msgid "Payment Method"
 msgstr "Betalingsmetode"
@@ -7072,7 +7337,7 @@ msgid "Payment error"
 msgstr "Betalingsfejl"
 
 msgid "Payment history"
-msgstr ""
+msgstr "Betalingshistorik"
 
 msgid "Payment link for Barion"
 msgstr "Betalingshistorik"
@@ -7090,19 +7355,22 @@ msgid "Payment protected by policy and powered by"
 msgstr "Betaling beskyttet af politik og drevet af"
 
 msgid "Payment segment"
-msgstr ""
+msgstr "Betalingssegment"
 
 msgid "Payment status"
 msgstr "Betalingsstatus"
 
 msgid "Payment summary"
-msgstr ""
+msgstr "Betalingsoversigt"
 
 msgid "Payment type"
 msgstr "Betalingstype"
 
 msgid "Payment type, deposit payment..."
 msgstr "Betalingstype, depositumbetaling..."
+
+msgid "Payment was canceled."
+msgstr "Betalingen blev annulleret."
 
 msgid "Payments"
 msgstr "Betalinger"
@@ -7120,7 +7388,7 @@ msgid "People"
 msgstr "Prisen ganges med antallet af mennesker"
 
 msgid "People counting logic"
-msgstr ""
+msgstr "Logik til tælling af personer"
 
 msgid "Per Location"
 msgstr "Per lokation"
@@ -7168,7 +7436,7 @@ msgid "Personal Information"
 msgstr "Besked fra køber"
 
 msgid "Personal information"
-msgstr ""
+msgstr "Personlige oplysninger"
 
 msgid "Phone"
 msgstr "Telefon"
@@ -7222,10 +7490,17 @@ msgid "Placeholder copied to clipboard."
 msgstr "Pladsholder kopieret til udklipsholder."
 
 msgid "Placeholder text"
-msgstr ""
+msgstr "Placeringsholdertekst"
 
 msgid "Placeholders"
 msgstr "</> Vis e-mail-pladsholdere"
+
+msgid ""
+"Places API (New) is required but not enabled. Please enable it in Google "
+"Cloud Console."
+msgstr ""
+"Places API (nyt) er påkrævet, men ikke aktiveret. Aktiver det i Google Cloud "
+"Console."
 
 msgid "Plain"
 msgstr "Almindelig"
@@ -7286,7 +7561,7 @@ msgid "Please enter a first name."
 msgstr "Indtast venligst et fornavn."
 
 msgid "Please enter a last name"
-msgstr ""
+msgstr "Indtast venligst et efternavn"
 
 msgid "Please enter a live publishable key."
 msgstr "Indtast venligst en live offentlig nøgle."
@@ -7334,7 +7609,7 @@ msgid "Please enter a test secret key."
 msgstr "Indtast venligst en test-hemmelig nøgle."
 
 msgid "Please enter a ticket code."
-msgstr ""
+msgstr "Indtast en billetkode."
 
 msgid "Please enter a ticket name."
 msgstr "Indtast venligst et billetnavn."
@@ -7390,20 +7665,20 @@ msgstr "Indtast efternavn"
 msgid "Please enter live API Key"
 msgstr "Indtast venligst live API-nøgle"
 
-msgid "Please enter live ClientId"
-msgstr "Indtast venligst Live klient-Id"
-
 msgid "Please enter live POSKey"
 msgstr "Angiv Live Secret"
 
-msgid "Please enter live Secret"
-msgstr "Angiv Live Secret"
+msgid "Please enter live client ID"
+msgstr "Indtast live klient-ID"
 
-msgid "Please enter live key id"
-msgstr "Indtast venligst live nøgle-id"
+msgid "Please enter live key ID"
+msgstr "Indtast live-nøgle-ID"
 
 msgid "Please enter live key secret"
 msgstr "Indtast venligst live nøglehemmelighed"
+
+msgid "Please enter live secret"
+msgstr "Indtast live-hemmelighed"
 
 msgid "Please enter name"
 msgstr "Indtast venligst navnet"
@@ -7438,17 +7713,17 @@ msgstr "Indtast venligst navn på skattesats"
 msgid "Please enter test API Key"
 msgstr "Indtast venligst test-API-nøgle"
 
-msgid "Please enter test ClientId"
-msgstr "Angiv test-ClientId"
+msgid "Please enter test client ID"
+msgstr "Indtast testklient-ID"
 
-msgid "Please enter test Secret"
-msgstr "Angiv test-Secret"
-
-msgid "Please enter test key id"
-msgstr "Indtast venligst testnøgle-id"
+msgid "Please enter test key ID"
+msgstr "Indtast testnøgle-ID"
 
 msgid "Please enter test key secret"
 msgstr "Indtast venligst testnøgle-hemmelighed"
+
+msgid "Please enter test secret"
+msgstr "Indtast testhemmelighed"
 
 msgid "Please enter waiting list capacity"
 msgstr "Indtast venligst ventelistekapaciteten"
@@ -7503,7 +7778,7 @@ msgid "Please select a duration."
 msgstr "Vælg venligst en varighed."
 
 msgid "Please select a location"
-msgstr ""
+msgstr "Vælg en placering"
 
 msgid "Please select a location."
 msgstr "Vælg venligst en placering."
@@ -7551,7 +7826,7 @@ msgid "Please select an opening time."
 msgstr "Vælg venligst et åbningstidspunkt."
 
 msgid "Please select an option."
-msgstr ""
+msgstr "Vælg en mulighed."
 
 msgid "Please select at least one customer"
 msgstr "Vælg mindst én kunde"
@@ -7622,10 +7897,10 @@ msgid "Popup Heading"
 msgstr "Afventer"
 
 msgid "Popup buttons"
-msgstr ""
+msgstr "Popup-knapper"
 
 msgid "Popup title"
-msgstr ""
+msgstr "Popup-titel"
 
 msgid "Preload entities when page loads"
 msgstr "Forudindlæs enheder, når siden indlæses"
@@ -7656,6 +7931,8 @@ msgid ""
 "Prevent scheduling conflicts with real-time calendar syncing for every "
 "employee."
 msgstr ""
+"Undgå planlægningskonflikter med realtids-kalendersynkronisering for alle "
+"medarbejdere."
 
 msgid "Preview"
 msgstr "Forhåndsvisning"
@@ -7664,10 +7941,10 @@ msgid "Preview Invoice"
 msgstr "Forhåndsvis faktura"
 
 msgid "Preview invoice"
-msgstr ""
+msgstr "Forhåndsvisning af faktura"
 
 msgid "Previous range"
-msgstr ""
+msgstr "Forrige interval"
 
 msgid "Price"
 msgstr "Pris"
@@ -7688,7 +7965,7 @@ msgid "Price Descending"
 msgstr "Pris Faldende"
 
 msgid "Price indicators"
-msgstr ""
+msgstr "Prisindikatorer"
 
 msgid "Price number of decimals"
 msgstr "Antal decimaler i pris"
@@ -7742,13 +8019,13 @@ msgid "Primary and state colors"
 msgstr "Primære og tilstandsfarver"
 
 msgid "Primary button style"
-msgstr ""
+msgstr "Primær knapstil"
 
 msgid "Primary color"
-msgstr ""
+msgstr "Primær farve"
 
 msgid "Primary text"
-msgstr ""
+msgstr "Primær tekst"
 
 msgid "Process payments easily with Square."
 msgstr "Behandl betalinger nemt med Square."
@@ -7787,7 +8064,7 @@ msgstr ""
 "til dine forretningsbehov."
 
 msgid "Publish"
-msgstr ""
+msgstr "Udgiv"
 
 msgid "Publish Form"
 msgstr "Udgiv formular"
@@ -7835,6 +8112,8 @@ msgid ""
 "Quickly download all appointment details from the Bookings page, making "
 "reporting, analysis, and record-keeping simple and efficient."
 msgstr ""
+"Download hurtigt alle aftaledetaljer fra siden Bookinger, så rapportering, "
+"analyse og registrering bliver enkel og effektiv."
 
 msgid "Radio button"
 msgstr "Radioknap"
@@ -7849,13 +8128,13 @@ msgid "Razorpay"
 msgstr ""
 
 msgid "Razorpay payment link"
-msgstr ""
+msgstr "Razorpay-betalingslink"
 
 msgid "Re-type New Password"
 msgstr "Indtast nyt kodeord igen"
 
 msgid "Re-type new password"
-msgstr ""
+msgstr "Indtast det nye kodeord igen"
 
 msgid "Read more"
 msgstr "Se mere"
@@ -7864,13 +8143,13 @@ msgid "Recharge"
 msgstr "Genopfyld"
 
 msgid "Recharge balance"
-msgstr ""
+msgstr "Genopfyld saldo"
 
 msgid "Recipient email"
-msgstr ""
+msgstr "Modtagerens e-mailadresse"
 
 msgid "Recipient phone"
-msgstr ""
+msgstr "Modtagerens telefonnummer"
 
 msgid "Recurrence"
 msgstr "Gentagelse"
@@ -7894,7 +8173,7 @@ msgid "Recurring Summary"
 msgstr "Tilbagevendende oversigt"
 
 msgid "Recurring appointment"
-msgstr ""
+msgstr "Tilbagevendende aftale"
 
 msgid "Recurring appointment payment"
 msgstr "Betaling for tilbagevendende aftale"
@@ -7903,13 +8182,13 @@ msgid "Recurring appointments"
 msgstr "Tilbagevendende aftaler"
 
 msgid "Recurring appointments:"
-msgstr ""
+msgstr "Tilbagevendende aftaler:"
 
 msgid "Recurring appointments details"
 msgstr "Kommende aftaler"
 
 msgid "Recurring appointments setup"
-msgstr ""
+msgstr "Opsætning af tilbagevendende aftaler"
 
 msgid "Recurring events"
 msgstr "Tilbagevendende begivenheder"
@@ -7921,13 +8200,13 @@ msgid "Recurring popup"
 msgstr "Tilbagevendende popup"
 
 msgid "Recurring summary"
-msgstr ""
+msgstr "Gentagende oversigt"
 
 msgid "Red"
 msgstr "Rød"
 
 msgid "Redirect"
-msgstr ""
+msgstr "Omdirigering"
 
 msgid "Redirect URI"
 msgstr "Omdirigerings-URI"
@@ -7966,7 +8245,7 @@ msgid "Redirect page"
 msgstr "Omdirigeringsside"
 
 msgid "Reduce no-shows with timely reminders sent automatically"
-msgstr ""
+msgstr "Reducer udeblivelser med rettidige påmindelser, der sendes automatisk"
 
 msgid "Reflect On"
 msgstr "Reflektere over"
@@ -7984,7 +8263,7 @@ msgid "Registration, Telephone Number, Email"
 msgstr "Registrering, telefonnummer, e-mail"
 
 msgid "Reject appointment link"
-msgstr ""
+msgstr "Afvis aftalelink"
 
 msgid "Rejected"
 msgstr "Afvist"
@@ -7999,7 +8278,7 @@ msgid "Remind me when my SMS balance is low"
 msgstr "Mind mig, når min SMS-saldo er lav"
 
 msgid "Remove Apple Calendar busy slots"
-msgstr ""
+msgstr "Fjern optagede tidsrum i Apple Kalender"
 
 msgid "Remove Attendee"
 msgstr "Fjern deltageren"
@@ -8008,7 +8287,7 @@ msgid "Remove Google Calendar busy slots"
 msgstr "Fjern optagede tider i Google Kalender"
 
 msgid "Remove Outlook Calendar busy slots"
-msgstr ""
+msgstr "Fjern optagede tidsrum i Outlook-kalenderen"
 
 msgid "Reorder Packages"
 msgstr "Omdisponér pakker"
@@ -8056,7 +8335,7 @@ msgid "Repeat every year"
 msgstr "Gentag hvert år"
 
 msgid "Repeat new password"
-msgstr ""
+msgstr "Gentag nyt kodeord"
 
 msgid "Repeat on"
 msgstr "Gentag Event"
@@ -8071,7 +8350,7 @@ msgid "Replace"
 msgstr "Erstat"
 
 msgid "Reply-to email"
-msgstr ""
+msgstr "Svar-til-e-mail"
 
 msgid "Require password for login"
 msgstr "Kræv adgangskode til login"
@@ -8086,7 +8365,7 @@ msgid "Reschedule"
 msgstr "Omlæg"
 
 msgid "Reschedule appointment"
-msgstr ""
+msgstr "Omplanlæg aftale"
 
 msgid "Rescheduled"
 msgstr "Aftalen kan ikke omplanlægges"
@@ -8100,8 +8379,11 @@ msgstr "Nulstil formular"
 msgid "Reset Password"
 msgstr "Nulstil Kodeord"
 
+msgid "Reset form settings"
+msgstr "Nulstil formularindstillinger"
+
 msgid "Reset password"
-msgstr ""
+msgstr "Nulstil adgangskode"
 
 msgid "Resource"
 msgstr "Servicen er blevet slettet"
@@ -8110,7 +8392,7 @@ msgid "Resource Details"
 msgstr "Ressourcedetaljer"
 
 msgid "Resource booking setup"
-msgstr ""
+msgstr "Opsætning af ressourcebooking"
 
 msgid "Resource has been added."
 msgstr "Ressourcen er blevet tilføjet."
@@ -8130,6 +8412,9 @@ msgstr "Ressourcen er nu synlig."
 msgid "Resources"
 msgstr "Kunder er blevet slettet"
 
+msgid "Return to Home"
+msgstr "Tilbage til startside"
+
 msgid "Returning"
 msgstr "Tilbagevendende"
 
@@ -8137,7 +8422,7 @@ msgid "Revenue"
 msgstr "Indtægter"
 
 msgid "Ribbon"
-msgstr ""
+msgstr "Bånd"
 
 msgid "Role"
 msgstr "Rolle"
@@ -8146,7 +8431,7 @@ msgid "Roles & permissions"
 msgstr "Roller og tilladelser"
 
 msgid "Roles settings"
-msgstr ""
+msgstr "Rolleindstillinger"
 
 msgid "Round-robin"
 msgstr ""
@@ -8164,10 +8449,10 @@ msgid "SMS Settings"
 msgstr "SMS-indstillinger"
 
 msgid "SMS balance"
-msgstr ""
+msgstr "SMS-saldo"
 
 msgid "SMS history"
-msgstr ""
+msgstr "SMS-historik"
 
 msgid "SMTP"
 msgstr ""
@@ -8187,6 +8472,11 @@ msgstr "SMTP-sikkerhed"
 msgid "SMTP Username"
 msgstr "SMTP Brugernavn"
 
+msgid "SMTP credentials validation failed. Please check your settings."
+msgstr ""
+"Validering af SMTP-legitimationsoplysninger mislykkedes. Kontroller dine "
+"indstillinger."
+
 msgid "SSL"
 msgstr ""
 
@@ -8197,7 +8487,7 @@ msgid "Sandbox mode"
 msgstr "Sandbox-tilstand"
 
 msgid "Sandbox secret key (POSKey)"
-msgstr ""
+msgstr "Sandkasse-hemmelig nøgle (POSKey)"
 
 msgid "Sat"
 msgstr "Lør"
@@ -8218,20 +8508,24 @@ msgid "Save Special Day"
 msgstr "Gem Speciel Dag"
 
 msgid "Save changes"
-msgstr ""
+msgstr "Gem ændringer"
 
 msgid "Save time and reduce manual work with instant, auto-generated invoices"
 msgstr ""
+"Spar tid og reducer manuelt arbejde med øjeblikkelige, automatisk genererede "
+"fakturaer"
 
 msgid ""
 "Save time by automating repeating events instead of creating them manually"
 msgstr ""
+"Spar tid ved at automatisere gentagne begivenheder i stedet for at oprette "
+"dem manuelt"
 
 msgid "Save time with fast, one-click appointment exports"
-msgstr ""
+msgstr "Spar tid med hurtig eksport af aftaler med et enkelt klik"
 
 msgid "Save time with quick, hassle-free customer data exports"
-msgstr ""
+msgstr "Spar tid med hurtig og problemfri eksport af kundedata"
 
 msgid "Scan"
 msgstr ""
@@ -8240,7 +8534,7 @@ msgid "Scan E-Ticket"
 msgstr "Vælg Tidspunkt"
 
 msgid "Scan e-ticket"
-msgstr ""
+msgstr "Scan e-billet"
 
 msgid "Schedule"
 msgstr "Tidsplan"
@@ -8249,7 +8543,7 @@ msgid "Schedule:"
 msgstr "Tidsplan"
 
 msgid "Schedule setup required"
-msgstr ""
+msgstr "Planlægning af opsætning påkrævet"
 
 msgid "Scheduled"
 msgstr "Planlagt"
@@ -8312,7 +8606,7 @@ msgid "Search events"
 msgstr "Søg efter begivenheder"
 
 msgid "Search extras"
-msgstr ""
+msgstr "Søg ekstra"
 
 msgid "Search features"
 msgstr "Søg efter funktioner"
@@ -8321,7 +8615,7 @@ msgid "Search for Events"
 msgstr "Søg i begivenheder ..."
 
 msgid "Search for events"
-msgstr ""
+msgstr "Søg efter begivenheder"
 
 msgid "Search integrations"
 msgstr "Søg efter integrationer"
@@ -8330,7 +8624,7 @@ msgid "Search invoices"
 msgstr "Søg efter fakturaer"
 
 msgid "Search locations"
-msgstr ""
+msgstr "Søg efter placeringer"
 
 msgid "Search notifications"
 msgstr "Søg efter meddelelser"
@@ -8348,19 +8642,19 @@ msgid "Second {day}"
 msgstr "Sekund {day}"
 
 msgid "Secondary"
-msgstr ""
+msgstr "Sekundær"
 
 msgid "Secondary Button Type"
 msgstr "Sekundær knaptype"
 
 msgid "Secondary button style"
-msgstr ""
+msgstr "Sekundær knapstil"
 
 msgid "Secondary color"
-msgstr ""
+msgstr "Sekundær farve"
 
 msgid "Secondary text"
-msgstr ""
+msgstr "Sekundær tekst"
 
 msgid "Secret key (POSKey)"
 msgstr "Hemmelig nøgle (POSKey)"
@@ -8371,7 +8665,7 @@ msgstr "Handling"
 msgid "Securely process payments using Stripe."
 msgstr "Behandl betalinger sikkert med Stripe."
 
-msgid "Segment:"
+msgid "Segment"
 msgstr ""
 
 msgid "Segments"
@@ -8460,6 +8754,9 @@ msgstr "Vælg Zoom bruger"
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr "Vælg en pladsholder for at indsætte den, hvor din markør er placeret."
 
+msgid "Select at least one option."
+msgstr "Vælg mindst én mulighed."
+
 msgid "Select box"
 msgstr "Vælg boks"
 
@@ -8470,7 +8767,7 @@ msgid "Select customer, employee and service"
 msgstr "Vælg kunde, medarbejder og service"
 
 msgid "Select date"
-msgstr ""
+msgstr "Vælg dato"
 
 msgid "Select date and time"
 msgstr "Vælg kunde og service"
@@ -8506,7 +8803,7 @@ msgid "Select package"
 msgstr "Vælg pakke"
 
 msgid "Select placeholder"
-msgstr ""
+msgstr "Vælg pladsholder"
 
 msgid "Select service"
 msgstr "Vælg tjeneste"
@@ -8536,6 +8833,9 @@ msgid ""
 "Select the employee who will be added as the organizer of the Google/Outlook/"
 "Apple Calendar event. Employees selected under Staff will be added as guests."
 msgstr ""
+"Vælg den medarbejder, der skal tilføjes som arrangør af begivenheden i "
+"Google/Outlook/Apple Kalender. Medarbejdere, der vælges under Medarbejdere, "
+"tilføjes som gæster."
 
 msgid "Select the events this coupon can be used for."
 msgstr "Vælg de begivenheder, som denne kupon kan bruges til."
@@ -8556,7 +8856,7 @@ msgid "Select this employee"
 msgstr "Vælg denne medarbejder"
 
 msgid "Select tickets"
-msgstr ""
+msgstr "Vælg billetter"
 
 msgid "Select your Square Location"
 msgstr "Vælg din Square-lokation"
@@ -8568,10 +8868,10 @@ msgid "Selected Customers"
 msgstr "Udvalgte Kunder"
 
 msgid "Selected date background"
-msgstr ""
+msgstr "Valgt dato baggrund"
 
 msgid "Selected date text"
-msgstr ""
+msgstr "Valgt dato-tekst"
 
 msgid "Selected extras"
 msgstr "Valgte ekstra"
@@ -8592,22 +8892,22 @@ msgid "Send Access Link"
 msgstr "Send adgangslink"
 
 msgid "Send ICS file for approved bookings"
-msgstr ""
+msgstr "Send ICS-fil for godkendte bookinger"
 
 msgid "Send ICS file for pending bookings"
-msgstr ""
+msgstr "Send ICS-fil for ventende bookinger"
 
 msgid "Send Reset Link"
 msgstr "Send nulstillingslink"
 
 msgid "Send access link"
-msgstr ""
+msgstr "Send adgangs-link"
 
 msgid "Send after appointment"
-msgstr ""
+msgstr "Send efter aftale"
 
 msgid "Send after event"
-msgstr ""
+msgstr "Send efter begivenhed"
 
 msgid "Send all SMS messages to additional numbers"
 msgstr "Send alle SMS-beskeder til yderligere numre"
@@ -8619,7 +8919,7 @@ msgid "Send appointment notifications directly via WhatsApp."
 msgstr "Send aftalebeskeder direkte via WhatsApp."
 
 msgid "Send at"
-msgstr ""
+msgstr "Send til"
 
 msgid "Send custom fields info for each customer separately"
 msgstr "Send brugerdefinerede feltoplysninger for hver kunde separat"
@@ -8642,7 +8942,7 @@ msgstr ""
 "Send personlige e-mail- og SMS-meddelelser skræddersyet til din virksomhed."
 
 msgid "Send smart, personalized notifications your way"
-msgstr ""
+msgstr "Send smarte, personaliserede meddelelser på din måde"
 
 msgid "Send test"
 msgstr ""
@@ -8653,14 +8953,14 @@ msgstr "Send test e-mail"
 msgid "Send your customer data to Mailchimp quickly and effortlessly."
 msgstr "Send dine kundedata til Mailchimp hurtigt og ubesværet."
 
-msgid "Sender ID supports up to 11 characters"
-msgstr "Afsender-id understøtter op til 11 tegn"
+msgid "Sender ID must be between 3 and 11 characters"
+msgstr "Afsender-ID skal bestå af mellem 3 og 11 tegn"
 
 msgid "Sender email"
-msgstr ""
+msgstr "Afsenderens e-mail"
 
 msgid "Sender name"
-msgstr ""
+msgstr "Afsenderens navn"
 
 msgid "Sent"
 msgstr "Sendt"
@@ -8705,16 +9005,16 @@ msgid "Service Subtotal"
 msgstr "Service subtotal"
 
 msgid "Service badge"
-msgstr ""
+msgstr "Service-badge"
 
 msgid "Service capacity"
-msgstr ""
+msgstr "Servicekapacitet"
 
 msgid "Service category"
-msgstr ""
+msgstr "Servicekategori"
 
 msgid "Service count"
-msgstr ""
+msgstr "Antal tjenester"
 
 msgid "Service description"
 msgstr "Behandlings beskrivelse"
@@ -8729,7 +9029,7 @@ msgid "Service employees list"
 msgstr "Liste over serviceansatte"
 
 msgid "Service filter"
-msgstr ""
+msgstr "Servicefilter"
 
 msgid "Service has been added."
 msgstr "Service er blevet tilføjet."
@@ -8753,34 +9053,34 @@ msgid "Service is now visible."
 msgstr "Service er nu synlig."
 
 msgid "Service location"
-msgstr ""
+msgstr "Servicelokation"
 
 msgid "Service name"
 msgstr "Servicenavn"
 
 msgid "Service or event description"
-msgstr ""
+msgstr "Beskrivelse af tjeneste eller begivenhed"
 
 msgid "Service or event name"
-msgstr ""
+msgstr "Service- eller begivenhedsnavn"
 
 msgid "Service packages overview"
-msgstr ""
+msgstr "Oversigt over servicepakker"
 
 msgid "Service price"
 msgstr "Servicepris"
 
 msgid "Service selection"
-msgstr ""
+msgstr "Valg af tjeneste"
 
 msgid "Service subtotal"
-msgstr ""
+msgstr "Servicetotal"
 
 msgid "Services"
 msgstr "Tjenester"
 
 msgid "Services & categories setup"
-msgstr ""
+msgstr "Opsætning af tjenester og kategorier"
 
 msgid "Services Asc"
 msgstr "Tjenester stigende"
@@ -8789,7 +9089,7 @@ msgid "Services Desc"
 msgstr "Tjenester faldende"
 
 msgid "Services and packages overview"
-msgstr ""
+msgstr "Oversigt over tjenester og pakker"
 
 msgid "Services have been reordered."
 msgstr "Tjenester er blevet omarrangeret."
@@ -8798,13 +9098,13 @@ msgid "Services list, Appointments"
 msgstr "Tjenesteliste, Aftaler"
 
 msgid "Services overview"
-msgstr ""
+msgstr "Oversigt over tjenester"
 
 msgid "Services setup"
-msgstr ""
+msgstr "Opsætning af tjenester"
 
 msgid "Set ICS file description"
-msgstr ""
+msgstr "Indstil ICS-filbeskrivelse"
 
 msgid "Set Limit"
 msgstr "Indstil grænse"
@@ -8843,10 +9143,15 @@ msgstr ""
 "Indstil fleksibel billetprisfastsættelse med kategorier og datobaserede "
 "intervaller for at maksimere tilgængelighed og indtægter."
 
+msgid "Set general settings"
+msgstr "Indstil generelle indstillinger"
+
 msgid ""
 "Set individual time zones for employees so availability and bookings are "
 "shown correctly for clients worldwide."
 msgstr ""
+"Indstil individuelle tidszoner for medarbejdere, så tilgængelighed og "
+"bookinger vises korrekt for kunder over hele verden."
 
 msgid "Set metadata and description"
 msgstr "Indstil metadata og beskrivelse"
@@ -8855,13 +9160,13 @@ msgid "Set minimum"
 msgstr "Indstil minimum"
 
 msgid "Set new password"
-msgstr ""
+msgstr "Indstil nyt kodeord"
 
 msgid "Set options, colors and labels for booking form"
 msgstr "Indstil muligheder, farver og etiketter for bookingformular"
 
 msgid "Set password"
-msgstr ""
+msgstr "Indstil adgangskode"
 
 msgid "Set pricing based on the number of people in the booking."
 msgstr "Indstil pris baseret på antallet af personer i bookingen."
@@ -8894,6 +9199,7 @@ msgstr ""
 msgid ""
 "Set the minimum number of people required per appointment for this service."
 msgstr ""
+"Angiv det mindste antal personer, der kræves pr. aftale for denne service."
 
 msgid ""
 "Set the number of approved bookings after which the customer will "
@@ -8992,6 +9298,8 @@ msgstr "Opsæt etiketter og knapper"
 
 msgid "Set up staff, location, gallery and other event information visibility"
 msgstr ""
+"Indstil synlighed for personale, placering, galleri og andre "
+"begivenhedsoplysninger"
 
 msgid "Set up visibility, button type and labels"
 msgstr "Opsæt synlighed, knaptype og etiketter"
@@ -9004,6 +9312,14 @@ msgstr "Opsæt synlighed og etiketter for billetvalg"
 
 msgid "Set your Google Map API Key in General Settings"
 msgstr "Indstil din Google Map API-nøgle i Generelle Indstillinger"
+
+msgid ""
+"Set your company working hours. This schedule will be used for all new "
+"employees, however you can customize schedule for each employee later."
+msgstr ""
+"Indstil din virksomheds arbejdstid. Denne tidsplan vil blive brugt for alle "
+"nye medarbejdere, men du kan senere tilpasse tidsplanen for hver enkelt "
+"medarbejder."
 
 msgid "Setting up days off"
 msgstr "Opsætning af fridage"
@@ -9024,10 +9340,13 @@ msgid "Shared capacity across services"
 msgstr "Delt kapacitet på tværs af tjenester"
 
 msgid "Shared category capacity"
-msgstr ""
+msgstr "Delt kategorikapacitet"
 
 msgid "Show"
 msgstr "Vis"
+
+msgid "Show Add To Calendar option to customers"
+msgstr "Vis muligheden \"Tilføj til kalender\" for kunder"
 
 msgid "Show All"
 msgstr "Vis alle tags"
@@ -9105,7 +9424,7 @@ msgid "Show more"
 msgstr "Vis mere"
 
 msgid "Show more ({count})"
-msgstr ""
+msgstr "Vis mere ({count})"
 
 msgid "Show on website"
 msgstr "Vis på hjemmesiden"
@@ -9163,13 +9482,13 @@ msgid "Showing"
 msgstr "Viser"
 
 msgid "Sidebar"
-msgstr ""
+msgstr "Sidebjælke"
 
 msgid "Sidebar area"
-msgstr ""
+msgstr "Sidebjælkeområde"
 
 msgid "Sidebar visibility"
-msgstr ""
+msgstr "Sidebjælkens synlighed"
 
 msgid "Sign In"
 msgstr "Log ind"
@@ -9181,13 +9500,16 @@ msgid "Sign Out of Mailchimp"
 msgstr "Log ud af Mailchimp"
 
 msgid "Sign in"
-msgstr ""
+msgstr "Log ind"
 
 msgid "Sign in as "
 msgstr "Log ind som"
 
 msgid "Sign in with Google"
 msgstr "Log ind med Google"
+
+msgid "Sign in with Microsoft"
+msgstr "Log ind med Microsoft"
 
 msgid "Sign in with Outlook"
 msgstr "Log ind med Outlook"
@@ -9199,7 +9521,7 @@ msgid "Sign out from Outlook"
 msgstr "Log ud fra Outlook"
 
 msgid "Sign up"
-msgstr ""
+msgstr "Tilmeld dig"
 
 msgid "Simple, secure payments powered by Barion."
 msgstr "Enkle, sikre betalinger drevet af Barion."
@@ -9208,17 +9530,21 @@ msgid ""
 "Simplify communication with customizable messages for both customers and "
 "employees"
 msgstr ""
+"Forenkle kommunikationen med tilpassede beskeder til både kunder og "
+"medarbejdere"
 
 msgid "Simplify financial management with easy, one-click transaction exports"
 msgstr ""
+"Forenklet økonomistyring med nem eksport af transaktioner med et enkelt klik"
 
 msgid ""
 "Simplify scheduling with individual availability, working hours, and "
 "assignments"
 msgstr ""
+"Forenkle planlægningen med individuel tilgængelighed, arbejdstid og opgaver"
 
 msgid "Simplify scheduling with recurring events"
-msgstr ""
+msgstr "Forenkle planlægningen med tilbagevendende begivenheder"
 
 msgid "Single-row export"
 msgstr "Eksport af enkelt række"
@@ -9238,14 +9564,17 @@ msgstr "Spring import over"
 msgid "Skip packages and continue with the selected service"
 msgstr "Spring pakker over og fortsæt med den valgte service"
 
+msgid "Skip setup"
+msgstr "Spring opsætning over"
+
 msgid "Slot end time"
-msgstr ""
+msgstr "Slot-sluttidspunkt"
 
 msgid "Social login"
 msgstr ""
 
 msgid "Social login setup"
-msgstr ""
+msgstr "Opsætning af social login"
 
 msgid ""
 "Some employees assigned to this event are not connected to Zoom. Please go "
@@ -9301,7 +9630,7 @@ msgid "Space-comma"
 msgstr "Mellemrum-komma"
 
 msgid "Space-dot"
-msgstr ""
+msgstr "Mellemrum-punktum"
 
 msgid "Special Days"
 msgstr "Specielle Dage"
@@ -9313,7 +9642,7 @@ msgid "Special days"
 msgstr "Særlige dage"
 
 msgid "Special days setup"
-msgstr ""
+msgstr "Opsætning af særlige dage"
 
 msgid "Specific Date"
 msgstr "Vis specifik kategori"
@@ -9337,13 +9666,13 @@ msgid "Spots capacity"
 msgstr "Kapacitet"
 
 msgid "Square"
-msgstr ""
+msgstr "Firkant"
 
 msgid "Square account successfully disconnected"
 msgstr "Square-kontoen blev afbrudt med succes"
 
 msgid "Square payment link"
-msgstr ""
+msgstr "Square-betalingslink"
 
 msgid "Staff"
 msgstr "Medarbejdere"
@@ -9370,7 +9699,7 @@ msgid "Start Zoom Meeting"
 msgstr "Start Zoommøde"
 
 msgid "Start by clicking the add custom field button"
-msgstr ""
+msgstr "Start med at klikke på knappen Tilføj brugerdefineret felt."
 
 msgid "Start date"
 msgstr "Startdato"
@@ -9384,9 +9713,6 @@ msgstr "Starttidspunkt"
 msgid "Status"
 msgstr ""
 
-msgid "Status:"
-msgstr ""
-
 msgid "Status Asc"
 msgstr "Status stigende"
 
@@ -9397,12 +9723,16 @@ msgid ""
 "Stay compliant with ease through consistent, reliable tax handling across "
 "your business"
 msgstr ""
+"Overhold reglerne med lethed gennem konsekvent og pålidelig skattehåndtering "
+"i hele din virksomhed"
 
 msgid "Stay connected with WhatsApp notifications"
-msgstr ""
+msgstr "Hold kontakten med WhatsApp-notifikationer"
 
 msgid "Stay organized with export files ready for analysis or external tools"
 msgstr ""
+"Hold styr på tingene med eksportfiler, der er klar til analyse eller "
+"eksterne værktøjer"
 
 msgid ""
 "Step-By-Step Booking Wizard gives your customers the option to choose "
@@ -9419,10 +9749,22 @@ msgstr ""
 "foretage deres bookinger."
 
 msgid "Step-by-step"
-msgstr ""
+msgstr "Trin for trin"
 
 msgid "Step-by-step booking form guide"
-msgstr ""
+msgstr "Trinvis vejledning til reservationsformularen"
+
+msgid "Step 1"
+msgstr "Trin 1"
+
+msgid "Step 2"
+msgstr "Trin 2"
+
+msgid "Step 3"
+msgstr "Trin 3"
+
+msgid "Step 4"
+msgstr "Trin 4"
 
 msgid "Step Booking"
 msgstr "Trinbooking"
@@ -9434,34 +9776,34 @@ msgid "Step Popups"
 msgstr "Trinpopups"
 
 msgid "Step content"
-msgstr ""
+msgstr "Trinindhold"
 
 msgid "Step header"
-msgstr ""
+msgstr "Trinoverskrift"
 
 msgid "Step heading"
-msgstr ""
+msgstr "Trinoverskrift"
 
 msgid "Step info tab"
-msgstr ""
+msgstr "Fanen Trinoplysninger"
 
 msgid "Step message"
-msgstr ""
+msgstr "Trinmeddelelse"
 
 msgid "Step pagination"
-msgstr ""
+msgstr "Trinvis paginering"
 
 msgid "Step tickets tab"
-msgstr ""
+msgstr "Fanen Trinbilletter"
 
 msgid "Steps"
 msgstr "Trin"
 
 msgid "Steps order"
-msgstr ""
+msgstr "Trin rækkefølge"
 
 msgid "Stop Scanner"
-msgstr ""
+msgstr "Stop scanner"
 
 msgid "Stop scanner"
 msgstr ""
@@ -9470,11 +9812,15 @@ msgid ""
 "Streamline operations with one central place to manage all resources across "
 "your business"
 msgstr ""
+"Strømlin dine operationer med ét centralt sted til at administrere alle "
+"ressourcer på tværs af din virksomhed"
 
 msgid ""
 "Streamline virtual meetings by integrating popular meeting platforms "
 "directly into bookings."
 msgstr ""
+"Strømlinjefør virtuelle møder ved at integrere populære mødeplatforme "
+"direkte i bookinger."
 
 msgid "Stripe"
 msgstr ""
@@ -9486,7 +9832,7 @@ msgid "Stripe Connect"
 msgstr "Tilslut"
 
 msgid "Stripe payment link"
-msgstr ""
+msgstr "Stripe-betalingslink"
 
 msgid "Studios"
 msgstr "Studier"
@@ -9495,7 +9841,7 @@ msgid "Sub Steps"
 msgstr "Undertrin"
 
 msgid "Sub step title"
-msgstr ""
+msgstr "Undertrinstitel"
 
 msgid "Subject"
 msgstr "Emne"
@@ -9524,6 +9870,13 @@ msgstr "Omdiriger URL efter reservation"
 msgid "Suggest closest available date"
 msgstr "Foreslå nærmeste ledige dato"
 
+msgid ""
+"Suggest customers to add an appointment to their calendar when booking is "
+"finalized."
+msgstr ""
+"Foreslå kunderne at tilføje en aftale til deres kalender, når bookingen er "
+"afsluttet."
+
 msgid "Suggest next available date"
 msgstr "Foreslå næste ledige dato"
 
@@ -9537,7 +9890,7 @@ msgid "Summary"
 msgstr "Oversigt"
 
 msgid "Summary segment"
-msgstr ""
+msgstr "Resumé-segment"
 
 msgid "Sun"
 msgstr "Søn"
@@ -9554,11 +9907,14 @@ msgstr "Støt Amelia ved at vise et backlink"
 msgid ""
 "Support deeper insights by using exported data for analysis and reporting"
 msgstr ""
+"Få dybere indsigt ved at bruge eksporterede data til analyse og rapportering"
 
 msgid ""
 "Support external workflows by seamlessly moving financial records into other "
 "systems"
 msgstr ""
+"Understøt eksterne arbejdsgange ved problemfrit at flytte finansielle poster "
+"til andre systemer"
 
 msgid "Switch Camera"
 msgstr "Skift kamera"
@@ -9572,6 +9928,13 @@ msgid ""
 msgstr ""
 "Synkroniser din Stripe Connect-konto for ubesværede betalinger og problemfri "
 "udbetalinger."
+
+msgid ""
+"Sync your and your employee's personal and professional events by connection "
+"Outlook calendars."
+msgstr ""
+"Synkroniser dine og dine medarbejderes personlige og professionelle "
+"begivenheder ved at forbinde Outlook-kalendere."
 
 msgid ""
 "Sync your and your employees' personal and professional events by connecting "
@@ -9605,13 +9968,13 @@ msgid "TLS"
 msgstr ""
 
 msgid "Tab title"
-msgstr ""
+msgstr "Faneoverskrift"
 
 msgid "Table settings have been updated."
 msgstr "Tabelindstillingerne er blevet opdateret."
 
 msgid "Tabs (All / Packages / Services)"
-msgstr ""
+msgstr "Faner (Alle / Pakker / Tjenester)"
 
 msgid "Tag"
 msgstr "Tags"
@@ -9626,7 +9989,7 @@ msgid "Tax amount"
 msgstr "Skattebeløb"
 
 msgid "Tax details"
-msgstr ""
+msgstr "Skatteoplysninger"
 
 msgid "Tax has been added."
 msgstr "Skat er blevet tilføjet."
@@ -9650,7 +10013,7 @@ msgid "Tax rate name"
 msgstr "Navn på skattesats"
 
 msgid "Tax setup"
-msgstr ""
+msgstr "Skatteopsætning"
 
 msgid "Tax will be excluded from price calculation and showed separately."
 msgstr "Skat vil blive udelukket fra prisberegningen og vist separat."
@@ -9662,7 +10025,7 @@ msgid "Taxes"
 msgstr "Skatter"
 
 msgid "Taxes overview"
-msgstr ""
+msgstr "Oversigt over skatter"
 
 msgid "Template name"
 msgstr "Skabelonnavn"
@@ -9674,13 +10037,13 @@ msgid "Test SMS"
 msgstr ""
 
 msgid "Test SMS sent successfully."
-msgstr ""
+msgstr "Test-SMS sendt med succes."
 
 msgid "Test WhatsApp"
 msgstr ""
 
 msgid "Test WhatsApp message sent successfully"
-msgstr ""
+msgstr "Test WhatsApp-besked sendt med succes"
 
 msgid "Test client ID"
 msgstr "Testklient-id"
@@ -9706,9 +10069,6 @@ msgstr "Testhemmelig nøgle"
 msgid "Text"
 msgstr "Tekst"
 
-msgid "Text:"
-msgstr "Tekst:"
-
 msgid "Text Mode"
 msgstr "Teksttilstand"
 
@@ -9716,10 +10076,10 @@ msgid "Text area"
 msgstr "Tekstområde"
 
 msgid "Text color"
-msgstr ""
+msgstr "Tekstfarve"
 
 msgid "Text color on background"
-msgstr ""
+msgstr "Tekstfarve på baggrund"
 
 msgid "Text content"
 msgstr "Tekstindhold"
@@ -9867,6 +10227,8 @@ msgid ""
 "The total number of persons ({waitingPersonsCount}) exceeds the maximum "
 "waiting list capacity of {waitingListMaxCapacity}."
 msgstr ""
+"Det samlede antal personer ({waitingPersonsCount}) overstiger den maksimale "
+"ventelistekapacitet på {waitingListMaxCapacity}."
 
 msgid "There are no attendees yet..."
 msgstr "Der er endnu ingen deltagere ..."
@@ -9923,8 +10285,14 @@ msgstr "Denne & fremtidige"
 msgid "This Only"
 msgstr "Kun denne"
 
+msgid "This appointment is a part of a package."
+msgstr "Denne aftale er en del af en pakke."
+
 msgid "This booking is part of a package deal"
 msgstr "Denne booking er en del af en pakkeløsning"
+
+msgid "This category cannot be deleted because it is included in a package."
+msgstr "Denne kategori kan ikke slettes, da den er inkluderet i en pakke."
 
 msgid ""
 "This category has services with {count} past appointment. | This category "
@@ -9970,6 +10338,13 @@ msgstr "Dette felt er påkrævet."
 
 msgid "This file is forbidden for upload"
 msgstr "Denne fil er forbudt at uploade"
+
+msgid ""
+"This is a temporary WhatsApp token and will automatically expire after 24 "
+"hours. Make sure to complete the setup before it expires."
+msgstr ""
+"Dette er en midlertidig WhatsApp-token, som automatisk udløber efter 24 "
+"timer. Sørg for at afslutte opsætningen, inden den udløber."
 
 msgid ""
 "This is a unique security token. Copy it into the 'Verify token' field in "
@@ -10063,7 +10438,10 @@ msgid "This placeholder's content will be applied wherever it is used."
 msgstr "Indholdet af denne pladsholder vil blive anvendt, hvor end det bruges."
 
 msgid "This range"
-msgstr ""
+msgstr "Dette interval"
+
+msgid "This service cannot be deleted because it is included in a package."
+msgstr "Denne tjeneste kan ikke slettes, da den er inkluderet i en pakke."
 
 msgid "This service does not have any extras"
 msgstr "Denne service har ingen ekstramateriale"
@@ -10086,7 +10464,7 @@ msgid "This service is available in a Package"
 msgstr "Denne service er tilgængelig i en pakke."
 
 msgid "This service is available in a package"
-msgstr ""
+msgstr "Denne tjeneste er tilgængelig i en pakke"
 
 msgid "This time slot is no longer available. Please select a different time."
 msgstr ""
@@ -10163,7 +10541,7 @@ msgid "Ticket not valid"
 msgstr "Billetten er ikke gyldig"
 
 msgid "Ticket types"
-msgstr ""
+msgstr "Billetter"
 
 msgid "Tickets"
 msgstr "Billetter"
@@ -10210,7 +10588,7 @@ msgid "Time slot is unavailable"
 msgstr "Tidsinterval er ikke tilgængeligt"
 
 msgid "Time slot price"
-msgstr ""
+msgstr "Pris pr. tidsinterval"
 
 msgid "Time slots are unavailable"
 msgstr "Tidsrum er ikke tilgængelige"
@@ -10219,7 +10597,7 @@ msgid "Time zone"
 msgstr "Tidszone"
 
 msgid "Time zones"
-msgstr ""
+msgstr "Tidszoner"
 
 msgid "Times"
 msgstr "Tidspunkter"
@@ -10240,10 +10618,10 @@ msgid "Tips & suggestions"
 msgstr "Tips og forslag"
 
 msgid "Title section"
-msgstr ""
+msgstr "Titelafsnit"
 
 msgid "Title text"
-msgstr ""
+msgstr "Titeltekst"
 
 msgid "To"
 msgstr "Til"
@@ -10311,7 +10689,7 @@ msgid "Torch on"
 msgstr "Lommelygte tændt"
 
 msgid "Total"
-msgstr ""
+msgstr "I alt"
 
 msgid "Total Amount"
 msgstr "Samlet beløb"
@@ -10332,7 +10710,7 @@ msgid "Total Services Booked"
 msgstr "Sorter Services:"
 
 msgid "Total amount"
-msgstr ""
+msgstr "Samlet beløb"
 
 msgid "Total appointments"
 msgstr "Samlet antal aftaler"
@@ -10356,7 +10734,7 @@ msgid "Total number of appointments"
 msgstr "Samlet antal aftaler"
 
 msgid "Total number of people:"
-msgstr ""
+msgstr "Samlet antal personer:"
 
 msgid "Total payments"
 msgstr "Samlede betalinger"
@@ -10368,7 +10746,7 @@ msgid "Total price"
 msgstr "Samlet pris"
 
 msgid "Total services booked"
-msgstr ""
+msgstr "Samlet antal bookede tjenester"
 
 msgid "Total tickets"
 msgstr "Samlet antal billetter"
@@ -10390,7 +10768,7 @@ msgid "Transaction #{count}"
 msgstr "Transaktion #{count}"
 
 msgid "Transaction details"
-msgstr ""
+msgstr "Transaktionsoplysninger"
 
 msgid "Transactions"
 msgstr "Transaktioner"
@@ -10418,7 +10796,7 @@ msgstr ""
 "du leder efter."
 
 msgid "Try adjusting your search or filters."
-msgstr ""
+msgstr "Prøv at justere din søgning eller dine filtre."
 
 msgid "Try adjusting your search to find what you are looking for."
 msgstr "Prøv at justere din søgning for at finde det, du leder efter."
@@ -10434,11 +10812,11 @@ msgid ""
 "multiple appointments into a single, discounted offer that drives bigger, "
 "more confident purchases."
 msgstr ""
+"Gør dine tjenester til værdifulde pakker, som kunderne elsker. Kombiner "
+"flere aftaler til et enkelt tilbud med rabat, der skaber større og mere "
+"sikre køb."
 
 msgid "Type"
-msgstr ""
-
-msgid "Type:"
 msgstr ""
 
 msgid "Type Asc"
@@ -10454,6 +10832,8 @@ msgid ""
 "URL on which will user be redirected if appointment can't be canceled "
 "because of 'Minimum time required before canceling' value"
 msgstr ""
+"URL, som brugeren omdirigeres til, hvis aftalen ikke kan annulleres på grund "
+"af værdien for 'Minimumstid før annullering'"
 
 msgid "Unable to deactivate plugin. Please try again later."
 msgstr "Kan ikke deaktivere plugin. Prøv igen senere."
@@ -10468,13 +10848,13 @@ msgid "Unavailable Time Slots"
 msgstr "Utilgængelige tidsrum"
 
 msgid "Unavailable date background"
-msgstr ""
+msgstr "Ikke tilgængelig dato baggrund"
 
 msgid "Unavailable date text"
-msgstr ""
+msgstr "Tekst om utilgængelig dato"
 
 msgid "Unavailable time slots"
-msgstr ""
+msgstr "Utilgængelige tidsintervaller"
 
 msgid "Unblock"
 msgstr "Fjern blokering"
@@ -10522,7 +10902,7 @@ msgid "Upcoming events"
 msgstr "Kommende begivenheder"
 
 msgid "Upcoming events section"
-msgstr ""
+msgstr "Afsnit om kommende begivenheder"
 
 msgid "Update"
 msgstr "Opdater"
@@ -10595,13 +10975,13 @@ msgid "User Profile"
 msgstr "Brugerprofil"
 
 msgid "User profile"
-msgstr ""
+msgstr "Brugerprofil"
 
 msgid "VAT"
 msgstr "Moms"
 
 msgid "VAT info"
-msgstr ""
+msgstr "Momsoplysninger"
 
 msgid "VAT number"
 msgstr "Momsnummer"
@@ -10631,7 +11011,7 @@ msgid "Version "
 msgstr ""
 
 msgid "Video tutorials"
-msgstr ""
+msgstr "Video-vejledninger"
 
 msgid "Videos"
 msgstr "Videoer"
@@ -10658,7 +11038,7 @@ msgid "View More Packages"
 msgstr "Se mere"
 
 msgid "View all"
-msgstr ""
+msgstr "Vis alle"
 
 msgid "View all photos"
 msgstr "Vis alle butikker"
@@ -10670,13 +11050,13 @@ msgid "View booking"
 msgstr "Se booking"
 
 msgid "View employees"
-msgstr ""
+msgstr "Vis medarbejdere"
 
 msgid "View events"
 msgstr "Se begivenheder"
 
 msgid "View in Calendar"
-msgstr ""
+msgstr "Vis i kalender"
 
 msgid "View in Package"
 msgstr "Se mere"
@@ -10685,16 +11065,16 @@ msgid "View invoice"
 msgstr "Se faktura"
 
 msgid "View less packages"
-msgstr ""
+msgstr "Vis færre pakker"
 
 msgid "View message"
-msgstr ""
+msgstr "Vis besked"
 
 msgid "View more"
 msgstr "Se mere"
 
 msgid "View more packages"
-msgstr ""
+msgstr "Se flere pakker"
 
 msgid "View packages"
 msgstr "Se pakker"
@@ -10718,10 +11098,10 @@ msgid "Waiting"
 msgstr "Venter"
 
 msgid "Waiting button background color"
-msgstr ""
+msgstr "Baggrundsfarve for venteknappen"
 
 msgid "Waiting button text color"
-msgstr ""
+msgstr "Farve på tekst på venteknap"
 
 msgid "Waiting for payment"
 msgstr "Venter på betaling"
@@ -10730,10 +11110,10 @@ msgid "Waiting list"
 msgstr "Venteliste"
 
 msgid "Waiting list availability"
-msgstr ""
+msgstr "Venteliste tilgængelighed"
 
 msgid "Waiting list background"
-msgstr ""
+msgstr "Ventelistebaggrund"
 
 msgid "Waiting list capacity"
 msgstr "Ventelistekapacitet"
@@ -10742,13 +11122,13 @@ msgid "Waiting list capacity must be at least 1"
 msgstr "Ventelistekapacitet skal være mindst 1"
 
 msgid "Waiting list confirmation"
-msgstr ""
+msgstr "Bekræftelse af venteliste"
 
 msgid "Waiting list is empty"
 msgstr "Ventelisten er tom"
 
 msgid "Waiting list text"
-msgstr ""
+msgstr "Tekst til venteliste"
 
 msgid "Warning"
 msgstr "Advarsel"
@@ -10771,6 +11151,21 @@ msgstr ""
 "Vi har forberedt en .csv-fil med de kunder, der ikke blev importeret. Efter "
 "at have rettet problemerne, kan du prøve igen."
 
+msgid ""
+"We were unable to cancel your booking. Please contact admin for assistance "
+"with canceling this booking."
+msgstr ""
+"Vi kunne ikke annullere din reservation. Kontakt venligst administratoren "
+"for at få hjælp til at annullere denne reservation."
+
+msgid ""
+"We were unable to process your booking, and it was rejected. Please contact "
+"admin if you need help or want to try booking again."
+msgstr ""
+"Vi kunne ikke behandle din reservation, og den blev afvist. Kontakt "
+"administratoren, hvis du har brug for hjælp eller ønsker at prøve at "
+"reservere igen."
+
 msgid "Web"
 msgstr ""
 
@@ -10781,7 +11176,7 @@ msgid "Webhooks"
 msgstr ""
 
 msgid "Webhooks setup"
-msgstr ""
+msgstr "Opsætning af webhooks"
 
 msgid "Website"
 msgstr "Hjemmeside"
@@ -10805,7 +11200,10 @@ msgid "Welcome Back"
 msgstr "Velkommen tilbage"
 
 msgid "Welcome back"
-msgstr ""
+msgstr "Velkommen tilbage"
+
+msgid "Welcome to Amelia!"
+msgstr "Velkommen til Amelia!"
 
 msgid "Wellness"
 msgstr "Velvære"
@@ -10832,7 +11230,7 @@ msgid "WhatsApp settings"
 msgstr "WhatsApp-indstillinger"
 
 msgid "WhatsApp setup"
-msgstr ""
+msgstr "WhatsApp-opsætning"
 
 msgid "WhatsApp webhook callback URL"
 msgstr "WhatsApp webhook callback-URL"
@@ -10852,6 +11250,9 @@ msgid ""
 "tags) load as soon as the page opens, instead of being loaded dynamically "
 "via AJAX."
 msgstr ""
+"Når denne funktion er aktiveret, indlæses alle enheder (tjenester, "
+"medarbejdere, lokationer, pakker og tags) så snart siden åbnes, i stedet for "
+"at blive indlæst dynamisk via AJAX."
 
 msgid ""
 "When enabled, customers will receive a Google Calendar invitation for the "
@@ -10923,7 +11324,7 @@ msgid "WooCommerce Thank you page"
 msgstr "WooCommerce takkeside"
 
 msgid "WooCommerce payment link"
-msgstr ""
+msgstr "WooCommerce-betalingslink"
 
 msgid "Woo Order Id"
 msgstr "Woo Ordre-id"
@@ -10941,7 +11342,7 @@ msgid "Work hours"
 msgstr "Arbejdstimer"
 
 msgid "Work hours setup"
-msgstr ""
+msgstr "Opsætning af arbejdstid"
 
 msgid "Working Hours"
 msgstr "Indstillinger for arbejdstid og fridage"
@@ -10966,9 +11367,6 @@ msgstr "År"
 
 msgid "Yes"
 msgstr "Ja"
-
-msgid "Yes, Reset"
-msgstr "Nulstil"
 
 msgid "Yoga"
 msgstr ""
@@ -10998,6 +11396,13 @@ msgid ""
 msgstr ""
 "Du er i øjeblikket forbundet til Google Kalender af Admin. Overstyring af "
 "Google Kalender-forbindelsen er ikke tilgængelig."
+
+msgid ""
+"You are currently connected to Outlook Calendar by Admin. Overriding Outlook "
+"Calendar connection is not available."
+msgstr ""
+"Du er i øjeblikket forbundet til Outlook-kalenderen af administratoren. Det "
+"er ikke muligt at tilsidesætte forbindelsen til Outlook-kalenderen."
 
 msgid "You are on the waiting list with position"
 msgstr "Du er på ventelisten med position"
@@ -11094,6 +11499,13 @@ msgstr "Du har indtastet en forkert adgangskode."
 msgid "You have reached maximum number of registered domains"
 msgstr "Du har nået det maksimale antal registrerede domæner"
 
+msgid ""
+"You have successfully declined this booking request. The status has been "
+"updated in the system."
+msgstr ""
+"Du har afvist denne reservationsanmodning. Status er blevet opdateret i "
+"systemet."
+
 msgid "You will be redirected to the payment checkout."
 msgstr "Du vil blive omdirigeret til betalingskassen."
 
@@ -11111,6 +11523,35 @@ msgstr "Dit navn"
 
 msgid "Your balance has been recharged."
 msgstr "Din saldo er blevet genopfyldt."
+
+msgid ""
+"Your booking has been successfully canceled. If you have any questions or "
+"wish to reschedule, please contact admin."
+msgstr ""
+"Din reservation er blevet annulleret. Hvis du har spørgsmål eller ønsker at "
+"ændre din reservation, bedes du kontakte admin."
+
+msgid ""
+"Your booking has been successfully completed and approved. You're all set "
+"and can expect everything to proceed smoothly."
+msgstr ""
+"Din reservation er blevet gennemført og godkendt. Alt er klar, og du kan "
+"forvente, at alt forløber problemfrit."
+
+msgid ""
+"Your booking was approved, but there was an issue completing the process. "
+"Please reach out to admin to ensure everything is properly recorded."
+msgstr ""
+"Din reservation blev godkendt, men der opstod et problem undervejs i "
+"processen. Kontakt venligst administratoren for at sikre, at alt er "
+"registreret korrekt."
+
+msgid ""
+"Your booking was successfully processed, but it could not be approved. "
+"Please contact admin if you need assistance."
+msgstr ""
+"Din reservation blev behandlet, men kunne ikke godkendes. Kontakt "
+"administratoren, hvis du har brug for hjælp."
 
 msgid "Your card's expiration date is incomplete"
 msgstr "Dit korts udløbsdato er ufuldstændig"
@@ -11131,13 +11572,13 @@ msgid "Your current changes will be lost."
 msgstr "Dine nuværende ændringer vil gå tabt."
 
 msgid "Your data will be saved before redirecting to another form."
-msgstr ""
+msgstr "Dine data gemmes, før du omdirigeres til en anden formular."
 
 msgid "Your information"
-msgstr ""
+msgstr "Dine oplysninger"
 
 msgid "Your name"
-msgstr ""
+msgstr "Dit navn"
 
 msgid ""
 "Your password has been changed successfully. Use your new password to log in."
@@ -11168,22 +11609,22 @@ msgid "Zoom User"
 msgstr "Zoom bruger"
 
 msgid "Zoom WP hooks"
-msgstr ""
+msgstr "Zoom WP-hooks"
 
 msgid "Zoom join meeting (participants) link"
-msgstr ""
+msgstr "Zoom-link til møde (deltagere)"
 
 msgid "Zoom link"
-msgstr ""
+msgstr "Zoom-link"
 
 msgid "Zoom setup"
-msgstr ""
+msgstr "Zoom-opsætning"
 
 msgid "Zoom start meeting (hosts) link"
-msgstr ""
+msgstr "Zoom start møde (værter) link"
 
 msgid "Zoom user"
-msgstr ""
+msgstr "Zoom-bruger"
 
 msgid "(+ Woo Tax)"
 msgstr "(+ Woo Moms)"
@@ -11198,10 +11639,10 @@ msgid "and"
 msgstr "og"
 
 msgid "application ID, client ID and client secret"
-msgstr ""
+msgstr "applikations-ID, klient-ID og klienthemmelighed"
 
 msgid "application (client) ID and secret"
-msgstr ""
+msgstr "applikations-ID (klient) og hemmelighed"
 
 msgid "appointment is required to be booked now."
 msgstr "aftalen skal bookes nu."
@@ -11317,6 +11758,15 @@ msgstr ""
 msgid "reCAPTCHA Type"
 msgstr "reCAPTCHA-type"
 
+msgid "reCAPTCHA challenge expired. Please try again."
+msgstr "reCAPTCHA-udfordringen er udløbet. Prøv igen."
+
+msgid "reCAPTCHA configuration is invalid."
+msgstr "reCAPTCHA-konfigurationen er ugyldig."
+
+msgid "reCAPTCHA could not be loaded."
+msgstr "reCAPTCHA kunne ikke indlæses."
+
 msgid "reCAPTCHA on Customer Panel"
 msgstr "reCAPTCHA på kundepanelet"
 
@@ -11324,7 +11774,10 @@ msgid "reCAPTCHA on Employee Panel"
 msgstr "reCAPTCHA på medarbejderpanelet"
 
 msgid "reCAPTCHA setup"
-msgstr ""
+msgstr "reCAPTCHA-opsætning"
+
+msgid "reCAPTCHA validation failed."
+msgstr "reCAPTCHA-validering mislykkedes."
 
 msgid "results"
 msgstr "resultater"
@@ -11480,6 +11933,9 @@ msgid ""
 "{count} employee has not been deleted due to future bookings. | {count} "
 "employees have not been deleted due to future bookings."
 msgstr ""
+"{count} medarbejderen er ikke blevet slettet på grund af fremtidige "
+"bookinger. | {count} medarbejdere er ikke blevet slettet på grund af "
+"fremtidige bookinger."
 
 msgid ""
 "{count} event booking has been deleted. | {count} event bookings have been "
@@ -11518,6 +11974,9 @@ msgid ""
 "{count} location has not been deleted due to future bookings. | {count} "
 "locations have not been deleted due to future bookings."
 msgstr ""
+"{count} placeringen er ikke blevet slettet på grund af fremtidige bookinger. "
+"| {count} placeringerne er ikke blevet slettet på grund af fremtidige "
+"bookinger."
 
 msgid "{count} minute | {count} minutes"
 msgstr "{count} minut | {count} minutter"
@@ -11546,6 +12005,8 @@ msgid ""
 "{count} package has not been deleted due to future bookings. | {count} "
 "packages have not been deleted due to future bookings."
 msgstr ""
+"{count} Pakken er ikke blevet slettet på grund af fremtidige bookinger. | "
+"{count} Pakkerne er ikke blevet slettet på grund af fremtidige bookinger."
 
 msgid ""
 "{count} resource has been deleted. | {count} resources have been deleted."
@@ -11598,5 +12059,5 @@ msgid ""
 "start date and time’ will set it based on the event’s start date and time."
 msgstr ""
 "‘Bookingdato og -tid’ vil sætte grænsen baseret på datoen, hvor bookingen "
-"oprettes, uanset begivenhedens dato og tid.<br>‘Begivenhedens startdato og -"
-"tid’ vil sætte den baseret på begivenhedens startdato og -tid."
+"oprettes, uanset begivenhedens dato og tid.<br>‘Begivenhedens startdato og "
+"-tid’ vil sætte den baseret på begivenhedens startdato og -tid."

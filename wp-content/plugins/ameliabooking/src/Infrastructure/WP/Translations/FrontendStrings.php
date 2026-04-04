@@ -15,12 +15,9 @@ use AmeliaBooking\Infrastructure\Licence;
  */
 class FrontendStrings
 {
-    /** @var SettingsService */
-    private static $settings;
+    private static ?SettingsService $settings = null;
 
     /**
-     * Set Settings
-     *
      * @return array|mixed
      */
     public static function getLabelsFromSettings()
@@ -41,10 +38,8 @@ class FrontendStrings
 
     /**
      * Return all strings for frontend
-     *
-     * @return array
      */
-    public static function getAllStrings()
+    public static function getAllStrings(): array
     {
         return array_merge(
             self::getCommonStrings(),
@@ -61,10 +56,8 @@ class FrontendStrings
 
     /**
      * Returns the array for the bookable strings
-     *
-     * @return array
      */
-    public static function getBookableStrings()
+    private static function getBookableStrings(): array
     {
         $labels = Licence\Licence::isPremium() ? [
             'allow_customers_to_pay_total'       => __('Check this option if you want your<br> customers to have the option to choose<br> whether they will pay a full amount<br> or just a deposit. If unchecked,<br> customers will only have deposit<br> as a payment option.', 'wpamelia'),
@@ -91,10 +84,8 @@ class FrontendStrings
 
     /**
      * Returns the array of the common frontend strings
-     *
-     * @return array
      */
-    public static function getCommonStrings()
+    public static function getCommonStrings(): array
     {
         $labels = Licence\Licence::isPremium() ? [
             'no_results_found'             => __('No results found...', 'wpamelia'),
@@ -234,10 +225,8 @@ class FrontendStrings
 
     /**
      * Returns the array of the frontend strings for the search shortcode
-     *
-     * @return array
      */
-    public static function getSearchStrings()
+    public static function getSearchStrings(): array
     {
         $labels = Licence\Licence::isPremium() ? [
             'appointment_date_colon'  => __('Appointment Date:', 'wpamelia'),
@@ -271,10 +260,8 @@ class FrontendStrings
 
     /**
      * Returns the array of the frontend strings for the booking shortcode
-     *
-     * @return array
      */
-    public static function getBookingStrings()
+    public static function getBookingStrings(): array
     {
         $labels = Licence\Licence::isPremium() ? [
             'add_appointment'              => __('Add appointment', 'wpamelia'),
@@ -325,7 +312,6 @@ class FrontendStrings
             'package_min_book'             => __('appointment is required to be booked now.', 'wpamelia'),
             'package_min_book_plural'      => __('appointments are required to be booked now.', 'wpamelia'),
             'payment_protected_policy'     => __('Payment protected by policy and powered by', 'wpamelia'),
-            'payment_or_pay_with_card'     => __('Or pay with card', 'wpamelia'),
             'payment_type_deposit_only'    => __('Deposit only', 'wpamelia'),
             'payment_type_full_amount'     => __('Whole amount', 'wpamelia'),
             'payment_wc_mollie_sentence'   => __('You will be redirected to the payment checkout.', 'wpamelia'),
@@ -509,10 +495,8 @@ class FrontendStrings
 
     /**
      * Returns the array of the frontend strings for the event shortcode
-     *
-     * @return array
      */
-    public static function getEventStrings()
+    public static function getEventStrings(): array
     {
         $labels = Licence\Licence::isPremium() ? [
             'add_ticket_category'       => __('Add Pricing Category', 'wpamelia'),
@@ -575,10 +559,8 @@ class FrontendStrings
 
     /**
      * Returns the array of the frontend strings for the catalog shortcode
-     *
-     * @return array
      */
-    public static function getCatalogStrings()
+    public static function getCatalogStrings(): array
     {
         $labels = Licence\Licence::isPremium() ? [
             'booking_appointment'                => __('Booking Appointment', 'wpamelia'),
@@ -620,10 +602,8 @@ class FrontendStrings
 
     /**
      * Returns the array of the frontend strings for the cabinet shortcode
-     *
-     * @return array
      */
-    public static function getFrontendCabinetAuthStrings()
+    public static function getFrontendCabinetAuthStrings(): array
     {
         return [
             'access_link_send'                       => __('Send Access Link', 'wpamelia'),
@@ -667,10 +647,8 @@ class FrontendStrings
 
     /**
      * Returns the array of the frontend strings for the event shortcode
-     *
-     * @return array
      */
-    public static function getCabinetStrings()
+    public static function getCabinetStrings(): array
     {
         $labels = Licence\Licence::isPremium() ? [
             'add_customer'                           => __('Add Customer', 'wpamelia'),
@@ -1019,6 +997,7 @@ class FrontendStrings
             'settings'                               => __('Settings', 'wpamelia'),
             'special_day_date_warning'               => __('Please enter date', 'wpamelia'),
             'special_day_end_time_warning'           => __('Please enter end time', 'wpamelia'),
+            'select_day_period_warning'              => __('Please add period', 'wpamelia'),
             'special_day_start_time_warning'         => __('Please enter start time', 'wpamelia'),
             'special_days'                           => __('Special Days', 'wpamelia'),
             'special_days_reflect_services'          => __('Reflect On', 'wpamelia'),

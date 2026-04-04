@@ -231,8 +231,6 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
 
         $invoiceItem = [];
 
-        $price = $package['price'];
-
         /** @var PackageCustomerService $packageCustomerService */
         foreach ($packageCustomerServices->getItems() as $packageCustomerService) {
             /** @var PackageCustomerRepository $packageCustomerRepository */
@@ -293,7 +291,10 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
                         $paymentType .= ($index === array_keys($payments)[0] ? '' : ', ') . $method;
 
                         $invoiceItem['invoice_number'] = $payment->getInvoiceNumber() ? $payment->getInvoiceNumber()->getValue() : '';
-                        $invoiceItem['invoice_issued'] = !empty($payment->toArray()['created']) ? date_i18n($dateFormat, $payment->toArray()['created']) : '';
+                        $invoiceItem['invoice_issued'] =
+                            !empty($payment->toArray()['created']) ?
+                                date_i18n($dateFormat, strtotime($payment->toArray()['created'])) :
+                                '';
                         $invoiceItem['invoice_method'] = $payment->getGatewayTitle() ? $payment->getGatewayTitle()->getValue() : $method;
                     }
                 }
@@ -325,7 +326,9 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
         /** @var Package $bookable */
         $bookable = PackageFactory::create(
             [
-                'price'           => $price,
+                'price'           => ($packageCustomer && $packageCustomer->getPrice()) ?
+                    $packageCustomer->getPrice()->getValue() :
+                    $package['price'],
                 'calculatedPrice' => $package['calculatedPrice'],
                 'discount'        => $package['discount'],
             ]

@@ -22,12 +22,14 @@ class CustomerBookingsToEventsPeriodsTable extends AbstractDatabaseTable
     {
         $table = self::getTableName();
 
+        $charsetCollate = self::getCharsetCollate();
+
         return "CREATE TABLE {$table} (
                     `id` INT(11) NOT NULL AUTO_INCREMENT,
                     `customerBookingId` bigint(20) NOT NULL,
                     `eventPeriodId` bigint(20) NOT NULL,
                     PRIMARY KEY (`id`),
                     UNIQUE KEY `bookingEventPeriod` (`customerBookingId` ,`eventPeriodId`)
-                ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
+                ) {$charsetCollate};";
     }
 }

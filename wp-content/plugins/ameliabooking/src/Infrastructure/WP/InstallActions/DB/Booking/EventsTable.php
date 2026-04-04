@@ -26,6 +26,8 @@ class EventsTable extends AbstractDatabaseTable
     {
         $table = self::getTableName();
 
+        $charsetCollate = self::getCharsetCollate();
+
         $name        = Name::MAX_LENGTH;
         $description = Description::MAX_LENGTH;
         $color       = Color::MAX_LENGTH;
@@ -78,7 +80,7 @@ class EventsTable extends AbstractDatabaseTable
                    `pictureFullPath` varchar ({$picture}) NULL,
                    `pictureThumbPath` varchar ({$picture}) NULL,
                    PRIMARY KEY (`id`)
-                ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
+                ) {$charsetCollate};";
     }
 
     /**

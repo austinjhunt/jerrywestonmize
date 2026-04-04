@@ -125,13 +125,9 @@ class CustomFieldRepository extends AbstractRepository implements CustomFieldRep
             );
 
 
-            $response = $statement->execute($params);
+            $statement->execute($params);
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to add data in ' . __CLASS__, $e->getCode(), $e);
-        }
-
-        if (!$response) {
-            throw new QueryExecutionException('Unable to add data in ' . __CLASS__);
+            throw new QueryExecutionException('Unable to add data in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return $this->connection->lastInsertId();
@@ -180,16 +176,12 @@ class CustomFieldRepository extends AbstractRepository implements CustomFieldRep
                 id = :id"
             );
 
-            $response = $statement->execute($params);
+            $statement->execute($params);
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to save data in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to save data in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
-        if (!$response) {
-            throw new QueryExecutionException('Unable to save data in ' . __CLASS__);
-        }
-
-        return $response;
+        return true;
     }
 
     /**
@@ -276,7 +268,7 @@ class CustomFieldRepository extends AbstractRepository implements CustomFieldRep
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return call_user_func([static::FACTORY, 'createCollection'], $rows);

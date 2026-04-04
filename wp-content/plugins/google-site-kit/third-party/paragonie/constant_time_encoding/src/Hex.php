@@ -4,7 +4,14 @@ declare (strict_types=1);
 namespace Google\Site_Kit_Dependencies\ParagonIE\ConstantTime;
 
 use RangeException;
+use SensitiveParameter;
+use SodiumException;
 use TypeError;
+use function extension_loaded;
+use function pack;
+use function sodium_bin2hex;
+use function sodium_hex2bin;
+use function unpack;
 /**
  *  Copyright (c) 2016 - 2022 Paragon Initiative Enterprises.
  *  Copyright (c) 2014 Steve "Sc00bz" Thomas (steve at tobtu dot com)
@@ -42,10 +49,17 @@ abstract class Hex implements \Google\Site_Kit_Dependencies\ParagonIE\ConstantTi
      * @throws TypeError
      */
     public static function encode(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $binString
     ) : string
     {
+        if (\extension_loaded('sodium')) {
+            try {
+                return \sodium_bin2hex($binString);
+            } catch (\SodiumException $ex) {
+                throw new \RangeException($ex->getMessage(), $ex->getCode(), $ex);
+            }
+        }
         $hex = '';
         $len = \Google\Site_Kit_Dependencies\ParagonIE\ConstantTime\Binary::safeStrlen($binString);
         for ($i = 0; $i < $len; ++$i) {
@@ -66,7 +80,7 @@ abstract class Hex implements \Google\Site_Kit_Dependencies\ParagonIE\ConstantTi
      * @throws TypeError
      */
     public static function encodeUpper(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $binString
     ) : string
     {
@@ -91,11 +105,18 @@ abstract class Hex implements \Google\Site_Kit_Dependencies\ParagonIE\ConstantTi
      * @throws RangeException
      */
     public static function decode(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $encodedString,
         bool $strictPadding = \false
     ) : string
     {
+        if (\extension_loaded('sodium') && $strictPadding) {
+            try {
+                return \sodium_hex2bin($encodedString);
+            } catch (\SodiumException $ex) {
+                throw new \RangeException($ex->getMessage(), $ex->getCode(), $ex);
+            }
+        }
         $hex_pos = 0;
         $bin = '';
         $c_acc = 0;

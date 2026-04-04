@@ -59,6 +59,10 @@ class Initializer {
  public function initialize(): void {
  add_filter( 'woocommerce_email_editor_theme_json', array( $this, 'adjust_theme_json' ), 10, 1 );
  add_filter( 'safe_style_css', array( $this, 'allow_styles' ) );
+ add_action( 'woocommerce_email_editor_render_start', array( $this, 'reset_renderers' ) );
+ }
+ public function reset_renderers(): void {
+ $this->renderers = array();
  }
  public function adjust_theme_json( \WP_Theme_JSON $editor_theme_json ): \WP_Theme_JSON {
  $theme_json = (string) file_get_contents( __DIR__ . '/theme.json' );

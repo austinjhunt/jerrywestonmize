@@ -5,7 +5,19 @@ namespace Google\Site_Kit_Dependencies\ParagonIE\ConstantTime;
 
 use InvalidArgumentException;
 use RangeException;
+use SensitiveParameter;
+use SodiumException;
 use TypeError;
+use function extension_loaded;
+use function pack;
+use function rtrim;
+use function sodium_base642bin;
+use function sodium_bin2base64;
+use function unpack;
+use const SODIUM_BASE64_VARIANT_ORIGINAL;
+use const SODIUM_BASE64_VARIANT_ORIGINAL_NO_PADDING;
+use const SODIUM_BASE64_VARIANT_URLSAFE;
+use const SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING;
 /**
  *  Copyright (c) 2016 - 2022 Paragon Initiative Enterprises.
  *  Copyright (c) 2014 Steve "Sc00bz" Thomas (steve at tobtu dot com)
@@ -47,10 +59,29 @@ abstract class Base64 implements \Google\Site_Kit_Dependencies\ParagonIE\Constan
      * @throws TypeError
      */
     public static function encode(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $binString
     ) : string
     {
+        if (\extension_loaded('sodium')) {
+            switch (static::class) {
+                case \Google\Site_Kit_Dependencies\ParagonIE\ConstantTime\Base64::class:
+                    $variant = \SODIUM_BASE64_VARIANT_ORIGINAL;
+                    break;
+                case \Google\Site_Kit_Dependencies\ParagonIE\ConstantTime\Base64UrlSafe::class:
+                    $variant = \SODIUM_BASE64_VARIANT_URLSAFE;
+                    break;
+                default:
+                    $variant = 0;
+            }
+            if ($variant > 0) {
+                try {
+                    return \sodium_bin2base64($binString, $variant);
+                } catch (\SodiumException $ex) {
+                    throw new \RangeException($ex->getMessage(), $ex->getCode(), $ex);
+                }
+            }
+        }
         return static::doEncode($binString, \true);
     }
     /**
@@ -64,10 +95,29 @@ abstract class Base64 implements \Google\Site_Kit_Dependencies\ParagonIE\Constan
      * @throws TypeError
      */
     public static function encodeUnpadded(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $src
     ) : string
     {
+        if (\extension_loaded('sodium')) {
+            switch (static::class) {
+                case \Google\Site_Kit_Dependencies\ParagonIE\ConstantTime\Base64::class:
+                    $variant = \SODIUM_BASE64_VARIANT_ORIGINAL_NO_PADDING;
+                    break;
+                case \Google\Site_Kit_Dependencies\ParagonIE\ConstantTime\Base64UrlSafe::class:
+                    $variant = \SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING;
+                    break;
+                default:
+                    $variant = 0;
+            }
+            if ($variant > 0) {
+                try {
+                    return \sodium_bin2base64($src, $variant);
+                } catch (\SodiumException $ex) {
+                    throw new \RangeException($ex->getMessage(), $ex->getCode(), $ex);
+                }
+            }
+        }
         return static::doEncode($src, \false);
     }
     /**
@@ -78,7 +128,7 @@ abstract class Base64 implements \Google\Site_Kit_Dependencies\ParagonIE\Constan
      * @throws TypeError
      */
     protected static function doEncode(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $src,
         bool $pad = \true
     ) : string
@@ -127,7 +177,7 @@ abstract class Base64 implements \Google\Site_Kit_Dependencies\ParagonIE\Constan
      * @throws TypeError
      */
     public static function decode(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $encodedString,
         bool $strictPadding = \false
     ) : string
@@ -151,6 +201,25 @@ abstract class Base64 implements \Google\Site_Kit_Dependencies\ParagonIE\Constan
             }
             if ($encodedString[$srcLen - 1] === '=') {
                 throw new \RangeException('Incorrect padding');
+            }
+            if (\extension_loaded('sodium')) {
+                switch (static::class) {
+                    case \Google\Site_Kit_Dependencies\ParagonIE\ConstantTime\Base64::class:
+                        $variant = \SODIUM_BASE64_VARIANT_ORIGINAL_NO_PADDING;
+                        break;
+                    case \Google\Site_Kit_Dependencies\ParagonIE\ConstantTime\Base64UrlSafe::class:
+                        $variant = \SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING;
+                        break;
+                    default:
+                        $variant = 0;
+                }
+                if ($variant > 0) {
+                    try {
+                        return \sodium_base642bin(\Google\Site_Kit_Dependencies\ParagonIE\ConstantTime\Binary::safeSubstr($encodedString, 0, $srcLen), $variant);
+                    } catch (\SodiumException $ex) {
+                        throw new \RangeException($ex->getMessage(), $ex->getCode(), $ex);
+                    }
+                }
             }
         } else {
             $encodedString = \rtrim($encodedString, '=');
@@ -204,7 +273,7 @@ abstract class Base64 implements \Google\Site_Kit_Dependencies\ParagonIE\Constan
      * @return string
      */
     public static function decodeNoPadding(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $encodedString
     ) : string
     {

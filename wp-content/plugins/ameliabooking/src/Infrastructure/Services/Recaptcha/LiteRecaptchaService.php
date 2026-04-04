@@ -23,6 +23,22 @@ class LiteRecaptchaService extends AbstractRecaptchaService
     }
 
     /**
+     * Verify recaptcha with provided secret and token
+     *
+     * @param string $secret
+     * @param string $token
+     *
+     * @return array Array with 'success' (bool) and 'message' (string)
+     */
+    public function verifyWithSecret($secret, $token)
+    {
+        return [
+            'success' => true,
+            'message' => 'Validation successful (Lite version)'
+        ];
+    }
+
+    /**
      * @param string $value
      * @param string $cabinetType
      *

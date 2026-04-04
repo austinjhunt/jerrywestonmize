@@ -486,7 +486,7 @@ class Forminator_Admin_L10n {
 				'install_dashboard' => esc_html__( 'You don\'t have the WPMU DEV Dashboard plugin, which you\'ll need to access Pro preset templates. Install and log in to the dashboard to unlock the complete list of preset templates.', 'forminator' ),
 				'install_button'    => esc_html__( 'Install Plugin', 'forminator' ),
 				'no_templates'      => esc_html__( 'No saved templates yet', 'forminator' ),
-				'no_templates_desc' => esc_html__( 'Save any of your forms as cloud templates to reuse them across your sites connected to the Hub – no need to start from scratch. Your saved templates will appear here. ', 'forminator' ),
+				'no_templates_desc' => esc_html__( 'Save any of your forms as cloud templates to reuse them across your sites connected to The Hub – no need to start from scratch. Your saved templates will appear here. ', 'forminator' ),
 				'no_templates_link' => sprintf(
 					/* translators: %1$s - opening anchor tag, %2$s - closing anchor tag */
 					esc_html__( '%1$sLearn how to save forms as cloud templates%2$s.', 'forminator' ),

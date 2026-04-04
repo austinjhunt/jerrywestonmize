@@ -732,6 +732,47 @@ class WhatsAppNotificationService extends AbstractWhatsAppNotificationService
     }
 
     /**
+     * @param string $token
+     * @param string $businessId
+     * @param string $phoneNumberId
+     * @return bool
+     * @throws ContainerValueNotFoundException
+     */
+    public function validateCredentials($token, $businessId, $phoneNumberId)
+    {
+        /** @var WhatsAppService $whatsAppService */
+        $whatsAppService = $this->container->get('application.whatsApp.service');
+
+        try {
+            $phoneNumbersResponse = $whatsAppService->getPhoneNumbers($token, $businessId);
+
+            if (!empty($phoneNumbersResponse['data'])) {
+                foreach ($phoneNumbersResponse['data'] as $phoneNumber) {
+                    if ($phoneNumber['id'] === $phoneNumberId) {
+                        return true;
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        return false;
+    }
+
+    public function getWhatsAppTokenInfo($token)
+    {
+        /** @var WhatsAppService $whatsAppService */
+        $whatsAppService = $this->container->get('application.whatsApp.service');
+
+        try {
+            return $whatsAppService->getTokenInfo($token);
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    /**
      * @return void
      */
     public function sendPreparedNotifications()

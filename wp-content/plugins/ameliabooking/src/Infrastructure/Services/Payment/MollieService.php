@@ -126,7 +126,6 @@ class MollieService extends AbstractPaymentService implements PaymentServiceInte
 
         $response = curl_exec($curl);
 
-        curl_close($curl);
         $response = json_decode($response, true);
         if (!empty($response) && !empty($response['_links']) && !empty($response['_links']['paymentLink'])) {
             return [
@@ -174,7 +173,6 @@ class MollieService extends AbstractPaymentService implements PaymentServiceInte
 
         $response = curl_exec($curl);
 
-        curl_close($curl);
         $response = json_decode($response, true);
         if (!empty($response)) {
             return $response;

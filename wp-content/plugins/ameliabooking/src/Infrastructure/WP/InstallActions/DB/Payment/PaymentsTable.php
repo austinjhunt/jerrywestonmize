@@ -27,6 +27,8 @@ class PaymentsTable extends AbstractDatabaseTable
     {
         $table = self::getTableName();
 
+        $charsetCollate = self::getCharsetCollate();
+
         return "CREATE TABLE {$table} (
                    `id` int(11) NOT NULL AUTO_INCREMENT,
                    `customerBookingId` int(11) NULL,
@@ -48,7 +50,7 @@ class PaymentsTable extends AbstractDatabaseTable
                    `transfers` text NULL,
                    `invoiceNumber` int(11) NULL,
                     PRIMARY KEY (`id`)
-                ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
+                ) {$charsetCollate};";
     }
 
     /**

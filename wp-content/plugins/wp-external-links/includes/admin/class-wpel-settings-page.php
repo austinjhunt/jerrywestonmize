@@ -96,7 +96,7 @@ final class WPEL_Settings_Page extends WPRun_Base_1x0x0
         }
 
         // set default tab
-        if (!key_exists($this->current_tab, $this->tabs)) {
+        if ( !isset($this->current_tab) || !key_exists($this->current_tab, $this->tabs)) {
             reset($this->tabs);
             $this->current_tab = key($this->tabs);
         }

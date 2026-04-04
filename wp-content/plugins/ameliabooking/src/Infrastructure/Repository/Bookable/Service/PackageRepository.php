@@ -129,15 +129,11 @@ class PackageRepository extends AbstractRepository
                 )"
             );
 
-            $result = $statement->execute($params);
-
-            if (!$result) {
-                throw new QueryExecutionException('Unable to add data in ' . __CLASS__);
-            }
+            $statement->execute($params);
 
             return $this->connection->lastInsertId();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to add data in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to add data in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
     }
 
@@ -206,13 +202,9 @@ class PackageRepository extends AbstractRepository
                 id = :id"
             );
 
-            $result = $statement->execute($params);
-
-            if (!$result) {
-                throw new QueryExecutionException('Unable to save data in ' . __CLASS__);
-            }
+            $statement->execute($params);
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to save data in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to save data in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
     }
 
@@ -435,7 +427,7 @@ class PackageRepository extends AbstractRepository
             $statement->execute($params);
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return call_user_func([static::FACTORY, 'createCollection'], $rows);
@@ -525,6 +517,8 @@ class PackageRepository extends AbstractRepository
                 pu.firstName AS provider_firstName,
                 pu.lastName AS provider_lastName,
                 pu.email AS provider_email,
+                pu.phone AS provider_phone,
+                pu.countryPhoneIso AS provider_countryPhoneIso,
                 pu.translations AS provider_translations,
                 pu.stripeConnect AS provider_stripeConnect,
                                 
@@ -548,7 +542,7 @@ class PackageRepository extends AbstractRepository
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return call_user_func([static::FACTORY, 'createCollection'], $rows)->getItem($id);
@@ -607,7 +601,7 @@ class PackageRepository extends AbstractRepository
 
             $row = $statement->fetch()['count'];
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to get data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return $row;

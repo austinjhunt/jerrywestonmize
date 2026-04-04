@@ -14,7 +14,6 @@ use AmeliaBooking\Application\Controller\Booking\Event\DeleteEventsController;
 use AmeliaBooking\Application\Controller\Booking\Event\GetEventBookingController;
 use AmeliaBooking\Application\Controller\Booking\Event\GetEventBookingsController;
 use AmeliaBooking\Application\Controller\Booking\Event\GetEventController;
-use AmeliaBooking\Application\Controller\Booking\Event\GetEventDeleteEffectController;
 use AmeliaBooking\Application\Controller\Booking\Event\GetEventsController;
 use AmeliaBooking\Application\Controller\Booking\Event\GetCalendarEventsController;
 use AmeliaBooking\Application\Controller\Booking\Event\UpdateEventBookingController;
@@ -48,8 +47,6 @@ class Event
         $app->post('/events/delete', DeleteEventsController::class);
 
         $app->post('/events/{id:[0-9]+}', UpdateEventController::class);
-
-        $app->get('/events/effect/{id:[0-9]+}', GetEventDeleteEffectController::class);
 
         $app->post('/events/bookings/delete/{id:[0-9]+}', DeleteEventBookingController::class);
 

@@ -31,7 +31,7 @@ abstract class BuiltIn extends \Google\Site_Kit_Dependencies\phpseclib3\Math\Big
     protected static function powModHelper(\Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger\Engines\BCMath $x, \Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger\Engines\BCMath $e, \Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger\Engines\BCMath $n)
     {
         $temp = new \Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger\Engines\BCMath();
-        $temp->value = \bcpowmod($x->value, $e->value, $n->value);
+        $temp->value = \bcpowmod($x->value, $e->value, $n->value, 0);
         return $x->normalize($temp);
     }
 }

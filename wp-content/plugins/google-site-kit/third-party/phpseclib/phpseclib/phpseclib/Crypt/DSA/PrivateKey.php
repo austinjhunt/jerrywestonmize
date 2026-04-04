@@ -75,7 +75,9 @@ final class PrivateKey extends \Google\Site_Kit_Dependencies\phpseclib3\Crypt\DS
                 if ($this->shortFormat == 'ASN1') {
                     return $signature;
                 }
-                \extract(\Google\Site_Kit_Dependencies\phpseclib3\Crypt\DSA\Formats\Signature\ASN1::load($signature));
+                $loaded = \Google\Site_Kit_Dependencies\phpseclib3\Crypt\DSA\Formats\Signature\ASN1::load($signature);
+                $r = $loaded['r'];
+                $s = $loaded['s'];
                 return $format::save($r, $s);
             }
         }

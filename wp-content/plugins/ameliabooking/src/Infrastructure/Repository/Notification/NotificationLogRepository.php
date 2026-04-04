@@ -104,15 +104,11 @@ class NotificationLogRepository extends AbstractRepository
                 VALUES (:notificationId, :userId, :appointmentId, :eventId, :packageCustomerId, :sentDateTime, 0, :data)"
             );
 
-            $res = $statement->execute($params);
-
-            if (!$res) {
-                throw new QueryExecutionException('Unable to add data in ' . __CLASS__);
-            }
+            $statement->execute($params);
 
             return $this->connection->lastInsertId();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to add data in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to add data in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
     }
 
@@ -163,13 +159,9 @@ class NotificationLogRepository extends AbstractRepository
                 . $userQuery
             );
 
-            $res = $statement->execute($params);
-
-            if (!$res) {
-                throw new QueryExecutionException('Unable to save data in ' . __CLASS__);
-            }
+            $statement->execute($params);
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to save data in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to save data in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
     }
 
@@ -289,7 +281,7 @@ class NotificationLogRepository extends AbstractRepository
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to find appointments in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to find appointments in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return AppointmentFactory::createCollection($rows);
@@ -427,7 +419,7 @@ class NotificationLogRepository extends AbstractRepository
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to find appointments in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to find appointments in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return EventFactory::createCollection($rows);
@@ -544,7 +536,7 @@ class NotificationLogRepository extends AbstractRepository
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to find appointments in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to find appointments in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return AppointmentFactory::createCollection($rows);
@@ -675,7 +667,7 @@ class NotificationLogRepository extends AbstractRepository
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to find events in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to find events in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return EventFactory::createCollection($rows);
@@ -803,7 +795,7 @@ class NotificationLogRepository extends AbstractRepository
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to find appointments in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to find appointments in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return AppointmentFactory::createCollection($rows);
@@ -914,7 +906,7 @@ class NotificationLogRepository extends AbstractRepository
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to find events in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to find events in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return EventFactory::createCollection($rows);
@@ -960,7 +952,7 @@ class NotificationLogRepository extends AbstractRepository
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to get data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         $items = [];
@@ -1009,7 +1001,7 @@ class NotificationLogRepository extends AbstractRepository
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to get data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         $items = [];
@@ -1069,7 +1061,7 @@ class NotificationLogRepository extends AbstractRepository
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to get data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         $items = [];

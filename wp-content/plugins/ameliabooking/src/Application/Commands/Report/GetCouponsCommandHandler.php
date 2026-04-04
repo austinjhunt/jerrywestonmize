@@ -13,7 +13,7 @@ use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Entity\Coupon\Coupon;
 use AmeliaBooking\Domain\Entity\Entities;
-use AmeliaBooking\Domain\Services\Report\AbstractReportService;
+use AmeliaBooking\Domain\Services\Report\ReportServiceInterface;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\WholeNumber;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageRepository;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ServiceRepository;
@@ -50,7 +50,7 @@ class GetCouponsCommandHandler extends CommandHandler
         /** @var CouponRepository $couponRepository */
         $couponRepository = $this->container->get('domain.coupon.repository');
 
-        /** @var AbstractReportService $reportService */
+        /** @var ReportServiceInterface $reportService */
         $reportService = $this->container->get('infrastructure.report.csv.service');
 
         /** @var ServiceRepository $serviceRepository */

@@ -2,9 +2,9 @@
 Contributors: WebFactory
 Tags: new window, new tab, external links, nofollow, noopener
 Requires at least: 4.2
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 7.2
-Stable tag: 2.63
+Stable tag: 2.64
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -243,6 +243,11 @@ When filter returns false the plugin settings will not be applied. Can be used w
 See [FAQ](https://wordpress.org/plugins/wp-external-links/faq/) for more info.
 
 == Changelog ==
+= 2.64 =
+ * 2026-03-21
+ * PHP 8.5 compatibility
+ * bug fixes
+
 = 2.63 =
  * 2025-07-12
  * _load_textdomain fix

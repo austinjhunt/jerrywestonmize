@@ -36,7 +36,6 @@ class CurrentLocation extends AbstractCurrentLocation
             curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($curlHandle, CURLOPT_USERAGENT, 'Amelia');
             $result = json_decode(curl_exec($curlHandle));
-            curl_close($curlHandle);
 
             return !isset($result->country_code) ? '' : strtolower($result->country_code);
         } catch (\Exception $e) {

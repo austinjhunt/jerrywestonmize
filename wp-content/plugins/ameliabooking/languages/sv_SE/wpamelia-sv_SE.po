@@ -9,10 +9,10 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n==1) ? 0 : 1;\n"
 
 msgid "\"Book now\" Button Type"
-msgstr ""
+msgstr "\"Boka nu\"-knapp"
 
 msgid "\"Go back\" Button Type"
-msgstr ""
+msgstr "\"Gå tillbaka\"-knappens typ"
 
 msgid "\"I'm not a robot\" checkbox"
 msgstr "\"Jag är inte en robot\" kryssruta"
@@ -33,16 +33,16 @@ msgid "# of bookings"
 msgstr "# bokningar"
 
 msgid "'Back' button style"
-msgstr ""
+msgstr "Stil för knappen \"Tillbaka\""
 
 msgid "'Book' button style"
-msgstr ""
+msgstr "Stil för knappen \"Bok\""
 
 msgid "'Book another' button style"
-msgstr ""
+msgstr "Knappstilen för \"Boka en till\""
 
 msgid "'Book now' button style"
-msgstr ""
+msgstr "Knappstilen för \"Boka nu\""
 
 msgid ""
 "'Booking Date and Time' sets the limit based on when the booking is made, "
@@ -54,79 +54,85 @@ msgstr ""
 "schemalagda mötet i sig."
 
 msgid "'Bringing anyone with you' popup"
-msgstr ""
+msgstr "Popup-fönster \"Ta med dig vem du vill\""
 
 msgid "'Cancel' button style"
-msgstr ""
+msgstr "Stil för knappen \"Avbryt\""
 
 msgid "'Change password' button style"
-msgstr ""
+msgstr "Stil för knappen \"Ändra lösenord\""
 
 msgid "'Close' button style"
-msgstr ""
+msgstr "Stil för knappen \"Stäng\""
 
 msgid "'Confirm' button style"
-msgstr ""
+msgstr "Stil för knappen \"Bekräfta\""
 
 msgid "'Continue' button style"
-msgstr ""
+msgstr "Stil för knappen \"Fortsätt\""
 
 msgid "'Customer panel' button style"
-msgstr ""
+msgstr "Knappens stil för \"Kundpanel\""
 
 msgid "'Delete' button style"
-msgstr ""
+msgstr "Stil för knappen \"Radera\""
 
 msgid "'Filter' button style"
-msgstr ""
+msgstr "Stil för knappen \"Filter\""
 
 msgid "'Finish' button style"
-msgstr ""
+msgstr "Stil för knappen \"Slutför\""
 
 msgid "'Join waiting list' button style"
-msgstr ""
+msgstr "Knappstilen för \"Gå med i väntelistan\""
 
 msgid "'Learn more' button"
-msgstr ""
+msgstr "Knappen \"Läs mer\""
 
 msgid "'Learn more' button style"
-msgstr ""
+msgstr "Knappen \"Läs mer\""
 
 msgid "'New Event' button style"
-msgstr ""
+msgstr "Knappstilen för \"Ny händelse\""
 
 msgid "'New appointment' button style"
-msgstr ""
+msgstr "Knappstilen för \"Ny tid\""
 
 msgid "'Read more' button style"
-msgstr ""
+msgstr "Stil för knappen \"Läs mer\""
 
 msgid "'Save changes' button style"
-msgstr ""
+msgstr "Knappen \"Spara ändringar\""
 
 msgid "'Scan e-ticket' button"
-msgstr ""
+msgstr "Knappen \"Skanna e-biljett\""
 
 msgid "'Send' button style"
-msgstr ""
+msgstr "Stil för knappen \"Skicka\""
 
 msgid "'Set password' button style"
-msgstr ""
+msgstr "Knappens stil för \"Ange lösenord\""
 
 msgid "'Sign in' button style"
-msgstr ""
+msgstr "Stil för knappen \"Logga in\""
 
 msgid "'View employee' button style"
-msgstr ""
+msgstr "Knappstilen för \"Visa anställd\""
 
 msgid "'View in package' button"
-msgstr ""
+msgstr "Knappen \"Visa i paket\""
 
 msgid "+more"
 msgstr "+mer"
 
 msgid "+{count} more"
 msgstr "+{count} fler"
+
+msgid "1/1 width"
+msgstr "1/1 bredd"
+
+msgid "1/2 width"
+msgstr "1/2 bredd"
 
 msgid "10h"
 msgstr "10 tim"
@@ -282,7 +288,7 @@ msgid "API base URL: "
 msgstr "URL för API-bas: "
 
 msgid "API setup"
-msgstr ""
+msgstr "API-inställningar"
 
 msgid ""
 "A percentage deposit is calculated based on the total booking price. A fixed "
@@ -312,25 +318,25 @@ msgid "About Service"
 msgstr "Lägg till tjänst"
 
 msgid "About event"
-msgstr ""
+msgstr "Om evenemanget"
 
 msgid "About package"
-msgstr ""
+msgstr "Om paketet"
 
 msgid "About service"
-msgstr ""
+msgstr "Om tjänsten"
 
 msgid "About this Event"
 msgstr "Beskrivning"
 
 msgid "About this event"
-msgstr ""
+msgstr "Om detta evenemang"
 
 msgid "Accent"
 msgstr ""
 
 msgid "Accent text"
-msgstr ""
+msgstr "Accenttext"
 
 msgid "Accept payments for bookings and services via PayPal."
 msgstr "Acceptera betalningar för bokningar och tjänster via PayPal."
@@ -342,13 +348,13 @@ msgid "Accept payments via Razorpay, ideal for Indian businesses."
 msgstr "Acceptera betalningar via Razorpay, perfekt för indiska företag."
 
 msgid "Access link"
-msgstr ""
+msgstr "Åtkomstlänk"
 
 msgid "Access link success"
-msgstr ""
+msgstr "Länkåtkomst lyckades"
 
 msgid "Access your financial data in seconds"
-msgstr ""
+msgstr "Få tillgång till dina finansiella data på några sekunder"
 
 msgid "Account ID"
 msgstr "Belopp"
@@ -378,7 +384,7 @@ msgid "Activation"
 msgstr "Aktivering"
 
 msgid "Activation settings"
-msgstr ""
+msgstr "Aktiveringsinställningar"
 
 msgid "Active"
 msgstr "Aktiv"
@@ -417,6 +423,8 @@ msgstr ""
 
 msgid "Add Meta Pixel to track ad conversions and optimize marketing."
 msgstr ""
+"Lägg till Meta Pixel för att spåra annonskonverteringar och optimera "
+"marknadsföringen."
 
 msgid "Add Period"
 msgstr "Lägg till period"
@@ -428,7 +436,7 @@ msgid "Add Special Day"
 msgstr "Lägg till special Day"
 
 msgid "Add Stripe address fields"
-msgstr ""
+msgstr "Lägg till Stripe-adressfält"
 
 msgid "Add Webhook"
 msgstr "Lägg till Webhook"
@@ -450,26 +458,32 @@ msgstr ""
 msgid "Add appointment"
 msgstr "Lägg till avtalad tid"
 
+msgid "Add booking"
+msgstr "Lägg till bokning"
+
 msgid "Add category"
 msgstr "Lägg till kategori"
 
 msgid "Add custom field"
-msgstr ""
+msgstr "Lägg till anpassat fält"
 
 msgid "Add custom notification"
-msgstr ""
+msgstr "Lägg till anpassad avisering"
+
+msgid "Add customer"
+msgstr "Lägg till kund"
 
 msgid "Add date range"
-msgstr ""
+msgstr "Lägg till datumintervall"
 
 msgid "Add day(s)"
-msgstr ""
+msgstr "Lägg till dag(ar)"
 
 msgid "Add day off"
 msgstr "Lägg till ledig dag"
 
 msgid "Add duration"
-msgstr ""
+msgstr "Lägg till varaktighet"
 
 msgid ""
 "Add element (button, link...) ID, that will manually load amelia shortcode "
@@ -477,6 +491,9 @@ msgid ""
 msgstr ""
 "Lägg till element (knapp, länk ...) ID, som manuellt laddar amelia "
 "kortkodsinnehåll"
+
+msgid "Add event"
+msgstr "Lägg till händelse"
 
 msgid "Add event attendees"
 msgstr "Lägg till deltagare till evenemang"
@@ -488,22 +505,28 @@ msgid "Add more Appointments"
 msgstr "Lägg till fler möten"
 
 msgid "Add more appointments"
-msgstr ""
+msgstr "Lägg till fler möten"
 
 msgid ""
 "Add multiple employees to your booking system, manage their schedules, and "
 "assign them to services or events, making it easy to scale your business and "
 "coordinate your team."
 msgstr ""
+"Lägg till flera anställda i ditt bokningssystem, hantera deras scheman och "
+"tilldela dem tjänster eller evenemang, vilket gör det enkelt att skala upp "
+"din verksamhet och samordna ditt team."
 
 msgid "Add option"
 msgstr "Lägg till alternativ"
+
+msgid "Add package"
+msgstr "Lägg till paket"
 
 msgid "Add period"
 msgstr "Lägg till period"
 
 msgid "Add pricing category"
-msgstr ""
+msgstr "Lägg till priskategori"
 
 msgid "Add rule"
 msgstr "Lägg till regel"
@@ -527,7 +550,7 @@ msgid "Add work hours"
 msgstr "Lägg till arbetstimmar"
 
 msgid "Additional information"
-msgstr ""
+msgstr "Ytterligare information"
 
 msgid "Additional people"
 msgstr "Ytterligare personer"
@@ -539,7 +562,7 @@ msgid "Admin"
 msgstr ""
 
 msgid "Advanced"
-msgstr ""
+msgstr "Avancerat"
 
 msgid "After"
 msgstr "Efter"
@@ -557,10 +580,10 @@ msgid "Agencies"
 msgstr "Byråer"
 
 msgid "Alert content"
-msgstr ""
+msgstr "Varningsinnehåll"
 
 msgid "Alert message"
-msgstr ""
+msgstr "Varningsmeddelande"
 
 msgid "All"
 msgstr "Alla"
@@ -608,7 +631,7 @@ msgid "All services"
 msgstr "Alla tjänster"
 
 msgid "All services are booked separately"
-msgstr ""
+msgstr "Alla tjänster bokas separat"
 
 msgid "All services are booked separately."
 msgstr "Varje tjänst bokas för sig."
@@ -630,9 +653,6 @@ msgstr "Tillåt bokning av väntande avtalade tider"
 
 msgid "Allow booking above maximum capacity"
 msgstr "Tillåt bokning över maximal kapacitet"
-
-msgid "Allow booking below minimum capacity"
-msgstr "Tillåt bokning under minsta kapacitet"
 
 msgid "Allow booking without a prior login"
 msgstr "Tillåt bokning utan föregående inloggning"
@@ -700,25 +720,25 @@ msgstr ""
 "för att matcha ditt varumärke och förbättra användarvänligheten."
 
 msgid "Allow employees to manage customers"
-msgstr ""
+msgstr "Tillåt anställda att hantera kunder"
 
 msgid "Allow employees to manage their appointments"
-msgstr ""
+msgstr "Låt anställda hantera sina möten"
 
 msgid "Allow employees to manage their days off"
-msgstr ""
+msgstr "Låt anställda hantera sina lediga dagar"
 
 msgid "Allow employees to manage their events"
-msgstr ""
+msgstr "Låt anställda hantera sina evenemang"
 
 msgid "Allow employees to manage their schedule"
-msgstr ""
+msgstr "Låt anställda hantera sina scheman"
 
 msgid "Allow employees to manage their services"
-msgstr ""
+msgstr "Låt anställda hantera sina tjänster"
 
 msgid "Allow employees to manage their special days"
-msgstr ""
+msgstr "Låt anställda hantera sina speciella dagar"
 
 msgid "Allow multiple bookings per customer"
 msgstr "Tillåt flera bokningar per kund"
@@ -733,12 +753,14 @@ msgid ""
 "Allow the short description below the booking form to support Amelia Booking "
 "Plugin and spread the word about it."
 msgstr ""
+"Tillåt den korta beskrivningen under bokningsformuläret för att stödja "
+"Amelia Booking Plugin och sprida information om det."
 
 msgid "Alpha sender ID"
 msgstr "Alfa-avsändar-ID"
 
 msgid "Alpha sender ID can't be empty"
-msgstr ""
+msgstr "Alfa-avsändar-ID får inte vara tomt"
 
 msgid "Already have an account?"
 msgstr "Har du redan ett konto?"
@@ -800,9 +822,6 @@ msgstr "Inställningar för Amelia-användare"
 msgid "Amount"
 msgstr "Belopp"
 
-msgid "Amount:"
-msgstr "Belopp:"
-
 msgid "An email with details of your booking has been sent to you."
 msgstr ""
 "Ett e-postmeddelande med information om din bokning har skickats till dig."
@@ -832,7 +851,7 @@ msgid "Apple Calendar (Personal)"
 msgstr "Apple Kalender (Personlig)"
 
 msgid "Apple Calendar setup"
-msgstr ""
+msgstr "Inställningar för Apple Kalender"
 
 msgid "Application (client) ID"
 msgstr "Applikations (klient) ID"
@@ -897,13 +916,13 @@ msgid "Appointment can't be rescheduled"
 msgstr "Avtalad tid kan inte ombokas"
 
 msgid "Appointment canceled"
-msgstr ""
+msgstr "Mötet är inställt"
 
 msgid "Appointment date"
-msgstr ""
+msgstr "Datum för möte"
 
 msgid "Appointment date & time"
-msgstr ""
+msgstr "Datum och tid för möte"
 
 msgid "Appointment deposit"
 msgstr "Deposition för bokning"
@@ -912,10 +931,10 @@ msgid "Appointment details"
 msgstr "Bokningsdetaljer"
 
 msgid "Appointment duration"
-msgstr ""
+msgstr "Mötets varaktighet"
 
 msgid "Appointment end time"
-msgstr ""
+msgstr "Slut tid för möte"
 
 msgid "Appointment has been created."
 msgstr "Bokningen har skapats."
@@ -939,22 +958,22 @@ msgid "Appointment information"
 msgstr "Din bokningsinformation"
 
 msgid "Appointment initial date"
-msgstr ""
+msgstr "Första datum för möte"
 
 msgid "Appointment initial date & time"
-msgstr ""
+msgstr "Första datum och tid för mötet"
 
 msgid "Appointment initial end time"
-msgstr ""
+msgstr "Upptäckt tidpunkt för möte"
 
 msgid "Appointment initial start time"
-msgstr ""
+msgstr "Upptäckt tidpunkt för möte"
 
 msgid "Appointment is removed from the cart."
 msgstr "Avtalad tid tas bort från kund vagnen."
 
 msgid "Appointment management guide"
-msgstr ""
+msgstr "Guide för hantering av bokningar"
 
 msgid "Appointment not found."
 msgstr "Bokning hittades inte."
@@ -972,13 +991,13 @@ msgid "Appointment price"
 msgstr "Utnämnings pris"
 
 msgid "Appointment repeats"
-msgstr ""
+msgstr "Upprepade möten"
 
 msgid "Appointment space name"
 msgstr "Bokningsutrymmets namn"
 
 msgid "Appointment start time"
-msgstr ""
+msgstr "Starttid för möte"
 
 msgid "Appointment status"
 msgstr "Bokningsstatus"
@@ -987,7 +1006,10 @@ msgid "Appointment status has been changed to "
 msgstr "Mötes status har ändrats till "
 
 msgid "Appointment status has been updated."
-msgstr ""
+msgstr "Mötesstatus har uppdaterats."
+
+msgid "Appointment title"
+msgstr "Titel på möte"
 
 msgid "Appointments"
 msgstr "Bokningar"
@@ -1008,10 +1030,10 @@ msgid "Appointments to book"
 msgstr "Tider att boka"
 
 msgid "Appointments waiting list"
-msgstr ""
+msgstr "Väntelista för tidsbokningar"
 
 msgid "Approve appointment link"
-msgstr ""
+msgstr "Godkänn länk till möte"
 
 msgid "Approved"
 msgstr "Godkänd"
@@ -1165,7 +1187,7 @@ msgid "Are you sure you want to show this employee?"
 msgstr "Är du säker på att du vill visa medarbetaren?"
 
 msgid "Are you sure you want to show this event?"
-msgstr ""
+msgstr "Är du säker på att du vill visa detta evenemang?"
 
 msgid "Are you sure you want to show this location?"
 msgstr "Är du säker på att du vill visa den här platsen?"
@@ -1181,6 +1203,14 @@ msgstr "Är du säker på att du vill visa den här tjänsten?"
 
 msgid "Are you sure you want to show this tax?"
 msgstr "Är du säker på att du vill visa det här paketet?"
+
+msgid ""
+"Are you sure you want to skip the setup? Once skipped, the guided setup will "
+"no longer be available. All settings will need to be configured later."
+msgstr ""
+"Är du säker på att du vill hoppa över installationen? När du har hoppat över "
+"installationen kommer den guidade installationen inte längre att vara "
+"tillgänglig. Alla inställningar måste konfigureras senare."
 
 msgid "Are you sure you want to unblock this customer?"
 msgstr "Är du säker på att du vill ta bort denna kund?"
@@ -1233,11 +1263,11 @@ msgstr "Deltagare har tagits bort"
 msgid "Attendees have not been deleted"
 msgstr "Deltagare har inte tagits bort"
 
-msgid "Auto-Approve Booking After Payment"
-msgstr "Automatiskt godkännande av bokning efter betalning"
-
 msgid "Auto-Reply Message"
 msgstr "Automatiskt svarmeddelande"
+
+msgid "Auto-approve booking after payment"
+msgstr "Automatiskt godkännande av bokning efter betalning"
 
 msgid "Auto-fill your details using:"
 msgstr "Fyll i dina uppgifter automatiskt med:"
@@ -1246,9 +1276,11 @@ msgid ""
 "Automate communication with notifications triggered by booking status, time, "
 "or custom rules"
 msgstr ""
+"Automatisera kommunikationen med aviseringar som utlöses av bokningsstatus, "
+"tid eller anpassade regler"
 
 msgid "Automated invoices for a smoother payment experience"
-msgstr ""
+msgstr "Automatiserade fakturor för en smidigare betalningsupplevelse"
 
 msgid ""
 "Automatically calculate and apply taxes for hassle-free compliance and "
@@ -1261,6 +1293,9 @@ msgid ""
 "Automatically calculate and apply taxes to your services and events, "
 "ensuring accurate billing and hassle-free compliance with every transaction."
 msgstr ""
+"Beräkna och tillämpa skatter automatiskt på dina tjänster och evenemang, "
+"vilket säkerställer korrekt fakturering och problemfri efterlevnad vid varje "
+"transaktion."
 
 msgid "Automatically create Amelia Customer user"
 msgstr "Skapa automatiskt Amelia kund användare"
@@ -1278,6 +1313,9 @@ msgid ""
 "Automatically generate invoices for every booking, making payments easier, "
 "more transparent, and fully streamlined for both you and your clients."
 msgstr ""
+"Skapa fakturor automatiskt för varje bokning, vilket gör betalningar "
+"enklare, mer transparenta och helt strömlinjeformade för både dig och dina "
+"kunder."
 
 msgid ""
 "Automatically update the booking status to \"Approved\" after a successful "
@@ -1293,10 +1331,10 @@ msgid "Available"
 msgstr "Tillgänglig"
 
 msgid "Available date background"
-msgstr ""
+msgstr "Tillgängligt datum bakgrund"
 
 msgid "Available date text"
-msgstr ""
+msgstr "Tillgängligt datumtext"
 
 msgid "Available from Pro license"
 msgstr "Tillgängliga bilder"
@@ -1317,6 +1355,8 @@ msgid ""
 "Avoid double-booking by automatically coordinating shared rooms, equipment, "
 "or tools"
 msgstr ""
+"Undvik dubbelbokningar genom att automatiskt samordna delade rum, utrustning "
+"eller verktyg."
 
 msgid "Away"
 msgstr "Bortalag"
@@ -1328,7 +1368,7 @@ msgid "Back"
 msgstr "Tillbaka"
 
 msgid "Back button"
-msgstr ""
+msgstr "Tillbaka-knapp"
 
 msgid "Back to"
 msgstr "Tillbaka till"
@@ -1346,7 +1386,7 @@ msgid "Backend"
 msgstr ""
 
 msgid "Background"
-msgstr ""
+msgstr "Bakgrund"
 
 msgid "Background Color"
 msgstr "Bakgrundsfärg"
@@ -1370,7 +1410,7 @@ msgid "Badge label"
 msgstr "Märkesetikett"
 
 msgid "Badges setup"
-msgstr ""
+msgstr "Inställning av märken"
 
 msgid "Balance"
 msgstr "Balans"
@@ -1382,7 +1422,7 @@ msgid "Base Price:"
 msgstr "Grundpris:"
 
 msgid "Basic"
-msgstr ""
+msgstr "Grundläggande"
 
 msgid "Beauty"
 msgstr "Skönhet"
@@ -1409,7 +1449,7 @@ msgid "Birthday"
 msgstr "Födelsedatum"
 
 msgid "Birthday greeting"
-msgstr ""
+msgstr "Födelsedagshälsning"
 
 msgid "Block"
 msgstr ""
@@ -1418,11 +1458,15 @@ msgid ""
 "Block booking times that overlap with busy events in the employee’s Apple "
 "Calendar."
 msgstr ""
+"Blockera bokningstider som överlappar med upptagna händelser i medarbetarens "
+"Apple-kalender."
 
 msgid ""
 "Block booking times that overlap with busy events in the employee’s Outlook "
 "Calendar."
 msgstr ""
+"Blockera bokningstider som överlappar med upptagna händelser i medarbetarens "
+"Outlook-kalender."
 
 msgid "Block customer"
 msgstr "Blockera kund"
@@ -1431,7 +1475,7 @@ msgid "Blog"
 msgstr "Blogg"
 
 msgid "Body text"
-msgstr ""
+msgstr "Brödtext"
 
 msgid "Book"
 msgstr "Boka"
@@ -1455,7 +1499,7 @@ msgid "Book another"
 msgstr "Boka"
 
 msgid "Book appointment"
-msgstr ""
+msgstr "Boka tid"
 
 msgid "Book event"
 msgstr "Boka event"
@@ -1467,10 +1511,10 @@ msgid "Book now"
 msgstr "Bestill nå"
 
 msgid "Book option on employee dialog"
-msgstr ""
+msgstr "Bokningsalternativ i dialogrutan för anställda"
 
 msgid "Book package"
-msgstr ""
+msgstr "Bokpaket"
 
 msgid "Book subtab name"
 msgstr "Namn på underfältet Bok"
@@ -1479,7 +1523,14 @@ msgid "Book this event"
 msgstr "Boka kurs"
 
 msgid "Book this service"
+msgstr "Boka denna tjänst"
+
+msgid ""
+"Book time-based appointments with configurable durations, prices, and "
+"availability."
 msgstr ""
+"Boka tidsbaserade möten med konfigurerbara varaktigheter, priser och "
+"tillgänglighet."
 
 msgid "Booked"
 msgstr "Bokad"
@@ -1488,7 +1539,7 @@ msgid "Booked Appointments"
 msgstr "Bokade möten"
 
 msgid "Booked customer (full name, email, phone)"
-msgstr ""
+msgstr "Bokad kund (fullständigt namn, e-postadress, telefonnummer)"
 
 msgid "Booking"
 msgstr "Bokning"
@@ -1499,6 +1550,12 @@ msgstr "Bokning #{count}"
 msgid "Booking Appointment"
 msgstr "Boka tid"
 
+msgid "Booking Approved with Issues"
+msgstr "Bokning godkänd med problem"
+
+msgid "Booking Canceled"
+msgstr "Bokningen avbokad"
+
 msgid "Booking Closes"
 msgstr "Bokningen stänger"
 
@@ -1508,8 +1565,14 @@ msgstr "Bokning stänger stigande"
 msgid "Booking Closes Desc"
 msgstr "Bokning stänger fallande"
 
+msgid "Booking Confirmed"
+msgstr "Bokningen bekräftad"
+
 msgid "Booking Details"
 msgstr "Bokningsdetaljer"
+
+msgid "Booking Failed"
+msgstr "Bokningen misslyckades"
 
 msgid "Booking Form"
 msgstr "Bokning"
@@ -1532,6 +1595,12 @@ msgstr "Bokning öppnar fallande"
 msgid "Booking Overview"
 msgstr "Bokningsöversikt"
 
+msgid "Booking Processed"
+msgstr "Bokning behandlad"
+
+msgid "Booking Rejected"
+msgstr "Bokningen avvisad"
+
 msgid "Booking added"
 msgstr "Bokning tillagd"
 
@@ -1548,7 +1617,7 @@ msgid "Booking closes when event starts"
 msgstr "Bokningen stänger när evenemanget startar"
 
 msgid "Booking date"
-msgstr ""
+msgstr "Bokningsdatum"
 
 msgid "Booking form on customer profile enabled"
 msgstr "Bokningsformulär på kundprofilen aktiverat"
@@ -1569,7 +1638,7 @@ msgid "Booking has been updated."
 msgstr "Bokningen har uppdaterats."
 
 msgid "Booking invoice"
-msgstr ""
+msgstr "Bokningsfaktura"
 
 msgid "Booking is canceled"
 msgstr "Bokningen inställd"
@@ -1617,7 +1686,7 @@ msgid "Booking tab name"
 msgstr "Namn på bokningsfliken"
 
 msgid "Booking time slots will depend on the service duration"
-msgstr ""
+msgstr "Bokningstiderna beror på tjänstens varaktighet."
 
 msgid "Booking type"
 msgstr "Bokningstyp"
@@ -1629,18 +1698,22 @@ msgid ""
 "Boost engagement by reaching clients instantly on a platform they use every "
 "day"
 msgstr ""
+"Öka engagemanget genom att nå kunder direkt på en plattform som de använder "
+"varje dag."
 
 msgid "Boost revenue with bundled service packages"
-msgstr ""
+msgstr "Öka intäkterna med paketerade tjänstepaket"
 
 msgid "Boost revenue with valuable extras"
-msgstr ""
+msgstr "Öka intäkterna med värdefulla tillägg"
 
 msgid "Boost team productivity with automated updates and fewer manual tasks."
 msgstr ""
+"Öka teamets produktivitet med automatiska uppdateringar och färre manuella "
+"uppgifter."
 
 msgid "Border color"
-msgstr ""
+msgstr "Kantfärg"
 
 msgid "Break Hours"
 msgstr "Raster"
@@ -1652,7 +1725,7 @@ msgid "Bringing Anyone With You"
 msgstr "Tar du någon med dig"
 
 msgid "Bringing anyone with you"
-msgstr ""
+msgstr "Ta med dig vem som helst"
 
 msgid "Bringing anyone with you?"
 msgstr "Att ta med dig någon?"
@@ -1681,6 +1754,10 @@ msgid ""
 "areas, and more, turning every booking and registration into a powerful "
 "intake process."
 msgstr ""
+"Skapa skräddarsydda formulär för tjänster, evenemang och kundprofiler med "
+"hjälp av anpassade fält. Samla in exakt den information du behöver med "
+"kryssrutor, textfält och mer, och förvandla varje bokning och registrering "
+"till en effektiv intagsprocess."
 
 msgid ""
 "Bundle multiple appointments or services at discounted rates to encourage "
@@ -1693,16 +1770,16 @@ msgid "Busy"
 msgstr "Upptagen"
 
 msgid "Busy slots"
-msgstr ""
+msgstr "Upptagen"
 
 msgid "Button"
-msgstr ""
+msgstr "Knapp"
 
 msgid "Button Type"
 msgstr "Knapptyp"
 
 msgid "Button style"
-msgstr ""
+msgstr "Knappstil"
 
 msgid "Buttons"
 msgstr "Knappar"
@@ -1759,22 +1836,22 @@ msgid "Cancel and Delete"
 msgstr "Avbryt och ta bort"
 
 msgid "Cancel appointment"
-msgstr ""
+msgstr "Avbryt möte"
 
 msgid "Cancel appointment link"
-msgstr ""
+msgstr "Länk för att avboka möte"
 
 msgid "Cancel event"
-msgstr ""
+msgstr "Avbryt händelse"
 
 msgid "Cancel event link"
-msgstr ""
+msgstr "Avbryt evenemangslänk"
 
 msgid "Cancel following"
 msgstr "Avbryt följande"
 
 msgid "Cancel package"
-msgstr ""
+msgstr "Avbryt paket"
 
 msgid "Canceled"
 msgstr "Avbruten"
@@ -1786,10 +1863,13 @@ msgid "Canceled By Attendee"
 msgstr "Avbokat av deltagare"
 
 msgid "Canceled by admin"
-msgstr ""
+msgstr "Avbruten av administratören"
 
 msgid "Canceled by attendee"
-msgstr ""
+msgstr "Avbokad av deltagare"
+
+msgid "Cancellation Failed"
+msgstr "Avbokningen misslyckades"
 
 msgid "Cancelled"
 msgstr "Avbruten"
@@ -1804,13 +1884,13 @@ msgid "Card"
 msgstr "Kort"
 
 msgid "Card color"
-msgstr ""
+msgstr "Kortfärg"
 
 msgid "Card content"
-msgstr ""
+msgstr "Kortinnehåll"
 
 msgid "Card field"
-msgstr ""
+msgstr "Kortfält"
 
 msgid "Card number"
 msgstr "Kortnummer"
@@ -1822,10 +1902,10 @@ msgid "Cards"
 msgstr "Kort"
 
 msgid "Cards and buttons"
-msgstr ""
+msgstr "Kort och knappar"
 
-msgid "Carrier:"
-msgstr "Bärare:"
+msgid "Carrier"
+msgstr "Operatör"
 
 msgid "Cart"
 msgstr "Varukorg"
@@ -1837,7 +1917,7 @@ msgid "Cart description"
 msgstr "Beskrivning av tjänsten"
 
 msgid "Cart purchased"
-msgstr ""
+msgstr "Kundvagn köpt"
 
 msgid "Catalog"
 msgstr "Katalog"
@@ -1861,7 +1941,7 @@ msgid "Categories positions updated successfully."
 msgstr "Kategoripositioner uppdaterades framgångsrikt."
 
 msgid "Categories sidebar"
-msgstr ""
+msgstr "Kategorier i sidofältet"
 
 msgid "Category"
 msgstr "Kategori"
@@ -1890,18 +1970,20 @@ msgstr "Kategorinamn"
 msgid ""
 "Centralize scheduling across all branches for clearer, simpler management"
 msgstr ""
+"Centralisera schemaläggningen för alla filialer för en tydligare och enklare "
+"hantering"
 
 msgid "Change Password"
 msgstr "Ändra lösenord"
 
 msgid "Change colors"
-msgstr ""
+msgstr "Ändra färger"
 
 msgid "Change group status"
 msgstr "Ändra grupp status"
 
 msgid "Change password"
-msgstr ""
+msgstr "Ändra lösenord"
 
 msgid "Charge type"
 msgstr "Typ av utlösare"
@@ -1994,6 +2076,9 @@ msgstr "Välj tjänst"
 msgid "Choose a Form"
 msgstr "Välj ett formulär"
 
+msgid "Choose a currency that will be used for all price based settings."
+msgstr "Välj en valuta som ska användas för alla prisbaserade inställningar."
+
 msgid ""
 "Choose a form you want to customize. The Step-by-Step 2.0 form is the new "
 "and improved version which provides you with better design and user "
@@ -2006,8 +2091,15 @@ msgstr ""
 msgid "Choose a group service"
 msgstr "Välj en grupp tjänst"
 
-msgid "Choose date and time"
+msgid ""
+"Choose a time interval that will be used when defining all time based "
+"settings."
 msgstr ""
+"Välj ett tidsintervall som ska användas när du definierar alla tidsbaserade "
+"inställningar."
+
+msgid "Choose date and time"
+msgstr "Välj datum och tid"
 
 msgid ""
 "Choose how Amelia suggests an alternative date when the selected recurring "
@@ -2052,6 +2144,9 @@ msgstr "Välj tid att upprepa bokningen"
 msgid "Choose when the repeating ends"
 msgstr "Välj när upprepning slutar"
 
+msgid "Choose whether you want to manage services, events, or both."
+msgstr "Välj om du vill hantera tjänster, evenemang eller båda."
+
 msgid "Choosing layout of first step in step by step form"
 msgstr "Välj layout för första steget i steg-för-steg-formuläret"
 
@@ -2084,7 +2179,7 @@ msgid "Client ID"
 msgstr "Klient ID"
 
 msgid "Client ID and secret"
-msgstr ""
+msgstr "Klient-ID och hemlig kod"
 
 msgid "Client Time:"
 msgstr "Klient tid:"
@@ -2129,7 +2224,7 @@ msgid "Collapse menu"
 msgstr "Komprimera menyn"
 
 msgid "Collect the information your business truly needs"
-msgstr ""
+msgstr "Samla in den information som ditt företag verkligen behöver"
 
 msgid "Color"
 msgstr "Färg"
@@ -2192,7 +2287,7 @@ msgid "Completed"
 msgstr "Slutförd"
 
 msgid "Configuration"
-msgstr ""
+msgstr "Konfiguration"
 
 msgid "Configure"
 msgstr "Bekräfta"
@@ -2219,7 +2314,7 @@ msgid "Configure the recurring appointments details placeholder."
 msgstr "Konfigurera platshållaren för detaljer om återkommande bokningar."
 
 msgid "Configure waiting list for appointments"
-msgstr ""
+msgstr "Konfigurera väntelista för bokningar"
 
 msgid "Confirm"
 msgstr "Bekräfta"
@@ -2262,6 +2357,9 @@ msgid ""
 "schedules perfectly synced and communication effortless across your entire "
 "team."
 msgstr ""
+"Anslut medarbetarnas kalendrar, mötesverktyg och andra integrationer för att "
+"hålla scheman perfekt synkroniserade och kommunikationen smidig i hela "
+"teamet."
 
 msgid "Connect to Apple Calendar"
 msgstr "Anslut till Apple Kalender"
@@ -2328,10 +2426,10 @@ msgid "Consulting"
 msgstr "Konsulttjänster"
 
 msgid "Contact message"
-msgstr ""
+msgstr "Kontaktmeddelande"
 
 msgid "Contact support."
-msgstr ""
+msgstr "Kontakta supporten."
 
 msgid "Content"
 msgstr "Innehåll"
@@ -2340,7 +2438,7 @@ msgid "Content Text Color"
 msgstr "Textfärg"
 
 msgid "Content area"
-msgstr ""
+msgstr "Innehållsområde"
 
 msgid "Content placeholders"
 msgstr "Innehållsplatshållare"
@@ -2351,12 +2449,15 @@ msgstr "Fortsätt"
 msgid "Continue Booking"
 msgstr "Fortsätt boka"
 
+msgid "Continue setup"
+msgstr "Fortsätt installationen"
+
 msgid "Copy your API key now, as it won't be visible again."
 msgstr ""
 "Kopiera din API-nyckel nu, eftersom den inte kommer att vara synlig igen."
 
-msgid "Cost:"
-msgstr "Kostnad:"
+msgid "Cost"
+msgstr "Kostnad"
 
 msgid ""
 "Could not delete category. This category has services available for booking "
@@ -2404,10 +2505,13 @@ msgstr "Belopp"
 
 msgid "Counts one primary customer plus any additional people they add."
 msgstr ""
+"Räknar en primär kund plus eventuella ytterligare personer som de lägger "
+"till."
 
 msgid ""
 "Counts the total number of people entered, including the primary customer."
 msgstr ""
+"Räknar det totala antalet personer som har angetts, inklusive huvudkunden."
 
 msgid "Coupon"
 msgstr "Kupong"
@@ -2422,7 +2526,7 @@ msgid "Coupon code"
 msgstr "Rabattkod"
 
 msgid "Coupon field"
-msgstr ""
+msgstr "Kupongfält"
 
 msgid "Coupon has been created."
 msgstr "Kupongen har skapats."
@@ -2440,22 +2544,22 @@ msgid "Coupon is now visible."
 msgstr "Kupongen är nu synlig."
 
 msgid "Coupon limit reached"
-msgstr ""
+msgstr "Kuponggränsen har nåtts"
 
 msgid "Coupon needs to have discount or deduction"
 msgstr "Kupong måste ha rabatt eller avdrag"
 
 msgid "Coupon segment"
-msgstr ""
+msgstr "Kupongsegment"
 
 msgid "Coupons"
 msgstr "Kuponger"
 
 msgid "Coupons overview"
-msgstr ""
+msgstr "Översikt över kuponger"
 
 msgid "Coupons setup"
-msgstr ""
+msgstr "Kuponginställningar"
 
 msgid "Create Amelia Customers"
 msgstr "Skapa kund"
@@ -2491,12 +2595,21 @@ msgid ""
 "reminders, keeping customers and employees informed at exactly the right "
 "time."
 msgstr ""
+"Skapa anpassade aviseringar som utlöses baserat på bokningsstatus eller "
+"schemalagda påminnelser, så att kunder och anställda hålls informerade vid "
+"exakt rätt tidpunkt."
+
+msgid "Create employee"
+msgstr "Skapa anställd"
+
+msgid "Create event"
+msgstr "Skapa händelse"
 
 msgid "Create meetings for pending appointments"
 msgstr "Skapa möten för väntande avtalade tider"
 
 msgid "Create new"
-msgstr ""
+msgstr "Skapa ny"
 
 msgid "Create new badge"
 msgstr "Skapa nytt emblem"
@@ -2517,6 +2630,15 @@ msgid ""
 "employees, services, or locations, ensuring customers only see time slots "
 "when everything they need is truly available."
 msgstr ""
+"Skapa rum, utrustning eller andra resurser som kan delas mellan anställda, "
+"tjänster eller platser, så att kunderna endast ser tidsluckor när allt de "
+"behöver verkligen är tillgängligt."
+
+msgid "Create scheduled events with fixed dates, prices and capacities."
+msgstr "Skapa schemalagda evenemang med fasta datum, priser och kapacitet."
+
+msgid "Create service"
+msgstr "Skapa tjänst"
 
 msgid "Create spaces for pending appointments"
 msgstr "Skapa utrymme för väntande bokningar"
@@ -2526,9 +2648,15 @@ msgid ""
 "discounts or even free appointments to boost engagement, satisfaction, and "
 "sales."
 msgstr ""
+"Skapa unika kupongkoder som kunderna kan lösa in vid bokning – erbjud "
+"rabatter eller till och med gratisbesök för att öka engagemanget, nöjdheten "
+"och försäljningen."
 
 msgid "Created On"
 msgstr "Skapad"
+
+msgid "Created on"
+msgstr "Skapad den"
 
 msgid "Credit Card"
 msgstr "Kreditkort"
@@ -2583,7 +2711,7 @@ msgid "Custom currency symbol"
 msgstr "Anpassad valutasymbol"
 
 msgid "Custom field"
-msgstr ""
+msgstr "Anpassat fält"
 
 msgid "Custom field has been added"
 msgstr "Anpassat fält har lagts till"
@@ -2604,13 +2732,13 @@ msgid "Custom fields have been updated."
 msgstr "Anpassade fält har uppdaterats."
 
 msgid "Custom fields setup"
-msgstr ""
+msgstr "Inställningar för anpassade fält"
 
 msgid "Custom font family"
-msgstr ""
+msgstr "Anpassad teckensnittsfamilj"
 
 msgid "Custom notification"
-msgstr ""
+msgstr "Anpassad avisering"
 
 msgid "Custom notifications"
 msgstr "Anpassade aviseringar"
@@ -2624,7 +2752,7 @@ msgstr ""
 "prispunkter."
 
 msgid "Custom service duration"
-msgstr ""
+msgstr "Anpassad servicetid"
 
 msgid "Customer"
 msgstr "Kund"
@@ -2638,9 +2766,6 @@ msgstr "Kund stigande"
 msgid "Customer Desc"
 msgstr "Kund fallande"
 
-msgid "Customer Name"
-msgstr "Kundens namn"
-
 msgid "Customer Panel"
 msgstr "Åtkomst till kundpanel"
 
@@ -2651,7 +2776,7 @@ msgid "Customer Profile "
 msgstr "Kundprofil "
 
 msgid "Customer configuration"
-msgstr ""
+msgstr "Kundkonfiguration"
 
 msgid "Customer details"
 msgstr "Kunduppgifter"
@@ -2660,7 +2785,7 @@ msgid "Customer email"
 msgstr "Kundens e-post"
 
 msgid "Customer filter"
-msgstr ""
+msgstr "Kundfilter"
 
 msgid "Customer first name"
 msgstr "Kundens förnamn"
@@ -2687,10 +2812,13 @@ msgid "Customer has been updated."
 msgstr "Kunden har uppdaterats."
 
 msgid "Customer information"
-msgstr ""
+msgstr "Kundinformation"
 
 msgid "Customer last name"
 msgstr "Kundens efter namn"
+
+msgid "Customer name"
+msgstr "Kundens namn"
 
 msgid "Customer note"
 msgstr "Kundanteckning"
@@ -2702,10 +2830,10 @@ msgid "Customer note has been updated."
 msgstr "Kundanteckning har uppdaterats."
 
 msgid "Customer panel"
-msgstr ""
+msgstr "Kundpanel"
 
 msgid "Customer panel access link"
-msgstr ""
+msgstr "Länk till kundpanelen"
 
 msgid "Customer phone"
 msgstr "Kund telefon"
@@ -2748,6 +2876,11 @@ msgstr "Kunder importerade från filen:"
 msgid "Customers in Waiting list"
 msgstr "Kunder i väntelistan"
 
+msgid "Customers will be redirected to this URL after booking an event."
+msgstr ""
+"Kunderna kommer att omdirigeras till denna URL efter att de har bokat ett "
+"evenemang."
+
 msgid ""
 "Customers will be redirected to this URL after scheduling an appointment."
 msgstr ""
@@ -2766,22 +2899,25 @@ msgid ""
 "Customize every interaction by gathering the right information for services, "
 "events, and customer records"
 msgstr ""
+"Anpassa varje interaktion genom att samla in rätt information för tjänster, "
+"evenemang och kundregister."
 
 msgid ""
 "Customize offerings to match specific services and meet diverse client needs"
 msgstr ""
+"Anpassa erbjudanden efter specifika tjänster och tillgodose olika kundbehov"
 
 msgid "Daily"
 msgstr "Dagligen"
 
 msgid "Daily occupancy"
-msgstr ""
+msgstr "Daglig beläggning"
 
 msgid "Danger button background color"
-msgstr ""
+msgstr "Bakgrundsfärg för varningsknapp"
 
 msgid "Danger button text color"
-msgstr ""
+msgstr "Färg på texten på varningsknappen"
 
 msgid "Dark Theme"
 msgstr "Mörkt tema"
@@ -2809,6 +2945,7 @@ msgstr "Datum & tid"
 
 msgid "Date & time periods of the event with Lesson Space join links"
 msgstr ""
+"Datum och tid för evenemanget med länkar för att ansluta till Lesson Space"
 
 msgid "Date Asc"
 msgstr "Datum stigande"
@@ -2832,7 +2969,7 @@ msgid "Date and Time"
 msgstr "Datum och tid"
 
 msgid "Date and time"
-msgstr ""
+msgstr "Datum och tid"
 
 msgid "Date of Birth"
 msgstr "Födelsedatum"
@@ -2929,8 +3066,8 @@ msgstr "Standardplats för Square"
 msgid "Default appointment status"
 msgstr "Standardstatus för bokning"
 
-msgid "Default back‑end page"
-msgstr ""
+msgid "Default back end page"
+msgstr "Standardbackend-sida"
 
 msgid "Default language"
 msgstr "Standardspråk"
@@ -2939,7 +3076,7 @@ msgid "Default location"
 msgstr "Standardplats"
 
 msgid "Default number of items per page on the back end"
-msgstr ""
+msgstr "Standardantal objekt per sida på backend"
 
 msgid "Default number of items per page on the front end"
 msgstr "Standardantal objekt per sida på framsidan"
@@ -2990,6 +3127,8 @@ msgid ""
 "Define which capabilities will be requested when creating an Express "
 "connected account"
 msgstr ""
+"Definiera vilka funktioner som kommer att begäras när ett Express-anslutet "
+"konto skapas."
 
 msgid ""
 "Defines the language used for notifications sent to this customer for "
@@ -3033,7 +3172,7 @@ msgid "Delete coupon"
 msgstr "Ta bort kupong"
 
 msgid "Delete custom field"
-msgstr ""
+msgstr "Ta bort anpassat fält"
 
 msgid "Delete customer"
 msgstr "Ta bort kund"
@@ -3074,11 +3213,15 @@ msgid ""
 "Deliver a smoother booking experience by showing customers only real, "
 "available time slots"
 msgstr ""
+"Ge kunderna en smidigare bokningsupplevelse genom att endast visa dem lediga "
+"tider som verkligen är tillgängliga."
 
 msgid ""
 "Deliver personalized messages tailored to your business tone, branding, and "
 "workflow"
 msgstr ""
+"Leverera personliga meddelanden som är anpassade efter ditt företags ton, "
+"varumärke och arbetsflöde"
 
 msgid "Delivered"
 msgstr "Levererad"
@@ -3096,7 +3239,7 @@ msgid "Deposit only"
 msgstr "Endast insättning"
 
 msgid "Deposit payment"
-msgstr ""
+msgstr "Insättningsbetalning"
 
 msgid "Deposit type"
 msgstr "Typ av deposition"
@@ -3142,10 +3285,10 @@ msgid "Disconnect Employee"
 msgstr "Koppla bort medarbetare"
 
 msgid "Disconnect account"
-msgstr ""
+msgstr "Koppla bort konto"
 
 msgid "Disconnect employee account"
-msgstr ""
+msgstr "Koppla bort anställds konto"
 
 msgid "Disconnect from Apple"
 msgstr "Koppla ned"
@@ -3249,12 +3392,15 @@ msgid "Download .csv"
 msgstr "Ladda ner .csv"
 
 msgid "Download invoice"
-msgstr ""
+msgstr "Ladda ner faktura"
 
 msgid ""
 "Download your customer list instantly for reporting, marketing, or external "
 "system use, making data management faster and more convenient than ever."
 msgstr ""
+"Ladda ner din kundlista direkt för rapportering, marknadsföring eller "
+"användning i externa system, vilket gör datahanteringen snabbare och "
+"bekvämare än någonsin."
 
 msgid "Draft"
 msgstr "Utkast"
@@ -3263,7 +3409,7 @@ msgid "Drag to rearrange columns and/or choose which ones to display."
 msgstr "Dra för att ordna om kolumner och/eller välja vilka som ska visas."
 
 msgid "Drive bookings with irresistible coupon offers"
-msgstr ""
+msgstr "Öka bokningarna med oemotståndliga kupongerbjudanden"
 
 msgid "Drop file here or click to upload"
 msgstr "Släpp filen här eller klicka för att ladda upp"
@@ -3344,7 +3490,7 @@ msgid "E-ticket QR code"
 msgstr "E-biljett QR-kod"
 
 msgid "E-ticket scanner"
-msgstr ""
+msgstr "E-biljettskanner"
 
 msgid "Each:"
 msgstr "Varje:"
@@ -3353,13 +3499,16 @@ msgid "Each spot counts as one attendee."
 msgstr "Varje plats räknas som en deltagare."
 
 msgid "Easily export your customer data in one click"
-msgstr ""
+msgstr "Exportera enkelt dina kunddata med ett enda klick"
 
 msgid ""
 "Easily organize multiple business locations in one place, ensuring smooth "
 "operations and a consistent booking experience no matter where your services "
 "are offered."
 msgstr ""
+"Organisera enkelt flera verksamhetsställen på ett ställe, vilket garanterar "
+"smidig drift och en enhetlig bokningsupplevelse oavsett var dina tjänster "
+"erbjuds."
 
 msgid "Edit"
 msgstr "Redigera"
@@ -3407,10 +3556,10 @@ msgid "Edit booking"
 msgstr "Redigera bokning"
 
 msgid "Edit custom field"
-msgstr ""
+msgstr "Redigera anpassat fält"
 
 msgid "Edit custom notification"
-msgstr ""
+msgstr "Redigera anpassad avisering"
 
 msgid "Edit customer"
 msgstr "Redigera kund"
@@ -3425,7 +3574,7 @@ msgid "Edit event"
 msgstr "Redigera evenemang"
 
 msgid "Edit event booking"
-msgstr ""
+msgstr "Redigera evenemangsbokning"
 
 msgid "Edit location"
 msgstr "Redigera plats"
@@ -3437,7 +3586,7 @@ msgid "Edit resource"
 msgstr "Redigera resurs"
 
 msgid "Edit service"
-msgstr ""
+msgstr "Redigera tjänst"
 
 msgid "Edit special day"
 msgstr "Redigera speciell dag"
@@ -3446,7 +3595,7 @@ msgid "Edit table"
 msgstr "Redigera tabell"
 
 msgid "Edit transaction"
-msgstr ""
+msgstr "Redigera transaktion"
 
 msgid "Edit work hours"
 msgstr "Redigera arbetstider"
@@ -3455,21 +3604,27 @@ msgid ""
 "Efficiently manage appointment cancellations by allowing customers to join a "
 "waiting list and manually fill newly opened time slots."
 msgstr ""
+"Hantera avbokningar effektivt genom att låta kunderna ställa sig på en "
+"väntelista och manuellt fylla nyöppnade tidsluckor."
 
 msgid "Effortless management for every location"
-msgstr ""
+msgstr "Enkel hantering för alla platser"
 
 msgid "Effortless tax management for every booking"
-msgstr ""
+msgstr "Enkel skattehantering för varje bokning"
 
 msgid ""
 "Effortlessly set up and manage events that repeat on your preferred schedule-"
 "offering flexibility, consistency, and a smooth experience for both your "
 "business and your customers."
 msgstr ""
+"Konfigurera och hantera enkelt evenemang som upprepas enligt ditt önskade "
+"schema – med flexibilitet, konsekvens och en smidig upplevelse för både ditt "
+"företag och dina kunder."
 
 msgid "Eliminate manual calculations with smart, automated tax application"
 msgstr ""
+"Eliminera manuella beräkningar med smart, automatiserad skatteapplikation"
 
 msgid "Email"
 msgstr "E-post"
@@ -3481,7 +3636,7 @@ msgid "Email Address"
 msgstr "E-postadress"
 
 msgid "Email address"
-msgstr ""
+msgstr "E-postadress"
 
 msgid "Email already exists with different name. Please check your name."
 msgstr "E-post finns redan med olika namn. Vänligen kontrol lera ditt namn."
@@ -3517,10 +3672,10 @@ msgid "Employee Selection"
 msgstr "E-post för anställda"
 
 msgid "Employee badges"
-msgstr ""
+msgstr "Anställdas namnbrickor"
 
 msgid "Employee badges management"
-msgstr ""
+msgstr "Hantering av anställdas ID-kort"
 
 msgid "Employee calendar disconnected successfully"
 msgstr "Anställdas kalender kopplades bort framgångsrikt"
@@ -3542,19 +3697,19 @@ msgid "Employee description"
 msgstr "Beskrivning medarbetare"
 
 msgid "Employee description popup"
-msgstr ""
+msgstr "Popup-fönster med beskrivning av anställd"
 
 msgid "Employee details"
 msgstr "Anställdas detaljer"
 
 msgid "Employee dialog"
-msgstr ""
+msgstr "Medarbetardialog"
 
 msgid "Employee email"
 msgstr "E-post för anställda"
 
 msgid "Employee filter"
-msgstr ""
+msgstr "Anställdfilter"
 
 msgid "Employee first name"
 msgstr "Medarbetarens förnamn"
@@ -3583,6 +3738,9 @@ msgstr "Medarbetaren är nu synlig."
 msgid "Employee last name"
 msgstr "Anställds efter namn"
 
+msgid "Employee name"
+msgstr "Anställdas namn"
+
 msgid "Employee name, email & phone"
 msgstr "Medarbetarens namn, e-post och telefon"
 
@@ -3593,46 +3751,46 @@ msgid "Employee note has been updated."
 msgstr "Anteckning för medarbetare har uppdaterats."
 
 msgid "Employee panel"
-msgstr ""
+msgstr "Anställdspanel"
 
 msgid "Employee panel access link"
-msgstr ""
+msgstr "Länk till anställdas panel"
 
 msgid "Employee panel page URL"
-msgstr ""
+msgstr "URL till sidan för medarbetarpanelen"
 
 msgid "Employee panel password"
 msgstr "Lösenord för medarbetarpanel"
 
 msgid "Employee password"
-msgstr ""
+msgstr "Anställdas lösenord"
 
 msgid "Employee phone"
 msgstr "Telefon för anställda"
 
 msgid "Employee price"
-msgstr ""
+msgstr "Anställdas pris"
 
 msgid "Employee profile"
-msgstr ""
+msgstr "Anställdsprofil"
 
 msgid "Employee selection"
-msgstr ""
+msgstr "Val av anställd"
 
 msgid "Employee selection logic"
 msgstr "E-post för anställda"
 
 msgid "Employee setup"
-msgstr ""
+msgstr "Anställningsinställningar"
 
 msgid "Employees"
 msgstr "Anställda"
 
 msgid "Empower your team with seamless integrations"
-msgstr ""
+msgstr "Ge ditt team möjlighet att arbeta smidigt med sömlösa integrationer"
 
 msgid "Empty state"
-msgstr ""
+msgstr "Tomt tillstånd"
 
 msgid "Enable"
 msgstr "Aktivera"
@@ -3756,6 +3914,8 @@ msgid ""
 "Enable this option to add event attendees to employees’ Apple Calendar "
 "events."
 msgstr ""
+"Aktivera det här alternativet för att lägga till evenemangsdeltagare till "
+"anställdas Apple Kalender-evenemang."
 
 msgid ""
 "Enable this option to add event attendees to employees’ Google Calendar "
@@ -3768,6 +3928,8 @@ msgid ""
 "Enable this option to add event attendees to employees’ Outlook Calendar "
 "events."
 msgstr ""
+"Aktivera det här alternativet för att lägga till evenemangsdeltagare till "
+"anställdas Outlook-kalenderhändelser."
 
 msgid ""
 "Enable this option to create meetings for appointments with pending status."
@@ -3807,11 +3969,15 @@ msgid ""
 "Enable this option to include buffer time for scheduled appointments in "
 "Google Calendar events."
 msgstr ""
+"Aktivera det här alternativet för att inkludera buffertid för schemalagda "
+"möten i Google Kalender-händelser."
 
 msgid ""
 "Enable this option to include buffer time for scheduled appointments in "
 "Outlook Calendar events."
 msgstr ""
+"Aktivera det här alternativet för att inkludera buffertid för schemalagda "
+"möten i Outlook-kalenderhändelser."
 
 msgid ""
 "Enable this option to make sure that the invoice will be sent to the "
@@ -3836,6 +4002,9 @@ msgid ""
 "Enable this option to use this custom field as the location in Google and "
 "Outlook Calendar events, ICS files, and ‘Add to Calendar’ events."
 msgstr ""
+"Aktivera det här alternativet för att använda det här anpassade fältet som "
+"plats i Google- och Outlook-kalenderhändelser, ICS-filer och händelser i "
+"\"Lägg till i kalender\"."
 
 msgid "Enable to display booking slots based on the client's time zone."
 msgstr "Aktivera för att visa bokningstider baserat på kundens tidszon."
@@ -3883,32 +4052,44 @@ msgid ""
 "Enhance client trust by providing transparent, documented payment details "
 "for every booking"
 msgstr ""
+"Öka kundernas förtroende genom att tillhandahålla transparenta, "
+"dokumenterade betalningsuppgifter för varje bokning."
 
 msgid ""
 "Enhance customer loyalty by rewarding clients with exclusive, personalized "
 "offers"
 msgstr ""
+"Öka kundlojaliteten genom att belöna kunder med exklusiva, personliga "
+"erbjudanden"
 
 msgid ""
 "Enhance flexibility with customer information ready for marketing tools or "
 "external platforms"
 msgstr ""
+"Öka flexibiliteten med kundinformation som är redo för "
+"marknadsföringsverktyg eller externa plattformar"
 
 msgid ""
 "Enhance the customer experience with clear, intuitive forms designed around "
 "your business needs"
 msgstr ""
+"Förbättra kundupplevelsen med tydliga, intuitiva formulär som är utformade "
+"efter dina affärsbehov."
 
 msgid ""
 "Enhance the customer experience with tailored add-ons that add convenience "
 "and value"
 msgstr ""
+"Förbättra kundupplevelsen med skräddarsydda tillägg som ger ökad "
+"bekvämlighet och mervärde."
 
 msgid "Ensure accurate billing by applying the correct tax rates every time"
 msgstr ""
+"Säkerställ korrekt fakturering genom att alltid tillämpa rätt skattesatser."
 
 msgid "Ensure accurate bookkeeping with clear, organized financial data"
 msgstr ""
+"Säkerställ korrekt bokföring med tydliga, välorganiserade finansiella data"
 
 msgid "Enter, and re-enter your new password to continue"
 msgstr "Vänligen ange nytt lösen ord igen"
@@ -4006,11 +4187,14 @@ msgstr "Skriv in ditt lösenord"
 msgid "Error"
 msgstr "Fel"
 
+msgid "Error occurred"
+msgstr "Fel uppstod"
+
 msgid "Error while generating CSV."
 msgstr "Fel vid generering av CSV."
 
 msgid "Estimated price"
-msgstr ""
+msgstr "Uppskattat pris"
 
 msgid "Event"
 msgstr "Evenemang"
@@ -4089,7 +4273,7 @@ msgid "Event Type"
 msgstr "Händelsetyp"
 
 msgid "Event available"
-msgstr ""
+msgstr "Evenemang tillgängligt"
 
 msgid "Event booking has been created."
 msgstr "Evenemangsbokningen har skapats."
@@ -4107,37 +4291,39 @@ msgid "Event calendar booking from"
 msgstr "Bokning från evenemangskalendern"
 
 msgid "Event card"
-msgstr ""
+msgstr "Evenemangskort"
 
 msgid "Event date & time period"
-msgstr ""
+msgstr "Evenemangets datum och tidsperiod"
 
 msgid "Event date & time periods with Google Meet join links"
 msgstr ""
+"Evenemangsdatum och tidsperioder med länkar för att ansluta till Google Meet"
 
 msgid "Event date & time periods with Microsoft Teams join links"
 msgstr ""
+"Evenemangsdatum och tidsperioder med Microsoft Teams-länkar för att ansluta"
 
 msgid "Event date & time periods with Zoom join links"
-msgstr ""
+msgstr "Evenemangets datum och tid med länkar för att ansluta till Zoom"
 
 msgid "Event date & time periods with Zoom start links"
-msgstr ""
+msgstr "Evenemangets datum och tid med Zoom-startlänkar"
 
 msgid "Event date period"
-msgstr ""
+msgstr "Evenemangets datumperiod"
 
 msgid "Event date periods with Google Meet join links"
-msgstr ""
+msgstr "Evenemangsdatum med länkar för att ansluta till Google Meet"
 
 msgid "Event date periods with Microsoft Teams join links"
-msgstr ""
+msgstr "Evenemangsdatum med Microsoft Teams-länkar för att ansluta"
 
 msgid "Event date periods with Zoom join links"
-msgstr ""
+msgstr "Evenemangsdatum med Zoom-länkar"
 
 msgid "Event date periods with Zoom start links"
-msgstr ""
+msgstr "Evenemangsdatum med Zoom-startlänkar"
 
 msgid "Event deposit"
 msgstr "Deposition för evenemang"
@@ -4149,31 +4335,31 @@ msgid "Event details"
 msgstr "Evenemangsdetaljer"
 
 msgid "Event e-ticket"
-msgstr ""
+msgstr "E-biljett till evenemang"
 
 msgid "Event employee"
-msgstr ""
+msgstr "Evenemangspersonal"
 
 msgid "Event employees"
-msgstr ""
+msgstr "Evenemangspersonal"
 
 msgid "Event end date"
-msgstr ""
+msgstr "Evenemangets slutdatum"
 
 msgid "Event end date & time"
-msgstr ""
+msgstr "Evenemangets slutdatum och -tid"
 
 msgid "Event end time"
-msgstr ""
+msgstr "Evenemangets sluttid"
 
 msgid "Event ends"
-msgstr ""
+msgstr "Evenemanget avslutas"
 
 msgid "Event filter"
-msgstr ""
+msgstr "Händelsefilter"
 
 msgid "Event gallery"
-msgstr ""
+msgstr "Evenemangsgalleri"
 
 msgid "Event has been canceled"
 msgstr "Evenemanget har ställts in"
@@ -4206,10 +4392,10 @@ msgid "Event has been updated."
 msgstr "Händelsen har uppdaterats."
 
 msgid "Event info"
-msgstr ""
+msgstr "Evenemangsinformation"
 
 msgid "Event initial start date"
-msgstr ""
+msgstr "Evenemangets initiala startdatum"
 
 msgid "Event is now visible."
 msgstr "Evenemanget är nu synligt."
@@ -4218,7 +4404,7 @@ msgid "Event list booking from"
 msgstr "Bokning från evenemangslista"
 
 msgid "Event location"
-msgstr ""
+msgstr "Plats för evenemanget"
 
 msgid "Event name"
 msgstr "Tävlingens namn"
@@ -4227,31 +4413,31 @@ msgid "Event price"
 msgstr "Pris på evenemang"
 
 msgid "Event slots capacity"
-msgstr ""
+msgstr "Kapacitet för evenemangsslots"
 
 msgid "Event space name"
 msgstr "Evenemangsplatsens namn"
 
 msgid "Event start date"
-msgstr ""
+msgstr "Evenemangets startdatum"
 
 msgid "Event start date & time"
-msgstr ""
+msgstr "Evenemangets startdatum och -tid"
 
 msgid "Event start date and time"
 msgstr "Välj kund och tjänst"
 
 msgid "Event start time"
-msgstr ""
+msgstr "Evenemangets starttid"
 
 msgid "Event starts"
-msgstr ""
+msgstr "Evenemanget börjar"
 
 msgid "Event status"
-msgstr ""
+msgstr "Händelsestatus"
 
 msgid "Event ticketing"
-msgstr ""
+msgstr "Biljettförsäljning"
 
 msgid "Event tickets"
 msgstr "Evenemangsbiljetter"
@@ -4263,7 +4449,7 @@ msgid "Event title and description"
 msgstr "Evenemangstitel och beskrivning"
 
 msgid "Event type"
-msgstr ""
+msgstr "Händelsetyp"
 
 msgid "Events"
 msgstr "Evenemang"
@@ -4281,28 +4467,28 @@ msgid "Events List Booking"
 msgstr "Bokning av evenemangslista"
 
 msgid "Events available"
-msgstr ""
+msgstr "Tillgängliga evenemang"
 
 msgid "Events calendar"
-msgstr ""
+msgstr "Evenemangskalender"
 
 msgid "Events custom pricing"
-msgstr ""
+msgstr "Anpassade priser för evenemang"
 
 msgid "Events list"
-msgstr ""
+msgstr "Händelselista"
 
 msgid "Events list view"
-msgstr ""
+msgstr "Händelselista"
 
 msgid "Events pricing"
 msgstr "Prissättning för evenemang"
 
 msgid "Events setup"
-msgstr ""
+msgstr "Händelseinställningar"
 
 msgid "Events waiting list"
-msgstr ""
+msgstr "Väntelista för evenemang"
 
 msgid "Every"
 msgstr "Varje"
@@ -4321,6 +4507,8 @@ msgstr "Expandera alla"
 
 msgid "Expand your capacity by adding as many employees as your business needs"
 msgstr ""
+"Utöka din kapacitet genom att anställa så många medarbetare som ditt företag "
+"behöver."
 
 msgid "Expiration date"
 msgstr "Förfallodatum"
@@ -4341,9 +4529,11 @@ msgid ""
 "Export all transaction records from the Finance page for effortless "
 "accounting, reconciliation, or sharing with your finance tools."
 msgstr ""
+"Exportera alla transaktionsposter från sidan Ekonomi för enkel redovisning, "
+"avstämning eller delning med dina ekonomiverktyg."
 
 msgid "Export appointment data with ease"
-msgstr ""
+msgstr "Exportera mötesdata enkelt"
 
 msgid "Export bookings"
 msgstr "Exportera bokningar"
@@ -4394,10 +4584,10 @@ msgid "Extras available"
 msgstr "Tillval finns tillgängliga"
 
 msgid "Extras cost:"
-msgstr ""
+msgstr "Extra kostnader:"
 
 msgid "Extras subtotal"
-msgstr ""
+msgstr "Extras delsumma"
 
 msgid "Extras total price"
 msgstr "Extra kostnad:"
@@ -4433,10 +4623,10 @@ msgid "Failed to send invoice."
 msgstr "Misslyckades med att skicka fakturan."
 
 msgid "Failed to send test SMS."
-msgstr ""
+msgstr "Det gick inte att skicka test-SMS."
 
 msgid "Failed to send test WhatsApp message."
-msgstr ""
+msgstr "Det gick inte att skicka testmeddelandet via WhatsApp."
 
 msgid "Failed to send test email."
 msgstr "Misslyckades med att skicka testmejl."
@@ -4457,7 +4647,7 @@ msgid "Field Order"
 msgstr "Fältordning"
 
 msgid "Field order"
-msgstr ""
+msgstr "Fältordning"
 
 msgid "Field order, mandatory fields, labels and display options"
 msgstr "Fältordning, obligatoriska fält, etiketter och visningsalternativ"
@@ -4478,10 +4668,10 @@ msgid "Filter by Location"
 msgstr "Redigera plats"
 
 msgid "Filter by employee"
-msgstr ""
+msgstr "Filtrera efter anställd"
 
 msgid "Filter by location"
-msgstr ""
+msgstr "Filtrera efter plats"
 
 msgid "Filterable Field:"
 msgstr "Visa fält:"
@@ -4490,7 +4680,7 @@ msgid "Filters"
 msgstr "Filter"
 
 msgid "Filters block"
-msgstr ""
+msgstr "Filterblock"
 
 msgid "Finance"
 msgstr "Finans"
@@ -4532,14 +4722,18 @@ msgid ""
 "Flexible discount options let you set custom values or offer full-price "
 "waivers"
 msgstr ""
+"Flexibla rabattalternativ låter dig ställa in anpassade värden eller erbjuda "
+"fullprisbefrielser."
 
 msgid ""
 "Flexible pricing lets you set a fixed package price and offer attractive "
 "discounts"
 msgstr ""
+"Flexibel prissättning gör att du kan fastställa ett fast paketpris och "
+"erbjuda attraktiva rabatter."
 
 msgid "Follow up"
-msgstr ""
+msgstr "Uppföljning"
 
 msgid "Font"
 msgstr "Typsnitt"
@@ -4548,7 +4742,7 @@ msgid "Font URL"
 msgstr "URL för typsnitt"
 
 msgid "Font family"
-msgstr ""
+msgstr "Teckensnittsfamilj"
 
 msgid "Fonts"
 msgstr "Typsnitt"
@@ -4560,10 +4754,10 @@ msgid "Footer"
 msgstr "Sidfot"
 
 msgid "Footer buttons"
-msgstr ""
+msgstr "Knappar i sidfoten"
 
 msgid "Footer content"
-msgstr ""
+msgstr "Innehåll i sidfoten"
 
 msgid "For multiselect: hold CTRL / Command (⌘)."
 msgstr "För flervalsval: håll ned CTRL / Kommando (⌘)."
@@ -4580,7 +4774,7 @@ msgid "Forgot Password?"
 msgstr "Glömt lösenordet?"
 
 msgid "Forgot password?"
-msgstr ""
+msgstr "Glömt lösenordet?"
 
 msgid "Forgot your password?"
 msgstr "Glömt lösenordet?"
@@ -4595,7 +4789,7 @@ msgid "Form colors"
 msgstr "Formulärets färger"
 
 msgid "Forms"
-msgstr ""
+msgstr "Formulär"
 
 msgid "Fourth"
 msgstr "Fjärde"
@@ -4658,7 +4852,7 @@ msgid "Front-end customer panel"
 msgstr "Frontend-kundpanel"
 
 msgid "Front-end employee panel"
-msgstr ""
+msgstr "Front-end-panel för anställda"
 
 msgid "Frontend"
 msgstr ""
@@ -4712,7 +4906,7 @@ msgid "Get in Touch"
 msgstr "Kontakta oss"
 
 msgid "Get in touch"
-msgstr ""
+msgstr "Kontakta oss"
 
 msgid "Global Settings"
 msgstr "Globala Inställningar"
@@ -4729,10 +4923,10 @@ msgid "Go Back"
 msgstr "Gå tillbaka"
 
 msgid "Go back"
-msgstr ""
+msgstr "Gå tillbaka"
 
 msgid "Go to Catalog form"
-msgstr ""
+msgstr "Gå till katalogformuläret"
 
 msgid "Go to Custom Fields"
 msgstr "Gå till Anpassade Fält"
@@ -4741,7 +4935,7 @@ msgid "Go to Notifications"
 msgstr "Gå till Aviseringar"
 
 msgid "Go to Step-by-step form"
-msgstr ""
+msgstr "Gå till steg-för-steg-formuläret"
 
 msgid "Google"
 msgstr ""
@@ -4753,7 +4947,7 @@ msgid "Google Analytics"
 msgstr ""
 
 msgid "Google Analytics setup"
-msgstr ""
+msgstr "Inställningar för Google Analytics"
 
 msgid "Google Calendar"
 msgstr "Google Kalender"
@@ -4762,7 +4956,7 @@ msgid "Google Calendar & Google Meet"
 msgstr "Google Kalender & Google Meet"
 
 msgid "Google Calendar setup"
-msgstr ""
+msgstr "Inställningar för Google Kalender"
 
 msgid "Google Map API key"
 msgstr "Google Maps API-nyckel"
@@ -4778,13 +4972,13 @@ msgid "Google Meet Link"
 msgstr "Google Meet Länk"
 
 msgid "Google Meet join link"
-msgstr ""
+msgstr "Länk för att ansluta till Google Meet"
 
 msgid "Google Meet link"
-msgstr ""
+msgstr "Google Meet-länk"
 
 msgid "Google Meet setup"
-msgstr ""
+msgstr "Inställningar för Google Meet"
 
 msgid "Google reCAPTCHA v2 secret key"
 msgstr "Google reCAPTCHA v2 hemliga nyckel"
@@ -4799,7 +4993,7 @@ msgid "Green"
 msgstr "Grön"
 
 msgid "Grid view"
-msgstr ""
+msgstr "Rutnätsvy"
 
 msgid "Group Ticket"
 msgstr "Gruppbiljett"
@@ -4820,7 +5014,7 @@ msgid "Group ticket has already been scanned"
 msgstr "Tjänsten har sparats"
 
 msgid "Grow your team with unlimited employee management"
-msgstr ""
+msgstr "Utöka ditt team med obegränsad personalhantering"
 
 msgid "Gyms"
 msgstr "Gym"
@@ -4841,17 +5035,20 @@ msgstr ""
 msgid "Header"
 msgstr "Sidhuvud"
 
+msgid "Header Image URL"
+msgstr "URL för rubrikbild"
+
 msgid "Heading"
-msgstr ""
+msgstr "Rubrik"
 
 msgid "Heading Text Color"
 msgstr "Textfärg"
 
 msgid "Heading content"
-msgstr ""
+msgstr "Rubrikinnehåll"
 
 msgid "Heading title"
-msgstr ""
+msgstr "Rubrikens titel"
 
 msgid "Healthcare"
 msgstr "Hälsovård"
@@ -4978,13 +5175,13 @@ msgid "Hide tax"
 msgstr "Dölj skatt"
 
 msgid "Hide tips & suggestions"
-msgstr ""
+msgstr "Dölj tips och förslag"
 
 msgid "Higher price background"
-msgstr ""
+msgstr "Högre pris bakgrund"
 
 msgid "Higher price text"
-msgstr ""
+msgstr "Högre pris text"
 
 msgid "Highest price"
 msgstr "Högsta pris"
@@ -5008,10 +5205,13 @@ msgid "How many people are coming?"
 msgstr "Hur många människor kommer?"
 
 msgid "How to"
-msgstr ""
+msgstr "Hur man gör"
 
 msgid "How to get your"
 msgstr "Hur du får din"
+
+msgid "How will you use Amelia?"
+msgstr "Hur kommer du att använda Amelia?"
 
 msgid "ID"
 msgstr ""
@@ -5039,11 +5239,25 @@ msgstr ""
 "standardbetalningsmetoden att användas."
 
 msgid ""
+"If disabled, booking must meet the minimum capacity, and the time slot "
+"closes after the first booking."
+msgstr ""
+"Om funktionen är inaktiverad måste bokningen uppfylla minimikapaciteten och "
+"tidsluckan stängs efter den första bokningen."
+
+msgid ""
 "If disabled, the price will remain the same regardless of how many people "
 "are included in the group appointment."
 msgstr ""
 "Om inaktiverad kommer priset att förbli detsamma oavsett hur många personer "
 "som ingår i gruppbokningen."
+
+msgid ""
+"If enabled, customers can book with Pending status even after maximum "
+"capacity is reached."
+msgstr ""
+"Om funktionen är aktiverad kan kunder boka med statusen Väntande även efter "
+"att maximal kapacitet har uppnåtts."
 
 msgid ""
 "If enabled, customers can complete their payment using the link in their "
@@ -5084,41 +5298,11 @@ msgstr ""
 "importeras."
 
 msgid ""
-"If this is disabled, your front-end customers won't be able to book "
-"appointment with Pending status above the maximum capacity. Once the maximum "
-"capacity is reached appointment will close and time slot will become "
-"unavailable."
+"If this option is disabled, the item will be available only for booking from "
+"the backend."
 msgstr ""
-"Om detta är inaktiverat kommer dina kunder på front-end inte kunna boka en "
-"tid med status Väntande över den maximala kapaciteten. När den maximala "
-"kapaciteten är nådd stängs bokningen och tidsluckan blir otillgänglig."
-
-msgid ""
-"If this is disabled, your front-end customers won't be able to submit a "
-"booking unless they fill in the minimum service capacity, but once they book "
-"for any capacity above minimum, the time slot will become unavailable for "
-"booking for others. If enabled, multiple customers will be able to book the "
-"same time slot, without having to fill in the minimum capacity."
-msgstr ""
-"Om detta är inaktiverat kommer dina kunder på front-end inte kunna skicka en "
-"bokning om de inte fyller i den minsta tjänstekapaciteten, men när de bokar "
-"för någon kapacitet över minimum blir tidsluckan otillgänglig för andra att "
-"boka. Om det är aktiverat kommer flera kunder kunna boka samma tidslucka "
-"utan att behöva fylla i den minsta kapaciteten."
-
-msgid ""
-"If this option is disabled, the employee will only be available for booking "
-"through the back-end"
-msgstr ""
-"Om det här alternativet är inaktiverat kommer medarbetaren endast att vara "
-"tillgänglig för bokning via back-end."
-
-msgid ""
-"If this option is disabled, the service will be bookable only from the back "
-"end."
-msgstr ""
-"Om detta alternativ är inaktiverat kommer tjänsten endast att kunna bokas "
-"från backend."
+"Om detta alternativ är inaktiverat kommer objektet endast att vara "
+"tillgängligt för bokning från backend."
 
 msgid ""
 "If this option is enabled customers will be able to pay via email "
@@ -5126,11 +5310,6 @@ msgid ""
 msgstr ""
 "Om det här alternativet är aktiverat kan kunderna betala via e-"
 "postmeddelanden eller via sin kundpanel."
-
-msgid ""
-"If this option is enabled time slots will be shown with included service "
-"buffer time."
-msgstr ""
 
 msgid ""
 "If this option is not checked the plugin will calculate the time <br> for "
@@ -5184,11 +5363,16 @@ msgid ""
 "time (working hours, special days and days off for all employees will be "
 "ignored)."
 msgstr ""
+"Om du aktiverar det här alternativet kan administratören boka möten när som "
+"helst (arbetstider, speciella dagar och lediga dagar för alla anställda "
+"ignoreras)."
 
 msgid ""
 "If you enable this option, Admin will be able to book appointment over or "
 "during another appointment."
 msgstr ""
+"Om du aktiverar det här alternativet kan administratören boka möten över "
+"eller under ett annat möte."
 
 msgid ""
 "If you enable this option every time a new customer schedules the "
@@ -5200,13 +5384,13 @@ msgstr ""
 "inloggningsuppgifter."
 
 msgid "Image"
-msgstr ""
+msgstr "Bild"
 
 msgid "Image Color"
 msgstr "Bildfärg"
 
 msgid "Image thumbs"
-msgstr ""
+msgstr "Bildminiatyrer"
 
 msgid "Import"
 msgstr "Importera"
@@ -5230,36 +5414,78 @@ msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
 "billing"
 msgstr ""
+"Förbättra noggrannheten och professionalismen med konsekvent, tydligt "
+"formaterad fakturering"
 
 msgid ""
 "Improve customer choice by letting clients book with the employee that suits "
 "them best"
 msgstr ""
+"Förbättra kundernas valmöjligheter genom att låta dem boka den anställde som "
+"passar dem bäst."
 
 msgid ""
 "Improve customer convenience by offering predictable, easy-to-book recurring "
 "options"
 msgstr ""
+"Förbättra kundernas bekvämlighet genom att erbjuda förutsägbara, lättbokade "
+"återkommande alternativ."
 
 msgid ""
 "Improve customer experience by letting clients choose the location that "
 "suits them best"
 msgstr ""
+"Förbättra kundupplevelsen genom att låta kunderna välja den plats som passar "
+"dem bäst"
 
 msgid ""
 "Improve reporting accuracy by accessing complete appointment data instantly"
 msgstr ""
+"Förbättra rapporteringens noggrannhet genom att få omedelbar tillgång till "
+"fullständiga mötesuppgifter"
 
 msgid ""
 "Improved customer retention as clients return to use the remaining sessions "
 "in their package"
 msgstr ""
+"Förbättrad kundlojalitet eftersom kunderna återvänder för att använda de "
+"återstående sessionerna i sitt paket."
+
+msgid ""
+"In Amelia, a “service” is a specific appointment-type offering your business "
+"provides to clients - such as consultations, treatments, or classes - that "
+"can be fully customized with its own name, duration, price, capacity, "
+"availability, and extras, and booked online with assigned employees."
+msgstr ""
+"I Amelia är en ”tjänst” en specifik typ av bokning som ditt företag erbjuder "
+"kunderna – till exempel konsultationer, behandlingar eller kurser – som kan "
+"anpassas helt med eget namn, varaktighet, pris, kapacitet, tillgänglighet "
+"och tillägg, och bokas online med tilldelade anställda."
+
+msgid ""
+"In Amelia, an employee is a team member who provides services or hosts "
+"events, with their own schedule, working hours, and assigned offerings."
+msgstr ""
+"I Amelia är en anställd en teammedlem som tillhandahåller tjänster eller "
+"arrangerar evenemang, med egen schemaläggning, arbetstider och tilldelade "
+"erbjudanden."
+
+msgid ""
+"In Amelia, an event is a booking-type offering designed for group activities "
+"or multi-day occasions - such as workshops, conferences, tours, or training "
+"series - that can be configured with its own schedule, capacity, pricing "
+"structure and assigned staff."
+msgstr ""
+"I Amelia är ett evenemang ett bokningsobjekt som är utformat för "
+"gruppaktiviteter eller flerdagarsevenemang – såsom workshops, konferenser, "
+"turer eller utbildningsserier – som kan konfigureras med eget schema, "
+"kapacitet, prisstruktur och tilldelad personal."
 
 msgid "In Package"
 msgstr "I paket"
 
 msgid "In package"
-msgstr ""
+msgstr "I paketet"
 
 msgid "Incl. VAT"
 msgstr "Inkl. moms"
@@ -5270,8 +5496,15 @@ msgstr "inkluderar"
 msgid "Include buffer time in calendar events"
 msgstr "Inkludera bufferttid i kalenderevenemang"
 
-msgid "Include in invoice"
+msgid ""
+"Include buffer time in slot calculation. When disabled, slots are based only "
+"on service duration."
 msgstr ""
+"Inkludera buffertid i slotberäkningen. När denna funktion är inaktiverad "
+"baseras slott endast på tjänstens varaktighet."
+
+msgid "Include in invoice"
+msgstr "Inkludera i faktura"
 
 msgid "Include service buffer time in time slots"
 msgstr "Inkludera bufferttid för tjänster i tidsluckor"
@@ -5283,16 +5516,22 @@ msgid ""
 "Increase conversions by motivating customers with attractive, limited-time "
 "deals"
 msgstr ""
+"Öka konverteringarna genom att motivera kunderna med attraktiva, "
+"tidsbegränsade erbjudanden"
 
 msgid ""
 "Increase revenue by encouraging customers to purchase additional services or "
 "products"
 msgstr ""
+"Öka intäkterna genom att uppmuntra kunderna att köpa ytterligare tjänster "
+"eller produkter."
 
 msgid ""
 "Increase sales volume by encouraging customers to book more appointments at "
 "once"
 msgstr ""
+"Öka försäljningsvolymen genom att uppmuntra kunderna att boka fler möten "
+"samtidigt."
 
 msgid ""
 "Indicates the number of new and returning customers<br/>for the selected "
@@ -5307,22 +5546,22 @@ msgid "Info"
 msgstr ""
 
 msgid "Info text"
-msgstr ""
+msgstr "Infotext"
 
 msgid "Initial end date & time of the event"
-msgstr ""
+msgstr "Initialt slutdatum och tid för evenemanget"
 
 msgid "Initial end date of the event"
-msgstr ""
+msgstr "Evenemangets ursprungliga slutdatum"
 
 msgid "Initial end time of the event"
-msgstr ""
+msgstr "Evenemangets ursprungliga sluttid"
 
 msgid "Initial start date & time of the event"
-msgstr ""
+msgstr "Evenemangets initiala startdatum och tid"
 
 msgid "Initial start time of the event"
-msgstr ""
+msgstr "Evenemangets initiala starttid"
 
 msgid "Input Color"
 msgstr "Inmatningsfärg"
@@ -5331,10 +5570,10 @@ msgid "Input Text Color"
 msgstr "Textfärg för inmatning"
 
 msgid "Input field"
-msgstr ""
+msgstr "Inmatningsfält"
 
 msgid "Input fields"
-msgstr ""
+msgstr "Inmatningsfält"
 
 msgid "Insert Amelia Booking Shortcode"
 msgstr "Infoga Amelia bokning Shortcode"
@@ -5351,6 +5590,9 @@ msgstr "Integrationer"
 
 msgid "Interested in unlocking this feature?"
 msgstr "Intresserad av att låsa upp denna funktion?"
+
+msgid "Invalid Stripe secret key."
+msgstr "Ogiltig hemlig nyckel för Stripe."
 
 msgid "Invisible reCAPTCHA badge"
 msgstr "Osynligt reCAPTCHA-märke"
@@ -5392,10 +5634,17 @@ msgid "Invoices"
 msgstr "Fakturor"
 
 msgid "Invoices setup"
-msgstr ""
+msgstr "Fakturainställningar"
 
 msgid "Issued"
 msgstr "Utfärdad"
+
+msgid ""
+"It looks like this is your first time here, so let’s walk through a few "
+"simple steps to help you get started."
+msgstr ""
+"Det verkar som om det här är första gången du är här, så låt oss gå igenom "
+"några enkla steg för att hjälpa dig komma igång."
 
 msgid ""
 "It seems like there are no available or visible services assigned to the "
@@ -5422,7 +5671,7 @@ msgid "Item"
 msgstr "Artikel"
 
 msgid "Item status"
-msgstr ""
+msgstr "Objektstatus"
 
 msgid "Jane Doe"
 msgstr "Lena Svensson"
@@ -5455,10 +5704,10 @@ msgid "Join waiting list"
 msgstr "Gå med i väntelistan"
 
 msgid "Join with Google Meet"
-msgstr ""
+msgstr "Gå med i Google Meet"
 
 msgid "Join with Microsoft Teams"
-msgstr ""
+msgstr "Gå med i Microsoft Teams"
 
 msgid "Keep Individual"
 msgstr "Behåll individuell"
@@ -5468,21 +5717,33 @@ msgid ""
 "notifications directly through WhatsApp - choose predefined messages or "
 "customize your own for a personal touch."
 msgstr ""
+"Håll kunder och anställda informerade genom att skicka aviseringar om möten "
+"och evenemang direkt via WhatsApp – välj fördefinierade meddelanden eller "
+"anpassa dina egna för en personlig touch."
 
 msgid ""
 "Keep everyone on track using scheduled reminders that reduce no-shows and "
 "confusion"
 msgstr ""
+"Håll alla på rätt spår med hjälp av schemalagda påminnelser som minskar "
+"antalet uteblivna besök och förvirring."
 
 msgid ""
 "Keep operations aligned with unified settings, availability, and resource "
 "control"
 msgstr ""
+"Håll verksamheten i linje med enhetliga inställningar, tillgänglighet och "
+"resurskontroll"
+
+msgid "Keep slot available after first booking"
+msgstr "Håll platsen tillgänglig efter första bokningen"
 
 msgid ""
 "Keep your data organized and meaningful with structured fields that "
 "standardize the information you collect"
 msgstr ""
+"Håll dina data organiserade och meningsfulla med strukturerade fält som "
+"standardiserar den information du samlar in."
 
 msgid "Label"
 msgstr "Etikett"
@@ -5497,7 +5758,7 @@ msgid "Language"
 msgstr "Språk"
 
 msgid "Languages"
-msgstr ""
+msgstr "Språk"
 
 msgid "Last"
 msgstr "Efternamn"
@@ -5557,13 +5818,13 @@ msgid "Lesson Space Links"
 msgstr "Länk till Lesson Space"
 
 msgid "Lesson Space link"
-msgstr ""
+msgstr "Länk till lektionsutrymme"
 
 msgid "Lesson Space link to join space"
-msgstr ""
+msgstr "Lektionens utrymme länk för att gå med i utrymmet"
 
 msgid "Lesson Space setup"
-msgstr ""
+msgstr "Inställningar för lektionsutrymme"
 
 msgid "Light Theme"
 msgstr "Ljust tema"
@@ -5625,7 +5886,7 @@ msgstr ""
 "genom att klicka på knappen Spara."
 
 msgid "List view"
-msgstr ""
+msgstr "Listvy"
 
 msgid "Live API key"
 msgstr "Live API-nyckel"
@@ -5664,10 +5925,7 @@ msgid "Local Time:"
 msgstr "Lokal tid:"
 
 msgid "Local time"
-msgstr ""
-
-msgid "Local time:"
-msgstr ""
+msgstr "Lokal tid"
 
 msgid "Location"
 msgstr "Plats"
@@ -5697,10 +5955,10 @@ msgid "Location description"
 msgstr "Plats beskrivning"
 
 msgid "Location details"
-msgstr ""
+msgstr "Platsinformation"
 
 msgid "Location filter"
-msgstr ""
+msgstr "Platsfilter"
 
 msgid "Location has been added."
 msgstr "Platsen har lagts till."
@@ -5721,10 +5979,10 @@ msgid "Location is now visible."
 msgstr "Platsen är nu synlig."
 
 msgid "Location latitude"
-msgstr ""
+msgstr "Platsens latitud"
 
 msgid "Location longitude"
-msgstr ""
+msgstr "Platsens longitud"
 
 msgid "Location name"
 msgstr "Namn på plats"
@@ -5733,7 +5991,7 @@ msgid "Location phone"
 msgstr "Plats telefon"
 
 msgid "Location selection"
-msgstr ""
+msgstr "Val av plats"
 
 msgid "Locations"
 msgstr "Platser"
@@ -5742,7 +6000,7 @@ msgid "Locations must be active and have card processing enabled"
 msgstr "Platser måste vara aktiva och ha kortbetalning aktiverad"
 
 msgid "Locations setup"
-msgstr ""
+msgstr "Inställningar för platser"
 
 msgid "Log In"
 msgstr "Logga in"
@@ -5760,16 +6018,16 @@ msgid "Longitude"
 msgstr "Longitud"
 
 msgid "Lower price background"
-msgstr ""
+msgstr "Lägre pris bakgrund"
 
 msgid "Lower price text"
-msgstr ""
+msgstr "Lägre pris text"
 
 msgid "Lowest price"
 msgstr "Lägsta pris"
 
 msgid "Mail service"
-msgstr ""
+msgstr "E-posttjänst"
 
 msgid "Mailchimp"
 msgstr ""
@@ -5778,7 +6036,7 @@ msgid "Mailchimp List"
 msgstr "Mailchimp-lista"
 
 msgid "Mailchimp setup"
-msgstr ""
+msgstr "Mailchimp-inställningar"
 
 msgid "Mailgun"
 msgstr "Postpistol"
@@ -5790,23 +6048,28 @@ msgid "Mailgun Domain"
 msgstr "Mailgun-domän"
 
 msgid "Main category button"
-msgstr ""
+msgstr "Huvudkategoriknapp"
 
 msgid "Main content"
-msgstr ""
+msgstr "Huvudsakligt innehåll"
 
 msgid ""
 "Maintain consistent scheduling with customizable frequencies and patterns"
 msgstr ""
+"Upprätthåll en konsekvent schemaläggning med anpassningsbara frekvenser och "
+"mönster"
 
 msgid "Make extra mandatory"
 msgstr "Gör extra obligatorisk"
+
+msgid "Make sure you are using the correct WhatsApp credentials."
+msgstr "Se till att du använder rätt WhatsApp-inloggningsuppgifter."
 
 msgid "Male"
 msgstr "Man"
 
 msgid "Manage badges"
-msgstr ""
+msgstr "Hantera märken"
 
 msgid "Manage bookings"
 msgstr "Hantera bokningar"
@@ -5825,16 +6088,16 @@ msgid "Manage languages"
 msgstr "Hantera språk"
 
 msgid "Manage personal schedule"
-msgstr ""
+msgstr "Hantera personlig schemaläggning"
 
 msgid "Manage shared resources with ease"
-msgstr ""
+msgstr "Hantera delade resurser med lätthet"
 
 msgid "Managing assigned services"
-msgstr ""
+msgstr "Hantera tilldelade tjänster"
 
 msgid "Managing packages"
-msgstr ""
+msgstr "Hantera paket"
 
 msgid "Mandatory Field:"
 msgstr "Obligatoriskt fält:"
@@ -5886,7 +6149,7 @@ msgid "Maximum quantity"
 msgstr "Maximal kvantitet"
 
 msgid "Maximum spots"
-msgstr ""
+msgstr "Maximalt antal platser"
 
 msgid "Maximum usage per customer"
 msgstr "Maximal användning per kund"
@@ -5907,7 +6170,7 @@ msgid "Message"
 msgstr "Meddelande"
 
 msgid "Message content"
-msgstr ""
+msgstr "Meddelandets innehåll"
 
 msgid "Message template"
 msgstr "Meddelandemall"
@@ -5916,6 +6179,8 @@ msgid ""
 "Messages sent through WhatsApp are without a reply option, so we advise "
 "setting the “Auto-reply” message"
 msgstr ""
+"Meddelanden som skickas via WhatsApp har ingen svarsfunktion, så vi "
+"rekommenderar att du ställer in ett automatiskt svarsmeddelande."
 
 msgid "Meta"
 msgstr ""
@@ -5924,7 +6189,7 @@ msgid "Meta Pixel"
 msgstr ""
 
 msgid "Meta Pixel setup"
-msgstr ""
+msgstr "Meta Pixel-inställningar"
 
 msgid "Method"
 msgstr "Metod"
@@ -5939,13 +6204,13 @@ msgid "Microsoft Teams Link"
 msgstr "Microsoft Teams-länk"
 
 msgid "Microsoft Teams join link"
-msgstr ""
+msgstr "Länk för att ansluta till Microsoft Teams"
 
 msgid "Microsoft Teams link"
-msgstr ""
+msgstr "Microsoft Teams-länk"
 
 msgid "Microsoft Teams setup"
-msgstr ""
+msgstr "Inställningar för Microsoft Teams"
 
 msgid "Min. Capacity"
 msgstr "Min. kapacitet"
@@ -5999,7 +6264,7 @@ msgid "Mollie"
 msgstr ""
 
 msgid "Mollie payment link"
-msgstr ""
+msgstr "Mollie-betalningslänk"
 
 msgid "Mon"
 msgstr "Mån"
@@ -6032,7 +6297,7 @@ msgid "Multiple Locations"
 msgstr "Flera platser"
 
 msgid "Multiple locations"
-msgstr ""
+msgstr "Flera platser"
 
 msgid "Multiple packages purchased."
 msgstr "Flera paket har köpts."
@@ -6044,7 +6309,7 @@ msgid "Multiply deposit amount by the number of people in one booking."
 msgstr "Multiplicera depositionsbeloppet med antalet personer i en bokning."
 
 msgid "Multiply deposit by number of people"
-msgstr ""
+msgstr "Multiplicera insättningen med antalet personer"
 
 msgid "Multiply price by number of people"
 msgstr "Multiplicera priset med antalet personer"
@@ -6053,7 +6318,7 @@ msgid "My Profile"
 msgstr "Min profil"
 
 msgid "My profile"
-msgstr ""
+msgstr "Min profil"
 
 msgid "Name"
 msgstr "Namn"
@@ -6086,7 +6351,7 @@ msgid "Need additional fields?"
 msgstr "Behöver du ytterligare fält?"
 
 msgid "Need help?"
-msgstr ""
+msgstr "Behöver du hjälp?"
 
 msgid "Need to update your company's days off?"
 msgstr "Behöver du uppdatera företagets lediga dagar?"
@@ -6119,46 +6384,46 @@ msgid "New Update"
 msgstr "Ny uppdatering"
 
 msgid "New appointment"
-msgstr ""
+msgstr "Ny tid"
 
 msgid "New category"
-msgstr ""
+msgstr "Ny kategori"
 
 msgid "New coupon"
-msgstr ""
+msgstr "Ny kupong"
 
 msgid "New customer"
-msgstr ""
+msgstr "Ny kund"
 
 msgid "New employee"
-msgstr ""
+msgstr "Nyanställd"
 
 msgid "New event"
-msgstr ""
+msgstr "Nytt evenemang"
 
 msgid "New event booking"
-msgstr ""
+msgstr "Ny evenemangsbokning"
 
 msgid "New language"
 msgstr "Nytt språk"
 
 msgid "New package"
-msgstr ""
+msgstr "Nytt paket"
 
 msgid "New package booking"
-msgstr ""
+msgstr "Ny paketbokning"
 
 msgid "New password"
 msgstr "Nytt lösenord"
 
 msgid "New resource"
-msgstr ""
+msgstr "Ny resurs"
 
 msgid "New service"
-msgstr ""
+msgstr "Ny tjänst"
 
 msgid "New tax"
-msgstr ""
+msgstr "Ny skatt"
 
 msgid "Next"
 msgstr "Nästa"
@@ -6167,13 +6432,10 @@ msgid "Next Service"
 msgstr "Nästa tjänst"
 
 msgid "Next day reminder"
-msgstr ""
+msgstr "Påminnelse nästa dag"
 
 msgid "No"
 msgstr "Nej"
-
-msgid "No, Cancel"
-msgstr "Avbryt"
 
 msgid "No, just this one"
 msgstr "Nej, bara den här"
@@ -6182,7 +6444,7 @@ msgid "No-show"
 msgstr "Icke infinnande"
 
 msgid "No-show tag"
-msgstr ""
+msgstr "Tagg för utebliven ankomst"
 
 msgid "No Employees Assigned to This Location"
 msgstr "Inga anställda tilldelade denna plats"
@@ -6215,7 +6477,7 @@ msgid "No appointments found"
 msgstr "Inga avtalade tider hittades"
 
 msgid "No appointments yet"
-msgstr ""
+msgstr "Inga möten ännu"
 
 msgid "No attendees found"
 msgstr "Inga deltagare hittades"
@@ -6230,55 +6492,55 @@ msgid "No camera found on this device."
 msgstr "Ingen kamera hittades på denna enhet."
 
 msgid "No coupons yet"
-msgstr ""
+msgstr "Inga kuponger ännu"
 
 msgid "No custom fields yet"
-msgstr ""
+msgstr "Inga anpassade fält ännu"
 
 msgid "No customers were imported to your customer list."
 msgstr "Inga kunder importerades till din kundlista."
 
 msgid "No customers yet"
-msgstr ""
+msgstr "Inga kunder ännu"
 
 msgid "No employees yet"
-msgstr ""
+msgstr "Inga anställda ännu"
 
 msgid "No event bookings yet"
-msgstr ""
+msgstr "Inga evenemangsbokningar ännu"
 
 msgid "No events found"
 msgstr "Inga evenemang hittades"
 
 msgid "No events yet"
-msgstr ""
+msgstr "Inga evenemang ännu"
 
 msgid "No extras yet"
-msgstr ""
+msgstr "Inga extrafunktioner ännu"
 
 msgid "No invoices yet"
-msgstr ""
+msgstr "Inga fakturor ännu"
 
 msgid "No limit per customer"
 msgstr "Ingen gräns per kund"
 
 msgid "No locations yet"
-msgstr ""
+msgstr "Inga platser ännu"
 
 msgid "No matching data"
 msgstr "Inga matchande uppgifter"
 
 msgid "No package bookings yet"
-msgstr ""
+msgstr "Inga paketbokningar ännu"
 
 msgid "No packages found"
 msgstr "Inga paket hittades"
 
 msgid "No packages yet"
-msgstr ""
+msgstr "Inga paket ännu"
 
 msgid "No resources yet"
-msgstr ""
+msgstr "Inga resurser ännu"
 
 msgid "No results"
 msgstr "Inga resultat"
@@ -6293,7 +6555,7 @@ msgid "No results found for"
 msgstr "Inga resultat hittades för"
 
 msgid "No services or employees available"
-msgstr ""
+msgstr "Inga tjänster eller anställda tillgängliga"
 
 msgid "No services yet"
 msgstr "Inga tjänster ännu"
@@ -6302,16 +6564,16 @@ msgid "No spots left"
 msgstr "Inga platser kvar"
 
 msgid "No taxes yet"
-msgstr ""
+msgstr "Inga skatter ännu"
 
 msgid "No top trends"
-msgstr ""
+msgstr "Inga topptrender"
 
 msgid "No transactions yet"
-msgstr ""
+msgstr "Inga transaktioner ännu"
 
 msgid "No upcoming events"
-msgstr ""
+msgstr "Inga kommande evenemang"
 
 msgid "No usage limit"
 msgstr "Ingen användningsbegränsning"
@@ -6332,7 +6594,7 @@ msgid "Note (Internal)"
 msgstr "Anmärkning (intern)"
 
 msgid "Note (internal)"
-msgstr ""
+msgstr "Anmärkning (intern)"
 
 msgid "Notice: Please select at least one panel."
 msgstr "Obs: Välj minst en panel."
@@ -6365,7 +6627,7 @@ msgid "Notification name"
 msgstr "Notisnamn"
 
 msgid "Notification settings"
-msgstr ""
+msgstr "Inställningar för aviseringar"
 
 msgid "Notification status has been updated."
 msgstr "Aviseringsstatus har uppdaterats."
@@ -6395,13 +6657,10 @@ msgid "Notify the attendee(s)"
 msgstr "Meddela kunden/kunderna"
 
 msgid "Notify the attendees"
-msgstr ""
+msgstr "Meddela deltagarna"
 
 msgid "Notify the customer(s)"
 msgstr "Meddela kunden/kunderna"
-
-msgid "Notify the customer(s) by default"
-msgstr "Meddela kunden/kunderna som standard"
 
 msgid "Number of Additional People"
 msgstr "Antal ytterligare personer"
@@ -6437,19 +6696,19 @@ msgid "Number of people"
 msgstr "Antal personer"
 
 msgid "Number of people on waiting list"
-msgstr ""
+msgstr "Antal personer på väntelistan"
 
 msgid "Number of people that are coming with you."
 msgstr "Antal personer som följer med dig."
 
 msgid "Number of recurrences:"
-msgstr ""
+msgstr "Antal förekomster:"
 
 msgid "Number of tickets"
 msgstr "Antal ärenden"
 
 msgid "Occupancy rate"
-msgstr ""
+msgstr "Beläggningsgrad"
 
 msgid "Occupied"
 msgstr "Upptagen"
@@ -6476,6 +6735,9 @@ msgid ""
 "additional services, products, or experiences to enhance appointments and "
 "delight your customers."
 msgstr ""
+"Erbjud valfria eller obligatoriska tillägg under bokningsprocessen – sälj in "
+"ytterligare tjänster, produkter eller upplevelser för att förbättra "
+"bokningarna och göra dina kunder nöjda."
 
 msgid ""
 "Offer services with multiple duration options for customers to choose from."
@@ -6514,13 +6776,13 @@ msgid "On Break"
 msgstr "På rast"
 
 msgid "On hold"
-msgstr ""
+msgstr "På vänt"
 
 msgid "On the same day"
 msgstr "Samma dag"
 
 msgid "On the same day each month"
-msgstr ""
+msgstr "Samma dag varje månad"
 
 msgid "Once Off"
 msgstr "En gång av"
@@ -6536,31 +6798,43 @@ msgid ""
 "Once you add your first custom field, it will appear here. Click + Custom "
 "Field below to get started."
 msgstr ""
+"När du har lagt till ditt första anpassade fält visas det här. Klicka på + "
+"Anpassat fält nedan för att komma igång."
 
 msgid ""
 "Once you add your first employee, it will appear here. Click + Employee "
 "below to get started."
 msgstr ""
+"När du har lagt till din första anställd kommer denne att visas här. Klicka "
+"på + Anställd nedan för att komma igång."
 
 msgid ""
 "Once you add your first event, it will appear here. Click + Event below to "
 "get started."
 msgstr ""
+"När du har lagt till din första händelse visas den här. Klicka på + Händelse "
+"nedan för att komma igång."
 
 msgid ""
 "Once you add your first extra, it will appear here. Click + Extra above to "
 "get started."
 msgstr ""
+"När du har lagt till din första extrafunktion visas den här. Klicka på + "
+"Extra ovan för att komma igång."
 
 msgid ""
 "Once you add your first package, it will appear here. Click + Package below "
 "to get started."
 msgstr ""
+"När du har lagt till ditt första paket visas det här. Klicka på + Paket "
+"nedan för att komma igång."
 
 msgid ""
 "Once you add your first resource, it will appear here. Click + Resource "
 "below to get started."
 msgstr ""
+"När du har lagt till din första resurs visas den här. Klicka på + Resurs "
+"nedan för att komma igång."
 
 msgid "Once you add your first service, it will appear here."
 msgstr "När du har lagt till din första tjänst kommer den att visas här."
@@ -6569,6 +6843,8 @@ msgid ""
 "Once you add your first tax, it will appear here. Click + Tax below to get "
 "started."
 msgstr ""
+"När du har lagt till din första skatt visas den här. Klicka på + Skatt nedan "
+"för att komma igång."
 
 msgid ""
 "Once you receive bookings, your appointments will be displayed here. You can "
@@ -6606,10 +6882,10 @@ msgstr "När du börjar ta emot bokningar kommer transaktioner att visas här."
 
 msgid ""
 "Once you start receiving bookings, your customers will be displayed here. "
-"You can also get started by clicking the Add button below."
+"You can also get started by clicking the Add or Import button below."
 msgstr ""
-"När du börjar ta emot bokningar kommer dina kunder att visas här. Du kan "
-"också komma igång genom att klicka på knappen Lägg till nedan."
+"När du börjar ta emot bokningar visas dina kunder här. Du kan också komma "
+"igång genom att klicka på knappen Lägg till eller Importera nedan."
 
 msgid "One booking can have multiple attendees/spots in it."
 msgstr "En bokning kan ha flera deltagare/platser i den."
@@ -6668,9 +6944,6 @@ msgstr "Alternativ:"
 msgid "Or"
 msgstr "Eller"
 
-msgid "Or Enter details below"
-msgstr "Skriv in postadressen"
-
 msgid "Or enter details below"
 msgstr "Information om gruppevenemang"
 
@@ -6699,7 +6972,7 @@ msgid "Other"
 msgstr "Annat"
 
 msgid "Outline"
-msgstr ""
+msgstr "Översikt"
 
 msgid "Outlook Calendar"
 msgstr "Outlook Kalender"
@@ -6708,10 +6981,10 @@ msgid "Outlook Calendar & Microsoft Teams"
 msgstr "Outlook-kalender & Microsoft Teams"
 
 msgid "Outlook Calendar WP hooks"
-msgstr ""
+msgstr "Outlook-kalender WP-krokar"
 
 msgid "Outlook Calendar setup"
-msgstr ""
+msgstr "Inställningar för Outlook-kalendern"
 
 msgid "Outlook Mailer"
 msgstr "Outlook Kalender"
@@ -6769,13 +7042,13 @@ msgid "Package appointment has been updated."
 msgstr "Paketbokning har uppdaterats."
 
 msgid "Package appointments"
-msgstr ""
+msgstr "Paketera möten"
 
 msgid "Package appointments details"
 msgstr "Information om avtalade tider"
 
 msgid "Package badge"
-msgstr ""
+msgstr "Paketmärke"
 
 msgid "Package booking details"
 msgstr "Detaljer om paketbokning"
@@ -6796,13 +7069,13 @@ msgid "Package canceled"
 msgstr "Paket avbokad"
 
 msgid "Package capacity"
-msgstr ""
+msgstr "Paketkapacitet"
 
 msgid "Package category"
-msgstr ""
+msgstr "Paketkategori"
 
 msgid "Package count"
-msgstr ""
+msgstr "Antal paket"
 
 msgid "Package deal"
 msgstr "Paketerbjudande"
@@ -6820,7 +7093,7 @@ msgid "Package duration"
 msgstr "Paketets varaktighet"
 
 msgid "Package filter"
-msgstr ""
+msgstr "Paketfilter"
 
 msgid "Package has been created."
 msgstr "Paket har skapats."
@@ -6838,28 +7111,28 @@ msgid "Package includes"
 msgstr "Paketet innehåller"
 
 msgid "Package info"
-msgstr ""
+msgstr "Paketinformation"
 
 msgid "Package is now visible."
 msgstr "Paketet är nu synligt."
 
 msgid "Package location"
-msgstr ""
+msgstr "Paketets plats"
 
 msgid "Package management"
-msgstr ""
+msgstr "Pakethantering"
 
 msgid "Package name"
 msgstr "Paketnamn"
 
 msgid "Package overview"
-msgstr ""
+msgstr "Paketöversikt"
 
 msgid "Package price"
 msgstr "Paketpris"
 
 msgid "Package price:"
-msgstr ""
+msgstr "Paketpris:"
 
 msgid "Package purchased"
 msgstr "Paket köpt"
@@ -6868,28 +7141,28 @@ msgid "Package rules and description"
 msgstr "Paketregler och beskrivning"
 
 msgid "Package selection"
-msgstr ""
+msgstr "Paketval"
 
 msgid "Package services list"
-msgstr ""
+msgstr "Lista över pakettjänster"
 
 msgid "Packages"
 msgstr "Paket"
 
 msgid "Packages appointments"
-msgstr ""
+msgstr "Paketbokningar"
 
 msgid "Packages block"
-msgstr ""
+msgstr "Paketblock"
 
 msgid "Packages have been reordered."
 msgstr "Paketen har omorganiserats."
 
 msgid "Packages overview"
-msgstr ""
+msgstr "Översikt över paket"
 
 msgid "Packages popup"
-msgstr ""
+msgstr "Popup-fönster för paket"
 
 msgid "Paddle"
 msgstr "Paddel"
@@ -6898,19 +7171,19 @@ msgid "Page"
 msgstr "Sida"
 
 msgid "Page card"
-msgstr ""
+msgstr "Sidkort"
 
 msgid "Page content"
-msgstr ""
+msgstr "Sidans innehåll"
 
 msgid "Page header"
-msgstr ""
+msgstr "Sidhuvud"
 
 msgid "Page messages"
-msgstr ""
+msgstr "Sidmeddelanden"
 
 msgid "Page scroll"
-msgstr ""
+msgstr "Sidrullning"
 
 msgid "Paid"
 msgstr "Betald"
@@ -6928,10 +7201,10 @@ msgid "Panel Button Type"
 msgstr "Typ av panelknapp"
 
 msgid "Panel access"
-msgstr ""
+msgstr "Panelåtkomst"
 
 msgid "Panel recovery"
-msgstr ""
+msgstr "Panelåterställning"
 
 msgid "Panel subtab name"
 msgstr "Namn på underfältet för panelen"
@@ -6982,11 +7255,15 @@ msgid ""
 "Paste the secret key you received after creating your API key pair in Google "
 "reCAPTCHA."
 msgstr ""
+"Klistra in den hemliga nyckeln som du fick efter att du skapade ditt API-"
+"nyckelpar i Google reCAPTCHA."
 
 msgid ""
 "Paste the site key you received after generating your API key pair in Google "
 "reCAPTCHA."
 msgstr ""
+"Klistra in webbplatsnyckeln som du fick efter att du genererat ditt API-"
+"nyckelpar i Google reCAPTCHA."
 
 msgid "Pay"
 msgstr "Dag"
@@ -6995,7 +7272,7 @@ msgid "PayPal"
 msgstr ""
 
 msgid "PayPal payment link"
-msgstr ""
+msgstr "PayPal-betalningslänk"
 
 msgid "Pay for all appointments at once"
 msgstr "Betala för alla bokningar på en gång"
@@ -7026,9 +7303,6 @@ msgstr "Betalningshistorik"
 
 msgid "Payment ID"
 msgstr "Betalnings-id"
-
-msgid "Payment ID:"
-msgstr "Betalning-ID:"
 
 msgid "Payment Method"
 msgstr "Betalningsmetod"
@@ -7064,7 +7338,7 @@ msgid "Payment error"
 msgstr "Fel vid betalningen"
 
 msgid "Payment history"
-msgstr ""
+msgstr "Betalningshistorik"
 
 msgid "Payment link for Barion"
 msgstr "Betalningslänk för Stripe"
@@ -7082,19 +7356,22 @@ msgid "Payment protected by policy and powered by"
 msgstr "Betalning som skyddas av policy och drivs av"
 
 msgid "Payment segment"
-msgstr ""
+msgstr "Betalningssegment"
 
 msgid "Payment status"
 msgstr "Betalningsstatus"
 
 msgid "Payment summary"
-msgstr ""
+msgstr "Betalningsöversikt"
 
 msgid "Payment type"
 msgstr "Betalningssätt"
 
 msgid "Payment type, deposit payment..."
 msgstr "Betalningstyp, insättning..."
+
+msgid "Payment was canceled."
+msgstr "Betalningen har avbrutits."
 
 msgid "Payments"
 msgstr "Betalningar"
@@ -7112,7 +7389,7 @@ msgid "People"
 msgstr "Personer"
 
 msgid "People counting logic"
-msgstr ""
+msgstr "Logik för personräkning"
 
 msgid "Per Location"
 msgstr "Per plats"
@@ -7160,7 +7437,7 @@ msgid "Personal Information"
 msgstr "Din information"
 
 msgid "Personal information"
-msgstr ""
+msgstr "Personuppgifter"
 
 msgid "Phone"
 msgstr "Telefon"
@@ -7214,10 +7491,17 @@ msgid "Placeholder copied to clipboard."
 msgstr "Platshållare kopierad till urklipp."
 
 msgid "Placeholder text"
-msgstr ""
+msgstr "Platshållartext"
 
 msgid "Placeholders"
 msgstr "Platshållare"
+
+msgid ""
+"Places API (New) is required but not enabled. Please enable it in Google "
+"Cloud Console."
+msgstr ""
+"Places API (nytt) krävs men är inte aktiverat. Aktivera det i Google Cloud "
+"Console."
 
 msgid "Plain"
 msgstr "Enkel"
@@ -7278,7 +7562,7 @@ msgid "Please enter a first name."
 msgstr "Vänligen ange ett förnamn."
 
 msgid "Please enter a last name"
-msgstr ""
+msgstr "Ange ett efternamn"
 
 msgid "Please enter a live publishable key."
 msgstr "Vänligen ange en live-publicerbar nyckel."
@@ -7326,7 +7610,7 @@ msgid "Please enter a test secret key."
 msgstr "Vänligen ange en testhemlig nyckel."
 
 msgid "Please enter a ticket code."
-msgstr ""
+msgstr "Ange en biljettkod."
 
 msgid "Please enter a ticket name."
 msgstr "Vänligen ange ett biljettnamn."
@@ -7382,20 +7666,20 @@ msgstr "Vänligen ange efter namn"
 msgid "Please enter live API Key"
 msgstr "Ange en API-nyckel för live-användning"
 
-msgid "Please enter live ClientId"
-msgstr "Ange Live ClientId"
-
 msgid "Please enter live POSKey"
 msgstr "Ange en API-nyckel för live-användning"
 
-msgid "Please enter live Secret"
-msgstr "Vänligen ange Live Secret"
+msgid "Please enter live client ID"
+msgstr "Ange live-klient-ID"
 
-msgid "Please enter live key id"
-msgstr "Ange live nyckel-id"
+msgid "Please enter live key ID"
+msgstr "Ange live-nyckel-ID"
 
 msgid "Please enter live key secret"
 msgstr "Ange hemligheten för live-nyckeln"
+
+msgid "Please enter live secret"
+msgstr "Ange live-hemlighet"
 
 msgid "Please enter name"
 msgstr "Vänligen ange namn"
@@ -7430,17 +7714,17 @@ msgstr "Ange namnet på skattesatsen."
 msgid "Please enter test API Key"
 msgstr "Ange API-nyckel för test"
 
-msgid "Please enter test ClientId"
-msgstr "Ange test ClientId"
+msgid "Please enter test client ID"
+msgstr "Ange testklient-ID"
 
-msgid "Please enter test Secret"
-msgstr "Vänligen ange test Secret"
-
-msgid "Please enter test key id"
-msgstr "Ange testnyckel-id"
+msgid "Please enter test key ID"
+msgstr "Ange testnyckel-ID"
 
 msgid "Please enter test key secret"
 msgstr "Ange testnyckelns hemlighet"
+
+msgid "Please enter test secret"
+msgstr "Ange testhemlighet"
 
 msgid "Please enter waiting list capacity"
 msgstr "Ange kapacitet för väntelistan"
@@ -7495,7 +7779,7 @@ msgid "Please select a duration."
 msgstr "Vänligen välj en varaktighet."
 
 msgid "Please select a location"
-msgstr ""
+msgstr "Välj en plats"
 
 msgid "Please select a location."
 msgstr "Vänligen välj en plats."
@@ -7543,7 +7827,7 @@ msgid "Please select an opening time."
 msgstr "Vänligen välj en öppningstid."
 
 msgid "Please select an option."
-msgstr ""
+msgstr "Välj ett alternativ."
 
 msgid "Please select at least one customer"
 msgstr "Vänligen välj minst en kund"
@@ -7615,10 +7899,10 @@ msgid "Popup Heading"
 msgstr "Väntande"
 
 msgid "Popup buttons"
-msgstr ""
+msgstr "Popup-knappar"
 
 msgid "Popup title"
-msgstr ""
+msgstr "Popup-titel"
 
 msgid "Preload entities when page loads"
 msgstr "Förladda entiteter när sidan laddas"
@@ -7649,6 +7933,8 @@ msgid ""
 "Prevent scheduling conflicts with real-time calendar syncing for every "
 "employee."
 msgstr ""
+"Förhindra schemakonflikter med kalendersynkronisering i realtid för alla "
+"anställda."
 
 msgid "Preview"
 msgstr "Förhandsgranska"
@@ -7657,10 +7943,10 @@ msgid "Preview Invoice"
 msgstr "Förhandsgranska"
 
 msgid "Preview invoice"
-msgstr ""
+msgstr "Förhandsgranska faktura"
 
 msgid "Previous range"
-msgstr ""
+msgstr "Föregående intervall"
 
 msgid "Price"
 msgstr "Pris"
@@ -7681,7 +7967,7 @@ msgid "Price Descending"
 msgstr "Pris Fallande"
 
 msgid "Price indicators"
-msgstr ""
+msgstr "Prisindikatorer"
 
 msgid "Price number of decimals"
 msgstr "Antal decimaler för pris"
@@ -7735,13 +8021,13 @@ msgid "Primary and state colors"
 msgstr "Primär- och statsfärger"
 
 msgid "Primary button style"
-msgstr ""
+msgstr "Primär knappstil"
 
 msgid "Primary color"
-msgstr ""
+msgstr "Primärfärg"
 
 msgid "Primary text"
-msgstr ""
+msgstr "Primär text"
 
 msgid "Process payments easily with Square."
 msgstr "Hantera betalningar enkelt med Square."
@@ -7781,7 +8067,7 @@ msgstr ""
 "dem efter dina affärsbehov."
 
 msgid "Publish"
-msgstr ""
+msgstr "Publicera"
 
 msgid "Publish Form"
 msgstr "Publicera formulär"
@@ -7829,6 +8115,8 @@ msgid ""
 "Quickly download all appointment details from the Bookings page, making "
 "reporting, analysis, and record-keeping simple and efficient."
 msgstr ""
+"Ladda snabbt ner alla mötesdetaljer från sidan Bokningar, vilket gör "
+"rapportering, analys och dokumentation enkelt och effektivt."
 
 msgid "Radio button"
 msgstr "Radioknapp"
@@ -7843,13 +8131,13 @@ msgid "Razorpay"
 msgstr ""
 
 msgid "Razorpay payment link"
-msgstr ""
+msgstr "Razorpay-betalningslänk"
 
 msgid "Re-type New Password"
 msgstr "Skriv in det nya lösenordet igen"
 
 msgid "Re-type new password"
-msgstr ""
+msgstr "Skriv in det nya lösenordet igen"
 
 msgid "Read more"
 msgstr "Läs mer"
@@ -7858,13 +8146,13 @@ msgid "Recharge"
 msgstr "Ladda"
 
 msgid "Recharge balance"
-msgstr ""
+msgstr "Ladda saldo"
 
 msgid "Recipient email"
-msgstr ""
+msgstr "Mottagarens e-postadress"
 
 msgid "Recipient phone"
-msgstr ""
+msgstr "Mottagarens telefonnummer"
 
 msgid "Recurrence"
 msgstr "Upprepning"
@@ -7888,7 +8176,7 @@ msgid "Recurring Summary"
 msgstr "Sammanfattning av återkomster"
 
 msgid "Recurring appointment"
-msgstr ""
+msgstr "Återkommande möte"
 
 msgid "Recurring appointment payment"
 msgstr "Betalning för återkommande bokningar"
@@ -7897,13 +8185,13 @@ msgid "Recurring appointments"
 msgstr "Återkommande bokningar"
 
 msgid "Recurring appointments:"
-msgstr ""
+msgstr "Återkommande möten:"
 
 msgid "Recurring appointments details"
 msgstr "Väntande tidsbeställningar"
 
 msgid "Recurring appointments setup"
-msgstr ""
+msgstr "Inställning av återkommande möten"
 
 msgid "Recurring events"
 msgstr "Återkommande händelser"
@@ -7915,13 +8203,13 @@ msgid "Recurring popup"
 msgstr "Återkommande popup"
 
 msgid "Recurring summary"
-msgstr ""
+msgstr "Återkommande sammanfattning"
 
 msgid "Red"
 msgstr "Röd"
 
 msgid "Redirect"
-msgstr ""
+msgstr "Omdirigera"
 
 msgid "Redirect URI"
 msgstr "Omdirigera URL"
@@ -7961,6 +8249,8 @@ msgstr "Omdirigera sida"
 
 msgid "Reduce no-shows with timely reminders sent automatically"
 msgstr ""
+"Minska antalet uteblivna besök med automatiska påminnelser som skickas i "
+"rätt tid"
 
 msgid "Reflect On"
 msgstr "Reflektera över"
@@ -7978,7 +8268,7 @@ msgid "Registration, Telephone Number, Email"
 msgstr "Registrering, telefonnummer, e-post"
 
 msgid "Reject appointment link"
-msgstr ""
+msgstr "Avvisa bokningslänk"
 
 msgid "Rejected"
 msgstr "Nekad"
@@ -7993,7 +8283,7 @@ msgid "Remind me when my SMS balance is low"
 msgstr "Påminn mig när mitt SMS-saldo är lågt"
 
 msgid "Remove Apple Calendar busy slots"
-msgstr ""
+msgstr "Ta bort upptagna tider i Apple Kalender"
 
 msgid "Remove Attendee"
 msgstr "Ta bort deltagare"
@@ -8002,7 +8292,7 @@ msgid "Remove Google Calendar busy slots"
 msgstr "Ta bort upptagna tider från Google Kalender"
 
 msgid "Remove Outlook Calendar busy slots"
-msgstr ""
+msgstr "Ta bort upptagna tider i Outlook-kalendern"
 
 msgid "Reorder Packages"
 msgstr "Omordna paket"
@@ -8050,7 +8340,7 @@ msgid "Repeat every year"
 msgstr "Upprepa varje år"
 
 msgid "Repeat new password"
-msgstr ""
+msgstr "Upprepa nytt lösenord"
 
 msgid "Repeat on"
 msgstr "Upprepa"
@@ -8065,7 +8355,7 @@ msgid "Replace"
 msgstr "Ersätt"
 
 msgid "Reply-to email"
-msgstr ""
+msgstr "Svara till e-post"
 
 msgid "Require password for login"
 msgstr "Kräv lösenord för inloggning"
@@ -8080,7 +8370,7 @@ msgid "Reschedule"
 msgstr "Boka om"
 
 msgid "Reschedule appointment"
-msgstr ""
+msgstr "Boka om möte"
 
 msgid "Rescheduled"
 msgstr "Ombokat"
@@ -8094,8 +8384,11 @@ msgstr "Återställ formulär"
 msgid "Reset Password"
 msgstr "Återställ lösenord"
 
+msgid "Reset form settings"
+msgstr "Återställ formulärinställningar"
+
 msgid "Reset password"
-msgstr ""
+msgstr "Återställ lösenord"
 
 msgid "Resource"
 msgstr "Resurs"
@@ -8104,7 +8397,7 @@ msgid "Resource Details"
 msgstr "Resursdetaljer"
 
 msgid "Resource booking setup"
-msgstr ""
+msgstr "Inställningar för resursbokning"
 
 msgid "Resource has been added."
 msgstr "Resursen har lagts till."
@@ -8124,6 +8417,9 @@ msgstr "Resursen är nu synlig."
 msgid "Resources"
 msgstr "Resurser"
 
+msgid "Return to Home"
+msgstr "Återgå till startsidan"
+
 msgid "Returning"
 msgstr "Återkommande"
 
@@ -8140,7 +8436,7 @@ msgid "Roles & permissions"
 msgstr "Roller och behörigheter"
 
 msgid "Roles settings"
-msgstr ""
+msgstr "Rollinställningar"
 
 msgid "Round-robin"
 msgstr ""
@@ -8158,10 +8454,10 @@ msgid "SMS Settings"
 msgstr "SMS-inställningar"
 
 msgid "SMS balance"
-msgstr ""
+msgstr "SMS-saldo"
 
 msgid "SMS history"
-msgstr ""
+msgstr "SMS-historik"
 
 msgid "SMTP"
 msgstr "Smtp"
@@ -8181,6 +8477,11 @@ msgstr "SMTP säkra"
 msgid "SMTP Username"
 msgstr "Utgående SMTP-server"
 
+msgid "SMTP credentials validation failed. Please check your settings."
+msgstr ""
+"SMTP-autentiseringsuppgifter kunde inte verifieras. Kontrollera dina "
+"inställningar."
+
 msgid "SSL"
 msgstr ""
 
@@ -8191,7 +8492,7 @@ msgid "Sandbox mode"
 msgstr "Sandlådeläge"
 
 msgid "Sandbox secret key (POSKey)"
-msgstr ""
+msgstr "Sandbox-hemlig nyckel (POSKey)"
 
 msgid "Sat"
 msgstr "Lör"
@@ -8212,20 +8513,24 @@ msgid "Save Special Day"
 msgstr "Spara en speciell dag"
 
 msgid "Save changes"
-msgstr ""
+msgstr "Spara ändringar"
 
 msgid "Save time and reduce manual work with instant, auto-generated invoices"
 msgstr ""
+"Spara tid och minska manuellt arbete med omedelbara, automatiskt genererade "
+"fakturor"
 
 msgid ""
 "Save time by automating repeating events instead of creating them manually"
 msgstr ""
+"Spara tid genom att automatisera återkommande händelser istället för att "
+"skapa dem manuellt"
 
 msgid "Save time with fast, one-click appointment exports"
-msgstr ""
+msgstr "Spara tid med snabb export av bokningar med ett enda klick"
 
 msgid "Save time with quick, hassle-free customer data exports"
-msgstr ""
+msgstr "Spara tid med snabba, smidiga exporter av kunddata"
 
 msgid "Scan"
 msgstr "Skanna"
@@ -8234,7 +8539,7 @@ msgid "Scan E-Ticket"
 msgstr "Välj tid"
 
 msgid "Scan e-ticket"
-msgstr ""
+msgstr "Skanna e-biljett"
 
 msgid "Schedule"
 msgstr "Schema"
@@ -8243,7 +8548,7 @@ msgid "Schedule:"
 msgstr "Schema"
 
 msgid "Schedule setup required"
-msgstr ""
+msgstr "Schemaläggning krävs"
 
 msgid "Scheduled"
 msgstr "Schemalagd"
@@ -8306,7 +8611,7 @@ msgid "Search events"
 msgstr "Sök evenemang"
 
 msgid "Search extras"
-msgstr ""
+msgstr "Sök extra"
 
 msgid "Search features"
 msgstr "Sök funktioner"
@@ -8315,7 +8620,7 @@ msgid "Search for Events"
 msgstr "Sök rabattkuponger"
 
 msgid "Search for events"
-msgstr ""
+msgstr "Sök efter evenemang"
 
 msgid "Search integrations"
 msgstr "Sök integrationer"
@@ -8324,7 +8629,7 @@ msgid "Search invoices"
 msgstr "Sök fakturor"
 
 msgid "Search locations"
-msgstr ""
+msgstr "Sökplatser"
 
 msgid "Search notifications"
 msgstr "Sök aviseringar"
@@ -8342,19 +8647,19 @@ msgid "Second {day}"
 msgstr "Andra {day}"
 
 msgid "Secondary"
-msgstr ""
+msgstr "Sekundär"
 
 msgid "Secondary Button Type"
 msgstr "Sekundär knapptyp"
 
 msgid "Secondary button style"
-msgstr ""
+msgstr "Sekundär knappstil"
 
 msgid "Secondary color"
-msgstr ""
+msgstr "Sekundär färg"
 
 msgid "Secondary text"
-msgstr ""
+msgstr "Sekundär text"
 
 msgid "Secret key (POSKey)"
 msgstr "Hemlig nyckel (POSKey)"
@@ -8365,7 +8670,7 @@ msgstr "Avdrag"
 msgid "Securely process payments using Stripe."
 msgstr "Bearbeta betalningar säkert med Stripe."
 
-msgid "Segment:"
+msgid "Segment"
 msgstr ""
 
 msgid "Segments"
@@ -8452,6 +8757,9 @@ msgstr "Välj Zoom användare"
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr "Välj en platshållare för att infoga den där markören är placerad."
 
+msgid "Select at least one option."
+msgstr "Välj minst ett alternativ."
+
 msgid "Select box"
 msgstr "Välj box"
 
@@ -8462,7 +8770,7 @@ msgid "Select customer, employee and service"
 msgstr "Välj kund, medarbetare och service"
 
 msgid "Select date"
-msgstr ""
+msgstr "Välj datum"
 
 msgid "Select date and time"
 msgstr "Välj kund och tjänst"
@@ -8497,7 +8805,7 @@ msgid "Select package"
 msgstr "Välj paket"
 
 msgid "Select placeholder"
-msgstr ""
+msgstr "Välj platshållare"
 
 msgid "Select service"
 msgstr "Välj tjänst"
@@ -8527,6 +8835,9 @@ msgid ""
 "Select the employee who will be added as the organizer of the Google/Outlook/"
 "Apple Calendar event. Employees selected under Staff will be added as guests."
 msgstr ""
+"Välj den anställde som ska läggas till som arrangör av evenemanget i Google/"
+"Outlook/Apple Kalender. Anställda som väljs under Personal läggs till som "
+"gäster."
 
 msgid "Select the events this coupon can be used for."
 msgstr "Välj de evenemang som den här kupongen kan användas för."
@@ -8547,7 +8858,7 @@ msgid "Select this employee"
 msgstr "Välj denna medarbetare"
 
 msgid "Select tickets"
-msgstr ""
+msgstr "Välj biljetter"
 
 msgid "Select your Square Location"
 msgstr "Välj din Square-plats"
@@ -8559,10 +8870,10 @@ msgid "Selected Customers"
 msgstr "Utvalda kunder"
 
 msgid "Selected date background"
-msgstr ""
+msgstr "Bakgrund för valt datum"
 
 msgid "Selected date text"
-msgstr ""
+msgstr "Vald datumtext"
 
 msgid "Selected extras"
 msgstr "Utvalda tillval"
@@ -8583,22 +8894,22 @@ msgid "Send Access Link"
 msgstr "Aktivera funktionen"
 
 msgid "Send ICS file for approved bookings"
-msgstr ""
+msgstr "Skicka ICS-fil för godkända bokningar"
 
 msgid "Send ICS file for pending bookings"
-msgstr ""
+msgstr "Skicka ICS-fil för väntande bokningar"
 
 msgid "Send Reset Link"
 msgstr "Skicka återställningslänk"
 
 msgid "Send access link"
-msgstr ""
+msgstr "Skicka åtkomstlänk"
 
 msgid "Send after appointment"
-msgstr ""
+msgstr "Skicka efter avtalad tid"
 
 msgid "Send after event"
-msgstr ""
+msgstr "Skicka efter händelse"
 
 msgid "Send all SMS messages to additional numbers"
 msgstr "Skicka SMS-meddelanden till ytterligare nummer"
@@ -8610,7 +8921,7 @@ msgid "Send appointment notifications directly via WhatsApp."
 msgstr "Skicka bokningsmeddelanden direkt via WhatsApp."
 
 msgid "Send at"
-msgstr ""
+msgstr "Skicka till"
 
 msgid "Send custom fields info for each customer separately"
 msgstr "Skicka information om anpassade fält för varje kund separat"
@@ -8633,10 +8944,10 @@ msgstr ""
 "Skicka personliga e-post- och SMS-notifikationer anpassade till ditt företag."
 
 msgid "Send smart, personalized notifications your way"
-msgstr ""
+msgstr "Skicka smarta, personliga aviseringar på ditt sätt"
 
 msgid "Send test"
-msgstr ""
+msgstr "Skicka test"
 
 msgid "Send to e-mail"
 msgstr "Skicka test"
@@ -8644,14 +8955,14 @@ msgstr "Skicka test"
 msgid "Send your customer data to Mailchimp quickly and effortlessly."
 msgstr "Skicka kunddata till Mailchimp snabbt och enkelt."
 
-msgid "Sender ID supports up to 11 characters"
-msgstr "Avsändar-ID har stöd för upp till 11 tecken"
+msgid "Sender ID must be between 3 and 11 characters"
+msgstr "Avsändar-ID måste bestå av mellan 3 och 11 tecken."
 
 msgid "Sender email"
-msgstr ""
+msgstr "Avsändarens e-postadress"
 
 msgid "Sender name"
-msgstr ""
+msgstr "Avsändarens namn"
 
 msgid "Sent"
 msgstr "Skickat"
@@ -8696,16 +9007,16 @@ msgid "Service Subtotal"
 msgstr "Delsumma av tjänst"
 
 msgid "Service badge"
-msgstr ""
+msgstr "Tjänstebadge"
 
 msgid "Service capacity"
-msgstr ""
+msgstr "Servicekapacitet"
 
 msgid "Service category"
-msgstr ""
+msgstr "Tjänstekategori"
 
 msgid "Service count"
-msgstr ""
+msgstr "Antal tjänster"
 
 msgid "Service description"
 msgstr "Beskrivning av tjänsten"
@@ -8720,7 +9031,7 @@ msgid "Service employees list"
 msgstr "Medarbetare för tjänster"
 
 msgid "Service filter"
-msgstr ""
+msgstr "Tjänstefilter"
 
 msgid "Service has been added."
 msgstr "Tjänsten har lagts till."
@@ -8744,34 +9055,34 @@ msgid "Service is now visible."
 msgstr "Tjänsten är nu synlig."
 
 msgid "Service location"
-msgstr ""
+msgstr "Tjänstens plats"
 
 msgid "Service name"
 msgstr "Tjänstens namn"
 
 msgid "Service or event description"
-msgstr ""
+msgstr "Beskrivning av tjänst eller evenemang"
 
 msgid "Service or event name"
-msgstr ""
+msgstr "Tjänst- eller evenemangsnamn"
 
 msgid "Service packages overview"
-msgstr ""
+msgstr "Översikt över servicepaket"
 
 msgid "Service price"
 msgstr "Service pris"
 
 msgid "Service selection"
-msgstr ""
+msgstr "Val av tjänst"
 
 msgid "Service subtotal"
-msgstr ""
+msgstr "Tjänstens delsumma"
 
 msgid "Services"
 msgstr "Tjänster"
 
 msgid "Services & categories setup"
-msgstr ""
+msgstr "Inställningar för tjänster och kategorier"
 
 msgid "Services Asc"
 msgstr "Tjänster stigande"
@@ -8780,7 +9091,7 @@ msgid "Services Desc"
 msgstr "Tjänster fallande"
 
 msgid "Services and packages overview"
-msgstr ""
+msgstr "Översikt över tjänster och paket"
 
 msgid "Services have been reordered."
 msgstr "Tjänster har omordnats."
@@ -8789,13 +9100,13 @@ msgid "Services list, Appointments"
 msgstr "Tjänster, bokningar"
 
 msgid "Services overview"
-msgstr ""
+msgstr "Översikt över tjänster"
 
 msgid "Services setup"
-msgstr ""
+msgstr "Inställning av tjänster"
 
 msgid "Set ICS file description"
-msgstr ""
+msgstr "Ställ in beskrivning av ICS-fil"
 
 msgid "Set Limit"
 msgstr "Ange gräns"
@@ -8831,10 +9142,15 @@ msgstr ""
 "Ställ in flexibel biljettprissättning med kategorier och datum-baserade "
 "intervall för att maximera tillgänglighet och intäkter."
 
+msgid "Set general settings"
+msgstr "Ställ in allmänna inställningar"
+
 msgid ""
 "Set individual time zones for employees so availability and bookings are "
 "shown correctly for clients worldwide."
 msgstr ""
+"Ställ in individuella tidszoner för anställda så att tillgänglighet och "
+"bokningar visas korrekt för kunder över hela världen."
 
 msgid "Set metadata and description"
 msgstr "Ange metadata och beskrivning"
@@ -8843,13 +9159,13 @@ msgid "Set minimum"
 msgstr "Ange minimum"
 
 msgid "Set new password"
-msgstr ""
+msgstr "Ange nytt lösenord"
 
 msgid "Set options, colors and labels for booking form"
 msgstr "Ange alternativ, färger och etiketter för bokningsformuläret"
 
 msgid "Set password"
-msgstr ""
+msgstr "Ställ in lösenord"
 
 msgid "Set pricing based on the number of people in the booking."
 msgstr "Ange prissättning baserat på antalet personer i bokningen."
@@ -8881,7 +9197,7 @@ msgstr ""
 
 msgid ""
 "Set the minimum number of people required per appointment for this service."
-msgstr ""
+msgstr "Ange det minsta antal personer som krävs per bokning för denna tjänst."
 
 msgid ""
 "Set the number of approved bookings after which the customer will "
@@ -8981,6 +9297,8 @@ msgstr "Konfigurera etiketter och knappar"
 
 msgid "Set up staff, location, gallery and other event information visibility"
 msgstr ""
+"Ställ in synlighet för personal, plats, galleri och annan "
+"evenemangsinformation"
 
 msgid "Set up visibility, button type and labels"
 msgstr "Konfigurera synlighet, knapptyp och etiketter"
@@ -8993,6 +9311,13 @@ msgstr "Ställ in synlighet och etiketter för biljettval"
 
 msgid "Set your Google Map API Key in General Settings"
 msgstr "Ange din Google Maps API-nyckel i Allmänna inställningar"
+
+msgid ""
+"Set your company working hours. This schedule will be used for all new "
+"employees, however you can customize schedule for each employee later."
+msgstr ""
+"Ställ in företagets arbetstider. Detta schema kommer att användas för alla "
+"nya anställda, men du kan senare anpassa schemat för varje anställd."
 
 msgid "Setting up days off"
 msgstr "Ställa in lediga dagar"
@@ -9013,10 +9338,13 @@ msgid "Shared capacity across services"
 msgstr "Delad kapacitet över tjänster"
 
 msgid "Shared category capacity"
-msgstr ""
+msgstr "Delad kategorikapacitet"
 
 msgid "Show"
 msgstr "Visa"
+
+msgid "Show Add To Calendar option to customers"
+msgstr "Visa alternativet Lägg till i kalendern för kunder"
 
 msgid "Show All"
 msgstr "Visa alla"
@@ -9094,7 +9422,7 @@ msgid "Show more"
 msgstr "Visa mer"
 
 msgid "Show more ({count})"
-msgstr ""
+msgstr "Visa mer ({count})"
 
 msgid "Show on website"
 msgstr "Visa på webbplatsen"
@@ -9155,10 +9483,10 @@ msgid "Sidebar"
 msgstr "Sidopanel"
 
 msgid "Sidebar area"
-msgstr ""
+msgstr "Sidfältet"
 
 msgid "Sidebar visibility"
-msgstr ""
+msgstr "Sidfältets synlighet"
 
 msgid "Sign In"
 msgstr "Logga in"
@@ -9170,13 +9498,16 @@ msgid "Sign Out of Mailchimp"
 msgstr "Logga ut från Mailchimp"
 
 msgid "Sign in"
-msgstr ""
+msgstr "Logga in"
 
 msgid "Sign in as "
 msgstr "Logga in som "
 
 msgid "Sign in with Google"
 msgstr "Logga in med Google"
+
+msgid "Sign in with Microsoft"
+msgstr "Logga in med Microsoft"
 
 msgid "Sign in with Outlook"
 msgstr "Logga in med Outlook"
@@ -9188,7 +9519,7 @@ msgid "Sign out from Outlook"
 msgstr "Logga ut från Outlook"
 
 msgid "Sign up"
-msgstr ""
+msgstr "Registrera dig"
 
 msgid "Simple, secure payments powered by Barion."
 msgstr "Enkla och säkra betalningar drivna av Barion."
@@ -9197,17 +9528,22 @@ msgid ""
 "Simplify communication with customizable messages for both customers and "
 "employees"
 msgstr ""
+"Förenkla kommunikationen med anpassningsbara meddelanden för både kunder och "
+"anställda"
 
 msgid "Simplify financial management with easy, one-click transaction exports"
 msgstr ""
+"Förenkla ekonomihanteringen med enkla transaktionsexporter med ett klick"
 
 msgid ""
 "Simplify scheduling with individual availability, working hours, and "
 "assignments"
 msgstr ""
+"Förenkla schemaläggningen med individuell tillgänglighet, arbetstider och "
+"uppdrag"
 
 msgid "Simplify scheduling with recurring events"
-msgstr ""
+msgstr "Förenkla schemaläggningen med återkommande händelser"
 
 msgid "Single-row export"
 msgstr "Export av enskild rad"
@@ -9227,14 +9563,17 @@ msgstr "Hoppa över import"
 msgid "Skip packages and continue with the selected service"
 msgstr "Hoppa över paket och fortsätt med vald tjänst"
 
+msgid "Skip setup"
+msgstr "Hoppa över inställningar"
+
 msgid "Slot end time"
-msgstr ""
+msgstr "Slotens sluttid"
 
 msgid "Social login"
-msgstr ""
+msgstr "Social inloggning"
 
 msgid "Social login setup"
-msgstr ""
+msgstr "Inställningar för social inloggning"
 
 msgid ""
 "Some employees assigned to this event are not connected to Zoom. Please go "
@@ -9303,7 +9642,7 @@ msgid "Special days"
 msgstr "Särskilda dagar"
 
 msgid "Special days setup"
-msgstr ""
+msgstr "Inställningar för speciella dagar"
 
 msgid "Specific Date"
 msgstr "Visa specifik kategori"
@@ -9327,13 +9666,13 @@ msgid "Spots capacity"
 msgstr "Kapacitet"
 
 msgid "Square"
-msgstr ""
+msgstr "Kvadrat"
 
 msgid "Square account successfully disconnected"
 msgstr "Square-konto har kopplats bort framgångsrikt"
 
 msgid "Square payment link"
-msgstr ""
+msgstr "Square-betalningslänk"
 
 msgid "Staff"
 msgstr "Medarbetare"
@@ -9360,21 +9699,18 @@ msgid "Start Zoom Meeting"
 msgstr "Börja Zoom-möte"
 
 msgid "Start by clicking the add custom field button"
-msgstr ""
+msgstr "Börja med att klicka på knappen Lägg till anpassat fält."
 
 msgid "Start date"
 msgstr "Startdatum"
 
 msgid "Start scanner"
-msgstr ""
+msgstr "Starta skannern"
 
 msgid "Start time"
 msgstr "Starttid"
 
 msgid "Status"
-msgstr ""
-
-msgid "Status:"
 msgstr ""
 
 msgid "Status Asc"
@@ -9387,12 +9723,15 @@ msgid ""
 "Stay compliant with ease through consistent, reliable tax handling across "
 "your business"
 msgstr ""
+"Håll dig enkelt efter reglerna genom konsekvent och tillförlitlig "
+"skattehantering i hela din verksamhet."
 
 msgid "Stay connected with WhatsApp notifications"
-msgstr ""
+msgstr "Håll kontakten med WhatsApp-meddelanden"
 
 msgid "Stay organized with export files ready for analysis or external tools"
 msgstr ""
+"Håll ordning med exportfiler som är redo för analys eller externa verktyg"
 
 msgid ""
 "Step-By-Step Booking Wizard gives your customers the option to choose "
@@ -9409,10 +9748,22 @@ msgstr ""
 "bokningar."
 
 msgid "Step-by-step"
-msgstr ""
+msgstr "Steg för steg"
 
 msgid "Step-by-step booking form guide"
-msgstr ""
+msgstr "Steg-för-steg-guide för bokningsformuläret"
+
+msgid "Step 1"
+msgstr "Steg 1"
+
+msgid "Step 2"
+msgstr "Steg 2"
+
+msgid "Step 3"
+msgstr "Steg 3"
+
+msgid "Step 4"
+msgstr "Steg 4"
 
 msgid "Step Booking"
 msgstr "Stegbokning"
@@ -9424,47 +9775,51 @@ msgid "Step Popups"
 msgstr "Steg"
 
 msgid "Step content"
-msgstr ""
+msgstr "Steginnehåll"
 
 msgid "Step header"
-msgstr ""
+msgstr "Stegrubrik"
 
 msgid "Step heading"
-msgstr ""
+msgstr "Stegrubrik"
 
 msgid "Step info tab"
-msgstr ""
+msgstr "Fliken Steginformation"
 
 msgid "Step message"
-msgstr ""
+msgstr "Stegmeddelande"
 
 msgid "Step pagination"
-msgstr ""
+msgstr "Stegvis paginering"
 
 msgid "Step tickets tab"
-msgstr ""
+msgstr "Fliken Stegbiljetter"
 
 msgid "Steps"
 msgstr "Steg"
 
 msgid "Steps order"
-msgstr ""
+msgstr "Stegordning"
 
 msgid "Stop Scanner"
 msgstr "Stoppa skanner"
 
 msgid "Stop scanner"
-msgstr ""
+msgstr "Stoppa skannern"
 
 msgid ""
 "Streamline operations with one central place to manage all resources across "
 "your business"
 msgstr ""
+"Effektivisera verksamheten med en central plats för hantering av alla "
+"resurser i hela företaget."
 
 msgid ""
 "Streamline virtual meetings by integrating popular meeting platforms "
 "directly into bookings."
 msgstr ""
+"Effektivisera virtuella möten genom att integrera populära mötesplattformar "
+"direkt i bokningarna."
 
 msgid "Stripe"
 msgstr ""
@@ -9476,7 +9831,7 @@ msgid "Stripe Connect"
 msgstr "Steg innehåll"
 
 msgid "Stripe payment link"
-msgstr ""
+msgstr "Stripe-betalningslänk"
 
 msgid "Studios"
 msgstr ""
@@ -9485,7 +9840,7 @@ msgid "Sub Steps"
 msgstr "Delsteg"
 
 msgid "Sub step title"
-msgstr ""
+msgstr "Underrubrik"
 
 msgid "Subject"
 msgstr "Ämne"
@@ -9514,6 +9869,12 @@ msgstr "Omdirigerings-URL för godkänd bokning"
 msgid "Suggest closest available date"
 msgstr "Föreslå närmaste tillgängliga datum"
 
+msgid ""
+"Suggest customers to add an appointment to their calendar when booking is "
+"finalized."
+msgstr ""
+"Föreslå kunderna att lägga till en tid i sin kalender när bokningen är klar."
+
 msgid "Suggest next available date"
 msgstr "Föreslå nästa tillgängliga datum"
 
@@ -9527,7 +9888,7 @@ msgid "Summary"
 msgstr "Sammanfattning"
 
 msgid "Summary segment"
-msgstr ""
+msgstr "Sammanfattningssegment"
 
 msgid "Sun"
 msgstr "Sön"
@@ -9544,11 +9905,15 @@ msgstr "Stöd Amelia genom att visa en bakåtlänk"
 msgid ""
 "Support deeper insights by using exported data for analysis and reporting"
 msgstr ""
+"Stöd djupare insikter genom att använda exporterade data för analys och "
+"rapportering"
 
 msgid ""
 "Support external workflows by seamlessly moving financial records into other "
 "systems"
 msgstr ""
+"Stöd externa arbetsflöden genom att smidigt flytta finansiella poster till "
+"andra system"
 
 msgid "Switch Camera"
 msgstr "Byt kamera"
@@ -9562,6 +9927,13 @@ msgid ""
 msgstr ""
 "Synkronisera ditt Stripe Connect-konto för smidiga betalningar och enkla "
 "utbetalningar."
+
+msgid ""
+"Sync your and your employee's personal and professional events by connection "
+"Outlook calendars."
+msgstr ""
+"Synkronisera dina och dina anställdas personliga och professionella "
+"händelser genom att ansluta Outlook-kalendrar."
 
 msgid ""
 "Sync your and your employees' personal and professional events by connecting "
@@ -9595,13 +9967,13 @@ msgid "TLS"
 msgstr ""
 
 msgid "Tab title"
-msgstr ""
+msgstr "Flikrubrik"
 
 msgid "Table settings have been updated."
 msgstr "Tabellinställningarna har uppdaterats."
 
 msgid "Tabs (All / Packages / Services)"
-msgstr ""
+msgstr "Flikar (Alla / Paket / Tjänster)"
 
 msgid "Tag"
 msgstr "Tagg"
@@ -9616,7 +9988,7 @@ msgid "Tax amount"
 msgstr "Skattebelopp"
 
 msgid "Tax details"
-msgstr ""
+msgstr "Skatteinformation"
 
 msgid "Tax has been added."
 msgstr "Skatten har lagts till."
@@ -9640,7 +10012,7 @@ msgid "Tax rate name"
 msgstr "Namn på skattesats"
 
 msgid "Tax setup"
-msgstr ""
+msgstr "Skatteinställningar"
 
 msgid "Tax will be excluded from price calculation and showed separately."
 msgstr "Skatt kommer att exkluderas från prisberäkningen och visas separat."
@@ -9652,7 +10024,7 @@ msgid "Taxes"
 msgstr "Skatter"
 
 msgid "Taxes overview"
-msgstr ""
+msgstr "Översikt över skatter"
 
 msgid "Template name"
 msgstr "Mallnamn"
@@ -9664,13 +10036,13 @@ msgid "Test SMS"
 msgstr "Test-SMS"
 
 msgid "Test SMS sent successfully."
-msgstr ""
+msgstr "Test-SMS skickat utan problem."
 
 msgid "Test WhatsApp"
-msgstr ""
+msgstr "Testa WhatsApp"
 
 msgid "Test WhatsApp message sent successfully"
-msgstr ""
+msgstr "Testmeddelande via WhatsApp skickat framgångsrikt"
 
 msgid "Test client ID"
 msgstr "Testklient-ID"
@@ -9696,9 +10068,6 @@ msgstr "Testhemlig nyckel"
 msgid "Text"
 msgstr ""
 
-msgid "Text:"
-msgstr ""
-
 msgid "Text Mode"
 msgstr "Textläge"
 
@@ -9706,10 +10075,10 @@ msgid "Text area"
 msgstr "Textområde"
 
 msgid "Text color"
-msgstr ""
+msgstr "Textfärg"
 
 msgid "Text color on background"
-msgstr ""
+msgstr "Textfärg på bakgrunden"
 
 msgid "Text content"
 msgstr "Textinnehåll"
@@ -9854,6 +10223,8 @@ msgid ""
 "The total number of persons ({waitingPersonsCount}) exceeds the maximum "
 "waiting list capacity of {waitingListMaxCapacity}."
 msgstr ""
+"Det totala antalet personer ({waitingPersonsCount}) överstiger den maximala "
+"kapaciteten för väntelistan på {waitingListMaxCapacity}."
 
 msgid "There are no attendees yet..."
 msgstr "Det finns inga deltagare ännu ..."
@@ -9911,8 +10282,14 @@ msgstr "Detta och framtida"
 msgid "This Only"
 msgstr "Endast detta"
 
+msgid "This appointment is a part of a package."
+msgstr "Denna utnämning är en del av ett paket."
+
 msgid "This booking is part of a package deal"
 msgstr "Denna bokning är en del av ett paketerbjudande"
+
+msgid "This category cannot be deleted because it is included in a package."
+msgstr "Denna kategori kan inte raderas eftersom den ingår i ett paket."
 
 msgid ""
 "This category has services with {count} past appointment. | This category "
@@ -9957,6 +10334,13 @@ msgstr "Detta fält är obligatoriskt."
 
 msgid "This file is forbidden for upload"
 msgstr "Den här filen är förbjuden att ladda upp"
+
+msgid ""
+"This is a temporary WhatsApp token and will automatically expire after 24 "
+"hours. Make sure to complete the setup before it expires."
+msgstr ""
+"Detta är en tillfällig WhatsApp-token som automatiskt upphör att gälla efter "
+"24 timmar. Se till att slutföra installationen innan den upphör att gälla."
 
 msgid ""
 "This is a unique security token. Copy it into the 'Verify token' field in "
@@ -10051,7 +10435,10 @@ msgstr ""
 "Denna platshållares innehåll kommer att tillämpas varhelst det används."
 
 msgid "This range"
-msgstr ""
+msgstr "Detta intervall"
+
+msgid "This service cannot be deleted because it is included in a package."
+msgstr "Denna tjänst kan inte raderas eftersom den ingår i ett paket."
 
 msgid "This service does not have any extras"
 msgstr "Den här tjänsten har inga extrafunktioner"
@@ -10074,7 +10461,7 @@ msgid "This service is available in a Package"
 msgstr "Denna tjänst är tillgänglig i ett paket"
 
 msgid "This service is available in a package"
-msgstr ""
+msgstr "Denna tjänst finns tillgänglig i ett paket"
 
 msgid "This time slot is no longer available. Please select a different time."
 msgstr ""
@@ -10151,7 +10538,7 @@ msgid "Ticket not valid"
 msgstr "Biljetten är ogiltig"
 
 msgid "Ticket types"
-msgstr ""
+msgstr "Biljettyper"
 
 msgid "Tickets"
 msgstr "Biljetter"
@@ -10198,7 +10585,7 @@ msgid "Time slot is unavailable"
 msgstr "Tids lucka är inte tillgänglig"
 
 msgid "Time slot price"
-msgstr ""
+msgstr "Pris per tidslucka"
 
 msgid "Time slots are unavailable"
 msgstr "Tiderna är inte tillgängliga"
@@ -10207,7 +10594,7 @@ msgid "Time zone"
 msgstr "Tidszon"
 
 msgid "Time zones"
-msgstr ""
+msgstr "Tidszoner"
 
 msgid "Times"
 msgstr "Tider"
@@ -10228,10 +10615,10 @@ msgid "Tips & suggestions"
 msgstr "Tips och förslag"
 
 msgid "Title section"
-msgstr ""
+msgstr "Titelavsnitt"
 
 msgid "Title text"
-msgstr ""
+msgstr "Titeltext"
 
 msgid "To"
 msgstr "Till"
@@ -10288,7 +10675,7 @@ msgid "Tomorrow"
 msgstr "Imorgon"
 
 msgid "Top trends"
-msgstr ""
+msgstr "Populäraste trender"
 
 msgid "Torch off"
 msgstr "Ficklampan av"
@@ -10318,7 +10705,7 @@ msgid "Total Services Booked"
 msgstr "Totalt antal personer:"
 
 msgid "Total amount"
-msgstr ""
+msgstr "Totalt belopp"
 
 msgid "Total appointments"
 msgstr "Totalt antal bokningar"
@@ -10342,7 +10729,7 @@ msgid "Total number of appointments"
 msgstr "Totalt antal möten"
 
 msgid "Total number of people:"
-msgstr ""
+msgstr "Totalt antal personer:"
 
 msgid "Total payments"
 msgstr "Totalt antal betalningar"
@@ -10354,7 +10741,7 @@ msgid "Total price"
 msgstr "Totalpris"
 
 msgid "Total services booked"
-msgstr ""
+msgstr "Totalt antal bokade tjänster"
 
 msgid "Total tickets"
 msgstr "Totalt antal biljetter"
@@ -10376,7 +10763,7 @@ msgid "Transaction #{count}"
 msgstr "Transaktion #{count}"
 
 msgid "Transaction details"
-msgstr ""
+msgstr "Transaktionsdetaljer"
 
 msgid "Transactions"
 msgstr "Transaktioner"
@@ -10404,7 +10791,7 @@ msgstr ""
 "letar efter."
 
 msgid "Try adjusting your search or filters."
-msgstr ""
+msgstr "Försök justera din sökning eller dina filter."
 
 msgid "Try adjusting your search to find what you are looking for."
 msgstr "Försök justera din sökning för att hitta det du letar efter."
@@ -10420,12 +10807,12 @@ msgid ""
 "multiple appointments into a single, discounted offer that drives bigger, "
 "more confident purchases."
 msgstr ""
+"Förvandla dina tjänster till högvärdiga paket som kunderna älskar. Kombinera "
+"flera bokningar till ett enda rabatterat erbjudande som leder till större "
+"och mer självsäkra köp."
 
 msgid "Type"
 msgstr "Typ"
-
-msgid "Type:"
-msgstr "Typ:"
 
 msgid "Type Asc"
 msgstr "Typ stigande"
@@ -10440,6 +10827,8 @@ msgid ""
 "URL on which will user be redirected if appointment can't be canceled "
 "because of 'Minimum time required before canceling' value"
 msgstr ""
+"URL som användaren omdirigeras till om bokningen inte kan avbokas på grund "
+"av värdet för ”Minsta tid som krävs före avbokning”."
 
 msgid "Unable to deactivate plugin. Please try again later."
 msgstr "Det gick inte att inaktivera plugin. Försök igen senare."
@@ -10454,13 +10843,13 @@ msgid "Unavailable Time Slots"
 msgstr "Tillgängliga luckor"
 
 msgid "Unavailable date background"
-msgstr ""
+msgstr "Otillgänglig datum bakgrund"
 
 msgid "Unavailable date text"
-msgstr ""
+msgstr "Text för datum som inte är tillgängligt"
 
 msgid "Unavailable time slots"
-msgstr ""
+msgstr "Otillgängliga tidsluckor"
 
 msgid "Unblock"
 msgstr "Avblockera"
@@ -10508,7 +10897,7 @@ msgid "Upcoming events"
 msgstr "Kommande event"
 
 msgid "Upcoming events section"
-msgstr ""
+msgstr "Kommande evenemang"
 
 msgid "Update"
 msgstr "Uppdatera"
@@ -10582,13 +10971,13 @@ msgid "User Profile"
 msgstr "Användarprofil"
 
 msgid "User profile"
-msgstr ""
+msgstr "Användarprofil"
 
 msgid "VAT"
 msgstr "Moms"
 
 msgid "VAT info"
-msgstr ""
+msgstr "Momsinformation"
 
 msgid "VAT number"
 msgstr "Momsnummer"
@@ -10618,7 +11007,7 @@ msgid "Version "
 msgstr ""
 
 msgid "Video tutorials"
-msgstr ""
+msgstr "Videohandledning"
 
 msgid "Videos"
 msgstr "Videor"
@@ -10645,7 +11034,7 @@ msgid "View More Packages"
 msgstr "Visa mer"
 
 msgid "View all"
-msgstr ""
+msgstr "Visa alla"
 
 msgid "View all photos"
 msgstr "Visa alla platser"
@@ -10657,13 +11046,13 @@ msgid "View booking"
 msgstr "Visa bokning"
 
 msgid "View employees"
-msgstr ""
+msgstr "Visa anställda"
 
 msgid "View events"
 msgstr "Visa evenemang"
 
 msgid "View in Calendar"
-msgstr ""
+msgstr "Visa i kalendern"
 
 msgid "View in Package"
 msgstr "Visa mer"
@@ -10672,16 +11061,16 @@ msgid "View invoice"
 msgstr "Visa faktura"
 
 msgid "View less packages"
-msgstr ""
+msgstr "Visa färre paket"
 
 msgid "View message"
-msgstr ""
+msgstr "Visa meddelande"
 
 msgid "View more"
 msgstr "Visa mer"
 
 msgid "View more packages"
-msgstr ""
+msgstr "Visa fler paket"
 
 msgid "View packages"
 msgstr "Visa paket"
@@ -10705,10 +11094,10 @@ msgid "Waiting"
 msgstr "Väntar"
 
 msgid "Waiting button background color"
-msgstr ""
+msgstr "Bakgrundsfärg för väntknappen"
 
 msgid "Waiting button text color"
-msgstr ""
+msgstr "Väntande knappens textfärg"
 
 msgid "Waiting for payment"
 msgstr "Väntar på betalning"
@@ -10717,10 +11106,10 @@ msgid "Waiting list"
 msgstr "Väntelista"
 
 msgid "Waiting list availability"
-msgstr ""
+msgstr "Väntelista tillgänglighet"
 
 msgid "Waiting list background"
-msgstr ""
+msgstr "Väntelistans bakgrund"
 
 msgid "Waiting list capacity"
 msgstr "Kapacitet för väntelista"
@@ -10729,13 +11118,13 @@ msgid "Waiting list capacity must be at least 1"
 msgstr "Kapaciteten för väntelistan måste vara minst 1"
 
 msgid "Waiting list confirmation"
-msgstr ""
+msgstr "Bekräftelse av väntelista"
 
 msgid "Waiting list is empty"
 msgstr "Väntelistan är tom"
 
 msgid "Waiting list text"
-msgstr ""
+msgstr "Väntelista text"
 
 msgid "Warning"
 msgstr "Varning"
@@ -10756,6 +11145,20 @@ msgstr ""
 "Vi har förberett en .csv-fil med kunderna som inte importerades. Efter att "
 "ha åtgärdat problemen kan du försöka igen."
 
+msgid ""
+"We were unable to cancel your booking. Please contact admin for assistance "
+"with canceling this booking."
+msgstr ""
+"Vi kunde inte avboka din bokning. Kontakta administratören för hjälp med att "
+"avboka denna bokning."
+
+msgid ""
+"We were unable to process your booking, and it was rejected. Please contact "
+"admin if you need help or want to try booking again."
+msgstr ""
+"Vi kunde inte behandla din bokning och den har avvisats. Kontakta "
+"administratören om du behöver hjälp eller vill försöka boka igen."
+
 msgid "Web"
 msgstr "Webb"
 
@@ -10766,7 +11169,7 @@ msgid "Webhooks"
 msgstr ""
 
 msgid "Webhooks setup"
-msgstr ""
+msgstr "Webhooks-inställningar"
 
 msgid "Website"
 msgstr "Webbplats"
@@ -10790,10 +11193,13 @@ msgid "Welcome Back"
 msgstr "Gå tillbaka"
 
 msgid "Welcome back"
-msgstr ""
+msgstr "Välkommen tillbaka"
+
+msgid "Welcome to Amelia!"
+msgstr "Välkommen till Amelia!"
 
 msgid "Wellness"
-msgstr ""
+msgstr "Välbefinnande"
 
 msgid "What's New"
 msgstr "Vad är nytt"
@@ -10817,7 +11223,7 @@ msgid "WhatsApp settings"
 msgstr "WhatsApp-inställningar"
 
 msgid "WhatsApp setup"
-msgstr ""
+msgstr "WhatsApp-inställningar"
 
 msgid "WhatsApp webhook callback URL"
 msgstr "WhatsApp-webhook-callback-URL"
@@ -10837,6 +11243,9 @@ msgid ""
 "tags) load as soon as the page opens, instead of being loaded dynamically "
 "via AJAX."
 msgstr ""
+"När denna funktion är aktiverad laddas alla enheter (tjänster, anställda, "
+"platser, paket och taggar) så snart sidan öppnas, istället för att laddas "
+"dynamiskt via AJAX."
 
 msgid ""
 "When enabled, customers will receive a Google Calendar invitation for the "
@@ -10907,7 +11316,7 @@ msgid "WooCommerce Thank you page"
 msgstr "WooCommerce Tack-sida"
 
 msgid "WooCommerce payment link"
-msgstr ""
+msgstr "WooCommerce-betalningslänk"
 
 msgid "Woo Order Id"
 msgstr "Woo Order-ID"
@@ -10925,7 +11334,7 @@ msgid "Work hours"
 msgstr "Arbetstider"
 
 msgid "Work hours setup"
-msgstr ""
+msgstr "Inställning av arbetstid"
 
 msgid "Working Hours"
 msgstr "Arbetstimmar"
@@ -10950,9 +11359,6 @@ msgstr "År"
 
 msgid "Yes"
 msgstr "Ja"
-
-msgid "Yes, Reset"
-msgstr "Återställ"
 
 msgid "Yoga"
 msgstr ""
@@ -10982,6 +11388,13 @@ msgid ""
 msgstr ""
 "Du är för närvarande ansluten till Google Kalender av Admin. Åsidosättning "
 "av Google Kalender-anslutningen är inte tillgänglig."
+
+msgid ""
+"You are currently connected to Outlook Calendar by Admin. Overriding Outlook "
+"Calendar connection is not available."
+msgstr ""
+"Du är för närvarande ansluten till Outlook-kalendern av administratören. Det "
+"går inte att åsidosätta anslutningen till Outlook-kalendern."
 
 msgid "You are on the waiting list with position"
 msgstr "Du är på väntelistan med position"
@@ -11078,6 +11491,12 @@ msgstr "Du har angett ett felaktigt lösenord."
 msgid "You have reached maximum number of registered domains"
 msgstr "Du har nått maximalt antal registrerade domäner"
 
+msgid ""
+"You have successfully declined this booking request. The status has been "
+"updated in the system."
+msgstr ""
+"Du har avvisat denna bokningsförfrågan. Statusen har uppdaterats i systemet."
+
 msgid "You will be redirected to the payment checkout."
 msgstr "Du kommer att omdirigeras till betalningssidan."
 
@@ -11095,6 +11514,35 @@ msgstr "Ditt namn"
 
 msgid "Your balance has been recharged."
 msgstr "Ditt saldo har fyllts på."
+
+msgid ""
+"Your booking has been successfully canceled. If you have any questions or "
+"wish to reschedule, please contact admin."
+msgstr ""
+"Din bokning har avbokats. Om du har några frågor eller vill boka om, "
+"vänligen kontakta administratören."
+
+msgid ""
+"Your booking has been successfully completed and approved. You're all set "
+"and can expect everything to proceed smoothly."
+msgstr ""
+"Din bokning har genomförts och godkänts. Allt är klart och du kan förvänta "
+"dig att allt kommer att gå smidigt."
+
+msgid ""
+"Your booking was approved, but there was an issue completing the process. "
+"Please reach out to admin to ensure everything is properly recorded."
+msgstr ""
+"Din bokning har godkänts, men det uppstod ett problem när processen skulle "
+"slutföras. Kontakta administratören för att säkerställa att allt registreras "
+"korrekt."
+
+msgid ""
+"Your booking was successfully processed, but it could not be approved. "
+"Please contact admin if you need assistance."
+msgstr ""
+"Din bokning har behandlats, men kunde inte godkännas. Kontakta "
+"administratören om du behöver hjälp."
 
 msgid "Your card's expiration date is incomplete"
 msgstr "Kortets utgångs datum är ofullständigt"
@@ -11115,13 +11563,13 @@ msgid "Your current changes will be lost."
 msgstr "Dina nuvarande ändringar kommer att gå förlorade."
 
 msgid "Your data will be saved before redirecting to another form."
-msgstr ""
+msgstr "Dina uppgifter sparas innan du omdirigeras till ett annat formulär."
 
 msgid "Your information"
-msgstr ""
+msgstr "Din information"
 
 msgid "Your name"
-msgstr ""
+msgstr "Ditt namn"
 
 msgid ""
 "Your password has been changed successfully. Use your new password to log in."
@@ -11152,22 +11600,22 @@ msgid "Zoom User"
 msgstr "Zoomanvändare"
 
 msgid "Zoom WP hooks"
-msgstr ""
+msgstr "Zoom WP-krokar"
 
 msgid "Zoom join meeting (participants) link"
-msgstr ""
+msgstr "Zoom-länk för att delta i mötet (deltagare)"
 
 msgid "Zoom link"
-msgstr ""
+msgstr "Zoom-länk"
 
 msgid "Zoom setup"
-msgstr ""
+msgstr "Zoom-inställningar"
 
 msgid "Zoom start meeting (hosts) link"
-msgstr ""
+msgstr "Zoom starta möte (värdar) länk"
 
 msgid "Zoom user"
-msgstr ""
+msgstr "Zoom-användare"
 
 msgid "(+ Woo Tax)"
 msgstr "(+ Woo-skatt)"
@@ -11182,10 +11630,10 @@ msgid "and"
 msgstr "och"
 
 msgid "application ID, client ID and client secret"
-msgstr ""
+msgstr "applikations-ID, klient-ID och klienthemlighet"
 
 msgid "application (client) ID and secret"
-msgstr ""
+msgstr "applikations-ID (klient) och hemlig kod"
 
 msgid "appointment is required to be booked now."
 msgstr "tid måste bokas nu."
@@ -11301,6 +11749,15 @@ msgstr ""
 msgid "reCAPTCHA Type"
 msgstr "reCAPTCHA-typ"
 
+msgid "reCAPTCHA challenge expired. Please try again."
+msgstr "reCAPTCHA-utmaningen har gått ut. Försök igen."
+
+msgid "reCAPTCHA configuration is invalid."
+msgstr "reCAPTCHA-konfigurationen är ogiltig."
+
+msgid "reCAPTCHA could not be loaded."
+msgstr "reCAPTCHA kunde inte laddas."
+
 msgid "reCAPTCHA on Customer Panel"
 msgstr "reCAPTCHA på kundpanelen"
 
@@ -11308,7 +11765,10 @@ msgid "reCAPTCHA on Employee Panel"
 msgstr "reCAPTCHA på medarbetarpanelen"
 
 msgid "reCAPTCHA setup"
-msgstr ""
+msgstr "reCAPTCHA-inställningar"
+
+msgid "reCAPTCHA validation failed."
+msgstr "reCAPTCHA-valideringen misslyckades."
 
 msgid "results"
 msgstr "resultat"
@@ -11459,6 +11919,8 @@ msgid ""
 "{count} employee has not been deleted due to future bookings. | {count} "
 "employees have not been deleted due to future bookings."
 msgstr ""
+"{count} Anställd har inte raderats på grund av framtida bokningar. | {count} "
+"Anställda har inte raderats på grund av framtida bokningar."
 
 msgid ""
 "{count} event booking has been deleted. | {count} event bookings have been "
@@ -11494,6 +11956,8 @@ msgid ""
 "{count} location has not been deleted due to future bookings. | {count} "
 "locations have not been deleted due to future bookings."
 msgstr ""
+"{count} Platsen har inte raderats på grund av framtida bokningar. | {count} "
+"Platserna har inte raderats på grund av framtida bokningar."
 
 msgid "{count} minute | {count} minutes"
 msgstr "{count} minut | {count} minuter"
@@ -11521,6 +11985,8 @@ msgid ""
 "{count} package has not been deleted due to future bookings. | {count} "
 "packages have not been deleted due to future bookings."
 msgstr ""
+"{count} Paketet har inte raderats på grund av framtida bokningar. | {count} "
+"Paketen har inte raderats på grund av framtida bokningar."
 
 msgid ""
 "{count} resource has been deleted. | {count} resources have been deleted."

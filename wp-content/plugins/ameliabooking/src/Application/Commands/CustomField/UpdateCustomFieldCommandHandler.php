@@ -147,20 +147,20 @@ class UpdateCustomFieldCommandHandler extends CommandHandler
                 $customFieldOption->setCustomFieldId($customField->getId());
             }
 
-            if ($customFieldOptionArray['new'] && !$customFieldOptionArray['deleted']) {
+            if (!empty($customFieldOptionArray['new']) && empty($customFieldOptionArray['deleted'])) {
                 $customFieldOptionId = $customFieldOptionRepository->add($customFieldOption);
                 $customFieldOption->setId(new Id($customFieldOptionId));
             }
 
-            if ($customFieldOptionArray['deleted'] && !$customFieldOptionArray['new']) {
+            if (!empty($customFieldOptionArray['deleted']) && empty($customFieldOptionArray['new'])) {
                 $customFieldOptionRepository->delete($customFieldOption->getId()->getValue());
                 $customField->getOptions()->deleteItem($customFieldOptionKey);
             }
 
             if (
-                $customFieldOptionArray['edited'] &&
-                !$customFieldOptionArray['deleted'] &&
-                !$customFieldOptionArray['new']
+                !empty($customFieldOptionArray['edited']) &&
+                empty($customFieldOptionArray['deleted']) &&
+                empty($customFieldOptionArray['new'])
             ) {
                 $customFieldOptionRepository->update($customFieldOption->getId()->getValue(), $customFieldOption);
             }

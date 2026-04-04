@@ -13,7 +13,6 @@ use AmeliaBooking\Application\Controller\CustomField\AddCustomFieldController;
 use AmeliaBooking\Application\Controller\CustomField\DeleteCustomFieldController;
 use AmeliaBooking\Application\Controller\CustomField\UpdateCustomFieldController;
 use AmeliaBooking\Application\Controller\CustomField\UpdateCustomFieldsPositionsController;
-use AmeliaBooking\Application\Controller\CustomField\BatchCustomFieldsController;
 use Slim\App;
 
 /**
@@ -39,7 +38,5 @@ class CustomField
         $app->post('/fields/{id:[0-9]+}', UpdateCustomFieldController::class);
 
         $app->post('/fields/positions', UpdateCustomFieldsPositionsController::class);
-
-        $app->post('/fields/batch', BatchCustomFieldsController::class);
     }
 }

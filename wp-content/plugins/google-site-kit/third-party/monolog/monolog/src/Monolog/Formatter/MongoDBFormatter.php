@@ -25,8 +25,6 @@ class MongoDBFormatter implements \Google\Site_Kit_Dependencies\Monolog\Formatte
     private $exceptionTraceAsString;
     /** @var int */
     private $maxNestingLevel;
-    /** @var bool */
-    private $isLegacyMongoExt;
     /**
      * @param int  $maxNestingLevel        0 means infinite nesting, the $record itself is level 1, $record['context'] is 2
      * @param bool $exceptionTraceAsString set to false to log exception traces as a sub documents instead of strings
@@ -35,7 +33,6 @@ class MongoDBFormatter implements \Google\Site_Kit_Dependencies\Monolog\Formatte
     {
         $this->maxNestingLevel = \max($maxNestingLevel, 0);
         $this->exceptionTraceAsString = $exceptionTraceAsString;
-        $this->isLegacyMongoExt = \extension_loaded('mongodb') && \version_compare((string) \phpversion('mongodb'), '1.1.9', '<=');
     }
     /**
      * {@inheritDoc}
@@ -108,27 +105,6 @@ class MongoDBFormatter implements \Google\Site_Kit_Dependencies\Monolog\Formatte
     }
     protected function formatDate(\DateTimeInterface $value, int $nestingLevel) : \MongoDB\BSON\UTCDateTime
     {
-        if ($this->isLegacyMongoExt) {
-            return $this->legacyGetMongoDbDateTime($value);
-        }
-        return $this->getMongoDbDateTime($value);
-    }
-    private function getMongoDbDateTime(\DateTimeInterface $value) : \MongoDB\BSON\UTCDateTime
-    {
         return new \MongoDB\BSON\UTCDateTime((int) \floor((float) $value->format('U.u') * 1000));
-    }
-    /**
-     * This is needed to support MongoDB Driver v1.19 and below
-     *
-     * See https://github.com/mongodb/mongo-php-driver/issues/426
-     *
-     * It can probably be removed in 2.1 or later once MongoDB's 1.2 is released and widely adopted
-     */
-    private function legacyGetMongoDbDateTime(\DateTimeInterface $value) : \MongoDB\BSON\UTCDateTime
-    {
-        $milliseconds = \floor((float) $value->format('U.u') * 1000);
-        $milliseconds = \PHP_INT_SIZE == 8 ? (int) $milliseconds : (string) $milliseconds;
-        // @phpstan-ignore-next-line
-        return new \MongoDB\BSON\UTCDateTime($milliseconds);
     }
 }

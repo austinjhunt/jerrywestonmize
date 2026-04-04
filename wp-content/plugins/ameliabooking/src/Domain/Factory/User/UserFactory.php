@@ -11,6 +11,7 @@ use AmeliaBooking\Domain\Factory\Apple\AppleCalendarFactory;
 use AmeliaBooking\Domain\Factory\Bookable\Service\ServiceFactory;
 use AmeliaBooking\Domain\Factory\Google\GoogleCalendarFactory;
 use AmeliaBooking\Domain\Factory\Outlook\OutlookCalendarFactory;
+use AmeliaBooking\Domain\Factory\Schedule\BlockTimeFactory;
 use AmeliaBooking\Domain\Factory\Schedule\PeriodLocationFactory;
 use AmeliaBooking\Domain\Factory\Schedule\PeriodServiceFactory;
 use AmeliaBooking\Domain\Factory\Schedule\SpecialDayFactory;
@@ -18,6 +19,7 @@ use AmeliaBooking\Domain\Factory\Schedule\SpecialDayPeriodFactory;
 use AmeliaBooking\Domain\Factory\Schedule\SpecialDayPeriodLocationFactory;
 use AmeliaBooking\Domain\Factory\Schedule\SpecialDayPeriodServiceFactory;
 use AmeliaBooking\Domain\Factory\Stripe\StripeFactory;
+use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\ValueObjects\BooleanValueObject;
 use AmeliaBooking\Domain\ValueObjects\DateTime\Birthday;
 use AmeliaBooking\Domain\ValueObjects\Gender;
@@ -132,7 +134,8 @@ class UserFactory
                     new Collection($serviceList),
                     isset($data['dayOffList']) ? self::createDayOffList($data['dayOffList']) : new Collection(),
                     isset($data['specialDayList']) ? self::createSpecialDayList($data['specialDayList']) : new Collection(),
-                    new Collection($appointmentList)
+                    new Collection($appointmentList),
+                    isset($data['blockTimeList']) ? self::createBlockTimeList($data['blockTimeList']) : new Collection(),
                 );
 
                 if (isset($data['show'])) {
@@ -317,6 +320,29 @@ class UserFactory
         }
 
         return new Collection($dayOffList);
+    }
+
+    /**
+     * @param $data
+     *
+     * @return Collection
+     * @throws InvalidArgumentException
+     */
+    public static function createBlockTimeList($data)
+    {
+        $blockTimes = [];
+
+        foreach ($data as $blockTime) {
+            $blockTimes[] = BlockTimeFactory::create([
+                'id'        => $blockTime['id'],
+                'userId'    => $blockTime['userId'],
+                'name'      => $blockTime['name'],
+                'startDate' => $blockTime['startDate'],
+                'endDate'   => $blockTime['endDate'],
+            ]);
+        }
+
+        return new Collection($blockTimes);
     }
 
     /**

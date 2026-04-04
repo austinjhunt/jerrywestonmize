@@ -23,6 +23,8 @@ class EventsPeriodsTable extends AbstractDatabaseTable
     {
         $table = self::getTableName();
 
+        $charsetCollate = self::getCharsetCollate();
+
         $description = Description::MAX_LENGTH;
 
         return "CREATE TABLE {$table} (
@@ -38,6 +40,6 @@ class EventsPeriodsTable extends AbstractDatabaseTable
                    `microsoftTeamsUrl` VARCHAR(255) NULL,
                    `appleCalendarEventId` VARCHAR(255) NULL,
                     PRIMARY KEY (`id`)
-                ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
+                ) {$charsetCollate};";
     }
 }

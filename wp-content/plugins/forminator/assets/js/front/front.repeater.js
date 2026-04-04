@@ -34,6 +34,13 @@
 				return;
 			}
 
+			// Initialize pre-existing cloned groups (from draft/preview).
+			groupField.find( '>.forminator-grouped-fields[data-suffix]' ).each( function() {
+				$( this ).trigger( 'forminator-clone-group' );
+			} );
+			// Restart the conditions to reset the visibility of the cloned group fields.
+			form.trigger( 'forminator.front.condition.restart' );
+
 			if ( 'variable' === fieldOptions.min_type ) {
 				const dependMinFromField = form.find( '[name="' + fieldOptions.min + '"]' );
 

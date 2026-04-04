@@ -370,7 +370,7 @@ class EventFactory
                     'description'           => $row['event_description'],
                     'color'                 => $row['event_color'],
                     'show'                  => $row['event_show'],
-                    'notifyParticipants'    => $row['event_notifyParticipants'],
+                    'notifyParticipants'    => (int)$row['event_notifyParticipants'],
                     'locationId'            => $row['event_locationId'],
                     'customLocation'        => $row['event_customLocation'],
                     'parentId'              => $row['event_parentId'],
@@ -414,6 +414,8 @@ class EventFactory
                         'note'             => $row['provider_note'],
                         'description'      => $row['provider_description'],
                         'phone'            => $row['provider_phone'],
+                        'countryPhoneIso'  =>
+                            !empty($row['provider_countryPhoneIso']) ? $row['provider_countryPhoneIso'] : null,
                         'pictureFullPath'  =>
                             isset($row['provider_pictureFullPath']) ? $row['provider_pictureFullPath'] : null,
                         'pictureThumbPath' =>
@@ -530,7 +532,7 @@ class EventFactory
                     'name'             => $row['ticket_name'],
                     'enabled'          => $row['ticket_enabled'],
                     'spots'            => $row['ticket_spots'],
-                    'waitingListSpots' => !empty($row['ticket_waiting_list_spots']) ? $row['ticket_waiting_list_spots'] : null,
+                    'waitingListSpots' => !empty($row['ticket_waiting_list_spots']) ? $row['ticket_waiting_list_spots'] : 0,
                     'price'            => $row['ticket_price'],
                     'dateRanges'       => $row['ticket_dateRanges'],
                     'translations'     => $row['ticket_translations'],
@@ -580,6 +582,8 @@ class EventFactory
                         'email'     => $row['customer_email'],
                         'note'      => $row['customer_note'],
                         'phone'     => $row['customer_phone'],
+                        'countryPhoneIso' =>
+                            !empty($row['customer_countryPhoneIso']) ? $row['customer_countryPhoneIso'] : null,
                         'gender'    => $row['customer_gender'],
                         'birthday'  => !empty($row['customer_birthday']) ? $row['customer_birthday'] : null,
                         'type'      => 'customer',

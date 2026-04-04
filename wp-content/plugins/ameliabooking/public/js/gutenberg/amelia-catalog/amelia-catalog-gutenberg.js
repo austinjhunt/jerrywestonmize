@@ -2,8 +2,9 @@
 
   var el = wp.element.createElement
   var components = wp.components
-  var blockControls = wp.editor.BlockControls
-  var inspectorControls = wp.editor.InspectorControls
+  var blockControls = wp.blockEditor.BlockControls
+  var inspectorControls = wp.blockEditor.InspectorControls
+  var useBlockProps = wp.blockEditor.useBlockProps
   var data = wpAmeliaLabels.data
 
   var categories = []
@@ -11,10 +12,6 @@
   var employees = []
   var locations = []
   var packages = []
-
-  var blockStyle = {
-    color: 'red'
-  }
 
   if (data.categories.length !== 0) {
     for (let i = 0; i < data.categories.length; i++) {
@@ -79,9 +76,10 @@
 
   // Registering the Block for catalog shortcode
   wp.blocks.registerBlockType('amelia/catalog-gutenberg-block', {
+    apiVersion: 3,
     title: wpAmeliaLabels.catalog_gutenberg_block.title,
-    description: el('div', {class: 'amelia-gutenberg-desc'}, wpAmeliaLabels.catalog_gutenberg_block.description,
-      el('div', {class: 'amelia-gutenberg-outdated'}, wpAmeliaLabels.outdated_booking_gutenberg_block)
+    description: el('div', {className: 'amelia-gutenberg-desc'}, wpAmeliaLabels.catalog_gutenberg_block.description,
+      el('div', {className: 'amelia-gutenberg-outdated'}, wpAmeliaLabels.outdated_booking_gutenberg_block)
     ),
     icon: window.ameliaBlockIcon,
     category: 'amelia-blocks',
@@ -246,6 +244,8 @@
         return shortCode
       }
 
+      var blockProps = useBlockProps()
+
       if (categories.length !== 0 && services.length !== 0 && employees.length !== 0) {
         inspectorElements.push(el(components.SelectControl, {
           id: 'amelia-js-select-category',
@@ -308,7 +308,7 @@
           }))
         }
 
-        inspectorElements.push(el('div', {style: {'margin-bottom': '1em'}}, ''))
+        inspectorElements.push(el('div', {style: {marginBottom: '1em'}}, ''))
 
         inspectorElements.push(el(components.PanelRow,
           {},
@@ -322,7 +322,7 @@
           })
         ))
 
-        inspectorElements.push(el('div', {style: {'margin-bottom': '1em'}}, ''))
+        inspectorElements.push(el('div', {style: {marginBottom: '1em'}}, ''))
 
         if (attributes.parametars) {
 
@@ -336,7 +336,7 @@
             }
           }))
 
-          inspectorElements.push(el('div', {style: {'margin-bottom': '1em'}}, ''))
+          inspectorElements.push(el('div', {style: {marginBottom: '1em'}}, ''))
 
           if (locations.length) {
             inspectorElements.push(el(components.SelectControl, {
@@ -349,7 +349,7 @@
               }
             }))
 
-            inspectorElements.push(el('div', {style: {'margin-bottom': '1em'}}, ''))
+            inspectorElements.push(el('div', {style: {marginBottom: '1em'}}, ''))
           }
 
           inspectorElements.push(el(components.TextControl, {
@@ -366,7 +366,7 @@
             attributes.categoryOptions !== 'packages' &&
             attributes.categoryOptions !== 'services'
           ) {
-            inspectorElements.push(el('div', {style: {'margin-bottom': '1em'}}, ''))
+            inspectorElements.push(el('div', {style: {marginBottom: '1em'}}, ''))
 
             inspectorElements.push(el(components.SelectControl, {
               id: 'amelia-js-select-type',
@@ -384,44 +384,70 @@
           attributes.location = ''
         }
 
-        return [
+        return el('div', blockProps,
           el(blockControls, {key: 'controls'}),
           el(inspectorControls, {key: 'inspector'},
             el(components.PanelBody, {initialOpen: true},
               inspectorElements
             )
           ),
-          el('div', {},
-            getShortCode(props, props.attributes)
+          el('div', {className: 'amelia-gutenberg-placeholder'},
+            el('div', {className: 'amelia-gutenberg-placeholder__header'},
+              el('div', {className: 'amelia-gutenberg-placeholder__icon'}, window.ameliaBlockIcon || ''),
+              el('div', {className: 'amelia-gutenberg-placeholder__title'}, 'Amelia - Catalog (Legacy)')
+            ),
+            el('div', {className: 'amelia-gutenberg-placeholder__shortcode'},
+              getShortCode(props, props.attributes)
+            )
           )
-        ]
+        )
       } else {
-        inspectorElements.push(el('p', {style: {'margin-bottom': '1em'}}, 'Please create category, services and employee first. You can find instructions in our documentation on link below.'));
-        inspectorElements.push(el('a', {href: 'https://wpamelia.com/quickstart/', target: '_blank', style: {'margin-bottom': '1em'}}, 'Start working with Amelia WordPress Appointment Booking plugin'));
+        inspectorElements.push(el('p', {style: {marginBottom: '1em'}}, 'Please create category, services and employee first. You can find instructions in our documentation on link below.'));
+        inspectorElements.push(el('a', {href: 'https://wpamelia.com/documentation/service-quick-start/', target: '_blank', style: {marginBottom: '1em'}}, 'Start working with Amelia WordPress Appointment Booking plugin'));
 
-        return [
+        return el('div', blockProps,
           el(blockControls, {key: 'controls'}),
           el(inspectorControls, {key: 'inspector'},
             el(components.PanelBody, {initialOpen: true},
               inspectorElements
             )
           ),
-          el('div',
-            {style: blockStyle},
-            getShortCode(props, props.attributes)
+          el('div', {className: 'amelia-gutenberg-placeholder'},
+            el('div', {className: 'amelia-gutenberg-placeholder__header'},
+              el('div', {className: 'amelia-gutenberg-placeholder__icon'}, window.ameliaBlockIcon || ''),
+              el('div', {className: 'amelia-gutenberg-placeholder__title'}, 'Amelia - Catalog (Legacy)')
+            ),
+            el('div', {className: 'amelia-gutenberg-placeholder__shortcode'},
+              getShortCode(props, props.attributes)
+            )
           )
-        ]
+        )
       }
 
     },
 
-    save: function (props) {
-      return (
-        el('div', {},
-          props.attributes.short_code
-        )
-      )
-    }
+    save: function () {
+      return null
+    },
+    deprecated: [
+      {
+        attributes: {
+          short_code: { type: 'string', default: '[ameliacatalog]' },
+          trigger: { type: 'string', default: '' },
+          show: { type: 'string', default: '' },
+          location: { type: 'string', default: '' },
+          package: { type: 'string', default: '' },
+          category: { type: 'string', default: '' },
+          categoryOptions: { type: 'string', default: '' },
+          service: { type: 'string', default: '' },
+          employee: { type: 'string', default: '' },
+          parametars: { type: 'boolean', default: false }
+        },
+        save: function (props) {
+          return el('div', {}, props.attributes.short_code)
+        }
+      }
+    ]
   })
 
 })(

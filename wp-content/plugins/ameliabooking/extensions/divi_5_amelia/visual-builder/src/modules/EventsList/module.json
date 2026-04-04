@@ -223,6 +223,73 @@
           }
         }
       }
+    },
+    "event_to_show": {
+      "type": "object",
+      "default": {
+        "innerContent": {
+          "desktop": {
+            "value": "future"
+          }
+        }
+      },
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 12,
+            "render": true,
+            "attrName": "event_to_show.innerContent",
+            "label": "Events to Show",
+            "description": "Filter events by date range",
+            "component": {
+              "name": "divi/select",
+              "type": "field"
+            }
+          }
+        }
+      }
+    },
+    "start_date": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 13,
+            "render": true,
+            "attrName": "start_date.innerContent",
+            "label": "Start Date",
+            "description": "Custom range start date (YYYY-MM-DD)",
+            "component": {
+              "name": "divi/text",
+              "type": "field"
+            }
+          }
+        }
+      }
+    },
+    "end_date": {
+      "type": "object",
+      "settings": {
+        "innerContent": {
+          "groupType": "group-item",
+          "item": {
+            "groupName": "mainContent",
+            "priority": 14,
+            "render": true,
+            "attrName": "end_date.innerContent",
+            "label": "End Date",
+            "description": "Custom range end date (YYYY-MM-DD)",
+            "component": {
+              "name": "divi/text",
+              "type": "field"
+            }
+          }
+        }
+      }
     }
   }
 }

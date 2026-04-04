@@ -244,6 +244,7 @@ class CustomerBookingFactory
                     'token'           => isset($row['booking_token']) ? $row['booking_token'] : null,
                     'tax'             => isset($row['booking_tax']) ? $row['booking_tax'] : null,
                     'qrCodes'         => isset($row['booking_qrCodes']) ? $row['booking_qrCodes'] : (isset($row['qrCodes']) ? $row['qrCodes'] : null),
+                    'created'         => isset($row['booking_created']) ? $row['booking_created'] : null,
                 ];
             }
 
@@ -255,6 +256,7 @@ class CustomerBookingFactory
                     'email'        => $row['customer_email'],
                     'note'         => $row['customer_note'],
                     'phone'        => $row['customer_phone'],
+                    'countryPhoneIso' => !empty($row['customer_countryPhoneIso']) ? $row['customer_countryPhoneIso'] : null,
                     'gender'       => $row['customer_gender'],
                     'birthday'     => $row['customer_birthday'],
                     'customFields' => !empty($row['customer_customFields']) ? $row['customer_customFields'] : null,

@@ -21,6 +21,7 @@ if ( $count > 0 ) {
 
 	$form_type = get_option( 'forminator_submissions_form_type', 'forminator_forms' );
 	$form_id   = get_option( 'forminator_submissions_form_id' );
+
 	?>
 
 	<form method="get"
@@ -45,6 +46,7 @@ if ( $count > 0 ) {
 						<option value="<?php echo esc_attr( $_post_type ); ?>" <?php echo selected( $_post_type, $form_type ); ?>><?php echo esc_html( $name ); ?></option>
 					<?php } ?>
 				</select>
+
 
 				<?php Forminator_Entries_Page::render_form_switcher( $form_type, $form_id ); ?>
 

@@ -202,6 +202,7 @@ class Forminator_Admin_Data {
 			'pdfAddonActive'                 => class_exists( 'Forminator_PDF_Addon' ),
 			'wpmudevMembership'              => forminator_get_wpmudev_membership(), // 'free'
 			'pdfExtensionsEnabled'           => $this->pdf_extensions_enabled(),
+			'isPDFAddonCompatible'           => $this->is_pdf_addon_compatible(),
 			'userPermissions'                => $user->get_role_caps(),
 			'manage_forminator_templates'    => forminator_is_user_allowed( 'forminator-templates' ),
 			'cloudDisabled'                  => forminator_cloud_templates_disabled(),
@@ -288,6 +289,24 @@ class Forminator_Admin_Data {
 	public function pdf_extensions_enabled() {
 		if ( function_exists( 'forminator_pdf_extensions_enabled' ) ) {
 			return forminator_pdf_extensions_enabled();
+		}
+
+		return false;
+	}
+
+	/**
+	 * Check if PDF addon is compatible.
+	 *
+	 * @since 1.51
+	 *
+	 * @return bool
+	 */
+	public function is_pdf_addon_compatible() {
+		if ( class_exists( 'Forminator_PDF_Addon' ) ) {
+			$pdf_addon = Forminator_PDF_Addon::get_instance();
+			if ( method_exists( $pdf_addon, 'is_supported_version' ) ) {
+				return $pdf_addon->is_supported_version();
+			}
 		}
 
 		return false;

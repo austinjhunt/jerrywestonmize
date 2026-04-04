@@ -1236,8 +1236,9 @@
 		paypal_button_condition: function() {
 			var paymentElement = this.$el.find('.forminator-paypal-row'),
 				paymentPageElement = this.$el.find('.forminator-pagination-footer').find('.forminator-button-paypal');
-			if( paymentElement.length > 0 ) {
-				this.$el.find('.forminator-button-submit').closest('.forminator-row').removeClass('forminator-hidden');
+			const $stripe_element = this.$el.find('.forminator-field-stripe-ocs:not(.forminator-hidden), .forminator-field-stripe:not(.forminator-hidden)');
+			this.$el.find('.forminator-button-submit').closest('.forminator-row').removeClass('forminator-hidden');
+			if( paymentElement.length > 0 && $stripe_element.length === 0 ) {
 				if( ! paymentElement.hasClass('forminator-hidden') ) {
 					this.$el.find('.forminator-button-submit').closest('.forminator-row').addClass('forminator-hidden');
 				}

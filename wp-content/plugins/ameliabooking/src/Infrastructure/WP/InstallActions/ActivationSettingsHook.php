@@ -252,7 +252,6 @@ class ActivationSettingsHook
             'senderName'           => '',
             'replyTo'              => '',
             'senderEmail'          => '',
-            'notifyCustomers'      => true,
             'sendAllCF'            => true,
             'smsAlphaSenderId'     => 'Amelia',
             'smsSignedIn'          => false,
@@ -895,6 +894,14 @@ This message does not have an option for responding. If you need additional info
                     "sortable" => false
                 ],
                 [
+                    "prop" => "created",
+                    "visible" => false,
+                    "width" => 160,
+                    "label" => "created_on",
+                    "sortable" => true,
+                    "required" => false
+                ],
+                [
                     "prop" => "bookingSource",
                     "visible" => false,
                     "width" => 64,
@@ -1058,6 +1065,14 @@ This message does not have an option for responding. If you need additional info
                     "width" => 200,
                     "label" => "payment_status",
                     "sortable" => false
+                ],
+                [
+                    "prop" => "created",
+                    "visible" => false,
+                    "width" => 160,
+                    "label" => "created_on",
+                    "sortable" => true,
+                    "required" => false
                 ],
             ],
 
@@ -1358,7 +1373,7 @@ This message does not have an option for responding. If you need additional info
                     "visible" => true,
                     "width" => 160,
                     "label" => "amount",
-                    "sortable" => false,
+                    "sortable" => true,
                     "required" => true
                 ],
                 [
@@ -1633,6 +1648,10 @@ This message does not have an option for responding. If you need additional info
                             $columnNeedsUpdate = true;
                         } elseif ($key === 'label' && $existingColumn[$key] !== $value) {
                             // Update label if it has changed in defaults
+                            $existingColumn[$key] = $value;
+                            $columnNeedsUpdate = true;
+                        } elseif ($key === 'sortable' && $existingColumn[$key] !== $value) {
+                            // Update sortable if it has changed in defaults
                             $existingColumn[$key] = $value;
                             $columnNeedsUpdate = true;
                         }
@@ -2397,6 +2416,9 @@ This message does not have an option for responding. If you need additional info
 
         $savedSettings = $settingsService->getCategorySettings($category);
 
+        $activationSettings = $settingsService->getCategorySettings('activation');
+        $savedVersion = !empty($activationSettings['version']) ? $activationSettings['version'] : '0.0.0';
+
         $setSettings = false;
 
         foreach ($pathsKeys as $keys) {
@@ -2410,6 +2432,24 @@ This message does not have an option for responding. If you need additional info
 
                     $setSettings = true;
 
+                    continue 2;
+                }
+
+                // If the saved value is a JSON-encoded string but the new schema expects
+                // a nested array (i.e. there are more keys to traverse), decode it so
+                // that subsequent keys can be accessed without a PHP 8 TypeError.
+                // This fix is only applied when upgrading from versions before 9.2
+                if (version_compare($savedVersion, '9.2', '<') && is_string($current[$key])) {
+                    $decoded = json_decode($current[$key], true);
+                    if (is_array($decoded)) {
+                        $current[$key] = $decoded;
+                        $setSettings   = true;
+                    } else {
+                        // Scalar string with no deeper path possible — skip this path.
+                        continue 2;
+                    }
+                } elseif (!is_array($current[$key]) && !is_null($current[$key])) {
+                    // Boolean / int leaf where a nested array is expected — skip.
                     continue 2;
                 }
 

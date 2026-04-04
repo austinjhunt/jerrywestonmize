@@ -5,6 +5,10 @@ if (!defined('ABSPATH')) exit;
 final class DeclarationBlockParser
 {
  private static $cache = [];
+ public static function clearCache(): void
+ {
+ self::$cache = [];
+ }
  public function normalizePropertyName(string $name): string
  {
  if (\substr($name, 0, 2) === '--') {

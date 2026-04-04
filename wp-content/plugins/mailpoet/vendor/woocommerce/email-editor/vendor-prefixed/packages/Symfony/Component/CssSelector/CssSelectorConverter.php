@@ -11,6 +11,7 @@ class CssSelectorConverter
 {
  private $translator;
  private $cache;
+ public static $maxCachedItems = 200;
  private static $xmlCache = [];
  private static $htmlCache = [];
  public function __construct(bool $html = true)
@@ -31,6 +32,17 @@ class CssSelectorConverter
  }
  public function toXPath(string $cssExpr, string $prefix = 'descendant-or-self::')
  {
- return $this->cache[$prefix][$cssExpr] ?? $this->cache[$prefix][$cssExpr] = $this->translator->cssToXPath($cssExpr, $prefix);
+ if (isset($this->cache[$prefix][$cssExpr])) {
+ // Promote to most-recently-used position.
+ $value = $this->cache[$prefix][$cssExpr];
+ unset($this->cache[$prefix][$cssExpr]);
+ return $this->cache[$prefix][$cssExpr] = $value;
+ }
+ $value = $this->translator->cssToXPath($cssExpr, $prefix);
+ if (\count($this->cache[$prefix] ?? []) >= self::$maxCachedItems) {
+ // Evict least-recently-used entry.
+ unset($this->cache[$prefix][\array_key_first($this->cache[$prefix])]);
+ }
+ return $this->cache[$prefix][$cssExpr] = $value;
  }
 }

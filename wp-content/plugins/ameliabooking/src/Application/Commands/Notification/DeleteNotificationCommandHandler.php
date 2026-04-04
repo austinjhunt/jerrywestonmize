@@ -72,10 +72,12 @@ class DeleteNotificationCommandHandler extends CommandHandler
 
         do_action('amelia_before_notification_deleted', $notification->toArray());
 
-        if (!$notificationRepo->delete($notification->getId()->getValue())) {
+        try {
+            $notificationRepo->delete($notification->getId()->getValue());
+        } catch (\Exception $e) {
             $notificationRepo->rollback();
             $result->setResult(CommandResult::RESULT_ERROR);
-            $result->setMessage('Unable to delete notification.');
+            $result->setMessage('Unable to delete notification. ' . $e->getMessage());
 
             return $result;
         }

@@ -27,6 +27,8 @@ class NotificationsTable extends AbstractDatabaseTable
 
         $table = self::getTableName();
 
+        $charsetCollate = self::getCharsetCollate();
+
         $name           = Name::MAX_LENGTH;
         $typeEmail      = NotificationType::EMAIL;
         $typeSms        = NotificationType::SMS;
@@ -59,6 +61,6 @@ class NotificationsTable extends AbstractDatabaseTable
                    `whatsAppTemplate` VARCHAR(255) NULL DEFAULT NULL,
                    `minimumTimeBeforeBooking` TEXT NULL DEFAULT NULL,
                     PRIMARY KEY (`id`)
-                ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
+                ) {$charsetCollate};";
     }
 }

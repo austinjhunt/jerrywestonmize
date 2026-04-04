@@ -97,8 +97,10 @@
 
 			this.$el.datepicker({
 				"beforeShow": function (input, inst) {
-					// elementor popup
-					var popup = $(this).closest('.elementor-popup-modal');
+					// Check for any popup modal (Hustle, Bootstrap, Elementor, or other common modals)
+					var popup = $(this).closest(
+						'.modal, .elementor-popup-modal, .mfp-wrap, .fancybox-container, [role="dialog"], [data-popup]'
+					);
 
 					// Remove all Hustle UI related classes
 					( inst.dpDiv ).removeClass( function( index, css ) {
@@ -138,14 +140,15 @@
 						}
 					}
 
-					// if elementor popup append datepicker with input
+					// Positioning inside popup modals
 					if( popup.length ) {
-						popup.append($('#ui-datepicker-div'));
-						var rect = input.getBoundingClientRect();
+						$(input).after($('#ui-datepicker-div'));
 						setTimeout(function() {
-							inst.dpDiv.css({
-								top: rect.top + rect.height,
-								left: rect.left
+							inst.dpDiv.position({
+								my: 'left top',
+								at: 'left bottom',
+								of: input,
+								collision: 'flipfit'
 							});
 						}, 0);
 					} else {
@@ -186,10 +189,7 @@
 				} else {
 					newDate = newDate.add( sdata[1], sdata[2] );
 				}
-				var formatedDate = moment( newDate ).format( 'YYYY-MM-DD' ),
-					dateVal = new Date( formatedDate );
-
-				return dateVal;
+				return newDate.toDate();
 			}
 		},
 

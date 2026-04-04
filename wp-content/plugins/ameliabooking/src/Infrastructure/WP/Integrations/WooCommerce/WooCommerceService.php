@@ -2895,7 +2895,15 @@ class WooCommerceService
             self::isAmeliaOrderValidForBooking($order) &&
             !self::isAmeliaOrderFromPaymentLink($order)
         ) {
-            self::createBookings($order, false, false);
+            /** @var PaymentRepository $paymentRepository */
+            $paymentRepository = self::$container->get('domain.payment.repository');
+
+            /** @var Collection $payments */
+            $payments = $paymentRepository->getByEntityId($order->get_id(), 'wcOrderId');
+
+            if (!$payments->length()) {
+                self::createBookings($order, false, false);
+            }
         }
     }
 

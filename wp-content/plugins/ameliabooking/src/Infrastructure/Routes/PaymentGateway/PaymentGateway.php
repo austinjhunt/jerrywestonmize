@@ -15,6 +15,7 @@ use AmeliaBooking\Application\Controller\PaymentGateway\MolliePaymentNotifyContr
 use AmeliaBooking\Application\Controller\PaymentGateway\PayPalPaymentCallbackController;
 use AmeliaBooking\Application\Controller\PaymentGateway\PayPalPaymentController;
 use AmeliaBooking\Application\Controller\PaymentGateway\RazorpayPaymentController;
+use AmeliaBooking\Application\Controller\PaymentGateway\StripeValidateKeysController;
 use AmeliaBooking\Application\Controller\PaymentGateway\WooCommercePaymentController;
 use AmeliaBooking\Application\Controller\PaymentGateway\WooCommerceProductsController;
 use Slim\App;
@@ -52,5 +53,7 @@ class PaymentGateway
         $app->get('/payment/barion/callback', BarionPaymentCallbackController::class);
 
         $app->post('/payment/barion/callback', BarionPaymentCallbackController::class);
+
+        $app->post('/payment/stripe/validate', StripeValidateKeysController::class);
     }
 }

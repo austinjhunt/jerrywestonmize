@@ -79,6 +79,19 @@ abstract class PKCS1 extends \Google\Site_Kit_Dependencies\phpseclib3\Crypt\Comm
         if (!isset($components['isPublicKey'])) {
             $components['isPublicKey'] = \true;
         }
+        $components = $components + $key;
+        foreach ($components as &$val) {
+            if ($val instanceof \Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger) {
+                $val = self::makePositive($val);
+            }
+            if (\is_array($val)) {
+                foreach ($val as &$subval) {
+                    if ($subval instanceof \Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger) {
+                        $subval = self::makePositive($subval);
+                    }
+                }
+            }
+        }
         return $components + $key;
     }
     /**
@@ -116,5 +129,15 @@ abstract class PKCS1 extends \Google\Site_Kit_Dependencies\phpseclib3\Crypt\Comm
         $key = ['modulus' => $n, 'publicExponent' => $e];
         $key = \Google\Site_Kit_Dependencies\phpseclib3\File\ASN1::encodeDER($key, \Google\Site_Kit_Dependencies\phpseclib3\File\ASN1\Maps\RSAPublicKey::MAP);
         return self::wrapPublicKey($key, 'RSA');
+    }
+    /**
+     * Negative numbers make no sense in RSA so convert them to positive
+     *
+     * @param BigInteger $x
+     * @return string
+     */
+    private static function makePositive(\Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger $x)
+    {
+        return $x->isNegative() ? new \Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger($x->toBytes(\true), 256) : $x;
     }
 }

@@ -16,6 +16,7 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
+use AmeliaBooking\Domain\Entity\Coupon\Coupon;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
@@ -27,6 +28,7 @@ use AmeliaBooking\Domain\ValueObjects\String\Description;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
+use AmeliaBooking\Infrastructure\Repository\Coupon\CouponRepository;
 use Exception;
 use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
@@ -124,9 +126,23 @@ class AddAppointmentCommandHandler extends CommandHandler
 
         $maxDuration = 0;
 
-        foreach ($appointmentData['bookings'] as $booking) {
+        foreach ($appointmentData['bookings'] as $key => $booking) {
             if ($booking['duration'] > $maxDuration && ($booking['status'] === BookingStatus::APPROVED || BookingStatus::PENDING)) {
                 $maxDuration = $booking['duration'];
+            }
+
+            $couponId = !empty($booking['coupon']['id'])
+                ? $booking['coupon']['id']
+                : (!empty($booking['couponId']) ? $booking['couponId'] : null);
+
+            if ($couponId) {
+                /** @var CouponRepository $couponRepository */
+                $couponRepository = $this->getContainer()->get('domain.coupon.repository');
+
+                /** @var Coupon $coupon */
+                $coupon = $couponRepository->getById($couponId);
+
+                $appointmentData['bookings'][$key]['coupon'] = $coupon ? $coupon->toArray() : null;
             }
         }
 
@@ -150,6 +166,10 @@ class AddAppointmentCommandHandler extends CommandHandler
             $existingAppointment ? $existingAppointment->toArray() : $appointmentData,
             $service
         );
+
+        if (!empty($appointmentData['createPaymentLinks'])) {
+            $appointment->setCreatePaymentLinks(true);
+        }
 
         if ($existingAppointment && !empty($appointmentData['internalNotes'])) {
             if (

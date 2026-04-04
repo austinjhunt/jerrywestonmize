@@ -770,12 +770,16 @@ class EventReservationService extends AbstractReservationService
         if ($reservation->getCustomPricing() && $reservation->getCustomPricing()->getValue() && !$reservation->getMaxCustomCapacity()) {
             $availableTicketsSpots = [];
 
+            $reservedTicketsSpots = [];
+
             /** @var EventTicket $ticket */
             foreach ($reservation->getCustomTickets()->getItems() as $ticket) {
                 $availableTicketsSpots[$ticket->getId()->getValue()] = $ticket->getSpots()->getValue();
-            }
 
-            $reservedTicketsSpots = [];
+                if (!$reservation->getBookings()->length()) {
+                    $reservedTicketsSpots[$ticket->getId()->getValue()] = $ticket->getSold() ? $ticket->getSold()->getValue() : 0;
+                }
+            }
 
             /** @var CustomerBooking $booking */
             foreach ($reservation->getBookings()->getItems() as $booking) {
@@ -810,11 +814,12 @@ class EventReservationService extends AbstractReservationService
             $hasTicketCapacity = [];
 
             foreach ($availableTicketsSpots as $eventTicketId => $availablePersons) {
-                $hasTicketCapacity[$eventTicketId] = array_key_exists($eventTicketId, $reservedTicketsSpots) ?
-                    ($newBooking ?
-                        $reservedTicketsSpots[$eventTicketId] <= $availablePersons :
-                        $reservedTicketsSpots[$eventTicketId] < $availablePersons
-                    ) : true;
+                $hasTicketCapacity[$eventTicketId] = !array_key_exists($eventTicketId, $reservedTicketsSpots) ||
+                    (
+                        $newBooking
+                            ? $reservedTicketsSpots[$eventTicketId] <= $availablePersons
+                            : $reservedTicketsSpots[$eventTicketId] < $availablePersons
+                    );
             }
 
             $hasCapacity = false;
@@ -845,7 +850,16 @@ class EventReservationService extends AbstractReservationService
             }
         } elseif ($reservation->getMaxCustomCapacity()) {
             $availableTicketsSpots = $reservation->getMaxCustomCapacity()->getValue();
+
             $reservedTicketsSpots  = 0;
+
+            if (!$reservation->getBookings()->length()) {
+                /** @var EventTicket $ticket */
+                foreach ($reservation->getCustomTickets()->getItems() as $ticket) {
+                    $reservedTicketsSpots += $ticket->getSold() ? $ticket->getSold()->getValue() : 0;
+                }
+            }
+
             /** @var CustomerBooking $booking */
             foreach ($reservation->getBookings()->getItems() as $booking) {
                 if ($booking->getStatus()->getValue() === BookingStatus::APPROVED) {
@@ -865,7 +879,9 @@ class EventReservationService extends AbstractReservationService
 
             $hasCapacity = ($newBooking ? $reservedTicketsSpots <= $availableTicketsSpots : $reservedTicketsSpots < $availableTicketsSpots);
         } else {
-            $persons = 0;
+            $persons = !$reservation->getBookings()->length() && $reservation->getSpotsSold()
+                ? $reservation->getSpotsSold()->getValue()
+                : 0;
 
             /** @var CustomerBooking $booking */
             foreach ($reservation->getBookings()->getItems() as $booking) {
@@ -873,6 +889,7 @@ class EventReservationService extends AbstractReservationService
                     $persons += $booking->getPersons()->getValue();
                 }
             }
+
             if ($newBooking) {
                 $hasCapacity = ($reservation->getMaxCapacity()->getValue() - $persons - $newBooking->getPersons()->getValue()) >= 0;
             } else {
@@ -900,6 +917,18 @@ class EventReservationService extends AbstractReservationService
         ) {
             $waitingCustomers = 0;
 
+            if (!$reservation->getBookings()->length()) {
+                if ($reservation->getCustomPricing()->getValue()) {
+                    /** @var EventTicket $ticket */
+                    foreach ($reservation->getCustomTickets()->getItems() as $ticket) {
+                        $waitingCustomers += $ticket->getWaiting() ? $ticket->getWaiting()->getValue() : 0;
+                    }
+                } else {
+                    $waitingCustomers += $reservation->getSpotsWaiting() ? $reservation->getSpotsWaiting()->getValue() : 0;
+                }
+            }
+
+            /** @var CustomerBooking $booking */
             foreach ($reservation->getBookings()->getItems() as $booking) {
                 if ($booking->getStatus()->getValue() === BookingStatus::WAITING) {
                     if ($reservation->getCustomPricing()->getValue()) {
@@ -917,9 +946,12 @@ class EventReservationService extends AbstractReservationService
                     if (!$reservation->getMaxCustomCapacity()) {
                         $ticketData = $reservation->getCustomTickets()->getItem($item->getId()->getValue());
 
-                        $hasWaitingList = $ticketData->getWaitingListSpots() && $ticketData->getWaitingListSpots()->getValue() >=
-                            ($item->getPersons() ? $item->getPersons()->getValue() : 0
-                                + ($ticketData->getWaiting() ? $ticketData->getWaiting()->getValue() : 0));
+                        $waitingListSpots = $ticketData->getWaitingListSpots() ? $ticketData->getWaitingListSpots()->getValue() : 0;
+
+                        $personsValue = $item->getPersons() ? $item->getPersons()->getValue() : 0;
+                        $waitingValue = $ticketData->getWaiting() ? $ticketData->getWaiting()->getValue() : 0;
+
+                        $hasWaitingList = $waitingListSpots >= ($personsValue + $waitingValue);
                     }
                 }
 
@@ -1020,7 +1052,7 @@ class EventReservationService extends AbstractReservationService
 
         $priceWithoutCoupon = $price;
 
-        $subtotalPrice = $price;
+        $subtotalPrice = round($price, 4);
 
         $subtraction = 0;
 

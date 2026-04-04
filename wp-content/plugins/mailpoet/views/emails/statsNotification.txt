@@ -1,6 +1,25 @@
 <% extends 'emails/statsNotificationLayout.txt' %>
 
 <% block content %>
+<% if is_garden() %>
+<%= blogName %>
+
+<%= __('Your campaign stats') %>
+
+<% if recipientFirstName %><%= __('Hi %s,')|replace({'%s': recipientFirstName}) %>
+
+<% endif %>
+<%= __('Here\'s how your campaign "%s" performed in the first 24 hours.')|replace({'%s': subject}) %>
+
+<%= __('Clicked') %>: <%= stats_number_format_i18n(clicked) %>% (<%= clicked_stats_text_garden(clicked) %>)
+<%= __('Opened') %>: <%= stats_number_format_i18n(opened) %>%
+<%= __('Machine-opened') %>: <%= stats_number_format_i18n(machineOpened) %>%
+<%= __('Unsubscribed') %>: <%= stats_number_format_i18n(unsubscribed) %>%
+<%= __('Bounced') %>: <%= stats_number_format_i18n(bounced) %>%
+
+<%= __('View full campaign report') %>
+  <%= linkStats|raw %>
+<% else %>
 <%= __('Your stats are in!') %>
 
 <%= subject %>
@@ -16,7 +35,7 @@
 <%= __('You need to upgrade now to be able to continue using MailPoet.') %>
 
 <%= __('Upgrade Now') %>
-  <%= upgradeNowLink %>
+  <%= upgradeNowLink|raw %>
 <% endif %>
 
 <%= stats_number_format_i18n(clicked) %>% <%= __('clicked') %>
@@ -38,6 +57,6 @@
 <% endif %>
 
 <%= __('View all stats') %>
-  <%= linkStats %>
-
+  <%= linkStats|raw %>
+<% endif %>
 <% endblock %>

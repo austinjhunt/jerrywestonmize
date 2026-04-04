@@ -13,6 +13,7 @@ use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Location\Location;
+use AmeliaBooking\Domain\Entity\Schedule\BlockTime;
 use AmeliaBooking\Domain\Entity\Schedule\DayOff;
 use AmeliaBooking\Domain\Entity\Schedule\Period;
 use AmeliaBooking\Domain\Entity\Schedule\PeriodLocation;
@@ -25,6 +26,7 @@ use AmeliaBooking\Domain\Entity\Schedule\TimeOut;
 use AmeliaBooking\Domain\Entity\Schedule\WeekDay;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Entity\User\Provider;
+use AmeliaBooking\Domain\Factory\Booking\Appointment\AppointmentFactory;
 use AmeliaBooking\Domain\Factory\Location\ProviderLocationFactory;
 use AmeliaBooking\Domain\Factory\Schedule\PeriodLocationFactory;
 use AmeliaBooking\Domain\Factory\Schedule\SpecialDayPeriodLocationFactory;
@@ -63,6 +65,7 @@ use AmeliaBooking\Infrastructure\Repository\Schedule\TimeOutRepository;
 use AmeliaBooking\Infrastructure\Repository\Schedule\WeekDayRepository;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
+use AmeliaVendor\Psr\Container\ContainerExceptionInterface;
 use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
 
@@ -1083,6 +1086,46 @@ class ProviderApplicationService
     }
 
     /**
+     * @throws ContainerExceptionInterface
+     * @throws InvalidArgumentException
+     */
+    public function removeSlotsFromBlockTime($providers, $dates)
+    {
+        $providersIds = (array)$providers->keys();
+
+        $dayOffRepository = $this->container->get('domain.schedule.dayOff.repository');
+
+        $blockTimes = $dayOffRepository->getFiltered([
+            'providers' => $providersIds,
+            'type'      => 'blockTime',
+            'dates'     => $dates,
+        ]);
+
+        /** @var BlockTime $blockTime */
+        foreach ($blockTimes->getItems() as $blockTime) {
+            /** @var Provider $provider */
+            foreach ($providers->getItems() as $provider) {
+                if (is_null($blockTime->getUserId()) || $blockTime->getUserId()->getValue() === $provider->getId()->getValue()) {
+                    $blockTimeStartString = $blockTime->getStartDate()->getValue()->format('Y-m-d H:i:s');
+                    $blockTimeEndString = $blockTime->getEndDate()->getValue()->format('Y-m-d H:i:s');
+
+                    $appointment = AppointmentFactory::create(
+                        [
+                            'bookingStart'       => $blockTimeStartString,
+                            'bookingEnd'         => $blockTimeEndString,
+                            'notifyParticipants' => false,
+                            'serviceId'          => 0,
+                            'providerId'         => $provider->getId()->getValue(),
+                        ]
+                    );
+
+                    $provider->getAppointmentList()->addItem($appointment);
+                }
+            }
+        }
+    }
+
+    /**
      * Update provider locations
      *
      * @param Provider $oldUser
@@ -1547,12 +1590,11 @@ class ProviderApplicationService
         /** @var ResourceEntitiesRepository $resourceEntitiesRepository */
         $resourceEntitiesRepository = $this->container->get('domain.bookable.resourceEntities.repository');
 
-        /** @var CustomerApplicationService $customerApplicationService */
-        $customerApplicationService = $this->container->get('application.user.customer.service');
+        /** @var UserRepository $userRepository */
+        $userRepository = $this->container->get('domain.users.repository');
 
-        /** @var EventRepository $eventRepository */
-        $eventRepository = $this->container->get('domain.booking.event.repository');
-
+        /** @var SettingsService $settingsDS */
+        $settingsDS = $this->container->get('domain.settings.service');
 
         /** @var Collection $appointments */
         $appointments = $appointmentRepository->getFiltered(
@@ -1580,6 +1622,17 @@ class ProviderApplicationService
             )
         );
 
+        $emptyPackageEmployees =  $settingsDS->getSetting('notifications', 'emptyPackageEmployees');
+
+        if (!empty($emptyPackageEmployees)) {
+            $employeeIds = explode(',', $emptyPackageEmployees);
+            if (($key = array_search($provider->getId()->getValue(), $employeeIds)) !== false) {
+                unset($employeeIds[$key]);
+                $employeeIds = implode(',', $employeeIds);
+                $settingsDS->setSetting('notifications', 'emptyPackageEmployees', $employeeIds);
+            }
+        }
+
         return
             $this->updateProviderDaysOff($provider, $newProvider) &&
             $this->updateProviderSpecialDays($provider, $newProvider) &&
@@ -1594,7 +1647,7 @@ class ProviderApplicationService
             $packageCustomerServiceRepository->updateByEntityId($provider->getId()->getValue(), null, 'providerId') &&
             $providerRepository->deleteViewStats($provider->getId()->getValue()) &&
             $resourceEntitiesRepository->deleteByEntityIdAndEntityType($provider->getId()->getValue(), 'employee') &&
-            $customerApplicationService->delete($provider);
+            $userRepository->delete($provider->getId()->getValue());
     }
 
     /**

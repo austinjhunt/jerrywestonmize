@@ -25,6 +25,8 @@ class Connection implements ConnectionInterface
 
         // Enable SQL_BIG_SELECTS to handle complex JOINs on restrictive hosting
         $this->wpdb->query('SET SESSION SQL_BIG_SELECTS=1');
+
+        $this->wpdb->query("SET NAMES " . (defined('DB_CHARSET') ? DB_CHARSET : 'utf8mb4'));
     }
 
     /**

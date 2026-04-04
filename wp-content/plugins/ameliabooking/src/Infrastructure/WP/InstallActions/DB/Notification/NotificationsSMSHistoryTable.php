@@ -28,6 +28,8 @@ class NotificationsSMSHistoryTable extends AbstractDatabaseTable
 
         $table = self::getTableName();
 
+        $charsetCollate = self::getCharsetCollate();
+
         $phone = Phone::MAX_LENGTH;
 
         if ($wpdb->get_var("SHOW TABLES LIKE '{$table}'") === $table) {
@@ -64,6 +66,6 @@ class NotificationsSMSHistoryTable extends AbstractDatabaseTable
                     `segments` TINYINT(2) NULL,
                     PRIMARY KEY (`id`),
                     UNIQUE KEY `id` (`id`)
-                ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
+                ) {$charsetCollate};";
     }
 }

@@ -23,17 +23,35 @@ class ProvidersDayOffTable extends AbstractDatabaseTable
     {
         $table = self::getTableName();
 
+        $charsetCollate = self::getCharsetCollate();
+
         $name = Name::MAX_LENGTH;
 
         return "CREATE TABLE {$table}  (
                   `id` int(11) NOT NULL AUTO_INCREMENT,
-                  `userId` int(11) NOT NULL,
+                  `userId` int(11) NULL,
                   `name` varchar({$name}) NOT NULL,
-                  `startDate` date NOT NULL,
-                  `endDate` date NOT NULL,
+                  `startDate` datetime NOT NULL,
+                  `endDate` datetime NOT NULL,
+                  `type` enum('dayOff','blockTime') NOT NULL DEFAULT 'dayOff',
                   `repeat` tinyint(1) NOT NULL,
                   PRIMARY KEY (`id`),
                   UNIQUE KEY `id` (`id`)
-                ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
+                ) {$charsetCollate};";
+    }
+
+    /**
+     * @return array
+     * @throws InvalidArgumentException
+     */
+    public static function alterTable()
+    {
+        $table = self::getTableName();
+
+        return [
+            "ALTER TABLE {$table} MODIFY startDate datetime NOT NULL",
+            "ALTER TABLE {$table} MODIFY endDate datetime NOT NULL",
+            "ALTER TABLE {$table} MODIFY userId int(11) DEFAULT NULL",
+        ];
     }
 }

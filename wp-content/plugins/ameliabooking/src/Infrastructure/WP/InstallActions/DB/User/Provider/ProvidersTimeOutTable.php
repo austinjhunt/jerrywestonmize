@@ -22,6 +22,8 @@ class ProvidersTimeOutTable extends AbstractDatabaseTable
     {
         $table = self::getTableName();
 
+        $charsetCollate = self::getCharsetCollate();
+
         return "CREATE TABLE {$table}  (
                   `id` int(11) NOT NULL AUTO_INCREMENT,
                   `weekDayId` int(11) NOT NULL,
@@ -29,6 +31,6 @@ class ProvidersTimeOutTable extends AbstractDatabaseTable
                   `endTime` time NOT NULL,
                   PRIMARY KEY (`id`),
                   UNIQUE KEY `id` (`id`)
-                ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
+                ) {$charsetCollate};";
     }
 }

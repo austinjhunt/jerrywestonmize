@@ -227,6 +227,8 @@ class GetAppointmentBookingsCommandHandler extends CommandHandler
                         ),
                         'status' => $paymentAS->getFullStatus($booking->toArray(), 'appointment'),
                     ],
+                    'created'  => $booking->getCreated() ?
+                        $booking->getCreated()->getValue()->format('Y-m-d') : null,
                 ];
 
                 $isPackageAppointment = !empty($booking->getPackageCustomerService());

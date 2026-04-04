@@ -3,6 +3,7 @@
 declare (strict_types=1);
 namespace Google\Site_Kit_Dependencies\ParagonIE\ConstantTime;
 
+use function pack;
 /**
  *  Copyright (c) 2016 - 2022 Paragon Initiative Enterprises.
  *  Copyright (c) 2014 Steve "Sc00bz" Thomas (steve at tobtu dot com)

@@ -3,6 +3,7 @@
 declare (strict_types=1);
 namespace Google\Site_Kit_Dependencies\ParagonIE\ConstantTime;
 
+use SensitiveParameter;
 use TypeError;
 /**
  *  Copyright (c) 2016 - 2022 Paragon Initiative Enterprises.
@@ -40,7 +41,7 @@ abstract class Encoding
      * @throws TypeError
      */
     public static function base32Encode(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $str
     ) : string
     {
@@ -54,7 +55,7 @@ abstract class Encoding
      * @throws TypeError
      */
     public static function base32EncodeUpper(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $str
     ) : string
     {
@@ -68,7 +69,7 @@ abstract class Encoding
      * @throws TypeError
      */
     public static function base32Decode(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $str
     ) : string
     {
@@ -82,7 +83,7 @@ abstract class Encoding
      * @throws TypeError
      */
     public static function base32DecodeUpper(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $str
     ) : string
     {
@@ -96,7 +97,7 @@ abstract class Encoding
      * @throws TypeError
      */
     public static function base32HexEncode(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $str
     ) : string
     {
@@ -110,7 +111,7 @@ abstract class Encoding
      * @throws TypeError
      */
     public static function base32HexEncodeUpper(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $str
     ) : string
     {
@@ -124,7 +125,7 @@ abstract class Encoding
      * @throws TypeError
      */
     public static function base32HexDecode(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $str
     ) : string
     {
@@ -138,7 +139,7 @@ abstract class Encoding
      * @throws TypeError
      */
     public static function base32HexDecodeUpper(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $str
     ) : string
     {
@@ -152,7 +153,7 @@ abstract class Encoding
      * @throws TypeError
      */
     public static function base64Encode(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $str
     ) : string
     {
@@ -166,7 +167,7 @@ abstract class Encoding
      * @throws TypeError
      */
     public static function base64Decode(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $str
     ) : string
     {
@@ -181,7 +182,7 @@ abstract class Encoding
      * @throws TypeError
      */
     public static function base64EncodeDotSlash(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $str
     ) : string
     {
@@ -198,7 +199,7 @@ abstract class Encoding
      * @throws TypeError
      */
     public static function base64DecodeDotSlash(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $str
     ) : string
     {
@@ -213,7 +214,7 @@ abstract class Encoding
      * @throws TypeError
      */
     public static function base64EncodeDotSlashOrdered(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $str
     ) : string
     {
@@ -230,7 +231,7 @@ abstract class Encoding
      * @throws TypeError
      */
     public static function base64DecodeDotSlashOrdered(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $str
     ) : string
     {
@@ -245,7 +246,7 @@ abstract class Encoding
      * @throws TypeError
      */
     public static function hexEncode(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $bin_string
     ) : string
     {
@@ -260,7 +261,7 @@ abstract class Encoding
      * @throws \RangeException
      */
     public static function hexDecode(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $hex_string
     ) : string
     {
@@ -275,7 +276,7 @@ abstract class Encoding
      * @throws TypeError
      */
     public static function hexEncodeUpper(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $bin_string
     ) : string
     {
@@ -289,7 +290,7 @@ abstract class Encoding
      * @return string
      */
     public static function hexDecodeUpper(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         string $bin_string
     ) : string
     {

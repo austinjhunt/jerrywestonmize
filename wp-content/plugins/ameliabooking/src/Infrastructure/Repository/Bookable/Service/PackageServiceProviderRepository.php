@@ -41,12 +41,9 @@ class PackageServiceProviderRepository extends AbstractRepository
                 (:packageServiceId, :userId)"
             );
 
-            $res = $statement->execute($params);
-            if (!$res) {
-                throw new QueryExecutionException('Unable to add data in ' . __CLASS__);
-            }
+            $statement->execute($params);
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to add data in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to add data in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return $this->connection->lastInsertId();
@@ -82,9 +79,10 @@ class PackageServiceProviderRepository extends AbstractRepository
                 "DELETE FROM {$this->table} WHERE 1 = 1 {$providers} AND packageServiceId = :packageServiceId"
             );
 
-            return $statement->execute($params);
+            $statement->execute($params);
+            return true;
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to delete data from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to delete data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
     }
 }

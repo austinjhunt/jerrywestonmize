@@ -13,7 +13,6 @@ use AmeliaBooking\Application\Services\Entity\EntityApplicationService;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Application\Services\Reservation\AppointmentReservationService;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
-use AmeliaBooking\Application\Services\Zoom\AbstractZoomApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
@@ -29,11 +28,13 @@ use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\BooleanValueObject;
 use AmeliaBooking\Domain\ValueObjects\DateTime\DateTimeValue;
 use AmeliaBooking\Domain\ValueObjects\Number\Float\Price;
+use AmeliaBooking\Domain\ValueObjects\Number\Integer\IntegerValue;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
+use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
@@ -86,8 +87,6 @@ class UpdateAppointmentCommandHandler extends CommandHandler
         $bookableAS = $this->container->get('application.bookable.service');
         /** @var AbstractCustomFieldApplicationService $customFieldService */
         $customFieldService = $this->container->get('application.customField.service');
-        /** @var AbstractZoomApplicationService $zoomService */
-        $zoomService = $this->container->get('application.zoom.service');
         /** @var UserApplicationService $userAS */
         $userAS = $this->getContainer()->get('application.user.service');
         /** @var SettingsService $settingsDS */
@@ -122,30 +121,6 @@ class UpdateAppointmentCommandHandler extends CommandHandler
 
         if ($userAS->isProvider($user) && !$settingsDS->getSetting('roles', 'allowWriteAppointments')) {
             throw new AccessDeniedException('You are not allowed to update appointment');
-        }
-
-        if (!empty($params['noteOnly'])) {
-            $appointmentId = (int)$command->getField('id');
-
-            $note = $command->getField('internalNotes');
-
-            $oldAppointment = $appointmentRepo->getById($appointmentId);
-
-            $appointmentRepo->updateFieldById($appointmentId, $note, 'internalNotes');
-
-            $result->setResult(CommandResult::RESULT_SUCCESS);
-            $result->setMessage('Successfully updated appointment note');
-            $result->setData([
-                Entities::APPOINTMENT => array_merge($oldAppointment ? $oldAppointment->toArray() : [], ['internalNotes' => $note]),
-                'appointmentStatusChanged' => false,
-                'appointmentRescheduled' => false,
-                'bookingsWithChangedStatus' => [],
-                'appointmentEmployeeChanged' => false,
-                'appointmentZoomUserChanged' => false,
-                'bookingAdded' => false
-            ]);
-
-            return $result;
         }
 
         $this->checkMandatoryFields($command);
@@ -207,7 +182,14 @@ class UpdateAppointmentCommandHandler extends CommandHandler
                     $newBooking->getId()->getValue() === $oldBooking->getId()->getValue()
                 ) {
                     if ($oldBooking->getUtcOffset()) {
-                        $newBooking->setUtcOffset($oldBooking->getUtcOffset());
+                        $bookingStartClone = clone $appointment->getBookingStart()->getValue();
+                        if ($oldBooking->getInfo() && json_decode($oldBooking->getInfo()->getValue(), true)) {
+                            $info = json_decode($oldBooking->getInfo()->getValue(), true);
+                            if (!empty($info['timeZone'])) {
+                                $bookingStartClone->setTimezone(new \DateTimeZone($info['timeZone']));
+                            }
+                        }
+                        $newBooking->setUtcOffset(new IntegerValue($bookingStartClone->getOffset() / 60));
                     }
 
                     if ($oldBooking->getCreated()) {
@@ -418,6 +400,43 @@ class UpdateAppointmentCommandHandler extends CommandHandler
             }
 
             $appointment->setChangedStatus(new BooleanValueObject(true));
+        }
+
+        /** @var PaymentRepository $paymentRepository */
+        $paymentRepository = $this->container->get('domain.payment.repository');
+
+        $bookingIds = [];
+
+        /** @var CustomerBooking $booking */
+        foreach ($appointment->getBookings()->getItems() as $booking) {
+            if ($booking->getId() && $booking->getId()->getValue()) {
+                $bookingIds[] = $booking->getId()->getValue();
+            }
+        }
+
+        if ($bookingIds) {
+            /** @var Collection $payments */
+            $payments = $paymentRepository->getByCriteria(['bookingIds' => $bookingIds]);
+
+            /** @var CustomerBooking $booking */
+            foreach ($appointment->getBookings()->getItems() as $booking) {
+                if ($booking->getId() && $booking->getId()->getValue() && !$booking->getPayments()->length()) {
+                    $bookingPayments = new Collection();
+
+                    foreach ($payments->getItems() as $payment) {
+                        if (
+                            $payment->getCustomerBookingId() &&
+                            $payment->getCustomerBookingId()->getValue() === $booking->getId()->getValue()
+                        ) {
+                            $bookingPayments->addItem($payment, $payment->getId()->getValue());
+                        }
+                    }
+
+                    if ($bookingPayments->length()) {
+                        $booking->setPayments($bookingPayments);
+                    }
+                }
+            }
         }
 
         $appointmentArray = $appointment->toArray();

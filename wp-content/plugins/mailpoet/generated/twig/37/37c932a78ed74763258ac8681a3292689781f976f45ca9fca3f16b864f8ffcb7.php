@@ -68,7 +68,7 @@ class __TwigTemplate_8af1b0123e44e0dbc01ef4376ab3d01514a0306b6a607ad264d10a53f47
     <label> ";
         // line 9
         yield $this->extensions['MailPoet\Twig\I18n']->translate("Email", "mailpoet");
-        yield "*<br /><strong>";
+        yield "<br /><strong>";
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(($context["email"] ?? null));
         yield "</strong></label>
     <br />

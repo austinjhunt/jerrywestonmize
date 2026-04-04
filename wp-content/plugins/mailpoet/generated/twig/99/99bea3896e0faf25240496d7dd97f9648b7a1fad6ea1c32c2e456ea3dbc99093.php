@@ -54,32 +54,50 @@ class __TwigTemplate_cc8efaa8d3c388c3a2e0e52f0b49037b3b775dd64304859aa3e0b97b4d7
         yield "
 ";
         // line 8
-        yield $this->extensions['MailPoet\Twig\I18n']->translate("The MailPoet Plugin");
-        yield "
-
+        if ($this->extensions['MailPoet\Twig\Functions']->isGarden()) {
+            // line 9
+            yield get_option("blogname");
+            yield "
 ";
-        // line 10
-        yield $this->extensions['MailPoet\Twig\I18n']->translate("You can disable these emails in your MailPoet Settings.");
-        yield "
+        } else {
+            // line 11
+            yield $this->extensions['MailPoet\Twig\I18n']->translate("The MailPoet Plugin");
+            yield "
 ";
-        // line 11
-        yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(($context["link_settings"] ?? null), "html", null, true);
-        yield "
-
-";
+        }
         // line 13
+        yield "
+";
+        // line 14
+        if ($this->extensions['MailPoet\Twig\Functions']->isGarden()) {
+            // line 15
+            yield $this->extensions['MailPoet\Twig\I18n']->translate("You can disable these emails in your email settings.");
+            yield "
+";
+        } else {
+            // line 17
+            yield $this->extensions['MailPoet\Twig\I18n']->translate("You can disable these emails in your MailPoet Settings.");
+            yield "
+";
+        }
+        // line 19
+        yield ($context["link_settings"] ?? null);
+        yield "
+
+";
+        // line 21
         if (($this->extensions['MailPoetVendor\Twig\Extension\CoreExtension']->formatDate("now", "Y-m-d") < $this->extensions['MailPoetVendor\Twig\Extension\CoreExtension']->formatDate("2018-11-30", "Y-m-d"))) {
-            // line 14
+            // line 22
             yield "    ";
             yield $this->extensions['MailPoet\Twig\I18n']->translate("PS. MailPoet annual plans are nearly half price for a limited time. Find out more in the Premium page in your admin.");
             yield "
     ";
-            // line 15
-            yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(($context["link_premium"] ?? null), "html", null, true);
+            // line 23
+            yield ($context["link_premium"] ?? null);
             yield "
 ";
         }
-        // line 17
+        // line 25
         yield "
 ";
         return; yield '';
@@ -106,7 +124,7 @@ class __TwigTemplate_cc8efaa8d3c388c3a2e0e52f0b49037b3b775dd64304859aa3e0b97b4d7
      */
     public function getDebugInfo()
     {
-        return array (  80 => 17,  75 => 15,  70 => 14,  68 => 13,  63 => 11,  59 => 10,  54 => 8,  50 => 7,  46 => 5,  44 => 4,  43 => 3,  38 => 1,);
+        return array (  98 => 25,  93 => 23,  88 => 22,  86 => 21,  81 => 19,  76 => 17,  71 => 15,  69 => 14,  66 => 13,  61 => 11,  56 => 9,  54 => 8,  50 => 7,  46 => 5,  44 => 4,  43 => 3,  38 => 1,);
     }
 
     public function getSourceContext()

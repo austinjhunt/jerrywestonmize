@@ -5,6 +5,9 @@ namespace MailPoet\Cron\Workers\StatsNotifications;
 if (!defined('ABSPATH')) exit;
 
 
+use MailPoet\Automation\Engine\Data\Automation;
+use MailPoet\Automation\Engine\Storage\AutomationStorage;
+use MailPoet\Automation\Integrations\MailPoet\Actions\SendEmailAction;
 use MailPoet\Config\Renderer;
 use MailPoet\Cron\Workers\SimpleWorker;
 use MailPoet\Entities\NewsletterEntity;
@@ -18,6 +21,7 @@ use MailPoet\Settings\SettingsController;
 use MailPoet\Settings\TrackingConfig;
 use MailPoet\WP\DateTime as WpDateTime;
 use MailPoet\WP\Functions as WPFunctions;
+use MailPoet\WPCOM\DotcomHelperFunctions;
 use MailPoetVendor\Carbon\Carbon;
 
 class AutomatedEmails extends SimpleWorker {
@@ -47,6 +51,12 @@ class AutomatedEmails extends SimpleWorker {
   /** @var WpDateTime */
   private $wpDateTime;
 
+  /** @var DotcomHelperFunctions */
+  private $dotcomHelperFunctions;
+
+  /** @var AutomationStorage */
+  private $automationStorage;
+
   public function __construct(
     MailerFactory $mailerFactory,
     Renderer $renderer,
@@ -54,7 +64,9 @@ class AutomatedEmails extends SimpleWorker {
     NewslettersRepository $repository,
     NewsletterStatisticsRepository $newsletterStatisticsRepository,
     MetaInfo $mailerMetaInfo,
-    TrackingConfig $trackingConfig
+    TrackingConfig $trackingConfig,
+    DotcomHelperFunctions $dotcomHelperFunctions,
+    AutomationStorage $automationStorage
   ) {
     parent::__construct();
     $this->mailerFactory = $mailerFactory;
@@ -64,6 +76,8 @@ class AutomatedEmails extends SimpleWorker {
     $this->repository = $repository;
     $this->newsletterStatisticsRepository = $newsletterStatisticsRepository;
     $this->trackingConfig = $trackingConfig;
+    $this->dotcomHelperFunctions = $dotcomHelperFunctions;
+    $this->automationStorage = $automationStorage;
     $this->wpDateTime = new WpDateTime();
   }
 
@@ -95,7 +109,7 @@ class AutomatedEmails extends SimpleWorker {
         $extraParams = [
           'meta' => $this->mailerMetaInfo->getStatsNotificationMetaInfo(),
         ];
-        $this->mailerFactory->getDefaultMailer()->send($this->constructNewsletter($newsletters), $settings['address'], $extraParams);
+        $this->mailerFactory->getDefaultMailer()->send($this->constructNewsletter($newsletters, $settings), $settings['address'], $extraParams);
       }
     } catch (\Exception $e) {
       if (WP_DEBUG) {
@@ -108,10 +122,15 @@ class AutomatedEmails extends SimpleWorker {
   /**
    * @param array<int, array{newsletter: NewsletterEntity, statistics: NewsletterStatistics}> $newsletters
    */
-  private function constructNewsletter(array $newsletters): array {
-    $context = $this->prepareContext($newsletters);
+  private function constructNewsletter(array $newsletters, array $settings): array {
+    $context = $this->prepareContext($newsletters, $settings);
+    if ($this->dotcomHelperFunctions->isGarden()) {
+      $subject = __('Your monthly automation stats are in!', 'mailpoet');
+    } else {
+      $subject = __('Your monthly stats are in!', 'mailpoet');
+    }
     return [
-      'subject' => __('Your monthly stats are in!', 'mailpoet'),
+      'subject' => $subject,
       'body' => [
         'html' => $this->renderer->render('emails/statsNotificationAutomatedEmails.html', $context),
         'text' => $this->renderer->render('emails/statsNotificationAutomatedEmails.txt', $context),
@@ -125,9 +144,16 @@ class AutomatedEmails extends SimpleWorker {
   protected function getNewsletters(): array {
     $result = [];
     $newsletters = $this->repository->findActiveByTypes(
-      [NewsletterEntity::TYPE_AUTOMATIC, NewsletterEntity::TYPE_WELCOME]
+      [NewsletterEntity::TYPE_AUTOMATIC, NewsletterEntity::TYPE_WELCOME, NewsletterEntity::TYPE_AUTOMATION]
     );
+    $activeAutomationNewsletterIds = $this->getActiveAutomationNewsletterIds();
     foreach ($newsletters as $newsletter) {
+      if (
+        $newsletter->getType() === NewsletterEntity::TYPE_AUTOMATION
+        && !in_array($newsletter->getId(), $activeAutomationNewsletterIds, true)
+      ) {
+        continue;
+      }
       $statistics = $this->newsletterStatisticsRepository->getStatistics($newsletter);
       if ($statistics->getTotalSentCount()) {
         $result[] = [
@@ -139,25 +165,52 @@ class AutomatedEmails extends SimpleWorker {
     return $result;
   }
 
+  /** @return int[] */
+  private function getActiveAutomationNewsletterIds(): array {
+    $ids = [];
+    $automations = $this->automationStorage->getAutomations([Automation::STATUS_ACTIVE]);
+    foreach ($automations as $automation) {
+      foreach ($automation->getSteps() as $step) {
+        if ($step->getKey() === SendEmailAction::KEY) {
+          $args = $step->getArgs();
+          if (isset($args['email_id'])) {
+            $ids[] = (int)$args['email_id'];
+          }
+        }
+      }
+    }
+    return $ids;
+  }
+
   /**
    * @param array<int, array{newsletter: NewsletterEntity, statistics: NewsletterStatistics}> $newsletters
    * @return array
    */
-  private function prepareContext(array $newsletters): array {
+  private function prepareContext(array $newsletters, array $settings = []): array {
     $context = [
-      'linkSettings' => WPFunctions::get()->getSiteUrl(null, '/wp-admin/admin.php?page=mailpoet-settings#basics'),
+      'linkSettings' => WPFunctions::get()->applyFilters(
+        'mailpoet_stats_notification_link_settings',
+        WPFunctions::get()->getSiteUrl(null, '/wp-admin/admin.php?page=mailpoet-settings#basics')
+      ),
+      'blogName' => WPFunctions::get()->getBloginfo('name'),
+      'recipientFirstName' => $this->getRecipientFirstName($settings['address'] ?? ''),
       'newsletters' => [],
     ];
     foreach ($newsletters as $row) {
       $statistics = $row['statistics'];
       $newsletter = $row['newsletter'];
-      $clicked = ($statistics->getClickCount() * 100) / $statistics->getTotalSentCount();
-      $opened = ($statistics->getOpenCount() * 100) / $statistics->getTotalSentCount();
-      $machineOpened = ($statistics->getMachineOpenCount() * 100) / $statistics->getTotalSentCount();
-      $unsubscribed = ($statistics->getUnsubscribeCount() * 100) / $statistics->getTotalSentCount();
-      $bounced = ($statistics->getBounceCount() * 100) / $statistics->getTotalSentCount();
+      $totalSentCount = $statistics->getTotalSentCount() ?: 1;
+      $clicked = ($statistics->getClickCount() * 100) / $totalSentCount;
+      $opened = ($statistics->getOpenCount() * 100) / $totalSentCount;
+      $machineOpened = ($statistics->getMachineOpenCount() * 100) / $totalSentCount;
+      $unsubscribed = ($statistics->getUnsubscribeCount() * 100) / $totalSentCount;
+      $bounced = ($statistics->getBounceCount() * 100) / $totalSentCount;
       $context['newsletters'][] = [
-        'linkStats' => WPFunctions::get()->getSiteUrl(null, '/wp-admin/admin.php?page=mailpoet-newsletters#/stats/' . $newsletter->getId()),
+        'linkStats' => WPFunctions::get()->applyFilters(
+          'mailpoet_stats_notification_link_stats',
+          WPFunctions::get()->getSiteUrl(null, '/wp-admin/admin.php?page=mailpoet-newsletters#/stats/' . $newsletter->getId()),
+          $newsletter->getId()
+        ),
         'clicked' => $clicked,
         'opened' => $opened,
         'machineOpened' => $machineOpened,
@@ -167,6 +220,22 @@ class AutomatedEmails extends SimpleWorker {
       ];
     }
     return $context;
+  }
+
+  private function getRecipientFirstName(string $email): string {
+    if (empty($email)) {
+      return '';
+    }
+    $user = WPFunctions::get()->getUserBy('email', $email);
+    if (!$user) {
+      return '';
+    }
+    $firstName = $user->first_name; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+    if (!empty($firstName)) {
+      return $firstName;
+    }
+    $displayName = $user->display_name; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+    return !empty($displayName) ? $displayName : '';
   }
 
   public function getNextRunDate() {

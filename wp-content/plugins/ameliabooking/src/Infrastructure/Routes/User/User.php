@@ -11,6 +11,7 @@ use AmeliaBooking\Application\Controller\User\Customer\GetCustomersController;
 use AmeliaBooking\Application\Controller\User\Customer\GetCustomerController;
 use AmeliaBooking\Application\Controller\User\Customer\AddCustomerController;
 use AmeliaBooking\Application\Controller\User\Customer\UpdateCustomerController;
+use AmeliaBooking\Application\Controller\User\Customer\UpdateCustomerNoteController;
 use AmeliaBooking\Application\Controller\User\Customer\UpdateCustomerStatusController;
 use AmeliaBooking\Application\Controller\User\DeleteUserController;
 use AmeliaBooking\Application\Controller\User\GetCurrentUserController;
@@ -45,6 +46,8 @@ class User
         $app->post('/users/customers', AddCustomerController::class);
 
         $app->post('/users/customers/{id:[0-9]+}', UpdateCustomerController::class);
+
+        $app->post('/users/customers/{id:[0-9]+}/note', UpdateCustomerNoteController::class);
 
         $app->post('/users/customers/delete/{id:[0-9]+}', DeleteUserController::class);
 

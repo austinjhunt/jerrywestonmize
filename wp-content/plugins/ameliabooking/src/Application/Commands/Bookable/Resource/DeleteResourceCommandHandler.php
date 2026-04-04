@@ -57,14 +57,14 @@ class DeleteResourceCommandHandler extends CommandHandler
 
         do_action('amelia_before_resource_deleted', $resourceId);
 
-        if (
-            !$resourceEntitiesRepository->deleteByEntityId($resourceId, 'resourceId') ||
-            !$resourceRepository->delete($resourceId)
-        ) {
+        try {
+            $resourceEntitiesRepository->deleteByEntityId($resourceId, 'resourceId');
+            $resourceRepository->delete($resourceId);
+        } catch (\Exception $e) {
             $resourceRepository->rollback();
 
             $result->setResult(CommandResult::RESULT_ERROR);
-            $result->setMessage('Could not delete resource.');
+            $result->setMessage('Could not delete resource. ' . $e->getMessage());
 
             return $result;
         }

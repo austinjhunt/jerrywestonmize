@@ -9,8 +9,9 @@ namespace AmeliaBooking\Infrastructure\Services\Payment;
 
 use AmeliaBooking\Domain\Services\Payment\AbstractPaymentService;
 use AmeliaBooking\Domain\Services\Payment\PaymentServiceInterface;
-use Omnipay\Omnipay;
-use Omnipay\PayPal\ExpressGateway;
+use AmeliaBooking\Infrastructure\Services\PayPal\PayPalClient;
+use AmeliaBooking\Infrastructure\Services\PayPal\PayPalResponse;
+use Exception;
 
 /**
  * Class PayPalService
@@ -18,148 +19,164 @@ use Omnipay\PayPal\ExpressGateway;
 class PayPalService extends AbstractPaymentService implements PaymentServiceInterface
 {
     /**
+     * Cached client instance
      *
-     * @return mixed
-     * @throws \Exception
+     * @var PayPalClient|null
      */
-    private function getGateway()
+    private ?PayPalClient $client = null;
+
+    /**
+     * Build (or return the cached) PayPalClient for the current settings.
+     */
+    private function getClient(): PayPalClient
     {
-        /** @var ExpressGateway $gateway */
-        $gateway = Omnipay::create('PayPal_Rest');
+        if ($this->client === null) {
+            $payPalSettings = $this->settingsService->getCategorySettings('payments')['payPal'];
+            $sandboxMode    = (bool)$payPalSettings['sandboxMode'];
 
-        $gateway->initialize(
-            [
-            'clientId' => $this->settingsService->getCategorySettings('payments')['payPal']['sandboxMode'] ?
-                $this->settingsService->getCategorySettings('payments')['payPal']['testApiClientId'] :
-                $this->settingsService->getCategorySettings('payments')['payPal']['liveApiClientId'],
-            'secret'   => $this->settingsService->getCategorySettings('payments')['payPal']['sandboxMode'] ?
-                $this->settingsService->getCategorySettings('payments')['payPal']['testApiSecret'] :
-                $this->settingsService->getCategorySettings('payments')['payPal']['liveApiSecret'],
-            'testMode' => $this->settingsService->getCategorySettings('payments')['payPal']['sandboxMode'],
-            ]
-        );
+            $this->client = new PayPalClient(
+                $sandboxMode ? $payPalSettings['testApiClientId'] : $payPalSettings['liveApiClientId'],
+                $sandboxMode ? $payPalSettings['testApiSecret']   : $payPalSettings['liveApiSecret'],
+                $sandboxMode
+            );
+        }
 
-        return $gateway;
+        return $this->client;
     }
 
     /**
+     * Create a PayPal order and return a response object.
+     *
      * @param array $data
      * @param array $transfers
      *
-     * @return mixed
-     * @throws \Exception
+     * @return PayPalResponse
+     * @throws Exception
      */
     public function execute($data, &$transfers)
     {
-        try {
-            $payPalData = [
-                'cancelUrl'  => $data['cancelUrl'],
-                'returnUrl'  => $data['returnUrl'],
-                'amount'     => $data['amount'],
-                'currency'   => $this->settingsService->getCategorySettings('payments')['currency'],
-                'noShipping' => 1,
-            ];
+        $currency = $this->settingsService->getCategorySettings('payments')['currency'];
 
-            if ($data['description']) {
-                $payPalData['description'] = $data['description'];
-            }
+        $response = $this->getClient()->createOrder(
+            [
+                'amount'      => $data['amount'],
+                'currency'    => $currency,
+                'returnUrl'   => $data['returnUrl'],
+                'cancelUrl'   => $data['cancelUrl'],
+                'description' => !empty($data['description']) ? $data['description'] : '',
+            ]
+        );
 
-            return $this->getGateway()->purchase($payPalData)->send();
-        } catch (\Exception $e) {
-            throw $e;
-        }
+        return new PayPalResponse($response);
     }
 
     /**
+     * Capture an approved PayPal order (called after the buyer approves).
+     *
      * @param array $data
      *
-     * @return mixed
-     * @throws \Exception
+     * @return PayPalResponse
+     * @throws Exception
      */
     public function complete($data)
     {
-        try {
-            $response = $this->getGateway()->completePurchase(
-                [
-                'transactionReference' => $data['transactionReference'],
-                'PayerID'              => $data['PayerID'],
-                'amount'               => $data['amount'],
-                'currency'             => $this->settingsService->getCategorySettings('payments')['currency']
-                ]
-            )->send();
+        $response = $this->getClient()->captureOrder($data['transactionReference']);
 
-            return $response;
-        } catch (\Exception $e) {
-            throw $e;
-        }
+        return new PayPalResponse($response);
     }
 
     /**
+     * Create an order and return its approval link for a redirect-based flow.
+     *
      * @param array $data
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function getPaymentLink($data)
     {
         $transfers = [];
 
         $response = $this->execute($data, $transfers);
-        if ($response->isSuccessful() && $response->getData() && $response->getData()['links'] && count($response->getData()['links']) > 1) {
-            return ['link' => $response->getData()['links'][1]['href'], 'status' => 200];
+
+        if ($response->isSuccessful()) {
+            $approveUrl = $response->getRedirectUrl();
+
+            if ($approveUrl) {
+                return ['link' => $approveUrl, 'status' => 200];
+            }
         }
+
         return ['message' => $response->getMessage(), 'status' => $response->getCode()];
     }
 
     /**
+     * Refund a captured PayPal order (full or partial).
+     *
      * @param array $data
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function refund($data)
     {
         $payment = $this->getTransaction($data['id']);
 
         if ($payment) {
-            $props = [
-                'transactionReference' => $payment['transactions'][0]['related_resources'][0]['sale']['id'],
-                'currency'             => $this->settingsService->getCategorySettings('payments')['currency']
-            ];
+            $captureId = !empty($payment['purchase_units'][0]['payments']['captures'][0]['id'])
+                ? $payment['purchase_units'][0]['payments']['captures'][0]['id']
+                : null;
 
-            if (!empty($data['amount'])) {
-                $props['amount'] = $data['amount'];
+            if (!$captureId) {
+                return ['error' => 'No capture found for this PayPal order'];
             }
 
-            $response = $this->getGateway()->refund($props)->send();
+            $currency   = $this->settingsService->getCategorySettings('payments')['currency'];
+            $refundData = ['currency' => $currency];
 
-            return ['error' => $response->getCode() !== 201 ? $response->getMessage() : false];
+            if (!empty($data['amount'])) {
+                $refundData['amount'] = $data['amount'];
+            }
+
+            $response = new PayPalResponse($this->getClient()->refundCapture($captureId, $refundData));
+
+            return ['error' => !$response->isSuccessful() ? $response->getMessage() ?: 'Refund failed' : false];
         }
 
         return ['error' => true];
     }
 
     /**
-     * @param string $id
+     * Return the total payment amount for a given PayPal order.
+     *
+     * @param string     $id
      * @param array|null $transfers
      *
-     * @return mixed
-     * @throws \Exception
+     * @return string|null
+     * @throws Exception
      */
     public function getTransactionAmount($id, $transfers)
     {
         $transaction = $this->getTransaction($id);
-        return $transaction ? $transaction['transactions'][0]['amount']['total'] : null;
+
+        if (!$transaction) {
+            return null;
+        }
+
+        return !empty($transaction['purchase_units'][0]['amount']['value'])
+            ? $transaction['purchase_units'][0]['amount']['value']
+            : null;
     }
 
-    private function getTransaction($id)
+    /**
+     * Fetch raw order data from PayPal.
+     *
+     * @throws Exception
+     */
+    private function getTransaction(string $id): ?array
     {
-        try {
-            $response = $this->getGateway()->fetchPurchase(['transactionReference' => $id])->send();
+        $response = $this->getClient()->getOrder($id);
 
-            return $response->getCode() === 200 ? $response->getData() : null;
-        } catch (\Exception $e) {
-            throw $e;
-        }
+        return isset($response['_http_code']) && $response['_http_code'] === 200 ? $response : null;
     }
 }

@@ -9,6 +9,7 @@ namespace AmeliaBooking\Application\Commands\Payment;
 
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
+use AmeliaBooking\Application\Commands\SortParamsTrait;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
@@ -24,6 +25,8 @@ use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
  */
 class GetPaymentsCommandHandler extends CommandHandler
 {
+    use SortParamsTrait;
+
     /**
      * @param GetPaymentsCommand $command
      *
@@ -56,14 +59,7 @@ class GetPaymentsCommandHandler extends CommandHandler
             $params['dates'][1] .= ' 23:59:59';
         }
 
-        if (!empty($params['sort'])) {
-            $sort = $params['sort'];
-            $isDescending   = substr($sort, 0, 1) === '-';
-            $params['sort'] = [
-                'field' => $isDescending ? substr($sort, 1) : $sort,
-                'order' => $isDescending ? 'DESC' : 'ASC',
-            ];
-        }
+        $params = $this->parseSortParams($params, ['id', 'created', 'status']);
 
         $paymentsData = $paymentAS->getPaymentsData(
             $params,

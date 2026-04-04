@@ -941,7 +941,10 @@ class PaymentApplicationService
     public function updateBookingPaymentDate($booking, $date)
     {
         foreach ($booking->getPayments()->getItems() as $payment) {
-            if ($payment->getGateway()->getName()->getValue() === PaymentType::ON_SITE) {
+            if (
+                $payment->getGateway()->getName()->getValue() === PaymentType::ON_SITE &&
+                (!$payment->getPackageCustomerId() || !$payment->getPackageCustomerId()->getValue())
+            ) {
                 /** @var PaymentRepository $paymentRepository */
                 $paymentRepository = $this->container->get('domain.payment.repository');
 

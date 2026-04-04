@@ -6,12 +6,13 @@ use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Booking\EventApplicationService;
-use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Entities;
+use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Event\EventStatusUpdatedEventHandler;
+use Microsoft\Graph\Exception\GraphException;
 
 /**
  * Class DeleteEventsCommandHandler
@@ -24,11 +25,11 @@ class DeleteEventsCommandHandler extends CommandHandler
      * @param DeleteEventsCommand $command
      *
      * @return CommandResult
-     * @throws \Slim\Exception\ContainerValueNotFoundException
      * @throws AccessDeniedException
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
-     * @throws \Interop\Container\Exception\ContainerException
+     * @throws NotFoundException
+     * @throws GraphException
      */
     public function handle(DeleteEventsCommand $command)
     {
@@ -59,12 +60,11 @@ class DeleteEventsCommandHandler extends CommandHandler
             ]
         );
 
-        do_action('amelia_before_events_deleted', $events ? $events->toArray() : null);
+        do_action('amelia_before_events_deleted', $events->toArray());
 
         $eventRepository->beginTransaction();
 
         try {
-            /** @var Collection $updatedEvents */
             $updatedEvents = $eventApplicationService->updateStatus(
                 $events,
                 'rejected',

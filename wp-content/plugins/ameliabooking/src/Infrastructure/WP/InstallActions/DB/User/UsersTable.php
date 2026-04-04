@@ -28,6 +28,8 @@ class UsersTable extends AbstractDatabaseTable
     {
         $table = self::getTableName();
 
+        $charsetCollate = self::getCharsetCollate();
+
         $name        = Name::MAX_LENGTH;
         $email       = Email::MAX_LENGTH;
         $phone       = Phone::MAX_LENGTH;
@@ -68,6 +70,6 @@ class UsersTable extends AbstractDatabaseTable
                   PRIMARY KEY (`id`),
                   UNIQUE KEY `email` (`email`),
                   UNIQUE KEY `id` (`id`)
-                ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci;";
+                ) {$charsetCollate}";
     }
 }

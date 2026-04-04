@@ -71,6 +71,42 @@ class DIVI_EventsList extends ET_Builder_Module
                 'toggle_slug'     => 'main_content',
                 'option_category' => 'basic_option',
             ),
+            'event_to_show' => array(
+                'label'           => esc_html__(BackendStrings::get('event_time_scope'), 'divi-divi_amelia'),
+                'type'            => 'select',
+                'options'         => array(
+                    'all'    => BackendStrings::get('all_events'),
+                    'future' => BackendStrings::get('future_events'),
+                    'past'   => BackendStrings::get('past_events'),
+                    'custom' => BackendStrings::get('custom_range'),
+                ),
+                'default'         => 'all',
+                'toggle_slug'     => 'main_content',
+                'option_category' => 'basic_option',
+                'show_if'         => array(
+                    'booking_params' => 'on',
+                ),
+            ),
+            'start_date' => array(
+                'label'           => esc_html__(BackendStrings::get('red_start_date'), 'divi-divi_amelia'),
+                'type'            => 'amelia_date_picker',
+                'toggle_slug'     => 'main_content',
+                'option_category' => 'basic_option',
+                'show_if'         => array(
+                    'booking_params' => 'on',
+                    'event_to_show'  => 'custom',
+                ),
+            ),
+            'end_date' => array(
+                'label'           => esc_html__(BackendStrings::get('red_end_date'), 'divi-divi_amelia'),
+                'type'            => 'amelia_date_picker',
+                'toggle_slug'     => 'main_content',
+                'option_category' => 'basic_option',
+                'show_if'         => array(
+                    'booking_params' => 'on',
+                    'event_to_show'  => 'custom',
+                ),
+            ),
             'events' => array(
                 'label'           => esc_html__(BackendStrings::get('select_event'), 'divi-divi_amelia'),
                 'type'            => 'amelia_multi_select',
@@ -184,6 +220,26 @@ class DIVI_EventsList extends ET_Builder_Module
         }
         if ($preselect === 'on') {
             $event = $this->checkValues($this->props['events']);
+
+            // Add event_to_show range logic (only if no specific event is selected)
+            if (empty($event) && !empty($this->props['event_to_show']) && $this->props['event_to_show'] !== 'all') {
+                if ($this->props['event_to_show'] === 'custom') {
+                    $startDate = !empty($this->props['start_date']) ? $this->props['start_date'] : '';
+                    $endDate = !empty($this->props['end_date']) ? $this->props['end_date'] : '';
+
+                    $has_valid_start = $startDate && preg_match('/^\d{4}-\d{2}-\d{2}$/', $startDate);
+                    $has_valid_end = $endDate && preg_match('/^\d{4}-\d{2}-\d{2}$/', $endDate);
+
+                    if (!$has_valid_start || !$has_valid_end) {
+                        return '';
+                    }
+
+                    $shortcode .= ' range="' . $startDate . ' - ' . $endDate . '"';
+                } else {
+                    $shortcode .= ' range="' . $this->props['event_to_show'] . '"';
+                }
+            }
+
             $tag   = $this->props['tags'];
             if ($event && count($event) > 0) {
                 $shortcode .= ' event=' . implode(',', $event);

@@ -555,6 +555,19 @@ class BookingApplicationService
                     $reservation->setService($service);
                 }
 
+                if (
+                    $reservation->getService() !== null &&
+                    $reservation->getService()->getCategory() === null &&
+                    $reservation->getService()->getCategoryId() !== null
+                ) {
+                    /** @var CategoryRepository $categoryRepository */
+                    $categoryRepository = $this->container->get('domain.bookable.category.repository');
+
+                    $category = $categoryRepository->getById($reservation->getService()->getCategoryId()->getValue());
+
+                    $reservation->getService()->setCategory($category);
+                }
+
                 if ($reservation->getProvider() === null && $reservation->getProviderId() !== null) {
                     /** @var Provider $provider */
                     $provider = $providerRepository->getWithSchedule(
@@ -659,52 +672,49 @@ class BookingApplicationService
         $locationId = $reservation->getLocation() === null && $reservation->getLocationId() !== null ?
             $reservation->getLocationId()->getValue() : null;
 
-        switch ($reservation->getType()->getValue()) {
-            case Entities::APPOINTMENT:
-                if ($reservation->getService() === null && $reservation->getServiceId() !== null) {
-                    /** @var BookableApplicationService $bookableAS */
-                    $bookableAS = $this->container->get('application.bookable.service');
+        if ($reservation->getType()->getValue() == Entities::APPOINTMENT) {
+            if ($reservation->getService() === null && $reservation->getServiceId() !== null) {
+                /** @var BookableApplicationService $bookableAS */
+                $bookableAS = $this->container->get('application.bookable.service');
 
-                    /** @var Service $service */
-                    $service = $bookableAS->getAppointmentService(
-                        $reservation->getServiceId()->getValue(),
-                        $reservation->getProviderId()->getValue()
-                    );
+                /** @var Service $service */
+                $service = $bookableAS->getAppointmentService(
+                    $reservation->getServiceId()->getValue(),
+                    $reservation->getProviderId()->getValue()
+                );
 
-                    if ($service->getCategory() === null && $service->getCategoryId() !== null) {
-                        /** @var Category $category */
-                        $category = $categoryRepository->getById($service->getCategoryId()->getValue());
+                if ($service->getCategory() === null && $service->getCategoryId() !== null) {
+                    /** @var Category $category */
+                    $category = $categoryRepository->getById($service->getCategoryId()->getValue());
 
-                        $service->setCategory($category);
-                    }
-
-                    $reservation->setService($service);
+                    $service->setCategory($category);
                 }
 
-                if ($reservation->getProvider() === null && $reservation->getProviderId() !== null) {
-                    /** @var Collection $providers */
-                    $providers = $providerRepository->getWithSchedule(
-                        ['providers' => [$reservation->getProviderId()->getValue()]]
-                    );
+                $reservation->setService($service);
+            }
 
-                    /** @var Provider $provider */
-                    $provider = count($providers->getItems()) ? $providers->getItem($reservation->getProviderId()->getValue()) : null;
+            if ($reservation->getProvider() === null && $reservation->getProviderId() !== null) {
+                /** @var Collection $providers */
+                $providers = $providerRepository->getWithSchedule(
+                    ['providers' => [$reservation->getProviderId()->getValue()]]
+                );
 
-                    if ($provider) {
-                        $reservation->setProvider($provider);
-                    }
+                /** @var Provider $provider */
+                $provider = count($providers->getItems()) ? $providers->getItem($reservation->getProviderId()->getValue()) : null;
+
+                if ($provider) {
+                    $reservation->setProvider($provider);
                 }
+            }
 
-                if (
-                    $reservation->getLocation() === null &&
-                    $reservation->getLocationId() === null &&
-                    $reservation->getProvider() !== null &&
-                    $reservation->getProvider()->getLocationId() !== null
-                ) {
-                    $locationId = $reservation->getProvider()->getLocationId()->getValue();
-                }
-
-                break;
+            if (
+                $reservation->getLocation() === null &&
+                $reservation->getLocationId() === null &&
+                $reservation->getProvider() !== null &&
+                $reservation->getProvider()->getLocationId() !== null
+            ) {
+                $locationId = $reservation->getProvider()->getLocationId()->getValue();
+            }
         }
 
         if ($locationId !== null) {

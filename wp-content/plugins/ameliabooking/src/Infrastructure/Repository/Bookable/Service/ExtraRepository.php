@@ -66,15 +66,11 @@ class ExtraRepository extends AbstractRepository implements ExtraRepositoryInter
                 )"
             );
 
-            $result = $statement->execute($params);
-
-            if (!$result) {
-                throw new QueryExecutionException('Unable to add data in ' . __CLASS__);
-            }
+            $statement->execute($params);
 
             return $this->connection->lastInsertId();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to add data in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to add data in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
     }
 
@@ -119,15 +115,11 @@ class ExtraRepository extends AbstractRepository implements ExtraRepositoryInter
                 WHERE id = :id"
             );
 
-            $result = $statement->execute($params);
+            $statement->execute($params);
 
-            if (!$result) {
-                throw new QueryExecutionException('Unable to save data in ' . __CLASS__);
-            }
-
-            return $result;
+            return true;
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to save data in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to save data in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
     }
 }

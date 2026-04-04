@@ -9,6 +9,7 @@ namespace AmeliaBooking\Infrastructure\Routes\Report;
 
 use AmeliaBooking\Application\Controller\Report\GetCustomersController;
 use AmeliaBooking\Application\Controller\Report\GetAppointmentsController;
+use AmeliaBooking\Application\Controller\Report\GetEventBookingsController;
 use AmeliaBooking\Application\Controller\Report\GetPaymentsController;
 use AmeliaBooking\Application\Controller\Report\GetCouponsController;
 use AmeliaBooking\Application\Controller\Report\GetEventAttendeesController;
@@ -37,5 +38,7 @@ class Report
         $app->post('/report/coupons', GetCouponsController::class)->setOutputBuffering(false);
 
         $app->post('/report/event/attendees', GetEventAttendeesController::class)->setOutputBuffering(false);
+
+        $app->post('/report/event/bookings', GetEventBookingsController::class)->setOutputBuffering(false);
     }
 }

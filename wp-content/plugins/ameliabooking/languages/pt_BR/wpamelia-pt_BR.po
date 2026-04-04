@@ -9,10 +9,10 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n>=0 && n<=1) ? 0 : 1;\n"
 
 msgid "\"Book now\" Button Type"
-msgstr ""
+msgstr "Tipo de botão “Reserve agora”"
 
 msgid "\"Go back\" Button Type"
-msgstr ""
+msgstr "Tipo de botão \"Voltar\""
 
 msgid "\"I'm not a robot\" checkbox"
 msgstr "Caixa de seleção \"Não sou um robô\""
@@ -33,16 +33,16 @@ msgid "# of bookings"
 msgstr "# de reservas"
 
 msgid "'Back' button style"
-msgstr ""
+msgstr "Estilo do botão “Voltar”"
 
 msgid "'Book' button style"
-msgstr ""
+msgstr "Estilo do botão “Reservar”"
 
 msgid "'Book another' button style"
-msgstr ""
+msgstr "Estilo do botão “Reservar outro”"
 
 msgid "'Book now' button style"
-msgstr ""
+msgstr "Estilo do botão “Reservar agora”"
 
 msgid ""
 "'Booking Date and Time' sets the limit based on when the booking is made, "
@@ -54,73 +54,73 @@ msgstr ""
 "Compromisso' define o limite com base no próprio compromisso agendado."
 
 msgid "'Bringing anyone with you' popup"
-msgstr ""
+msgstr "Pop-up “Traga qualquer pessoa com você”"
 
 msgid "'Cancel' button style"
-msgstr ""
+msgstr "Estilo do botão “Cancelar”"
 
 msgid "'Change password' button style"
-msgstr ""
+msgstr "Estilo do botão “Alterar senha”"
 
 msgid "'Close' button style"
-msgstr ""
+msgstr "Estilo do botão “Fechar”"
 
 msgid "'Confirm' button style"
-msgstr ""
+msgstr "Estilo do botão “Confirmar”"
 
 msgid "'Continue' button style"
-msgstr ""
+msgstr "Estilo do botão “Continuar”"
 
 msgid "'Customer panel' button style"
-msgstr ""
+msgstr "Estilo do botão “Painel do cliente”"
 
 msgid "'Delete' button style"
-msgstr ""
+msgstr "Estilo do botão “Excluir”"
 
 msgid "'Filter' button style"
-msgstr ""
+msgstr "Estilo do botão 'Filtro'"
 
 msgid "'Finish' button style"
-msgstr ""
+msgstr "Estilo do botão “Concluir”"
 
 msgid "'Join waiting list' button style"
-msgstr ""
+msgstr "Estilo do botão “Entrar na lista de espera”"
 
 msgid "'Learn more' button"
-msgstr ""
+msgstr "Botão “Saiba mais”"
 
 msgid "'Learn more' button style"
-msgstr ""
+msgstr "Estilo do botão “Saiba mais”"
 
 msgid "'New Event' button style"
-msgstr ""
+msgstr "Estilo do botão “Novo evento”"
 
 msgid "'New appointment' button style"
-msgstr ""
+msgstr "Estilo do botão “Nova consulta”"
 
 msgid "'Read more' button style"
-msgstr ""
+msgstr "Estilo do botão “Leia mais”"
 
 msgid "'Save changes' button style"
-msgstr ""
+msgstr "Estilo do botão “Salvar alterações”"
 
 msgid "'Scan e-ticket' button"
-msgstr ""
+msgstr "Botão “Digitalizar bilhete eletrônico”"
 
 msgid "'Send' button style"
-msgstr ""
+msgstr "Estilo do botão “Enviar”"
 
 msgid "'Set password' button style"
-msgstr ""
+msgstr "Estilo do botão \"Definir senha\""
 
 msgid "'Sign in' button style"
-msgstr ""
+msgstr "Estilo do botão “Entrar”"
 
 msgid "'View employee' button style"
-msgstr ""
+msgstr "Estilo do botão \"Ver funcionário\""
 
 msgid "'View in package' button"
-msgstr ""
+msgstr "Botão “Ver no pacote”"
 
 msgid "+more"
 msgstr "+mais "
@@ -128,11 +128,17 @@ msgstr "+mais "
 msgid "+{count} more"
 msgstr "+{count} mais"
 
+msgid "1/1 width"
+msgstr "1/1 largura"
+
+msgid "1/2 width"
+msgstr "1/2 largura"
+
 msgid "10h"
 msgstr ""
 
 msgid "10min"
-msgstr ""
+msgstr "10 min"
 
 msgid "11h"
 msgstr ""
@@ -183,7 +189,7 @@ msgid "2min"
 msgstr ""
 
 msgid "30min"
-msgstr ""
+msgstr "30 min"
 
 msgid "3 days"
 msgstr "3 dias"
@@ -201,7 +207,7 @@ msgid "3h"
 msgstr ""
 
 msgid "45min"
-msgstr ""
+msgstr "45 min"
 
 msgid "4 days"
 msgstr "4 dias"
@@ -282,7 +288,7 @@ msgid "API base URL: "
 msgstr "URL base da API:"
 
 msgid "API setup"
-msgstr ""
+msgstr "Configuração da API"
 
 msgid ""
 "A percentage deposit is calculated based on the total booking price. A fixed "
@@ -312,25 +318,25 @@ msgid "About Service"
 msgstr "Sobre o serviço"
 
 msgid "About event"
-msgstr ""
+msgstr "Sobre o evento"
 
 msgid "About package"
-msgstr ""
+msgstr "Sobre o pacote"
 
 msgid "About service"
-msgstr ""
+msgstr "Sobre o serviço"
 
 msgid "About this Event"
 msgstr "Sobre este evento"
 
 msgid "About this event"
-msgstr ""
+msgstr "Sobre este evento"
 
 msgid "Accent"
-msgstr ""
+msgstr "Acentos"
 
 msgid "Accent text"
-msgstr ""
+msgstr "Texto com acento"
 
 msgid "Accept payments for bookings and services via PayPal."
 msgstr "Aceite pagamentos por agendamentos e serviços via PayPal."
@@ -343,13 +349,13 @@ msgid "Accept payments via Razorpay, ideal for Indian businesses."
 msgstr "Aceite pagamentos via Razorpay, ideal para negócios na Índia."
 
 msgid "Access link"
-msgstr ""
+msgstr "Link de acesso"
 
 msgid "Access link success"
-msgstr ""
+msgstr "Link de acesso bem-sucedido"
 
 msgid "Access your financial data in seconds"
-msgstr ""
+msgstr "Acesse seus dados financeiros em segundos"
 
 msgid "Account ID"
 msgstr "ID da conta"
@@ -379,7 +385,7 @@ msgid "Activation"
 msgstr "Ativação"
 
 msgid "Activation settings"
-msgstr ""
+msgstr "Configurações de ativação"
 
 msgid "Active"
 msgstr "Ativo"
@@ -418,6 +424,8 @@ msgstr ""
 
 msgid "Add Meta Pixel to track ad conversions and optimize marketing."
 msgstr ""
+"Adicione o Meta Pixel para rastrear conversões de anúncios e otimizar o "
+"marketing."
 
 msgid "Add Period"
 msgstr "Adicionar período"
@@ -429,7 +437,7 @@ msgid "Add Special Day"
 msgstr "Adicionar dia especial"
 
 msgid "Add Stripe address fields"
-msgstr ""
+msgstr "Adicionar campos de endereço Stripe"
 
 msgid "Add Webhook"
 msgstr "Adicionar Webhook"
@@ -451,26 +459,32 @@ msgstr ""
 msgid "Add appointment"
 msgstr "Adicionar agendamento"
 
+msgid "Add booking"
+msgstr "Adicionar reserva"
+
 msgid "Add category"
 msgstr "Adicionar categoria"
 
 msgid "Add custom field"
-msgstr ""
+msgstr "Adicionar campo personalizado"
 
 msgid "Add custom notification"
-msgstr ""
+msgstr "Adicionar notificação personalizada"
+
+msgid "Add customer"
+msgstr "Adicionar cliente"
 
 msgid "Add date range"
-msgstr ""
+msgstr "Adicionar intervalo de datas"
 
 msgid "Add day(s)"
-msgstr ""
+msgstr "Adicionar dia(s)"
 
 msgid "Add day off"
 msgstr "Adicionar dia de folga"
 
 msgid "Add duration"
-msgstr ""
+msgstr "Adicionar duração"
 
 msgid ""
 "Add element (button, link...) ID, that will manually load amelia shortcode "
@@ -478,6 +492,9 @@ msgid ""
 msgstr ""
 "Adicionar elemento (botão, link...) ID, que carregará manualmente o conteúdo "
 "do shortcode amelia"
+
+msgid "Add event"
+msgstr "Adicionar evento"
 
 msgid "Add event attendees"
 msgstr "Adicionar participantes do evento"
@@ -489,22 +506,28 @@ msgid "Add more Appointments"
 msgstr "Adicionar mais agendamentos"
 
 msgid "Add more appointments"
-msgstr ""
+msgstr "Adicionar mais compromissos"
 
 msgid ""
 "Add multiple employees to your booking system, manage their schedules, and "
 "assign them to services or events, making it easy to scale your business and "
 "coordinate your team."
 msgstr ""
+"Adicione vários funcionários ao seu sistema de reservas, gerencie suas "
+"agendas e atribua-os a serviços ou eventos, facilitando a expansão do seu "
+"negócio e a coordenação da sua equipe."
 
 msgid "Add option"
 msgstr "Adicionar opção"
+
+msgid "Add package"
+msgstr "Adicionar pacote"
 
 msgid "Add period"
 msgstr "Adicionar período"
 
 msgid "Add pricing category"
-msgstr ""
+msgstr "Adicionar categoria de preços"
 
 msgid "Add rule"
 msgstr "Adicionar regra"
@@ -528,7 +551,7 @@ msgid "Add work hours"
 msgstr "Adicionar horas de trabalho"
 
 msgid "Additional information"
-msgstr ""
+msgstr "Informações adicionais"
 
 msgid "Additional people"
 msgstr "Pessoas adicionais"
@@ -540,7 +563,7 @@ msgid "Admin"
 msgstr "Administrador"
 
 msgid "Advanced"
-msgstr ""
+msgstr "Avançado"
 
 msgid "After"
 msgstr "Depois"
@@ -557,10 +580,10 @@ msgid "Agencies"
 msgstr "Agências"
 
 msgid "Alert content"
-msgstr ""
+msgstr "Conteúdo do alerta"
 
 msgid "Alert message"
-msgstr ""
+msgstr "Mensagem de alerta"
 
 msgid "All"
 msgstr "Todos"
@@ -608,7 +631,7 @@ msgid "All services"
 msgstr "Todos os serviços"
 
 msgid "All services are booked separately"
-msgstr ""
+msgstr "Todos os serviços são reservados separadamente"
 
 msgid "All services are booked separately."
 msgstr "Todos os serviços são reservados separadamente."
@@ -630,9 +653,6 @@ msgstr "Permitir que o administrador marque uma consulta a qualquer momento"
 
 msgid "Allow booking above maximum capacity"
 msgstr "Permitir reserva acima da capacidade máxima"
-
-msgid "Allow booking below minimum capacity"
-msgstr "Permitir reserva abaixo da capacidade mínima"
 
 msgid "Allow booking without a prior login"
 msgstr "Permitir reserva sem login prévio"
@@ -703,25 +723,25 @@ msgstr ""
 "Personalize as cores para combinar com sua marca e melhorar a usabilidade."
 
 msgid "Allow employees to manage customers"
-msgstr ""
+msgstr "Permitir que os funcionários gerenciem clientes"
 
 msgid "Allow employees to manage their appointments"
-msgstr ""
+msgstr "Permitir que os funcionários gerenciem seus compromissos"
 
 msgid "Allow employees to manage their days off"
-msgstr ""
+msgstr "Permitir que os funcionários gerenciem seus dias de folga"
 
 msgid "Allow employees to manage their events"
-msgstr ""
+msgstr "Permitir que os funcionários gerenciem seus eventos"
 
 msgid "Allow employees to manage their schedule"
-msgstr ""
+msgstr "Permitir que os funcionários gerenciem sua agenda"
 
 msgid "Allow employees to manage their services"
-msgstr ""
+msgstr "Permitir que os funcionários gerenciem seus serviços"
 
 msgid "Allow employees to manage their special days"
-msgstr ""
+msgstr "Permitir que os funcionários gerenciem seus dias especiais"
 
 msgid "Allow multiple bookings per customer"
 msgstr "Permitir múltiplas reservas por cliente"
@@ -736,12 +756,14 @@ msgid ""
 "Allow the short description below the booking form to support Amelia Booking "
 "Plugin and spread the word about it."
 msgstr ""
+"Permita que a breve descrição abaixo do formulário de reserva seja "
+"compatível com o Amelia Booking Plugin e divulgue-o."
 
 msgid "Alpha sender ID"
 msgstr "ID do remetente Alpha"
 
 msgid "Alpha sender ID can't be empty"
-msgstr ""
+msgstr "O ID do remetente alfa não pode estar vazio"
 
 msgid "Already have an account?"
 msgstr "Já tem uma conta?"
@@ -803,9 +825,6 @@ msgstr "Configurações de usuários Amelia"
 msgid "Amount"
 msgstr "Quantia"
 
-msgid "Amount:"
-msgstr "Quantia:"
-
 msgid "An email with details of your booking has been sent to you."
 msgstr "Um e-mail com detalhes da sua reserva foi enviado para você."
 
@@ -834,7 +853,7 @@ msgid "Apple Calendar (Personal)"
 msgstr "Calendário Apple (Pessoal)"
 
 msgid "Apple Calendar setup"
-msgstr ""
+msgstr "Configuração do Calendário Apple"
 
 msgid "Application (client) ID"
 msgstr "ID do aplicativo (cliente)"
@@ -901,13 +920,13 @@ msgid "Appointment can't be rescheduled"
 msgstr "O compromisso não pode ser remarcado"
 
 msgid "Appointment canceled"
-msgstr ""
+msgstr "Compromisso cancelado"
 
 msgid "Appointment date"
-msgstr ""
+msgstr "Data da consulta"
 
 msgid "Appointment date & time"
-msgstr ""
+msgstr "Data e hora da consulta"
 
 msgid "Appointment deposit"
 msgstr "Depósito do agendamento"
@@ -916,10 +935,10 @@ msgid "Appointment details"
 msgstr "Detalhes do agendamento"
 
 msgid "Appointment duration"
-msgstr ""
+msgstr "Duração da consulta"
 
 msgid "Appointment end time"
-msgstr ""
+msgstr "Hora de término do compromisso"
 
 msgid "Appointment has been created."
 msgstr "O agendamento foi criado."
@@ -943,22 +962,22 @@ msgid "Appointment information"
 msgstr "Informações sobre agendamento"
 
 msgid "Appointment initial date"
-msgstr ""
+msgstr "Data inicial da consulta"
 
 msgid "Appointment initial date & time"
-msgstr ""
+msgstr "Data e hora iniciais da consulta"
 
 msgid "Appointment initial end time"
-msgstr ""
+msgstr "Hora inicial de término da consulta"
 
 msgid "Appointment initial start time"
-msgstr ""
+msgstr "Hora inicial do compromisso"
 
 msgid "Appointment is removed from the cart."
 msgstr "O compromisso é removido do carrinho."
 
 msgid "Appointment management guide"
-msgstr ""
+msgstr "Guia de gerenciamento de compromissos"
 
 msgid "Appointment not found."
 msgstr "Compromisso não encontrado."
@@ -976,13 +995,13 @@ msgid "Appointment price"
 msgstr "Preço da consulta"
 
 msgid "Appointment repeats"
-msgstr ""
+msgstr "Repetições de compromissos"
 
 msgid "Appointment space name"
 msgstr "Nome do espaço de compromisso"
 
 msgid "Appointment start time"
-msgstr ""
+msgstr "Hora de início da consulta"
 
 msgid "Appointment status"
 msgstr "Status do agendamento"
@@ -991,7 +1010,10 @@ msgid "Appointment status has been changed to "
 msgstr "O status do agendamento foi alterado para"
 
 msgid "Appointment status has been updated."
-msgstr ""
+msgstr "O status do compromisso foi atualizado."
+
+msgid "Appointment title"
+msgstr "Título do compromisso"
 
 msgid "Appointments"
 msgstr "Agendamentos"
@@ -1012,10 +1034,10 @@ msgid "Appointments to book"
 msgstr "Consultas para marcar"
 
 msgid "Appointments waiting list"
-msgstr ""
+msgstr "Lista de espera para consultas"
 
 msgid "Approve appointment link"
-msgstr ""
+msgstr "Aprovar link de compromisso"
 
 msgid "Approved"
 msgstr "Aprovado"
@@ -1170,7 +1192,7 @@ msgid "Are you sure you want to show this employee?"
 msgstr "Tem certeza de que deseja mostrar este funcionário?"
 
 msgid "Are you sure you want to show this event?"
-msgstr ""
+msgstr "Tem certeza de que deseja exibir este evento?"
 
 msgid "Are you sure you want to show this location?"
 msgstr "Tem certeza de que deseja mostrar este local?"
@@ -1186,6 +1208,14 @@ msgstr "Tem certeza de que deseja mostrar este serviço?"
 
 msgid "Are you sure you want to show this tax?"
 msgstr "Tem certeza de que deseja mostrar este imposto? "
+
+msgid ""
+"Are you sure you want to skip the setup? Once skipped, the guided setup will "
+"no longer be available. All settings will need to be configured later."
+msgstr ""
+"Tem certeza de que deseja ignorar a configuração? Uma vez ignorada, a "
+"configuração guiada não estará mais disponível. Todas as configurações "
+"precisarão ser definidas posteriormente."
 
 msgid "Are you sure you want to unblock this customer?"
 msgstr "Tem certeza de que deseja excluir este cliente?"
@@ -1238,11 +1268,11 @@ msgstr "Os participantes foram excluídos"
 msgid "Attendees have not been deleted"
 msgstr "Os participantes não foram excluídos"
 
-msgid "Auto-Approve Booking After Payment"
-msgstr "Aprovar automaticamente a reserva após o pagamento"
-
 msgid "Auto-Reply Message"
 msgstr "Mensagem de resposta automática"
+
+msgid "Auto-approve booking after payment"
+msgstr "Aprovar automaticamente a reserva após o pagamento"
 
 msgid "Auto-fill your details using:"
 msgstr "Preencha seus dados automaticamente usando:"
@@ -1251,9 +1281,11 @@ msgid ""
 "Automate communication with notifications triggered by booking status, time, "
 "or custom rules"
 msgstr ""
+"Automatize a comunicação com notificações acionadas pelo status da reserva, "
+"horário ou regras personalizadas."
 
 msgid "Automated invoices for a smoother payment experience"
-msgstr ""
+msgstr "Faturas automatizadas para uma experiência de pagamento mais tranquila"
 
 msgid ""
 "Automatically calculate and apply taxes for hassle-free compliance and "
@@ -1266,6 +1298,9 @@ msgid ""
 "Automatically calculate and apply taxes to your services and events, "
 "ensuring accurate billing and hassle-free compliance with every transaction."
 msgstr ""
+"Calcule e aplique automaticamente impostos aos seus serviços e eventos, "
+"garantindo um faturamento preciso e conformidade sem complicações em todas "
+"as transações."
 
 msgid "Automatically create Amelia Customer user"
 msgstr "Criar automaticamente um usuário cliente Amelia"
@@ -1284,6 +1319,8 @@ msgid ""
 "Automatically generate invoices for every booking, making payments easier, "
 "more transparent, and fully streamlined for both you and your clients."
 msgstr ""
+"Gere faturas automaticamente para cada reserva, tornando os pagamentos mais "
+"fáceis, transparentes e totalmente simplificados para você e seus clientes."
 
 msgid ""
 "Automatically update the booking status to \"Approved\" after a successful "
@@ -1299,10 +1336,10 @@ msgid "Available"
 msgstr "Disponível"
 
 msgid "Available date background"
-msgstr ""
+msgstr "Data disponível em segundo plano"
 
 msgid "Available date text"
-msgstr ""
+msgstr "Texto da data disponível"
 
 msgid "Available from Pro license"
 msgstr "Disponível na licença Pro "
@@ -1323,6 +1360,8 @@ msgid ""
 "Avoid double-booking by automatically coordinating shared rooms, equipment, "
 "or tools"
 msgstr ""
+"Evite reservas duplicadas coordenando automaticamente salas, equipamentos ou "
+"ferramentas compartilhados."
 
 msgid "Away"
 msgstr "Ausente"
@@ -1334,7 +1373,7 @@ msgid "Back"
 msgstr "Voltar"
 
 msgid "Back button"
-msgstr ""
+msgstr "Botão Voltar"
 
 msgid "Back to"
 msgstr "Voltar para"
@@ -1352,7 +1391,7 @@ msgid "Backend"
 msgstr ""
 
 msgid "Background"
-msgstr ""
+msgstr "Contexto"
 
 msgid "Background Color"
 msgstr "Cor de fundo"
@@ -1376,7 +1415,7 @@ msgid "Badge label"
 msgstr "Rótulo do emblema"
 
 msgid "Badges setup"
-msgstr ""
+msgstr "Configuração de emblemas"
 
 msgid "Balance"
 msgstr "Saldo"
@@ -1388,7 +1427,7 @@ msgid "Base Price:"
 msgstr "Preço base:"
 
 msgid "Basic"
-msgstr ""
+msgstr "Básico"
 
 msgid "Beauty"
 msgstr "Beleza"
@@ -1415,7 +1454,7 @@ msgid "Birthday"
 msgstr "Aniversário"
 
 msgid "Birthday greeting"
-msgstr ""
+msgstr "Mensagem de aniversário"
 
 msgid "Block"
 msgstr "Bloqueio"
@@ -1424,11 +1463,15 @@ msgid ""
 "Block booking times that overlap with busy events in the employee’s Apple "
 "Calendar."
 msgstr ""
+"Bloqueie horários de reserva que se sobreponham a eventos ocupados no "
+"Calendário Apple do funcionário."
 
 msgid ""
 "Block booking times that overlap with busy events in the employee’s Outlook "
 "Calendar."
 msgstr ""
+"Bloqueie horários de reserva que se sobreponham a eventos ocupados no "
+"Calendário do Outlook do funcionário."
 
 msgid "Block customer"
 msgstr "Bloquear cliente"
@@ -1437,7 +1480,7 @@ msgid "Blog"
 msgstr ""
 
 msgid "Body text"
-msgstr ""
+msgstr "Texto do corpo"
 
 msgid "Book"
 msgstr "Livro"
@@ -1461,7 +1504,7 @@ msgid "Book another"
 msgstr "Reserve outro "
 
 msgid "Book appointment"
-msgstr ""
+msgstr "Marcar consulta"
 
 msgid "Book event"
 msgstr "Evento de livro"
@@ -1473,10 +1516,10 @@ msgid "Book now"
 msgstr "Reserve agora "
 
 msgid "Book option on employee dialog"
-msgstr ""
+msgstr "Opção de livro na caixa de diálogo do funcionário"
 
 msgid "Book package"
-msgstr ""
+msgstr "Pacote de livros"
 
 msgid "Book subtab name"
 msgstr "Nome da subguia do livro"
@@ -1485,7 +1528,14 @@ msgid "Book this event"
 msgstr "Reserve este evento"
 
 msgid "Book this service"
+msgstr "Reserve este serviço"
+
+msgid ""
+"Book time-based appointments with configurable durations, prices, and "
+"availability."
 msgstr ""
+"Marque compromissos com base no tempo, com durações, preços e "
+"disponibilidade configuráveis."
 
 msgid "Booked"
 msgstr "Reservado "
@@ -1494,7 +1544,7 @@ msgid "Booked Appointments"
 msgstr "Consultas agendadas"
 
 msgid "Booked customer (full name, email, phone)"
-msgstr ""
+msgstr "Cliente com reserva (nome completo, e-mail, telefone)"
 
 msgid "Booking"
 msgstr "Reserva"
@@ -1505,6 +1555,12 @@ msgstr "Reserva #{count}"
 msgid "Booking Appointment"
 msgstr "Agendamento de consulta"
 
+msgid "Booking Approved with Issues"
+msgstr "Reserva aprovada com problemas"
+
+msgid "Booking Canceled"
+msgstr "Reserva cancelada"
+
 msgid "Booking Closes"
 msgstr "Reservas encerradas"
 
@@ -1514,8 +1570,14 @@ msgstr "Fechamento de Reservas Asc"
 msgid "Booking Closes Desc"
 msgstr "Fechamento de Reservas Desc"
 
+msgid "Booking Confirmed"
+msgstr "Reserva confirmada"
+
 msgid "Booking Details"
 msgstr "Detalhes da Reserva"
+
+msgid "Booking Failed"
+msgstr "Falha na reserva"
 
 msgid "Booking Form"
 msgstr "Formulário de reserva"
@@ -1538,6 +1600,12 @@ msgstr "Abertura de Reservas Desc"
 msgid "Booking Overview"
 msgstr "Visão geral da reserva"
 
+msgid "Booking Processed"
+msgstr "Reserva processada"
+
+msgid "Booking Rejected"
+msgstr "Reserva rejeitada"
+
 msgid "Booking added"
 msgstr "Reserva adicionada"
 
@@ -1554,7 +1622,7 @@ msgid "Booking closes when event starts"
 msgstr "As reservas fecham quando o evento começa"
 
 msgid "Booking date"
-msgstr ""
+msgstr "Data da reserva"
 
 msgid "Booking form on customer profile enabled"
 msgstr "Formulário de reserva no perfil do cliente habilitado"
@@ -1575,7 +1643,7 @@ msgid "Booking has been updated."
 msgstr "A reserva foi atualizada."
 
 msgid "Booking invoice"
-msgstr ""
+msgstr "Fatura de reserva"
 
 msgid "Booking is canceled"
 msgstr "Reserva cancelada"
@@ -1623,7 +1691,7 @@ msgid "Booking tab name"
 msgstr "Nome da aba de reserva"
 
 msgid "Booking time slots will depend on the service duration"
-msgstr ""
+msgstr "Os horários disponíveis para reserva dependerão da duração do serviço."
 
 msgid "Booking type"
 msgstr "Tipo de reserva"
@@ -1635,18 +1703,22 @@ msgid ""
 "Boost engagement by reaching clients instantly on a platform they use every "
 "day"
 msgstr ""
+"Aumente o engajamento alcançando os clientes instantaneamente em uma "
+"plataforma que eles utilizam diariamente."
 
 msgid "Boost revenue with bundled service packages"
-msgstr ""
+msgstr "Aumente a receita com pacotes de serviços combinados"
 
 msgid "Boost revenue with valuable extras"
-msgstr ""
+msgstr "Aumente a receita com extras valiosos"
 
 msgid "Boost team productivity with automated updates and fewer manual tasks."
 msgstr ""
+"Aumente a produtividade da equipe com atualizações automatizadas e menos "
+"tarefas manuais."
 
 msgid "Border color"
-msgstr ""
+msgstr "Cor da borda"
 
 msgid "Break Hours"
 msgstr "Horas de intervalo"
@@ -1658,7 +1730,7 @@ msgid "Bringing Anyone With You"
 msgstr "Trazendo qualquer pessoa com você "
 
 msgid "Bringing anyone with you"
-msgstr ""
+msgstr "Traga qualquer pessoa com você"
 
 msgid "Bringing anyone with you?"
 msgstr "Vai levar alguém com você?"
@@ -1687,6 +1759,10 @@ msgid ""
 "areas, and more, turning every booking and registration into a powerful "
 "intake process."
 msgstr ""
+"Crie formulários personalizados para serviços, eventos e perfis de clientes "
+"usando campos personalizados. Capture exatamente os detalhes de que você "
+"precisa com caixas de seleção, áreas de texto e muito mais, transformando "
+"cada reserva e registro em um poderoso processo de admissão."
 
 msgid ""
 "Bundle multiple appointments or services at discounted rates to encourage "
@@ -1699,16 +1775,16 @@ msgid "Busy"
 msgstr "Ocupado"
 
 msgid "Busy slots"
-msgstr ""
+msgstr "Slots ocupados"
 
 msgid "Button"
-msgstr ""
+msgstr "Botão"
 
 msgid "Button Type"
 msgstr "Tipo de botão "
 
 msgid "Button style"
-msgstr ""
+msgstr "Estilo do botão"
 
 msgid "Buttons"
 msgstr "Botões"
@@ -1766,22 +1842,22 @@ msgid "Cancel and Delete"
 msgstr "Cancelar e Excluir"
 
 msgid "Cancel appointment"
-msgstr ""
+msgstr "Cancelar compromisso"
 
 msgid "Cancel appointment link"
-msgstr ""
+msgstr "Link para cancelar compromisso"
 
 msgid "Cancel event"
-msgstr ""
+msgstr "Cancelar evento"
 
 msgid "Cancel event link"
-msgstr ""
+msgstr "Cancelar link do evento"
 
 msgid "Cancel following"
 msgstr "Cancelar seguindo"
 
 msgid "Cancel package"
-msgstr ""
+msgstr "Cancelar pacote"
 
 msgid "Canceled"
 msgstr "Cancelado"
@@ -1793,10 +1869,13 @@ msgid "Canceled By Attendee"
 msgstr "Cancelado pelo participante"
 
 msgid "Canceled by admin"
-msgstr ""
+msgstr "Cancelado pelo administrador"
 
 msgid "Canceled by attendee"
-msgstr ""
+msgstr "Cancelado pelo participante"
+
+msgid "Cancellation Failed"
+msgstr "Falha no cancelamento"
 
 msgid "Cancelled"
 msgstr "Cancelado"
@@ -1811,13 +1890,13 @@ msgid "Card"
 msgstr "Cartão "
 
 msgid "Card color"
-msgstr ""
+msgstr "Cor do cartão"
 
 msgid "Card content"
-msgstr ""
+msgstr "Conteúdo do cartão"
 
 msgid "Card field"
-msgstr ""
+msgstr "Campo do cartão"
 
 msgid "Card number"
 msgstr "Número do cartão"
@@ -1829,10 +1908,10 @@ msgid "Cards"
 msgstr "Cartões"
 
 msgid "Cards and buttons"
-msgstr ""
+msgstr "Cartões e botões"
 
-msgid "Carrier:"
-msgstr "Operadora:"
+msgid "Carrier"
+msgstr "Operadora"
 
 msgid "Cart"
 msgstr "Carrinho "
@@ -1844,7 +1923,7 @@ msgid "Cart description"
 msgstr "Descrição do carrinho "
 
 msgid "Cart purchased"
-msgstr ""
+msgstr "Carrinho comprado"
 
 msgid "Catalog"
 msgstr "Catálogo"
@@ -1868,7 +1947,7 @@ msgid "Categories positions updated successfully."
 msgstr "Posições das categorias atualizadas com sucesso."
 
 msgid "Categories sidebar"
-msgstr ""
+msgstr "Barra lateral de categorias"
 
 msgid "Category"
 msgstr "Categoria"
@@ -1897,18 +1976,20 @@ msgstr "Nome da categoria"
 msgid ""
 "Centralize scheduling across all branches for clearer, simpler management"
 msgstr ""
+"Centralize o agendamento em todas as filiais para uma gestão mais clara e "
+"simples"
 
 msgid "Change Password"
 msgstr "Alterar a senha"
 
 msgid "Change colors"
-msgstr ""
+msgstr "Alterar cores"
 
 msgid "Change group status"
 msgstr "Alterar status do grupo"
 
 msgid "Change password"
-msgstr ""
+msgstr "Alterar senha"
 
 msgid "Charge type"
 msgstr "Tipo de carga"
@@ -2000,6 +2081,11 @@ msgstr "Escolha o serviço"
 msgid "Choose a Form"
 msgstr "Escolha um formulário"
 
+msgid "Choose a currency that will be used for all price based settings."
+msgstr ""
+"Escolha uma moeda que será usada para todas as configurações baseadas em "
+"preços."
+
 msgid ""
 "Choose a form you want to customize. The Step-by-Step 2.0 form is the new "
 "and improved version which provides you with better design and user "
@@ -2012,8 +2098,15 @@ msgstr ""
 msgid "Choose a group service"
 msgstr "Escolha um serviço de grupo"
 
-msgid "Choose date and time"
+msgid ""
+"Choose a time interval that will be used when defining all time based "
+"settings."
 msgstr ""
+"Escolha um intervalo de tempo que será usado ao definir todas as "
+"configurações baseadas em tempo."
+
+msgid "Choose date and time"
+msgstr "Escolha a data e a hora"
 
 msgid ""
 "Choose how Amelia suggests an alternative date when the selected recurring "
@@ -2061,6 +2154,9 @@ msgstr "Escolha o horário em que deseja repetir a consulta"
 msgid "Choose when the repeating ends"
 msgstr "Escolha quando a repetição termina"
 
+msgid "Choose whether you want to manage services, events, or both."
+msgstr "Escolha se deseja gerenciar serviços, eventos ou ambos."
+
 msgid "Choosing layout of first step in step by step form"
 msgstr "Escolhendo o layout do primeiro passo no formulário passo a passo"
 
@@ -2093,7 +2189,7 @@ msgid "Client ID"
 msgstr "ID do cliente"
 
 msgid "Client ID and secret"
-msgstr ""
+msgstr "ID do cliente e segredo"
 
 msgid "Client Time:"
 msgstr "Horário do cliente:"
@@ -2126,7 +2222,7 @@ msgid "Closes on:"
 msgstr "Fecha em:"
 
 msgid "Coaching"
-msgstr ""
+msgstr "Treinamento"
 
 msgid "Code"
 msgstr "Código"
@@ -2138,7 +2234,7 @@ msgid "Collapse menu"
 msgstr "Recolher menu"
 
 msgid "Collect the information your business truly needs"
-msgstr ""
+msgstr "Reúna as informações de que sua empresa realmente precisa"
 
 msgid "Color"
 msgstr "Cor"
@@ -2201,7 +2297,7 @@ msgid "Completed"
 msgstr "Concluído "
 
 msgid "Configuration"
-msgstr ""
+msgstr "Configuração"
 
 msgid "Configure"
 msgstr "Configurar"
@@ -2231,7 +2327,7 @@ msgstr ""
 "Configure o espaço reservado para os detalhes dos compromissos recorrentes."
 
 msgid "Configure waiting list for appointments"
-msgstr ""
+msgstr "Configurar lista de espera para consultas"
 
 msgid "Confirm"
 msgstr "Confirmar"
@@ -2274,6 +2370,9 @@ msgid ""
 "schedules perfectly synced and communication effortless across your entire "
 "team."
 msgstr ""
+"Conecte calendários de funcionários, ferramentas de reunião e outras "
+"integrações para manter as agendas perfeitamente sincronizadas e facilitar a "
+"comunicação em toda a sua equipe."
 
 msgid "Connect to Apple Calendar"
 msgstr "Conectar ao Calendário da Apple"
@@ -2341,10 +2440,10 @@ msgid "Consulting"
 msgstr "Consultoria"
 
 msgid "Contact message"
-msgstr ""
+msgstr "Mensagem de contato"
 
 msgid "Contact support."
-msgstr ""
+msgstr "Entre em contato com o suporte."
 
 msgid "Content"
 msgstr "Conteúdo"
@@ -2353,7 +2452,7 @@ msgid "Content Text Color"
 msgstr "Cor do texto do conteúdo"
 
 msgid "Content area"
-msgstr ""
+msgstr "Área de conteúdo"
 
 msgid "Content placeholders"
 msgstr "Marcadores de conteúdo"
@@ -2364,11 +2463,14 @@ msgstr "Continuar"
 msgid "Continue Booking"
 msgstr "Continuar reservando"
 
+msgid "Continue setup"
+msgstr "Continuar configuração"
+
 msgid "Copy your API key now, as it won't be visible again."
 msgstr "Copie sua chave de API agora, pois ela não ficará visível novamente."
 
-msgid "Cost:"
-msgstr "Custo:"
+msgid "Cost"
+msgstr "Custo"
 
 msgid ""
 "Could not delete category. This category has services available for booking "
@@ -2417,10 +2519,13 @@ msgstr "Quantia"
 
 msgid "Counts one primary customer plus any additional people they add."
 msgstr ""
+"Conta um cliente principal mais quaisquer pessoas adicionais que ele "
+"adicionar."
 
 msgid ""
 "Counts the total number of people entered, including the primary customer."
 msgstr ""
+"Conta o número total de pessoas inseridas, incluindo o cliente principal."
 
 msgid "Coupon"
 msgstr "Cupom "
@@ -2435,7 +2540,7 @@ msgid "Coupon code"
 msgstr "Código de cupom "
 
 msgid "Coupon field"
-msgstr ""
+msgstr "Campo cupom"
 
 msgid "Coupon has been created."
 msgstr "O cupom foi criado."
@@ -2453,22 +2558,22 @@ msgid "Coupon is now visible."
 msgstr "O cupom agora está visível."
 
 msgid "Coupon limit reached"
-msgstr ""
+msgstr "Limite do cupom atingido"
 
 msgid "Coupon needs to have discount or deduction"
 msgstr "O cupom precisa ter desconto ou dedução"
 
 msgid "Coupon segment"
-msgstr ""
+msgstr "Segmento do cupom"
 
 msgid "Coupons"
 msgstr "Cupons"
 
 msgid "Coupons overview"
-msgstr ""
+msgstr "Visão geral dos cupons"
 
 msgid "Coupons setup"
-msgstr ""
+msgstr "Configuração de cupons"
 
 msgid "Create Amelia Customers"
 msgstr "Crie clientes Amelia"
@@ -2507,12 +2612,21 @@ msgid ""
 "reminders, keeping customers and employees informed at exactly the right "
 "time."
 msgstr ""
+"Crie notificações personalizadas que são acionadas com base no status da "
+"reserva ou lembretes de agendamento, mantendo os clientes e funcionários "
+"informados no momento certo."
+
+msgid "Create employee"
+msgstr "Criar funcionário"
+
+msgid "Create event"
+msgstr "Criar evento"
 
 msgid "Create meetings for pending appointments"
 msgstr "Criar reuniões para agendamentos pendentes"
 
 msgid "Create new"
-msgstr ""
+msgstr "Criar novo"
 
 msgid "Create new badge"
 msgstr "Criar novo emblema"
@@ -2535,6 +2649,15 @@ msgid ""
 "employees, services, or locations, ensuring customers only see time slots "
 "when everything they need is truly available."
 msgstr ""
+"Crie salas, equipamentos ou outros recursos que possam ser compartilhados "
+"entre funcionários, serviços ou locais, garantindo que os clientes vejam "
+"apenas os horários em que tudo o que precisam está realmente disponível."
+
+msgid "Create scheduled events with fixed dates, prices and capacities."
+msgstr "Crie eventos programados com datas, preços e capacidades fixas."
+
+msgid "Create service"
+msgstr "Criar serviço"
 
 msgid "Create spaces for pending appointments"
 msgstr "Crie espaços para compromissos pendentes"
@@ -2544,8 +2667,14 @@ msgid ""
 "discounts or even free appointments to boost engagement, satisfaction, and "
 "sales."
 msgstr ""
+"Crie códigos de cupom exclusivos que os clientes podem resgatar durante a "
+"reserva, oferecendo descontos ou até mesmo consultas gratuitas para aumentar "
+"o engajamento, a satisfação e as vendas."
 
 msgid "Created On"
+msgstr "Criado em"
+
+msgid "Created on"
 msgstr "Criado em"
 
 msgid "Credit Card"
@@ -2601,7 +2730,7 @@ msgid "Custom currency symbol"
 msgstr "Símbolo de moeda personalizado"
 
 msgid "Custom field"
-msgstr ""
+msgstr "Campo personalizado"
 
 msgid "Custom field has been added"
 msgstr "Campo personalizado foi adicionado"
@@ -2622,13 +2751,13 @@ msgid "Custom fields have been updated."
 msgstr "Os campos personalizados foram atualizados."
 
 msgid "Custom fields setup"
-msgstr ""
+msgstr "Configuração de campos personalizados"
 
 msgid "Custom font family"
-msgstr ""
+msgstr "Família de fontes personalizada"
 
 msgid "Custom notification"
-msgstr ""
+msgstr "Notificação personalizada"
 
 msgid "Custom notifications"
 msgstr "Notificações personalizadas"
@@ -2642,7 +2771,7 @@ msgstr ""
 "pontos."
 
 msgid "Custom service duration"
-msgstr ""
+msgstr "Duração do serviço personalizado"
 
 msgid "Customer"
 msgstr "Cliente"
@@ -2656,9 +2785,6 @@ msgstr "Cliente Asc"
 msgid "Customer Desc"
 msgstr "Cliente Desc"
 
-msgid "Customer Name"
-msgstr "Nome do cliente"
-
 msgid "Customer Panel"
 msgstr "Painel do cliente"
 
@@ -2669,7 +2795,7 @@ msgid "Customer Profile "
 msgstr "Perfil do cliente"
 
 msgid "Customer configuration"
-msgstr ""
+msgstr "Configuração do cliente"
 
 msgid "Customer details"
 msgstr "Detalhes do cliente"
@@ -2678,7 +2804,7 @@ msgid "Customer email"
 msgstr "E-mail do cliente"
 
 msgid "Customer filter"
-msgstr ""
+msgstr "Filtro de clientes"
 
 msgid "Customer first name"
 msgstr "Nome do cliente"
@@ -2705,10 +2831,13 @@ msgid "Customer has been updated."
 msgstr "O cliente foi atualizado."
 
 msgid "Customer information"
-msgstr ""
+msgstr "Informações do cliente"
 
 msgid "Customer last name"
 msgstr "Sobrenome do cliente"
+
+msgid "Customer name"
+msgstr "Nome do cliente"
 
 msgid "Customer note"
 msgstr "Nota do cliente"
@@ -2720,10 +2849,10 @@ msgid "Customer note has been updated."
 msgstr "A nota do cliente foi atualizada."
 
 msgid "Customer panel"
-msgstr ""
+msgstr "Painel do cliente"
 
 msgid "Customer panel access link"
-msgstr ""
+msgstr "Link de acesso ao painel do cliente"
 
 msgid "Customer phone"
 msgstr "Telefone do cliente"
@@ -2765,6 +2894,10 @@ msgstr "Clientes importados do arquivo:"
 msgid "Customers in Waiting list"
 msgstr "Clientes na lista de espera"
 
+msgid "Customers will be redirected to this URL after booking an event."
+msgstr ""
+"Os clientes serão redirecionados para este URL após reservarem um evento."
+
 msgid ""
 "Customers will be redirected to this URL after scheduling an appointment."
 msgstr ""
@@ -2782,22 +2915,26 @@ msgid ""
 "Customize every interaction by gathering the right information for services, "
 "events, and customer records"
 msgstr ""
+"Personalize cada interação reunindo as informações certas para serviços, "
+"eventos e registros de clientes."
 
 msgid ""
 "Customize offerings to match specific services and meet diverse client needs"
 msgstr ""
+"Personalize as ofertas para corresponder a serviços específicos e atender às "
+"diversas necessidades dos clientes."
 
 msgid "Daily"
 msgstr "Diário"
 
 msgid "Daily occupancy"
-msgstr ""
+msgstr "Ocupação diária"
 
 msgid "Danger button background color"
-msgstr ""
+msgstr "Cor de fundo do botão de perigo"
 
 msgid "Danger button text color"
-msgstr ""
+msgstr "Cor do texto do botão de perigo"
 
 msgid "Dark Theme"
 msgstr "Tema Escuro"
@@ -2824,7 +2961,7 @@ msgid "Date & time"
 msgstr "Data e hora"
 
 msgid "Date & time periods of the event with Lesson Space join links"
-msgstr ""
+msgstr "Data e horários do evento com links para participar do Espaço de Aulas"
 
 msgid "Date Asc"
 msgstr "Data Asc"
@@ -2848,7 +2985,7 @@ msgid "Date and Time"
 msgstr "Data e Hora"
 
 msgid "Date and time"
-msgstr ""
+msgstr "Data e hora"
 
 msgid "Date of Birth"
 msgstr "Data de nascimento"
@@ -2947,8 +3084,8 @@ msgstr "Localização do quadrado padrão"
 msgid "Default appointment status"
 msgstr "Status padrão do agendamento"
 
-msgid "Default back‑end page"
-msgstr ""
+msgid "Default back end page"
+msgstr "Página padrão do back-end"
 
 msgid "Default language"
 msgstr "Idioma padrão"
@@ -2957,7 +3094,7 @@ msgid "Default location"
 msgstr "Localização padrão"
 
 msgid "Default number of items per page on the back end"
-msgstr ""
+msgstr "Número padrão de itens por página no back-end"
 
 msgid "Default number of items per page on the front end"
 msgstr "Número padrão de itens por página no front-end"
@@ -3014,6 +3151,8 @@ msgid ""
 "Define which capabilities will be requested when creating an Express "
 "connected account"
 msgstr ""
+"Defina quais recursos serão solicitados ao criar uma conta conectada ao "
+"Express."
 
 msgid ""
 "Defines the language used for notifications sent to this customer for "
@@ -3057,7 +3196,7 @@ msgid "Delete coupon"
 msgstr "Excluir cupom"
 
 msgid "Delete custom field"
-msgstr ""
+msgstr "Excluir campo personalizado"
 
 msgid "Delete customer"
 msgstr "Excluir cliente"
@@ -3099,11 +3238,15 @@ msgid ""
 "Deliver a smoother booking experience by showing customers only real, "
 "available time slots"
 msgstr ""
+"Ofereça uma experiência de reserva mais tranquila, mostrando aos clientes "
+"apenas horários reais e disponíveis."
 
 msgid ""
 "Deliver personalized messages tailored to your business tone, branding, and "
 "workflow"
 msgstr ""
+"Entregue mensagens personalizadas adaptadas ao tom, à marca e ao fluxo de "
+"trabalho da sua empresa."
 
 msgid "Delivered"
 msgstr "Entregue"
@@ -3121,7 +3264,7 @@ msgid "Deposit only"
 msgstr "Somente depósito"
 
 msgid "Deposit payment"
-msgstr ""
+msgstr "Pagamento do depósito"
 
 msgid "Deposit type"
 msgstr "Tipo de depósito"
@@ -3167,10 +3310,10 @@ msgid "Disconnect Employee"
 msgstr "Desconectar Funcionário"
 
 msgid "Disconnect account"
-msgstr ""
+msgstr "Desconectar conta"
 
 msgid "Disconnect employee account"
-msgstr ""
+msgstr "Desconectar conta de funcionário"
 
 msgid "Disconnect from Apple"
 msgstr "Desconectar"
@@ -3276,12 +3419,15 @@ msgid "Download .csv"
 msgstr "Baixar .csv"
 
 msgid "Download invoice"
-msgstr ""
+msgstr "Baixar fatura"
 
 msgid ""
 "Download your customer list instantly for reporting, marketing, or external "
 "system use, making data management faster and more convenient than ever."
 msgstr ""
+"Baixe sua lista de clientes instantaneamente para relatórios, marketing ou "
+"uso em sistemas externos, tornando o gerenciamento de dados mais rápido e "
+"conveniente do que nunca."
 
 msgid "Draft"
 msgstr "Rascunho"
@@ -3290,7 +3436,7 @@ msgid "Drag to rearrange columns and/or choose which ones to display."
 msgstr "Arraste para reorganizar as colunas e/ou escolha quais exibir."
 
 msgid "Drive bookings with irresistible coupon offers"
-msgstr ""
+msgstr "Impulsione as reservas com ofertas de cupons irresistíveis"
 
 msgid "Drop file here or click to upload"
 msgstr "Solte o arquivo aqui ou clique para fazer upload"
@@ -3365,13 +3511,13 @@ msgid "E-Tickets"
 msgstr "Ingressos"
 
 msgid "E-ticket"
-msgstr ""
+msgstr "Bilhete eletrônico"
 
 msgid "E-ticket QR code"
 msgstr "Código QR do e-ticket"
 
 msgid "E-ticket scanner"
-msgstr ""
+msgstr "Leitor de bilhetes eletrônicos"
 
 msgid "Each:"
 msgstr "Cada:"
@@ -3380,13 +3526,16 @@ msgid "Each spot counts as one attendee."
 msgstr "Cada vaga conta como um participante."
 
 msgid "Easily export your customer data in one click"
-msgstr ""
+msgstr "Exporte facilmente os dados dos seus clientes com um clique"
 
 msgid ""
 "Easily organize multiple business locations in one place, ensuring smooth "
 "operations and a consistent booking experience no matter where your services "
 "are offered."
 msgstr ""
+"Organize facilmente vários locais de negócios em um só lugar, garantindo "
+"operações tranquilas e uma experiência de reserva consistente, "
+"independentemente de onde seus serviços são oferecidos."
 
 msgid "Edit"
 msgstr "Editar"
@@ -3434,10 +3583,10 @@ msgid "Edit booking"
 msgstr "Editar reserva"
 
 msgid "Edit custom field"
-msgstr ""
+msgstr "Editar campo personalizado"
 
 msgid "Edit custom notification"
-msgstr ""
+msgstr "Editar notificação personalizada"
 
 msgid "Edit customer"
 msgstr "Editar cliente"
@@ -3452,7 +3601,7 @@ msgid "Edit event"
 msgstr "Editar evento"
 
 msgid "Edit event booking"
-msgstr ""
+msgstr "Editar reserva de evento"
 
 msgid "Edit location"
 msgstr "Editar local"
@@ -3464,7 +3613,7 @@ msgid "Edit resource"
 msgstr "Editar recurso"
 
 msgid "Edit service"
-msgstr ""
+msgstr "Editar serviço"
 
 msgid "Edit special day"
 msgstr "Editar dia especial"
@@ -3473,7 +3622,7 @@ msgid "Edit table"
 msgstr "Editar tabela"
 
 msgid "Edit transaction"
-msgstr ""
+msgstr "Editar transação"
 
 msgid "Edit work hours"
 msgstr "Editar horário de trabalho"
@@ -3482,21 +3631,29 @@ msgid ""
 "Efficiently manage appointment cancellations by allowing customers to join a "
 "waiting list and manually fill newly opened time slots."
 msgstr ""
+"Gerencie com eficiência os cancelamentos de compromissos, permitindo que os "
+"clientes entrem em uma lista de espera e preencham manualmente os horários "
+"recém-abertos."
 
 msgid "Effortless management for every location"
-msgstr ""
+msgstr "Gerenciamento sem esforço para todos os locais"
 
 msgid "Effortless tax management for every booking"
-msgstr ""
+msgstr "Gerenciamento de impostos sem esforço para todas as reservas"
 
 msgid ""
 "Effortlessly set up and manage events that repeat on your preferred schedule-"
 "offering flexibility, consistency, and a smooth experience for both your "
 "business and your customers."
 msgstr ""
+"Configure e gerencie facilmente eventos que se repetem de acordo com sua "
+"programação preferida, oferecendo flexibilidade, consistência e uma "
+"experiência tranquila tanto para sua empresa quanto para seus clientes."
 
 msgid "Eliminate manual calculations with smart, automated tax application"
 msgstr ""
+"Elimine cálculos manuais com a aplicação inteligente e automatizada de "
+"impostos"
 
 msgid "Email"
 msgstr "E-mail"
@@ -3508,7 +3665,7 @@ msgid "Email Address"
 msgstr "Endereço de email"
 
 msgid "Email address"
-msgstr ""
+msgstr "Endereço de e-mail"
 
 msgid "Email already exists with different name. Please check your name."
 msgstr ""
@@ -3545,10 +3702,10 @@ msgid "Employee Selection"
 msgstr "Lógica de seleção de funcionários"
 
 msgid "Employee badges"
-msgstr ""
+msgstr "Crachás dos funcionários"
 
 msgid "Employee badges management"
-msgstr ""
+msgstr "Gerenciamento de crachás de funcionários"
 
 msgid "Employee calendar disconnected successfully"
 msgstr "Calendário do funcionário desconectado com sucesso"
@@ -3570,19 +3727,19 @@ msgid "Employee description"
 msgstr "Descrição do funcionário"
 
 msgid "Employee description popup"
-msgstr ""
+msgstr "Pop-up com descrição do funcionário"
 
 msgid "Employee details"
 msgstr "Detalhes do funcionário"
 
 msgid "Employee dialog"
-msgstr ""
+msgstr "Diálogo do funcionário"
 
 msgid "Employee email"
 msgstr "E-mail do funcionário"
 
 msgid "Employee filter"
-msgstr ""
+msgstr "Filtro de funcionários"
 
 msgid "Employee first name"
 msgstr "Primeiro nome do funcionário"
@@ -3611,6 +3768,9 @@ msgstr "O funcionário agora está visível."
 msgid "Employee last name"
 msgstr "Sobrenome do funcionário"
 
+msgid "Employee name"
+msgstr "Nome do funcionário"
+
 msgid "Employee name, email & phone"
 msgstr "Nome do funcionário, e-mail e telefone"
 
@@ -3621,46 +3781,46 @@ msgid "Employee note has been updated."
 msgstr "A nota do funcionário foi atualizada."
 
 msgid "Employee panel"
-msgstr ""
+msgstr "Painel do funcionário"
 
 msgid "Employee panel access link"
-msgstr ""
+msgstr "Link de acesso ao painel do funcionário"
 
 msgid "Employee panel page URL"
-msgstr ""
+msgstr "URL da página do painel do funcionário"
 
 msgid "Employee panel password"
 msgstr "Senha do painel do funcionário"
 
 msgid "Employee password"
-msgstr ""
+msgstr "Senha do funcionário"
 
 msgid "Employee phone"
 msgstr "Telefone do funcionário"
 
 msgid "Employee price"
-msgstr ""
+msgstr "Preço para funcionários"
 
 msgid "Employee profile"
-msgstr ""
+msgstr "Perfil do funcionário"
 
 msgid "Employee selection"
-msgstr ""
+msgstr "Seleção de funcionários"
 
 msgid "Employee selection logic"
 msgstr "Lógica de seleção de funcionários"
 
 msgid "Employee setup"
-msgstr ""
+msgstr "Configuração do funcionário"
 
 msgid "Employees"
 msgstr "Funcionários"
 
 msgid "Empower your team with seamless integrations"
-msgstr ""
+msgstr "Capacite sua equipe com integrações perfeitas"
 
 msgid "Empty state"
-msgstr ""
+msgstr "Estado vazio"
 
 msgid "Enable"
 msgstr "Habilitar"
@@ -3783,6 +3943,8 @@ msgid ""
 "Enable this option to add event attendees to employees’ Apple Calendar "
 "events."
 msgstr ""
+"Habilite esta opção para adicionar participantes do evento aos eventos do "
+"Calendário Apple dos funcionários."
 
 msgid ""
 "Enable this option to add event attendees to employees’ Google Calendar "
@@ -3795,6 +3957,8 @@ msgid ""
 "Enable this option to add event attendees to employees’ Outlook Calendar "
 "events."
 msgstr ""
+"Habilite esta opção para adicionar participantes do evento aos eventos do "
+"Calendário do Outlook dos funcionários."
 
 msgid ""
 "Enable this option to create meetings for appointments with pending status."
@@ -3831,11 +3995,15 @@ msgid ""
 "Enable this option to include buffer time for scheduled appointments in "
 "Google Calendar events."
 msgstr ""
+"Ative esta opção para incluir tempo de buffer para compromissos agendados em "
+"eventos do Google Agenda."
 
 msgid ""
 "Enable this option to include buffer time for scheduled appointments in "
 "Outlook Calendar events."
 msgstr ""
+"Habilite esta opção para incluir tempo de buffer para compromissos agendados "
+"nos eventos do Calendário do Outlook."
 
 msgid ""
 "Enable this option to make sure that the invoice will be sent to the "
@@ -3858,6 +4026,9 @@ msgid ""
 "Enable this option to use this custom field as the location in Google and "
 "Outlook Calendar events, ICS files, and ‘Add to Calendar’ events."
 msgstr ""
+"Habilite esta opção para usar este campo personalizado como localização nos "
+"eventos do Google e do Outlook Calendar, nos arquivos ICS e nos eventos "
+"“Adicionar ao calendário”."
 
 msgid "Enable to display booking slots based on the client's time zone."
 msgstr ""
@@ -3906,32 +4077,43 @@ msgid ""
 "Enhance client trust by providing transparent, documented payment details "
 "for every booking"
 msgstr ""
+"Aumente a confiança do cliente, fornecendo detalhes de pagamento "
+"transparentes e documentados para cada reserva."
 
 msgid ""
 "Enhance customer loyalty by rewarding clients with exclusive, personalized "
 "offers"
 msgstr ""
+"Aumente a fidelidade dos clientes, recompensando-os com ofertas exclusivas e "
+"personalizadas."
 
 msgid ""
 "Enhance flexibility with customer information ready for marketing tools or "
 "external platforms"
 msgstr ""
+"Aumente a flexibilidade com informações do cliente prontas para ferramentas "
+"de marketing ou plataformas externas"
 
 msgid ""
 "Enhance the customer experience with clear, intuitive forms designed around "
 "your business needs"
 msgstr ""
+"Melhore a experiência do cliente com formulários claros e intuitivos, "
+"projetados de acordo com as necessidades da sua empresa."
 
 msgid ""
 "Enhance the customer experience with tailored add-ons that add convenience "
 "and value"
 msgstr ""
+"Melhore a experiência do cliente com complementos personalizados que agregam "
+"conveniência e valor"
 
 msgid "Ensure accurate billing by applying the correct tax rates every time"
-msgstr ""
+msgstr "Garanta um faturamento preciso aplicando sempre as alíquotas corretas"
 
 msgid "Ensure accurate bookkeeping with clear, organized financial data"
 msgstr ""
+"Garanta uma contabilidade precisa com dados financeiros claros e organizados"
 
 msgid "Enter, and re-enter your new password to continue"
 msgstr "Insira, e digite novamente sua nova senha para continuar"
@@ -4033,11 +4215,14 @@ msgstr "Digite sua senha"
 msgid "Error"
 msgstr "Erro"
 
+msgid "Error occurred"
+msgstr "Ocorreu um erro"
+
 msgid "Error while generating CSV."
 msgstr "Erro ao gerar CSV."
 
 msgid "Estimated price"
-msgstr ""
+msgstr "Preço estimado"
 
 msgid "Event"
 msgstr "Evento"
@@ -4118,7 +4303,7 @@ msgid "Event Type"
 msgstr "Tipo de evento"
 
 msgid "Event available"
-msgstr ""
+msgstr "Evento disponível"
 
 msgid "Event booking has been created."
 msgstr "A reserva do evento foi criada."
@@ -4136,37 +4321,38 @@ msgid "Event calendar booking from"
 msgstr "Reserva no calendário de eventos de"
 
 msgid "Event card"
-msgstr ""
+msgstr "Cartão de evento"
 
 msgid "Event date & time period"
-msgstr ""
+msgstr "Data e horário do evento"
 
 msgid "Event date & time periods with Google Meet join links"
-msgstr ""
+msgstr "Data e horário do evento com links para participar do Google Meet"
 
 msgid "Event date & time periods with Microsoft Teams join links"
-msgstr ""
+msgstr "Data e horário do evento com links para participar do Microsoft Teams"
 
 msgid "Event date & time periods with Zoom join links"
-msgstr ""
+msgstr "Data e horário do evento com links para participar do Zoom"
 
 msgid "Event date & time periods with Zoom start links"
-msgstr ""
+msgstr "Data e horário do evento com links para iniciar o Zoom"
 
 msgid "Event date period"
-msgstr ""
+msgstr "Período da data do evento"
 
 msgid "Event date periods with Google Meet join links"
-msgstr ""
+msgstr "Períodos de datas de eventos com links para participar do Google Meet"
 
 msgid "Event date periods with Microsoft Teams join links"
 msgstr ""
+"Períodos de datas de eventos com links para participar do Microsoft Teams"
 
 msgid "Event date periods with Zoom join links"
-msgstr ""
+msgstr "Períodos de datas de eventos com links para participar do Zoom"
 
 msgid "Event date periods with Zoom start links"
-msgstr ""
+msgstr "Períodos de datas de eventos com links de início do Zoom"
 
 msgid "Event deposit"
 msgstr "Depósito de evento"
@@ -4178,31 +4364,31 @@ msgid "Event details"
 msgstr "Detalhes do evento"
 
 msgid "Event e-ticket"
-msgstr ""
+msgstr "Bilhete eletrônico para eventos"
 
 msgid "Event employee"
-msgstr ""
+msgstr "Funcionário do evento"
 
 msgid "Event employees"
-msgstr ""
+msgstr "Funcionários do evento"
 
 msgid "Event end date"
-msgstr ""
+msgstr "Data de término do evento"
 
 msgid "Event end date & time"
-msgstr ""
+msgstr "Data e hora de término do evento"
 
 msgid "Event end time"
-msgstr ""
+msgstr "Hora de término do evento"
 
 msgid "Event ends"
-msgstr ""
+msgstr "Evento encerrado"
 
 msgid "Event filter"
-msgstr ""
+msgstr "Filtro de eventos"
 
 msgid "Event gallery"
-msgstr ""
+msgstr "Galeria de eventos"
 
 msgid "Event has been canceled"
 msgstr "O evento foi cancelado"
@@ -4235,10 +4421,10 @@ msgid "Event has been updated."
 msgstr "O evento foi atualizado."
 
 msgid "Event info"
-msgstr ""
+msgstr "Informações sobre o evento"
 
 msgid "Event initial start date"
-msgstr ""
+msgstr "Data inicial do evento"
 
 msgid "Event is now visible."
 msgstr "O evento agora está visível."
@@ -4247,7 +4433,7 @@ msgid "Event list booking from"
 msgstr "Reserva da lista de eventos a partir de"
 
 msgid "Event location"
-msgstr ""
+msgstr "Local do evento"
 
 msgid "Event name"
 msgstr "Nome do evento"
@@ -4256,31 +4442,31 @@ msgid "Event price"
 msgstr "Preço do evento"
 
 msgid "Event slots capacity"
-msgstr ""
+msgstr "Capacidade dos espaços para eventos"
 
 msgid "Event space name"
 msgstr "Nome do espaço do evento"
 
 msgid "Event start date"
-msgstr ""
+msgstr "Data de início do evento"
 
 msgid "Event start date & time"
-msgstr ""
+msgstr "Data e hora de início do evento"
 
 msgid "Event start date and time"
 msgstr "Data e hora de início do evento"
 
 msgid "Event start time"
-msgstr ""
+msgstr "Hora de início do evento"
 
 msgid "Event starts"
-msgstr ""
+msgstr "O evento começa"
 
 msgid "Event status"
-msgstr ""
+msgstr "Status do evento"
 
 msgid "Event ticketing"
-msgstr ""
+msgstr "Venda de ingressos para eventos"
 
 msgid "Event tickets"
 msgstr "Ingressos para eventos"
@@ -4292,7 +4478,7 @@ msgid "Event title and description"
 msgstr "Título e descrição do evento"
 
 msgid "Event type"
-msgstr ""
+msgstr "Tipo de evento"
 
 msgid "Events"
 msgstr "Eventos"
@@ -4310,28 +4496,28 @@ msgid "Events List Booking"
 msgstr "Lista de Eventos Reservas"
 
 msgid "Events available"
-msgstr ""
+msgstr "Eventos disponíveis"
 
 msgid "Events calendar"
-msgstr ""
+msgstr "Calendário de eventos"
 
 msgid "Events custom pricing"
-msgstr ""
+msgstr "Preços personalizados para eventos"
 
 msgid "Events list"
-msgstr ""
+msgstr "Lista de eventos"
 
 msgid "Events list view"
-msgstr ""
+msgstr "Exibição da lista de eventos"
 
 msgid "Events pricing"
 msgstr "Preços de eventos"
 
 msgid "Events setup"
-msgstr ""
+msgstr "Configuração de eventos"
 
 msgid "Events waiting list"
-msgstr ""
+msgstr "Lista de espera de eventos"
 
 msgid "Every"
 msgstr "Todo"
@@ -4350,6 +4536,7 @@ msgstr "Expandir tudo"
 
 msgid "Expand your capacity by adding as many employees as your business needs"
 msgstr ""
+"Expanda sua capacidade adicionando quantos funcionários sua empresa precisar."
 
 msgid "Expiration date"
 msgstr "Data de validade"
@@ -4370,9 +4557,12 @@ msgid ""
 "Export all transaction records from the Finance page for effortless "
 "accounting, reconciliation, or sharing with your finance tools."
 msgstr ""
+"Exporte todos os registros de transações da página Finanças para facilitar a "
+"contabilidade, a reconciliação ou o compartilhamento com suas ferramentas "
+"financeiras."
 
 msgid "Export appointment data with ease"
-msgstr ""
+msgstr "Exporte dados de compromissos com facilidade"
 
 msgid "Export bookings"
 msgstr "Exportar reservas"
@@ -4424,10 +4614,10 @@ msgid "Extras available"
 msgstr "Extras disponíveis"
 
 msgid "Extras cost:"
-msgstr ""
+msgstr "Custo dos extras:"
 
 msgid "Extras subtotal"
-msgstr ""
+msgstr "Subtotal extras"
 
 msgid "Extras total price"
 msgstr "Preço total dos extras"
@@ -4467,10 +4657,10 @@ msgid "Failed to send invoice."
 msgstr "Falha ao enviar a fatura."
 
 msgid "Failed to send test SMS."
-msgstr ""
+msgstr "Falha ao enviar SMS de teste."
 
 msgid "Failed to send test WhatsApp message."
-msgstr ""
+msgstr "Falha ao enviar mensagem de teste pelo WhatsApp."
 
 msgid "Failed to send test email."
 msgstr "Falha ao enviar e-mail de teste."
@@ -4491,7 +4681,7 @@ msgid "Field Order"
 msgstr "Ordem de campo"
 
 msgid "Field order"
-msgstr ""
+msgstr "Ordem dos campos"
 
 msgid "Field order, mandatory fields, labels and display options"
 msgstr "Ordem dos campos, campos obrigatórios, rótulos e opções de exibição"
@@ -4512,10 +4702,10 @@ msgid "Filter by Location"
 msgstr "Filtrar por Localização"
 
 msgid "Filter by employee"
-msgstr ""
+msgstr "Filtrar por funcionário"
 
 msgid "Filter by location"
-msgstr ""
+msgstr "Filtrar por localização"
 
 msgid "Filterable Field:"
 msgstr "Campo filtrável:"
@@ -4524,7 +4714,7 @@ msgid "Filters"
 msgstr "Filtros"
 
 msgid "Filters block"
-msgstr ""
+msgstr "Bloco de filtros"
 
 msgid "Finance"
 msgstr "Finanças"
@@ -4566,14 +4756,18 @@ msgid ""
 "Flexible discount options let you set custom values or offer full-price "
 "waivers"
 msgstr ""
+"Opções flexíveis de desconto permitem definir valores personalizados ou "
+"oferecer isenções do preço total"
 
 msgid ""
 "Flexible pricing lets you set a fixed package price and offer attractive "
 "discounts"
 msgstr ""
+"A flexibilidade de preços permite definir um preço fixo para o pacote e "
+"oferecer descontos atraentes."
 
 msgid "Follow up"
-msgstr ""
+msgstr "Acompanhamento"
 
 msgid "Font"
 msgstr "Fonte"
@@ -4582,7 +4776,7 @@ msgid "Font URL"
 msgstr "URL da fonte"
 
 msgid "Font family"
-msgstr ""
+msgstr "Família de fontes"
 
 msgid "Fonts"
 msgstr "Fontes"
@@ -4594,10 +4788,10 @@ msgid "Footer"
 msgstr "Rodapé"
 
 msgid "Footer buttons"
-msgstr ""
+msgstr "Botões do rodapé"
 
 msgid "Footer content"
-msgstr ""
+msgstr "Conteúdo do rodapé"
 
 msgid "For multiselect: hold CTRL / Command (⌘)."
 msgstr "Para multisseleção: segure CTRL / Command (⌘)."
@@ -4614,7 +4808,7 @@ msgid "Forgot Password?"
 msgstr "Esqueceu sua senha?"
 
 msgid "Forgot password?"
-msgstr ""
+msgstr "Esqueceu a senha?"
 
 msgid "Forgot your password?"
 msgstr "Esqueceu sua senha?"
@@ -4629,7 +4823,7 @@ msgid "Form colors"
 msgstr "Cores do formulário"
 
 msgid "Forms"
-msgstr ""
+msgstr "Formulários"
 
 msgid "Fourth"
 msgstr "Quarto"
@@ -4692,10 +4886,10 @@ msgid "Front-end customer panel"
 msgstr "Painel de Cliente do Front-end"
 
 msgid "Front-end employee panel"
-msgstr ""
+msgstr "Painel de funcionários front-end"
 
 msgid "Frontend"
-msgstr ""
+msgstr "Front-end"
 
 msgid "Frontend & Backend"
 msgstr "Frontend e Backend"
@@ -4745,7 +4939,7 @@ msgid "Get in Touch"
 msgstr "Entre em contato"
 
 msgid "Get in touch"
-msgstr ""
+msgstr "Entre em contato"
 
 msgid "Global Settings"
 msgstr "Configurações globais"
@@ -4762,10 +4956,10 @@ msgid "Go Back"
 msgstr "Volte"
 
 msgid "Go back"
-msgstr ""
+msgstr "Voltar"
 
 msgid "Go to Catalog form"
-msgstr ""
+msgstr "Ir para o formulário Catálogo"
 
 msgid "Go to Custom Fields"
 msgstr "Ir para Campos Personalizados"
@@ -4774,7 +4968,7 @@ msgid "Go to Notifications"
 msgstr "Ir para Notificações"
 
 msgid "Go to Step-by-step form"
-msgstr ""
+msgstr "Ir para o formulário passo a passo"
 
 msgid "Google"
 msgstr ""
@@ -4786,7 +4980,7 @@ msgid "Google Analytics"
 msgstr "Análise do Google"
 
 msgid "Google Analytics setup"
-msgstr ""
+msgstr "Configuração do Google Analytics"
 
 msgid "Google Calendar"
 msgstr "Calendário Google"
@@ -4795,7 +4989,7 @@ msgid "Google Calendar & Google Meet"
 msgstr "Google Agenda & Google Meet"
 
 msgid "Google Calendar setup"
-msgstr ""
+msgstr "Configuração do Google Agenda"
 
 msgid "Google Map API key"
 msgstr "Chave de API do Google Maps"
@@ -4811,13 +5005,13 @@ msgid "Google Meet Link"
 msgstr "Link do Google Meet"
 
 msgid "Google Meet join link"
-msgstr ""
+msgstr "Link para participar do Google Meet"
 
 msgid "Google Meet link"
-msgstr ""
+msgstr "Link do Google Meet"
 
 msgid "Google Meet setup"
-msgstr ""
+msgstr "Configuração do Google Meet"
 
 msgid "Google reCAPTCHA v2 secret key"
 msgstr "Chave secreta do Google reCAPTCHA v2"
@@ -4832,7 +5026,7 @@ msgid "Green"
 msgstr "Verde"
 
 msgid "Grid view"
-msgstr ""
+msgstr "Exibição em grade"
 
 msgid "Group Ticket"
 msgstr "Ingresso de grupo"
@@ -4853,7 +5047,7 @@ msgid "Group ticket has already been scanned"
 msgstr "O serviço foi salvo"
 
 msgid "Grow your team with unlimited employee management"
-msgstr ""
+msgstr "Expanda sua equipe com gerenciamento ilimitado de funcionários"
 
 msgid "Gyms"
 msgstr "Academias"
@@ -4874,17 +5068,20 @@ msgstr ""
 msgid "Header"
 msgstr "Cabeçalho"
 
+msgid "Header Image URL"
+msgstr "URL da imagem do cabeçalho"
+
 msgid "Heading"
-msgstr ""
+msgstr "Título"
 
 msgid "Heading Text Color"
 msgstr "Cor do texto do título"
 
 msgid "Heading content"
-msgstr ""
+msgstr "Conteúdo do título"
 
 msgid "Heading title"
-msgstr ""
+msgstr "Título do cabeçalho"
 
 msgid "Healthcare"
 msgstr "Saúde"
@@ -5016,13 +5213,13 @@ msgid "Hide tax"
 msgstr "Ocultar imposto"
 
 msgid "Hide tips & suggestions"
-msgstr ""
+msgstr "Ocultar dicas e sugestões"
 
 msgid "Higher price background"
-msgstr ""
+msgstr "Preço mais elevado"
 
 msgid "Higher price text"
-msgstr ""
+msgstr "Texto de preço mais alto"
 
 msgid "Highest price"
 msgstr "Preço mais alto"
@@ -5046,10 +5243,13 @@ msgid "How many people are coming?"
 msgstr "Quantas pessoas virão?"
 
 msgid "How to"
-msgstr ""
+msgstr "Como fazer"
 
 msgid "How to get your"
 msgstr "Como obter o seu"
+
+msgid "How will you use Amelia?"
+msgstr "Como você usará a Amelia?"
 
 msgid "ID"
 msgstr ""
@@ -5058,7 +5258,7 @@ msgid "ID Asc"
 msgstr ""
 
 msgid "ID Desc"
-msgstr ""
+msgstr "ID Descrição"
 
 msgid "I want to pay full amount"
 msgstr "Quero pagar o valor total"
@@ -5077,11 +5277,25 @@ msgstr ""
 "método de pagamento padrão será utilizado."
 
 msgid ""
+"If disabled, booking must meet the minimum capacity, and the time slot "
+"closes after the first booking."
+msgstr ""
+"Se desativado, a reserva deve atender à capacidade mínima e o intervalo de "
+"tempo é encerrado após a primeira reserva."
+
+msgid ""
 "If disabled, the price will remain the same regardless of how many people "
 "are included in the group appointment."
 msgstr ""
 "Se desativado, o preço permanecerá o mesmo, independentemente de quantas "
 "pessoas estejam incluídas no agendamento em grupo."
+
+msgid ""
+"If enabled, customers can book with Pending status even after maximum "
+"capacity is reached."
+msgstr ""
+"Se ativado, os clientes podem fazer reservas com o status Pendente mesmo "
+"após a capacidade máxima ter sido atingida."
 
 msgid ""
 "If enabled, customers can complete their payment using the link in their "
@@ -5123,42 +5337,11 @@ msgstr ""
 "será importado."
 
 msgid ""
-"If this is disabled, your front-end customers won't be able to book "
-"appointment with Pending status above the maximum capacity. Once the maximum "
-"capacity is reached appointment will close and time slot will become "
-"unavailable."
+"If this option is disabled, the item will be available only for booking from "
+"the backend."
 msgstr ""
-"Se isto estiver desativado, seus clientes no front-end não poderão agendar "
-"compromissos com status Pendente acima da capacidade máxima. Uma vez que a "
-"capacidade máxima for atingida, o agendamento será encerrado e o horário se "
-"tornará indisponível."
-
-msgid ""
-"If this is disabled, your front-end customers won't be able to submit a "
-"booking unless they fill in the minimum service capacity, but once they book "
-"for any capacity above minimum, the time slot will become unavailable for "
-"booking for others. If enabled, multiple customers will be able to book the "
-"same time slot, without having to fill in the minimum capacity."
-msgstr ""
-"Se isto estiver desativado, seus clientes no front-end não poderão enviar "
-"uma reserva a menos que preencham a capacidade mínima do serviço, mas uma "
-"vez que reservem para qualquer capacidade acima do mínimo, o horário se "
-"tornará indisponível para outros. Se ativado, vários clientes poderão "
-"reservar o mesmo horário, sem precisar preencher a capacidade mínima."
-
-msgid ""
-"If this option is disabled, the employee will only be available for booking "
-"through the back-end"
-msgstr ""
-"Se esta opção estiver desativada, o funcionário estará disponível para "
-"agendamento apenas pelo back-end."
-
-msgid ""
-"If this option is disabled, the service will be bookable only from the back "
-"end."
-msgstr ""
-"Se esta opção estiver desativada, o serviço só poderá ser reservado pelo "
-"back-end."
+"Se esta opção estiver desativada, o item estará disponível apenas para "
+"reserva a partir do backend."
 
 msgid ""
 "If this option is enabled customers will be able to pay via email "
@@ -5166,11 +5349,6 @@ msgid ""
 msgstr ""
 "Se esta opção estiver habilitada, os clientes poderão pagar por meio de "
 "notificações por e-mail ou pelo painel do cliente."
-
-msgid ""
-"If this option is enabled time slots will be shown with included service "
-"buffer time."
-msgstr ""
 
 msgid ""
 "If this option is not checked the plugin will calculate the time <br> for "
@@ -5222,11 +5400,16 @@ msgid ""
 "time (working hours, special days and days off for all employees will be "
 "ignored)."
 msgstr ""
+"Se você ativar esta opção, o administrador poderá marcar consultas a "
+"qualquer momento (horário de trabalho, dias especiais e dias de folga de "
+"todos os funcionários serão ignorados)."
 
 msgid ""
 "If you enable this option, Admin will be able to book appointment over or "
 "during another appointment."
 msgstr ""
+"Se você ativar esta opção, o administrador poderá marcar consultas sobre ou "
+"durante outra consulta."
 
 msgid ""
 "If you enable this option every time a new customer schedules the "
@@ -5238,13 +5421,13 @@ msgstr ""
 "automático com os detalhes de login."
 
 msgid "Image"
-msgstr ""
+msgstr "Imagem"
 
 msgid "Image Color"
 msgstr "Cor da imagem"
 
 msgid "Image thumbs"
-msgstr ""
+msgstr "Miniaturas de imagens"
 
 msgid "Import"
 msgstr "Importar"
@@ -5268,36 +5451,78 @@ msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
 "billing"
 msgstr ""
+"Melhore a precisão e o profissionalismo com faturamento consistente e "
+"claramente formatado"
 
 msgid ""
 "Improve customer choice by letting clients book with the employee that suits "
 "them best"
 msgstr ""
+"Melhore a escolha do cliente, permitindo que os clientes façam reservas com "
+"o funcionário que melhor lhes convier."
 
 msgid ""
 "Improve customer convenience by offering predictable, easy-to-book recurring "
 "options"
 msgstr ""
+"Melhore a conveniência do cliente oferecendo opções recorrentes previsíveis "
+"e fáceis de reservar."
 
 msgid ""
 "Improve customer experience by letting clients choose the location that "
 "suits them best"
 msgstr ""
+"Melhore a experiência do cliente, permitindo que os clientes escolham o "
+"local que melhor lhes convém."
 
 msgid ""
 "Improve reporting accuracy by accessing complete appointment data instantly"
 msgstr ""
+"Melhore a precisão dos relatórios acessando instantaneamente os dados "
+"completos dos compromissos"
 
 msgid ""
 "Improved customer retention as clients return to use the remaining sessions "
 "in their package"
 msgstr ""
+"Melhoria na retenção de clientes, uma vez que estes voltam a utilizar as "
+"sessões restantes do seu pacote"
+
+msgid ""
+"In Amelia, a “service” is a specific appointment-type offering your business "
+"provides to clients - such as consultations, treatments, or classes - that "
+"can be fully customized with its own name, duration, price, capacity, "
+"availability, and extras, and booked online with assigned employees."
+msgstr ""
+"Na Amelia, um “serviço” é um tipo específico de compromisso que sua empresa "
+"oferece aos clientes — como consultas, tratamentos ou aulas — que pode ser "
+"totalmente personalizado com seu próprio nome, duração, preço, capacidade, "
+"disponibilidade e extras, e reservado online com funcionários designados."
+
+msgid ""
+"In Amelia, an employee is a team member who provides services or hosts "
+"events, with their own schedule, working hours, and assigned offerings."
+msgstr ""
+"Na Amelia, um funcionário é um membro da equipe que presta serviços ou "
+"organiza eventos, com sua própria agenda, horário de trabalho e ofertas "
+"atribuídas."
+
+msgid ""
+"In Amelia, an event is a booking-type offering designed for group activities "
+"or multi-day occasions - such as workshops, conferences, tours, or training "
+"series - that can be configured with its own schedule, capacity, pricing "
+"structure and assigned staff."
+msgstr ""
+"No Amelia, um evento é uma oferta do tipo reserva projetada para atividades "
+"em grupo ou ocasiões de vários dias — como workshops, conferências, passeios "
+"ou séries de treinamento — que pode ser configurada com sua própria "
+"programação, capacidade, estrutura de preços e equipe designada."
 
 msgid "In Package"
 msgstr "No Pacote"
 
 msgid "In package"
-msgstr ""
+msgstr "No pacote"
 
 msgid "Incl. VAT"
 msgstr "Incluindo IVA"
@@ -5308,8 +5533,15 @@ msgstr "Incluir impostos"
 msgid "Include buffer time in calendar events"
 msgstr "Incluir tempo de espera nos eventos do calendário"
 
-msgid "Include in invoice"
+msgid ""
+"Include buffer time in slot calculation. When disabled, slots are based only "
+"on service duration."
 msgstr ""
+"Incluir tempo de buffer no cálculo do slot. Quando desativado, os slots são "
+"baseados apenas na duração do serviço."
+
+msgid "Include in invoice"
+msgstr "Incluir na fatura"
 
 msgid "Include service buffer time in time slots"
 msgstr "Incluir os intervalos de tempo no horário dos agendamentos"
@@ -5321,16 +5553,22 @@ msgid ""
 "Increase conversions by motivating customers with attractive, limited-time "
 "deals"
 msgstr ""
+"Aumente as conversões motivando os clientes com ofertas atraentes por tempo "
+"limitado."
 
 msgid ""
 "Increase revenue by encouraging customers to purchase additional services or "
 "products"
 msgstr ""
+"Aumente a receita incentivando os clientes a adquirir serviços ou produtos "
+"adicionais."
 
 msgid ""
 "Increase sales volume by encouraging customers to book more appointments at "
 "once"
 msgstr ""
+"Aumente o volume de vendas incentivando os clientes a marcarem mais "
+"consultas de uma só vez."
 
 msgid ""
 "Indicates the number of new and returning customers<br/>for the selected "
@@ -5346,22 +5584,22 @@ msgid "Info"
 msgstr "Informações"
 
 msgid "Info text"
-msgstr ""
+msgstr "Texto informativo"
 
 msgid "Initial end date & time of the event"
-msgstr ""
+msgstr "Data e hora iniciais de término do evento"
 
 msgid "Initial end date of the event"
-msgstr ""
+msgstr "Data inicial de término do evento"
 
 msgid "Initial end time of the event"
-msgstr ""
+msgstr "Hora inicial de término do evento"
 
 msgid "Initial start date & time of the event"
-msgstr ""
+msgstr "Data e hora de início do evento"
 
 msgid "Initial start time of the event"
-msgstr ""
+msgstr "Hora inicial do evento"
 
 msgid "Input Color"
 msgstr "Cor de entrada"
@@ -5370,10 +5608,10 @@ msgid "Input Text Color"
 msgstr "Cor do texto de entrada"
 
 msgid "Input field"
-msgstr ""
+msgstr "Campo de entrada"
 
 msgid "Input fields"
-msgstr ""
+msgstr "Campos de entrada"
 
 msgid "Insert Amelia Booking Shortcode"
 msgstr "Insira o código de acesso da reserva Amelia"
@@ -5390,6 +5628,9 @@ msgstr "Integrações"
 
 msgid "Interested in unlocking this feature?"
 msgstr "Interessado em desbloquear esse recurso?"
+
+msgid "Invalid Stripe secret key."
+msgstr "Chave secreta Stripe inválida."
 
 msgid "Invisible reCAPTCHA badge"
 msgstr "Selo do reCAPTCHA invisível"
@@ -5431,10 +5672,17 @@ msgid "Invoices"
 msgstr "Faturas"
 
 msgid "Invoices setup"
-msgstr ""
+msgstr "Configuração de faturas"
 
 msgid "Issued"
 msgstr "Emitido"
+
+msgid ""
+"It looks like this is your first time here, so let’s walk through a few "
+"simple steps to help you get started."
+msgstr ""
+"Parece que esta é sua primeira vez aqui, então vamos percorrer algumas "
+"etapas simples para ajudá-lo a começar."
 
 msgid ""
 "It seems like there are no available or visible services assigned to the "
@@ -5461,7 +5709,7 @@ msgid "Item"
 msgstr ""
 
 msgid "Item status"
-msgstr ""
+msgstr "Status do item"
 
 msgid "Jane Doe"
 msgstr ""
@@ -5494,10 +5742,10 @@ msgid "Join waiting list"
 msgstr "Entrar na lista de espera"
 
 msgid "Join with Google Meet"
-msgstr ""
+msgstr "Participe com o Google Meet"
 
 msgid "Join with Microsoft Teams"
-msgstr ""
+msgstr "Participe com o Microsoft Teams"
 
 msgid "Keep Individual"
 msgstr "Manter individual"
@@ -5507,21 +5755,33 @@ msgid ""
 "notifications directly through WhatsApp - choose predefined messages or "
 "customize your own for a personal touch."
 msgstr ""
+"Mantenha os clientes e funcionários informados enviando notificações de "
+"compromissos e eventos diretamente pelo WhatsApp — escolha mensagens "
+"predefinidas ou personalize as suas próprias para dar um toque pessoal."
 
 msgid ""
 "Keep everyone on track using scheduled reminders that reduce no-shows and "
 "confusion"
 msgstr ""
+"Mantenha todos atualizados usando lembretes programados que reduzem o número "
+"de faltas e a confusão."
 
 msgid ""
 "Keep operations aligned with unified settings, availability, and resource "
 "control"
 msgstr ""
+"Mantenha as operações alinhadas com configurações unificadas, "
+"disponibilidade e controle de recursos"
+
+msgid "Keep slot available after first booking"
+msgstr "Manter vaga disponível após a primeira reserva"
 
 msgid ""
 "Keep your data organized and meaningful with structured fields that "
 "standardize the information you collect"
 msgstr ""
+"Mantenha seus dados organizados e significativos com campos estruturados que "
+"padronizam as informações coletadas."
 
 msgid "Label"
 msgstr "Rótulo"
@@ -5536,7 +5796,7 @@ msgid "Language"
 msgstr "Linguagem"
 
 msgid "Languages"
-msgstr ""
+msgstr "Idiomas"
 
 msgid "Last"
 msgstr "Durar"
@@ -5596,13 +5856,13 @@ msgid "Lesson Space Links"
 msgstr "Links do Lesson Space"
 
 msgid "Lesson Space link"
-msgstr ""
+msgstr "Link para o Espaço de Aulas"
 
 msgid "Lesson Space link to join space"
-msgstr ""
+msgstr "Link do espaço da lição para entrar no espaço"
 
 msgid "Lesson Space setup"
-msgstr ""
+msgstr "Configuração do espaço da aula"
 
 msgid "Light Theme"
 msgstr "Tema Claro"
@@ -5665,7 +5925,7 @@ msgstr ""
 "no botão Salvar."
 
 msgid "List view"
-msgstr ""
+msgstr "Exibição em lista"
 
 msgid "Live API key"
 msgstr "Chave de API ativa"
@@ -5704,10 +5964,7 @@ msgid "Local Time:"
 msgstr "Hora local:"
 
 msgid "Local time"
-msgstr ""
-
-msgid "Local time:"
-msgstr ""
+msgstr "Hora local"
 
 msgid "Location"
 msgstr "Localização"
@@ -5737,10 +5994,10 @@ msgid "Location description"
 msgstr "Descrição do local"
 
 msgid "Location details"
-msgstr ""
+msgstr "Detalhes da localização"
 
 msgid "Location filter"
-msgstr ""
+msgstr "Filtro de localização"
 
 msgid "Location has been added."
 msgstr "A localização foi adicionada."
@@ -5761,10 +6018,10 @@ msgid "Location is now visible."
 msgstr "A localização agora está visível."
 
 msgid "Location latitude"
-msgstr ""
+msgstr "Latitude da localização"
 
 msgid "Location longitude"
-msgstr ""
+msgstr "Longitude da localização"
 
 msgid "Location name"
 msgstr "Nome do local"
@@ -5773,7 +6030,7 @@ msgid "Location phone"
 msgstr "Localização telefone"
 
 msgid "Location selection"
-msgstr ""
+msgstr "Seleção de localização"
 
 msgid "Locations"
 msgstr "Locais"
@@ -5783,7 +6040,7 @@ msgstr ""
 "Os locais devem estar ativos e ter o processamento de cartão habilitado"
 
 msgid "Locations setup"
-msgstr ""
+msgstr "Configuração de locais"
 
 msgid "Log In"
 msgstr "Conecte-se"
@@ -5801,16 +6058,16 @@ msgid "Longitude"
 msgstr ""
 
 msgid "Lower price background"
-msgstr ""
+msgstr "Preço mais baixo"
 
 msgid "Lower price text"
-msgstr ""
+msgstr "Texto de preço mais baixo"
 
 msgid "Lowest price"
 msgstr "Preço mais baixo"
 
 msgid "Mail service"
-msgstr ""
+msgstr "Serviço de correio eletrônico"
 
 msgid "Mailchimp"
 msgstr ""
@@ -5819,7 +6076,7 @@ msgid "Mailchimp List"
 msgstr "Lista do Mailchimp"
 
 msgid "Mailchimp setup"
-msgstr ""
+msgstr "Configuração do Mailchimp"
 
 msgid "Mailgun"
 msgstr ""
@@ -5831,23 +6088,28 @@ msgid "Mailgun Domain"
 msgstr "Domínio Mailgun"
 
 msgid "Main category button"
-msgstr ""
+msgstr "Botão da categoria principal"
 
 msgid "Main content"
-msgstr ""
+msgstr "Conteúdo principal"
 
 msgid ""
 "Maintain consistent scheduling with customizable frequencies and patterns"
 msgstr ""
+"Mantenha uma programação consistente com frequências e padrões "
+"personalizáveis"
 
 msgid "Make extra mandatory"
 msgstr "Tornar extra obrigatório"
+
+msgid "Make sure you are using the correct WhatsApp credentials."
+msgstr "Certifique-se de que está usando as credenciais corretas do WhatsApp."
 
 msgid "Male"
 msgstr "Masculino"
 
 msgid "Manage badges"
-msgstr ""
+msgstr "Gerenciar emblemas"
 
 msgid "Manage bookings"
 msgstr "Gerenciar reservas"
@@ -5866,16 +6128,16 @@ msgid "Manage languages"
 msgstr "Gerenciar idiomas"
 
 msgid "Manage personal schedule"
-msgstr ""
+msgstr "Gerenciar agenda pessoal"
 
 msgid "Manage shared resources with ease"
-msgstr ""
+msgstr "Gerencie recursos compartilhados com facilidade"
 
 msgid "Managing assigned services"
-msgstr ""
+msgstr "Gerenciando serviços atribuídos"
 
 msgid "Managing packages"
-msgstr ""
+msgstr "Gerenciando pacotes"
 
 msgid "Mandatory Field:"
 msgstr "Campo obrigatório:"
@@ -5927,7 +6189,7 @@ msgid "Maximum quantity"
 msgstr "Quantidade máxima"
 
 msgid "Maximum spots"
-msgstr ""
+msgstr "Número máximo de vagas"
 
 msgid "Maximum usage per customer"
 msgstr "Uso máximo por cliente"
@@ -5948,7 +6210,7 @@ msgid "Message"
 msgstr "Mensagem"
 
 msgid "Message content"
-msgstr ""
+msgstr "Conteúdo da mensagem"
 
 msgid "Message template"
 msgstr "Modelo de Mensagem"
@@ -5957,6 +6219,8 @@ msgid ""
 "Messages sent through WhatsApp are without a reply option, so we advise "
 "setting the “Auto-reply” message"
 msgstr ""
+"As mensagens enviadas pelo WhatsApp não têm opção de resposta, por isso "
+"recomendamos definir a mensagem de “Resposta automática”."
 
 msgid "Meta"
 msgstr ""
@@ -5965,7 +6229,7 @@ msgid "Meta Pixel"
 msgstr ""
 
 msgid "Meta Pixel setup"
-msgstr ""
+msgstr "Configuração do Meta Pixel"
 
 msgid "Method"
 msgstr "Método"
@@ -5980,13 +6244,13 @@ msgid "Microsoft Teams Link"
 msgstr "Link do Microsoft Teams"
 
 msgid "Microsoft Teams join link"
-msgstr ""
+msgstr "Link para participar do Microsoft Teams"
 
 msgid "Microsoft Teams link"
-msgstr ""
+msgstr "Link do Microsoft Teams"
 
 msgid "Microsoft Teams setup"
-msgstr ""
+msgstr "Configuração do Microsoft Teams"
 
 msgid "Min. Capacity"
 msgstr "Capacidade mínima"
@@ -6040,7 +6304,7 @@ msgid "Mollie"
 msgstr "Moleque"
 
 msgid "Mollie payment link"
-msgstr ""
+msgstr "Link de pagamento Mollie"
 
 msgid "Mon"
 msgstr "Seg"
@@ -6073,7 +6337,7 @@ msgid "Multiple Locations"
 msgstr "Vários locais"
 
 msgid "Multiple locations"
-msgstr ""
+msgstr "Vários locais"
 
 msgid "Multiple packages purchased."
 msgstr "Vários pacotes comprados."
@@ -6085,7 +6349,7 @@ msgid "Multiply deposit amount by the number of people in one booking."
 msgstr "Multiplicar o valor do depósito pelo número de pessoas em uma reserva."
 
 msgid "Multiply deposit by number of people"
-msgstr ""
+msgstr "Multiplique o depósito pelo número de pessoas"
 
 msgid "Multiply price by number of people"
 msgstr "Multiplicar o preço pelo número de pessoas"
@@ -6094,7 +6358,7 @@ msgid "My Profile"
 msgstr "Meu Perfil"
 
 msgid "My profile"
-msgstr ""
+msgstr "Meu perfil"
 
 msgid "Name"
 msgstr "Nome"
@@ -6127,7 +6391,7 @@ msgid "Need additional fields?"
 msgstr "Precisa de campos adicionais?"
 
 msgid "Need help?"
-msgstr ""
+msgstr "Precisa de ajuda?"
 
 msgid "Need to update your company's days off?"
 msgstr "Precisa atualizar os dias de folga da sua empresa?"
@@ -6160,46 +6424,46 @@ msgid "New Update"
 msgstr "Nova Atualização"
 
 msgid "New appointment"
-msgstr ""
+msgstr "Nova nomeação"
 
 msgid "New category"
-msgstr ""
+msgstr "Nova categoria"
 
 msgid "New coupon"
-msgstr ""
+msgstr "Novo cupom"
 
 msgid "New customer"
-msgstr ""
+msgstr "Novo cliente"
 
 msgid "New employee"
-msgstr ""
+msgstr "Novo funcionário"
 
 msgid "New event"
-msgstr ""
+msgstr "Novo evento"
 
 msgid "New event booking"
-msgstr ""
+msgstr "Nova reserva de evento"
 
 msgid "New language"
 msgstr "Novo idioma"
 
 msgid "New package"
-msgstr ""
+msgstr "Novo pacote"
 
 msgid "New package booking"
-msgstr ""
+msgstr "Nova reserva de pacote"
 
 msgid "New password"
 msgstr "Nova senha"
 
 msgid "New resource"
-msgstr ""
+msgstr "Novo recurso"
 
 msgid "New service"
-msgstr ""
+msgstr "Novo serviço"
 
 msgid "New tax"
-msgstr ""
+msgstr "Novo imposto"
 
 msgid "Next"
 msgstr "Próximo"
@@ -6208,13 +6472,10 @@ msgid "Next Service"
 msgstr "Próximo serviço"
 
 msgid "Next day reminder"
-msgstr ""
+msgstr "Lembrete para o dia seguinte"
 
 msgid "No"
 msgstr "Não"
-
-msgid "No, Cancel"
-msgstr "Não, Cancelar"
 
 msgid "No, just this one"
 msgstr "Não, só esse"
@@ -6223,7 +6484,7 @@ msgid "No-show"
 msgstr "Falta"
 
 msgid "No-show tag"
-msgstr ""
+msgstr "Tag de não comparecimento"
 
 msgid "No Employees Assigned to This Location"
 msgstr "Nenhum funcionário atribuído a este local"
@@ -6258,7 +6519,7 @@ msgid "No appointments found"
 msgstr "Nenhum compromisso encontrado"
 
 msgid "No appointments yet"
-msgstr ""
+msgstr "Ainda não há compromissos"
 
 msgid "No attendees found"
 msgstr "Nenhum participante encontrado"
@@ -6273,55 +6534,55 @@ msgid "No camera found on this device."
 msgstr "Nenhuma câmera encontrada neste dispositivo."
 
 msgid "No coupons yet"
-msgstr ""
+msgstr "Ainda não há cupons"
 
 msgid "No custom fields yet"
-msgstr ""
+msgstr "Ainda não há campos personalizados"
 
 msgid "No customers were imported to your customer list."
 msgstr "Nenhum cliente foi importado para sua lista de clientes."
 
 msgid "No customers yet"
-msgstr ""
+msgstr "Ainda não há clientes"
 
 msgid "No employees yet"
-msgstr ""
+msgstr "Ainda não há funcionários"
 
 msgid "No event bookings yet"
-msgstr ""
+msgstr "Ainda não há reservas para eventos"
 
 msgid "No events found"
 msgstr "Nenhum evento encontrado"
 
 msgid "No events yet"
-msgstr ""
+msgstr "Ainda não há eventos"
 
 msgid "No extras yet"
-msgstr ""
+msgstr "Ainda não há extras"
 
 msgid "No invoices yet"
-msgstr ""
+msgstr "Ainda não há faturas"
 
 msgid "No limit per customer"
 msgstr "Sem limite por cliente"
 
 msgid "No locations yet"
-msgstr ""
+msgstr "Ainda não há localizações"
 
 msgid "No matching data"
 msgstr "Nenhum dado correspondente"
 
 msgid "No package bookings yet"
-msgstr ""
+msgstr "Ainda não há reservas de pacotes"
 
 msgid "No packages found"
 msgstr "Nenhum pacote encontrado"
 
 msgid "No packages yet"
-msgstr ""
+msgstr "Ainda não há pacotes"
 
 msgid "No resources yet"
-msgstr ""
+msgstr "Ainda não há recursos"
 
 msgid "No results"
 msgstr "Nenhum resultado"
@@ -6336,7 +6597,7 @@ msgid "No results found for"
 msgstr "Nenhum resultado encontrado para"
 
 msgid "No services or employees available"
-msgstr ""
+msgstr "Não há serviços ou funcionários disponíveis"
 
 msgid "No services yet"
 msgstr "Nenhum serviço ainda"
@@ -6345,16 +6606,16 @@ msgid "No spots left"
 msgstr "Não há mais vagas"
 
 msgid "No taxes yet"
-msgstr ""
+msgstr "Ainda sem impostos"
 
 msgid "No top trends"
-msgstr ""
+msgstr "Sem tendências principais"
 
 msgid "No transactions yet"
-msgstr ""
+msgstr "Ainda não há transações"
 
 msgid "No upcoming events"
-msgstr ""
+msgstr "Não há eventos programados"
 
 msgid "No usage limit"
 msgstr "Sem limite de uso"
@@ -6375,7 +6636,7 @@ msgid "Note (Internal)"
 msgstr "Nota (apenas interno)"
 
 msgid "Note (internal)"
-msgstr ""
+msgstr "Nota (interna)"
 
 msgid "Notice: Please select at least one panel."
 msgstr "Aviso: Selecione pelo menos um painel."
@@ -6408,7 +6669,7 @@ msgid "Notification name"
 msgstr "Nome da notificação"
 
 msgid "Notification settings"
-msgstr ""
+msgstr "Configurações de notificação"
 
 msgid "Notification status has been updated."
 msgstr "O status da notificação foi atualizado."
@@ -6440,13 +6701,10 @@ msgid "Notify the attendee(s)"
 msgstr "Notificar o(s) participante(s)"
 
 msgid "Notify the attendees"
-msgstr ""
+msgstr "Notificar os participantes"
 
 msgid "Notify the customer(s)"
 msgstr "Notificar o(s) cliente(s)"
-
-msgid "Notify the customer(s) by default"
-msgstr "Notificar o(s) cliente(s) por padrão"
 
 msgid "Number of Additional People"
 msgstr "Número de pessoas adicionais"
@@ -6482,19 +6740,19 @@ msgid "Number of people"
 msgstr "Número de pessoas"
 
 msgid "Number of people on waiting list"
-msgstr ""
+msgstr "Número de pessoas na lista de espera"
 
 msgid "Number of people that are coming with you."
 msgstr "Número de pessoas que irão com você."
 
 msgid "Number of recurrences:"
-msgstr ""
+msgstr "Número de ocorrências:"
 
 msgid "Number of tickets"
 msgstr "Número de bilhetes"
 
 msgid "Occupancy rate"
-msgstr ""
+msgstr "Taxa de ocupação"
 
 msgid "Occupied"
 msgstr "Ocupado"
@@ -6521,6 +6779,9 @@ msgid ""
 "additional services, products, or experiences to enhance appointments and "
 "delight your customers."
 msgstr ""
+"Ofereça extras opcionais ou obrigatórios durante o processo de reserva - "
+"venda serviços, produtos ou experiências adicionais para melhorar os "
+"compromissos e encantar seus clientes."
 
 msgid ""
 "Offer services with multiple duration options for customers to choose from."
@@ -6560,13 +6821,13 @@ msgid "On Break"
 msgstr "No intervalo"
 
 msgid "On hold"
-msgstr ""
+msgstr "Em espera"
 
 msgid "On the same day"
 msgstr "No mesmo dia"
 
 msgid "On the same day each month"
-msgstr ""
+msgstr "No mesmo dia de cada mês"
 
 msgid "Once Off"
 msgstr "Férias"
@@ -6582,31 +6843,43 @@ msgid ""
 "Once you add your first custom field, it will appear here. Click + Custom "
 "Field below to get started."
 msgstr ""
+"Depois de adicionar seu primeiro campo personalizado, ele aparecerá aqui. "
+"Clique em + Campo personalizado abaixo para começar."
 
 msgid ""
 "Once you add your first employee, it will appear here. Click + Employee "
 "below to get started."
 msgstr ""
+"Depois de adicionar seu primeiro funcionário, ele aparecerá aqui. Clique em "
+"+ Funcionário abaixo para começar."
 
 msgid ""
 "Once you add your first event, it will appear here. Click + Event below to "
 "get started."
 msgstr ""
+"Depois de adicionar seu primeiro evento, ele aparecerá aqui. Clique em + "
+"Evento abaixo para começar."
 
 msgid ""
 "Once you add your first extra, it will appear here. Click + Extra above to "
 "get started."
 msgstr ""
+"Depois de adicionar seu primeiro extra, ele aparecerá aqui. Clique em + "
+"Extra acima para começar."
 
 msgid ""
 "Once you add your first package, it will appear here. Click + Package below "
 "to get started."
 msgstr ""
+"Depois de adicionar seu primeiro pacote, ele aparecerá aqui. Clique em + "
+"Pacote abaixo para começar."
 
 msgid ""
 "Once you add your first resource, it will appear here. Click + Resource "
 "below to get started."
 msgstr ""
+"Depois de adicionar seu primeiro recurso, ele aparecerá aqui. Clique em + "
+"Recurso abaixo para começar."
 
 msgid "Once you add your first service, it will appear here."
 msgstr "Assim que você adicionar seu primeiro serviço, ele aparecerá aqui."
@@ -6615,6 +6888,8 @@ msgid ""
 "Once you add your first tax, it will appear here. Click + Tax below to get "
 "started."
 msgstr ""
+"Depois de adicionar seu primeiro imposto, ele aparecerá aqui. Clique em + "
+"Imposto abaixo para começar."
 
 msgid ""
 "Once you receive bookings, your appointments will be displayed here. You can "
@@ -6654,10 +6929,10 @@ msgstr ""
 
 msgid ""
 "Once you start receiving bookings, your customers will be displayed here. "
-"You can also get started by clicking the Add button below."
+"You can also get started by clicking the Add or Import button below."
 msgstr ""
-"Assim que você começar a receber reservas, seus clientes serão exibidos "
-"aqui. Você também pode começar clicando no botão Adicionar abaixo."
+"Assim que começar a receber reservas, seus clientes serão exibidos aqui. "
+"Você também pode começar clicando no botão Adicionar ou Importar abaixo."
 
 msgid "One booking can have multiple attendees/spots in it."
 msgstr "Uma reserva pode ter vários participantes/vagas."
@@ -6715,9 +6990,6 @@ msgstr "Opções:"
 msgid "Or"
 msgstr "Ou"
 
-msgid "Or Enter details below"
-msgstr "Digite o e-mail"
-
 msgid "Or enter details below"
 msgstr "Detalhes do evento do grupo"
 
@@ -6746,7 +7018,7 @@ msgid "Other"
 msgstr "Outro"
 
 msgid "Outline"
-msgstr ""
+msgstr "Esboço"
 
 msgid "Outlook Calendar"
 msgstr "Calendário do Outlook"
@@ -6755,10 +7027,10 @@ msgid "Outlook Calendar & Microsoft Teams"
 msgstr "Calendário do Outlook & Microsoft Teams"
 
 msgid "Outlook Calendar WP hooks"
-msgstr ""
+msgstr "Ganchos do Outlook Calendar WP"
 
 msgid "Outlook Calendar setup"
-msgstr ""
+msgstr "Configuração do Calendário do Outlook"
 
 msgid "Outlook Mailer"
 msgstr "Calendário do Outlook"
@@ -6816,13 +7088,13 @@ msgid "Package appointment has been updated."
 msgstr "O agendamento do pacote foi atualizado."
 
 msgid "Package appointments"
-msgstr ""
+msgstr "Agendar compromissos"
 
 msgid "Package appointments details"
 msgstr "Detalhes dos compromissos do pacote"
 
 msgid "Package badge"
-msgstr ""
+msgstr "Emblema do pacote"
 
 msgid "Package booking details"
 msgstr "Detalhes da reserva do pacote"
@@ -6843,13 +7115,13 @@ msgid "Package canceled"
 msgstr "Pacote cancelado"
 
 msgid "Package capacity"
-msgstr ""
+msgstr "Capacidade do pacote"
 
 msgid "Package category"
-msgstr ""
+msgstr "Categoria do pacote"
 
 msgid "Package count"
-msgstr ""
+msgstr "Contagem de pacotes"
 
 msgid "Package deal"
 msgstr "Pacote de ofertas"
@@ -6867,7 +7139,7 @@ msgid "Package duration"
 msgstr "Duração do pacote"
 
 msgid "Package filter"
-msgstr ""
+msgstr "Filtro de pacotes"
 
 msgid "Package has been created."
 msgstr "O pacote foi criado."
@@ -6885,28 +7157,28 @@ msgid "Package includes"
 msgstr "O pacote inclui"
 
 msgid "Package info"
-msgstr ""
+msgstr "Informações sobre o pacote"
 
 msgid "Package is now visible."
 msgstr "O pacote agora está visível."
 
 msgid "Package location"
-msgstr ""
+msgstr "Localização do pacote"
 
 msgid "Package management"
-msgstr ""
+msgstr "Gerenciamento de pacotes"
 
 msgid "Package name"
 msgstr "Nome do pacote"
 
 msgid "Package overview"
-msgstr ""
+msgstr "Visão geral do pacote"
 
 msgid "Package price"
 msgstr "Preço do pacote"
 
 msgid "Package price:"
-msgstr ""
+msgstr "Preço do pacote:"
 
 msgid "Package purchased"
 msgstr "Pacote comprado"
@@ -6915,28 +7187,28 @@ msgid "Package rules and description"
 msgstr "Regras e descrição do pacote"
 
 msgid "Package selection"
-msgstr ""
+msgstr "Seleção de pacotes"
 
 msgid "Package services list"
-msgstr ""
+msgstr "Lista de serviços do pacote"
 
 msgid "Packages"
 msgstr "Pacotes"
 
 msgid "Packages appointments"
-msgstr ""
+msgstr "Pacotes de compromissos"
 
 msgid "Packages block"
-msgstr ""
+msgstr "Bloco de pacotes"
 
 msgid "Packages have been reordered."
 msgstr "Os pacotes foram reordenados."
 
 msgid "Packages overview"
-msgstr ""
+msgstr "Visão geral dos pacotes"
 
 msgid "Packages popup"
-msgstr ""
+msgstr "Pop-up de pacotes"
 
 msgid "Paddle"
 msgstr "Remo"
@@ -6945,19 +7217,19 @@ msgid "Page"
 msgstr "Página"
 
 msgid "Page card"
-msgstr ""
+msgstr "Cartão da página"
 
 msgid "Page content"
-msgstr ""
+msgstr "Conteúdo da página"
 
 msgid "Page header"
-msgstr ""
+msgstr "Cabeçalho da página"
 
 msgid "Page messages"
-msgstr ""
+msgstr "Mensagens da página"
 
 msgid "Page scroll"
-msgstr ""
+msgstr "Rolagem da página"
 
 msgid "Paid"
 msgstr "Pago"
@@ -6975,10 +7247,10 @@ msgid "Panel Button Type"
 msgstr "Tipo de botão do painel"
 
 msgid "Panel access"
-msgstr ""
+msgstr "Acesso ao painel"
 
 msgid "Panel recovery"
-msgstr ""
+msgstr "Recuperação do painel"
 
 msgid "Panel subtab name"
 msgstr "Nome da subguia do painel"
@@ -7029,11 +7301,15 @@ msgid ""
 "Paste the secret key you received after creating your API key pair in Google "
 "reCAPTCHA."
 msgstr ""
+"Cole a chave secreta que você recebeu após criar seu par de chaves API no "
+"Google reCAPTCHA."
 
 msgid ""
 "Paste the site key you received after generating your API key pair in Google "
 "reCAPTCHA."
 msgstr ""
+"Cole a chave do site que você recebeu após gerar seu par de chaves API no "
+"Google reCAPTCHA."
 
 msgid "Pay"
 msgstr "Pagar"
@@ -7042,7 +7318,7 @@ msgid "PayPal"
 msgstr ""
 
 msgid "PayPal payment link"
-msgstr ""
+msgstr "Link de pagamento PayPal"
 
 msgid "Pay for all appointments at once"
 msgstr "Pagar por todas as consultas de uma vez"
@@ -7073,9 +7349,6 @@ msgstr "Histórico de pagamento"
 
 msgid "Payment ID"
 msgstr "ID de pagamento"
-
-msgid "Payment ID:"
-msgstr "ID do pagamento:"
 
 msgid "Payment Method"
 msgstr "Método de pagamento"
@@ -7111,7 +7384,7 @@ msgid "Payment error"
 msgstr "Erro de pagamento"
 
 msgid "Payment history"
-msgstr ""
+msgstr "Histórico de pagamentos"
 
 msgid "Payment link for Barion"
 msgstr "Link de pagamento para Stripe"
@@ -7129,19 +7402,22 @@ msgid "Payment protected by policy and powered by"
 msgstr "Pagamento protegido por política e fornecido por"
 
 msgid "Payment segment"
-msgstr ""
+msgstr "Segmento de pagamento"
 
 msgid "Payment status"
 msgstr "Status do pagamento"
 
 msgid "Payment summary"
-msgstr ""
+msgstr "Resumo do pagamento"
 
 msgid "Payment type"
 msgstr "Tipo de pagamento"
 
 msgid "Payment type, deposit payment..."
 msgstr "Tipo de pagamento, pagamento por depósito..."
+
+msgid "Payment was canceled."
+msgstr "O pagamento foi cancelado."
 
 msgid "Payments"
 msgstr "Pagamentos"
@@ -7159,7 +7435,7 @@ msgid "People"
 msgstr "Pessoas"
 
 msgid "People counting logic"
-msgstr ""
+msgstr "Lógica de contagem de pessoas"
 
 msgid "Per Location"
 msgstr "Por Localização"
@@ -7207,7 +7483,7 @@ msgid "Personal Information"
 msgstr "Informações Pessoais"
 
 msgid "Personal information"
-msgstr ""
+msgstr "Informações pessoais"
 
 msgid "Phone"
 msgstr "Telefone"
@@ -7262,10 +7538,17 @@ msgid "Placeholder copied to clipboard."
 msgstr "Espaço reservado copiado para a área de transferência."
 
 msgid "Placeholder text"
-msgstr ""
+msgstr "Texto de espaço reservado"
 
 msgid "Placeholders"
 msgstr "Marcadores"
+
+msgid ""
+"Places API (New) is required but not enabled. Please enable it in Google "
+"Cloud Console."
+msgstr ""
+"A API Places (Nova) é necessária, mas não está ativada. Ative-a no Google "
+"Cloud Console."
 
 msgid "Plain"
 msgstr "Simples"
@@ -7326,7 +7609,7 @@ msgid "Please enter a first name."
 msgstr "Por favor, insira um nome."
 
 msgid "Please enter a last name"
-msgstr ""
+msgstr "Por favor, insira um sobrenome"
 
 msgid "Please enter a live publishable key."
 msgstr "Por favor, insira uma chave publicável ativa."
@@ -7374,7 +7657,7 @@ msgid "Please enter a test secret key."
 msgstr "Por favor, insira uma chave secreta de teste."
 
 msgid "Please enter a ticket code."
-msgstr ""
+msgstr "Insira um código de ticket."
 
 msgid "Please enter a ticket name."
 msgstr "Por favor, insira um nome de ingresso."
@@ -7430,20 +7713,20 @@ msgstr "Por favor, insira o sobrenome"
 msgid "Please enter live API Key"
 msgstr "Por favor, insira a chave API ativa"
 
-msgid "Please enter live ClientId"
-msgstr "Por favor, insira o ClientId ativo"
-
 msgid "Please enter live POSKey"
 msgstr "Por favor, insira a chave API ativa"
 
-msgid "Please enter live Secret"
-msgstr "Por favor, insira o segredo ao vivo"
+msgid "Please enter live client ID"
+msgstr "Insira o ID do cliente ativo"
 
-msgid "Please enter live key id"
-msgstr "Por favor, insira o ID da chave ativa"
+msgid "Please enter live key ID"
+msgstr "Insira a ID da chave ativa"
 
 msgid "Please enter live key secret"
 msgstr "Por favor, insira a chave secreta ao vivo"
+
+msgid "Please enter live secret"
+msgstr "Insira o segredo ativo"
 
 msgid "Please enter name"
 msgstr "Por favor insira o nome"
@@ -7478,17 +7761,17 @@ msgstr "Por favor, insira o nome da taxa de imposto."
 msgid "Please enter test API Key"
 msgstr "Por favor, insira a chave da API de teste"
 
-msgid "Please enter test ClientId"
-msgstr "Por favor, insira o ClientId de teste"
+msgid "Please enter test client ID"
+msgstr "Insira o ID do cliente de teste"
 
-msgid "Please enter test Secret"
-msgstr "Por favor, insira o segredo do teste"
-
-msgid "Please enter test key id"
-msgstr "Por favor, insira o ID da chave de teste"
+msgid "Please enter test key ID"
+msgstr "Insira a ID da chave de teste"
 
 msgid "Please enter test key secret"
 msgstr "Por favor, insira a chave secreta do teste"
+
+msgid "Please enter test secret"
+msgstr "Insira o segredo de teste"
 
 msgid "Please enter waiting list capacity"
 msgstr "Por favor, insira a capacidade da lista de espera"
@@ -7545,7 +7828,7 @@ msgid "Please select a duration."
 msgstr "Por favor, selecione uma duração."
 
 msgid "Please select a location"
-msgstr ""
+msgstr "Selecione um local"
 
 msgid "Please select a location."
 msgstr "Por favor, selecione um local."
@@ -7593,7 +7876,7 @@ msgid "Please select an opening time."
 msgstr "Por favor, selecione um horário de abertura."
 
 msgid "Please select an option."
-msgstr ""
+msgstr "Selecione uma opção."
 
 msgid "Please select at least one customer"
 msgstr "Selecione pelo menos um cliente"
@@ -7664,10 +7947,10 @@ msgid "Popup Heading"
 msgstr "Cabeçalho pop-up"
 
 msgid "Popup buttons"
-msgstr ""
+msgstr "Botões pop-up"
 
 msgid "Popup title"
-msgstr ""
+msgstr "Título do pop-up"
 
 msgid "Preload entities when page loads"
 msgstr "Pré-carregar entidades quando a página carregar"
@@ -7698,6 +7981,8 @@ msgid ""
 "Prevent scheduling conflicts with real-time calendar syncing for every "
 "employee."
 msgstr ""
+"Evite conflitos de agendamento com a sincronização em tempo real do "
+"calendário para todos os funcionários."
 
 msgid "Preview"
 msgstr "Pré-visualização"
@@ -7706,10 +7991,10 @@ msgid "Preview Invoice"
 msgstr "Pré-visualização"
 
 msgid "Preview invoice"
-msgstr ""
+msgstr "Pré-visualizar fatura"
 
 msgid "Previous range"
-msgstr ""
+msgstr "Intervalo anterior"
 
 msgid "Price"
 msgstr "Preço"
@@ -7730,7 +8015,7 @@ msgid "Price Descending"
 msgstr "Preço Descendente"
 
 msgid "Price indicators"
-msgstr ""
+msgstr "Indicadores de preço"
 
 msgid "Price number of decimals"
 msgstr "Número de decimais do preço"
@@ -7784,13 +8069,13 @@ msgid "Primary and state colors"
 msgstr "Cores primárias e estaduais"
 
 msgid "Primary button style"
-msgstr ""
+msgstr "Estilo do botão principal"
 
 msgid "Primary color"
-msgstr ""
+msgstr "Cor primária"
 
 msgid "Primary text"
-msgstr ""
+msgstr "Texto principal"
 
 msgid "Process payments easily with Square."
 msgstr "Processe pagamentos facilmente com o Square."
@@ -7830,7 +8115,7 @@ msgstr ""
 "as necessidades do seu negócio."
 
 msgid "Publish"
-msgstr ""
+msgstr "Publicar"
 
 msgid "Publish Form"
 msgstr "Publicar formulário"
@@ -7878,6 +8163,8 @@ msgid ""
 "Quickly download all appointment details from the Bookings page, making "
 "reporting, analysis, and record-keeping simple and efficient."
 msgstr ""
+"Baixe rapidamente todos os detalhes dos compromissos da página Reservas, "
+"tornando os relatórios, análises e registros simples e eficientes."
 
 msgid "Radio button"
 msgstr "Botão de opção"
@@ -7892,13 +8179,13 @@ msgid "Razorpay"
 msgstr ""
 
 msgid "Razorpay payment link"
-msgstr ""
+msgstr "Link de pagamento Razorpay"
 
 msgid "Re-type New Password"
 msgstr "Digite a nova senha novamente"
 
 msgid "Re-type new password"
-msgstr ""
+msgstr "Digite novamente a nova senha"
 
 msgid "Read more"
 msgstr "Ler mais"
@@ -7907,13 +8194,13 @@ msgid "Recharge"
 msgstr "Recarregar"
 
 msgid "Recharge balance"
-msgstr ""
+msgstr "Recarregar saldo"
 
 msgid "Recipient email"
-msgstr ""
+msgstr "E-mail do destinatário"
 
 msgid "Recipient phone"
-msgstr ""
+msgstr "Telefone do destinatário"
 
 msgid "Recurrence"
 msgstr "Recorrência"
@@ -7937,7 +8224,7 @@ msgid "Recurring Summary"
 msgstr "Resumo recorrente"
 
 msgid "Recurring appointment"
-msgstr ""
+msgstr "Compromisso recorrente"
 
 msgid "Recurring appointment payment"
 msgstr "Pagamento de consultas recorrentes"
@@ -7946,13 +8233,13 @@ msgid "Recurring appointments"
 msgstr "Consultas recorrentes"
 
 msgid "Recurring appointments:"
-msgstr ""
+msgstr "Compromissos recorrentes:"
 
 msgid "Recurring appointments details"
 msgstr "Detalhes de compromissos recorrentes"
 
 msgid "Recurring appointments setup"
-msgstr ""
+msgstr "Configuração de compromissos recorrentes"
 
 msgid "Recurring events"
 msgstr "Eventos recorrentes"
@@ -7964,13 +8251,13 @@ msgid "Recurring popup"
 msgstr "Pop-up recorrente"
 
 msgid "Recurring summary"
-msgstr ""
+msgstr "Resumo recorrente"
 
 msgid "Red"
 msgstr "Vermelho"
 
 msgid "Redirect"
-msgstr ""
+msgstr "Redirecionar"
 
 msgid "Redirect URI"
 msgstr "Redirecionar URI"
@@ -8010,6 +8297,7 @@ msgstr "Redirecionar página"
 
 msgid "Reduce no-shows with timely reminders sent automatically"
 msgstr ""
+"Reduza o número de faltas com lembretes oportunos enviados automaticamente"
 
 msgid "Reflect On"
 msgstr "Refletir sobre"
@@ -8027,7 +8315,7 @@ msgid "Registration, Telephone Number, Email"
 msgstr "Registro, Número de Telefone, Email"
 
 msgid "Reject appointment link"
-msgstr ""
+msgstr "Link para rejeitar compromisso"
 
 msgid "Rejected"
 msgstr "Rejeitado"
@@ -8042,7 +8330,7 @@ msgid "Remind me when my SMS balance is low"
 msgstr "Lembre-me quando meu saldo de SMS estiver baixo"
 
 msgid "Remove Apple Calendar busy slots"
-msgstr ""
+msgstr "Remover intervalos ocupados do Calendário da Apple"
 
 msgid "Remove Attendee"
 msgstr "Remover participante"
@@ -8051,7 +8339,7 @@ msgid "Remove Google Calendar busy slots"
 msgstr "Remover horários ocupados do Google Agenda"
 
 msgid "Remove Outlook Calendar busy slots"
-msgstr ""
+msgstr "Remover intervalos ocupados do Calendário do Outlook"
 
 msgid "Reorder Packages"
 msgstr "Reordenar Pacotes"
@@ -8099,7 +8387,7 @@ msgid "Repeat every year"
 msgstr "Repetir todos os anos"
 
 msgid "Repeat new password"
-msgstr ""
+msgstr "Repita a nova senha"
 
 msgid "Repeat on"
 msgstr "Repita em"
@@ -8114,7 +8402,7 @@ msgid "Replace"
 msgstr "Substituir"
 
 msgid "Reply-to email"
-msgstr ""
+msgstr "E-mail de resposta"
 
 msgid "Require password for login"
 msgstr "Exigir senha para login"
@@ -8129,7 +8417,7 @@ msgid "Reschedule"
 msgstr "Reprogramar"
 
 msgid "Reschedule appointment"
-msgstr ""
+msgstr "Remarcar consulta"
 
 msgid "Rescheduled"
 msgstr "Remarcado"
@@ -8143,8 +8431,11 @@ msgstr "Redefinir formulário"
 msgid "Reset Password"
 msgstr "Redefinir senha"
 
+msgid "Reset form settings"
+msgstr "Redefinir configurações do formulário"
+
 msgid "Reset password"
-msgstr ""
+msgstr "Redefinir senha"
 
 msgid "Resource"
 msgstr "Recurso"
@@ -8153,7 +8444,7 @@ msgid "Resource Details"
 msgstr "Detalhes do Recurso"
 
 msgid "Resource booking setup"
-msgstr ""
+msgstr "Configuração de reserva de recursos"
 
 msgid "Resource has been added."
 msgstr "O recurso foi adicionado."
@@ -8173,6 +8464,9 @@ msgstr "Recurso agora está visível."
 msgid "Resources"
 msgstr "Recursos"
 
+msgid "Return to Home"
+msgstr "Voltar para a página inicial"
+
 msgid "Returning"
 msgstr "Recorrente"
 
@@ -8180,7 +8474,7 @@ msgid "Revenue"
 msgstr "Receita"
 
 msgid "Ribbon"
-msgstr ""
+msgstr "Faixa de opções"
 
 msgid "Role"
 msgstr "Função"
@@ -8189,7 +8483,7 @@ msgid "Roles & permissions"
 msgstr "Funções e permissões"
 
 msgid "Roles settings"
-msgstr ""
+msgstr "Configurações de funções"
 
 msgid "Round-robin"
 msgstr "Rodízio"
@@ -8207,10 +8501,10 @@ msgid "SMS Settings"
 msgstr "Configurações de SMS"
 
 msgid "SMS balance"
-msgstr ""
+msgstr "Saldo de SMS"
 
 msgid "SMS history"
-msgstr ""
+msgstr "Histórico de SMS"
 
 msgid "SMTP"
 msgstr ""
@@ -8230,6 +8524,9 @@ msgstr "SMTP Seguro"
 msgid "SMTP Username"
 msgstr "Nome de usuário SMTP"
 
+msgid "SMTP credentials validation failed. Please check your settings."
+msgstr "Falha na validação das credenciais SMTP. Verifique suas configurações."
+
 msgid "SSL"
 msgstr ""
 
@@ -8240,7 +8537,7 @@ msgid "Sandbox mode"
 msgstr "Modo sandbox"
 
 msgid "Sandbox secret key (POSKey)"
-msgstr ""
+msgstr "Chave secreta da área restrita (POSKey)"
 
 msgid "Sat"
 msgstr "Sáb"
@@ -8261,20 +8558,26 @@ msgid "Save Special Day"
 msgstr "Salve o dia especial"
 
 msgid "Save changes"
-msgstr ""
+msgstr "Salvar alterações"
 
 msgid "Save time and reduce manual work with instant, auto-generated invoices"
 msgstr ""
+"Economize tempo e reduza o trabalho manual com faturas instantâneas geradas "
+"automaticamente."
 
 msgid ""
 "Save time by automating repeating events instead of creating them manually"
 msgstr ""
+"Economize tempo automatizando eventos repetitivos em vez de criá-los "
+"manualmente"
 
 msgid "Save time with fast, one-click appointment exports"
-msgstr ""
+msgstr "Economize tempo com exportações rápidas de compromissos com um clique"
 
 msgid "Save time with quick, hassle-free customer data exports"
 msgstr ""
+"Economize tempo com exportações rápidas e sem complicações dos dados dos "
+"clientes"
 
 msgid "Scan"
 msgstr "Digitalizar"
@@ -8283,7 +8586,7 @@ msgid "Scan E-Ticket"
 msgstr "Selecionar ingressos"
 
 msgid "Scan e-ticket"
-msgstr ""
+msgstr "Digitalizar bilhete eletrônico"
 
 msgid "Schedule"
 msgstr "Agendamento"
@@ -8292,7 +8595,7 @@ msgid "Schedule:"
 msgstr "Agendar:"
 
 msgid "Schedule setup required"
-msgstr ""
+msgstr "Configuração da programação necessária"
 
 msgid "Scheduled"
 msgstr "Agendado"
@@ -8355,7 +8658,7 @@ msgid "Search events"
 msgstr "Pesquisar eventos"
 
 msgid "Search extras"
-msgstr ""
+msgstr "Pesquisar extras"
 
 msgid "Search features"
 msgstr "Pesquisar funcionalidades"
@@ -8364,7 +8667,7 @@ msgid "Search for Events"
 msgstr "Pesquisar Eventos"
 
 msgid "Search for events"
-msgstr ""
+msgstr "Pesquisar eventos"
 
 msgid "Search integrations"
 msgstr "Pesquisar integrações"
@@ -8373,7 +8676,7 @@ msgid "Search invoices"
 msgstr "Pesquisar faturas"
 
 msgid "Search locations"
-msgstr ""
+msgstr "Pesquisar locais"
 
 msgid "Search notifications"
 msgstr "Pesquisar notificações"
@@ -8391,19 +8694,19 @@ msgid "Second {day}"
 msgstr "Segundo {day}"
 
 msgid "Secondary"
-msgstr ""
+msgstr "Secundário"
 
 msgid "Secondary Button Type"
 msgstr "Tipo de botão secundário"
 
 msgid "Secondary button style"
-msgstr ""
+msgstr "Estilo do botão secundário"
 
 msgid "Secondary color"
-msgstr ""
+msgstr "Cor secundária"
 
 msgid "Secondary text"
-msgstr ""
+msgstr "Texto secundário"
 
 msgid "Secret key (POSKey)"
 msgstr "Chave secreta (POSKey)"
@@ -8414,8 +8717,8 @@ msgstr "Seção"
 msgid "Securely process payments using Stripe."
 msgstr "Processar pagamentos de forma segura usando o Stripe."
 
-msgid "Segment:"
-msgstr "Segmento:"
+msgid "Segment"
+msgstr "Segmento"
 
 msgid "Segments"
 msgstr "Segmentos"
@@ -8503,6 +8806,9 @@ msgstr ""
 "Selecione um espaço reservado para inseri-lo onde o seu cursor está "
 "posicionado."
 
+msgid "Select at least one option."
+msgstr "Selecione pelo menos uma opção."
+
 msgid "Select box"
 msgstr "Caixa de seleção"
 
@@ -8513,7 +8819,7 @@ msgid "Select customer, employee and service"
 msgstr "Selecione cliente, funcionário e serviço"
 
 msgid "Select date"
-msgstr ""
+msgstr "Selecione a data"
 
 msgid "Select date and time"
 msgstr "Selecione a data e a hora"
@@ -8549,7 +8855,7 @@ msgid "Select package"
 msgstr "Selecionar pacote"
 
 msgid "Select placeholder"
-msgstr ""
+msgstr "Selecionar espaço reservado"
 
 msgid "Select service"
 msgstr "Selecionar serviço"
@@ -8579,6 +8885,9 @@ msgid ""
 "Select the employee who will be added as the organizer of the Google/Outlook/"
 "Apple Calendar event. Employees selected under Staff will be added as guests."
 msgstr ""
+"Selecione o funcionário que será adicionado como organizador do evento do "
+"Google/Outlook/Apple Calendar. Os funcionários selecionados em Equipe serão "
+"adicionados como convidados."
 
 msgid "Select the events this coupon can be used for."
 msgstr "Selecione os eventos para os quais este cupom pode ser usado."
@@ -8601,7 +8910,7 @@ msgid "Select this employee"
 msgstr "Selecione este funcionário"
 
 msgid "Select tickets"
-msgstr ""
+msgstr "Selecionar bilhetes"
 
 msgid "Select your Square Location"
 msgstr "Selecione a localização do seu quadrado"
@@ -8613,10 +8922,10 @@ msgid "Selected Customers"
 msgstr "Clientes selecionados"
 
 msgid "Selected date background"
-msgstr ""
+msgstr "Fundo da data selecionada"
 
 msgid "Selected date text"
-msgstr ""
+msgstr "Texto da data selecionada"
 
 msgid "Selected extras"
 msgstr "Extras selecionados"
@@ -8637,22 +8946,22 @@ msgid "Send Access Link"
 msgstr "Enviar Link de Acesso"
 
 msgid "Send ICS file for approved bookings"
-msgstr ""
+msgstr "Enviar arquivo ICS para reservas aprovadas"
 
 msgid "Send ICS file for pending bookings"
-msgstr ""
+msgstr "Enviar arquivo ICS para reservas pendentes"
 
 msgid "Send Reset Link"
 msgstr "Enviar Link de Redefinição"
 
 msgid "Send access link"
-msgstr ""
+msgstr "Enviar link de acesso"
 
 msgid "Send after appointment"
-msgstr ""
+msgstr "Enviar após a consulta"
 
 msgid "Send after event"
-msgstr ""
+msgstr "Enviar após o evento"
 
 msgid "Send all SMS messages to additional numbers"
 msgstr "Enviar todas as mensagens SMS para números adicionais"
@@ -8664,7 +8973,7 @@ msgid "Send appointment notifications directly via WhatsApp."
 msgstr "Enviar notificações de agendamento diretamente pelo WhatsApp."
 
 msgid "Send at"
-msgstr ""
+msgstr "Enviar em"
 
 msgid "Send custom fields info for each customer separately"
 msgstr ""
@@ -8688,10 +8997,10 @@ msgstr ""
 "Enviar notificações personalizadas por e-mail e SMS adaptadas ao seu negócio."
 
 msgid "Send smart, personalized notifications your way"
-msgstr ""
+msgstr "Envie notificações inteligentes e personalizadas do seu jeito"
 
 msgid "Send test"
-msgstr ""
+msgstr "Enviar teste"
 
 msgid "Send to e-mail"
 msgstr "Enviar para e-mail"
@@ -8701,14 +9010,14 @@ msgstr ""
 "Envie os dados dos seus clientes para o Mailchimp de forma rápida e sem "
 "esforço."
 
-msgid "Sender ID supports up to 11 characters"
-msgstr "O ID do remetente suporta até 11 caracteres"
+msgid "Sender ID must be between 3 and 11 characters"
+msgstr "O ID do remetente deve ter entre 3 e 11 caracteres"
 
 msgid "Sender email"
-msgstr ""
+msgstr "E-mail do remetente"
 
 msgid "Sender name"
-msgstr ""
+msgstr "Nome do remetente"
 
 msgid "Sent"
 msgstr "Enviado"
@@ -8753,16 +9062,16 @@ msgid "Service Subtotal"
 msgstr "Subtotal do serviço"
 
 msgid "Service badge"
-msgstr ""
+msgstr "Emblema de serviço"
 
 msgid "Service capacity"
-msgstr ""
+msgstr "Capacidade do serviço"
 
 msgid "Service category"
-msgstr ""
+msgstr "Categoria de serviço"
 
 msgid "Service count"
-msgstr ""
+msgstr "Contagem de serviços"
 
 msgid "Service description"
 msgstr "Descrição do serviço"
@@ -8777,7 +9086,7 @@ msgid "Service employees list"
 msgstr "Lista de funcionários de serviço"
 
 msgid "Service filter"
-msgstr ""
+msgstr "Filtro de serviço"
 
 msgid "Service has been added."
 msgstr "Serviço foi adicionado."
@@ -8801,34 +9110,34 @@ msgid "Service is now visible."
 msgstr "O serviço agora está visível."
 
 msgid "Service location"
-msgstr ""
+msgstr "Localização do serviço"
 
 msgid "Service name"
 msgstr "Nome do serviço"
 
 msgid "Service or event description"
-msgstr ""
+msgstr "Descrição do serviço ou evento"
 
 msgid "Service or event name"
-msgstr ""
+msgstr "Nome do serviço ou evento"
 
 msgid "Service packages overview"
-msgstr ""
+msgstr "Visão geral dos pacotes de serviços"
 
 msgid "Service price"
 msgstr "Preço do serviço"
 
 msgid "Service selection"
-msgstr ""
+msgstr "Seleção de serviço"
 
 msgid "Service subtotal"
-msgstr ""
+msgstr "Subtotal do serviço"
 
 msgid "Services"
 msgstr "Serviços"
 
 msgid "Services & categories setup"
-msgstr ""
+msgstr "Configuração de serviços e categorias"
 
 msgid "Services Asc"
 msgstr "Serviços Asc"
@@ -8837,7 +9146,7 @@ msgid "Services Desc"
 msgstr "Serviços Desc"
 
 msgid "Services and packages overview"
-msgstr ""
+msgstr "Visão geral dos serviços e pacotes"
 
 msgid "Services have been reordered."
 msgstr "Os serviços foram reordenados."
@@ -8846,13 +9155,13 @@ msgid "Services list, Appointments"
 msgstr "Lista de serviços, Compromissos"
 
 msgid "Services overview"
-msgstr ""
+msgstr "Visão geral dos serviços"
 
 msgid "Services setup"
-msgstr ""
+msgstr "Configuração dos serviços"
 
 msgid "Set ICS file description"
-msgstr ""
+msgstr "Definir descrição do arquivo ICS"
 
 msgid "Set Limit"
 msgstr "Definir Limite"
@@ -8891,10 +9200,16 @@ msgstr ""
 "Defina preços flexíveis de ingressos com categorias e faixas baseadas em "
 "datas para maximizar a acessibilidade e a receita."
 
+msgid "Set general settings"
+msgstr "Definir configurações gerais"
+
 msgid ""
 "Set individual time zones for employees so availability and bookings are "
 "shown correctly for clients worldwide."
 msgstr ""
+"Defina fusos horários individuais para os funcionários, para que a "
+"disponibilidade e as reservas sejam exibidas corretamente para clientes em "
+"todo o mundo."
 
 msgid "Set metadata and description"
 msgstr "Definir metadados e descrição"
@@ -8903,13 +9218,13 @@ msgid "Set minimum"
 msgstr "Definir mínimo"
 
 msgid "Set new password"
-msgstr ""
+msgstr "Definir nova senha"
 
 msgid "Set options, colors and labels for booking form"
 msgstr "Defina opções, cores e rótulos para o formulário de reserva"
 
 msgid "Set password"
-msgstr ""
+msgstr "Definir senha"
 
 msgid "Set pricing based on the number of people in the booking."
 msgstr "Definir preços com base no número de pessoas na reserva."
@@ -8942,6 +9257,7 @@ msgstr ""
 msgid ""
 "Set the minimum number of people required per appointment for this service."
 msgstr ""
+"Defina o número mínimo de pessoas necessárias por consulta para este serviço."
 
 msgid ""
 "Set the number of approved bookings after which the customer will "
@@ -9041,6 +9357,8 @@ msgstr "Configurar rótulos e botões"
 
 msgid "Set up staff, location, gallery and other event information visibility"
 msgstr ""
+"Configure a visibilidade das informações sobre a equipe, localização, "
+"galeria e outros eventos"
 
 msgid "Set up visibility, button type and labels"
 msgstr "Configurar visibilidade, tipo de botão e rótulos"
@@ -9053,6 +9371,14 @@ msgstr "Configurar visibilidade e rótulos de seleção de tíquetes"
 
 msgid "Set your Google Map API Key in General Settings"
 msgstr "Defina sua chave da API do Google Maps nas configurações gerais"
+
+msgid ""
+"Set your company working hours. This schedule will be used for all new "
+"employees, however you can customize schedule for each employee later."
+msgstr ""
+"Defina o horário de funcionamento da sua empresa. Este horário será "
+"utilizado para todos os novos funcionários, mas poderá personalizá-lo "
+"posteriormente para cada funcionário."
 
 msgid "Setting up days off"
 msgstr "Configurando dias de folga"
@@ -9073,10 +9399,13 @@ msgid "Shared capacity across services"
 msgstr "Capacidade compartilhada entre serviços"
 
 msgid "Shared category capacity"
-msgstr ""
+msgstr "Capacidade da categoria compartilhada"
 
 msgid "Show"
 msgstr "Mostrar"
+
+msgid "Show Add To Calendar option to customers"
+msgstr "Mostrar a opção Adicionar ao calendário aos clientes"
 
 msgid "Show All"
 msgstr "Mostrar tudo"
@@ -9154,7 +9483,7 @@ msgid "Show more"
 msgstr "Mostrar mais"
 
 msgid "Show more ({count})"
-msgstr ""
+msgstr "Mostrar mais ({count})"
 
 msgid "Show on website"
 msgstr "Mostrar no site"
@@ -9215,10 +9544,10 @@ msgid "Sidebar"
 msgstr "Barra lateral"
 
 msgid "Sidebar area"
-msgstr ""
+msgstr "Área da barra lateral"
 
 msgid "Sidebar visibility"
-msgstr ""
+msgstr "Visibilidade da barra lateral"
 
 msgid "Sign In"
 msgstr "Entrar"
@@ -9230,13 +9559,16 @@ msgid "Sign Out of Mailchimp"
 msgstr "Sair do Mailchimp"
 
 msgid "Sign in"
-msgstr ""
+msgstr "Entrar"
 
 msgid "Sign in as "
 msgstr "Entrar como "
 
 msgid "Sign in with Google"
 msgstr "Entrar com o Google"
+
+msgid "Sign in with Microsoft"
+msgstr "Entrar com a Microsoft"
 
 msgid "Sign in with Outlook"
 msgstr "Entrar com o Outlook"
@@ -9248,7 +9580,7 @@ msgid "Sign out from Outlook"
 msgstr "Sair do Outlook"
 
 msgid "Sign up"
-msgstr ""
+msgstr "Inscreva-se"
 
 msgid "Simple, secure payments powered by Barion."
 msgstr "Pagamentos simples e seguros com tecnologia da Barion."
@@ -9257,17 +9589,23 @@ msgid ""
 "Simplify communication with customizable messages for both customers and "
 "employees"
 msgstr ""
+"Simplifique a comunicação com mensagens personalizáveis para clientes e "
+"funcionários"
 
 msgid "Simplify financial management with easy, one-click transaction exports"
 msgstr ""
+"Simplifique a gestão financeira com exportações de transações fáceis, com um "
+"único clique"
 
 msgid ""
 "Simplify scheduling with individual availability, working hours, and "
 "assignments"
 msgstr ""
+"Simplifique o agendamento com disponibilidade individual, horário de "
+"trabalho e atribuições"
 
 msgid "Simplify scheduling with recurring events"
-msgstr ""
+msgstr "Simplifique o agendamento com eventos recorrentes"
 
 msgid "Single-row export"
 msgstr "Exportação de linha única"
@@ -9287,14 +9625,17 @@ msgstr "Pular Importação"
 msgid "Skip packages and continue with the selected service"
 msgstr "Pular pacotes e continuar com o serviço selecionado"
 
+msgid "Skip setup"
+msgstr "Ignorar configuração"
+
 msgid "Slot end time"
-msgstr ""
+msgstr "Hora de término do slot"
 
 msgid "Social login"
-msgstr ""
+msgstr "Login social"
 
 msgid "Social login setup"
-msgstr ""
+msgstr "Configuração do login social"
 
 msgid ""
 "Some employees assigned to this event are not connected to Zoom. Please go "
@@ -9362,7 +9703,7 @@ msgid "Special days"
 msgstr "Dias especiais"
 
 msgid "Special days setup"
-msgstr ""
+msgstr "Configuração de dias especiais"
 
 msgid "Specific Date"
 msgstr "Data específica"
@@ -9392,7 +9733,7 @@ msgid "Square account successfully disconnected"
 msgstr "Conta Square desconectada com sucesso"
 
 msgid "Square payment link"
-msgstr ""
+msgstr "Link de pagamento Square"
 
 msgid "Staff"
 msgstr "Funcionários"
@@ -9419,13 +9760,13 @@ msgid "Start Zoom Meeting"
 msgstr "Iniciar reunião do Zoom"
 
 msgid "Start by clicking the add custom field button"
-msgstr ""
+msgstr "Comece clicando no botão “Adicionar campo personalizado”."
 
 msgid "Start date"
 msgstr "Data de início"
 
 msgid "Start scanner"
-msgstr ""
+msgstr "Iniciar scanner"
 
 msgid "Start time"
 msgstr "Hora de início"
@@ -9433,25 +9774,26 @@ msgstr "Hora de início"
 msgid "Status"
 msgstr ""
 
-msgid "Status:"
-msgstr ""
-
 msgid "Status Asc"
 msgstr ""
 
 msgid "Status Desc"
-msgstr ""
+msgstr "Status Descrição"
 
 msgid ""
 "Stay compliant with ease through consistent, reliable tax handling across "
 "your business"
 msgstr ""
+"Mantenha a conformidade com facilidade por meio de um tratamento tributário "
+"consistente e confiável em toda a sua empresa"
 
 msgid "Stay connected with WhatsApp notifications"
-msgstr ""
+msgstr "Mantenha-se conectado com as notificações do WhatsApp"
 
 msgid "Stay organized with export files ready for analysis or external tools"
 msgstr ""
+"Mantenha-se organizado com arquivos de exportação prontos para análise ou "
+"ferramentas externas"
 
 msgid ""
 "Step-By-Step Booking Wizard gives your customers the option to choose "
@@ -9468,10 +9810,22 @@ msgstr ""
 "etapas para fazer suas reservas."
 
 msgid "Step-by-step"
-msgstr ""
+msgstr "Passo a passo"
 
 msgid "Step-by-step booking form guide"
-msgstr ""
+msgstr "Guia passo a passo do formulário de reserva"
+
+msgid "Step 1"
+msgstr "Passo 1"
+
+msgid "Step 2"
+msgstr "Etapa 2"
+
+msgid "Step 3"
+msgstr "Etapa 3"
+
+msgid "Step 4"
+msgstr "Etapa 4"
 
 msgid "Step Booking"
 msgstr "Reserva de Passos"
@@ -9483,47 +9837,51 @@ msgid "Step Popups"
 msgstr "Pop-ups de Passo"
 
 msgid "Step content"
-msgstr ""
+msgstr "Conteúdo da etapa"
 
 msgid "Step header"
-msgstr ""
+msgstr "Cabeçalho da etapa"
 
 msgid "Step heading"
-msgstr ""
+msgstr "Título da etapa"
 
 msgid "Step info tab"
-msgstr ""
+msgstr "Guia de informações sobre etapas"
 
 msgid "Step message"
-msgstr ""
+msgstr "Mensagem de etapa"
 
 msgid "Step pagination"
-msgstr ""
+msgstr "Paginação por etapas"
 
 msgid "Step tickets tab"
-msgstr ""
+msgstr "Guia de tickets de etapas"
 
 msgid "Steps"
 msgstr "Passos"
 
 msgid "Steps order"
-msgstr ""
+msgstr "Ordem das etapas"
 
 msgid "Stop Scanner"
 msgstr "Parar Scanner"
 
 msgid "Stop scanner"
-msgstr ""
+msgstr "Parar scanner"
 
 msgid ""
 "Streamline operations with one central place to manage all resources across "
 "your business"
 msgstr ""
+"Otimize as operações com um local central para gerenciar todos os recursos "
+"da sua empresa"
 
 msgid ""
 "Streamline virtual meetings by integrating popular meeting platforms "
 "directly into bookings."
 msgstr ""
+"Otimize as reuniões virtuais integrando plataformas populares de reunião "
+"diretamente nas reservas."
 
 msgid "Stripe"
 msgstr "Listra"
@@ -9535,7 +9893,7 @@ msgid "Stripe Connect"
 msgstr ""
 
 msgid "Stripe payment link"
-msgstr ""
+msgstr "Link de pagamento Stripe"
 
 msgid "Studios"
 msgstr "Estúdios"
@@ -9544,7 +9902,7 @@ msgid "Sub Steps"
 msgstr "Sub-etapas"
 
 msgid "Sub step title"
-msgstr ""
+msgstr "Título da subetapa"
 
 msgid "Subject"
 msgstr "Assunto"
@@ -9573,6 +9931,13 @@ msgstr "Reserva adicionada com sucesso"
 msgid "Suggest closest available date"
 msgstr "Sugerir a data disponível mais próxima"
 
+msgid ""
+"Suggest customers to add an appointment to their calendar when booking is "
+"finalized."
+msgstr ""
+"Sugira aos clientes que adicionem um compromisso ao calendário quando a "
+"reserva for finalizada."
+
 msgid "Suggest next available date"
 msgstr "Sugerir próxima data disponível"
 
@@ -9586,7 +9951,7 @@ msgid "Summary"
 msgstr "Resumo"
 
 msgid "Summary segment"
-msgstr ""
+msgstr "Segmento de resumo"
 
 msgid "Sun"
 msgstr "Dom"
@@ -9603,11 +9968,15 @@ msgstr "Apoie o Amelia exibindo um backlink"
 msgid ""
 "Support deeper insights by using exported data for analysis and reporting"
 msgstr ""
+"Ofereça insights mais profundos usando dados exportados para análise e "
+"relatórios"
 
 msgid ""
 "Support external workflows by seamlessly moving financial records into other "
 "systems"
 msgstr ""
+"Ofereça suporte a fluxos de trabalho externos, transferindo registros "
+"financeiros para outros sistemas de maneira integrada."
 
 msgid "Switch Camera"
 msgstr "Trocar câmera"
@@ -9621,6 +9990,13 @@ msgid ""
 msgstr ""
 "Sincronize sua conta do Stripe Connect para pagamentos sem esforço e "
 "repasses contínuos."
+
+msgid ""
+"Sync your and your employee's personal and professional events by connection "
+"Outlook calendars."
+msgstr ""
+"Sincronize seus eventos pessoais e profissionais e os de seus funcionários "
+"conectando os calendários do Outlook."
 
 msgid ""
 "Sync your and your employees' personal and professional events by connecting "
@@ -9654,13 +10030,13 @@ msgid "TLS"
 msgstr ""
 
 msgid "Tab title"
-msgstr ""
+msgstr "Título da guia"
 
 msgid "Table settings have been updated."
 msgstr "As configurações da tabela foram atualizadas."
 
 msgid "Tabs (All / Packages / Services)"
-msgstr ""
+msgstr "Guias (Todas / Pacotes / Serviços)"
 
 msgid "Tag"
 msgstr "Marcação"
@@ -9675,7 +10051,7 @@ msgid "Tax amount"
 msgstr "Valor do Imposto"
 
 msgid "Tax details"
-msgstr ""
+msgstr "Detalhes fiscais"
 
 msgid "Tax has been added."
 msgstr "O imposto foi adicionado."
@@ -9699,7 +10075,7 @@ msgid "Tax rate name"
 msgstr "Nome da taxa de imposto"
 
 msgid "Tax setup"
-msgstr ""
+msgstr "Configuração de impostos"
 
 msgid "Tax will be excluded from price calculation and showed separately."
 msgstr "O imposto será excluído do cálculo do preço e mostrado separadamente."
@@ -9711,7 +10087,7 @@ msgid "Taxes"
 msgstr "Impostos"
 
 msgid "Taxes overview"
-msgstr ""
+msgstr "Visão geral dos impostos"
 
 msgid "Template name"
 msgstr "Nome do modelo"
@@ -9723,13 +10099,13 @@ msgid "Test SMS"
 msgstr "Teste de SMS"
 
 msgid "Test SMS sent successfully."
-msgstr ""
+msgstr "SMS de teste enviado com sucesso."
 
 msgid "Test WhatsApp"
-msgstr ""
+msgstr "Teste WhatsApp"
 
 msgid "Test WhatsApp message sent successfully"
-msgstr ""
+msgstr "Mensagem de teste do WhatsApp enviada com sucesso"
 
 msgid "Test client ID"
 msgstr "Teste de ID do cliente"
@@ -9755,9 +10131,6 @@ msgstr "Chave secreta de teste"
 msgid "Text"
 msgstr "Texto"
 
-msgid "Text:"
-msgstr "Texto:"
-
 msgid "Text Mode"
 msgstr "Modo de texto"
 
@@ -9765,10 +10138,10 @@ msgid "Text area"
 msgstr "Área de texto"
 
 msgid "Text color"
-msgstr ""
+msgstr "Cor do texto"
 
 msgid "Text color on background"
-msgstr ""
+msgstr "Cor do texto no fundo"
 
 msgid "Text content"
 msgstr "Conteúdo de texto"
@@ -9925,6 +10298,8 @@ msgid ""
 "The total number of persons ({waitingPersonsCount}) exceeds the maximum "
 "waiting list capacity of {waitingListMaxCapacity}."
 msgstr ""
+"O número total de pessoas ({waitingPersonsCount}) excede a capacidade máxima "
+"da lista de espera de {waitingListMaxCapacity}."
 
 msgid "There are no attendees yet..."
 msgstr "Ainda não há participantes..."
@@ -9979,8 +10354,15 @@ msgstr "Este e Futuro"
 msgid "This Only"
 msgstr "Somente Este"
 
+msgid "This appointment is a part of a package."
+msgstr "Esta nomeação faz parte de um pacote."
+
 msgid "This booking is part of a package deal"
 msgstr "Esta reserva faz parte de um pacote"
+
+msgid "This category cannot be deleted because it is included in a package."
+msgstr ""
+"Esta categoria não pode ser excluída porque está incluída em um pacote."
 
 msgid ""
 "This category has services with {count} past appointment. | This category "
@@ -10027,6 +10409,13 @@ msgstr "Este campo é obrigatório."
 
 msgid "This file is forbidden for upload"
 msgstr "Este arquivo está proibido para upload"
+
+msgid ""
+"This is a temporary WhatsApp token and will automatically expire after 24 "
+"hours. Make sure to complete the setup before it expires."
+msgstr ""
+"Este é um token temporário do WhatsApp e expirará automaticamente após 24 "
+"horas. Certifique-se de concluir a configuração antes que ele expire."
 
 msgid ""
 "This is a unique security token. Copy it into the 'Verify token' field in "
@@ -10121,7 +10510,10 @@ msgstr ""
 "O conteúdo deste espaço reservado será aplicado onde quer que seja utilizado."
 
 msgid "This range"
-msgstr ""
+msgstr "Este intervalo"
+
+msgid "This service cannot be deleted because it is included in a package."
+msgstr "Este serviço não pode ser excluído porque está incluído em um pacote."
 
 msgid "This service does not have any extras"
 msgstr "Este serviço não tem extras"
@@ -10144,7 +10536,7 @@ msgid "This service is available in a Package"
 msgstr "Este serviço está disponível em um pacote"
 
 msgid "This service is available in a package"
-msgstr ""
+msgstr "Este serviço está disponível em um pacote"
 
 msgid "This time slot is no longer available. Please select a different time."
 msgstr ""
@@ -10221,7 +10613,7 @@ msgid "Ticket not valid"
 msgstr "Ingresso inválido"
 
 msgid "Ticket types"
-msgstr ""
+msgstr "Tipos de bilhetes"
 
 msgid "Tickets"
 msgstr "Ingressos"
@@ -10269,7 +10661,7 @@ msgid "Time slot is unavailable"
 msgstr "O intervalo de tempo não está disponível"
 
 msgid "Time slot price"
-msgstr ""
+msgstr "Preço do intervalo de tempo"
 
 msgid "Time slots are unavailable"
 msgstr "Os horários não estão disponíveis"
@@ -10278,7 +10670,7 @@ msgid "Time zone"
 msgstr "Fuso horário"
 
 msgid "Time zones"
-msgstr ""
+msgstr "Fusos horários"
 
 msgid "Times"
 msgstr "Horários"
@@ -10299,10 +10691,10 @@ msgid "Tips & suggestions"
 msgstr "Dicas e sugestões"
 
 msgid "Title section"
-msgstr ""
+msgstr "Seção do título"
 
 msgid "Title text"
-msgstr ""
+msgstr "Texto do título"
 
 msgid "To"
 msgstr "Para"
@@ -10361,7 +10753,7 @@ msgid "Tomorrow"
 msgstr "Amanhã"
 
 msgid "Top trends"
-msgstr ""
+msgstr "Principais tendências"
 
 msgid "Torch off"
 msgstr "Lanterna desligada"
@@ -10391,7 +10783,7 @@ msgid "Total Services Booked"
 msgstr "Total de serviços reservados"
 
 msgid "Total amount"
-msgstr ""
+msgstr "Valor total"
 
 msgid "Total appointments"
 msgstr "Total de compromissos"
@@ -10415,7 +10807,7 @@ msgid "Total number of appointments"
 msgstr "Número total de compromissos"
 
 msgid "Total number of people:"
-msgstr ""
+msgstr "Número total de pessoas:"
 
 msgid "Total payments"
 msgstr "Total de pagamentos"
@@ -10427,7 +10819,7 @@ msgid "Total price"
 msgstr "Preço total"
 
 msgid "Total services booked"
-msgstr ""
+msgstr "Total de serviços reservados"
 
 msgid "Total tickets"
 msgstr "Total de ingressos"
@@ -10449,7 +10841,7 @@ msgid "Transaction #{count}"
 msgstr "Transação #{count}"
 
 msgid "Transaction details"
-msgstr ""
+msgstr "Detalhes da transação"
 
 msgid "Transactions"
 msgstr "Transações"
@@ -10477,7 +10869,7 @@ msgstr ""
 "que você está procurando."
 
 msgid "Try adjusting your search or filters."
-msgstr ""
+msgstr "Tente ajustar sua pesquisa ou filtros."
 
 msgid "Try adjusting your search to find what you are looking for."
 msgstr "Tente ajustar sua busca para encontrar o que você está procurando."
@@ -10493,12 +10885,12 @@ msgid ""
 "multiple appointments into a single, discounted offer that drives bigger, "
 "more confident purchases."
 msgstr ""
+"Transforme seus serviços em pacotes de alto valor que os clientes adoram. "
+"Combine várias consultas em uma única oferta com desconto que estimula "
+"compras maiores e mais confiantes."
 
 msgid "Type"
 msgstr "Tipo"
-
-msgid "Type:"
-msgstr "Tipo:"
 
 msgid "Type Asc"
 msgstr "Tipo Asc"
@@ -10513,6 +10905,9 @@ msgid ""
 "URL on which will user be redirected if appointment can't be canceled "
 "because of 'Minimum time required before canceling' value"
 msgstr ""
+"URL para o qual o usuário será redirecionado se o compromisso não puder ser "
+"cancelado devido ao valor de \"Tempo mínimo necessário antes do "
+"cancelamento\""
 
 msgid "Unable to deactivate plugin. Please try again later."
 msgstr "Não foi possível desativar o plugin. Tente novamente mais tarde."
@@ -10527,13 +10922,13 @@ msgid "Unavailable Time Slots"
 msgstr "Horários indisponíveis"
 
 msgid "Unavailable date background"
-msgstr ""
+msgstr "Fundo de data indisponível"
 
 msgid "Unavailable date text"
-msgstr ""
+msgstr "Texto de data indisponível"
 
 msgid "Unavailable time slots"
-msgstr ""
+msgstr "Horários indisponíveis"
 
 msgid "Unblock"
 msgstr "Desbloquear"
@@ -10581,7 +10976,7 @@ msgid "Upcoming events"
 msgstr "Próximos eventos"
 
 msgid "Upcoming events section"
-msgstr ""
+msgstr "Seção de eventos futuros"
 
 msgid "Update"
 msgstr "Atualizar"
@@ -10655,13 +11050,13 @@ msgid "User Profile"
 msgstr "Perfil do usuário"
 
 msgid "User profile"
-msgstr ""
+msgstr "Perfil do usuário"
 
 msgid "VAT"
 msgstr "CUBA"
 
 msgid "VAT info"
-msgstr ""
+msgstr "Informações sobre o IVA"
 
 msgid "VAT number"
 msgstr "Número de CNPJ"
@@ -10691,7 +11086,7 @@ msgid "Version "
 msgstr "Versão"
 
 msgid "Video tutorials"
-msgstr ""
+msgstr "Tutoriais em vídeo"
 
 msgid "Videos"
 msgstr "Vídeos"
@@ -10718,7 +11113,7 @@ msgid "View More Packages"
 msgstr "Ver mais pacotes"
 
 msgid "View all"
-msgstr ""
+msgstr "Ver tudo"
 
 msgid "View all photos"
 msgstr "Ver todas as fotos"
@@ -10730,13 +11125,13 @@ msgid "View booking"
 msgstr "Ver reserva"
 
 msgid "View employees"
-msgstr ""
+msgstr "Ver funcionários"
 
 msgid "View events"
 msgstr "Ver eventos"
 
 msgid "View in Calendar"
-msgstr ""
+msgstr "Ver no calendário"
 
 msgid "View in Package"
 msgstr "Ver mais pacotes"
@@ -10745,16 +11140,16 @@ msgid "View invoice"
 msgstr "Ver fatura"
 
 msgid "View less packages"
-msgstr ""
+msgstr "Ver menos pacotes"
 
 msgid "View message"
-msgstr ""
+msgstr "Ver mensagem"
 
 msgid "View more"
 msgstr "Ver mais"
 
 msgid "View more packages"
-msgstr ""
+msgstr "Ver mais pacotes"
 
 msgid "View packages"
 msgstr "Ver pacotes"
@@ -10778,10 +11173,10 @@ msgid "Waiting"
 msgstr "Aguardando"
 
 msgid "Waiting button background color"
-msgstr ""
+msgstr "Cor de fundo do botão \"Aguardando\""
 
 msgid "Waiting button text color"
-msgstr ""
+msgstr "Cor do texto do botão \"Aguardando\""
 
 msgid "Waiting for payment"
 msgstr "Aguardando pagamento"
@@ -10790,10 +11185,10 @@ msgid "Waiting list"
 msgstr "Lista de espera"
 
 msgid "Waiting list availability"
-msgstr ""
+msgstr "Disponibilidade da lista de espera"
 
 msgid "Waiting list background"
-msgstr ""
+msgstr "Histórico da lista de espera"
 
 msgid "Waiting list capacity"
 msgstr "Capacidade da lista de espera"
@@ -10802,13 +11197,13 @@ msgid "Waiting list capacity must be at least 1"
 msgstr "A capacidade da lista de espera deve ser pelo menos 1"
 
 msgid "Waiting list confirmation"
-msgstr ""
+msgstr "Confirmação da lista de espera"
 
 msgid "Waiting list is empty"
 msgstr "A lista de espera está vazia"
 
 msgid "Waiting list text"
-msgstr ""
+msgstr "Texto da lista de espera"
 
 msgid "Warning"
 msgstr "Aviso"
@@ -10829,6 +11224,21 @@ msgstr ""
 "Preparamos um arquivo .csv com os clientes que não foram importados. Após "
 "corrigir os problemas, você pode tentar novamente."
 
+msgid ""
+"We were unable to cancel your booking. Please contact admin for assistance "
+"with canceling this booking."
+msgstr ""
+"Não foi possível cancelar sua reserva. Entre em contato com o administrador "
+"para obter ajuda com o cancelamento desta reserva."
+
+msgid ""
+"We were unable to process your booking, and it was rejected. Please contact "
+"admin if you need help or want to try booking again."
+msgstr ""
+"Não foi possível processar sua reserva, que foi rejeitada. Entre em contato "
+"com o administrador se precisar de ajuda ou quiser tentar fazer a reserva "
+"novamente."
+
 msgid "Web"
 msgstr ""
 
@@ -10839,7 +11249,7 @@ msgid "Webhooks"
 msgstr ""
 
 msgid "Webhooks setup"
-msgstr ""
+msgstr "Configuração de webhooks"
 
 msgid "Website"
 msgstr "Site"
@@ -10863,7 +11273,10 @@ msgid "Welcome Back"
 msgstr "Bem vindo(a) de volta"
 
 msgid "Welcome back"
-msgstr ""
+msgstr "Bem-vindo de volta"
+
+msgid "Welcome to Amelia!"
+msgstr "Bem-vindo ao Amelia!"
 
 msgid "Wellness"
 msgstr "Bem-estar"
@@ -10890,7 +11303,7 @@ msgid "WhatsApp settings"
 msgstr "Configurações do WhatsApp"
 
 msgid "WhatsApp setup"
-msgstr ""
+msgstr "Configuração do WhatsApp"
 
 msgid "WhatsApp webhook callback URL"
 msgstr "URL de callback do webhook do WhatsApp"
@@ -10910,6 +11323,9 @@ msgid ""
 "tags) load as soon as the page opens, instead of being loaded dynamically "
 "via AJAX."
 msgstr ""
+"Quando ativado, todas as entidades (serviços, funcionários, locais, pacotes "
+"e tags) são carregadas assim que a página é aberta, em vez de serem "
+"carregadas dinamicamente via AJAX."
 
 msgid ""
 "When enabled, customers will receive a Google Calendar invitation for the "
@@ -10980,7 +11396,7 @@ msgid "WooCommerce Thank you page"
 msgstr "Página de agradecimento do WooCommerce"
 
 msgid "WooCommerce payment link"
-msgstr ""
+msgstr "Link de pagamento WooCommerce"
 
 msgid "Woo Order Id"
 msgstr "ID do pedido Woo"
@@ -10998,7 +11414,7 @@ msgid "Work hours"
 msgstr "Horário de trabalho"
 
 msgid "Work hours setup"
-msgstr ""
+msgstr "Configuração do horário de trabalho"
 
 msgid "Working Hours"
 msgstr "Horas de trabalho"
@@ -11023,9 +11439,6 @@ msgstr "Anos"
 
 msgid "Yes"
 msgstr "Sim"
-
-msgid "Yes, Reset"
-msgstr "Sim, redefinir"
 
 msgid "Yoga"
 msgstr ""
@@ -11056,6 +11469,13 @@ msgid ""
 msgstr ""
 "Você está atualmente conectado ao Google Agenda pelo Admin. Substituir a "
 "conexão com o Google Agenda não está disponível."
+
+msgid ""
+"You are currently connected to Outlook Calendar by Admin. Overriding Outlook "
+"Calendar connection is not available."
+msgstr ""
+"Você está conectado ao Calendário do Outlook pelo administrador. Não é "
+"possível substituir a conexão do Calendário do Outlook."
 
 msgid "You are on the waiting list with position"
 msgstr "Você está na lista de espera na posição"
@@ -11152,6 +11572,13 @@ msgstr "Você inseriu uma senha incorreta."
 msgid "You have reached maximum number of registered domains"
 msgstr "Você atingiu o número máximo de domínios registrados"
 
+msgid ""
+"You have successfully declined this booking request. The status has been "
+"updated in the system."
+msgstr ""
+"Você recusou com sucesso esta solicitação de reserva. O status foi "
+"atualizado no sistema."
+
 msgid "You will be redirected to the payment checkout."
 msgstr "Você será redirecionado para a finalização do pagamento."
 
@@ -11169,6 +11596,35 @@ msgstr "Seu nome"
 
 msgid "Your balance has been recharged."
 msgstr "Seu saldo foi recarregado."
+
+msgid ""
+"Your booking has been successfully canceled. If you have any questions or "
+"wish to reschedule, please contact admin."
+msgstr ""
+"Sua reserva foi cancelada com sucesso. Se você tiver alguma dúvida ou quiser "
+"remarcar, entre em contato com o administrador."
+
+msgid ""
+"Your booking has been successfully completed and approved. You're all set "
+"and can expect everything to proceed smoothly."
+msgstr ""
+"Sua reserva foi concluída e aprovada com sucesso. Tudo está pronto e você "
+"pode esperar que tudo corra bem."
+
+msgid ""
+"Your booking was approved, but there was an issue completing the process. "
+"Please reach out to admin to ensure everything is properly recorded."
+msgstr ""
+"Sua reserva foi aprovada, mas houve um problema ao concluir o processo. "
+"Entre em contato com o administrador para garantir que tudo esteja "
+"registrado corretamente."
+
+msgid ""
+"Your booking was successfully processed, but it could not be approved. "
+"Please contact admin if you need assistance."
+msgstr ""
+"Sua reserva foi processada com sucesso, mas não pôde ser aprovada. Entre em "
+"contato com o administrador se precisar de ajuda."
 
 msgid "Your card's expiration date is incomplete"
 msgstr "A data de validade do seu cartão está incompleta"
@@ -11190,12 +11646,13 @@ msgstr "Suas alterações atuais serão perdidas."
 
 msgid "Your data will be saved before redirecting to another form."
 msgstr ""
+"Seus dados serão salvos antes do redirecionamento para outro formulário."
 
 msgid "Your information"
-msgstr ""
+msgstr "Suas informações"
 
 msgid "Your name"
-msgstr ""
+msgstr "Seu nome"
 
 msgid ""
 "Your password has been changed successfully. Use your new password to log in."
@@ -11227,22 +11684,22 @@ msgid "Zoom User"
 msgstr "Usuário do Zoom"
 
 msgid "Zoom WP hooks"
-msgstr ""
+msgstr "Ganchos do Zoom WP"
 
 msgid "Zoom join meeting (participants) link"
-msgstr ""
+msgstr "Link para participar da reunião no Zoom (participantes)"
 
 msgid "Zoom link"
-msgstr ""
+msgstr "Link do Zoom"
 
 msgid "Zoom setup"
-msgstr ""
+msgstr "Configuração do zoom"
 
 msgid "Zoom start meeting (hosts) link"
-msgstr ""
+msgstr "Link para iniciar reunião no Zoom (anfitriões)"
 
 msgid "Zoom user"
-msgstr ""
+msgstr "Usuário do Zoom"
 
 msgid "(+ Woo Tax)"
 msgstr "(+ Imposto Woo)"
@@ -11257,10 +11714,10 @@ msgid "and"
 msgstr "e"
 
 msgid "application ID, client ID and client secret"
-msgstr ""
+msgstr "ID da aplicação, ID do cliente e segredo do cliente"
 
 msgid "application (client) ID and secret"
-msgstr ""
+msgstr "ID e segredo da aplicação (cliente)"
 
 msgid "appointment is required to be booked now."
 msgstr "é necessário agendar uma consulta agora."
@@ -11376,6 +11833,15 @@ msgstr ""
 msgid "reCAPTCHA Type"
 msgstr "Tipo de reCAPTCHA"
 
+msgid "reCAPTCHA challenge expired. Please try again."
+msgstr "O desafio reCAPTCHA expirou. Por favor, tente novamente."
+
+msgid "reCAPTCHA configuration is invalid."
+msgstr "A configuração do reCAPTCHA é inválida."
+
+msgid "reCAPTCHA could not be loaded."
+msgstr "Não foi possível carregar o reCAPTCHA."
+
 msgid "reCAPTCHA on Customer Panel"
 msgstr "reCAPTCHA no Painel do Cliente"
 
@@ -11383,7 +11849,10 @@ msgid "reCAPTCHA on Employee Panel"
 msgstr "reCAPTCHA no Painel do Funcionário"
 
 msgid "reCAPTCHA setup"
-msgstr ""
+msgstr "Configuração do reCAPTCHA"
+
+msgid "reCAPTCHA validation failed."
+msgstr "Falha na validação do reCAPTCHA."
 
 msgid "results"
 msgstr "resultados"
@@ -11536,6 +12005,8 @@ msgid ""
 "{count} employee has not been deleted due to future bookings. | {count} "
 "employees have not been deleted due to future bookings."
 msgstr ""
+"{count} O funcionário não foi excluído devido a reservas futuras. | {count} "
+"Os funcionários não foram excluídos devido a reservas futuras."
 
 msgid ""
 "{count} event booking has been deleted. | {count} event bookings have been "
@@ -11571,6 +12042,8 @@ msgid ""
 "{count} location has not been deleted due to future bookings. | {count} "
 "locations have not been deleted due to future bookings."
 msgstr ""
+"{count} A localização não foi excluída devido a reservas futuras. | {count} "
+"As localizações não foram excluídas devido a reservas futuras."
 
 msgid "{count} minute | {count} minutes"
 msgstr "{count} minuto | {count} minutos"
@@ -11599,6 +12072,8 @@ msgid ""
 "{count} package has not been deleted due to future bookings. | {count} "
 "packages have not been deleted due to future bookings."
 msgstr ""
+"{count} O pacote não foi excluído devido a reservas futuras. | {count} Os "
+"pacotes não foram excluídos devido a reservas futuras."
 
 msgid ""
 "{count} resource has been deleted. | {count} resources have been deleted."

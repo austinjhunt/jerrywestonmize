@@ -19,6 +19,16 @@ class AbstractDatabaseTable
     public const TABLE = '';
 
     /**
+     * Return charset collate for the database table
+     */
+    public static function getCharsetCollate(): string
+    {
+        global $wpdb;
+
+        return $wpdb->get_charset_collate();
+    }
+
+    /**
      * @return string
      * @throws InvalidArgumentException
      */

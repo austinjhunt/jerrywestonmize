@@ -28,6 +28,8 @@ class GalleriesTable extends AbstractDatabaseTable
     {
         $table = self::getTableName();
 
+        $charsetCollate = self::getCharsetCollate();
+
         $picture = Picture::MAX_LENGTH;
 
         return "CREATE TABLE {$table} (
@@ -38,6 +40,6 @@ class GalleriesTable extends AbstractDatabaseTable
                    `pictureThumbPath` varchar ({$picture}) NULL,
                    `position` int(11) NOT NULL,
                     PRIMARY KEY (`id`)
-                ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
+                ) {$charsetCollate};";
     }
 }

@@ -11,6 +11,8 @@
 namespace Google\Site_Kit\Core\Email_Reporting;
 
 use Google\Site_Kit\Context;
+use Google\Site_Kit\Core\Golinks\Golinks;
+use Google\Site_Kit\Core\Email_Reporting\Notices\Enable_Conversion_Events_Email_Notice;
 use Google\Site_Kit\Core\User\Email_Reporting_Settings;
 use WP_Error;
 use WP_Post;
@@ -44,16 +46,40 @@ class Email_Template_Formatter {
 	private $section_builder;
 
 	/**
+	 * Golinks instance.
+	 *
+	 * @since 1.174.0
+	 *
+	 * @var Golinks
+	 */
+	private $golinks;
+
+	/**
+	 * Email notices resolver.
+	 *
+	 * @since 1.175.0
+	 *
+	 * @var Email_Notices
+	 */
+	private $email_notices;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 1.170.0
+	 * @since 1.174.0 Added golinks dependency.
+	 * @since 1.175.0 Added email notices dependency.
 	 *
 	 * @param Context                      $context         Plugin context.
 	 * @param Email_Report_Section_Builder $section_builder Section builder instance.
+	 * @param Golinks                      $golinks         Golinks instance.
+	 * @param Email_Notices                $email_notices   Email notices resolver.
 	 */
-	public function __construct( Context $context, Email_Report_Section_Builder $section_builder ) {
+	public function __construct( Context $context, Email_Report_Section_Builder $section_builder, Golinks $golinks, Email_Notices $email_notices ) {
 		$this->context         = $context;
 		$this->section_builder = $section_builder;
+		$this->golinks         = $golinks;
+		$this->email_notices   = $email_notices;
 	}
 
 	/**
@@ -86,7 +112,7 @@ class Email_Template_Formatter {
 					$user_locale,
 					$email_log
 				);
-			} catch ( \Exception $exception ) {
+			} catch ( \Throwable $exception ) {
 				return new WP_Error( 'email_report_section_build_failed', $exception->getMessage() );
 			}
 
@@ -107,12 +133,13 @@ class Email_Template_Formatter {
 	 *
 	 * @since 1.170.0
 	 *
-	 * @param array  $sections   Sections.
-	 * @param string $frequency  Frequency slug.
-	 * @param array  $date_range Date range.
+	 * @param array   $sections   Sections.
+	 * @param string  $frequency  Frequency slug.
+	 * @param array   $date_range Date range.
+	 * @param WP_User $user      User receiving the report.
 	 * @return array|WP_Error Template payload or WP_Error.
 	 */
-	public function build_template_payload( $sections, $frequency, $date_range ) {
+	public function build_template_payload( $sections, $frequency, $date_range, WP_User $user ) {
 		$sections_payload = $this->prepare_sections_payload( $sections, $date_range );
 
 		if ( empty( $sections_payload ) ) {
@@ -122,7 +149,13 @@ class Email_Template_Formatter {
 			);
 		}
 
-		$sections_map = new Sections_Map( $this->context, $sections_payload );
+		$section_notices = $this->prepare_section_notices( $user );
+
+		if ( ! empty( $section_notices[ Enable_Conversion_Events_Email_Notice::SECTION_KEY ] ) ) {
+			$sections_payload[ Sections_Map::CONVERSIONS_NOTICE_ONLY_FLAG ] = true;
+		}
+
+		$sections_map = new Sections_Map( $this->context, $sections_payload, $this->golinks );
 		if ( empty( $sections_map->get_sections() ) ) {
 			return new WP_Error(
 				'email_report_no_data',
@@ -132,7 +165,12 @@ class Email_Template_Formatter {
 
 		return array(
 			'sections_payload' => $sections_payload,
-			'template_data'    => $this->prepare_template_data( $frequency, $date_range ),
+			'template_data'    => $this->prepare_template_data(
+				$frequency,
+				$date_range,
+				$user,
+				$section_notices
+			),
 		);
 	}
 
@@ -170,11 +208,15 @@ class Email_Template_Formatter {
 					: $dimension_values[0];
 			}
 
-			$payload[ $section->get_section_key() ] = array(
+			$section_key = $section->get_section_key();
+			$label       = isset( $labels[0] ) ? $labels[0] : $section->get_title();
+			$event_name  = isset( $event_names[0] ) ? $event_names[0] : '';
+
+			$payload[ $section_key ] = array(
 				'value'            => isset( $values[0] ) ? $values[0] : '',
 				'values'           => $values,
-				'label'            => isset( $labels[0] ) ? $labels[0] : $section->get_title(),
-				'event_name'       => isset( $event_names[0] ) ? $event_names[0] : '',
+				'label'            => $label,
+				'event_name'       => $event_name,
 				'dimension'        => isset( $dimensions[0] ) ? $dimensions[0] : '',
 				'dimension_value'  => $first_dimension_value,
 				'dimension_values' => $dimension_values ?? array(),
@@ -272,48 +314,208 @@ class Email_Template_Formatter {
 	}
 
 	/**
-	 * Builds template data for rendering.
+	 * Builds template data for simple email rendering.
 	 *
-	 * @since 1.170.0
+	 * Simple emails share the same structure (subject, preheader, site, CTA, footer)
+	 * but differ in their content. The $email_data array provides the variable content.
 	 *
-	 * @param string $frequency  Frequency slug.
-	 * @param array  $date_range Date range.
-	 * @return array Template data.
+	 * @since 1.173.0
+	 *
+	 * @param string $subject   Email subject line.
+	 * @param string $preheader Email preheader text.
+	 * @param array  $email_data {
+	 *     Additional email-specific data.
+	 *
+	 *     @type string $learn_more_url   URL for the learn more link.
+	 *     @type string $cta_label        Label for the primary call-to-action button.
+	 *     @type string $cta_url          URL for the primary call-to-action button.
+	 *     @type string $footer_copy      Footer copy text.
+	 *     @type array  $body_format_args Format arguments for plain text body (e.g., frequency, first_report_date).
+	 *     @type array  $custom_data      Any additional custom data for the template.
+	 * }
+	 * @return array Template data for simple email.
 	 */
-	private function prepare_template_data( $frequency, $date_range ) {
-		return array(
-			'subject'                => $this->build_subject( $frequency ),
-			'preheader'              => __( 'See the latest highlights from Site Kit.', 'google-site-kit' ),
+	public function prepare_simple_email_data( $subject, $preheader, $email_data = array() ) {
+		$site_domain        = $this->get_site_domain();
+		$dashboard_url      = $this->golinks->get_url( 'dashboard' );
+		$email_settings_url = $this->golinks->get_url( 'manage-subscription-email-reporting' );
+		$help_center_url    = add_query_arg( 'doc', 'get-support', 'https://sitekit.withgoogle.com/support/' );
+
+		$data = array(
+			'subject'                => $subject,
+			'preheader'              => $preheader,
 			'site'                   => array(
-				'domain' => $this->get_site_domain(),
+				'domain' => $site_domain,
+				'url'    => $this->context->get_reference_site_url(),
 			),
-			'date_range'             => array(
-				'label'   => $this->build_date_label( $date_range ),
-				'context' => $this->get_change_context_label( $date_range ),
-			),
+			'learn_more_url'         => $email_data['learn_more_url'] ?? '',
 			'primary_call_to_action' => array(
-				'label' => __( 'View dashboard', 'google-site-kit' ),
-				'url'   => admin_url( 'admin.php?page=googlesitekit-dashboard' ),
+				'label' => $email_data['cta_label'] ?? __( 'Get your report', 'google-site-kit' ),
+				'url'   => $email_data['cta_url'] ?? $dashboard_url,
 			),
 			'footer'                 => array(
-				'copy'            => __( 'You received this email because you signed up to receive email reports from Site Kit.', 'google-site-kit' ),
-				'unsubscribe_url' => admin_url( 'admin.php?page=googlesitekit-settings#/admin-settings' ),
+				'copy'            => $email_data['footer_copy'] ?? '',
+				'unsubscribe_url' => $email_settings_url,
 				'links'           => array(
 					array(
-						'label' => __( 'Help center', 'google-site-kit' ),
-						'url'   => 'https://sitekit.withgoogle.com/support/',
+						'label' => __( 'Manage subscription', 'google-site-kit' ),
+						'url'   => $email_settings_url,
 					),
 					array(
 						'label' => __( 'Privacy Policy', 'google-site-kit' ),
 						'url'   => 'https://policies.google.com/privacy',
 					),
 					array(
-						'label' => __( 'Manage subscription', 'google-site-kit' ),
-						'url'   => admin_url( 'admin.php?page=googlesitekit-dashboard&email-reporting-panel-opened=1' ),
+						'label' => __( 'Help center', 'google-site-kit' ),
+						'url'   => $help_center_url,
 					),
 				),
 			),
 		);
+
+		return $data;
+	}
+
+	/**
+	 * Builds template data for the subscription confirmation email.
+	 *
+	 * @since 1.174.0
+	 *
+	 * @param string $frequency Frequency slug.
+	 * @return array Template data.
+	 */
+	public function prepare_subscription_confirmation_template_data( $frequency ) {
+		$site_domain        = $this->get_site_domain();
+		$frequency_label    = $this->get_frequency_label( $frequency );
+		$first_report_date  = $this->get_first_report_date_label( $frequency );
+		$dashboard_url      = $this->golinks->get_url( 'dashboard' );
+		$email_settings_url = $this->golinks->get_url( 'manage-subscription-email-reporting' );
+		$help_center_url    = add_query_arg( 'doc', 'get-support', 'https://sitekit.withgoogle.com/support/' );
+
+		return array(
+			'subject'                => sprintf(
+				/* translators: %s: Site domain. */
+				__( 'Success! You’re subscribed to Site Kit reports for %s', 'google-site-kit' ),
+				$site_domain
+			),
+			'preheader'              => __( 'Your subscription is confirmed and your first report is on the way.', 'google-site-kit' ),
+			'site'                   => array(
+				'domain' => $site_domain,
+				'url'    => $this->context->get_reference_site_url(),
+			),
+			'title'                  => Content_Map::get_title( 'subscription-confirmation' ),
+			'body'                   => Content_Map::get_body_with_args(
+				'subscription-confirmation',
+				array(
+					$frequency_label,
+					$first_report_date,
+				)
+			),
+			'learn_more_url'         => 'https://sitekit.withgoogle.com/documentation/email-reports/',
+			'primary_call_to_action' => array(
+				'label' => __( 'View dashboard', 'google-site-kit' ),
+				'url'   => $dashboard_url,
+			),
+			'footer'                 => array(
+				'copy'            => __( 'You received this email because you signed up to receive email reports from Site Kit. If you do not want to receive these emails in the future you can unsubscribe', 'google-site-kit' ),
+				'unsubscribe_url' => $email_settings_url,
+				'links'           => array(
+					array(
+						'label' => __( 'Manage subscription', 'google-site-kit' ),
+						'url'   => $email_settings_url,
+					),
+					array(
+						'label' => __( 'Privacy Policy', 'google-site-kit' ),
+						'url'   => 'https://policies.google.com/privacy',
+					),
+					array(
+						'label' => __( 'Help center', 'google-site-kit' ),
+						'url'   => $help_center_url,
+					),
+				),
+			),
+		);
+	}
+
+	/**
+	 * Builds template data for rendering.
+	 *
+	 * @since 1.170.0
+	 *
+	 * @param string  $frequency       Frequency slug.
+	 * @param array   $date_range      Date range.
+	 * @param WP_User $user            User receiving the report.
+	 * @param array   $section_notices Section notices keyed by section key.
+	 * @return array Template data.
+	 */
+	private function prepare_template_data( $frequency, $date_range, WP_User $user, array $section_notices ) {
+		$dashboard_url      = $this->golinks->get_url( 'dashboard' );
+		$email_settings_url = $this->golinks->get_url( 'manage-subscription-email-reporting' );
+		$help_center_url    = add_query_arg( 'doc', 'get-support', 'https://sitekit.withgoogle.com/support/' );
+
+		return array(
+			'subject'                => $this->build_subject( $frequency ),
+			'preheader'              => __( 'See the latest highlights from Site Kit.', 'google-site-kit' ),
+			'site'                   => array(
+				'domain' => $this->get_site_domain(),
+				'url'    => $this->context->get_reference_site_url(),
+			),
+			'date_range'             => array(
+				'label'   => $this->build_date_label( $date_range ),
+				'context' => $this->get_change_context_label( $date_range ),
+			),
+			'header_notices'         => $this->email_notices->get_header_notices( $user ),
+			'section_notices'        => $section_notices,
+			'primary_call_to_action' => array(
+				'label' => __( 'View dashboard', 'google-site-kit' ),
+				'url'   => $dashboard_url,
+			),
+			'footer'                 => array(
+				'copy'            => __( 'You received this email because you signed up to receive email reports from Site Kit. If you do not want to receive these emails in the future you can unsubscribe', 'google-site-kit' ), // The space and unsubscribe link are handled in the template.
+				'unsubscribe_url' => $email_settings_url,
+				'links'           => array(
+					array(
+						'label' => __( 'Manage subscription', 'google-site-kit' ),
+						'url'   => $email_settings_url,
+					),
+					array(
+						'label' => __( 'Privacy Policy', 'google-site-kit' ),
+						'url'   => 'https://policies.google.com/privacy',
+					),
+					array(
+						'label' => __( 'Help center', 'google-site-kit' ),
+						'url'   => $help_center_url,
+					),
+				),
+			),
+		);
+	}
+
+	/**
+	 * Resolves section notices keyed by section slug.
+	 *
+	 * @since 1.175.0
+	 *
+	 * @param WP_User $user User receiving the report.
+	 * @return array Section notices map.
+	 */
+	private function prepare_section_notices( WP_User $user ) {
+		$section_notices = array();
+		$section_keys    = $this->email_notices->get_section_notice_keys();
+
+		foreach ( $section_keys as $section_key ) {
+			$section_key = sanitize_key( (string) $section_key );
+			if ( '' === $section_key ) {
+				continue;
+			}
+
+			$notices = $this->email_notices->get_section_notices( $user, $section_key );
+			if ( ! empty( $notices ) ) {
+				$section_notices[ $section_key ] = $notices;
+			}
+		}
+
+		return $section_notices;
 	}
 
 	/**
@@ -378,7 +580,7 @@ class Email_Template_Formatter {
 	 * @param string $frequency Frequency slug.
 	 * @return string Frequency label.
 	 */
-	private function get_frequency_label( $frequency ) {
+	public function get_frequency_label( $frequency ) {
 		switch ( $frequency ) {
 			case Email_Reporting_Settings::FREQUENCY_MONTHLY:
 				return __( 'monthly', 'google-site-kit' );
@@ -388,6 +590,94 @@ class Email_Template_Formatter {
 			default:
 				return __( 'weekly', 'google-site-kit' );
 		}
+	}
+
+	/**
+	 * Gets a human-readable label for when the first report will be sent.
+	 *
+	 * Returns a localized string describing when the user can expect their
+	 * first report based on their selected frequency.
+	 *
+	 * @since 1.173.0
+	 *
+	 * @param string $frequency Frequency slug (weekly, monthly, quarterly).
+	 * @return string First report date label.
+	 */
+	public function get_first_report_date_label( $frequency ) {
+		switch ( $frequency ) {
+			case Email_Reporting_Settings::FREQUENCY_MONTHLY:
+				return __( '1st of the following month', 'google-site-kit' );
+
+			case Email_Reporting_Settings::FREQUENCY_QUARTERLY:
+				return $this->get_next_quarter_label();
+
+			case Email_Reporting_Settings::FREQUENCY_WEEKLY:
+			default:
+				return $this->get_next_week_start_label();
+		}
+	}
+
+	/**
+	 * Gets the label for the next week start day.
+	 *
+	 * Uses WordPress start_of_week setting to determine which day
+	 * of the week reports are sent.
+	 *
+	 * @since 1.173.0
+	 *
+	 * @return string Label like "next Monday".
+	 */
+	private function get_next_week_start_label() {
+		$start_of_week = (int) get_option( 'start_of_week', 0 );
+
+		global $wp_locale;
+
+		$day_name = $wp_locale->get_weekday( $start_of_week );
+
+		return sprintf(
+			/* translators: %s: Day of the week (e.g., "Monday"). */
+			__( 'next %s', 'google-site-kit' ),
+			$day_name
+		);
+	}
+
+	/**
+	 * Gets the label for the next quarterly report date.
+	 *
+	 * Quarters are: Q1 (Jan-Mar), Q2 (Apr-Jun), Q3 (Jul-Sep), Q4 (Oct-Dec).
+	 * Returns "1st of {month}" for the first month of the next quarter.
+	 *
+	 * @since 1.173.0
+	 *
+	 * @return string Label like "1st of April".
+	 */
+	private function get_next_quarter_label() {
+		$current_month = (int) gmdate( 'n' );
+
+		// Determine the first month of the next quarter.
+		if ( $current_month <= 3 ) {
+			// Current: Q1 (Jan-Mar), Next: Q2 starts April.
+			$next_quarter_month = 4;
+		} elseif ( $current_month <= 6 ) {
+			// Current: Q2 (Apr-Jun), Next: Q3 starts July.
+			$next_quarter_month = 7;
+		} elseif ( $current_month <= 9 ) {
+			// Current: Q3 (Jul-Sep), Next: Q4 starts October.
+			$next_quarter_month = 10;
+		} else {
+			// Current: Q4 (Oct-Dec), Next: Q1 starts January.
+			$next_quarter_month = 1;
+		}
+
+		// Get localized month name.
+		$timestamp  = mktime( 0, 0, 0, $next_quarter_month, 1 );
+		$month_name = wp_date( 'F', $timestamp );
+
+		return sprintf(
+			/* translators: %s: Month name (e.g., "April"). */
+			__( '1st of %s', 'google-site-kit' ),
+			$month_name
+		);
 	}
 
 	/**

@@ -38,7 +38,6 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
     }
     protected function register_controls()
     {
-
         $this->start_controls_section(
             'amelia_events_section',
             [
@@ -58,6 +57,54 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
                 'default' => false,
                 'label_on' => BackendStrings::get('yes'),
                 'label_off' => BackendStrings::get('no'),
+            ]
+        );
+
+        $this->add_control(
+            'event_to_show',
+            [
+                'label'     => BackendStrings::get('event_time_scope'),
+                'type'      => Controls_Manager::SELECT,
+                'condition' => ['preselect' => 'yes'],
+                'default'   => 'all',
+                'options'   => [
+                    'all'    => BackendStrings::get('all_events'),
+                    'future' => BackendStrings::get('future_events'),
+                    'past'   => BackendStrings::get('past_events'),
+                    'custom' => BackendStrings::get('custom_range'),
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'start_date',
+            [
+                'label' => BackendStrings::get('red_start_date'),
+                'type' => Controls_Manager::DATE_TIME,
+                'picker_options' => [
+                    'enableTime' => false,
+                    'dateFormat' => 'Y-m-d',
+                ],
+                'condition' => [
+                    'preselect' => 'yes',
+                    'event_to_show' => 'custom'
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'end_date',
+            [
+                'label' => BackendStrings::get('red_end_date'),
+                'type' => Controls_Manager::DATE_TIME,
+                'picker_options' => [
+                    'enableTime' => false,
+                    'dateFormat' => 'Y-m-d',
+                ],
+                'condition' => [
+                    'preselect' => 'yes',
+                    'event_to_show' => 'custom'
+                ],
             ]
         );
 
@@ -165,6 +212,20 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
             $selected_event = empty($settings['select_event']) ? '' : ' event=' . (is_array($settings['select_event']) ?
                     implode(',', $settings['select_event']) : $settings['select_event']);
 
+            $event_to_show = '';
+            if (empty($settings['select_event']) && !empty($settings['event_to_show']) && $settings['event_to_show'] !== 'all') {
+                if ($settings['event_to_show'] === 'custom') {
+                    if (empty($settings['start_date']) || empty($settings['end_date'])) {
+                        echo BackendStrings::get('notice_for_missing_dates');
+                        return;
+                    }
+
+                    $event_to_show = ' range="' . $settings['start_date'] . ' - ' . $settings['end_date'] . '"';
+                } else {
+                    $event_to_show = ' range="' . $settings['event_to_show'] . '"';
+                }
+            }
+
             $show_recurring = $settings['show_recurring'] ? ' recurring=1' : '';
 
             $selected_location = empty($settings['select_location']) ? '' : ' location=' . (is_array($settings['select_location']) ?
@@ -188,6 +249,7 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
                 $trigger_type .
                 $in_dialog .
                 $selected_event .
+                $event_to_show .
                 $selected_location .
                 $selected_tag .
                 $show_recurring . ']';

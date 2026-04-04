@@ -46,13 +46,9 @@ class CustomFieldServiceRepository extends AbstractRepository
                 )"
             );
 
-            $response = $statement->execute($params);
+            $statement->execute($params);
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to add data in ' . __CLASS__, $e->getCode(), $e);
-        }
-
-        if (!$response) {
-            throw new QueryExecutionException('Unable to add data in ' . __CLASS__);
+            throw new QueryExecutionException('Unable to add data in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return $this->connection->lastInsertId();
@@ -87,16 +83,12 @@ class CustomFieldServiceRepository extends AbstractRepository
                 id = :id"
             );
 
-            $response = $statement->execute($params);
+            $statement->execute($params);
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to save data in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to save data in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
-        if (!$response) {
-            throw new QueryExecutionException('Unable to save data in ' . __CLASS__);
-        }
-
-        return $response;
+        return true;
     }
 
     /**
@@ -119,7 +111,7 @@ class CustomFieldServiceRepository extends AbstractRepository
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return $rows;
@@ -142,9 +134,10 @@ class CustomFieldServiceRepository extends AbstractRepository
             $statement->bindParam(':customFieldId', $customFieldId);
             $statement->bindParam(':serviceId', $serviceId);
 
-            return $statement->execute();
+            $statement->execute();
+            return true;
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to delete data from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to delete data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
     }
 }

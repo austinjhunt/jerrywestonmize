@@ -1233,7 +1233,8 @@ abstract class AbstractNotificationService
                             $usersInfo[$entityData['bookings'][$bookingKey]['customerId']] = [
                                 'id'    => $entityData['bookings'][$bookingKey]['customerId'],
                                 'email' => $emailData['customer_email'],
-                                'phone' => $emailData['customer_phone']
+                                'phone' => $emailData['customer_phone'],
+                                'phone_country' => $emailData['customer_phone_country']
                             ];
                         }
 
@@ -1244,7 +1245,8 @@ abstract class AbstractNotificationService
                         $usersInfo[$entityData['customer']['id']] = [
                             'id'    => $entityData['customer']['id'],
                             'email' => $entityData['customer']['email'],
-                            'phone' => $entityData['customer']['phone']
+                            'phone' => $entityData['customer']['phone'],
+                            'phone_country' => $entityData['customer']['countryPhoneIso']
                         ];
 
                         break;
@@ -1259,7 +1261,8 @@ abstract class AbstractNotificationService
                         $usersInfo[$entityData['providerId']] = [
                             'id'    => $entityData['providerId'],
                             'email' => $emailData['employee_email'],
-                            'phone' => $emailData['employee_phone']
+                            'phone' => $emailData['employee_phone'],
+                            'phone_country' => $emailData['employee_phone_country']
                         ];
 
                         break;
@@ -1269,7 +1272,8 @@ abstract class AbstractNotificationService
                             $usersInfo[$provider['id']] = [
                                 'id'    => $provider['id'],
                                 'email' => $provider['email'],
-                                'phone' => $provider['phone']
+                                'phone' => $provider['phone'],
+                                'phone_country' => $provider['countryPhoneIso']
                             ];
                         }
                         if ($entityData['organizerId']) {
@@ -1277,7 +1281,8 @@ abstract class AbstractNotificationService
                             $usersInfo[$organizer['id']] = [
                                 'id'    => $organizer['id'],
                                 'email' => $organizer['email'],
-                                'phone' => $organizer['phone']
+                                'phone' => $organizer['phone'],
+                                'phone_country' => $organizer['countryPhoneIso']
                             ];
                         }
 
@@ -1289,7 +1294,8 @@ abstract class AbstractNotificationService
                             $usersInfo[$reservation['appointment']['provider']['id']] = [
                                 'id'    => $reservation['appointment']['provider']['id'],
                                 'email' => $reservation['appointment']['provider']['email'],
-                                'phone' => $reservation['appointment']['provider']['phone']
+                                'phone' => $reservation['appointment']['provider']['phone'],
+                                'phone_country' => $reservation['appointment']['provider']['countryPhoneIso']
                             ];
                         }
                         if (empty($entityData['recurring'])) {
@@ -1297,7 +1303,8 @@ abstract class AbstractNotificationService
                                 $usersInfo[$entityData['onlyOneEmployee']['id']] = [
                                     'id' => $entityData['onlyOneEmployee']['id'],
                                     'email' => $entityData['onlyOneEmployee']['email'],
-                                    'phone' => $entityData['onlyOneEmployee']['phone']
+                                    'phone' => $entityData['onlyOneEmployee']['phone'],
+                                    'phone_country' => $entityData['onlyOneEmployee']['countryPhoneIso']
                                 ];
                             }
                             $emptyPackageEmployees = $settingsAS->getEmptyPackageEmployees();
@@ -1306,7 +1313,8 @@ abstract class AbstractNotificationService
                                     $usersInfo[$employee['id']] = [
                                         'id'    => $employee['id'],
                                         'email' => $employee['email'],
-                                        'phone' => $employee['phone']
+                                        'phone' => $employee['phone'],
+                                        'phone_country' => $employee['countryPhoneIso']
                                     ];
                                 }
                             }

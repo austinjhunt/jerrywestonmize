@@ -81,7 +81,14 @@
 					self.form.find( '.forminator-field-' + self.element + '-' + self.form_id ).click();
 				}
 			});
-
+			this.$el.on("fail:forminator:multiple:upload  delete:forminator:multiple:upload", function (e) {
+				const element = self.uploader.find("input[type='file']");
+				if (self.uploader.parent().find('.forminator-uploaded-file.forminator-has_error').length > 0) {
+					$(element).data("valid", false)
+				} else {
+					$(element).data("valid", true)
+				}
+			});
 			this.form.on("forminator:form:submit:success", function(e) {
 				fileList = [];
 			});
@@ -157,11 +164,13 @@
 				if ( 'undefined' !== typeof $this.data('size') && $this.data('size') <= item.size ) {
 					error_messsage = $this.data('size-message');
 					self.upload_fail_response( unique_id, error_messsage );
+					self.$el.trigger('fail:forminator:multiple:upload', uploadData);
 					return;
 				} else if( ! file_reg.test( itemName ) ) {
 					var ext = itemName.split('.').pop();
 					error_messsage = '.' + ext + ' ' + $this.data('filetype-message');
 					self.upload_fail_response( unique_id, error_messsage );
+					self.$el.trigger('fail:forminator:multiple:upload', uploadData);
 					return;
 				}
 				if( 'ajax' === method ) {
@@ -190,7 +199,7 @@
 						contentType: false,
 						processData: false,
 						beforeSend: function () {
-							self.form.find('.forminator-button-submit').attr( 'disabled', true ).attr( 'data-uploading', true );
+							self.form.find('.forminator-button-submit, .forminator-button-next').attr( 'disabled', true ).attr( 'data-uploading', true );
 							self.$el.trigger('before:forminator:multiple:upload', uploadData);
 							uploadRequests[self.form_id]++;
 						},
@@ -218,7 +227,7 @@
 						complete: function (xhr, status) {
 							uploadCompleted[self.form_id]++;
 							if ( uploadRequests[self.form_id] === uploadCompleted[self.form_id] ) {
-								self.form.find('.forminator-button-submit').attr( 'disabled', false ).removeAttr( 'data-uploading' );
+								self.form.find('.forminator-button-submit, .forminator-button-next').attr( 'disabled', false ).removeAttr( 'data-uploading' );
 							}
 							self.$el.trigger('complete:forminator:multiple:upload', uploadData);
 							self.$el.find('input[type="file"]').trigger('forminator.change', 'forminator_emulate_trigger' );
@@ -528,7 +537,7 @@
 						if( 'undefined' !== typeof uploaded_value ) {
 							var file_index = self.get_uploaded_file_id( element_id, file_id );
 							if( '' !== file_index && null !== file_index ) {
-								uploaded_arr[ element_id ].splice( file_index, 1 );
+								uploaded_arr[ element_id ]?.splice( file_index, 1 );
 							}
 							uploaded_value.val( JSON.stringify( uploaded_arr ) );
 						}
@@ -569,6 +578,7 @@
 					self.form.find('.forminator-button-submit').attr( 'disabled', false );
 				}
 				fileInput.trigger( 'forminator.change', 'forminator_emulate_trigger' );
+				self.$el.trigger('delete:forminator:multiple:upload');
 			})
 		},
 

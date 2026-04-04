@@ -21,7 +21,6 @@ use AmeliaBooking\Domain\Entity\Booking\Event\EventPeriod;
 use AmeliaBooking\Domain\Entity\Booking\Event\EventTicket;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
-use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\IntegerValue;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
@@ -90,6 +89,9 @@ class GetEventCommandHandler extends CommandHandler
         /** @var CustomFieldRepository $customFieldRepository */
         $customFieldRepository = $this->container->get('domain.customField.repository');
 
+        $fetchBookings =
+            empty($command->getFields()['params']['bookings']) ||
+            filter_var($command->getFields()['params']['bookings'], FILTER_VALIDATE_BOOLEAN);
 
         /** @var Event $event */
         $event = $eventApplicationService->getEventById(
@@ -100,13 +102,14 @@ class GetEventCommandHandler extends CommandHandler
                 'fetchEventsTags'       => empty($command->getFields()['params']['drawer']),
                 'fetchEventsProviders'  => empty($command->getFields()['params']['drawer']),
                 'fetchEventsImages'     => true,
-                'fetchBookings'         => true,
-                'fetchBookingsTickets'  => true,
-                'fetchBookingsUsers'    => true,
-                'fetchBookingsPayments' => true,
-                'fetchBookingsCoupons'  => true,
+                'fetchBookings'         => $fetchBookings,
+                'fetchBookingsTickets'  => $fetchBookings,
+                'fetchBookingsUsers'    => $fetchBookings,
+                'fetchBookingsPayments' => $fetchBookings,
+                'fetchBookingsCoupons'  => $fetchBookings,
                 'fetchEventsOrganizer'  => true,
                 'fetchEventsLocation'   => true,
+                'fetchOccupancy'        => !$fetchBookings,
             ]
         );
 
@@ -173,6 +176,15 @@ class GetEventCommandHandler extends CommandHandler
         $bookingsPrice = 0;
         $paidPrice     = 0;
 
+        $customersIds = [];
+
+        /** @var CustomerBooking $booking */
+        foreach ($event->getBookings()->getItems() as $booking) {
+            $customersIds[] = $booking->getCustomerId()->getValue();
+        }
+
+        $customersNoShowCount = $customersIds ? $bookingRepository->countByNoShowStatus($customersIds) : [];
+
         /** @var CustomerBooking $booking */
         foreach ($event->getBookings()->getItems() as $booking) {
             $customFields   = [];
@@ -211,11 +223,6 @@ class GetEventCommandHandler extends CommandHandler
             }
             $paidPrice += $bookingPaidPrice;
 
-            $noShowCount = $bookingRepository->countByNoShowStatus([$booking->getCustomerId()->getValue()]);
-            if ($noShowCount && !empty($noShowCount[$booking->getCustomerId()->getValue()])) {
-                $noShowCount = $noShowCount[$booking->getCustomerId()->getValue()]['count'];
-            }
-
             $customFields = $customFieldService->reformatCustomField($booking, $customFields, $customFieldsCollection);
 
             $eventBookings[] = [
@@ -225,7 +232,9 @@ class GetEventCommandHandler extends CommandHandler
                     'firstName' => $booking->getCustomer()->getFirstName()->getValue(),
                     'lastName' => $booking->getCustomer()->getLastName() ? $booking->getCustomer()->getLastName()->getValue() : null,
                     'email' => $booking->getCustomer()->getEmail() ? $booking->getCustomer()->getEmail()->getValue() : null,
-                    'noShowCount' => $noShowCount,
+                    'noShowCount' => !empty($customersNoShowCount[$booking->getCustomerId()->getValue()])
+                        ? $customersNoShowCount[$booking->getCustomerId()->getValue()]['count']
+                        : [],
                     'note' => $booking->getCustomer()->getNote() ? $booking->getCustomer()->getNote()->getValue() : null,
                 ],
                 'tickets' => $ticketsData,
@@ -286,6 +295,7 @@ class GetEventCommandHandler extends CommandHandler
                 'location' => $event->getCustomLocation() ?
                     ['name' => $event->getCustomLocation()->getValue()] :
                     ($event->getLocationId() ? $event->getLocation()->toArray() : null),
+                'payment' => $eventRepository->getEventsPaymentsSummary((int)$command->getField('id')),
             ],
             $eventInfo
         );

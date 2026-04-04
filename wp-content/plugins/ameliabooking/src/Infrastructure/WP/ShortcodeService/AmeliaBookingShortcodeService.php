@@ -23,7 +23,7 @@ use Interop\Container\Exception\ContainerException;
  *
  * @package AmeliaBooking\Infrastructure\WP\ShortcodeService
  */
-class AmeliaBookingShortcodeService
+class AmeliaBookingShortcodeService extends AmeliaShortcodeService
 {
     public static $counter = 1000;
 
@@ -44,9 +44,7 @@ class AmeliaBookingShortcodeService
 
         $settingsService = new SettingsService(new SettingsStorage());
 
-        if ($settingsService->getSetting('payments', 'payPal')['enabled'] === true) {
-            wp_enqueue_script('amelia_paypal_script', 'https://www.paypalobjects.com/api/checkout.js');
-        }
+        self::enqueuePaypalScript($settingsService);
 
         if ($settingsService->getSetting('payments', 'stripe')['enabled'] === true) {
             wp_enqueue_script('amelia_stripe_script', 'https://js.stripe.com/v3/');
@@ -110,7 +108,7 @@ class AmeliaBookingShortcodeService
         } else {
             wp_enqueue_script(
                 $scriptId,
-                AMELIA_URL . 'v3/public/assets/public.b00ed04a.js',
+                AMELIA_URL . 'v3/public/assets/public.eff1ec7f.js',
                 [],
                 AMELIA_VERSION,
                 true
@@ -199,6 +197,8 @@ class AmeliaBookingShortcodeService
                 $stashAS->getStash()
             );
         }
+
+        do_action('amelia_scripts_loaded');
     }
 
     /**

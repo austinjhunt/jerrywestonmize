@@ -8,7 +8,7 @@ use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
-use AmeliaBooking\Domain\Entity\User\AbstractUser;
+use AmeliaBooking\Domain\Entity\Booking\Event\Event;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
 use AmeliaBooking\Domain\Entity\Entities;
@@ -49,18 +49,22 @@ class ScanQrCodeCommandHandler extends CommandHandler
         $userAS = $this->container->get('application.user.service');
 
         if (!$command->getPermissionService()->currentUserCanWrite(Entities::BOOKINGS)) {
-            $user = $userAS->getAuthenticatedUser($command->getToken(), false, 'providerCabinet');
+            $user = $this->container->get('logged.in.user');
 
-            if ($user === null) {
-                $result->setResult(CommandResult::RESULT_ERROR);
-                $result->setMessage('Could not retrieve user');
-                $result->setData(
-                    [
-                        'reauthorize' => true
-                    ]
-                );
+            if (!$user || $user->getId() === null) {
+                $user = $userAS->getAuthenticatedUser($command->getToken(), false, 'providerCabinet');
 
-                return $result;
+                if ($user === null) {
+                    $result->setResult(CommandResult::RESULT_ERROR);
+                    $result->setMessage('Could not retrieve user');
+                    $result->setData(
+                        [
+                            'reauthorize' => true
+                        ]
+                    );
+
+                    return $result;
+                }
             }
         }
 
@@ -114,14 +118,27 @@ class ScanQrCodeCommandHandler extends CommandHandler
 
         /** @var EventRepository $eventRepository */
         $eventRepository = $this->container->get('domain.booking.event.repository');
-        $event = $eventRepository->getByBookingId($bookingId);
+        $eventId = $eventRepository->getByBookingId($bookingId)->getId()->getValue();
+        $event = $eventRepository->getById($eventId);
 
-        if ($event && $event->getStatus()->getValue() === 'rejected') {
+        if (!$event || $event->getStatus()->getValue() === 'rejected') {
             $result->setResult(CommandResult::RESULT_ERROR);
             $result->setMessage('Event is canceled');
             $result->setData([
                 'messageType' => 'error',
                 'message'     => 'event_canceled',
+            ]);
+
+            return $result;
+        }
+
+        // Check if the scanned date is within the event's periods
+        if (!$this->isDateWithinEventPeriods($event, $scannedAt)) {
+            $result->setResult(CommandResult::RESULT_ERROR);
+            $result->setMessage('Ticket cannot be scanned for this date');
+            $result->setData([
+                'messageType' => 'error',
+                'message'     => 'ticket_not_valid_for_date',
             ]);
 
             return $result;
@@ -144,18 +161,7 @@ class ScanQrCodeCommandHandler extends CommandHandler
                     isset($qrCode['ticketManualCode']) &&
                     hash_equals($qrCode['ticketManualCode'], $ticketManualCode)
                 ) {
-                    if (!array_key_exists($scannedAt, $qrCode['dates'])) {
-                        $result->setResult(CommandResult::RESULT_ERROR);
-                        $result->setMessage('Ticket cannot be scanned for this date');
-                        $result->setData([
-                            'messageType' => 'error',
-                            'message'     => 'ticket_not_valid_for_date',
-                        ]);
-
-                        return $result;
-                    }
-
-                    if ($qrCode['dates'][$scannedAt] === true) {
+                    if (isset($qrCode['dates'][$scannedAt]) && $qrCode['dates'][$scannedAt] === true) {
                         $result->setResult(CommandResult::RESULT_ERROR);
                         $result->setMessage('Ticket has already been scanned');
                         $result->setData([
@@ -182,18 +188,7 @@ class ScanQrCodeCommandHandler extends CommandHandler
                     isset($qrCode['ticketManualCode']) &&
                     hash_equals($qrCode['ticketManualCode'], $ticketManualCode)
                 ) {
-                    if (!array_key_exists($scannedAt, $qrCode['dates'])) {
-                        $result->setResult(CommandResult::RESULT_ERROR);
-                        $result->setMessage('Ticket cannot be scanned for this date');
-                        $result->setData([
-                            'messageType' => 'error',
-                            'message'     => 'ticket_not_valid_for_date',
-                        ]);
-
-                        return $result;
-                    }
-
-                    if ($qrCode['dates'][$scannedAt] === true) {
+                    if (isset($qrCode['dates'][$scannedAt]) && $qrCode['dates'][$scannedAt] === true) {
                         $result->setResult(CommandResult::RESULT_ERROR);
                         $result->setMessage('Group ticket has already been scanned');
                         $result->setData([
@@ -212,7 +207,7 @@ class ScanQrCodeCommandHandler extends CommandHandler
 
             // Check if any ticket is already scanned for this date
             foreach ($qrCodes as $qrCodeItem) {
-                if (array_key_exists($scannedAt, $qrCodeItem['dates']) && $qrCodeItem['dates'][$scannedAt] === true) {
+                if (isset($qrCodeItem['dates'][$scannedAt]) && $qrCodeItem['dates'][$scannedAt] === true) {
                     $ticketsControl++;
                 }
             }
@@ -229,13 +224,11 @@ class ScanQrCodeCommandHandler extends CommandHandler
             }
 
             $ticketsControl = 0;
-            // Mark all as scanned for this date
+            // Mark all tickets as scanned for this date
             foreach ($qrCodes as &$qr) {
-                if (array_key_exists($scannedAt, $qr['dates'])) {
-                    if ($qr['dates'][$scannedAt] === false) {
-                        $ticketsControl++;
-                        $qr['dates'][$scannedAt] = true;
-                    }
+                if (!isset($qr['dates'][$scannedAt]) || $qr['dates'][$scannedAt] === false) {
+                    $ticketsControl++;
+                    $qr['dates'][$scannedAt] = true;
                 }
             }
         }
@@ -269,5 +262,28 @@ class ScanQrCodeCommandHandler extends CommandHandler
         ]);
 
         return $result;
+    }
+
+    private function isDateWithinEventPeriods(Event $event, string $scannedAt): bool
+    {
+        if (!$event->getPeriods()) {
+            return false;
+        }
+
+        $scannedDateTime = \DateTime::createFromFormat('Y-m-d', $scannedAt);
+        if (!$scannedDateTime) {
+            return false;
+        }
+
+        foreach ($event->getPeriods()->getItems() as $period) {
+            $periodStart = (clone $period->getPeriodStart()->getValue())->setTime(0, 0, 0);
+            $periodEnd = (clone $period->getPeriodEnd()->getValue())->setTime(23, 59, 59);
+
+            if ($scannedDateTime >= $periodStart && $scannedDateTime <= $periodEnd) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

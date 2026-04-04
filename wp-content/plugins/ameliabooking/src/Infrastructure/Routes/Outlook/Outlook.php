@@ -36,6 +36,8 @@ class Outlook
         // Middleware routes for Outlook Calendar integration
         $app->post('/outlook-calendar/authorization/url', GetOutlookMiddlewareAuthURLController::class);
 
+        $app->get('/outlook-calendar/authorization/url/{id:[0-9]+}', GetOutlookMiddlewareAuthURLController::class);
+
         $app->post('/outlook-calendar/authorization/url/{id:[0-9]+}', GetOutlookMiddlewareAuthURLController::class);
 
         $app->get('/outlook-calendar/authorization/token', FetchOutlookMiddlewareAccessTokenController::class);

@@ -45,46 +45,43 @@ class GetPaymentCommandHandler extends CommandHandler
 
         $this->checkMandatoryFields($command);
 
-        /** @var PaymentRepository $paymentRepository */
-        $paymentRepository = $this->container->get('domain.payment.repository');
-
         /** @var PaymentApplicationService $paymentAS */
         $paymentAS = $this->container->get('application.payment.service');
 
-        /** @var Payment $payment */
-        $payment = $paymentRepository->getById($command->getArg('id'));
+        $params = $command->getField('params');
 
-        $paymentArray = $payment->toArray();
-
-        /** @var ReservationServiceInterface $reservationService */
-        $reservationService = $this->container->get('application.reservation.service')->get(
-            $payment->getEntity()->getValue()
-        );
+        $paymentId = $command->getArg('id');
 
         $paymentsData = $paymentAS->getPaymentsData(
             [
-                'ids'      => [$payment->getId()->getValue()],
-                'invoices' => false,
+                'ids'      => [$paymentId],
+                'invoices' => !empty($params['invoices']),
             ]
         );
 
-        $paymentArray['summary'] = $reservationService->getPaymentSummary(
-            $paymentsData[$payment->getId()->getValue()],
-            false
+        if (empty($paymentsData)) {
+            throw new NotFoundException('Payment not found.');
+        }
+
+        /** @var ReservationServiceInterface $reservationService */
+        $reservationService = $this->container->get('application.reservation.service')->get(
+            $paymentsData[$paymentId]['type']
         );
+
+        $paymentsData[$paymentId]['summary'] = $reservationService->getPaymentSummary(
+            $paymentsData[$paymentId],
+            !empty($params['invoices'])
+        );
+
+        $paymentArray = reset($paymentsData);
 
         $paymentArray = apply_filters('amelia_get_payment_filter', $paymentArray);
 
         do_action('amelia_get_payment', $paymentArray);
 
-
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved payment.');
-        $result->setData(
-            [
-                Entities::PAYMENT => $paymentArray,
-            ]
-        );
+        $result->setData([Entities::PAYMENT => $paymentArray]);
 
         return $result;
     }

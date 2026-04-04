@@ -109,7 +109,7 @@ abstract class PSS extends \Google\Site_Kit_Dependencies\phpseclib3\Crypt\Common
         $result['hash'] = \str_replace('id-', '', $params['hashAlgorithm']['algorithm']);
         $result['MGFHash'] = \str_replace('id-', '', $params['maskGenAlgorithm']['parameters']['algorithm']);
         if (isset($params['saltLength'])) {
-            $result['saltLength'] = (int) $params['saltLength']->toString();
+            $result['saltLength'] = (int) "{$params['saltLength']}";
         }
         if (isset($key['meta'])) {
             $result['meta'] = $key['meta'];

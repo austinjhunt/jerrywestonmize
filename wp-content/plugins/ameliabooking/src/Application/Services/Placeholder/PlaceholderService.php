@@ -663,6 +663,7 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
             'customer_last_name'  => $info ? $info->lastName : $customer->getLastName()->getValue(),
             'customer_full_name'  => $info ? $info->firstName . ' ' . $info->lastName : $customer->getFullName(),
             'customer_phone'      => $phone,
+            'customer_phone_country' => $customer->getCountryPhoneIso() ? $customer->getCountryPhoneIso()->getValue() : null,
             'customer_phone_local' => !empty($phone) ? str_replace('+', '', $phone) : '',
             'customer_note'       => $customer->getNote() ? $customer->getNote()->getValue() : '',
             'customer_panel_url'  => $helperService->getCustomerCabinetUrl(

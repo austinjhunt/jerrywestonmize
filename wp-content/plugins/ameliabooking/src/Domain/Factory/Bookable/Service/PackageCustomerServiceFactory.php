@@ -92,6 +92,7 @@ class PackageCustomerServiceFactory
                             'lastName'  => $row['customer_lastName'],
                             'email'     => $row['customer_email'],
                             'phone'     => $row['customer_phone'],
+                            'countryPhoneIso' => !empty($row['customer_countryPhoneIso']) ? $row['customer_countryPhoneIso'] : null,
                             'status'    => !empty($row['customer_status']) ? $row['customer_status'] : null,
                         ],
                         'packageId'  => $row['package_customer_packageId'],

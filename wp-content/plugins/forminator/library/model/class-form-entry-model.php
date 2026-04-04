@@ -1406,11 +1406,12 @@ class Forminator_Form_Entry_Model {
 	 * @param mixed  $meta_value Meta value.
 	 * @param bool   $allow_html Allow HTML.
 	 * @param int    $truncate truncate returned string (usefull if display container is limited).
+	 * @param mixed  $field Field data (optional).
 	 *
 	 * @return string
 	 * @since 1.0.5
 	 */
-	public static function meta_value_to_string( $field_type, $meta_value, $allow_html = false, $truncate = PHP_INT_MAX ) {
+	public static function meta_value_to_string( $field_type, $meta_value, $allow_html = false, $truncate = PHP_INT_MAX, $field = null ) {
 		switch ( $field_type ) {
 			case 'postdata':
 				$string_value = self::postdata_to_string( $meta_value, $allow_html, $truncate );
@@ -1548,10 +1549,15 @@ class Forminator_Form_Entry_Model {
 				} elseif ( ! empty( $meta_value['error'] ) ) {
 						$string_value = $meta_value['error'];
 				} else {
-					if ( isset( $meta_value['formatting_result'] ) ) {
-						$result = $meta_value['formatting_result'];
-					} else {
-						$result = $meta_value['result'];
+					if ( isset( $meta_value['result'] ) && is_array( $field ) && ! empty( $field ) ) {
+							$result = Forminator_Field::forminator_number_formatting( $field, $meta_value['result'] );
+					}
+					if ( ! isset( $result ) ) {
+						if ( isset( $meta_value['formatting_result'] ) ) {
+							$result = $meta_value['formatting_result'];
+						} else {
+							$result = $meta_value['result'];
+						}
 					}
 					if ( ! isset( $result ) ) {
 						$string_value = '0.0';
@@ -1604,6 +1610,14 @@ class Forminator_Form_Entry_Model {
 					break;
 				}
 				// fall-through.
+			case 'currency':
+			case 'number':
+				if ( is_array( $field ) && ! empty( $meta_value ) ) {
+					$string_value = Forminator_Field::forminator_number_formatting( $field, $meta_value );
+				} else {
+					$string_value = (string) $meta_value;
+				}
+				break;
 			default:
 				// base flattener.
 				// implode on array.

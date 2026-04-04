@@ -30,7 +30,7 @@ class CustomFieldOptionFactory
         );
 
         if (isset($data['customFieldId'])) {
-            $customFieldOption->setId(new Id($data['customFieldId']));
+            $customFieldOption->setCustomFieldId(new Id($data['customFieldId']));
         }
 
         if (isset($data['translations'])) {

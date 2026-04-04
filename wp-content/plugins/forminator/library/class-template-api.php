@@ -59,15 +59,6 @@ class Forminator_Template_API {
 	}
 
 	/**
-	 * Check if connected to Hub
-	 *
-	 * @return bool
-	 */
-	public static function is_connected(): bool {
-		return FORMINATOR_PRO && ! empty( self::get_api_key() );
-	}
-
-	/**
 	 * Get templates
 	 *
 	 * @param bool   $is_official - official or custom cloud templates.

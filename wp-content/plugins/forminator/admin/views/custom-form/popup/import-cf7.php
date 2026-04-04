@@ -535,7 +535,7 @@ $forms     = forminator_list_thirdparty_contact_forms( 'cf7' );
 <div class="forminator-cf7-imported-fail sui-hidden">
 
 	<div class="sui-box-body wpmudev-popup-form">
-		<?php $support_url = FORMINATOR_PRO ? 'https://wpmudev.com/hub2/support/' : 'https://wordpress.org/support/plugin/forminator'; ?>
+		<?php $support_url = apply_filters( 'forminator_support_url', 'https://wordpress.org/support/plugin/forminator' ); ?>
 		<p>
 		<?php
 		esc_html_e( 'We have encountered an error while importing your forms from Contact Form 7 and selected add-ons.', 'forminator' );

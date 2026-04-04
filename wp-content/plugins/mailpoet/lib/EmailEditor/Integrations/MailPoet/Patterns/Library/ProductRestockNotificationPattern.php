@@ -28,8 +28,8 @@ class ProductRestockNotificationPattern extends Pattern {
     <!-- wp:group {"style":{"spacing":{"padding":{"right":"var:preset|spacing|40","left":"var:preset|spacing|40"}}},"layout":{"type":"constrained"}} -->
     <div class="wp-block-group" style="padding-right:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40)"><!-- wp:heading {"level":1} -->
       <h1 class="wp-block-heading">' .
-      /* translators: [Product Name] is a placeholder for the product name */
-      __('[Product Name] Is back in stock!', 'mailpoet') . '</h1>
+      /* translators: PRODUCT NAME is placeholder text that merchants replace with their own content. */
+      __('PRODUCT NAME is back in stock!', 'mailpoet') . '</h1>
       <!-- /wp:heading -->
 
       <!-- wp:paragraph {"style":{"typography":{"fontSize":"16px"}}} -->

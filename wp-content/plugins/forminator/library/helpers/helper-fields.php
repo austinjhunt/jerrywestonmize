@@ -196,6 +196,49 @@ function forminator_decode_html_entity( $fields ) {
 }
 
 /**
+ * Sort fields so that grouped fields appear immediately after their parent group.
+ *
+ * @since 1.51.0
+ * @param array $fields Array of field arrays.
+ * @return array Sorted fields array.
+ */
+function forminator_sort_fields_with_groups( array $fields ): array {
+	if ( empty( $fields ) ) {
+		return $fields;
+	}
+
+	$top_level = array();
+	$children  = array();
+
+	// Separate top-level fields from grouped (child) fields.
+	foreach ( $fields as $field ) {
+		$parent_group = $field['parent_group'] ?? '';
+		if ( '' === $parent_group ) {
+			$top_level[] = $field;
+		} else {
+			$children[ $parent_group ][] = $field;
+		}
+	}
+
+	// No need to sort if there are no grouped fields.
+	if ( empty( $children ) ) {
+		return $top_level;
+	}
+
+	// Build sorted array: each group field followed by its children.
+	$sorted = array();
+	foreach ( $top_level as $field ) {
+		$sorted[] = $field;
+		$field_id = $field['element_id'] ?? '';
+		if ( isset( $children[ $field_id ] ) ) {
+			array_push( $sorted, ...$children[ $field_id ] );
+		}
+	}
+
+	return $sorted;
+}
+
+/**
  * Sanitize text area
  *
  * @param string $field Field value.
@@ -1470,7 +1513,7 @@ function render_entry( $item, $column_name, $field = null, $type = '', $remove_e
 	}
 
 	if ( $is_calculation && $data ) {
-		return Forminator_Form_Entry_Model::meta_value_to_string( 'calculation', $data, true );
+		return Forminator_Form_Entry_Model::meta_value_to_string( 'calculation', $data, true, PHP_INT_MAX, $field );
 	}
 
 	if ( $data || '0' === $data ) {
@@ -1758,6 +1801,9 @@ function render_entry( $item, $column_name, $field = null, $type = '', $remove_e
 									$key = $field['year_label'];
 								}
 
+								if ( 'amount' === $key_slug && in_array( $field['type'], array( 'stripe', 'stripe-ocs', 'paypal' ), true ) ) {
+									$value = Forminator_Field::get_formatted_amount( $field, $data );
+								}
 								if ( $remove_empty && empty( $value ) ) {
 									$output .= '';
 								} elseif ( $show_label ) {
@@ -2622,7 +2668,7 @@ function forminator_replace_form_payment_data( $content, ?Forminator_Form_Model 
 		$replaces = array(
 			'{payment_mode}'     => $payment_meta['mode'],
 			'{payment_status}'   => $payment_meta['status'],
-			'{payment_amount}'   => $payment_meta['amount'],
+			'{payment_amount}'   => Forminator_Field::get_formatted_amount( $payment_meta['field'], $payment_meta, $custom_form ),
 			'{payment_currency}' => $payment_meta['currency'],
 			'{transaction_id}'   => $payment_meta['transaction_id'],
 			'{subscription_id}'  => ! empty( $payment_meta['subscription_id'] ) ? $payment_meta['subscription_id'] : '',
@@ -2655,6 +2701,8 @@ function forminator_payment_data( $content, $custom_form, $entry ) {
 			if ( in_array( $field_type, array( 'stripe', 'stripe-ocs', 'paypal' ), true ) && ! empty( $entry->meta_data[ $field->slug ] ) ) {
 				$payment_meta                   = $entry->meta_data[ $field->slug ]['value'];
 				$payment_meta['payment_method'] = $field_type;
+				// Include field data for getting the formatted amount.
+				$payment_meta['field'] = $field->to_array();
 			}
 		}
 	}
@@ -2754,7 +2802,14 @@ function forminator_get_entry_field_value( $entry, $mapper, $sub_meta_key = '', 
 	} elseif ( 'group' === $mapper['type'] ) {
 		$meta_value = $entry->get_meta( $sub_meta_key, '' );
 		$field_type = Forminator_Core::get_field_type( $sub_meta_key );
-		$value      = Forminator_Form_Entry_Model::meta_value_to_string( $field_type, $meta_value, $allow_html, $truncate );
+		$field      = array();
+		foreach ( $mapper['sub_metas'] as $sub_meta ) {
+			if ( isset( $sub_meta['meta_key'] ) && false !== strpos( $sub_meta_key, $sub_meta['meta_key'] ) ) {
+				$field = $sub_meta['field'] ?? array();
+				break;
+			}
+		}
+		$value = Forminator_Form_Entry_Model::meta_value_to_string( $field_type, $meta_value, $allow_html, $truncate, $field );
 	} else {
 		$meta_value = $entry->get_meta( $mapper['meta_key'], '' );
 		$field_keys = array_keys( $entry->meta_data );
@@ -2768,13 +2823,13 @@ function forminator_get_entry_field_value( $entry, $mapper, $sub_meta_key = '', 
 
 		// meta_key based.
 		if ( ! isset( $mapper['sub_metas'] ) ) {
-			$value = Forminator_Form_Entry_Model::meta_value_to_string( $mapper['type'], $meta_value, $allow_html, $truncate );
+			$value = Forminator_Form_Entry_Model::meta_value_to_string( $mapper['type'], $meta_value, $allow_html, $truncate, $mapper['field'] ?? null );
 		} elseif ( empty( $sub_meta_key ) ) {
 				$value = '';
 		} elseif ( isset( $meta_value[ $sub_meta_key ] ) && ! empty( $meta_value[ $sub_meta_key ] ) ) {
 				$value      = $meta_value[ $sub_meta_key ];
 				$field_type = $mapper['type'] . '.' . $sub_meta_key;
-				$value      = Forminator_Form_Entry_Model::meta_value_to_string( $field_type, $value, $allow_html, $truncate );
+				$value      = Forminator_Form_Entry_Model::meta_value_to_string( $field_type, $value, $allow_html, $truncate, $mapper['field'] ?? null );
 		} else {
 			$value = '';
 		}

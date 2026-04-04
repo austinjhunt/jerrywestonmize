@@ -107,18 +107,6 @@ class EditorPageRenderer {
       $editorIntegrationAssetsParams['version']
     );
 
-    // Email editor rich text JS - Because we Personalization Tags depend on Gutenberg 19.8.0 and higher
-    // the following code replaces used Rich Text for the version containing the necessary changes.
-    $assetsParams = require Env::$assetsPath . '/dist/js/email-editor/assets/rich-text.asset.php';
-    $this->wp->wpDeregisterScript('wp-rich-text');
-    $this->wp->wpEnqueueScript(
-      'wp-rich-text',
-      Env::$assetsUrl . '/dist/js/email-editor/assets/rich-text.js',
-      $assetsParams['dependencies'],
-      $assetsParams['version'],
-      true
-    );
-    // End of replacing Rich Text package.
     $styleParams = require Env::$assetsPath . '/dist/js/email-editor/style/style.asset.php';
     $this->wp->wpEnqueueStyle(
       'mailpoet_email_editor',
@@ -248,6 +236,14 @@ class EditorPageRenderer {
       $routes[] = '/wp/v2/templates/lookup?slug=' . $templateSlug;
     } else {
       $routes[] = '/wp/v2/mailpoet_email?context=edit&per_page=30&status=publish,sent';
+    }
+
+    // Preload personalization tags for automation emails
+    // Note: The registry is already extended in render() before preloading.
+    // We include post_id to match the WooCommerce Email Editor's request URL.
+    $newsletter = $this->newslettersRepository->findOneBy(['wpPost' => $post->ID]);
+    if ($newsletter && ($newsletter->isAutomation() || $newsletter->isAutomationTransactional())) {
+      $routes[] = '/woocommerce-email-editor/v1/personalization_tags?context=view&per_page=-1&post_id=' . intval($post->ID);
     }
 
     // Preload the data for the specified routes

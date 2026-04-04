@@ -3,7 +3,7 @@
   "d4Shortcode": "divi_booking",
   "title": "Amelia - Booking (Legacy)",
   "titles": "Amelia Bookings (Legacy)",
-  "category": null,
+  "category": "module",
   "moduleClassName": "divi5_amelia_booking",
   "moduleOrderClassName": "divi5_amelia_booking",
   "moduleIcon": "amelia/step-booking",

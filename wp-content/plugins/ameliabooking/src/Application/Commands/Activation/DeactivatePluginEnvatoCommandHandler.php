@@ -50,8 +50,6 @@ class DeactivatePluginEnvatoCommandHandler extends CommandHandler
         // Response from the Melograno Store
         $response = json_decode(curl_exec($ch));
 
-        curl_close($ch);
-
         // Update Amelia Settings
         if ($response->deactivated === true || $response === null) {
             $settingsService->setSetting('activation', 'active', false);

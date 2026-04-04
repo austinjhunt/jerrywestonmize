@@ -86,8 +86,6 @@ class SMSAPIService
             return ['status' => null, 'error' => [$errorNo, $errorStr, $error]];
         }
 
-        curl_close($ch);
-
         return json_decode($response);
     }
 

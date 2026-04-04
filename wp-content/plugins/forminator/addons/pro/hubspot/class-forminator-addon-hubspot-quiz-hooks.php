@@ -21,6 +21,7 @@ class Forminator_Hubspot_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 	 */
 	protected function custom_entry_fields( $submitted_data, $current_entry_fields ): array {
 		$addon_setting_values = $this->settings_instance->get_settings_values();
+		$addon_setting_values = $this->settings_instance->migrate_list_id( $addon_setting_values );
 		$data                 = array();
 
 		foreach ( $addon_setting_values as $key => $addon_setting_value ) {
@@ -164,7 +165,7 @@ class Forminator_Hubspot_Quiz_Hooks extends Forminator_Integration_Quiz_Hooks {
 			$to_object_id = null;
 			if ( ! empty( $list_id ) && ! empty( $contact_id ) && ! is_object( $contact_id ) && (int) $contact_id > 0 ) {
 				$to_object_id = $contact_id;
-				$api->add_to_contact_list( $contact_id, $args['email'], $list_id );
+				$api->add_to_contact_list( $contact_id, $list_id );
 			}
 
 			$create_ticket = isset( $connection_settings['create_ticket'] ) ? $connection_settings['create_ticket'] : '';

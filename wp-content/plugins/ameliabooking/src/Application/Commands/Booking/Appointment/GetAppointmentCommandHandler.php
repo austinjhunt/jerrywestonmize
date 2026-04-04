@@ -280,6 +280,7 @@ class GetAppointmentCommandHandler extends CommandHandler
                     'id' => $booking->getId()->getValue(),
                     'customer' => $booking->getCustomer() ? array_merge($booking->getCustomer()->toArray(), ['birthday' => $customerBirthday]) : null,
                     'status' => $booking->getStatus()->getValue(),
+                    'isPackageBooking' => !!$booking->getPackageCustomerService(),
                     'payment' => [
                         'paymentMethods' => $paymentMethods,
                         'wcOrderUrls' => $wcOrderUrls,

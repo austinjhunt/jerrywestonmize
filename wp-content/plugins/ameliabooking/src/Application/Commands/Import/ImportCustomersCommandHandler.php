@@ -20,6 +20,7 @@ use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
+use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
 use Exception;
 use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
@@ -114,6 +115,9 @@ class ImportCustomersCommandHandler extends CommandHandler
         $existingEmails = $userRepository->getAllEmailsByType('customer');
 
         for ($i = 0; $i < $num; $i++) {
+            if ($data['firstName'][$i] === BackendStrings::get('first_name')) {
+                continue;
+            }
             try {
                 $customerData = [
                     'firstName' => $data['firstName'][$i],

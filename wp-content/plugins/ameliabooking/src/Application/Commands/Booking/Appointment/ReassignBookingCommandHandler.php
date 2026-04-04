@@ -12,7 +12,6 @@ use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Application\Services\Reservation\AppointmentReservationService;
 use AmeliaBooking\Application\Services\TimeSlot\TimeSlotService as ApplicationTimeSlotService;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
-use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\BookingCancellationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
@@ -385,13 +384,18 @@ class ReassignBookingCommandHandler extends CommandHandler
             );
         }
 
-        /** @var Collection $existingAppointments */
-        $existingAppointments = $appointmentRepository->getFiltered(
+        /** @var Appointment $existingAppointment */
+        $existingAppointment = $appointmentAS->getAlreadyBookedAppointment(
             [
-                'dates'     => [$bookingStart, $bookingStart],
-                'services'  => [$requiredServiceId],
-                'providers' => [$requiredProviderId],
-            ]
+                'bookingStart'  => $bookingStart,
+                'serviceId'     => $requiredServiceId,
+                'providerId'    => $requiredProviderId,
+                'bookings'      => [
+                    $booking->toArray(),
+                ],
+            ],
+            $userAS->isCustomer($user),
+            $requiredService
         );
 
         $userConnectionChanges = $appointmentAS->getUserConnectionChanges(
@@ -401,11 +405,6 @@ class ReassignBookingCommandHandler extends CommandHandler
 
         /** @var Appointment|null $newAppointment */
         $newAppointment = null;
-
-        /** @var Appointment $existingAppointment */
-        $existingAppointment = $existingAppointments->length()
-            ? $existingAppointments->getItem($existingAppointments->keys()[0])
-            : null;
 
         if (
             $existingAppointment &&
@@ -616,6 +615,8 @@ class ReassignBookingCommandHandler extends CommandHandler
                     $bookingStatus,
                     $oldAppointment->getStatus()->getValue()
                 );
+
+                $newAppointment->setInternalNotes(new Description(''));
 
                 $newAppointmentId = $appointmentRepository->add($newAppointment);
 

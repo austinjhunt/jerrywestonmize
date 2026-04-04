@@ -153,7 +153,7 @@ class TwistedEdwards extends \Google\Site_Kit_Dependencies\phpseclib3\Crypt\EC\B
     /**
      * Returns the affine point
      *
-     * @return PrimeField\Integer[]
+     * @return PrimeInteger[]
      */
     public function convertToAffine(array $p)
     {

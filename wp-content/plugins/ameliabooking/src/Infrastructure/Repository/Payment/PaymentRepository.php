@@ -187,13 +187,9 @@ class PaymentRepository extends AbstractRepository
                 )"
             );
 
-            $response = $statement->execute($params);
+            $statement->execute($params);
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to add data in ' . __CLASS__, $e->getCode(), $e);
-        }
-
-        if (!$response) {
-            throw new QueryExecutionException('Unable to add data in ' . __CLASS__);
+            throw new QueryExecutionException('Unable to add data in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return $this->connection->lastInsertId();
@@ -242,16 +238,12 @@ class PaymentRepository extends AbstractRepository
                 id = :id"
             );
 
-            $response = $statement->execute($params);
+            $statement->execute($params);
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to save data in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to save data in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
-        if (!$response) {
-            throw new QueryExecutionException('Unable to save data in ' . __CLASS__);
-        }
-
-        return $response;
+        return true;
     }
 
     /**
@@ -328,7 +320,7 @@ class PaymentRepository extends AbstractRepository
                 $result->addItem(call_user_func([static::FACTORY, 'create'], $row), $row['id']);
             }
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return $result;
@@ -557,6 +549,7 @@ class PaymentRepository extends AbstractRepository
                 p.dateTime AS dateTime,
                 p.created AS created,
                 p.status AS status,
+                p.amount AS amount,
                 p.invoiceNumber AS invoiceNumber,
                 'appointment' AS type
             FROM {$this->table} p
@@ -569,6 +562,7 @@ class PaymentRepository extends AbstractRepository
                 p.dateTime AS dateTime,
                 p.created AS created,
                 p.status AS status,
+                p.amount AS amount,
                 p.invoiceNumber AS invoiceNumber,
                 'package' AS type
             FROM {$this->table} p
@@ -581,6 +575,7 @@ class PaymentRepository extends AbstractRepository
                 p.dateTime AS dateTime,
                 p.created AS created,
                 p.status AS status,
+                p.amount AS amount,
                 p.invoiceNumber AS invoiceNumber,
                 'event' AS type
             FROM {$this->table} p
@@ -635,7 +630,7 @@ class PaymentRepository extends AbstractRepository
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to get data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         foreach ($rows as $row) {
@@ -927,7 +922,7 @@ class PaymentRepository extends AbstractRepository
                 $row = $statement->fetch();
                 return (int)($row['cnt'] ?? 0);
             } catch (\Exception $e) {
-                throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
+                throw new QueryExecutionException('Unable to get data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
             }
         }
 
@@ -940,7 +935,7 @@ class PaymentRepository extends AbstractRepository
             $row = $statement->fetch();
             return (int)($row['cnt'] ?? 0);
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to get data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
     }
 
@@ -977,7 +972,7 @@ class PaymentRepository extends AbstractRepository
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to get data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         $items = [];
@@ -1052,7 +1047,7 @@ class PaymentRepository extends AbstractRepository
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         $result = [];
@@ -1083,16 +1078,12 @@ class PaymentRepository extends AbstractRepository
                 "UPDATE {$this->table} SET `transactionId` = :transactionId WHERE id = :paymentId1 OR parentId = :paymentId2"
             );
 
-            $response = $statement->execute($params);
+            $statement->execute($params);
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to update data in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to update data in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
-        if (!$response) {
-            throw new QueryExecutionException('Unable to update data in ' . __CLASS__);
-        }
-
-        return $response;
+        return true;
     }
 
 
@@ -1125,16 +1116,12 @@ class PaymentRepository extends AbstractRepository
                 {$where}"
             );
 
-            $response = $statement->execute($params);
+            $statement->execute($params);
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to save invoice number in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to save invoice number in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
-        if (!$response) {
-            throw new QueryExecutionException('Unable to save invoice number in ' . __CLASS__);
-        }
-
-        return $response;
+        return true;
     }
 
     /**
@@ -1329,7 +1316,7 @@ class PaymentRepository extends AbstractRepository
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to get data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return $this->getEntitiesPaymentsResult($rows);
@@ -1435,7 +1422,7 @@ class PaymentRepository extends AbstractRepository
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to get data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return $this->getEntitiesPaymentsResult($rows);
@@ -1538,7 +1525,7 @@ class PaymentRepository extends AbstractRepository
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to get data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return $this->getEntitiesPaymentsResult($rows);

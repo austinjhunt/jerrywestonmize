@@ -521,6 +521,9 @@ class Forminator_Stripe extends Forminator_Field {
 			$metadata_object[ $label ] = $value;
 		}
 
+		$form_id                               = ! empty( Forminator_Front_Action::$module_object->id ) ? (string) Forminator_Front_Action::$module_object->id : '';
+		$metadata_object['forminator_form_id'] = $form_id;
+
 		// Default options.
 		$options = array(
 			'amount'   => (int) $this->calculate_amount( $amount, $currency ),
@@ -731,6 +734,10 @@ class Forminator_Stripe extends Forminator_Field {
 
 		if ( ! empty( $stored_metadata ) ) {
 			foreach ( (array) $stored_metadata as $key => $meta ) {
+				if ( 'forminator_form_id' === $key ) {
+					$metadata[ $key ] = (string) $meta;
+					continue;
+				}
 				$metadata[ $key ] = forminator_replace_form_data( '{' . $meta . '}', Forminator_Front_Action::$module_object );
 			}
 		}
@@ -1062,11 +1069,27 @@ class Forminator_Stripe extends Forminator_Field {
 				);
 			}
 
-			$charge_amount = $this->get_payment_amount( $field );
+			$charge_amount     = $this->get_payment_amount( $field );
+			$expected_amount   = (int) $this->calculate_amount( $charge_amount, $currency );
+			$intent_amount     = isset( $intent->amount ) ? (int) $intent->amount : 0;
+			$intent_currency   = isset( $intent->currency ) ? strtoupper( (string) $intent->currency ) : '';
+			$expected_currency = strtoupper( (string) $currency );
+
+			$form_id_meta = isset( $intent->metadata->forminator_form_id ) ? (string) $intent->metadata->forminator_form_id : '';
+
+			$expected_form_id = ! empty( Forminator_Front_Action::$module_object->id ) ? (string) Forminator_Front_Action::$module_object->id : '';
+
+			if (
+				( $form_id_meta !== $expected_form_id )
+				|| ( $expected_amount !== $intent_amount )
+				|| ( $expected_currency !== $intent_currency )
+			) {
+				return new WP_Error( 'forminator_stripe_error', esc_html__( 'Payment Intent ID is not valid', 'forminator' ) );
+			}
 
 			$entry_data['mode']     = $mode;
 			$entry_data['currency'] = $currency;
-			$entry_data['amount']   = number_format( $charge_amount, 2, '.', '' );
+			$entry_data['amount']   = $charge_amount;
 			if ( ! empty( $this->payment_plan ) ) {
 				$entry_data['product_name'] = $this->payment_plan['plan_name'];
 				$entry_data['payment_type'] = $this->payment_method( $this->payment_plan['payment_method'] );

@@ -18,6 +18,8 @@ class ResourcesTable extends AbstractDatabaseTable
     {
         $table = self::getTableName();
 
+        $charsetCollate = self::getCharsetCollate();
+
         $name = Name::MAX_LENGTH;
 
         return "CREATE TABLE {$table} (
@@ -28,6 +30,6 @@ class ResourcesTable extends AbstractDatabaseTable
                    `status` ENUM('hidden', 'visible', 'disabled') NOT NULL DEFAULT 'visible',
                    `countAdditionalPeople` TINYINT(1) DEFAULT 0,
                     PRIMARY KEY (`id`)
-                ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
+                ) {$charsetCollate};";
     }
 }

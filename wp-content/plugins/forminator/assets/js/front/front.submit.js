@@ -241,6 +241,17 @@
 						}
 					}
 
+					// Note: removeMaskOnSubmit is not working if form is not actually submitted,
+					// so inputmask values are handled here specifically when submitting via PayPal.
+					if ('forminator:submit:paypal' === submitter) {
+						self.$el.find('input[data-inputmask]').each(function () {
+							var inputName = $(this).attr('name');
+							if (!inputName) {
+								return;
+							}
+							formData.set(inputName, $(this).val());
+						});
+					}
 					// Should check if submitted thru save draft button
 					if ( self.$el.hasClass('forminator_ajax') || $saveDraft ) {
 						$target_message.html('');

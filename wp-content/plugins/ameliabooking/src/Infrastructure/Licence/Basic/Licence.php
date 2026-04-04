@@ -42,7 +42,6 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Starter\Licence
                 Commands\CustomField\DeleteCustomFieldCommand::class               => new Commands\CustomField\DeleteCustomFieldCommandHandler($c),
                 Commands\CustomField\UpdateCustomFieldCommand::class               => new Commands\CustomField\UpdateCustomFieldCommandHandler($c),
                 Commands\CustomField\UpdateCustomFieldsPositionsCommand::class     => new Commands\CustomField\UpdateCustomFieldsPositionsCommandHandler($c),
-                Commands\CustomField\BatchCustomFieldsCommand::class               => new Commands\CustomField\BatchCustomFieldsCommandHandler($c),
                 // Google
                 Commands\Google\DisconnectFromGoogleAccountCommand::class          => new Commands\Google\DisconnectFromGoogleAccountCommandHandler($c),
                 Commands\Google\FetchAccessTokenWithAuthCodeCommand::class         => new Commands\Google\FetchAccessTokenWithAuthCodeCommandHandler($c),
@@ -81,6 +80,7 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Starter\Licence
                 Commands\PaymentGateway\BarionPaymentCommand::class                => new Commands\PaymentGateway\BarionPaymentCommandHandler($c),
                 Commands\PaymentGateway\BarionPaymentNotifyCommand::class          => new Commands\PaymentGateway\BarionPaymentNotifyCommandHandler($c),
                 Commands\PaymentGateway\BarionPaymentCallbackCommand::class        => new Commands\PaymentGateway\BarionPaymentCallbackCommandHandler($c),
+                Commands\PaymentGateway\StripeValidateKeysCommand::class           => new Commands\PaymentGateway\StripeValidateKeysCommandHandler($c),
 
                 // Tax
                 Commands\Tax\AddTaxCommand::class                                  => new Commands\Tax\AddTaxCommandHandler($c),

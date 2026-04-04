@@ -23,6 +23,8 @@ class EventsTagsTable extends AbstractDatabaseTable
     {
         $table = self::getTableName();
 
+        $charsetCollate = self::getCharsetCollate();
+
         $name = Name::MAX_LENGTH;
 
         return "CREATE TABLE {$table} (
@@ -30,6 +32,6 @@ class EventsTagsTable extends AbstractDatabaseTable
                    `eventId` bigint(20) NOT NULL,
                    `name` varchar({$name}) NOT NULL,
                     PRIMARY KEY (`id`)
-                ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
+                ) {$charsetCollate};";
     }
 }

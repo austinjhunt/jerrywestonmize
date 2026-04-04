@@ -3,7 +3,7 @@
 Plugin Name: Amelia
 Plugin URI: https://wpamelia.com/
 Description: Amelia is a simple yet powerful automated booking specialist, working 24/7 to make sure your customers can make appointments and events even while you sleep!
-Version: 9.1
+Version: 9.3
 Author: Melograno Ventures
 Author URI: https://melograno.io/
 Text Domain: wpamelia
@@ -37,12 +37,18 @@ use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
 use AmeliaBooking\Infrastructure\WP\UserRoles\UserRoles;
 use AmeliaBooking\Infrastructure\WP\WPMenu\Submenu;
 use AmeliaBooking\Infrastructure\WP\WPMenu\SubmenuPageHandler;
+use AmeliaBooking\Infrastructure\WP\Compatibility\LiteSpeedCacheCompatibility;
+use AmeliaBooking\Infrastructure\WP\WPMenu\AdminBarMenu;
 use Exception;
 use Slim\App;
 use AmeliaBooking\Infrastructure\Licence;
 
 // No direct access
 defined('ABSPATH') or die('No script kiddies please!');
+
+if (!defined('AMELIA_DOMAIN')) {
+    define('AMELIA_DOMAIN', 'wpamelia');
+}
 
 // Const for path root
 if (!defined('AMELIA_PATH')) {
@@ -107,7 +113,7 @@ if (!defined('AMELIA_LOGIN_URL')) {
 
 // Const for Amelia version
 if (!defined('AMELIA_VERSION')) {
-    define('AMELIA_VERSION', '9.1');
+    define('AMELIA_VERSION', '9.3');
 }
 
 // Const for site URL
@@ -212,14 +218,12 @@ class Plugin
     {
         $settingsService = new SettingsService(new SettingsStorage());
 
+        // Initialize LiteSpeed Cache compatibility
+        LiteSpeedCacheCompatibility::init();
+
         self::weglotConflict($settingsService, true);
 
-        // Const for path root
-        if (!defined('AMELIA_LOCALE')) {
-            define('AMELIA_LOCALE', get_user_locale());
-        }
-
-        load_plugin_textdomain('wpamelia', false, plugin_basename(__DIR__) . '/languages/' . AMELIA_LOCALE . '/');
+        load_plugin_textdomain(AMELIA_DOMAIN, false, plugin_basename(__DIR__) . '/languages/' . AMELIA_LOCALE . '/');
 
         self::weglotConflict($settingsService, false);
 
@@ -260,6 +264,18 @@ class Plugin
 
         $ameliaRole = UserRoles::getUserAmeliaRole(wp_get_current_user());
 
+        // Register Gutenberg blocks for rendering on frontend (works for all users, logged in or not)
+        AmeliaStepBookingGutenbergBlock::init();
+        AmeliaCatalogBookingGutenbergBlock::init();
+        AmeliaBookingGutenbergBlock::init();
+        AmeliaSearchGutenbergBlock::init();
+        AmeliaCatalogGutenbergBlock::init();
+        AmeliaEventsGutenbergBlock::init();
+        AmeliaEventsListBookingGutenbergBlock::init();
+        AmeliaEventsCalendarBookingGutenbergBlock::init();
+        AmeliaCustomerCabinetGutenbergBlock::init();
+        AmeliaEmployeeCabinetGutenbergBlock::init();
+
         // Init menu if user is logged in with amelia role
         if (in_array($ameliaRole, ['admin', 'manager', 'provider', 'customer'])) {
             if ($ameliaRole === 'admin') {
@@ -268,19 +284,6 @@ class Plugin
 
             // Add TinyMCE button for shortcode generator
             ButtonService::renderButton();
-
-            // Add Gutenberg Block for shortcode generator
-            AmeliaStepBookingGutenbergBlock::init();
-            AmeliaCatalogBookingGutenbergBlock::init();
-            AmeliaBookingGutenbergBlock::init();
-            AmeliaSearchGutenbergBlock::init();
-            AmeliaCatalogGutenbergBlock::init();
-            AmeliaEventsGutenbergBlock::init();
-            AmeliaEventsListBookingGutenbergBlock::init();
-            AmeliaEventsCalendarBookingGutenbergBlock::init();
-            AmeliaCustomerCabinetGutenbergBlock::init();
-            AmeliaEmployeeCabinetGutenbergBlock::init();
-
 
             add_filter('block_categories_all', array('AmeliaBooking\Plugin', 'addAmeliaBlockCategory'), 10, 2);
             add_filter('learn-press/frontend-default-scripts', array('AmeliaBooking\Plugin', 'learnPressConflict'));
@@ -430,6 +433,16 @@ class Plugin
         $wpMenu->addOptionsPages();
     }
 
+    public static function initAdminBar()
+    {
+        $settingsService = new SettingsService(new SettingsStorage());
+
+        add_action('admin_bar_menu', function ($wpAdminBar) use ($settingsService) {
+            $adminBarMenu = new AdminBarMenu($settingsService);
+            $adminBarMenu->addAdminBarMenu($wpAdminBar);
+        }, 100);
+    }
+
     public static function adminInit()
     {
         $settingsService = new SettingsService(new SettingsStorage());
@@ -480,7 +493,7 @@ class Plugin
      */
     public static function activation($networkWide)
     {
-        load_plugin_textdomain('wpamelia', false, plugin_basename(__DIR__) . '/languages/' . get_locale() . '/');
+        load_plugin_textdomain(AMELIA_DOMAIN, false, plugin_basename(__DIR__) . '/languages/' . get_locale() . '/');
 
         // Check PHP version
         if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < 50500) {
@@ -596,7 +609,7 @@ class Plugin
     public static function hide_notices_on_amelia_pages()
     {
         $screen = get_current_screen();
-        if ($screen && strpos($screen->id, 'wpamelia')) {
+        if ($screen && strpos($screen->id, AMELIA_DOMAIN)) {
             remove_action('admin_notices', 'update_nag', 3);
             remove_action('network_admin_notices', 'update_nag', 3);
             remove_action('admin_notices', 'maintenance_nag');
@@ -681,6 +694,9 @@ add_action('wp_ajax_nopriv_wpamelia_api', array('AmeliaBooking\Plugin', 'wpAmeli
 
 /** Init the plugin */
 add_action('plugins_loaded', array('AmeliaBooking\Plugin', 'init'));
+
+add_action('init', array('AmeliaBooking\Infrastructure\WP\WPMenu\AdminBarMenu', 'enqueueScripts'));
+add_action('init', array('AmeliaBooking\Plugin', 'initAdminBar'));
 
 add_action('admin_init', array('AmeliaBooking\Plugin', 'adminInit'));
 

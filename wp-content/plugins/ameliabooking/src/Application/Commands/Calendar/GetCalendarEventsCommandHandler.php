@@ -10,18 +10,24 @@ namespace AmeliaBooking\Application\Commands\Calendar;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
-use AmeliaBooking\Application\Services\Booking\AppointmentApplicationService;
 use AmeliaBooking\Application\Services\Booking\EventApplicationService;
 use AmeliaBooking\Application\Services\User\ProviderApplicationService;
+use AmeliaBooking\Domain\Collection\Collection;
+use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Event\Event;
 use AmeliaBooking\Domain\Entity\Booking\Event\EventPeriod;
 use AmeliaBooking\Domain\Entity\Entities;
+use AmeliaBooking\Domain\Entity\Schedule\BlockTime;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
+use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
+use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
+use AmeliaVendor\Psr\Container\ContainerExceptionInterface;
+use DateInvalidTimeZoneException;
 use DateTimeZone;
 
 class GetCalendarEventsCommandHandler extends CommandHandler
@@ -44,86 +50,92 @@ class GetCalendarEventsCommandHandler extends CommandHandler
             throw new AccessDeniedException('You are not allowed to read calendar events.');
         }
 
-        /** @var ProviderApplicationService $providerAS */
-        $providerAS = $this->container->get('application.user.provider.service');
-
         /** @var AbstractUser $user */
         $user = $this->container->get('logged.in.user');
+        $timeZone = DateTimeService::getTimeZone()->getName();
+        $userType = $user->getType();
 
         $timeZone = '';
 
         if ($user->getType() === Entities::CUSTOMER) {
+            if (!$user->getId()) {
+                throw new AccessDeniedException('You are not allowed to read calendar events.');
+            }
+
             $queryParams['customers'] = [$user->getId()->getValue()];
         }
 
-        if ($user->getType() === Entities::PROVIDER) {
+        if ($userType === Entities::PROVIDER) {
             $queryParams['providers'] = [$user->getId()->getValue()];
-
+            /** @var ProviderApplicationService $providerAS */
+            $providerAS = $this->container->get('application.user.provider.service');
             $timeZone = $providerAS->getTimeZone($user);
         }
 
-        $appointments = $this->getAppointments($queryParams, $timeZone);
-        $events       = $this->getEvents($queryParams, $timeZone);
-
-        $sortedItems  = array_merge($appointments, $events);
-
-        usort(
-            $sortedItems,
-            function ($a, $b) {
-                $startA = $a instanceof Appointment ? $a->getBookingStart()->getValue() : $a['eventPeriod']->getPeriodStart()->getValue();
-                $startB = $b instanceof Appointment ? $b->getBookingStart()->getValue() : $b['eventPeriod']->getPeriodStart()->getValue();
-                return $startA <=> $startB;
-            }
+        $sortedItems = array_merge(
+            $this->getAppointments($queryParams, $timeZone),
+            $this->getEvents($queryParams, $timeZone),
+            $this->getBlockTimes($queryParams, $timeZone)
         );
 
-        $filledDays        = [];
-        $maxNumberOfEvents = PHP_INT_MAX;
+        usort($sortedItems, function ($a, $b) {
+            $startA = $a instanceof Appointment ? $a->getBookingStart()->getValue()
+                : ($a instanceof BlockTime ? $a->getStartDate()->getValue() : $a['eventPeriod']->getPeriodStart()->getValue());
+            $startB = $b instanceof Appointment ? $b->getBookingStart()->getValue()
+                : ($b instanceof BlockTime ? $b->getStartDate()->getValue() : $b['eventPeriod']->getPeriodStart()->getValue());
+            return $startA <=> $startB;
+        });
 
-        if ($queryParams['view'] === 'dayGridMonth') {
-            $maxNumberOfEvents = 4;
-        }
+        $maxNumberOfEvents = $queryParams['view'] === 'dayGridMonth' ? 4
+            : (in_array($queryParams['view'], ['dayGridMonthSevenDays', 'dayGridMonthMobile']) ? 2 : PHP_INT_MAX);
 
-        if (in_array($queryParams['view'], ['dayGridMonthSevenDays', 'dayGridMonthMobile'])) {
-            $maxNumberOfEvents = 2;
-        }
+        $filledDays = [];
 
         foreach ($sortedItems as $item) {
-            $itemStartDate = $item instanceof Appointment
-                ? $item->getBookingStart()->getValue()->format('Y-m-d')
-                : $item['eventPeriod']->getPeriodStart()->getValue()->format('Y-m-d');
+            $isAppointment = $item instanceof Appointment;
+            $isBlockTime = $item instanceof BlockTime;
+
+            $itemStartDate = $isAppointment ? $item->getBookingStart()->getValue()->format('Y-m-d')
+                : ($isBlockTime ? $item->getStartDate()->getValue()->format('Y-m-d')
+                    : $item['eventPeriod']->getPeriodStart()->getValue()->format('Y-m-d'));
 
             if (!isset($filledDays[$itemStartDate])) {
                 $filledDays[$itemStartDate] = ['events' => [], 'count' => 0, 'more' => 0];
             }
 
-            // Add more button items number
             if ($filledDays[$itemStartDate]['count'] >= $maxNumberOfEvents) {
                 $filledDays[$itemStartDate]['more']++;
                 $this->processEventDates($filledDays, $item, 'more');
-
                 continue;
             }
 
-            $filledDays[$itemStartDate]['events'][] = $item instanceof Appointment
-                ? $this->appointmentFormatter($item, $queryParams, $user)
-                : $this->eventFormatter($item['event'], $item['eventPeriod'], $queryParams);
+            if ($isAppointment) {
+                $filledDays[$itemStartDate]['events'][] = $this->appointmentFormatter($item, $user);
+            } elseif ($isBlockTime) {
+                $filledDays[$itemStartDate]['events'][] = $this->blockTimeFormatter($item);
+            } else {
+                $filledDays[$itemStartDate]['events'][] = $this->eventFormatter($item['event'], $item['eventPeriod'], $queryParams);
+            }
+
             $filledDays[$itemStartDate]['count']++;
             $this->processEventDates($filledDays, $item, 'count');
         }
 
+
         $result->setData(['events' => $filledDays]);
+
         return $result;
     }
 
     /**
      * @param array $filledDays
-     * @param array|Appointment $item
+     * @param array|Appointment|BlockTime $item
      * @param string $counterKey
      * @return void
      */
     private function processEventDates(array &$filledDays, $item, string $counterKey): void
     {
-        if (!$item instanceof Appointment) {
+        if (!$item instanceof Appointment && !$item instanceof BlockTime) {
             $eventStartDate = $item['eventPeriod']->getPeriodStart()->getValue()->setTime(0, 0, 0);
             $eventEndDate   = $item['eventPeriod']->getPeriodEnd()->getValue()->setTime(23, 59, 59);
 
@@ -139,6 +151,7 @@ class GetCalendarEventsCommandHandler extends CommandHandler
 
     /**
      * @throws QueryExecutionException
+     * @throws DateInvalidTimeZoneException
      */
     private function getAppointments(array $queryParams, string $timeZone): array
     {
@@ -154,7 +167,8 @@ class GetCalendarEventsCommandHandler extends CommandHandler
             ? [BookingStatus::APPROVED, BookingStatus::PENDING]
             : [BookingStatus::APPROVED];
 
-        $queryParams['dates']    = [$queryParams['calendarStartDate'], $queryParams['calendarEndDate']];
+        $queryParams['dates'] = [$queryParams['calendarStartDate'], $queryParams['calendarEndDate']];
+        $queryParams['withLocations'] = true;
 
         $appointments = $appointmentRepository->getFiltered($queryParams);
 
@@ -170,6 +184,12 @@ class GetCalendarEventsCommandHandler extends CommandHandler
         return $appointments->getItems();
     }
 
+    /**
+     * @throws DateInvalidTimeZoneException
+     * @throws InvalidArgumentException
+     * @throws ContainerExceptionInterface
+     * @throws QueryExecutionException
+     */
     private function getEvents(array $queryParams, string $timeZone): array
     {
         if (!isset($queryParams['entitiesToShow']) || !in_array('events', $queryParams['entitiesToShow']) || !empty($queryParams['services'])) {
@@ -187,7 +207,11 @@ class GetCalendarEventsCommandHandler extends CommandHandler
             $queryParams['id'] = $queryParams['events'];
         }
 
-        $events = $eventAS->getEventsByCriteria($queryParams, ['fetchEventsPeriods' => true], -1);
+        $events = $eventAS->getEventsByCriteria(
+            $queryParams,
+            ['fetchEventsPeriods' => true, 'fetchEventsLocation' => true, 'fetchEventsOrganizer' => true],
+            -1
+        );
 
         if ($timeZone) {
             /** @var Event $event */
@@ -212,7 +236,32 @@ class GetCalendarEventsCommandHandler extends CommandHandler
         return $eventPeriods;
     }
 
-    private function appointmentFormatter(Appointment $appointment, array $queryParams, AbstractUser $user): array
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws DateInvalidTimeZoneException
+     */
+    private function getBlockTimes(array $queryParams, string $timeZone): array
+    {
+        $dayOffRepository = $this->container->get('domain.schedule.dayOff.repository');
+
+        $queryParams['type'] = 'blockTime';
+        $queryParams['dates'] = [$queryParams['calendarStartDate'], $queryParams['calendarEndDate']];
+
+        $blockTimes = $dayOffRepository->getFiltered($queryParams);
+
+        if ($timeZone) {
+            /** @var BlockTime $blockTime */
+            foreach ($blockTimes->getItems() as $blockTime) {
+                $blockTime->getStartDate()->getValue()->setTimezone(new DateTimeZone($timeZone));
+
+                $blockTime->getEndDate()->getValue()->setTimezone(new DateTimeZone($timeZone));
+            }
+        }
+
+        return $blockTimes->getItems();
+    }
+
+    private function appointmentFormatter(Appointment $appointment, AbstractUser $user): array
     {
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
@@ -238,6 +287,7 @@ class GetCalendarEventsCommandHandler extends CommandHandler
             'bookings'                => $appointment->getBookings()->toArray(),
             'serviceName'             => $appointment->getService()->getName()->getValue(),
             'employeeName'            => $appointment->getProvider()->getFullName(),
+            'locationName'            => $appointment->getLocation() ? $appointment->getLocation()->getName()->getValue() : '',
             'start'                   => $start->format('Y-m-d H:i:s'),
             'end'                     => $end->format('Y-m-d H:i:s'),
             'startWithoutBuffer'      => $startWithoutBuffer->format('Y-m-d H:i:s'),
@@ -246,7 +296,7 @@ class GetCalendarEventsCommandHandler extends CommandHandler
             'numberOfSlots'           => $appointmentDurationInSeconds / $timeSlotStep,
             'serviceId'               => $appointment->getService()->getId()->getValue(),
             'employeeId'              => $appointment->getProvider()->getId()->getValue(),
-            'locationId'              => $appointment->getLocationId() ?: null,
+            'locationId'              => $appointment->getLocation() ? $appointment->getLocation()->getId()->getValue() : null,
             'bufferTimeBefore'        => $bufferTimeBefore,
             'bufferTimeAfter'         => $bufferTimeAfter,
             'timeZone'                => $start->getTimeZone()->getName(),
@@ -287,6 +337,8 @@ class GetCalendarEventsCommandHandler extends CommandHandler
             'endWithoutBuffer'   => $periodEndDate->format('Y-m-d H:i:s'),
             'timeZone'           => $periodStartDate->getTimeZone()->getName(),
             'notes'              => '',
+            'locationName'       => $eventEntity->getLocation() ? $eventEntity->getLocation()->getName()->getValue() : '',
+            'employeeName'       => $eventEntity->getOrganizer() ? $eventEntity->getOrganizer()->getFullName() : '',
         ];
 
         if (in_array($queryParams['view'], ['dayGridMonthSevenDays', 'dayGridMonth', 'dayGridMonthMobile'])) {
@@ -303,5 +355,25 @@ class GetCalendarEventsCommandHandler extends CommandHandler
         }
 
         return $event;
+    }
+
+    private function blockTimeFormatter(BlockTime $blockTime): array
+    {
+        $startDate = $blockTime->getStartDate()->getValue();
+        $endDate   = $blockTime->getEndDate()->getValue();
+
+        return [
+            'uuid'               => $blockTime->getId()->getValue(),
+            'id'                 => $blockTime->getId()->getValue(),
+            'title'              => $blockTime->getName()->getValue(),
+            'type'               => 'blockTime',
+            'editable'           => false,
+            'start'              => $startDate->format('Y-m-d H:i:s'),
+            'end'                => $endDate->format('Y-m-d H:i:s'),
+            'startWithoutBuffer' => $startDate->format('Y-m-d H:i:s'),
+            'endWithoutBuffer'   => $endDate->format('Y-m-d H:i:s'),
+            'timeZone'           => $startDate->getTimezone()->getName(),
+            'employeeName'       => $blockTime->getUser() ? $blockTime->getUser()->getFullName() : BackendStrings::get('all_employees'),
+        ];
     }
 }

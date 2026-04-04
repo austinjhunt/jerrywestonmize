@@ -370,6 +370,7 @@ class StashApplicationService
                 'name'        => $tax->getName()->getValue(),
                 'type'        => $tax->getType()->getValue(),
                 'amount'      => $tax->getAmount()->getValue(),
+                'status'      => $tax->getStatus()->getValue(),
                 'serviceList' => [],
                 'extraList'   => [],
                 'packageList' => [],

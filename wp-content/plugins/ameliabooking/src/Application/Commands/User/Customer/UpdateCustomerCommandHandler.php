@@ -72,6 +72,8 @@ class UpdateCustomerCommandHandler extends CommandHandler
                     $provider === null &&
                     ($oldUser === null || $oldUser->getId()->getValue() !== intval($command->getArg('id')))
                 ) {
+                    $userRepository->rollback();
+
                     $result->setResult(CommandResult::RESULT_ERROR);
                     $result->setMessage('Could not retrieve user');
                     $result->setData(
@@ -87,6 +89,13 @@ class UpdateCustomerCommandHandler extends CommandHandler
             }
         } else {
             $oldUser = $userRepository->getById($command->getArg('id'));
+            if ($oldUser === null) {
+                $userRepository->rollback();
+
+                $result->setResult(CommandResult::RESULT_ERROR);
+                $result->setMessage('Could not retrieve user');
+                return $result;
+            }
         }
 
         if ($command->getField('externalId') === -1) {
@@ -123,8 +132,18 @@ class UpdateCustomerCommandHandler extends CommandHandler
         /** @var Customer $newUser */
         $newUser = UserFactory::create($newUserData);
 
+        $oldExternalId = $oldUser->getExternalId() ? $oldUser->getExternalId()->getValue() : null;
+        $newExternalId = $newUser->getExternalId() ? $newUser->getExternalId()->getValue() : null;
+
+        if ($oldExternalId !== $newExternalId && (!$currentUser || $currentUser->getType() !== AbstractUser::USER_ROLE_ADMIN)) {
+            $result->setResult(CommandResult::RESULT_ERROR);
+            $result->setMessage('Could not update user.');
+
+            return $result;
+        }
+
         // If the phone is not set and the old phone is set, set the phone and country phone iso to null
-        if (!$customerData['phone'] && $oldUser->getPhone() && $oldUser->getPhone()->getValue()) {
+        if (empty($customerData['phone']) && $oldUser->getPhone() && $oldUser->getPhone()->getValue()) {
             $newUser->setPhone(new Phone(null));
             $newUser->setCountryPhoneIso(new Name(null));
         }

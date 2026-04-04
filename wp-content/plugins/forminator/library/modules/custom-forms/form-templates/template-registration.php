@@ -25,7 +25,7 @@ class Forminator_Template_Registration extends Forminator_Template {
 	public function defaults() {
 		return array(
 			'id'          => 'registration',
-			'name'        => esc_html__( 'Registration', 'forminator' ),
+			'name'        => esc_html__( 'User Registration', 'forminator' ),
 			'description' => esc_html__( 'A general-purpose registration form suitable for events, services, or websites, including personal and contact details.', 'forminator' ),
 			'icon'        => 'profile-male',
 			'priority'    => 5,

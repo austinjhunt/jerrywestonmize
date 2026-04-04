@@ -38,22 +38,28 @@ class GutenbergBlock
     /** @var  Collection */
     private static $entities;
 
-    /**
-     * Register WP Ajax actions.
-     */
     public static function init()
     {
+        $class = get_called_class();
+
+        // Register block type for frontend rendering (dynamic blocks with save: null)
+        if (function_exists('register_block_type')) {
+            add_action('init', function () use ($class) {
+                call_user_func([$class, 'registerBlockForRendering']);
+            });
+        }
+
+        // Editor-only: enqueue scripts, styles, and localize data
         if (is_admin() && function_exists('register_block_type')) {
             if (
                 substr($_SERVER['PHP_SELF'], '-8') == 'post.php' ||
                 substr($_SERVER['PHP_SELF'], '-12') == 'post-new.php'
             ) {
                 if (self::isGutenbergActive()) {
-                    $class = get_called_class();
                     add_action(
                         'enqueue_block_editor_assets',
                         function () use ($class) {
-                            $class::registerBlockType();
+                            call_user_func([$class, 'registerBlockType']);
                         }
                     );
                 }
@@ -77,6 +83,32 @@ class GutenbergBlock
             );
             $enqueued = true;
         }
+    }
+
+    /**
+     * Enqueue shared Amelia placeholder styles for block editor
+     */
+    public static function enqueueSharedStyles()
+    {
+        static $enqueued = false;
+
+        if (!$enqueued) {
+            wp_enqueue_style(
+                'amelia_gutenberg_placeholder_styles',
+                AMELIA_URL . 'public/js/gutenberg/amelia-gutenberg-placeholder.css',
+                [],
+                AMELIA_VERSION
+            );
+            $enqueued = true;
+        }
+    }
+
+    /**
+     * Register block type with attributes and render_callback for frontend rendering.
+     * Override in child classes.
+     */
+    public static function registerBlockForRendering()
+    {
     }
 
     /**

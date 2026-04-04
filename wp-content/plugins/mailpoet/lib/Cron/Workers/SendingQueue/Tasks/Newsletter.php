@@ -7,6 +7,7 @@ if (!defined('ABSPATH')) exit;
 
 use Automattic\WooCommerce\EmailEditor\Email_Editor_Container;
 use Automattic\WooCommerce\EmailEditor\Engine\Personalizer;
+use MailPoet\Automation\Engine\Storage\AutomationRunStorage;
 use MailPoet\Cron\Workers\SendingQueue\Tasks\Links as LinksTask;
 use MailPoet\Cron\Workers\SendingQueue\Tasks\Posts as PostsTask;
 use MailPoet\Cron\Workers\SendingQueue\Tasks\Shortcodes as ShortcodesTask;
@@ -82,6 +83,9 @@ class Newsletter {
   /** @var Personalizer */
   private $personalizer;
 
+  /** @var AutomationRunStorage */
+  private $automationRunStorage;
+
   public function __construct(
     ?WPFunctions $wp = null,
     ?PostsTask $postsTask = null,
@@ -116,6 +120,7 @@ class Newsletter {
     $this->segmentsRepository = ContainerWrapper::getInstance()->get(SegmentsRepository::class);
     $this->scheduledTasksRepository = ContainerWrapper::getInstance()->get(ScheduledTasksRepository::class);
     $this->personalizer = Email_Editor_Container::container()->get(Personalizer::class);
+    $this->automationRunStorage = ContainerWrapper::getInstance()->get(AutomationRunStorage::class);
   }
 
   public function getNewsletterFromQueue(ScheduledTaskEntity $task): ?NewsletterEntity {
@@ -292,11 +297,66 @@ class Newsletter {
     }
     $preparedNewsletter = Helpers::splitObject($preparedNewsletter);
     if ($newsletter->getWpPostId() !== null) {
-      $this->personalizer->set_context([
+      $context = [
         'recipient_email' => $subscriber->getEmail(),
         'newsletter_id' => $newsletter->getId(),
         'queue_id' => $queue->getId(),
-      ]);
+      ];
+
+      $queueMeta = $queue->getMeta();
+      if (isset($queueMeta['automation']['run_id'])) {
+        $runId = (int)$queueMeta['automation']['run_id'];
+        $automationRun = $this->automationRunStorage->getAutomationRun($runId);
+
+        if ($automationRun) {
+          // Convert automation run subjects to array format for filter
+          $subjectsArray = [];
+          foreach ($automationRun->getSubjects() as $subject) {
+            $subjectsArray[$subject->getKey()] = [
+              'key' => $subject->getKey(),
+              'args' => $subject->getArgs(),
+            ];
+          }
+
+          // Load WooCommerce order if present
+          if (
+            isset($subjectsArray['woocommerce:order'])
+            && isset($subjectsArray['woocommerce:order']['args']['order_id'])
+            && function_exists('wc_get_order')
+          ) {
+            $orderId = (int)$subjectsArray['woocommerce:order']['args']['order_id'];
+            $order = wc_get_order($orderId);
+            if ($order instanceof \WC_Order) {
+              $context['order'] = $order;
+            }
+          }
+
+          // Load WooCommerce customer if present
+          if (
+            isset($subjectsArray['woocommerce:customer'])
+            && isset($subjectsArray['woocommerce:customer']['args']['customer_id'])
+            && class_exists(\WC_Customer::class)
+          ) {
+            $customerId = (int)$subjectsArray['woocommerce:customer']['args']['customer_id'];
+            $customer = new \WC_Customer($customerId);
+            if ($customer->get_id()) {
+              $context['customer'] = $customer;
+            }
+          }
+
+          // Allow extensions to add their own subject context
+          /** @var array<string, mixed> $context */
+          $context = $this->wp->applyFilters('mailpoet_automation_email_personalization_context', $context, $subjectsArray);
+
+          // Get available subject keys for extending personalization tags
+          $availableSubjects = array_keys($subjectsArray);
+
+          // Allow extensions to register additional personalization tags based on available subjects
+          $this->wp->doAction('mailpoet_automation_email_extend_personalization_tags_for_sending', $availableSubjects);
+        }
+      }
+
+      $this->personalizer->set_context($context);
       foreach ($preparedNewsletter as $key => $content) {
         $preparedNewsletter[$key] = $this->personalizer->personalize_content($content);
       }

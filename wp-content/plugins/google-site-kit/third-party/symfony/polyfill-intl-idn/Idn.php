@@ -105,7 +105,10 @@ final class Idn
      */
     public static function idn_to_ascii($domainName, $options = self::IDNA_DEFAULT, $variant = self::INTL_IDNA_VARIANT_UTS46, &$idna_info = [])
     {
-        if (\PHP_VERSION_ID >= 70200 && self::INTL_IDNA_VARIANT_2003 === $variant) {
+        if (\PHP_VERSION_ID > 80400 && '' === $domainName) {
+            throw new \ValueError('idn_to_ascii(): Argument #1 ($domain) cannot be empty');
+        }
+        if (self::INTL_IDNA_VARIANT_2003 === $variant) {
             @\trigger_error('idn_to_ascii(): INTL_IDNA_VARIANT_2003 is deprecated', \E_USER_DEPRECATED);
         }
         $options = ['CheckHyphens' => \true, 'CheckBidi' => self::INTL_IDNA_VARIANT_2003 === $variant || 0 !== ($options & self::IDNA_CHECK_BIDI), 'CheckJoiners' => self::INTL_IDNA_VARIANT_UTS46 === $variant && 0 !== ($options & self::IDNA_CHECK_CONTEXTJ), 'UseSTD3ASCIIRules' => 0 !== ($options & self::IDNA_USE_STD3_RULES), 'Transitional_Processing' => self::INTL_IDNA_VARIANT_2003 === $variant || 0 === ($options & self::IDNA_NONTRANSITIONAL_TO_ASCII), 'VerifyDnsLength' => \true];
@@ -140,7 +143,10 @@ final class Idn
      */
     public static function idn_to_utf8($domainName, $options = self::IDNA_DEFAULT, $variant = self::INTL_IDNA_VARIANT_UTS46, &$idna_info = [])
     {
-        if (\PHP_VERSION_ID >= 70200 && self::INTL_IDNA_VARIANT_2003 === $variant) {
+        if (\PHP_VERSION_ID > 80400 && '' === $domainName) {
+            throw new \ValueError('idn_to_utf8(): Argument #1 ($domain) cannot be empty');
+        }
+        if (self::INTL_IDNA_VARIANT_2003 === $variant) {
             @\trigger_error('idn_to_utf8(): INTL_IDNA_VARIANT_2003 is deprecated', \E_USER_DEPRECATED);
         }
         $info = new \Google\Site_Kit_Dependencies\Symfony\Polyfill\Intl\Idn\Info();

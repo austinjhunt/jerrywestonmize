@@ -5,9 +5,6 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 return array(
  'Webmozart\\Assert\\' => array($vendorDir . '/webmozart/assert/src'),
- 'MailPoet\\' => array($baseDir . '/lib'),
- 'MailPoetVendor\\' => array($baseDir . '/vendor-prefixed'),
- 'MailPoetGenerated\\' => array($baseDir . '/generated'),
  'Cron\\' => array($vendorDir . '/dragonmantank/cron-expression/src/Cron'),
  'Automattic\\Jetpack\\Autoloader\\' => array($vendorDir . '/automattic/jetpack-autoloader/src'),
 );

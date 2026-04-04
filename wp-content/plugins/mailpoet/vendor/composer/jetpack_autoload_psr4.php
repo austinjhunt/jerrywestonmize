@@ -16,21 +16,9 @@ return array(
  'version' => 'dev-trunk',
  'path' => array( $baseDir . '/tests/DataFactories' )
  ),
- 'MailPoet\\' => array(
- 'version' => 'dev-trunk',
- 'path' => array( $baseDir . '/lib' )
- ),
- 'MailPoetVendor\\' => array(
- 'version' => 'dev-trunk',
- 'path' => array( $baseDir . '/vendor-prefixed' )
- ),
  'MailPoetTasks\\Release\\' => array(
  'version' => 'dev-trunk',
  'path' => array( $baseDir . '/tasks/release' )
- ),
- 'MailPoetGenerated\\' => array(
- 'version' => 'dev-trunk',
- 'path' => array( $baseDir . '/generated' )
  ),
  'Cron\\' => array(
  'version' => '3.3.3.0',

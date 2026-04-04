@@ -99,4 +99,25 @@ abstract class AbstractWhatsAppNotificationService extends AbstractNotificationS
     public function sendUndeliveredNotifications()
     {
     }
+
+    /**
+     * @param string $token
+     * @param string $businessId
+     * @param string $phoneNumberId
+     * @return bool
+     * @throws ContainerValueNotFoundException
+     */
+    public function validateCredentials($token, $businessId, $phoneNumberId)
+    {
+        return true;
+    }
+
+    /**
+     * @param string $token
+     * @return array|null
+     */
+    public function getWhatsAppTokenInfo($token)
+    {
+        return null;
+    }
 }

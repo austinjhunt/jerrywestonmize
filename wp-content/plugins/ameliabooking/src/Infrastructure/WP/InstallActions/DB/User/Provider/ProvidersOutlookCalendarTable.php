@@ -23,6 +23,8 @@ class ProvidersOutlookCalendarTable extends AbstractDatabaseTable
     {
         $table = self::getTableName();
 
+        $charsetCollate = self::getCharsetCollate();
+
         $email = Email::MAX_LENGTH;
 
         return "CREATE TABLE {$table}  (
@@ -32,6 +34,6 @@ class ProvidersOutlookCalendarTable extends AbstractDatabaseTable
                   `calendarId` TEXT({$email}) NULL,
                   PRIMARY KEY (`id`),
                   UNIQUE KEY `id` (`id`)
-                ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
+                ) {$charsetCollate};";
     }
 }

@@ -871,6 +871,7 @@ class AppointmentPlaceholderService extends PlaceholderService
             'employee_last_name'   => $lastName,
             'employee_full_name'   => $firstName . ' ' . $lastName,
             'employee_phone'       => $user->getPhone()->getValue(),
+            'employee_phone_country' => $user->getCountryPhoneIso() ? $user->getCountryPhoneIso()->getValue() : null,
             'employee_note'        => $user->getNote() ? $user->getNote()->getValue() : '',
             'employee_description' => $userDescription,
             'employee_panel_url'  => trim(
@@ -1152,12 +1153,27 @@ class AppointmentPlaceholderService extends PlaceholderService
         /** @var ReservationServiceInterface $reservationService */
         $reservationService = $this->container->get('application.reservation.service')->get(Entities::APPOINTMENT);
 
-        if (!empty($bookingArray['couponId']) && empty($bookingArray['coupon'])) {
+        $couponIdToFetch = !empty($bookingArray['couponId'])
+            ? $bookingArray['couponId']
+            : (!empty($bookingArray['coupon']['id']) ? $bookingArray['coupon']['id'] : null);
+
+        if ($couponIdToFetch) {
+            $bookingArray['couponId'] = $couponIdToFetch;
+        }
+
+        $couponIsIncomplete = $couponIdToFetch && (
+            empty($bookingArray['coupon'])
+            || empty($bookingArray['coupon']['code'])
+            || !isset($bookingArray['coupon']['discount'])
+            || !isset($bookingArray['coupon']['deduction'])
+        );
+
+        if ($couponIsIncomplete) {
             /** @var CouponRepository $couponRepository */
             $couponRepository = $this->container->get('domain.coupon.repository');
 
             /** @var Coupon $coupon */
-            $coupon = $couponRepository->getById($bookingArray['couponId']);
+            $coupon = $couponRepository->getById($couponIdToFetch);
 
             $bookingArray['coupon'] = $coupon ? $coupon->toArray() : null;
         }

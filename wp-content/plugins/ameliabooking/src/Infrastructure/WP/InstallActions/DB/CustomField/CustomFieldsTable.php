@@ -22,6 +22,8 @@ class CustomFieldsTable extends AbstractDatabaseTable
     {
         $table = self::getTableName();
 
+        $charsetCollate = self::getCharsetCollate();
+
         return "CREATE TABLE {$table} (
                    `id` INT(11) NOT NULL AUTO_INCREMENT,
                    `label` TEXT DEFAULT NULL,
@@ -37,6 +39,6 @@ class CustomFieldsTable extends AbstractDatabaseTable
                    `saveFirstChoice` TINYINT(1) NULL DEFAULT NULL,
                    `includeInInvoice` TINYINT(1) NULL DEFAULT NULL,
                     PRIMARY KEY (`id`)
-                ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
+                ) {$charsetCollate};";
     }
 }

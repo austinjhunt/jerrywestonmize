@@ -22,6 +22,8 @@ class PackagesServicesTable extends AbstractDatabaseTable
     {
         $table = self::getTableName();
 
+        $charsetCollate = self::getCharsetCollate();
+
         return "CREATE TABLE {$table}  (
                   `id` INT(11) NOT NULL AUTO_INCREMENT,
                   `serviceId` INT(11) NOT NULL,
@@ -32,6 +34,6 @@ class PackagesServicesTable extends AbstractDatabaseTable
                   `allowProviderSelection` TINYINT(1) DEFAULT 1,
                   `position` INT(11) DEFAULT 0,
                   PRIMARY KEY (`id`)
-                ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
+                ) {$charsetCollate};";
     }
 }

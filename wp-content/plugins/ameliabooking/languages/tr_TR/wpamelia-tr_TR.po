@@ -128,6 +128,12 @@ msgstr "+daha fazla"
 msgid "+{count} more"
 msgstr "+{count} daha fazla"
 
+msgid "1/1 width"
+msgstr "1/1 genişlik"
+
+msgid "1/2 width"
+msgstr "1/2 genişlik"
+
 msgid "10h"
 msgstr "10 saat"
 
@@ -455,6 +461,9 @@ msgstr ""
 msgid "Add appointment"
 msgstr "Randevu ekle"
 
+msgid "Add booking"
+msgstr "Randevu ekle"
+
 msgid "Add category"
 msgstr "Kategori ekle"
 
@@ -463,6 +472,9 @@ msgstr "Özel alan ekle"
 
 msgid "Add custom notification"
 msgstr "Özel bildirim ekle"
+
+msgid "Add customer"
+msgstr "Müşteri ekle"
 
 msgid "Add date range"
 msgstr "Tarih aralığı ekle"
@@ -482,6 +494,9 @@ msgid ""
 msgstr ""
 "Öğeye Kimlik ekle (düğme, bağlantı...) , bu Amelia kısa koddaki elementi "
 "tetikler"
+
+msgid "Add event"
+msgstr "Etkinlik ekle"
 
 msgid "Add event attendees"
 msgstr "Etkinlik katılımcılarını ekle"
@@ -506,6 +521,9 @@ msgstr ""
 
 msgid "Add option"
 msgstr "Seçenek ekle"
+
+msgid "Add package"
+msgstr "Paket ekle"
 
 msgid "Add period"
 msgstr "Dönem ekle"
@@ -640,9 +658,6 @@ msgstr ""
 
 msgid "Allow booking above maximum capacity"
 msgstr "Maksimum kapasitenin üzerinde rezervasyona izin ver"
-
-msgid "Allow booking below minimum capacity"
-msgstr "Minimum kapasitenin altında rezervasyona izin ver"
 
 msgid "Allow booking without a prior login"
 msgstr "Önceden giriş yapmadan rezervasyona izin ver"
@@ -817,9 +832,6 @@ msgstr "Amelia Kullanıcı Ayarları"
 
 msgid "Amount"
 msgstr "Miktar"
-
-msgid "Amount:"
-msgstr "Tutar:"
 
 msgid "An email with details of your booking has been sent to you."
 msgstr "Size rezervasyonunuzun detaylarını içeren bir e-posta gönderildi."
@@ -1003,6 +1015,9 @@ msgstr "Randevu durumu şu şekilde değiştirildi"
 
 msgid "Appointment status has been updated."
 msgstr "Randevu durumu güncellendi."
+
+msgid "Appointment title"
+msgstr "Randevu başlığı"
 
 msgid "Appointments"
 msgstr "Randevular"
@@ -1197,6 +1212,14 @@ msgstr "Bu hizmeti göstermek istediğinizden emin misiniz?"
 msgid "Are you sure you want to show this tax?"
 msgstr "Bu vergiyi göstermek istediğinize emin misiniz?"
 
+msgid ""
+"Are you sure you want to skip the setup? Once skipped, the guided setup will "
+"no longer be available. All settings will need to be configured later."
+msgstr ""
+"Kurulumu atlamak istediğinizden emin misiniz? Atladıktan sonra, kılavuzlu "
+"kurulum artık kullanılamayacaktır. Tüm ayarlar daha sonra "
+"yapılandırılmalıdır."
+
 msgid "Are you sure you want to unblock this customer?"
 msgstr "Bu müşterinin engelini kaldırmak istediğinize emin misiniz?"
 
@@ -1248,11 +1271,11 @@ msgstr "Katılımcılar silindi"
 msgid "Attendees have not been deleted"
 msgstr "Katılımcılar silinmedi"
 
-msgid "Auto-Approve Booking After Payment"
-msgstr "Ödeme Sonrası Rezervasyonu Otomatik Olarak Onayla"
-
 msgid "Auto-Reply Message"
 msgstr "Otomatik Yanıt Mesajı"
+
+msgid "Auto-approve booking after payment"
+msgstr "Ödeme yapıldıktan sonra randevu otomatik olarak onaylanır."
 
 msgid "Auto-fill your details using:"
 msgstr "Bilgilerinizi otomatik doldurmak için:"
@@ -1510,6 +1533,13 @@ msgstr "Bu etkinliği rezerve edin"
 msgid "Book this service"
 msgstr "Bu hizmeti rezerve edin"
 
+msgid ""
+"Book time-based appointments with configurable durations, prices, and "
+"availability."
+msgstr ""
+"Yapılandırılabilir süreler, fiyatlar ve uygunluk durumuna göre zaman bazlı "
+"randevular alın."
+
 msgid "Booked"
 msgstr "Rezerve"
 
@@ -1528,6 +1558,12 @@ msgstr "Rezervasyon #{count}"
 msgid "Booking Appointment"
 msgstr "Randevu Al"
 
+msgid "Booking Approved with Issues"
+msgstr "Randevu Sorunlu Olarak Onaylandı"
+
+msgid "Booking Canceled"
+msgstr "Randevu İptal Edildi"
+
 msgid "Booking Closes"
 msgstr "Rezervasyon Kapanıyor"
 
@@ -1537,8 +1573,14 @@ msgstr "Rezervasyon Kapanış Artan"
 msgid "Booking Closes Desc"
 msgstr "Rezervasyon Kapanıyor Azalan"
 
+msgid "Booking Confirmed"
+msgstr "Randevu Onaylandı"
+
 msgid "Booking Details"
 msgstr "Rezervasyon Detayları"
+
+msgid "Booking Failed"
+msgstr "Randevu Başarısız"
 
 msgid "Booking Form"
 msgstr "Rezervasyon Formu"
@@ -1560,6 +1602,12 @@ msgstr "Rezervasyon Açıldı Azalan"
 
 msgid "Booking Overview"
 msgstr "Randevulara Genel Bakış"
+
+msgid "Booking Processed"
+msgstr "Randevu İşlemi Tamamlandı"
+
+msgid "Booking Rejected"
+msgstr "Randevu Reddedildi"
 
 msgid "Booking added"
 msgstr "Rezervasyon eklendi"
@@ -1827,6 +1875,9 @@ msgstr "Yönetici tarafından iptal edildi"
 msgid "Canceled by attendee"
 msgstr "Katılımcı tarafından iptal edildi"
 
+msgid "Cancellation Failed"
+msgstr "İptal Başarısız"
+
 msgid "Cancelled"
 msgstr "İptal edildi"
 
@@ -1860,8 +1911,8 @@ msgstr "Kartlar"
 msgid "Cards and buttons"
 msgstr "Kartlar ve düğmeler"
 
-msgid "Carrier:"
-msgstr "Taşıyıcı:"
+msgid "Carrier"
+msgstr "Taşıyıcı"
 
 msgid "Cart"
 msgstr "Sepet"
@@ -2033,6 +2084,9 @@ msgstr "Hizmeti Seçin"
 msgid "Choose a Form"
 msgstr "Bir Form Seçin"
 
+msgid "Choose a currency that will be used for all price based settings."
+msgstr "Tüm fiyat bazlı ayarlar için kullanılacak bir para birimi seçin."
+
 msgid ""
 "Choose a form you want to customize. The Step-by-Step 2.0 form is the new "
 "and improved version which provides you with better design and user "
@@ -2044,6 +2098,12 @@ msgstr ""
 
 msgid "Choose a group service"
 msgstr "Bir grup hizmeti seçin"
+
+msgid ""
+"Choose a time interval that will be used when defining all time based "
+"settings."
+msgstr ""
+"Tüm zaman tabanlı ayarları tanımlarken kullanılacak zaman aralığını seçin."
 
 msgid "Choose date and time"
 msgstr "Tarih ve saati seçin"
@@ -2090,6 +2150,10 @@ msgstr "Randevuyu tekrarlamak istediğiniz saati seçin"
 
 msgid "Choose when the repeating ends"
 msgstr "Tekrarlamanın ne zaman biteceğini seçin"
+
+msgid "Choose whether you want to manage services, events, or both."
+msgstr ""
+"Hizmetleri, etkinlikleri veya her ikisini birden yönetmek istediğinizi seçin."
 
 msgid "Choosing layout of first step in step by step form"
 msgstr "Adım adım formda ilk adımın düzenini seçme"
@@ -2391,11 +2455,14 @@ msgstr "Devam et"
 msgid "Continue Booking"
 msgstr "Rezervasyona Devam Et"
 
+msgid "Continue setup"
+msgstr "Kuruluma devam et"
+
 msgid "Copy your API key now, as it won't be visible again."
 msgstr "API anahtarınızı şimdi kopyalayın, çünkü bir daha görünmeyecektir."
 
-msgid "Cost:"
-msgstr "Maliyet:"
+msgid "Cost"
+msgstr "Maliyet"
 
 msgid ""
 "Could not delete category. This category has services available for booking "
@@ -2535,6 +2602,12 @@ msgstr ""
 "bildirimler oluşturarak müşterileri ve çalışanları tam zamanında "
 "bilgilendirin."
 
+msgid "Create employee"
+msgstr "Çalışan oluştur"
+
+msgid "Create event"
+msgstr "Etkinlik oluştur"
+
 msgid "Create meetings for pending appointments"
 msgstr "Bekleyen randevular için toplantılar oluşturun"
 
@@ -2567,6 +2640,13 @@ msgstr ""
 "duydukları her şeyin gerçekten mevcut olduğu zaman aralıklarını görmelerini "
 "sağlayın."
 
+msgid "Create scheduled events with fixed dates, prices and capacities."
+msgstr ""
+"Sabit tarihler, fiyatlar ve kapasitelerle planlanmış etkinlikler oluşturun."
+
+msgid "Create service"
+msgstr "Hizmet oluştur"
+
 msgid "Create spaces for pending appointments"
 msgstr "Bekleyen randevular için alanlar oluşturun"
 
@@ -2581,6 +2661,9 @@ msgstr ""
 
 msgid "Created On"
 msgstr "Oluşturuldu"
+
+msgid "Created on"
+msgstr "Oluşturulma tarihi"
 
 msgid "Credit Card"
 msgstr "Kredi kartı"
@@ -2690,9 +2773,6 @@ msgstr "Müşteri Artan"
 msgid "Customer Desc"
 msgstr "Müşteri Azalan"
 
-msgid "Customer Name"
-msgstr "Müşteri Adı"
-
 msgid "Customer Panel"
 msgstr "Müşteri Paneli"
 
@@ -2743,6 +2823,9 @@ msgstr "Müşteri bilgileri"
 
 msgid "Customer last name"
 msgstr "Müşteri soyadı"
+
+msgid "Customer name"
+msgstr "Müşteri adı"
 
 msgid "Customer note"
 msgstr "Müşteri notu"
@@ -2798,6 +2881,11 @@ msgstr "Dosyadan içe aktarılan müşteriler:"
 
 msgid "Customers in Waiting list"
 msgstr "Bekleme listesindeki müşteriler"
+
+msgid "Customers will be redirected to this URL after booking an event."
+msgstr ""
+"Müşteriler, bir etkinlik rezervasyonu yaptıktan sonra bu bağlantıya "
+"yönlendirilecektir."
 
 msgid ""
 "Customers will be redirected to this URL after scheduling an appointment."
@@ -2984,7 +3072,7 @@ msgstr "Varsayılan Square konumu"
 msgid "Default appointment status"
 msgstr "Varsayılan randevu durumu"
 
-msgid "Default back‑end page"
+msgid "Default back end page"
 msgstr "Varsayılan arka uç sayfası"
 
 msgid "Default language"
@@ -3354,7 +3442,7 @@ msgid "Dropdowns"
 msgstr "Açılır Menü"
 
 msgid "Due"
-msgstr "Nedeniyle"
+msgstr "Kalan Tutar"
 
 msgid "Duplicate"
 msgstr "Kopyala"
@@ -3662,6 +3750,9 @@ msgstr "Çalışan artık görünür durumda."
 
 msgid "Employee last name"
 msgstr "Çalışan soyadı"
+
+msgid "Employee name"
+msgstr "Çalışan adı"
 
 msgid "Employee name, email & phone"
 msgstr "Çalışan adı, e-posta ve telefon"
@@ -4109,6 +4200,9 @@ msgstr "Şifrenizi girin"
 
 msgid "Error"
 msgstr "Hata"
+
+msgid "Error occurred"
+msgstr "Hata oluştu"
 
 msgid "Error while generating CSV."
 msgstr "CSV oluşturulurken hata oluştu."
@@ -4955,6 +5049,9 @@ msgstr ""
 msgid "Header"
 msgstr "Başlık"
 
+msgid "Header Image URL"
+msgstr "Başlık Görsel Bağlantısı"
+
 msgid "Heading"
 msgstr "Başlık"
 
@@ -5129,6 +5226,9 @@ msgstr "Nasıl yapılır"
 msgid "How to get your"
 msgstr "Nasıl elde edebilirsiniz?"
 
+msgid "How will you use Amelia?"
+msgstr "Amelia'yı nasıl kullanacaksınız?"
+
 msgid "ID"
 msgstr "Kimlik"
 
@@ -5155,11 +5255,25 @@ msgstr ""
 "ödeme yöntemi kullanılır."
 
 msgid ""
+"If disabled, booking must meet the minimum capacity, and the time slot "
+"closes after the first booking."
+msgstr ""
+"Devre dışı bırakıldığında, rezervasyon minimum kapasiteyi karşılamalıdır ve "
+"ilk rezervasyondan sonra zaman dilimi kapanır."
+
+msgid ""
 "If disabled, the price will remain the same regardless of how many people "
 "are included in the group appointment."
 msgstr ""
 "Devre dışı bırakılırsa, grup randevusuna kaç kişinin dahil olduğu fark "
 "etmeksizin fiyat aynı kalacaktır."
+
+msgid ""
+"If enabled, customers can book with Pending status even after maximum "
+"capacity is reached."
+msgstr ""
+"Etkinleştirildiğinde, müşteriler maksimum kapasiteye ulaşıldıktan sonra bile "
+"Beklemede statüsüyle rezervasyon yapabilirler."
 
 msgid ""
 "If enabled, customers can complete their payment using the link in their "
@@ -5197,42 +5311,11 @@ msgstr ""
 "aktarılır."
 
 msgid ""
-"If this is disabled, your front-end customers won't be able to book "
-"appointment with Pending status above the maximum capacity. Once the maximum "
-"capacity is reached appointment will close and time slot will become "
-"unavailable."
+"If this option is disabled, the item will be available only for booking from "
+"the backend."
 msgstr ""
-"Bu devre dışı bırakılırsa, ön uç müşterileriniz maksimum kapasitenin "
-"üzerindeki Beklemede statüsünde randevu alamazlar. Maksimum kapasiteye "
-"ulaşıldığında randevu kapanır ve zaman aralığı kullanılamaz hale gelir."
-
-msgid ""
-"If this is disabled, your front-end customers won't be able to submit a "
-"booking unless they fill in the minimum service capacity, but once they book "
-"for any capacity above minimum, the time slot will become unavailable for "
-"booking for others. If enabled, multiple customers will be able to book the "
-"same time slot, without having to fill in the minimum capacity."
-msgstr ""
-"Bu devre dışı bırakılırsa, ön uç müşterileriniz minimum hizmet kapasitesini "
-"doldurmadıkları sürece rezervasyon yapamazlar, ancak minimum kapasitenin "
-"üzerinde bir kapasite için rezervasyon yaptıklarında, zaman aralığı "
-"diğerleri için rezervasyona kapalı hale gelir. Etkinleştirilirse, birden "
-"fazla müşteri minimum kapasiteyi doldurmak zorunda kalmadan aynı zaman "
-"aralığı için rezervasyon yapabilir."
-
-msgid ""
-"If this option is disabled, the employee will only be available for booking "
-"through the back-end"
-msgstr ""
-"Bu seçenek devre dışı bırakılırsa, çalışan yalnızca arka uçtan rezervasyon "
-"yapılabilir."
-
-msgid ""
-"If this option is disabled, the service will be bookable only from the back "
-"end."
-msgstr ""
-"Bu seçenek devre dışı bırakılırsa, hizmet yalnızca arka uçtan rezerve "
-"edilebilir."
+"Bu seçenek devre dışı bırakılırsa, öğe yalnızca arka uçtan rezervasyon için "
+"kullanılabilir olacaktır."
 
 msgid ""
 "If this option is enabled customers will be able to pay via email "
@@ -5240,13 +5323,6 @@ msgid ""
 msgstr ""
 "Bu seçenek etkinleştirilirse müşteriler e-posta bildirimleri veya Müşteri "
 "panelleri aracılığıyla ödeme yapabilecektir."
-
-msgid ""
-"If this option is enabled time slots will be shown with included service "
-"buffer time."
-msgstr ""
-"Bu seçenek etkinleştirilirse, zaman aralıkları hizmet tampon süresi dahil "
-"olarak gösterilecektir."
 
 msgid ""
 "If this option is not checked the plugin will calculate the time <br> for "
@@ -5383,6 +5459,36 @@ msgstr ""
 "Müşteriler paketlerindeki kalan oturumları kullanmak için geri döndükçe "
 "müşteri sadakati arttı."
 
+msgid ""
+"In Amelia, a “service” is a specific appointment-type offering your business "
+"provides to clients - such as consultations, treatments, or classes - that "
+"can be fully customized with its own name, duration, price, capacity, "
+"availability, and extras, and booked online with assigned employees."
+msgstr ""
+"Amelia'da \"hizmet\", işletmenizin müşterilere sunduğu belirli bir randevu "
+"türüdür (örneğin danışmanlık, tedavi veya dersler). Bu hizmetler, kendi adı, "
+"süresi, fiyatı, kapasitesi, uygunluğu ve ekstraları ile tamamen "
+"özelleştirilebilir ve atanan çalışanlar ile çevrimiçi olarak rezerve "
+"edilebilir."
+
+msgid ""
+"In Amelia, an employee is a team member who provides services or hosts "
+"events, with their own schedule, working hours, and assigned offerings."
+msgstr ""
+"Amelia'da bir çalışan, kendi çalışma programı, çalışma saatleri ve atanmış "
+"görevleri olan, hizmet sunan veya etkinlik düzenleyen bir ekip üyesidir."
+
+msgid ""
+"In Amelia, an event is a booking-type offering designed for group activities "
+"or multi-day occasions - such as workshops, conferences, tours, or training "
+"series - that can be configured with its own schedule, capacity, pricing "
+"structure and assigned staff."
+msgstr ""
+"Amelia'da etkinlik, atölye çalışmaları, konferanslar, turlar veya eğitim "
+"serileri gibi grup etkinlikleri veya birkaç gün süren etkinlikler için "
+"tasarlanmış, kendi programı, kapasitesi, fiyatlandırma yapısı ve atanmış "
+"personeli ile yapılandırılabilen bir rezervasyon türü teklifidir."
+
 msgid "In Package"
 msgstr "Paket İçinde"
 
@@ -5397,6 +5503,14 @@ msgstr "Vergileri Dahil Et"
 
 msgid "Include buffer time in calendar events"
 msgstr "Takvim etkinliklerine tampon süresini dahil et"
+
+msgid ""
+"Include buffer time in slot calculation. When disabled, slots are based only "
+"on service duration."
+msgstr ""
+"Zaman aralıkları hesaplamasına tampon süresini de dahil edin. Bu özellik "
+"devre dışı bırakıldığında, zaman aralıkları yalnızca hizmet süresine göre "
+"belirlenir."
 
 msgid "Include in invoice"
 msgstr "Makbuza dahil et"
@@ -5486,6 +5600,9 @@ msgstr "Entegrasyonlar"
 msgid "Interested in unlocking this feature?"
 msgstr "Bu özelliğin kilidini açmak ister misiniz?"
 
+msgid "Invalid Stripe secret key."
+msgstr "Geçersiz Stripe gizli anahtarı."
+
 msgid "Invisible reCAPTCHA badge"
 msgstr "Görünmez reCAPTCHA rozeti"
 
@@ -5530,6 +5647,13 @@ msgstr "Makbuz kurulumu"
 
 msgid "Issued"
 msgstr "Veriliş"
+
+msgid ""
+"It looks like this is your first time here, so let’s walk through a few "
+"simple steps to help you get started."
+msgstr ""
+"Buraya ilk kez geldiğiniz anlaşılıyor, bu yüzden başlamanıza yardımcı olacak "
+"birkaç basit adımı birlikte inceleyelim."
 
 msgid ""
 "It seems like there are no available or visible services assigned to the "
@@ -5619,6 +5743,9 @@ msgid ""
 msgstr ""
 "İşlemleri birleşik ayarlar, kullanılabilirlik ve kaynak kontrolü ile uyumlu "
 "tutun"
+
+msgid "Keep slot available after first booking"
+msgstr "İlk rezervasyondan sonra slotu kullanılabilir tutun"
 
 msgid ""
 "Keep your data organized and meaningful with structured fields that "
@@ -5809,9 +5936,6 @@ msgstr "Yerel Zaman:"
 msgid "Local time"
 msgstr "Yerel saat"
 
-msgid "Local time:"
-msgstr "Yerel saat:"
-
 msgid "Location"
 msgstr "Konum"
 
@@ -5945,6 +6069,9 @@ msgstr ""
 
 msgid "Make extra mandatory"
 msgstr "Ekstra zorunlu hale getir"
+
+msgid "Make sure you are using the correct WhatsApp credentials."
+msgstr "Doğru WhatsApp kimlik bilgilerini kullandığınızdan emin olun."
 
 msgid "Male"
 msgstr "Erkek"
@@ -6318,9 +6445,6 @@ msgstr "Ertesi gün hatırlatma"
 msgid "No"
 msgstr "Hayır"
 
-msgid "No, Cancel"
-msgstr "Hayır, İptal"
-
 msgid "No, just this one"
 msgstr "Hayır, sadece bu"
 
@@ -6548,9 +6672,6 @@ msgstr "Katılımcılara bildirin"
 msgid "Notify the customer(s)"
 msgstr "Müşteriyi(leri) bilgilendir"
 
-msgid "Notify the customer(s) by default"
-msgstr "Varsayılan olarak müşteri(ler)i bilgilendir"
-
 msgid "Number of Additional People"
 msgstr "Ek Kişi Sayısı"
 
@@ -6773,10 +6894,10 @@ msgstr "Rezervasyon almaya başladığınızda, işlemler burada görüntülenec
 
 msgid ""
 "Once you start receiving bookings, your customers will be displayed here. "
-"You can also get started by clicking the Add button below."
+"You can also get started by clicking the Add or Import button below."
 msgstr ""
 "Rezervasyon almaya başladığınızda, müşterileriniz burada görüntülenecektir. "
-"Aşağıdaki Ekle düğmesine tıklayarak da başlayabilirsiniz."
+"Aşağıdaki Ekle veya İçe Aktar düğmesine tıklayarak da başlayabilirsiniz."
 
 msgid "One booking can have multiple attendees/spots in it."
 msgstr "Bir rezervasyonda birden fazla katılımcı/yer olabilir."
@@ -6833,9 +6954,6 @@ msgstr "Seçenekler:"
 
 msgid "Or"
 msgstr "Veya"
-
-msgid "Or Enter details below"
-msgstr "veya Detayları aşağıya girin"
 
 msgid "Or enter details below"
 msgstr "veya detayları aşağıya girin"
@@ -7197,9 +7315,6 @@ msgstr "Ödeme Geçmişi"
 msgid "Payment ID"
 msgstr "Ödeme ID"
 
-msgid "Payment ID:"
-msgstr "Ödeme ID:"
-
 msgid "Payment Method"
 msgstr "Ödeme Metodu"
 
@@ -7265,6 +7380,9 @@ msgstr "Ödeme tipi"
 
 msgid "Payment type, deposit payment..."
 msgstr "Ödeme tipi, depozito ödemesi..."
+
+msgid "Payment was canceled."
+msgstr "Ödeme iptal edildi."
 
 msgid "Payments"
 msgstr "Ödemeler"
@@ -7388,6 +7506,13 @@ msgstr "Yer tutucu metin"
 
 msgid "Placeholders"
 msgstr "Yer Tutucular"
+
+msgid ""
+"Places API (New) is required but not enabled. Please enable it in Google "
+"Cloud Console."
+msgstr ""
+"Places API'ı (Yeni) gereklidir ancak etkinleştirilmemiştir. Lütfen Google "
+"Cloud Console'da etkinleştirin."
 
 msgid "Plain"
 msgstr "Düz"
@@ -7553,20 +7678,20 @@ msgstr "Lütfen soyadı girin"
 msgid "Please enter live API Key"
 msgstr "Lütfen canlı API Anahtarını girin"
 
-msgid "Please enter live ClientId"
-msgstr "Lütfen canlı ClientId girin"
-
 msgid "Please enter live POSKey"
 msgstr "Lütfen canlı POSKey'e girin"
 
-msgid "Please enter live Secret"
-msgstr "Lütfen canlı Gizli'yi girin"
+msgid "Please enter live client ID"
+msgstr "Lütfen canlı istemci kimliğini girin"
 
-msgid "Please enter live key id"
-msgstr "Lütfen canlı anahtar id'si girin"
+msgid "Please enter live key ID"
+msgstr "Lütfen canlı anahtar kimliğini girin"
 
 msgid "Please enter live key secret"
 msgstr "Lütfen canlı anahtar sırrını girin"
+
+msgid "Please enter live secret"
+msgstr "Lütfen canlı gizli anahtarı girin"
 
 msgid "Please enter name"
 msgstr "Lütfen isim girin"
@@ -7601,17 +7726,17 @@ msgstr "Lütfen vergi oranı adını girin."
 msgid "Please enter test API Key"
 msgstr "Lütfen test API Anahtarını girin"
 
-msgid "Please enter test ClientId"
-msgstr "Lütfen test ClientId girin"
+msgid "Please enter test client ID"
+msgstr "Lütfen test istemci kimliğini girin"
 
-msgid "Please enter test Secret"
-msgstr "Lütfen test Gizli'yi girin"
-
-msgid "Please enter test key id"
-msgstr "Lütfen test anahtar id'si girin"
+msgid "Please enter test key ID"
+msgstr "Lütfen test anahtar kimliğini girin"
 
 msgid "Please enter test key secret"
 msgstr "Lütfen test anahtar sırrını girin"
+
+msgid "Please enter test secret"
+msgstr "Lütfen test gizli kodunu girin."
 
 msgid "Please enter waiting list capacity"
 msgstr "Lütfen bekleme listesi kapasitesini girin"
@@ -8277,6 +8402,9 @@ msgstr "Formu Sıfırla"
 msgid "Reset Password"
 msgstr "Şifreyi Sıfırla"
 
+msgid "Reset form settings"
+msgstr "Form ayarlarını sıfırla"
+
 msgid "Reset password"
 msgstr "Şifreyi sıfırla"
 
@@ -8306,6 +8434,9 @@ msgstr "Kaynak artık görünür durumda."
 
 msgid "Resources"
 msgstr "Kaynaklar"
+
+msgid "Return to Home"
+msgstr "Ana Sayfaya Dön"
 
 msgid "Returning"
 msgstr "Dönen"
@@ -8363,6 +8494,11 @@ msgstr "SMTP Güvenliği"
 
 msgid "SMTP Username"
 msgstr "SMTP Kullanıcı Adı"
+
+msgid "SMTP credentials validation failed. Please check your settings."
+msgstr ""
+"SMTP kimlik bilgileri doğrulaması başarısız oldu. Lütfen ayarlarınızı "
+"kontrol edin."
 
 msgid "SSL"
 msgstr ""
@@ -8553,8 +8689,8 @@ msgstr "Bölüm"
 msgid "Securely process payments using Stripe."
 msgstr "Stripe kullanarak ödemeleri güvenli bir şekilde işleyin."
 
-msgid "Segment:"
-msgstr "Bölüm:"
+msgid "Segment"
+msgstr ""
 
 msgid "Segments"
 msgstr "Segmentler"
@@ -8639,6 +8775,9 @@ msgstr "Zoom Kullanıcısı Seç"
 
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr "İmlecinizin bulunduğu yere eklemek için bir yer tutucu seçin."
+
+msgid "Select at least one option."
+msgstr "En az bir seçenek seçin."
 
 msgid "Select box"
 msgstr "Seçim kutusu"
@@ -8837,8 +8976,8 @@ msgstr "E-postaya gönder"
 msgid "Send your customer data to Mailchimp quickly and effortlessly."
 msgstr "Müşteri verilerinizi Mailchimp'e hızlı ve kolay bir şekilde gönderin."
 
-msgid "Sender ID supports up to 11 characters"
-msgstr "Gönderen ID'si en fazla 11 karakteri destekler"
+msgid "Sender ID must be between 3 and 11 characters"
+msgstr "Gönderen kimliği 3 ile 11 karakter arasında olmalıdır."
 
 msgid "Sender email"
 msgstr "Gönderen e-postası"
@@ -9027,6 +9166,9 @@ msgstr ""
 "Erişilebilirliği ve geliri en üst düzeye çıkarmak için kategoriler ve tarihe "
 "dayalı aralıklarla esnek bilet fiyatlandırması belirleyin."
 
+msgid "Set general settings"
+msgstr "Genel ayarları belirle"
+
 msgid ""
 "Set individual time zones for employees so availability and bookings are "
 "shown correctly for clients worldwide."
@@ -9192,6 +9334,14 @@ msgstr "Bilet seçimi etiketlerini ve görünürlüğünü ayarla"
 msgid "Set your Google Map API Key in General Settings"
 msgstr "Google Map API Anahtarını Genel Ayarlarda Ayarla"
 
+msgid ""
+"Set your company working hours. This schedule will be used for all new "
+"employees, however you can customize schedule for each employee later."
+msgstr ""
+"Şirketinizin çalışma saatlerini ayarlayın. Bu program tüm yeni çalışanlar "
+"için geçerli olacaktır, ancak daha sonra her çalışan için programı "
+"özelleştirebilirsiniz."
+
 msgid "Setting up days off"
 msgstr "İzin günlerini ayarlama"
 
@@ -9215,6 +9365,9 @@ msgstr "Paylaşılan kategori kapasitesi"
 
 msgid "Show"
 msgstr "Göster"
+
+msgid "Show Add To Calendar option to customers"
+msgstr "Müşterilere Takvime Ekle seçeneğini göster"
 
 msgid "Show All"
 msgstr "Tümünü Göster"
@@ -9376,6 +9529,9 @@ msgstr "Oturum aç "
 msgid "Sign in with Google"
 msgstr "Google ile Giriş Yap"
 
+msgid "Sign in with Microsoft"
+msgstr "Microsoft ile oturum açın"
+
 msgid "Sign in with Outlook"
 msgstr "Outlook ile Giriş Yap"
 
@@ -9430,6 +9586,9 @@ msgstr "İçe Aktarmayı Atla"
 msgid "Skip packages and continue with the selected service"
 msgstr "Paketleri atla ve seçilen hizmetle devam et"
 
+msgid "Skip setup"
+msgstr "Kurulumu atla"
+
 msgid "Slot end time"
 msgstr "Zaman aralığı bitişi"
 
@@ -9483,9 +9642,9 @@ msgstr ""
 
 msgid "Sorry, there was an error while adding booking to WooCommerce cart."
 msgstr ""
-"Üzgünüz, WooCommerce sepetine rezervasyon eklenirken bir hata oluştu."
-"Maalesef, WooCommerce alışveriş sepetine rezervasyon eklenirken bir hata "
-"oluştu."
+"Üzgünüz, WooCommerce sepetine rezervasyon eklenirken bir hata "
+"oluştu.Maalesef, WooCommerce alışveriş sepetine rezervasyon eklenirken bir "
+"hata oluştu."
 
 msgid "Sort"
 msgstr "Sırala"
@@ -9577,9 +9736,6 @@ msgstr "Başlangıç zamanı"
 msgid "Status"
 msgstr "Durum"
 
-msgid "Status:"
-msgstr "Durum:"
-
 msgid "Status Asc"
 msgstr "Durum Artan"
 
@@ -9619,6 +9775,18 @@ msgstr "Adım adım"
 
 msgid "Step-by-step booking form guide"
 msgstr "Adım adım rezervasyon formu kılavuzu"
+
+msgid "Step 1"
+msgstr "Adım 1"
+
+msgid "Step 2"
+msgstr "Adım 2"
+
+msgid "Step 3"
+msgstr "Adım 3"
+
+msgid "Step 4"
+msgstr "Adım 4"
 
 msgid "Step Booking"
 msgstr "Adım Rezervasyonu"
@@ -9724,6 +9892,12 @@ msgstr "Randevu başarıyla eklendi"
 msgid "Suggest closest available date"
 msgstr "En yakın tarihi öner"
 
+msgid ""
+"Suggest customers to add an appointment to their calendar when booking is "
+"finalized."
+msgstr ""
+"Randevu tamamlandığında müşterilere takvimlerine randevu eklemelerini önerin."
+
 msgid "Suggest next available date"
 msgstr "Bir sonraki uygun tarihi öner"
 
@@ -9775,6 +9949,13 @@ msgid ""
 "payouts."
 msgstr ""
 "Kolay ödeme ve sorunsuz ödeme için Stripe Connect hesabınızı senkronize edin."
+
+msgid ""
+"Sync your and your employee's personal and professional events by connection "
+"Outlook calendars."
+msgstr ""
+"Outlook takvimlerini bağlayarak sizin ve çalışanlarınızın kişisel ve "
+"profesyonel etkinliklerini senkronize edin."
 
 msgid ""
 "Sync your and your employees' personal and professional events by connecting "
@@ -9909,9 +10090,6 @@ msgstr "Test gizli anahtarı"
 
 msgid "Text"
 msgstr "Metin"
-
-msgid "Text:"
-msgstr "Metin:"
 
 msgid "Text Mode"
 msgstr "Metin Modu"
@@ -10125,8 +10303,14 @@ msgstr "Bu ve Gelecek"
 msgid "This Only"
 msgstr "Sadece Bu"
 
+msgid "This appointment is a part of a package."
+msgstr "Bu randevu bir paketin parçasıdır."
+
 msgid "This booking is part of a package deal"
 msgstr "Bu randevu bir paket alımının parçasıdır"
+
+msgid "This category cannot be deleted because it is included in a package."
+msgstr "Bu kategori bir pakete dahil olduğu için silinemez."
 
 msgid ""
 "This category has services with {count} past appointment. | This category "
@@ -10172,6 +10356,13 @@ msgstr "Bu alan zorunludur."
 
 msgid "This file is forbidden for upload"
 msgstr "Bu dosyanın yüklenmesi yasaktır"
+
+msgid ""
+"This is a temporary WhatsApp token and will automatically expire after 24 "
+"hours. Make sure to complete the setup before it expires."
+msgstr ""
+"Bu geçici bir WhatsApp jetonudur ve 24 saat sonra otomatik olarak sona "
+"erecektir. Sona ermeden önce kurulumu tamamladığınızdan emin olun."
 
 msgid ""
 "This is a unique security token. Copy it into the 'Verify token' field in "
@@ -10265,6 +10456,9 @@ msgstr "Bu yer tutucunun içeriği, kullanıldığı her yerde uygulanacaktır."
 
 msgid "This range"
 msgstr "Bu aralık"
+
+msgid "This service cannot be deleted because it is included in a package."
+msgstr "Bu hizmet bir pakete dahil olduğu için silinemez."
 
 msgid "This service does not have any extras"
 msgstr "Bu hizmetin ekstraları yok"
@@ -10640,9 +10834,6 @@ msgstr ""
 msgid "Type"
 msgstr "Tür"
 
-msgid "Type:"
-msgstr "Tür:"
-
 msgid "Type Asc"
 msgstr "Tür Artan"
 
@@ -10978,6 +11169,20 @@ msgstr ""
 "İçe aktarılmayan müşterileri içeren bir .csv dosyası hazırladık. Sorunları "
 "giderdikten sonra tekrar deneyebilirsiniz."
 
+msgid ""
+"We were unable to cancel your booking. Please contact admin for assistance "
+"with canceling this booking."
+msgstr ""
+"Randevunuzu iptal edemedik. Lütfen bu randevunun iptali konusunda yardım "
+"almak için bizimle iletişime geçin."
+
+msgid ""
+"We were unable to process your booking, and it was rejected. Please contact "
+"admin if you need help or want to try booking again."
+msgstr ""
+"Randevunuz işleme alınamadı ve reddedildi. Yardıma ihtiyacınız olursa veya "
+"tekrar rezervasyon yapmayı denemek isterseniz lütfen bizimle iletişime geçin."
+
 msgid "Web"
 msgstr ""
 
@@ -11013,6 +11218,9 @@ msgstr "Tekrar Hoşgeldiniz"
 
 msgid "Welcome back"
 msgstr "Tekrar hoşgeldin"
+
+msgid "Welcome to Amelia!"
+msgstr "Amelia'ya hoş geldiniz!"
 
 msgid "Wellness"
 msgstr "Sağlıklı yaşam"
@@ -11175,9 +11383,6 @@ msgstr "Yıl"
 msgid "Yes"
 msgstr "Evet"
 
-msgid "Yes, Reset"
-msgstr "Evet, Sıfırla"
-
 msgid "Yoga"
 msgstr ""
 
@@ -11207,6 +11412,13 @@ msgid ""
 msgstr ""
 "Şu anda Yönetici tarafından Google Takvim'e bağlısınız. Google Takvim "
 "bağlantısını geçersiz kılma özelliği kullanılamaz."
+
+msgid ""
+"You are currently connected to Outlook Calendar by Admin. Overriding Outlook "
+"Calendar connection is not available."
+msgstr ""
+"Şu anda Outlook Takvimine, yönetici tarafından bağlısınız. Outlook Takvim "
+"bağlantısını geçersiz kılma seçeneği mevcut değil."
 
 msgid "You are on the waiting list with position"
 msgstr "Bekleme listesindeki numaranız"
@@ -11302,6 +11514,12 @@ msgstr "Yanlış şifre girdiniz."
 msgid "You have reached maximum number of registered domains"
 msgstr "Kayıtlı maksimum alan sayısına ulaşıldı"
 
+msgid ""
+"You have successfully declined this booking request. The status has been "
+"updated in the system."
+msgstr ""
+"Bu randevu talebini başarıyla reddettiniz. Sistemdeki durum güncellendi."
+
 msgid "You will be redirected to the payment checkout."
 msgstr "Ödeme sayfasına yönlendirileceksiniz."
 
@@ -11319,6 +11537,35 @@ msgstr "Adınız"
 
 msgid "Your balance has been recharged."
 msgstr "Bakiyeniz yeniden yüklendi."
+
+msgid ""
+"Your booking has been successfully canceled. If you have any questions or "
+"wish to reschedule, please contact admin."
+msgstr ""
+"Randevunuz başarıyla iptal edildi. Herhangi bir sorunuz varsa veya "
+"rezervasyonunuzu yeniden planlamak isterseniz lütfen bizimle iletişime geçin."
+
+msgid ""
+"Your booking has been successfully completed and approved. You're all set "
+"and can expect everything to proceed smoothly."
+msgstr ""
+"Randevunuz başarıyla tamamlandı ve onaylandı. Artık her şey yolunda ve "
+"sorunsuz bir şekilde ilerleyecektir."
+
+msgid ""
+"Your booking was approved, but there was an issue completing the process. "
+"Please reach out to admin to ensure everything is properly recorded."
+msgstr ""
+"Randevunuz onaylandı, ancak işlem tamamlanırken bir sorun oluştu. Her şeyin "
+"doğru şekilde kaydedildiğinden emin olmak için lütfen bizimle iletişime "
+"geçin."
+
+msgid ""
+"Your booking was successfully processed, but it could not be approved. "
+"Please contact admin if you need assistance."
+msgstr ""
+"Randevunuz başarıyla işleme alındı, ancak onaylanamadı. Yardıma ihtiyacınız "
+"olursa lütfen bizimle iletişime geçin."
 
 msgid "Your card's expiration date is incomplete"
 msgstr "Kartınızın son kullanma tarihi eksik"
@@ -11526,6 +11773,15 @@ msgstr ""
 msgid "reCAPTCHA Type"
 msgstr "reCAPTCHA Türü"
 
+msgid "reCAPTCHA challenge expired. Please try again."
+msgstr "reCAPTCHA sorgusu süresi doldu. Lütfen tekrar deneyin."
+
+msgid "reCAPTCHA configuration is invalid."
+msgstr "reCAPTCHA yapılandırması geçersiz."
+
+msgid "reCAPTCHA could not be loaded."
+msgstr "reCAPTCHA yüklenemedi."
+
 msgid "reCAPTCHA on Customer Panel"
 msgstr "Müşteri Panelinde reCAPTCHA"
 
@@ -11534,6 +11790,9 @@ msgstr "Çalışan Panelinde reCAPTCHA"
 
 msgid "reCAPTCHA setup"
 msgstr "reCAPTCHA kurulumu"
+
+msgid "reCAPTCHA validation failed."
+msgstr "reCAPTCHA doğrulaması başarısız oldu."
 
 msgid "results"
 msgstr "sonuçlar"

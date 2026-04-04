@@ -3,6 +3,7 @@ declare(strict_types = 1);
 namespace Automattic\WooCommerce\EmailEditor\Engine\Renderer;
 if (!defined('ABSPATH')) exit;
 use Automattic\WooCommerce\EmailEditor\Engine\Renderer\ContentRenderer\Content_Renderer;
+use Automattic\WooCommerce\EmailEditor\Engine\Renderer\ContentRenderer\Process_Manager;
 use Automattic\WooCommerce\EmailEditor\Engine\Templates\Templates;
 use Automattic\WooCommerce\EmailEditor\Engine\Theme_Controller;
 use Automattic\WooCommerce\EmailEditor\Engine\PersonalizationTags\Personalization_Tags_Registry;
@@ -12,6 +13,7 @@ class Renderer {
  private Content_Renderer $content_renderer;
  private Templates $templates;
  private Css_Inliner $css_inliner;
+ private Process_Manager $process_manager;
  private Personalization_Tags_Registry $personalization_tags_registry;
  private array $personalization_tag_placeholders = array();
  const TEMPLATE_FILE = 'template-canvas.php';
@@ -21,13 +23,15 @@ class Renderer {
  Templates $templates,
  Css_Inliner $css_inliner,
  Theme_Controller $theme_controller,
- Personalization_Tags_Registry $personalization_tags_registry
+ Personalization_Tags_Registry $personalization_tags_registry,
+ Process_Manager $process_manager
  ) {
  $this->content_renderer = $content_renderer;
  $this->templates = $templates;
  $this->theme_controller = $theme_controller;
  $this->css_inliner = $css_inliner;
  $this->personalization_tags_registry = $personalization_tags_registry;
+ $this->process_manager = $process_manager;
  }
  public function render( \WP_Post $post, string $subject, string $pre_header, string $language, string $meta_robots = '', string $template_slug = '' ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
  if ( ! $template_slug ) {
@@ -36,7 +40,9 @@ class Renderer {
  // phpcs:ignore Generic.Commenting.DocComment.MissingShort -- used for phpstan
  $template = $this->templates->get_block_template( $template_slug );
  $email_styles = $this->theme_controller->get_styles();
- $template_html = $this->content_renderer->render( $post, $template );
+ $content_result = $this->content_renderer->render_without_css_inline( $post, $template );
+ $template_html = $content_result['html'];
+ $content_styles = $content_result['styles'];
  $layout = $this->theme_controller->get_layout_settings();
  ob_start();
  include self::TEMPLATE_FILE;
@@ -48,8 +54,6 @@ class Renderer {
  'color' => $email_styles['color']['text'] ?? 'inherit',
  'padding-top' => $email_styles['spacing']['padding']['top'] ?? '0px',
  'padding-bottom' => $email_styles['spacing']['padding']['bottom'] ?? '0px',
- 'padding-left' => $email_styles['spacing']['padding']['left'] ?? '0px',
- 'padding-right' => $email_styles['spacing']['padding']['right'] ?? '0px',
  'font-family' => $email_styles['typography']['fontFamily'] ?? 'inherit',
  'line-height' => $email_styles['typography']['lineHeight'] ?? '1.5',
  'font-size' => $email_styles['typography']['fontSize'] ?? 'inherit',
@@ -58,8 +62,12 @@ class Renderer {
  );
  $template_styles .= '.email_layout_wrapper { box-sizing: border-box;}';
  $template_styles .= file_get_contents( __DIR__ . '/' . self::TEMPLATE_STYLES_FILE );
- $template_styles = '<style>' . wp_strip_all_tags( (string) apply_filters( 'woocommerce_email_renderer_styles', $template_styles, $post ) ) . '</style>';
- $rendered_template = $this->inline_css_styles( $template_styles . $rendered_template );
+ $template_styles = wp_strip_all_tags( (string) apply_filters( 'woocommerce_email_renderer_styles', $template_styles, $post ) );
+ // Single CSS inlining pass: combine content and template styles, then inline all at once.
+ $all_styles = '<style>' . $template_styles . $content_styles . '</style>';
+ $rendered_template = $this->inline_css_styles( $all_styles . $rendered_template );
+ // Postprocess after CSS inlining (border normalization, CSS variable replacement, etc.).
+ $rendered_template = $this->process_manager->postprocess( $rendered_template );
  // This is a workaround to support link :hover in some clients. Ideally we would remove the ability to set :hover
  // however this is not possible using the color panel from Gutenberg.
  if ( isset( $email_styles['elements']['link'][':hover']['color']['text'] ) ) {

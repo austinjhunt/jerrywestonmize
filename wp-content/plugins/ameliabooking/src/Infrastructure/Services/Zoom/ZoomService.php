@@ -8,7 +8,6 @@
 namespace AmeliaBooking\Infrastructure\Services\Zoom;
 
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
-use AmeliaVendor\Firebase\JWT\JWT;
 
 /**
  * Class ZoomService
@@ -17,30 +16,9 @@ use AmeliaVendor\Firebase\JWT\JWT;
  */
 class ZoomService extends AbstractZoomService
 {
-    /**
-     * ZoomService constructor.
-     *
-     * @param SettingsService $settingsService
-     */
     public function __construct(SettingsService $settingsService)
     {
         $this->settingsService = $settingsService;
-    }
-
-    /**
-     * @param string $apiKey
-     * @param string $apiSecret
-     *
-     * @return string
-     */
-    private function getJwtToken($apiKey, $apiSecret)
-    {
-        $token = [
-            'iss' => $apiKey,
-            'exp' => time() + 3600
-        ];
-
-        return JWT::encode($token, $apiSecret, 'HS256');
     }
 
     /**
@@ -86,8 +64,6 @@ class ZoomService extends AbstractZoomService
         if ($result === false) {
             return null;
         }
-
-        curl_close($ch);
 
         $resultArray = json_decode($result, true);
 
@@ -141,8 +117,6 @@ class ZoomService extends AbstractZoomService
         if ($result === false || $code === 401) {
             return ['message' => curl_error($ch), 'code' => curl_getinfo($ch, CURLINFO_HTTP_CODE), 'users' => null];
         }
-
-        curl_close($ch);
 
         return json_decode($result, true);
     }

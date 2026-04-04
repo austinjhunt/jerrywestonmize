@@ -23,6 +23,8 @@ class PackagesCustomersServicesTable extends AbstractDatabaseTable
     {
         $table = self::getTableName();
 
+        $charsetCollate = self::getCharsetCollate();
+
         return "CREATE TABLE {$table} (
                     `id` INT(11) NOT NULL AUTO_INCREMENT,
                     `packageCustomerId` INT(11) NOT NULL,
@@ -31,7 +33,7 @@ class PackagesCustomersServicesTable extends AbstractDatabaseTable
                     `locationId` INT(11) NULL,
                     `bookingsCount` INT(5) DEFAULT NULL,
                     PRIMARY KEY (`id`)
-                ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
+                ) {$charsetCollate};";
     }
 
     /**

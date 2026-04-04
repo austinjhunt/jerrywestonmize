@@ -13,6 +13,7 @@ use AmeliaBooking\Application\Controller\Google\FetchAccessTokenWithAuthCodeCont
 use AmeliaBooking\Application\Controller\Google\FetchGoogleMiddlewareAccessTokenController;
 use AmeliaBooking\Application\Controller\Google\GetGoogleAuthURLController;
 use AmeliaBooking\Application\Controller\Google\GetGoogleMiddlewareAuthURLController;
+use AmeliaBooking\Application\Controller\Google\VerifyRecaptchaController;
 use Slim\App;
 
 /**
@@ -34,6 +35,8 @@ class Google
         $app->post('/google/disconnect/{id:[0-9]+}', DisconnectFromGoogleAccountController::class);
 
         $app->post('/google/authorization/token', FetchAccessTokenWithAuthCodeController::class);
+
+        $app->post('/google/recaptcha/verify', VerifyRecaptchaController::class);
 
         // Middleware routes for Google Calendar integration
 

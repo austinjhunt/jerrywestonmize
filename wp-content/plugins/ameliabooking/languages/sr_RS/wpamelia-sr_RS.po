@@ -10,13 +10,13 @@ msgstr ""
 "&& n%10<=4) && ((n%100<12 || n%100>14))) ? 1 : 2;\n"
 
 msgid "\"Book now\" Button Type"
-msgstr ""
+msgstr "Tip dugmeta \"Rezerviši\""
 
 msgid "\"Go back\" Button Type"
-msgstr ""
+msgstr "Tip dugmeta \"Idi nazad\""
 
 msgid "\"I'm not a robot\" checkbox"
-msgstr ""
+msgstr "Polje za potvrdu \"Nisam robot\""
 
 msgid "\"Paying now\" Button Type"
 msgstr "Tip Dugmeta za Panel"
@@ -31,100 +31,109 @@ msgid "# of appointments"
 msgstr "Broj termina"
 
 msgid "# of bookings"
-msgstr ""
+msgstr "Broj rezervacija"
 
 msgid "'Back' button style"
-msgstr ""
+msgstr "Stil dugmeta \"Nazad\""
 
 msgid "'Book' button style"
-msgstr ""
+msgstr "Stil dugmeta \"Rezerviši\""
 
 msgid "'Book another' button style"
-msgstr ""
+msgstr "Stil dugmeta \"Rezerviši još\""
 
 msgid "'Book now' button style"
-msgstr ""
+msgstr "Stil dugmeta \"Rezerviši\""
 
 msgid ""
 "'Booking Date and Time' sets the limit based on when the booking is made, "
 "regardless of the appointment date. 'Appointment Date and Time' sets the "
 "limit based on the scheduled appointment itself."
 msgstr ""
+"'Datum i vreme rezervacije' postavlja ograničenje na osnovu kada je "
+"rezervacija napravljena, bez obzira na datum termina. \"Datum i vreme "
+"termina\" postavlja ograničenje na osnovu samog zakazanog termina."
 
 msgid "'Bringing anyone with you' popup"
-msgstr ""
+msgstr "Iskačući prozor \"Da li dovodite nekoga sa sobom\""
 
 msgid "'Cancel' button style"
-msgstr ""
+msgstr "Stil dugmeta \"Otkaži\""
 
 msgid "'Change password' button style"
-msgstr ""
+msgstr "Stil dugmeta \"Promeni lozinku\""
 
 msgid "'Close' button style"
-msgstr ""
+msgstr "Stil dugmeta \"Zatvori\""
 
 msgid "'Confirm' button style"
-msgstr ""
+msgstr "Stil dugmeta \"Potvrdi\""
 
 msgid "'Continue' button style"
-msgstr ""
+msgstr "Stil dugmeta \"Nastavi\""
 
 msgid "'Customer panel' button style"
-msgstr ""
+msgstr "Stil dugmeta \"Korisnički panel\""
 
 msgid "'Delete' button style"
-msgstr ""
+msgstr "Stil dugmeta \"Izbriši\""
 
 msgid "'Filter' button style"
-msgstr ""
+msgstr "Stil dugmeta \"Filter\""
 
 msgid "'Finish' button style"
-msgstr ""
+msgstr "Stil dugmeta \"Završi\""
 
 msgid "'Join waiting list' button style"
-msgstr ""
+msgstr "Stil dugmeta 'Pridruži se listi čekanja'"
 
 msgid "'Learn more' button"
-msgstr ""
+msgstr "Dugme 'Saznaj više'"
 
 msgid "'Learn more' button style"
-msgstr ""
+msgstr "Stil dugmeta 'Saznaj više'"
 
 msgid "'New Event' button style"
-msgstr ""
+msgstr "Stil dugmeta 'Novi događaj\""
 
 msgid "'New appointment' button style"
-msgstr ""
+msgstr "Stil dugmeta 'Novi termin'"
 
 msgid "'Read more' button style"
-msgstr ""
+msgstr "Stil dugmeta 'Pročitaj više'"
 
 msgid "'Save changes' button style"
-msgstr ""
+msgstr "Stil dugmeta 'Sačuvaj promene'"
 
 msgid "'Scan e-ticket' button"
-msgstr ""
+msgstr "Dugme 'Skeniraj e-kartu'"
 
 msgid "'Send' button style"
-msgstr ""
+msgstr "Stil dugmeta 'Pošalji'"
 
 msgid "'Set password' button style"
-msgstr ""
+msgstr "Stil dugmeta 'Podesi lozinku'"
 
 msgid "'Sign in' button style"
-msgstr ""
+msgstr "Stil dugmeta 'Prijavi se'"
 
 msgid "'View employee' button style"
-msgstr ""
+msgstr "Stil dugmeta 'Pogledaj zaposlenog'"
 
 msgid "'View in package' button"
-msgstr ""
+msgstr "Dugme 'Vidi unutar paketa'"
 
 msgid "+more"
 msgstr "+još"
 
 msgid "+{count} more"
 msgstr ""
+
+msgid "1/1 width"
+msgstr "Širina 1/1"
+
+msgid "1/2 width"
+msgstr "Širina 1/2"
 
 msgid "10h"
 msgstr "10č"
@@ -287,18 +296,20 @@ msgid ""
 "amount can either be multiplied by the number of people or applied as a "
 "single total amount."
 msgstr ""
+"Procentualni depozit se izračunava na osnovu cene rezervacije. Fiksni iznos "
+"se može pomnožiti brojem ljudi ili primeniti kao jedan ukupan iznos."
 
 msgid "A server error occurred. Please try again later."
-msgstr ""
+msgstr "Došlo je do greške na serveru. Molimo pokušajte ponovo kasnije."
 
 msgid "A single booking may include multiple attendees (spots)."
-msgstr ""
+msgstr "Jedna rezervacija može sadržati više učesnika (mesta)."
 
 msgid "About"
 msgstr "Više detalja"
 
 msgid "About Event"
-msgstr "O Ovom Događaju"
+msgstr "O događaju"
 
 msgid "About Package"
 msgstr "O Paketu"
@@ -307,25 +318,25 @@ msgid "About Service"
 msgstr "O Servisu"
 
 msgid "About event"
-msgstr ""
+msgstr "O događaju"
 
 msgid "About package"
-msgstr ""
+msgstr "O paketu"
 
 msgid "About service"
-msgstr ""
+msgstr "O servisu"
 
 msgid "About this Event"
 msgstr "O Ovom Događaju"
 
 msgid "About this event"
-msgstr ""
+msgstr "O ovom događaju"
 
 msgid "Accent"
-msgstr ""
+msgstr "Akcentna boja"
 
 msgid "Accent text"
-msgstr ""
+msgstr "Akcentni tekst"
 
 msgid "Accept payments for bookings and services via PayPal."
 msgstr ""
@@ -337,7 +348,7 @@ msgid "Accept payments via Razorpay, ideal for Indian businesses."
 msgstr ""
 
 msgid "Access link"
-msgstr ""
+msgstr "Pristupni link"
 
 msgid "Access link success"
 msgstr ""
@@ -352,10 +363,10 @@ msgid "Action"
 msgstr "Akcija"
 
 msgid "Action-based notification"
-msgstr ""
+msgstr "Obaveštenje pokrenuto akcijom"
 
 msgid "Action Triggered"
-msgstr ""
+msgstr "Pokrenuto akcijom"
 
 msgid "Actions"
 msgstr "Akcije"
@@ -373,7 +384,7 @@ msgid "Activation"
 msgstr "Aktivacija"
 
 msgid "Activation settings"
-msgstr ""
+msgstr "Podešavanja aktivacije"
 
 msgid "Active"
 msgstr "Aktivno"
@@ -439,6 +450,9 @@ msgstr ""
 msgid "Add appointment"
 msgstr "Dodaj termina"
 
+msgid "Add booking"
+msgstr ""
+
 msgid "Add category"
 msgstr ""
 
@@ -446,6 +460,9 @@ msgid "Add custom field"
 msgstr ""
 
 msgid "Add custom notification"
+msgstr ""
+
+msgid "Add customer"
 msgstr ""
 
 msgid "Add date range"
@@ -467,8 +484,11 @@ msgstr ""
 "Dodaj ID elementa (dugme, link...) koji će ručno učitati sadržaj Amelia "
 "shortcode-a"
 
+msgid "Add event"
+msgstr "Dodaj događaj"
+
 msgid "Add event attendees"
-msgstr ""
+msgstr "Dodaj učesnike događaja"
 
 msgid "Add extra"
 msgstr "Dodaj dodatak"
@@ -486,6 +506,9 @@ msgid ""
 msgstr ""
 
 msgid "Add option"
+msgstr ""
+
+msgid "Add package"
 msgstr ""
 
 msgid "Add period"
@@ -619,9 +642,6 @@ msgstr "Dozvoli administratoru da rezerviše termin u bilo koje vreme"
 
 msgid "Allow booking above maximum capacity"
 msgstr "Dozvoli rezervisanje preko maksimalnog kapaciteta"
-
-msgid "Allow booking below minimum capacity"
-msgstr "Dozvoli rezervacije ispod minimalnog kapaciteta"
 
 msgid "Allow booking without a prior login"
 msgstr "Dozvoli rezervacije bez logovanja"
@@ -780,9 +800,6 @@ msgstr "Amelia Podešavanja Korisnika"
 
 msgid "Amount"
 msgstr "Količina"
-
-msgid "Amount:"
-msgstr "Iznos:"
 
 msgid "An email with details of your booking has been sent to you."
 msgstr "Email sa detaljima o vašoj rezervaciji vam je poslat."
@@ -965,6 +982,9 @@ msgid "Appointment status has been changed to "
 msgstr "Status termina je promenjen na"
 
 msgid "Appointment status has been updated."
+msgstr ""
+
+msgid "Appointment title"
 msgstr ""
 
 msgid "Appointments"
@@ -1160,6 +1180,11 @@ msgstr "Da li ste sigurni da želite da prikažete ovaj servis?"
 msgid "Are you sure you want to show this tax?"
 msgstr "Da li ste sigurni da želite da prikažete ovaj paket?"
 
+msgid ""
+"Are you sure you want to skip the setup? Once skipped, the guided setup will "
+"no longer be available. All settings will need to be configured later."
+msgstr ""
+
 msgid "Are you sure you want to unblock this customer?"
 msgstr "Da li ste sigurni da želite da izbrišete ovu mušteriju?"
 
@@ -1211,10 +1236,10 @@ msgstr "Učesnici su izbrisani"
 msgid "Attendees have not been deleted"
 msgstr "Učesnici nisu izbrisani"
 
-msgid "Auto-Approve Booking After Payment"
+msgid "Auto-Reply Message"
 msgstr ""
 
-msgid "Auto-Reply Message"
+msgid "Auto-approve booking after payment"
 msgstr ""
 
 msgid "Auto-fill your details using:"
@@ -1410,7 +1435,7 @@ msgid "Book Appointment"
 msgstr "Zakaži Termin"
 
 msgid "Book Now"
-msgstr "Rezerviši Sada"
+msgstr "Rezerviši"
 
 msgid "Book Package"
 msgstr "Rezerviši Paket"
@@ -1422,7 +1447,7 @@ msgid "Book This Service"
 msgstr "Rezerviši Ovaj Servis"
 
 msgid "Book another"
-msgstr "Rezerviši sada"
+msgstr "Rezerviši još"
 
 msgid "Book appointment"
 msgstr ""
@@ -1434,7 +1459,7 @@ msgid "Book next appointment"
 msgstr "Rezerviši sledeći termin"
 
 msgid "Book now"
-msgstr "Rezerviši sada"
+msgstr "Rezerviši"
 
 msgid "Book option on employee dialog"
 msgstr ""
@@ -1449,6 +1474,11 @@ msgid "Book this event"
 msgstr "Rezerviši ovaj događaj"
 
 msgid "Book this service"
+msgstr ""
+
+msgid ""
+"Book time-based appointments with configurable durations, prices, and "
+"availability."
 msgstr ""
 
 msgid "Booked"
@@ -1469,6 +1499,12 @@ msgstr ""
 msgid "Booking Appointment"
 msgstr "Rezervacija Termina"
 
+msgid "Booking Approved with Issues"
+msgstr ""
+
+msgid "Booking Canceled"
+msgstr ""
+
 msgid "Booking Closes"
 msgstr "Rezervacija se zatvara"
 
@@ -1478,7 +1514,13 @@ msgstr ""
 msgid "Booking Closes Desc"
 msgstr ""
 
+msgid "Booking Confirmed"
+msgstr ""
+
 msgid "Booking Details"
+msgstr ""
+
+msgid "Booking Failed"
 msgstr ""
 
 msgid "Booking Form"
@@ -1501,6 +1543,12 @@ msgstr ""
 
 msgid "Booking Overview"
 msgstr "Pregled Rezervacije"
+
+msgid "Booking Processed"
+msgstr ""
+
+msgid "Booking Rejected"
+msgstr ""
 
 msgid "Booking added"
 msgstr ""
@@ -1622,7 +1670,7 @@ msgid "Bringing Anyone With You"
 msgstr "Da li dovodite nekoga sa sobom"
 
 msgid "Bringing anyone with you"
-msgstr ""
+msgstr "Da li dovodite nekoga sa sobom"
 
 msgid "Bringing anyone with you?"
 msgstr "Da li dovodite nekoga sa sobom?"
@@ -1755,6 +1803,9 @@ msgstr ""
 msgid "Canceled by attendee"
 msgstr ""
 
+msgid "Cancellation Failed"
+msgstr ""
+
 msgid "Cancelled"
 msgstr "Otkazano"
 
@@ -1788,8 +1839,8 @@ msgstr "Kartice"
 msgid "Cards and buttons"
 msgstr ""
 
-msgid "Carrier:"
-msgstr "Provajder:"
+msgid "Carrier"
+msgstr ""
 
 msgid "Cart"
 msgstr "Korpa"
@@ -1950,6 +2001,9 @@ msgstr "Izaberi Servis"
 msgid "Choose a Form"
 msgstr "Izaberite Formu"
 
+msgid "Choose a currency that will be used for all price based settings."
+msgstr ""
+
 msgid ""
 "Choose a form you want to customize. The Step-by-Step 2.0 form is the new "
 "and improved version which provides you with better design and user "
@@ -1961,6 +2015,11 @@ msgstr ""
 
 msgid "Choose a group service"
 msgstr "Izaberi grupni servis"
+
+msgid ""
+"Choose a time interval that will be used when defining all time based "
+"settings."
+msgstr ""
 
 msgid "Choose date and time"
 msgstr ""
@@ -1998,6 +2057,9 @@ msgstr "Izaberite vreme kada želite da ponovite termin"
 
 msgid "Choose when the repeating ends"
 msgstr "Izaberite kada se ponavljanje završava"
+
+msgid "Choose whether you want to manage services, events, or both."
+msgstr ""
 
 msgid "Choosing layout of first step in step by step form"
 msgstr ""
@@ -2164,7 +2226,7 @@ msgid "Configure the recurring appointments details placeholder."
 msgstr ""
 
 msgid "Configure waiting list for appointments"
-msgstr ""
+msgstr "Konfiguriši listu čekanja za termine"
 
 msgid "Confirm"
 msgstr "Potvrdi"
@@ -2277,11 +2339,14 @@ msgstr "Nastavi"
 msgid "Continue Booking"
 msgstr "Nastavi sa Rezervacijom"
 
+msgid "Continue setup"
+msgstr ""
+
 msgid "Copy your API key now, as it won't be visible again."
 msgstr ""
 
-msgid "Cost:"
-msgstr "Cena:"
+msgid "Cost"
+msgstr ""
 
 msgid ""
 "Could not delete category. This category has services available for booking "
@@ -2407,6 +2472,12 @@ msgid ""
 "time."
 msgstr ""
 
+msgid "Create employee"
+msgstr ""
+
+msgid "Create event"
+msgstr ""
+
 msgid "Create meetings for pending appointments"
 msgstr ""
 
@@ -2431,6 +2502,12 @@ msgid ""
 "when everything they need is truly available."
 msgstr ""
 
+msgid "Create scheduled events with fixed dates, prices and capacities."
+msgstr ""
+
+msgid "Create service"
+msgstr ""
+
 msgid "Create spaces for pending appointments"
 msgstr "Kreiraj space-eve za termine u čekanju"
 
@@ -2442,6 +2519,9 @@ msgstr ""
 
 msgid "Created On"
 msgstr "Kreirano"
+
+msgid "Created on"
+msgstr ""
 
 msgid "Credit Card"
 msgstr "Kreditna Kartica"
@@ -2549,9 +2629,6 @@ msgstr ""
 msgid "Customer Desc"
 msgstr ""
 
-msgid "Customer Name"
-msgstr "Ime Mušterije"
-
 msgid "Customer Panel"
 msgstr "Korisnički Panel"
 
@@ -2603,6 +2680,9 @@ msgstr ""
 msgid "Customer last name"
 msgstr "Prezime Mušterije"
 
+msgid "Customer name"
+msgstr ""
+
 msgid "Customer note"
 msgstr "Zabeleška o Mušteriji"
 
@@ -2653,6 +2733,9 @@ msgid "Customers imported from file:"
 msgstr ""
 
 msgid "Customers in Waiting list"
+msgstr ""
+
+msgid "Customers will be redirected to this URL after booking an event."
 msgstr ""
 
 msgid ""
@@ -2828,7 +2911,7 @@ msgstr ""
 msgid "Default appointment status"
 msgstr ""
 
-msgid "Default back‑end page"
+msgid "Default back end page"
 msgstr ""
 
 msgid "Default language"
@@ -3464,6 +3547,9 @@ msgstr ""
 msgid "Employee last name"
 msgstr "Prezime Zaposlenog"
 
+msgid "Employee name"
+msgstr ""
+
 msgid "Employee name, email & phone"
 msgstr "Ime, email i telefon zaposlenog"
 
@@ -3625,16 +3711,22 @@ msgid ""
 "Enable this option to add event attendees to employees’ Apple Calendar "
 "events."
 msgstr ""
+"Uključite ovu opciju da biste dodali učesnike događaja u događaje zaposlenih "
+"unutar Apple kalendara."
 
 msgid ""
 "Enable this option to add event attendees to employees’ Google Calendar "
 "events."
 msgstr ""
+"Uključite ovu opciju da biste dodali učesnike događaja u događaje zaposlenih "
+"unutar Google kalendara."
 
 msgid ""
 "Enable this option to add event attendees to employees’ Outlook Calendar "
 "events."
 msgstr ""
+"Ukključite ovu opciju da biste dodali učesnike događaja u događaje "
+"zaposlenih unutar Outlook kalendara."
 
 msgid ""
 "Enable this option to create meetings for appointments with pending status."
@@ -3799,6 +3891,10 @@ msgid ""
 "to send it to your customers in notifications. Make sure to also add the "
 "placeholder in notification so the URL can be sent."
 msgstr ""
+"Ovde unesite URL stranice koja sadrži [ameliacustomerpanel] kratki kod "
+"ukoliko želite da je pošaljete svojim mušterijama u obaveštenjima. Takođe se "
+"postarajte da dodate %customer_panel_url% unutar obaveštenja da bi URL mogao "
+"biti poslat."
 
 msgid ""
 "Enter here URL of the page with [ameliaemployeepanel] shortcode if you want "
@@ -3822,7 +3918,7 @@ msgid "Enter redirect URL"
 msgstr ""
 
 msgid "Enter the event name that will be sent for tracking purposes."
-msgstr ""
+msgstr "Unesi naziv događaja koji će biti poslat u svrhu praćenja."
 
 msgid "Enter ticket code"
 msgstr "Karte za Događaj"
@@ -3846,6 +3942,9 @@ msgstr "Unesite svoju lozinku"
 
 msgid "Error"
 msgstr "Greška"
+
+msgid "Error occurred"
+msgstr ""
 
 msgid "Error while generating CSV."
 msgstr ""
@@ -4562,7 +4661,7 @@ msgid "Go Back"
 msgstr "Idi Nazad"
 
 msgid "Go back"
-msgstr ""
+msgstr "Idi nazad"
 
 msgid "Go to Catalog form"
 msgstr ""
@@ -4670,6 +4769,9 @@ msgstr ""
 
 msgid "Header"
 msgstr "Zaglavlje"
+
+msgid "Header Image URL"
+msgstr ""
 
 msgid "Heading"
 msgstr ""
@@ -4833,6 +4935,9 @@ msgstr ""
 msgid "How to get your"
 msgstr ""
 
+msgid "How will you use Amelia?"
+msgstr ""
+
 msgid "ID"
 msgstr ""
 
@@ -4857,8 +4962,18 @@ msgid ""
 msgstr ""
 
 msgid ""
+"If disabled, booking must meet the minimum capacity, and the time slot "
+"closes after the first booking."
+msgstr ""
+
+msgid ""
 "If disabled, the price will remain the same regardless of how many people "
 "are included in the group appointment."
+msgstr ""
+
+msgid ""
+"If enabled, customers can book with Pending status even after maximum "
+"capacity is reached."
 msgstr ""
 
 msgid ""
@@ -4890,28 +5005,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"If this is disabled, your front-end customers won't be able to book "
-"appointment with Pending status above the maximum capacity. Once the maximum "
-"capacity is reached appointment will close and time slot will become "
-"unavailable."
-msgstr ""
-
-msgid ""
-"If this is disabled, your front-end customers won't be able to submit a "
-"booking unless they fill in the minimum service capacity, but once they book "
-"for any capacity above minimum, the time slot will become unavailable for "
-"booking for others. If enabled, multiple customers will be able to book the "
-"same time slot, without having to fill in the minimum capacity."
-msgstr ""
-
-msgid ""
-"If this option is disabled, the employee will only be available for booking "
-"through the back-end"
-msgstr ""
-
-msgid ""
-"If this option is disabled, the service will be bookable only from the back "
-"end."
+"If this option is disabled, the item will be available only for booking from "
+"the backend."
 msgstr ""
 
 msgid ""
@@ -4920,11 +5015,6 @@ msgid ""
 msgstr ""
 "Ako je ova opcija uključena, mušterije će moći da plate kroz email "
 "obaveštenja ili kroz svoj Korisnički Panel."
-
-msgid ""
-"If this option is enabled time slots will be shown with included service "
-"buffer time."
-msgstr ""
 
 msgid ""
 "If this option is not checked the plugin will calculate the time <br> for "
@@ -5039,6 +5129,25 @@ msgid ""
 "in their package"
 msgstr ""
 
+msgid ""
+"In Amelia, a “service” is a specific appointment-type offering your business "
+"provides to clients - such as consultations, treatments, or classes - that "
+"can be fully customized with its own name, duration, price, capacity, "
+"availability, and extras, and booked online with assigned employees."
+msgstr ""
+
+msgid ""
+"In Amelia, an employee is a team member who provides services or hosts "
+"events, with their own schedule, working hours, and assigned offerings."
+msgstr ""
+
+msgid ""
+"In Amelia, an event is a booking-type offering designed for group activities "
+"or multi-day occasions - such as workshops, conferences, tours, or training "
+"series - that can be configured with its own schedule, capacity, pricing "
+"structure and assigned staff."
+msgstr ""
+
 msgid "In Package"
 msgstr "U Paketu"
 
@@ -5052,6 +5161,11 @@ msgid "Include Taxes"
 msgstr "uključuje"
 
 msgid "Include buffer time in calendar events"
+msgstr ""
+
+msgid ""
+"Include buffer time in slot calculation. When disabled, slots are based only "
+"on service duration."
 msgstr ""
 
 msgid "Include in invoice"
@@ -5135,6 +5249,9 @@ msgstr "Integracije"
 msgid "Interested in unlocking this feature?"
 msgstr ""
 
+msgid "Invalid Stripe secret key."
+msgstr ""
+
 msgid "Invisible reCAPTCHA badge"
 msgstr ""
 
@@ -5178,6 +5295,11 @@ msgid "Invoices setup"
 msgstr ""
 
 msgid "Issued"
+msgstr ""
+
+msgid ""
+"It looks like this is your first time here, so let’s walk through a few "
+"simple steps to help you get started."
 msgstr ""
 
 msgid ""
@@ -5258,6 +5380,9 @@ msgstr ""
 msgid ""
 "Keep operations aligned with unified settings, availability, and resource "
 "control"
+msgstr ""
+
+msgid "Keep slot available after first booking"
 msgstr ""
 
 msgid ""
@@ -5446,9 +5571,6 @@ msgstr "Lokalno Vreme:"
 msgid "Local time"
 msgstr ""
 
-msgid "Local time:"
-msgstr ""
-
 msgid "Location"
 msgstr "Lokacija"
 
@@ -5580,6 +5702,9 @@ msgid ""
 msgstr ""
 
 msgid "Make extra mandatory"
+msgstr ""
+
+msgid "Make sure you are using the correct WhatsApp credentials."
 msgstr ""
 
 msgid "Male"
@@ -5945,9 +6070,6 @@ msgstr ""
 msgid "No"
 msgstr "Ne"
 
-msgid "No, Cancel"
-msgstr "Ne, Otkaži"
-
 msgid "No, just this one"
 msgstr "Ne, samo ovaj"
 
@@ -6162,7 +6284,7 @@ msgid "Notify attendees by email when event information is updated."
 msgstr ""
 
 msgid "Notify selected employees about empty package purchases"
-msgstr ""
+msgstr "Obavesti izabrane zaposlene o kupovini praznih paketa"
 
 msgid "Notify the attendee(s)"
 msgstr "Obavesti mušteriju/mušterije"
@@ -6172,9 +6294,6 @@ msgstr ""
 
 msgid "Notify the customer(s)"
 msgstr "Obavesti mušteriju/mušterije"
-
-msgid "Notify the customer(s) by default"
-msgstr "Uvek obavesti mušteriju/mušterije"
 
 msgid "Number of Additional People"
 msgstr "Broj Dodatnih Osoba"
@@ -6364,7 +6483,7 @@ msgstr ""
 
 msgid ""
 "Once you start receiving bookings, your customers will be displayed here. "
-"You can also get started by clicking the Add button below."
+"You can also get started by clicking the Add or Import button below."
 msgstr ""
 
 msgid "One booking can have multiple attendees/spots in it."
@@ -6420,9 +6539,6 @@ msgstr ""
 
 msgid "Or"
 msgstr "Ili"
-
-msgid "Or Enter details below"
-msgstr "Unesite email adresu"
 
 msgid "Or enter details below"
 msgstr "Detalji Grupnog Događaja"
@@ -6778,9 +6894,6 @@ msgstr "Istorija Uplata"
 msgid "Payment ID"
 msgstr "ID uplate"
 
-msgid "Payment ID:"
-msgstr "ID uplate:"
-
 msgid "Payment Method"
 msgstr "Metod Uplate"
 
@@ -6846,6 +6959,9 @@ msgstr "Tip Uplate"
 
 msgid "Payment type, deposit payment..."
 msgstr "Tip Uplate, uplata depozita..."
+
+msgid "Payment was canceled."
+msgstr ""
 
 msgid "Payments"
 msgstr "Uplate"
@@ -6969,6 +7085,11 @@ msgstr ""
 
 msgid "Placeholders"
 msgstr "Placeholder-i"
+
+msgid ""
+"Places API (New) is required but not enabled. Please enable it in Google "
+"Cloud Console."
+msgstr ""
 
 msgid "Plain"
 msgstr "Obično"
@@ -7131,20 +7252,20 @@ msgstr "Molimo unesite prezime"
 msgid "Please enter live API Key"
 msgstr "Molimo unesite Live API ključ"
 
-msgid "Please enter live ClientId"
-msgstr "Molimo unesite Live ID klijenta"
-
 msgid "Please enter live POSKey"
 msgstr "Molimo unesite Live API ključ"
 
-msgid "Please enter live Secret"
-msgstr "Molimo unesite Live tajnu"
+msgid "Please enter live client ID"
+msgstr ""
 
-msgid "Please enter live key id"
-msgstr "Molimo unesite Live ID ključa"
+msgid "Please enter live key ID"
+msgstr ""
 
 msgid "Please enter live key secret"
 msgstr "Molimo unesite Live tajnu ključa"
+
+msgid "Please enter live secret"
+msgstr ""
 
 msgid "Please enter name"
 msgstr "Molimo unesite ime"
@@ -7179,17 +7300,17 @@ msgstr ""
 msgid "Please enter test API Key"
 msgstr "Molimo unesite test API ključ"
 
-msgid "Please enter test ClientId"
-msgstr "Molimo unesite Test ID klijenta"
+msgid "Please enter test client ID"
+msgstr ""
 
-msgid "Please enter test Secret"
-msgstr "Molimo unesite Test tajnu"
-
-msgid "Please enter test key id"
-msgstr "Molimo unesite Test ID ključa"
+msgid "Please enter test key ID"
+msgstr ""
 
 msgid "Please enter test key secret"
 msgstr "Molimo unesite Test tajnu ključa"
+
+msgid "Please enter test secret"
+msgstr ""
 
 msgid "Please enter waiting list capacity"
 msgstr ""
@@ -7837,6 +7958,9 @@ msgstr "Resetuj Formu"
 msgid "Reset Password"
 msgstr "Resetuj Lozinku"
 
+msgid "Reset form settings"
+msgstr ""
+
 msgid "Reset password"
 msgstr ""
 
@@ -7867,6 +7991,9 @@ msgstr ""
 msgid "Resources"
 msgstr "Resursi"
 
+msgid "Return to Home"
+msgstr ""
+
 msgid "Returning"
 msgstr "Stalne mušterije"
 
@@ -7886,7 +8013,7 @@ msgid "Roles settings"
 msgstr ""
 
 msgid "Round-robin"
-msgstr ""
+msgstr "Kružni sistem"
 
 msgid "Rules"
 msgstr ""
@@ -7924,6 +8051,9 @@ msgstr "SMTP bezbednost"
 msgid "SMTP Username"
 msgstr "SMTP korisničko ime"
 
+msgid "SMTP credentials validation failed. Please check your settings."
+msgstr ""
+
 msgid "SSL"
 msgstr ""
 
@@ -7934,7 +8064,7 @@ msgid "Sandbox mode"
 msgstr ""
 
 msgid "Sandbox secret key (POSKey)"
-msgstr ""
+msgstr "Sandbox tajni ključ (POSKey)"
 
 msgid "Sat"
 msgstr ""
@@ -8100,7 +8230,7 @@ msgid "Secondary text"
 msgstr ""
 
 msgid "Secret key (POSKey)"
-msgstr ""
+msgstr "Tajni ključ (POSKey)"
 
 msgid "Section"
 msgstr "Sekcija"
@@ -8108,7 +8238,7 @@ msgstr "Sekcija"
 msgid "Securely process payments using Stripe."
 msgstr ""
 
-msgid "Segment:"
+msgid "Segment"
 msgstr ""
 
 msgid "Segments"
@@ -8193,6 +8323,9 @@ msgid "Select Zoom User"
 msgstr "Izaberi Zoom korisnika"
 
 msgid "Select a placeholder to insert it where your cursor is placed."
+msgstr ""
+
+msgid "Select at least one option."
 msgstr ""
 
 msgid "Select box"
@@ -8387,8 +8520,8 @@ msgstr "Pošalji Test Email"
 msgid "Send your customer data to Mailchimp quickly and effortlessly."
 msgstr ""
 
-msgid "Sender ID supports up to 11 characters"
-msgstr "ID Pošiljaoca podržava maksimalno 11 karaktera"
+msgid "Sender ID must be between 3 and 11 characters"
+msgstr ""
 
 msgid "Sender email"
 msgstr ""
@@ -8570,6 +8703,9 @@ msgid ""
 "maximize accessibility and revenue."
 msgstr ""
 
+msgid "Set general settings"
+msgstr ""
+
 msgid ""
 "Set individual time zones for employees so availability and bookings are "
 "shown correctly for clients worldwide."
@@ -8717,6 +8853,11 @@ msgstr "Podesite vidljivost i labele"
 msgid "Set your Google Map API Key in General Settings"
 msgstr "Podesite vaš Google Map API ključ u Opštim Podešavanjima"
 
+msgid ""
+"Set your company working hours. This schedule will be used for all new "
+"employees, however you can customize schedule for each employee later."
+msgstr ""
+
 msgid "Setting up days off"
 msgstr ""
 
@@ -8740,6 +8881,9 @@ msgstr ""
 
 msgid "Show"
 msgstr "Prikaži"
+
+msgid "Show Add To Calendar option to customers"
+msgstr ""
 
 msgid "Show All"
 msgstr "Prikaži Sve"
@@ -8899,6 +9043,9 @@ msgstr ""
 msgid "Sign in with Google"
 msgstr "Uloguj se sa Google-om"
 
+msgid "Sign in with Microsoft"
+msgstr ""
+
 msgid "Sign in with Outlook"
 msgstr "Uloguj se sa Outlook-om"
 
@@ -8947,6 +9094,9 @@ msgstr ""
 
 msgid "Skip packages and continue with the selected service"
 msgstr "Preskočite pakete i nastavite sa izabranim servisom"
+
+msgid "Skip setup"
+msgstr ""
 
 msgid "Slot end time"
 msgstr ""
@@ -9087,9 +9237,6 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-msgid "Status:"
-msgstr ""
-
 msgid "Status Asc"
 msgstr ""
 
@@ -9125,6 +9272,18 @@ msgid "Step-by-step"
 msgstr ""
 
 msgid "Step-by-step booking form guide"
+msgstr ""
+
+msgid "Step 1"
+msgstr ""
+
+msgid "Step 2"
+msgstr ""
+
+msgid "Step 3"
+msgstr ""
+
+msgid "Step 4"
 msgstr ""
 
 msgid "Step Booking"
@@ -9227,6 +9386,11 @@ msgstr "URL za preusmeravanje nakon rezervacije"
 msgid "Suggest closest available date"
 msgstr ""
 
+msgid ""
+"Suggest customers to add an appointment to their calendar when booking is "
+"finalized."
+msgstr ""
+
 msgid "Suggest next available date"
 msgstr ""
 
@@ -9272,6 +9436,11 @@ msgstr ""
 msgid ""
 "Sync your Stripe Connect account for effortless payments and seamless "
 "payouts."
+msgstr ""
+
+msgid ""
+"Sync your and your employee's personal and professional events by connection "
+"Outlook calendars."
 msgstr ""
 
 msgid ""
@@ -9398,9 +9567,6 @@ msgstr ""
 
 msgid "Text"
 msgstr "Tekst"
-
-msgid "Text:"
-msgstr "Tekst:"
 
 msgid "Text Mode"
 msgstr "Tekst mod"
@@ -9574,6 +9740,8 @@ msgid ""
 "These employees will receive the package purchased e-mail notification when "
 "it is purchased without any appointments booked."
 msgstr ""
+"Ovi zaposleni će dobiti obaveštenje o kupljenom paketu putem elektronske "
+"pošte kada je paket kupljen bez zakazanih termina."
 
 msgid "Third"
 msgstr "Treći"
@@ -9587,8 +9755,14 @@ msgstr ""
 msgid "This Only"
 msgstr ""
 
+msgid "This appointment is a part of a package."
+msgstr ""
+
 msgid "This booking is part of a package deal"
 msgstr "Ova rezervacija je deo paketa"
+
+msgid "This category cannot be deleted because it is included in a package."
+msgstr ""
 
 msgid ""
 "This category has services with {count} past appointment. | This category "
@@ -9626,6 +9800,11 @@ msgstr ""
 
 msgid "This file is forbidden for upload"
 msgstr "Ovaj tip fajla nije dozvoljen"
+
+msgid ""
+"This is a temporary WhatsApp token and will automatically expire after 24 "
+"hours. Make sure to complete the setup before it expires."
+msgstr ""
 
 msgid ""
 "This is a unique security token. Copy it into the 'Verify token' field in "
@@ -9696,6 +9875,9 @@ msgid "This placeholder's content will be applied wherever it is used."
 msgstr ""
 
 msgid "This range"
+msgstr ""
+
+msgid "This service cannot be deleted because it is included in a package."
 msgstr ""
 
 msgid "This service does not have any extras"
@@ -10043,9 +10225,6 @@ msgstr ""
 msgid "Type"
 msgstr "Tip"
 
-msgid "Type:"
-msgstr "Tip:"
-
 msgid "Type Asc"
 msgstr ""
 
@@ -10375,6 +10554,16 @@ msgid ""
 "fixing the issues, you can try again."
 msgstr ""
 
+msgid ""
+"We were unable to cancel your booking. Please contact admin for assistance "
+"with canceling this booking."
+msgstr ""
+
+msgid ""
+"We were unable to process your booking, and it was rejected. Please contact "
+"admin if you need help or want to try booking again."
+msgstr ""
+
 msgid "Web"
 msgstr ""
 
@@ -10409,6 +10598,9 @@ msgid "Welcome Back"
 msgstr "Idi Nazad"
 
 msgid "Welcome back"
+msgstr ""
+
+msgid "Welcome to Amelia!"
 msgstr ""
 
 msgid "Wellness"
@@ -10555,9 +10747,6 @@ msgstr "Godine"
 msgid "Yes"
 msgstr "Da"
 
-msgid "Yes, Reset"
-msgstr "Da, Resetuj"
-
 msgid "Yoga"
 msgstr ""
 
@@ -10577,6 +10766,11 @@ msgstr ""
 
 msgid ""
 "You are currently connected to Google Calendar by Admin. Overriding Google "
+"Calendar connection is not available."
+msgstr ""
+
+msgid ""
+"You are currently connected to Outlook Calendar by Admin. Overriding Outlook "
 "Calendar connection is not available."
 msgstr ""
 
@@ -10667,6 +10861,11 @@ msgstr ""
 msgid "You have reached maximum number of registered domains"
 msgstr "Dostigli ste maksimalni broj registrovanih domena"
 
+msgid ""
+"You have successfully declined this booking request. The status has been "
+"updated in the system."
+msgstr ""
+
 msgid "You will be redirected to the payment checkout."
 msgstr "Bićete preusmereni na stranicu za plaćanje."
 
@@ -10683,6 +10882,26 @@ msgid "Your Name"
 msgstr "Vaše Ime"
 
 msgid "Your balance has been recharged."
+msgstr ""
+
+msgid ""
+"Your booking has been successfully canceled. If you have any questions or "
+"wish to reschedule, please contact admin."
+msgstr ""
+
+msgid ""
+"Your booking has been successfully completed and approved. You're all set "
+"and can expect everything to proceed smoothly."
+msgstr ""
+
+msgid ""
+"Your booking was approved, but there was an issue completing the process. "
+"Please reach out to admin to ensure everything is properly recorded."
+msgstr ""
+
+msgid ""
+"Your booking was successfully processed, but it could not be approved. "
+"Please contact admin if you need assistance."
 msgstr ""
 
 msgid "Your card's expiration date is incomplete"
@@ -10890,6 +11109,15 @@ msgstr ""
 msgid "reCAPTCHA Type"
 msgstr ""
 
+msgid "reCAPTCHA challenge expired. Please try again."
+msgstr ""
+
+msgid "reCAPTCHA configuration is invalid."
+msgstr ""
+
+msgid "reCAPTCHA could not be loaded."
+msgstr ""
+
 msgid "reCAPTCHA on Customer Panel"
 msgstr ""
 
@@ -10897,6 +11125,9 @@ msgid "reCAPTCHA on Employee Panel"
 msgstr ""
 
 msgid "reCAPTCHA setup"
+msgstr ""
+
+msgid "reCAPTCHA validation failed."
 msgstr ""
 
 msgid "results"
@@ -10954,10 +11185,10 @@ msgid "weeks"
 msgstr "nedelje"
 
 msgid "{booked}/{total} Booked"
-msgstr ""
+msgstr "{booked} / {total} rezervisano"
 
 msgid "{count} Appointment | {count} Appointments"
-msgstr ""
+msgstr "{count} Termin | {count} Termina"
 
 msgid "{count} Assigned"
 msgstr "{count} Dodeljeno"
@@ -11044,6 +11275,8 @@ msgid ""
 "{count} event booking has been deleted. | {count} event bookings have been "
 "deleted."
 msgstr ""
+"{count} rezervacija događaja je obrisana | {count} rezervacije događaja su "
+"obrisane."
 
 msgid ""
 "{count} event booking has not been deleted. | {count} event bookings have "
@@ -11054,7 +11287,7 @@ msgid "{count} event has been deleted. | {count} events have been deleted."
 msgstr ""
 
 msgid "{count} event | {count} events"
-msgstr ""
+msgstr "{count} događaj | {count} događaji"
 
 msgid "{count} hour | {count} hours"
 msgstr ""

@@ -432,12 +432,12 @@ class GetEntitiesCommandHandler extends CommandHandler
         }
 
         /** Coupons */
+        // Deprecated for backend use; replaced by `/coupons` endpoint.
+        // Retained for public `/entities` route and API access.
         if (
             in_array(Entities::COUPONS, $params['types'], true) &&
             $this->getContainer()->getPermissionsService()->currentUserCanRead(Entities::COUPONS)
         ) {
-            $coupons = $couponAS->getAll();
-
             /** @var CouponRepository $couponRepository */
             $couponRepository = $this->container->get('domain.coupon.repository');
 
@@ -446,6 +446,11 @@ class GetEntitiesCommandHandler extends CommandHandler
 
             /** @var PackageRepository $packageRepository */
             $packageRepository = $this->container->get('domain.bookable.package.repository');
+
+            $coupons = $couponRepository->getFiltered(
+                ['page' => 1],
+                100
+            );
 
             if ($coupons->length()) {
                 foreach ($couponRepository->getCouponsServicesIds($coupons->keys()) as $ids) {

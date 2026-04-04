@@ -666,7 +666,7 @@ class Prime extends \Google\Site_Kit_Dependencies\phpseclib3\Crypt\EC\BaseCurves
      * To convert a Jacobian Coordinate to an Affine Point
      * you do (x / z^2, y / z^3)
      *
-     * @return \phpseclib3\Math\PrimeField\Integer[]
+     * @return PrimeInteger[]
      */
     public function convertToAffine(array $p)
     {
@@ -681,7 +681,7 @@ class Prime extends \Google\Site_Kit_Dependencies\phpseclib3\Crypt\EC\BaseCurves
     /**
      * Converts an affine point to a jacobian coordinate
      *
-     * @return \phpseclib3\Math\PrimeField\Integer[]
+     * @return PrimeInteger[]
      */
     public function convertToInternal(array $p)
     {

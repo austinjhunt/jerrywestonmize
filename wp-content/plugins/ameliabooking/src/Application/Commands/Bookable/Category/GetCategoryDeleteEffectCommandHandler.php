@@ -10,9 +10,9 @@ use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
+use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageRepository;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ServiceRepository;
 use AmeliaBooking\Domain\Collection\Collection;
-use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
 
 /**
@@ -29,7 +29,6 @@ class GetCategoryDeleteEffectCommandHandler extends CommandHandler
      * @throws ContainerValueNotFoundException
      * @throws AccessDeniedException
      * @throws QueryExecutionException
-     * @throws ContainerException
      * @throws InvalidArgumentException
      */
     public function handle(GetCategoryDeleteEffectCommand $command)
@@ -45,6 +44,9 @@ class GetCategoryDeleteEffectCommandHandler extends CommandHandler
 
         /** @var ServiceRepository $serviceRepository */
         $serviceRepository = $this->getContainer()->get('domain.bookable.service.repository');
+
+        /** @var PackageRepository $packageRepository */
+        $packageRepository = $this->container->get('domain.bookable.package.repository');
 
         /** @var Collection $services */
         $services = $serviceRepository->getByCriteria(['categories' => [$command->getArg('id')]]);
@@ -73,11 +75,18 @@ class GetCategoryDeleteEffectCommandHandler extends CommandHandler
             }
         }
 
+        /** @var Collection $packages */
+        $packages = $services->length() ? $packageRepository->getByCriteria(['services' => $services->keys()]) : new Collection();
+
+        if ($packages->length()) {
+            $messageKey = 'red_category_failed_to_be_deleted';
+        }
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved message.');
         $result->setData(
             [
-                'valid'   => !($categoryServiceIds && ($appointmentsCount['futureAppointments'] || $appointmentsCount['packageAppointments'])),
+                'valid'       => !($categoryServiceIds && ($appointmentsCount['futureAppointments'] || $appointmentsCount['packageAppointments'])),
                 'messageKey'  => $messageKey,
                 'messageData' => $messageData,
             ]

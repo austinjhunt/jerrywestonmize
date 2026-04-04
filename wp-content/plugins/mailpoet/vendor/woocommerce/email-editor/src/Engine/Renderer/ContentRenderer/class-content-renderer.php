@@ -15,7 +15,6 @@ class Content_Renderer {
  private Theme_Controller $theme_controller;
  const CONTENT_STYLES_FILE = 'content.css';
  private WP_Block_Type_Registry $block_type_registry;
- private Css_Inliner $css_inliner;
  private $backup_template_content;
  private $backup_template_id;
  private $backup_post;
@@ -23,6 +22,7 @@ class Content_Renderer {
  private Fallback $fallback_renderer;
  private Email_Editor_Logger $logger;
  private $backup_post_content_callback;
+ private Css_Inliner $css_inliner;
  public function __construct(
  Process_Manager $preprocess_manager,
  Css_Inliner $css_inliner,
@@ -30,8 +30,8 @@ class Content_Renderer {
  Email_Editor_Logger $logger
  ) {
  $this->process_manager = $preprocess_manager;
- $this->theme_controller = $theme_controller;
  $this->css_inliner = $css_inliner;
+ $this->theme_controller = $theme_controller;
  $this->logger = $logger;
  $this->block_type_registry = WP_Block_Type_Registry::get_instance();
  $this->fallback_renderer = new Fallback();
@@ -53,17 +53,31 @@ class Content_Renderer {
  }
  }
  public function render( WP_Post $post, WP_Block_Template $template ): string {
+ $result = $this->render_without_css_inline( $post, $template );
+ $styles = '<style>' . $result['styles'] . '</style>';
+ $html = $this->css_inliner->from_html( $styles . $result['html'] )->inline_css()->render();
+ return $this->process_manager->postprocess( $html );
+ }
+ public function render_without_css_inline( WP_Post $post, WP_Block_Template $template ): array {
  $this->set_template_globals( $post, $template );
  $this->initialize();
+ try {
+ do_action( 'woocommerce_email_editor_render_start' );
  $rendered_html = get_the_block_template_html();
+ } finally {
  $this->reset();
- return $this->process_manager->postprocess( $this->inline_styles( $rendered_html, $post, $template ) );
+ }
+ return array(
+ 'html' => $rendered_html,
+ 'styles' => $this->collect_styles( $post, $template ),
+ );
  }
  public function block_parser() {
  return 'Automattic\WooCommerce\EmailEditor\Engine\Renderer\ContentRenderer\Blocks_Parser';
  }
  public function preprocess_parsed_blocks( array $parsed_blocks ): array {
- return $this->process_manager->preprocess( $parsed_blocks, $this->theme_controller->get_layout_settings(), $this->theme_controller->get_styles() );
+ $styles = $this->theme_controller->get_styles();
+ return $this->process_manager->preprocess( $parsed_blocks, $this->theme_controller->get_layout_settings(), $styles );
  }
  public function render_block( string $block_content, array $parsed_block ): string {
  $email_context = apply_filters( 'woocommerce_email_editor_rendering_email_context', array() );
@@ -119,7 +133,7 @@ class Content_Renderer {
  $wp_query = $this->backup_query; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Restoring of the query.
  $post = $this->backup_post; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Restoring of the post.
  }
- private function inline_styles( $html, WP_Post $post, $template = null ) {
+ private function collect_styles( WP_Post $post, $template = null ): string {
  $styles = (string) file_get_contents( __DIR__ . '/' . self::CONTENT_STYLES_FILE );
  $styles .= (string) file_get_contents( __DIR__ . '/../../content-shared.css' );
  // Apply default contentWidth to constrained blocks.
@@ -157,7 +171,6 @@ class Content_Renderer {
  $block_support_styles
  );
  $styles .= $block_support_styles;
- $styles = '<style>' . wp_strip_all_tags( (string) apply_filters( 'woocommerce_email_content_renderer_styles', $styles, $post ) ) . '</style>';
- return $this->css_inliner->from_html( $styles . $html )->inline_css()->render();
+ return wp_strip_all_tags( (string) apply_filters( 'woocommerce_email_content_renderer_styles', $styles, $post ) );
  }
 }

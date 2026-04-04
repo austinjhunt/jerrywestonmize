@@ -48,7 +48,7 @@ class AbstractRepository
             $statement->execute();
             $row = $statement->fetch();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         if (!$row) {
@@ -83,7 +83,7 @@ class AbstractRepository
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         $entities = new Collection();
@@ -109,7 +109,7 @@ class AbstractRepository
             $statement = $this->connection->query($this->selectQuery());
             $rows      = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get all data from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to get all data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         $items = [];
@@ -131,7 +131,7 @@ class AbstractRepository
             $statement = $this->connection->query($this->selectQuery());
             $rows      = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get all data indexed by id from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to get all data indexed by id from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         $collection = new Collection();
@@ -165,7 +165,7 @@ class AbstractRepository
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to find by field value in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to find by field value in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         $collection = new Collection();
@@ -190,7 +190,8 @@ class AbstractRepository
         try {
             $statement = $this->connection->prepare("DELETE FROM {$this->table} WHERE id = :id");
             $statement->bindParam(':id', $id);
-            return $statement->execute();
+            $statement->execute();
+            return true;
         } catch (\Exception $e) {
             throw new QueryExecutionException(
                 'Unable to delete data from ' . __CLASS__ .
@@ -224,7 +225,7 @@ class AbstractRepository
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to find by id in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         $items = [];
@@ -240,7 +241,7 @@ class AbstractRepository
      * @param int    $entityId
      * @param String $entityColumnName
      *
-     * @return mixed
+     * @return bool
      * @throws QueryExecutionException
      */
     public function deleteByEntityId($entityId, $entityColumnName)
@@ -254,7 +255,9 @@ class AbstractRepository
                 "DELETE FROM {$this->table} WHERE {$entityColumnName} = :{$entityColumnName}"
             );
 
-            return $statement->execute($params);
+            $statement->execute($params);
+
+            return true;
         } catch (\Exception $e) {
             throw new QueryExecutionException(
                 'Unable to delete data by entity id from ' . __CLASS__ .
@@ -296,13 +299,9 @@ class AbstractRepository
                 WHERE {$entityColumnName} = :{$entityColumnName}"
             );
 
-            $res = $statement->execute($params);
+            $statement->execute($params);
 
-            if (!$res) {
-                throw new QueryExecutionException('Unable to update by entity id in table ' . $this->table . ' in class ' . __CLASS__);
-            }
-
-            return $res;
+            return true;
         } catch (\Exception $e) {
             throw new QueryExecutionException(
                 'Unable to update by entity id in ' . $this->table . ' in class ' . __CLASS__ . "\n\n" . $e->getTraceAsString(),
@@ -337,13 +336,9 @@ class AbstractRepository
                 WHERE id = :id"
             );
 
-            $res = $statement->execute($params);
+            $statement->execute($params);
 
-            if (!$res) {
-                throw new QueryExecutionException('Unable to update field by id in table ' . $this->table . ' in class ' . __CLASS__);
-            }
-
-            return $res;
+            return true;
         } catch (\Exception $e) {
             throw new QueryExecutionException(
                 'Unable to update field by id in table ' . $this->table . ' in class ' . __CLASS__ . "\n\n" . $e->getTraceAsString(),
@@ -393,13 +388,9 @@ class AbstractRepository
                 {$where}"
             );
 
-            $res = $statement->execute($params);
+            $statement->execute($params);
 
-            if (!$res) {
-                throw new QueryExecutionException('Unable to update field by ids in table ' . $this->table . ' in class ' . __CLASS__);
-            }
-
-            return $res;
+            return true;
         } catch (\Exception $e) {
             throw new QueryExecutionException(
                 'Unable to update field by ids in table ' . $this->table . ' in class ' . __CLASS__ . "\n\n" . $e->getTraceAsString(),
@@ -435,11 +426,7 @@ class AbstractRepository
                 WHERE $columnName = :second"
             );
 
-            $res = $statement->execute($params);
-
-            if (!$res) {
-                throw new QueryExecutionException('Unable to update field by column in table ' . $this->table . ' in class ' . __CLASS__);
-            }
+            $statement->execute($params);
         } catch (\Exception $e) {
             throw new QueryExecutionException(
                 'Unable to update field by column in table ' . $this->table . ' in class ' . __CLASS__ . "\n\n" . $e->getTraceAsString(),
@@ -524,7 +511,7 @@ class AbstractRepository
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get missing data from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to get missing data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         if ($rows) {
@@ -564,7 +551,7 @@ class AbstractRepository
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get ids from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to get ids from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return array_map('intval', array_column($rows, 'id'));

@@ -90,8 +90,6 @@ class GetWhatsNewCommandHandler extends CommandHandler
         $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         $curlError = curl_error($curl);
 
-        curl_close($curl);
-
         if ($response === false) {
             throw new Exception('Failed to fetch posts from API: ' . $curlError);
         }

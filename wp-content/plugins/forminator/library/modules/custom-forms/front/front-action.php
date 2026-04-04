@@ -87,6 +87,20 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 	private static $has_payment = false;
 
 	/**
+	 * Is stripe payment
+	 *
+	 * @var false
+	 */
+	private static $is_stripe_payment = false;
+
+	/**
+	 * Is paypal payment
+	 *
+	 * @var false
+	 */
+	private static $is_paypal_payment = false;
+
+	/**
 	 * Forminator_CForm_Front_Action constructor
 	 */
 	public function __construct() {
@@ -201,6 +215,11 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 	 * @since 1.7.3
 	 */
 	public function update_payment_amount() {
+		$form_id = Forminator_Core::sanitize_text_field( 'form_id' );
+		if ( empty( $form_id ) || ! $this->validate_ajax( 'forminator_submit_form' . $form_id, 'POST', 'forminator_nonce' ) ) {
+			wp_send_json_error( esc_html__( 'Invalid nonce. Please refresh your browser.', 'forminator' ) );
+		}
+
 		$this->init_properties();
 
 		self::check_fields_visibility();
@@ -557,6 +576,14 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 
 		self::check_errors();
 		self::filter_field_data_array();
+
+		if ( self::$has_payment ) {
+			if ( ! empty( self::$prepared_data['payment_transaction_id'] ) ) {
+				self::$is_paypal_payment = true;
+			} else {
+				self::$is_stripe_payment = true;
+			}
+		}
 	}
 
 	/**
@@ -587,6 +614,10 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 
 		// if certain field types - go to next field.
 		if ( in_array( $field_type, array( 'stripe', 'stripe-ocs', 'paypal', 'calculation', 'group' ), true ) ) {
+			return;
+		}
+
+		if ( ! empty( $field->parent_group ) && in_array( $field->parent_group, self::$hidden_fields, true ) ) {
 			return;
 		}
 
@@ -982,21 +1013,19 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 
 			// Don't process confirm if status is requires_capture as it confirmed already.
 			if ( 'requires_confirmation' === $intent->status ) {
-				$result = $intent->confirm(
+				$intent = $intent->confirm(
 					array(
 						'return_url' => Forminator_Stripe::get_return_url(),
 					)
 				);
-			} else {
-				$result = $intent;
 			}
 
 			// If we have 3D security on the card return for verification.
-			if ( 'requires_action' === $result->status || 'requires_confirmation' === $result->status || 'requires_payment_method' === $result->status ) {
-				$error_data = self::handle_failed_stripe_response( $result, $entry );
+			if ( 'requires_action' === $intent->status || 'requires_confirmation' === $intent->status || 'requires_payment_method' === $intent->status ) {
+				$error_data = self::handle_failed_stripe_response( $intent, $entry );
 
 				self::$response_attrs           = array_merge( self::$response_attrs, $error_data );
-				self::$response_attrs['secret'] = $result->client_secret;
+				self::$response_attrs['secret'] = $intent->client_secret;
 				return new WP_Error( 'forminator_stripe_error', esc_html( $error_data['message'] ) );
 			}
 		} catch ( Exception $e ) {
@@ -1063,7 +1092,7 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 
 		$stripe = new Forminator_Gateway_Stripe();
 
-		if ( ! $stripe->is_ready() || ! self::$info['stripe_field'] ) {
+		if ( ! $stripe->is_ready() || ! self::$info['stripe_field'] || ! self::$is_stripe_payment ) {
 			return;
 		}
 
@@ -1082,7 +1111,7 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 			return;
 		}
 
-		if ( ! self::$info['paypal_field'] ) {
+		if ( ! self::$info['paypal_field'] || ! self::$is_paypal_payment ) {
 			return;
 		}
 
@@ -1119,6 +1148,7 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 		try {
 			self::can_submit();
 			self::prepare_fields_info();
+			self::check_submit_visibility();
 			self::check_captcha();
 
 			$entry = self::get_entry();
@@ -1507,6 +1537,29 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 		$form_submit = self::$module_object->form_can_submit();
 		if ( ! $form_submit['can_submit'] ) {
 			throw new Exception( esc_html( $form_submit['error'] ) );
+		}
+	}
+
+	/**
+	 * Check submit button visibility condition after fields data is prepared.
+	 *
+	 * @since 1.52.0
+	 *
+	 * @throws Exception When submit button is hidden by conditions.
+	 */
+	private static function check_submit_visibility() {
+		$form_settings = self::$module_settings;
+
+		if ( empty( $form_settings['submitData'] ) ) {
+			return;
+		}
+
+		if ( true === Forminator_Field::is_hidden( $form_settings['submitData'] ) && false === self::$module_object->has_active_paypal() ) {
+			$invalid_form_message = esc_html__( 'Error: Your form is not valid, please fix the errors!', 'forminator' );
+			if ( ! empty( $form_settings['submitData']['custom-invalid-form-message'] ) ) {
+				$invalid_form_message = $form_settings['submitData']['custom-invalid-form-message'];
+			}
+			throw new Exception( esc_html( $invalid_form_message ) );
 		}
 	}
 
@@ -2347,7 +2400,7 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 	 * @param string $formula Formula.
 	 * @param array  $visible_fields Not hidden field values.
 	 * @param array  $field_settings Field settings.
-	 * @return int
+	 * @return mixed
 	 */
 	public static function calculate_formula( $formula, $visible_fields, $field_settings ) {
 		$formula           = self::maybe_replace_groupped_fields( $formula ); // todo: remove it, cuz it was already replaced.
@@ -2379,12 +2432,33 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 		$calculator->set_is_throwable( true );
 
 		try {
-			$result = round( floatval( $calculator->calculate() ), $precision );
+			$calculated_value = $calculator->calculate();
+			// Check if the calculated value is in scientific notation.
+			if ( self::is_in_scientific_notation( floatval( $calculated_value ) ) ) {
+				// Format the value using number_format instead of the round method, as it may lead to a loss of precision for scientific notation.
+				$result = Forminator_Calculation::get_calculable_number_format( $field_settings, $calculated_value );
+			} else {
+				$result = round( floatval( $calculated_value ), $precision );
+			}
 		} catch ( Forminator_Calculator_Exception $e ) {
 			$result = round( 0.0, $precision );
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Check if value is in scientific notation
+	 *
+	 * @param float $value Value.
+	 * @return boolean
+	 */
+	private static function is_in_scientific_notation( $value ) {
+		// Check if the string contains 'e'.
+		if ( is_numeric( $value ) && false !== strpos( strtolower( (string) $value ), 'e' ) ) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -2669,7 +2743,7 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 	 */
 	private static function handle_hidden_field( $field_settings ) {
 		if ( ! empty( $field_settings['element_id'] ) && ! empty( $field_settings['default_value'] ) ) {
-			$exclude_key = array( 'query', 'embed_id', 'embed_title', 'embed_url' );
+			$exclude_key = array( 'query', 'embed_id', 'embed_title', 'embed_url', 'refer_url' );
 			if ( 'submission_time' === $field_settings['default_value'] ) {
 				self::$prepared_data[ $field_settings['element_id'] ] = date_i18n( 'g:i:s a, T', forminator_local_timestamp(), true );
 			} elseif ( ! in_array( $field_settings['default_value'], $exclude_key, true ) ) {

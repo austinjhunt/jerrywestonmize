@@ -51,6 +51,7 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Basic\Licence
                 Commands\Notification\SendTestWhatsAppCommand::class               => new Commands\Notification\SendTestWhatsAppCommandHandler($c),
                 Commands\Notification\WhatsAppWebhookRegisterCommand::class        => new Commands\Notification\WhatsAppWebhookRegisterCommandHandler($c),
                 Commands\Notification\WhatsAppWebhookCommand::class                => new Commands\Notification\WhatsAppWebhookCommandHandler($c),
+                Commands\Notification\ValidateWhatsAppCredentialsCommand::class    => new Commands\Notification\ValidateWhatsAppCredentialsCommandHandler($c),
                 // Payment
                 Commands\Payment\RefundPaymentCommand::class                       => new Commands\Payment\RefundPaymentCommandHandler($c),
                 Commands\Payment\GetTransactionAmountCommand::class                => new Commands\Payment\GetTransactionAmountCommandHandler($c),

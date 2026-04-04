@@ -3,7 +3,7 @@
   "d4Shortcode": "divi_events",
   "title": "Amelia - Events (Legacy)",
   "titles": "Amelia Events",
-  "category": null,
+  "category": "module",
   "moduleClassName": "divi5_amelia_events",
   "moduleOrderClassName": "divi5_amelia_events",
   "moduleIcon": "amelia/step-booking",

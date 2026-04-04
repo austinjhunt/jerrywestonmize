@@ -141,9 +141,11 @@ class PaymentCallbackCommandHandler extends CommandHandler
                             break;
 
                         case ('payPal'):
+                            $payPalOrderId = $command->getField('paymentId') ?: $command->getField('token');
+
                             $response = $paymentService->complete(
                                 [
-                                    'transactionReference' => $command->getField('paymentId'),
+                                    'transactionReference' => $payPalOrderId,
                                     'PayerID'              => $command->getField('PayerID'),
                                     'amount'               => $command->getField('chargedAmount'),
                                 ]

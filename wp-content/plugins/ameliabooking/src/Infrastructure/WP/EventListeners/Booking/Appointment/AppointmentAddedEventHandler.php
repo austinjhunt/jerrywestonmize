@@ -95,7 +95,6 @@ class AppointmentAddedEventHandler
             ApplicationIntegrationService::APPOINTMENT_ADDED,
             [
                 ApplicationIntegrationService::SKIP_ZOOM_MEETING => $pastAppointment,
-                ApplicationIntegrationService::SKIP_LESSON_SPACE => $pastAppointment,
             ]
         );
 
@@ -250,7 +249,16 @@ class AppointmentAddedEventHandler
             }
         }
 
-        $webHookService->process(self::BOOKING_ADDED, $appointment, $appointment['bookings']);
+        $webHookService->process(
+            self::BOOKING_ADDED,
+            $appointment,
+            array_filter(
+                $appointment['bookings'],
+                function ($booking) {
+                    return $booking['isChangedStatus'];
+                }
+            )
+        );
 
         foreach ($recurringData as $key => $recurringReservationData) {
             $webHookService->process(

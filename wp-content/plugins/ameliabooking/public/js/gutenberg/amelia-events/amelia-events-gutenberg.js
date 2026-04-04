@@ -3,17 +3,14 @@
 
   var el = wp.element.createElement
   var components = wp.components
-  var blockControls = wp.editor.BlockControls
-  var inspectorControls = wp.editor.InspectorControls
+  var blockControls = wp.blockEditor.BlockControls
+  var inspectorControls = wp.blockEditor.InspectorControls
+  var useBlockProps = wp.blockEditor.useBlockProps
   var data = wpAmeliaLabels.data
   var isLite = !!parseInt(wpAmeliaLabels.isLite)
 
   var events = []
   var tags = []
-
-  var blockStyle = {
-    color: 'red'
-  }
 
   if (data.events.length !== 0) {
     for (let i = 0; i < data.events.length; i++) {
@@ -39,11 +36,12 @@
 
   // Registering the Block for events shortcode
   wp.blocks.registerBlockType('amelia/events-gutenberg-block', {
+    apiVersion: 3,
     title: wpAmeliaLabels.events_gutenberg_block.title,
-    description: el('div', {class: 'amelia-gutenberg-desc'}, wpAmeliaLabels.events_gutenberg_block.description,
-      el('div', {class: 'amelia-gutenberg-outdated'}, wpAmeliaLabels.outdated_booking_gutenberg_block)
+    description: el('div', {className: 'amelia-gutenberg-desc'}, wpAmeliaLabels.events_gutenberg_block.description,
+      el('div', {className: 'amelia-gutenberg-outdated'}, wpAmeliaLabels.outdated_booking_gutenberg_block)
     ),
-    icon: el('svg', {width: '59', height: '27', viewBox: '0 0 59 27', fill: 'none', xmlns: 'http://www.w3.org/2000/svg', class: 'amelia-booking-gutenberg-outdated'},
+    icon: el('svg', {width: '59', height: '27', viewBox: '0 0 59 27', fill: 'none', xmlns: 'http://www.w3.org/2000/svg', className: 'amelia-booking-gutenberg-outdated'},
       el('g', {clipPath: 'url(#clip0_4557_119)'},
         el('path', {
           d: 'M11.5035 10.8582V2.03134C11.5035 0.469951 9.84273 -0.505952 8.51417 0.274788L0.996444 4.69241C0.379839 5.05468 0 5.72434 0 6.44897V15.2339C0 16.7916 1.65361 17.768 2.98218 16.9947L10.5 12.6191C11.1206 12.2578 11.5035 11.5859 11.5035 10.8582Z',
@@ -200,6 +198,8 @@
         return shortCode
       }
 
+      var blockProps = useBlockProps()
+
       if (events.length !== 0) {
         inspectorElements.push(el(components.PanelRow,
           {},
@@ -223,7 +223,7 @@
           }
         }))
 
-        inspectorElements.push(el('div', {style: {'margin-bottom': '1em'}}, ''))
+        inspectorElements.push(el('div', {style: {marginBottom: '1em'}}, ''))
 
         if (attributes.parametars) {
           if (tags.length) {
@@ -249,7 +249,7 @@
               }
             }))
 
-            inspectorElements.push(el('div', {style: {'margin-bottom': '1em'}}, ''))
+            inspectorElements.push(el('div', {style: {marginBottom: '1em'}}, ''))
 
             inspectorElements.push(el(components.PanelRow,
               {},
@@ -264,7 +264,7 @@
             ))
           }
 
-          inspectorElements.push(el('div', {style: {'margin-bottom': '1em'}}, ''))
+          inspectorElements.push(el('div', {style: {marginBottom: '1em'}}, ''))
 
           inspectorElements.push(el(components.TextControl, {
             id: 'amelia-js-trigger',
@@ -280,43 +280,91 @@
           attributes.tag = ''
         }
 
-        return [
+        return el('div', blockProps,
           el(blockControls, {key: 'controls'}),
           el(inspectorControls, {key: 'inspector'},
             el(components.PanelBody, {initialOpen: true},
               inspectorElements
             )
           ),
-          el('div', {},
-            getShortCode(props, props.attributes)
+          el('div', {className: 'amelia-gutenberg-placeholder'},
+            el('div', {className: 'amelia-gutenberg-placeholder__header'},
+              el('div', {className: 'amelia-gutenberg-placeholder__icon'}, window.ameliaBlockIcon || ''),
+              el('div', {className: 'amelia-gutenberg-placeholder__title'}, 'Amelia - Events (Legacy)')
+            ),
+            el('div', {className: 'amelia-gutenberg-placeholder__shortcode'},
+              getShortCode(props, props.attributes)
+            )
           )
-        ]
+        )
       } else {
-        inspectorElements.push(el('p', {style: {'margin-bottom': '1em'}}, 'Please create event first. You can find instructions in our documentation on link below.'));
-        inspectorElements.push(el('a', {href: 'https://wpamelia.com/quickstart/', target: '_blank', style: {'margin-bottom': '1em'}}, 'Start working with Amelia WordPress Appointment Booking plugin'));
+        inspectorElements.push(el('p', {style: {marginBottom: '1em'}}, 'Please create event first. You can find instructions in our documentation on link below.'));
+        inspectorElements.push(el('a', {href: 'https://wpamelia.com/documentation/service-quick-start/', target: '_blank', style: {marginBottom: '1em'}}, 'Start working with Amelia WordPress Appointment Booking plugin'));
 
-        return [
+        return el('div', blockProps,
           el(blockControls, {key: 'controls'}),
           el(inspectorControls, {key: 'inspector'},
             el(components.PanelBody, {initialOpen: true},
               inspectorElements
             )
           ),
-          el('div',
-            {style: blockStyle},
-            getShortCode(props, props.attributes)
+          el('div', {className: 'amelia-gutenberg-placeholder'},
+            el('div', {className: 'amelia-gutenberg-placeholder__header'},
+              el('div', {className: 'amelia-gutenberg-placeholder__icon'}, window.ameliaBlockIcon || ''),
+              el('div', {className: 'amelia-gutenberg-placeholder__title'}, 'Amelia - Events (Legacy)')
+            ),
+            el('div', {className: 'amelia-gutenberg-placeholder__shortcode'},
+              getShortCode(props, props.attributes)
+            )
           )
-        ]
+        )
       }
     },
 
-    save: function (props) {
-      return (
-        el('div', {},
-          props.attributes.short_code
-        )
-      )
-    }
+    save: function () {
+      return null
+    },
+    deprecated: [
+      {
+        attributes: {
+          short_code: {
+            type: 'string',
+            default: '[ameliaevents]'
+          },
+          trigger: {
+            type: 'string',
+            default: ''
+          },
+          event: {
+            type: 'string',
+            default: ''
+          },
+          type: {
+            type: 'string',
+            default: 'list'
+          },
+          recurring: {
+            type: 'boolean',
+            default: false
+          },
+          tag: {
+            type: 'string',
+            default: ''
+          },
+          eventOptions: {
+            type: 'string',
+            default: ''
+          },
+          parametars: {
+            type: 'boolean',
+            default: false
+          }
+        },
+        save: function (props) {
+          return el('div', {}, props.attributes.short_code)
+        }
+      }
+    ]
   })
 
 })(

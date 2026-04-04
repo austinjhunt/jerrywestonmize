@@ -138,6 +138,7 @@ final class CssInliner extends AbstractHtmlProcessor
  self::CACHE_KEY_SELECTOR => [],
  self::CACHE_KEY_COMBINED_STYLES => [],
  ];
+ DeclarationBlockParser::clearCache();
  }
  private function purgeVisitedNodes(): void
  {

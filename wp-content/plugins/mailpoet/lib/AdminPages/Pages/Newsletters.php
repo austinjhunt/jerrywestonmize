@@ -162,6 +162,7 @@ class Newsletters {
         'lowerLimit' => AuthorizedSenderDomainController::LOWER_LIMIT,
         'isAuthorizedDomainRequiredForNewCampaigns' => $this->senderDomainController->isAuthorizedDomainRequiredForNewCampaigns(),
         'campaignTypes' => NewsletterEntity::CAMPAIGN_TYPES,
+        'skipAuthorization' => $this->senderDomainController->shouldSkipAuthorization(),
       ];
     }
 

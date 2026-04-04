@@ -41,6 +41,90 @@ class Plain_Text_Formatter {
 	}
 
 	/**
+	 * Formats a simple email as plain text.
+	 *
+	 * Simple emails share a common structure with customizable content.
+	 *
+	 * @since 1.173.0
+	 *
+	 * @param array $data The simple email data containing site, title, learn_more_url,
+	 *                    primary_call_to_action, body, and footer.
+	 * @return string Formatted plain text email.
+	 */
+	public static function format_simple_email( $data ) {
+		$site_domain     = $data['site']['domain'] ?? '';
+		$title           = wp_strip_all_tags( $data['title'] ?? '' );
+		$learn_more_url  = $data['learn_more_url'] ?? '';
+		$cta             = $data['primary_call_to_action'] ?? array();
+		$footer_copy     = $data['footer']['copy'] ?? '';
+		$body            = $data['body'] ?? array();
+		$unsubscribe_url = $data['footer']['unsubscribe_url'] ?? '';
+
+		$lines = array(
+			__( 'Site Kit by Google', 'google-site-kit' ),
+			'',
+			$site_domain,
+			'',
+		);
+
+		// Title.
+		if ( ! empty( $title ) ) {
+			$lines[] = $title;
+			$lines[] = '';
+		}
+
+		// Body paragraphs (convert links to text, then strip remaining HTML).
+		foreach ( (array) $body as $paragraph ) {
+			$paragraph = self::convert_links_to_text( $paragraph );
+			$lines[]   = wp_strip_all_tags( $paragraph );
+			$lines[]   = '';
+		}
+
+		// Learn more link (optional).
+		if ( ! empty( $learn_more_url ) ) {
+			$lines[] = self::format_link( __( 'Learn more', 'google-site-kit' ), $learn_more_url );
+			$lines[] = '';
+		}
+
+		$lines[] = str_repeat( '-', 50 );
+		$lines[] = '';
+
+		// Primary CTA.
+		if ( ! empty( $cta['url'] ) ) {
+			$label   = $cta['label'] ?? __( 'Get your report', 'google-site-kit' );
+			$lines[] = self::format_link( $label, $cta['url'] );
+			$lines[] = '';
+		}
+
+		$lines[] = str_repeat( '-', 50 );
+		$lines[] = '';
+
+		// Footer copy.
+		if ( ! empty( $footer_copy ) ) {
+			$lines[] = $footer_copy;
+			$lines[] = '';
+		}
+
+		// Unsubscribe link.
+		if ( ! empty( $unsubscribe_url ) ) {
+			$lines[] = self::format_link( __( 'Unsubscribe', 'google-site-kit' ), $unsubscribe_url );
+			$lines[] = '';
+		}
+
+		// Footer links.
+		$footer_links = $data['footer']['links'] ?? array();
+		if ( ! empty( $footer_links ) && is_array( $footer_links ) ) {
+			foreach ( $footer_links as $link ) {
+				if ( ! empty( $link['label'] ) && ! empty( $link['url'] ) ) {
+					$lines[] = self::format_link( $link['label'], $link['url'] );
+				}
+			}
+		}
+
+		return implode( "\n", $lines );
+	}
+
+	/**
 	 * Formats a section based on its template type.
 	 *
 	 * @since 1.170.0
@@ -138,6 +222,33 @@ class Plain_Text_Formatter {
 	}
 
 	/**
+	 * Converts HTML anchor tags to plain text format.
+	 *
+	 * Replaces `<a href="url">text</a>` with `text (url)` so that
+	 * link destinations are preserved in plain text emails. The input
+	 * is controlled (Content_Map strings), not arbitrary user HTML.
+	 *
+	 * @since 1.175.0
+	 *
+	 * @param string $html HTML string that may contain anchor tags.
+	 * @return string String with anchors converted to text format.
+	 */
+	public static function convert_links_to_text( $html ) {
+		// We use a regex here instead of DOMDocument because DOMDocument
+		// is pretty messy to use and shifts fragility to other factors like
+		// Latin-1/UTF-8 encoding issues.
+		//
+		// WP Core uses REGEX heavily internally for clean HTML tag filtering.
+		//
+		// See: https://github.com/google/site-kit-wp/pull/12273#discussion_r2886510325.
+		return preg_replace(
+			'/<a\s+[^>]*href=["\']([^"\']*)["\'][^>]*>(.*?)<\/a>/i',
+			'$2 ($1)',
+			$html
+		);
+	}
+
+	/**
 	 * Formats the email footer with CTA and links.
 	 *
 	 * @since 1.170.0
@@ -159,17 +270,15 @@ class Plain_Text_Formatter {
 			$lines[] = '';
 		}
 
-		// Footer copy with unsubscribe link.
+		// Footer copy.
 		if ( ! empty( $footer['copy'] ) ) {
-			$copy = $footer['copy'];
-			if ( ! empty( $footer['unsubscribe_url'] ) ) {
-				$copy .= ' ' . sprintf(
-					/* translators: %s: Unsubscribe URL */
-					__( 'Unsubscribe here: %s', 'google-site-kit' ),
-					$footer['unsubscribe_url']
-				);
-			}
-			$lines[] = $copy;
+			$lines[] = $footer['copy'];
+			$lines[] = '';
+		}
+
+		// Unsubscribe link.
+		if ( ! empty( $footer['unsubscribe_url'] ) ) {
+			$lines[] = self::format_link( __( 'Unsubscribe', 'google-site-kit' ), $footer['unsubscribe_url'] );
 			$lines[] = '';
 		}
 
@@ -266,7 +375,7 @@ class Plain_Text_Formatter {
 			$event_label = sprintf(
 				/* translators: %s: Event name (e.g., "Purchase") */
 				__( '“%s“ events', 'google-site-kit' ),
-				ucfirst( $data['event_name'] )
+				$data['event_name']
 			);
 			$lines[] = self::format_metric(
 				$event_label,

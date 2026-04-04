@@ -184,7 +184,7 @@ class CustomerRepository extends UserRepository implements CustomerRepositoryInt
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to get data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         $items = [];
@@ -296,7 +296,7 @@ class CustomerRepository extends UserRepository implements CustomerRepositoryInt
 
             $rows = $statement->fetch()['count'];
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to get data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return $rows;
@@ -335,7 +335,7 @@ class CustomerRepository extends UserRepository implements CustomerRepositoryInt
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get data from ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to get data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return $rows;
@@ -363,6 +363,7 @@ class CustomerRepository extends UserRepository implements CustomerRepositoryInt
             u.email AS email,
             u.note AS note,
             u.phone AS phone,
+            u.countryPhoneIso AS countryPhoneIso,
             u.gender AS gender,
             u.birthday AS birthday,
             u.status AS status
@@ -396,7 +397,7 @@ class CustomerRepository extends UserRepository implements CustomerRepositoryInt
 
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to find event by id in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException('Unable to find event by id in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         $items = new Collection();

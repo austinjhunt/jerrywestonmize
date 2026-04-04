@@ -106,6 +106,9 @@ class GetAppointmentsCommandHandler extends CommandHandler
         if (in_array('customFields', $params['fields'], true)) {
             foreach ((array)$appointmentsArray as $appointment) {
                 foreach ((array)$appointment['bookings'] as $booking) {
+                    if (empty($booking['customFields'])) {
+                        continue;
+                    }
                     $customFieldsJson = json_decode($booking['customFields'], true);
                     foreach ((array)$customFieldsJson as $cfId => $customFiled) {
                         if (!in_array($cfId, array_keys($customFields))) {
@@ -162,6 +165,7 @@ class GetAppointmentsCommandHandler extends CommandHandler
                     BookingStatus::CANCELED => 0,
                     BookingStatus::REJECTED => 0,
                     BookingStatus::NO_SHOW => 0,
+                    BookingStatus::WAITING => 0
                 ]
             ];
 
@@ -184,9 +188,9 @@ class GetAppointmentsCommandHandler extends CommandHandler
             $rowExtras = [];
             $extraInfo = [];
 
-            if ($params['separate'] !== "true") {
+            if (empty($params['separate']) || $params['separate'] !== "true") {
                 foreach ((array)$appointment['bookings'] as $booking) {
-                    $infoJson = json_decode($booking['info'], true);
+                    $infoJson = !empty($booking['info']) ? json_decode($booking['info'], true) : null;
 
                     $customerInfo = $infoJson ?: $booking['customer'];
 
@@ -196,7 +200,8 @@ class GetAppointmentsCommandHandler extends CommandHandler
                         $customerInfo['firstName'] . ' ' . $customerInfo['lastName'] . ' ' .
                         ($booking['customer']['email'] ?: '') . ' ' . ($customerInfo['phone'] ?: $phone);
 
-                    $customFieldsJson = json_decode($booking['customFields'], true);
+                    $customFieldsJson = !empty($booking['customFields']) ?
+                        json_decode($booking['customFields'], true) : [];
                     foreach ($customFields as $customFieldId => $customFieldLabel) {
                         $value = '';
                         foreach ((array)$customFieldsJson as $cfId => $customFiled) {
@@ -248,7 +253,7 @@ class GetAppointmentsCommandHandler extends CommandHandler
                         'amelia_before_csv_export_appointments',
                         array_merge($row, $rowCF, $rowExtras),
                         $appointment,
-                        $params['separate'],
+                        false,
                         null
                     );
 
@@ -305,7 +310,7 @@ class GetAppointmentsCommandHandler extends CommandHandler
                         $row[LiteBackendStrings::get('extras')] =  implode(', ', $extraInfo);
                     }
 
-                    $row = apply_filters('amelia_before_csv_export_appointments', $row, $appointment, $params['separate'], $booking);
+                    $row = apply_filters('amelia_before_csv_export_appointments', $row, $appointment, true, $booking);
 
                     $rows[] = $row;
                 }
@@ -513,6 +518,29 @@ class GetAppointmentsCommandHandler extends CommandHandler
                     $couponCodes[] = ($booking2['coupon'] ? $booking2['coupon']['code'] : '');
                 }
                 $row[BackendStrings::get('coupon_code')] = implode(', ', $couponCodes);
+            }
+        }
+
+        if (in_array('created', $params['fields'], true)) {
+            if ($booking) {
+                $row[BackendStrings::get('created_on')] = !empty($booking['created']) ?
+                    DateTimeService::getCustomDateTimeObject($booking['created'])
+                        ->format($dateFormat . ' ' . $timeFormat) : '';
+            } else {
+                $createdDate = '';
+                if (!empty($appointment['bookings'])) {
+                    $minBooking = null;
+                    foreach ($appointment['bookings'] as $booking2) {
+                        if ($minBooking === null || $booking2['id'] < $minBooking['id']) {
+                            $minBooking = $booking2;
+                        }
+                    }
+                    if ($minBooking && !empty($minBooking['created'])) {
+                        $createdDate = DateTimeService::getCustomDateTimeObject($minBooking['created'])
+                            ->format($dateFormat . ' ' . $timeFormat);
+                    }
+                }
+                $row[BackendStrings::get('created_on')] = $createdDate;
             }
         }
     }

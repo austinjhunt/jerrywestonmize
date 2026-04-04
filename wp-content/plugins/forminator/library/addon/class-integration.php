@@ -695,7 +695,7 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 			return false;
 		}
 
-		$is_forminator_version_supported = version_compare( FORMINATOR_VERSION, $this->_min_forminator_version, '>=' );
+		$is_forminator_version_supported = version_compare( FORMINATOR_VERSION, $this->_min_forminator_version . '-alpha', '>=' );
 		if ( ! $is_forminator_version_supported ) {
 			forminator_addon_maybe_log( __METHOD__, $this->get_slug(), $this->_min_forminator_version, FORMINATOR_VERSION, 'Forminator Version not supported' );
 

@@ -64,6 +64,42 @@ class Submenu
         add_action('admin_head', function () {
             remove_submenu_page('amelia', 'wpamelia-welcome');
         });
+
+        if (!Licence::isPremium()) {
+            $this->addUpgradeMenuItem();
+        }
+    }
+
+    private function addUpgradeMenuItem()
+    {
+        $upgradeUrl = 'https://wpamelia.com/pricing/?utm_source=lite&utm_medium=dashboard&utm_content=amelia&utm_campaign=amelia-utm';
+
+        $this->addSubmenuPage(
+            'amelia',
+            '',
+            esc_html__('Upgrade', 'wpamelia'),
+            'amelia_read_menu',
+            'wpamelia-upgrade',
+            '__return_null'
+        );
+
+        add_action('admin_init', function () use ($upgradeUrl) {
+            $page = isset($_GET['page']) ? sanitize_key($_GET['page']) : '';
+
+            if ('wpamelia-upgrade' === $page) {
+                wp_redirect($upgradeUrl);
+                exit;
+            }
+        });
+
+        add_action('admin_enqueue_scripts', function () {
+            wp_enqueue_style(
+                'amelia-admin-menu',
+                AMELIA_URL . 'public/css/backend/admin-menu.css',
+                [],
+                AMELIA_VERSION
+            );
+        });
     }
 
     /**
@@ -80,12 +116,9 @@ class Submenu
             . '</svg>';
     }
 
-    /**
-     * @param array $menu
-     */
-    public function handleMenuItem($menu)
+    public function handleMenuItem(array $menu)
     {
-        if (!is_array($menu) || empty($menu['menuSlug'])) {
+        if (!isset($menu['menuSlug'])) {
             return;
         }
 

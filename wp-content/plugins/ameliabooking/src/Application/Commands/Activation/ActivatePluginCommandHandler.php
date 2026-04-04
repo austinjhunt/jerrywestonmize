@@ -52,8 +52,6 @@ class ActivatePluginCommandHandler extends CommandHandler
         // Response from the Melograno Store
         $response = json_decode(curl_exec($ch));
 
-        curl_close($ch);
-
         // Update Amelia Settings
         $settingsService->setSetting('activation', 'active', $response->valid && $response->domainRegistered);
 

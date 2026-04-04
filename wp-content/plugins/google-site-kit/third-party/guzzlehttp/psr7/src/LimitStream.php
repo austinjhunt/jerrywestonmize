@@ -50,9 +50,8 @@ final class LimitStream implements \Google\Site_Kit_Dependencies\Psr\Http\Messag
             return null;
         } elseif ($this->limit === -1) {
             return $length - $this->offset;
-        } else {
-            return \min($this->limit, $length - $this->offset);
         }
+        return \min($this->limit, $length - $this->offset);
     }
     /**
      * Allow for a bounded seek on the read limited stream

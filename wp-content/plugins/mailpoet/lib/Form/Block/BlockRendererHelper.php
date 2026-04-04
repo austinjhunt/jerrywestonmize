@@ -148,7 +148,7 @@ class BlockRendererHelper {
       $html .= static::getFieldLabel($block);
 
       if (static::getFieldIsRequired($block)) {
-        $html .= ' <span class="mailpoet_required" aria-hidden="true">*</span>';
+        $html .= '&nbsp;<span class="mailpoet_required" aria-hidden="true">*</span>';
       }
 
       $html .= '</label>';
@@ -179,7 +179,7 @@ class BlockRendererHelper {
       $html .= static::getFieldLabel($block);
 
       if (static::getFieldIsRequired($block)) {
-        $html .= ' <span class="mailpoet_required" aria-hidden="true">*</span>';
+        $html .= '&nbsp;<span class="mailpoet_required" aria-hidden="true">*</span>';
       }
 
       $html .= '</legend>';

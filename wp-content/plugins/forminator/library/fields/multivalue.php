@@ -521,7 +521,7 @@ class Forminator_MultiValue extends Forminator_Field {
 			}
 		}
 
-		return floatval( $sums );
+		return self::get_calculable_number_format( $field_settings, $sums );
 	}
 
 	/**

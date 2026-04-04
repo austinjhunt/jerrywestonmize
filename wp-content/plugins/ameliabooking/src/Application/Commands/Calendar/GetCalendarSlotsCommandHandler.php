@@ -9,21 +9,33 @@ namespace AmeliaBooking\Application\Commands\Calendar;
 
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
+use AmeliaBooking\Application\Services\User\ProviderApplicationService;
+use AmeliaBooking\Domain\Entity\Entities;
+use AmeliaBooking\Domain\Collection\Collection;
+use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Schedule\DayOff;
+use AmeliaBooking\Domain\Entity\Schedule\Period;
 use AmeliaBooking\Domain\Entity\Schedule\SpecialDay;
 use AmeliaBooking\Domain\Entity\Schedule\WeekDay;
+use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
+use AmeliaBooking\Domain\ValueObjects\DateTime\DateTimeValue;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Domain\ValueObjects\String\Status;
+use AmeliaVendor\Psr\Container\ContainerExceptionInterface;
 use DateInterval;
+use DateInvalidTimeZoneException;
+use DateMalformedPeriodStringException;
 use DatePeriod;
 use DateTime;
 use DateTimeZone;
+use Exception;
 
 class GetCalendarSlotsCommandHandler extends CommandHandler
 {
     private $timeLimits = ['slotMinTime' => '24:00:00', 'slotMaxTime' => '00:00:00'];
+    private $userTimezone;
 
     public function handle(GetCalendarSlotsCommand $command): CommandResult
     {
@@ -31,6 +43,16 @@ class GetCalendarSlotsCommandHandler extends CommandHandler
 
         $providerRepository = $this->container->get('domain.users.providers.repository');
         $locationRepository = $this->container->get('domain.locations.repository');
+
+        $this->userTimezone = DateTimeService::getTimeZone()->getName();
+
+        /** @var AbstractUser $user */
+        $user = $this->container->get('logged.in.user');
+        if ($user->getType() === Entities::PROVIDER) {
+            /** @var ProviderApplicationService $providerAS */
+            $providerAS = $this->container->get('application.user.provider.service');
+            $this->userTimezone = $providerAS->getTimeZone($user);
+        }
 
         $queryParams = $command->getField('queryParams');
         $allWorkDays = [];
@@ -61,7 +83,7 @@ class GetCalendarSlotsCommandHandler extends CommandHandler
             }
         }
 
-        if (empty($allWorkDays)) {
+        if (empty($allWorkDays) || $user->getType() === Entities::CUSTOMER) {
             $this->fillEmptyWorkDays($allWorkDays, $queryParams);
         }
 
@@ -80,6 +102,9 @@ class GetCalendarSlotsCommandHandler extends CommandHandler
         return $result;
     }
 
+    /**
+     * @throws DateMalformedPeriodStringException
+     */
     private function fillEmptyWorkDays(array &$allWorkDays, array $queryParams): void
     {
         [$this->timeLimits['slotMinTime'], $this->timeLimits['slotMaxTime']] = $this->getLimitsFromCompanyWorkHours();
@@ -100,14 +125,18 @@ class GetCalendarSlotsCommandHandler extends CommandHandler
         }
     }
 
+    /**
+     * @throws DateMalformedPeriodStringException
+     * @throws InvalidArgumentException
+     * @throws Exception
+     */
     private function getProviderWorkDays(Provider $provider, array $queryParams): array
     {
         $providerTimeZone = $provider->getTimezone() ? $provider->getTimezone()->getValue() : DateTimeService::getTimeZone()->getName();
-        $currentUserTimeZone = DateTimeService::getTimeZone();
 
         $employeeDays = [];
-        $startDate = new DateTime($queryParams['calendarStartDate'], $currentUserTimeZone);
-        $endDate = new DateTime($queryParams['calendarEndDate'], $currentUserTimeZone);
+        $startDate = (new DateTime($queryParams['calendarStartDate'], new DateTimeZone($this->userTimezone)))->modify('-1 day');
+        $endDate = (new DateTime($queryParams['calendarEndDate'], new DateTimeZone($this->userTimezone)))->modify('+1 day');
 
         $datePeriod = new DatePeriod($startDate, new DateInterval('P1D'), $endDate);
 
@@ -119,15 +148,6 @@ class GetCalendarSlotsCommandHandler extends CommandHandler
             $dateString = $date->format('Y-m-d');
             $weekDay = $this->findMatchingDay($weekDays, $date->format('N'));
 
-            $this->mapPeriods(
-                $employeeDays,
-                $weekDay ? $weekDay->getPeriodList()->getItems() : [],
-                $dateString,
-                $providerTimeZone,
-                $currentUserTimeZone,
-                'workHours'
-            );
-
             $specialDay = $this->findMatchingSpecialDay($specialDays, $date);
 
             if ($specialDay) {
@@ -136,17 +156,37 @@ class GetCalendarSlotsCommandHandler extends CommandHandler
                     $specialDay->getPeriodList()->getItems(),
                     $dateString,
                     $providerTimeZone,
-                    $currentUserTimeZone,
-                    'workHours specialDay'
+                    $this->userTimezone,
                 );
+
+                continue;
             }
+
+            $this->mapPeriods(
+                $employeeDays,
+                $weekDay ? $weekDay->getPeriodList()->getItems() : [],
+                $dateString,
+                $providerTimeZone,
+                $this->userTimezone,
+            );
 
             $dayOff = $this->findMatchingDayOff($daysOff, $date);
             if ($dayOff) {
-                $employeeDays[$dateString] = [
-                    'groupId' => 'dayOff',
-                    'periods' => []
-                ];
+                $this->mapPeriods(
+                    $employeeDays,
+                    [
+                        new Period(
+                            new DateTimeValue(\DateTime::createFromFormat('H:i:s', '00:00:00')),
+                            new DateTimeValue(\DateTime::createFromFormat('H:i:s', '00:00:00')),
+                            new Collection(),
+                            new Collection()
+                        )
+                    ],
+                    $dateString,
+                    $providerTimeZone,
+                    $this->userTimezone,
+                    'dayOff'
+                );
             }
         }
 
@@ -160,6 +200,7 @@ class GetCalendarSlotsCommandHandler extends CommandHandler
                 return $weekDay;
             }
         }
+
         return null;
     }
 
@@ -170,6 +211,7 @@ class GetCalendarSlotsCommandHandler extends CommandHandler
                 return $specialDay;
             }
         }
+
         return null;
     }
 
@@ -180,15 +222,19 @@ class GetCalendarSlotsCommandHandler extends CommandHandler
                 return $dayOff;
             }
         }
+
         return null;
     }
 
+    /**
+     * @throws Exception
+     */
     private function mapPeriods(
         array &$employeeDays,
         array $periods,
         string $dateString,
         string $providerTimeZone,
-        DateTimeZone $currentUserTimeZone,
+        string $currentUserTimeZone,
         string $groupId = 'workHours'
     ): void {
         if (!isset($employeeDays[$dateString])) {
@@ -205,8 +251,14 @@ class GetCalendarSlotsCommandHandler extends CommandHandler
                 $currentUserTimeZone
             );
 
+            $endDateString = $dateString;
+            $endTimeString = $period->getEndTime()->getValue()->format('H:i:s');
+            if ($endTimeString === '00:00:00') {
+                $endDateString = (new DateTime($dateString))->modify('+1 day')->format('Y-m-d');
+            }
+
             $endDateTime = $this->convertWorkPeriods(
-                new DateTime($dateString . $period->getEndTime()->getValue()->format('H:i:s')),
+                new DateTime($endDateString . $endTimeString),
                 $providerTimeZone,
                 $currentUserTimeZone
             );
@@ -231,17 +283,32 @@ class GetCalendarSlotsCommandHandler extends CommandHandler
                     ];
                 }
 
-                $employeeDays[$startDate]['periods'][] = ['groupId' => $groupId, 'start' => $startTime, 'end' => '24:00:00'];
-                $employeeDays[$endDate]['periods'][] = ['groupId' => $groupId, 'start' => '00:00:00', 'end' => $endTime];
+                $this->addOrReplacePeriod($employeeDays[$startDate]['periods'], $groupId, $startTime, '24:00:00');
+                $this->addOrReplacePeriod($employeeDays[$endDate]['periods'], $groupId, '00:00:00', $endTime);
 
                 continue;
             }
 
-            $employeeDays[$dateString]['periods'][] = [
-                'groupId' => $groupId,
-                'start' => $startTime,
-                'end' => $endTime === '00:00:00' ? '24:00:00' : $endTime
-            ];
+            $normalizedEndTime = $endTime === '00:00:00' ? '24:00:00' : $endTime;
+            $this->addOrReplacePeriod($employeeDays[$dateString]['periods'], $groupId, $startTime, $normalizedEndTime);
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function addOrReplacePeriod(array &$periods, string $groupId, string $startTime, string $endTime): void
+    {
+        if ($groupId === 'dayOff') {
+            foreach ($periods as $key => $existingPeriod) {
+                if (new DateTime($existingPeriod['start']) >= new DateTime($startTime) && new DateTime($existingPeriod['end']) <= new DateTime($endTime)) {
+                    unset($periods[$key]);
+                }
+            }
+        }
+
+        if (new DateTime($startTime) < new DateTime($endTime)) {
+            $periods[] = ['groupId' => $groupId, 'start' => $startTime, 'end' => $endTime];
         }
     }
 
@@ -249,17 +316,15 @@ class GetCalendarSlotsCommandHandler extends CommandHandler
     {
         foreach ($providerWorkDays as $date => $info) {
             if (!isset($allWorkDays[$date])) {
-                $allWorkDays[$date] = $info;
-
-                continue;
-            }
-
-            if ($allWorkDays[$date]['groupId'] === 'workHours' && $info['groupId'] === 'dayOff') {
-                continue;
+                $allWorkDays[$date] = [
+                    'groupId' => $info['groupId'],
+                    'periods' => []
+                ];
             }
 
             foreach ($info['periods'] as $period) {
                 $merged = false;
+
                 foreach ($allWorkDays[$date]['periods'] as &$existingPeriod) {
                     if (
                         $period['groupId'] === $existingPeriod['groupId'] &&
@@ -269,7 +334,6 @@ class GetCalendarSlotsCommandHandler extends CommandHandler
                         $existingPeriod['start'] = min($existingPeriod['start'], $period['start']);
                         $existingPeriod['end'] = max($existingPeriod['end'], $period['end']);
                         $merged = true;
-                        break;
                     }
                 }
 
@@ -285,11 +349,6 @@ class GetCalendarSlotsCommandHandler extends CommandHandler
         $formattedPeriods = [];
 
         foreach ($allWorkDays as $date => $info) {
-            if ($info['groupId'] === 'dayOff') {
-                $formattedPeriods[] = $this->createPeriod($date, $date, 'dayOff', 'day-off');
-                continue;
-            }
-
             $periods = $info['periods'];
             if (empty($periods)) {
                 $formattedPeriods[] = $this->createPeriod($date, $date, 'notWorkHours', 'not-work-hours');
@@ -306,7 +365,11 @@ class GetCalendarSlotsCommandHandler extends CommandHandler
                     $formattedPeriods[] = $this->createPeriod("{$date}T00:00:00", $start, 'notWorkHours', 'not-work-hours');
                 }
 
-                $formattedPeriods[] = $this->createPeriod($start, $end, 'workHours', 'work-hours');
+                if ($period['groupId'] === 'dayOff') {
+                    $formattedPeriods[] = $this->createPeriod($start, $end, 'dayOff', 'day-off');
+                } else {
+                    $formattedPeriods[] = $this->createPeriod($start, $end, 'workHours', 'work-hours');
+                }
 
                 if (isset($periods[$i + 1]) && $period['end'] !== $periods[$i + 1]['start']) {
                     $formattedPeriods[] = $this->createPeriod($end, "{$date}T{$periods[$i + 1]['start']}", 'notWorkHours', 'not-work-hours');
@@ -354,6 +417,10 @@ class GetCalendarSlotsCommandHandler extends CommandHandler
     {
         foreach ($providerWorkDays as $providerWorkDay) {
             foreach ($providerWorkDay['periods'] as $period) {
+                if ($period['groupId'] === 'dayOff') {
+                    continue;
+                }
+
                 $slotMinTime = min($slotMinTime, $period['start']);
                 $slotMaxTime = max($slotMaxTime, $period['end']);
             }
@@ -390,6 +457,9 @@ class GetCalendarSlotsCommandHandler extends CommandHandler
             [$this->timeLimits['slotMinTime'], $this->timeLimits['slotMaxTime']] =
                 $this->getLimitsForEvents($queryParams, $this->timeLimits['slotMinTime'], $this->timeLimits['slotMaxTime']);
         }
+
+        [$this->timeLimits['slotMinTime'], $this->timeLimits['slotMaxTime']] =
+            $this->getLimitsForBlockTime($queryParams, $this->timeLimits['slotMinTime'], $this->timeLimits['slotMaxTime']);
     }
 
     private function getLimitsForAppointments($queryParams, $slotMinTime, $slotMaxTime): array
@@ -410,12 +480,19 @@ class GetCalendarSlotsCommandHandler extends CommandHandler
         ]);
 
         foreach ($appointments->getItems() as $appointment) {
-            $startDateTime = $appointment->getBookingStart()->getValue()->sub(new DateInterval(
+            $startDateTime = $appointment->getBookingStart()->getValue()->setTimezone(new DateTimeZone($this->userTimezone))->sub(new DateInterval(
                 'PT' . abs($appointment->getService()->getTimeBefore() ? $appointment->getService()->getTimeBefore()->getValue() : 0) . 'S'
             ));
-            $endDateTime = $appointment->getBookingEnd()->getValue()->add(new DateInterval(
+            $endDateTime = $appointment->getBookingEnd()->getValue()->setTimezone(new DateTimeZone($this->userTimezone))->add(new DateInterval(
                 'PT' . abs($appointment->getService()->getTimeAfter() ? $appointment->getService()->getTimeAfter()->getValue() : 0) . 'S'
             ));
+
+            $startDate = $startDateTime->format('Y-m-d');
+            $endDate = $endDateTime->format('Y-m-d');
+
+            if ($startDate !== $endDate) {
+                return ['00:00:00', '24:00:00'];
+            }
 
             $slotMinTime = min($slotMinTime, $startDateTime->format('H:i:s'));
             $slotMaxTime = max($slotMaxTime, $endDateTime->format('H:i:s'));
@@ -455,64 +532,93 @@ class GetCalendarSlotsCommandHandler extends CommandHandler
         return [$slotMinTime, $slotMaxTime];
     }
 
+    private function getLimitsForBlockTime($queryParams, $slotMinTime, $slotMaxTime): array
+    {
+        $dayOffRepository = $this->container->get('domain.schedule.dayOff.repository');
+
+        $queryParams['type'] = 'blockTime';
+        $queryParams['dates'] = [$queryParams['calendarStartDate'], $queryParams['calendarEndDate']];
+
+        $blockTimes = $dayOffRepository->getFiltered($queryParams);
+
+        foreach ($blockTimes->getItems() as $blockTime) {
+            $startDateTime = $blockTime->getStartDate()->getValue()->setTimezone(new DateTimeZone($this->userTimezone));
+            $endDateTime   = $blockTime->getEndDate()->getValue()->setTimezone(new DateTimeZone($this->userTimezone));
+
+            $startDate = $startDateTime->format('Y-m-d');
+            $endDate = $endDateTime->format('Y-m-d');
+
+            if ($startDate !== $endDate) {
+                return ['00:00:00', '24:00:00'];
+            }
+
+            $slotMinTime = min($slotMinTime, $startDateTime->format('H:i:s'));
+            $slotMaxTime = max($slotMaxTime, $endDateTime->format('H:i:s'));
+        }
+
+        return [$slotMinTime, $slotMaxTime];
+    }
+
+    /**
+     * @param array $allWorkDays
+     * @param array $queryParams
+     * @return void
+     * @throws ContainerExceptionInterface
+     * @throws DateInvalidTimeZoneException
+     * @throws DateMalformedPeriodStringException
+     * @throws InvalidArgumentException
+     */
     private function processCompanyDaysOff(array &$allWorkDays, array $queryParams): void
     {
         $isDateRangeOverlapping = fn(DateTime $start1, DateTime $end1, DateTime $start2, DateTime $end2): bool =>
-        $start1 <= $end2 && $end1 >= $start2;
+            $start1 <= $end2 && $end1 >= $start2;
 
         $settingsDS = $this->container->get('domain.settings.service');
         $calendarStartDate = DateTime::createFromFormat('Y-m-d', $queryParams['calendarStartDate']);
         $calendarEndDate = DateTime::createFromFormat('Y-m-d', $queryParams['calendarEndDate']);
 
+        $systemTimezone = DateTimeService::getTimeZone();
+        $userTimezone = DateTimeService::getTimeZone()->getName();
+
         $companyDaysOff = $settingsDS->getCategorySettings('daysOff');
 
         foreach ($companyDaysOff as $key => $companyDayOff) {
-            $dayOffStartDate = DateTime::createFromFormat('Y-m-d', $companyDayOff['startDate']);
-            $dayOffEndDate = DateTime::createFromFormat('Y-m-d', $companyDayOff['endDate']);
+            $dayOffStartDate = (new DateTime($companyDayOff['startDate'] . ' 00:00:00', $systemTimezone))->setTimezone(new DateTimeZone($userTimezone));
+            $dayOffEndDate = (new DateTime($companyDayOff['endDate'] . ' 23:59:59', $systemTimezone))->setTimezone(new DateTimeZone($userTimezone));
 
             if (!$isDateRangeOverlapping($calendarStartDate, $calendarEndDate, $dayOffStartDate, $dayOffEndDate)) {
                 unset($companyDaysOff[$key]);
             }
         }
 
-        foreach ($allWorkDays as $date => $info) {
-            $periodDateTime = DateTime::createFromFormat('Y-m-d', $date)->setTime(0, 0);
+        foreach ($companyDaysOff as $companyDayOff) {
+            $dayOffStartDate = (new DateTime($companyDayOff['startDate'] . ' 00:00:00', $systemTimezone))->setTimezone(new DateTimeZone($userTimezone));
+            $dayOffEndDate = (new DateTime($companyDayOff['endDate'] . ' 23:59:59', $systemTimezone))->setTimezone(new DateTimeZone($userTimezone));
 
-            foreach ($companyDaysOff as $dayOff) {
-                $dayOffStartDate = DateTime::createFromFormat('Y-m-d', $dayOff['startDate'])->setTime(0, 0);
-                $dayOffEndDate = DateTime::createFromFormat('Y-m-d', $dayOff['endDate'])->setTime(0, 0);
-
-                if ($dayOffStartDate <= $periodDateTime && $dayOffEndDate >= $periodDateTime) {
-                    $allWorkDays[$date] = ['groupId' => 'dayOff', 'periods' => []];
-                    break;
-                }
+            $datePeriod = new DatePeriod($dayOffStartDate, new DateInterval('P1D'), $dayOffEndDate);
+            foreach ($datePeriod as $date) {
+                $this->mapPeriods(
+                    $allWorkDays,
+                    [
+                        new Period(
+                            new DateTimeValue(\DateTime::createFromFormat('H:i:s', '00:00:00')),
+                            new DateTimeValue(\DateTime::createFromFormat('H:i:s', '00:00:00')),
+                            new Collection(),
+                            new Collection()
+                        )
+                    ],
+                    $date->format('Y-m-d'),
+                    $systemTimezone->getName(),
+                    $userTimezone,
+                    'dayOff'
+                );
             }
         }
     }
 
-    private function convertWorkPeriods($period, string $providerTimezone, DateTimeZone $userTimezone): DateTime
+    private function convertWorkPeriods($period, string $providerTimezone, string $userTimezone): DateTime
     {
         return (new DateTime($period->format('Y-m-d H:i:s'), new DateTimeZone($providerTimezone)))
-            ->setTimezone($userTimezone);
-    }
-
-    private function convertTimeLimits(string $slotMinTime, string $slotMaxTime, Provider $provider): array
-    {
-        $providerTimezone = ($provider->getTimezone() ? $provider->getTimezone()->getValue() : DateTimeService::getTimeZone()->getName());
-        $slotMinTime      = $this->applyTimezone($slotMinTime, $providerTimezone);
-        $slotMaxTime      = $this->applyTimezone($slotMaxTime, $providerTimezone);
-
-        if ($slotMinTime >= $slotMaxTime) {
-            return ['00:00:00', '24:00:00'];
-        }
-
-        return [$slotMinTime, $slotMaxTime];
-    }
-
-    private function applyTimezone(string $time, string $providerTimezone): string
-    {
-        return (new DateTime($time, new DateTimeZone($providerTimezone)))
-            ->setTimezone(DateTimeService::getTimeZone())
-            ->format('H:i:s');
+            ->setTimezone(new DateTimeZone($userTimezone));
     }
 }

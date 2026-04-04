@@ -19,6 +19,7 @@ use AmeliaBooking\Application\Controller\Notification\UpdateNotificationControll
 use AmeliaBooking\Application\Controller\Notification\UpdateNotificationStatusController;
 use AmeliaBooking\Application\Controller\Notification\UpdateSMSNotificationHistoryController;
 use AmeliaBooking\Application\Controller\Notification\UpdateSMSNotificationHistoryDirectlyController;
+use AmeliaBooking\Application\Controller\Notification\ValidateSMTPCredentialsController;
 use Slim\App;
 
 /**
@@ -42,6 +43,8 @@ class Notification
         $app->post('/notifications/status/{id:[0-9]+}', UpdateNotificationStatusController::class);
 
         $app->post('/notifications/email/test', SendTestEmailController::class);
+
+        $app->post('/notifications/smtp/validate', ValidateSMTPCredentialsController::class);
 
         $app->get('/notifications/scheduled/send', SendScheduledNotificationsController::class);
 

@@ -15,7 +15,7 @@ class NewArrivalsAnnouncementPattern extends Pattern {
   protected $name = 'new-arrivals-announcement';
   protected $block_types = ['core/post-content']; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
   protected $template_types = ['email-template']; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
-  protected $categories = ['newsletter'];
+  protected $categories = ['sales-announcement'];
   protected $post_types = [EmailEditor::MAILPOET_EMAIL_POST_TYPE]; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 
   /**
@@ -33,8 +33,8 @@ class NewArrivalsAnnouncementPattern extends Pattern {
 
       <!-- wp:paragraph {"style":{"typography":{"fontSize":"16px"}}} -->
       <p style="font-size:16px">' .
-      /* translators: [product category] is a placeholder for the product category */
-      __("Explore our latest collection featuring [product category]. It's designed to inspire and elevate.", 'mailpoet') . '</p>
+      /* translators: PRODUCT CATEGORY is placeholder text that merchants replace with their own content. */
+      __("Explore our latest collection featuring PRODUCT CATEGORY. It's designed to inspire and elevate.", 'mailpoet') . '</p>
       <!-- /wp:paragraph -->
 
       <!-- wp:image -->

@@ -294,7 +294,7 @@ class GetTimeSlotsCommandHandler extends CommandHandler
                     $endDateTimeCopy->format('Y-m-d H:i') === $maximumDateTimeCopy->format('Y-m-d H:i') ||
                     ($endDateTimeCopy->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i') ===
                         $maximumDateTimeCopy->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i')) ||
-                    ($endDateTimeCopy > $maximumDateTimeCopy)
+                    ($endDateTimeCopy >= $maximumDateTimeCopy)
                 ) {
                     break;
                 }

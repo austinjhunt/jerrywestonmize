@@ -67,8 +67,6 @@ class SquareMiddlewareService
             $response = null;
         }
 
-        curl_close($ch);
-
         return $response['result'];
     }
 
@@ -113,8 +111,6 @@ class SquareMiddlewareService
 
         $response = curl_exec($ch);
 
-        curl_close($ch);
-
         return true;
     }
 
@@ -154,8 +150,6 @@ class SquareMiddlewareService
             $response = null;
         }
 
-        curl_close($ch);
-
         return $response;
     }
 
@@ -174,8 +168,6 @@ class SquareMiddlewareService
             $response = json_decode($response, true);
             $url      = $response['result'];
         }
-
-        curl_close($ch);
 
         return $url;
     }

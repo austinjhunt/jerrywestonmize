@@ -44,9 +44,59 @@ class RecaptchaService extends AbstractRecaptchaService
 
         $response = json_decode(curl_exec($ch));
 
+        return $response->success;
+    }
+
+    /**
+     * Verify recaptcha with provided secret and token
+     *
+     * @param string $secret
+     * @param string $token
+     *
+     * @return array Array with 'success' (bool), 'message' (string), and optional 'error_codes' (array)
+     */
+    public function verifyWithSecret($secret, $token)
+    {
+        if (empty($secret)) {
+            return [
+                'success' => false,
+                'message' => 'Missing secret'
+            ];
+        }
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'https://www.google.com/recaptcha/api/siteverify');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, [
+            'secret'   => $secret,
+            'response' => $token ?: ''
+        ]);
+
+        $response = json_decode(curl_exec($ch));
         curl_close($ch);
 
-        return $response->success;
+        if (!$response) {
+            return [
+                'success' => false,
+                'message' => 'Failed to connect to Google Recaptcha service.'
+            ];
+        }
+
+        $errorCodes = isset($response->{'error-codes'}) ? $response->{'error-codes'} : [];
+
+        if ($response->success) {
+            return [
+                'success' => true,
+                'message' => 'Validation successful'
+            ];
+        }
+
+        return [
+            'success'     => false,
+            'message'     => 'Recaptcha verification failed',
+            'error_codes' => $errorCodes
+        ];
     }
 
     /**

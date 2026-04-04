@@ -135,6 +135,21 @@ class Event extends AbstractBookable
     /** @var DateTimeValue|null */
     private $initialEventEnd;
 
+    /** @var IntegerValue */
+    private $spotsSold;
+
+    /** @var IntegerValue */
+    private $spotsWaiting;
+
+    /** @var IntegerValue */
+    private $bookingsApproved;
+
+    /** @var IntegerValue */
+    private $bookingsPending;
+
+    /** @var IntegerValue */
+    private $bookingsWaiting;
+
     /**
      * @return Id
      */
@@ -721,6 +736,85 @@ class Event extends AbstractBookable
         $this->aggregatedPrice = $aggregatedPrice;
     }
 
+    /**
+     * @return IntegerValue
+     */
+    public function getSpotsSold()
+    {
+        return $this->spotsSold;
+    }
+
+    /**
+     * @param IntegerValue $spotsSold
+     */
+    public function setSpotsSold($spotsSold)
+    {
+        $this->spotsSold = $spotsSold;
+    }
+
+    /**
+     * @return IntegerValue
+     */
+    public function getSpotsWaiting()
+    {
+        return $this->spotsWaiting;
+    }
+
+    /**
+     * @param IntegerValue $spotsWaiting
+     */
+    public function setSpotsWaiting($spotsWaiting)
+    {
+        $this->spotsWaiting = $spotsWaiting;
+    }
+
+    /**
+     * @return IntegerValue
+     */
+    public function getBookingsApproved()
+    {
+        return $this->bookingsApproved;
+    }
+
+    /**
+     * @param IntegerValue $bookingsApproved
+     */
+    public function setBookingsApproved($bookingsApproved)
+    {
+        $this->bookingsApproved = $bookingsApproved;
+    }
+
+    /**
+     * @return IntegerValue
+     */
+    public function getBookingsPending()
+    {
+        return $this->bookingsPending;
+    }
+
+    /**
+     * @param IntegerValue $bookingsPending
+     */
+    public function setBookingsPending($bookingsPending)
+    {
+        $this->bookingsPending = $bookingsPending;
+    }
+
+    /**
+     * @return IntegerValue
+     */
+    public function getBookingsWaiting()
+    {
+        return $this->bookingsWaiting;
+    }
+
+    /**
+     * @param IntegerValue $bookingsWaiting
+     */
+    public function setBookingsWaiting($bookingsWaiting)
+    {
+        $this->bookingsWaiting = $bookingsWaiting;
+    }
 
     /**
      * @return array
@@ -770,6 +864,11 @@ class Event extends AbstractBookable
                 'aggregatedPrice'        => $this->getAggregatedPrice() ? $this->getAggregatedPrice()->getValue() : null,
                 'pictureFullPath'        => $this->getPicture() ? $this->getPicture()->getFullPath() : null,
                 'pictureThumbPath'       => $this->getPicture() ? $this->getPicture()->getThumbPath() : null,
+                'spotsSold'              => $this->getSpotsSold() ? $this->getSpotsSold()->getValue() : 0,
+                'spotsWaiting'           => $this->getSpotsWaiting() ? $this->getSpotsWaiting()->getValue() : 0,
+                'bookingsApproved'       => $this->getBookingsApproved() ? $this->getBookingsApproved()->getValue() : 0,
+                'bookingsPending'        => $this->getBookingsPending() ? $this->getBookingsPending()->getValue() : 0,
+                'bookingsWaiting'        => $this->getBookingsWaiting() ? $this->getBookingsWaiting()->getValue() : 0,
             ]
         );
     }

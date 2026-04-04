@@ -23,6 +23,8 @@ class AppointmentsTable extends AbstractDatabaseTable
     {
         $table = self::getTableName();
 
+        $charsetCollate = self::getCharsetCollate();
+
         $description = Description::MAX_LENGTH;
 
         return "CREATE TABLE {$table} (
@@ -47,6 +49,6 @@ class AppointmentsTable extends AbstractDatabaseTable
                    `parentId` INT(11) NULL,
                    `error` TEXT({$description}) DEFAULT NULL,
                     PRIMARY KEY (`id`)
-                ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
+                ) {$charsetCollate};";
     }
 }

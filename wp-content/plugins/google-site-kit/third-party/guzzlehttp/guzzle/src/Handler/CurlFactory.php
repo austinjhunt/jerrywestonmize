@@ -99,7 +99,9 @@ class CurlFactory implements \Google\Site_Kit_Dependencies\GuzzleHttp\Handler\Cu
         $resource = $easy->handle;
         unset($easy->handle);
         if (\count($this->handles) >= $this->maxHandles) {
-            \curl_close($resource);
+            if (\PHP_VERSION_ID < 80000) {
+                \curl_close($resource);
+            }
         } else {
             // Remove all callback functions as they can hold onto references
             // and are not cleaned up by curl_reset. Using curl_setopt_array
@@ -556,7 +558,9 @@ class CurlFactory implements \Google\Site_Kit_Dependencies\GuzzleHttp\Handler\Cu
     public function __destruct()
     {
         foreach ($this->handles as $id => $handle) {
-            \curl_close($handle);
+            if (\PHP_VERSION_ID < 80000) {
+                \curl_close($handle);
+            }
             unset($this->handles[$id]);
         }
     }

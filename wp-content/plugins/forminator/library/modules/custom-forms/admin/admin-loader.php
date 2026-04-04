@@ -517,10 +517,15 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 			}
 			$change_recipients = apply_filters( 'forminator_change_template_recipients', true, $template );
 
+			$template_name = Forminator_Custom_Forms::translate_template_name( $template['name'] ?? '' );
+			if ( empty( $name ) ) {
+				$name = $template_name;
+			}
+
 			$extra_args = array(
 				'trigger_from'  => $trigger_from,
 				'template_type' => $template['is_official'] ?? false ? 'preset' : 'cloud',
-				'template_name' => $template['name'] ?? '',
+				'template_name' => $template_name,
 			);
 
 			try {

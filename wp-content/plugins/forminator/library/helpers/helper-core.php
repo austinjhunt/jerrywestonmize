@@ -740,26 +740,16 @@ function forminator_get_form_id_helper() {
  * @return array
  */
 function forminator_get_page_ids_helper() {
-	// Sanitize is requied when user uses space inside the translation.
-	$name = sanitize_title( esc_html__( 'forminator', 'forminator' ) );
-	if ( FORMINATOR_PRO ) {
-		$title = sanitize_title( esc_html__( 'Forminator Pro', 'forminator' ) );
-		return array(
-			$title . '_page_forminator-quiz-view',
-			$title . '_page_forminator-cform-view',
-			$title . '_page_forminator-poll-view',
-			$title . '_page_forminator-entries',
-		);
-	} else {
-		// Free version.
-		$title = sanitize_title( esc_html__( 'Forminator', 'forminator' ) );
-		return array(
-			$title . '_page_forminator-quiz-view',
-			$title . '_page_forminator-cform-view',
-			$title . '_page_forminator-poll-view',
-			$title . '_page_forminator-entries',
-		);
-	}
+	// Free version.
+	$title    = sanitize_title( esc_html__( 'Forminator', 'forminator' ) );
+	$page_ids = array(
+		$title . '_page_forminator-quiz-view',
+		$title . '_page_forminator-cform-view',
+		$title . '_page_forminator-poll-view',
+		$title . '_page_forminator-entries',
+	);
+
+	return apply_filters( 'forminator_page_ids', $page_ids );
 }
 
 /**
@@ -1492,59 +1482,6 @@ function forminator_get_prefix( $module_slug, $form_prefix = '', $ucfirst = fals
 }
 
 /**
- * Reset plugin to fresh install
- *
- * @since 1.6.3
- */
-function forminator_reset_plugin() {
-	global $wpdb;
-
-	/**
-	 * Fires before Plugin reset
-	 *
-	 * @since 1.6.3
-	 */
-	do_action( 'forminator_before_reset_plugin' );
-
-	forminator_reset_settings();
-
-	/**
-	 * Forminator_clear_module_views
-	 *
-	 * @see forminator_clear_module_views()
-	 */
-	$wpdb->query( "TRUNCATE {$wpdb->prefix}frmt_form_views" );
-
-	/**
-	 * Forminator_clear_module_submissions
-	 *
-	 * @see forminator_clear_module_submissions()
-	 */
-	$max_entry_id = $wpdb->get_var( "SELECT MAX(`entry_id`) FROM {$wpdb->prefix}frmt_form_entry" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-
-	if ( $max_entry_id && is_numeric( $max_entry_id ) && $max_entry_id > 0 ) {
-		for ( $i = 1; $i <= $max_entry_id; $i++ ) {
-			wp_cache_delete( $i, Forminator_Form_Entry_Model::FORM_ENTRY_CACHE_GROUP );
-		}
-	}
-
-	$wpdb->query( "TRUNCATE {$wpdb->prefix}frmt_form_entry" );
-	$wpdb->query( "TRUNCATE {$wpdb->prefix}frmt_form_entry_meta" );
-
-	wp_cache_delete( 'all_form_types', Forminator_Form_Entry_Model::FORM_COUNT_CACHE_GROUP );
-	wp_cache_delete( 'custom-forms_form_type', Forminator_Form_Entry_Model::FORM_COUNT_CACHE_GROUP );
-	wp_cache_delete( 'poll_form_type', Forminator_Form_Entry_Model::FORM_COUNT_CACHE_GROUP );
-	wp_cache_delete( 'quizzes_form_type', Forminator_Form_Entry_Model::FORM_COUNT_CACHE_GROUP );
-
-	/**
-	 * Fires after Plugin reset
-	 *
-	 * @since 1.6.3
-	 */
-	do_action( 'forminator_after_reset_plugin' );
-}
-
-/**
  * Add Slash in string
  *
  * @since 1.8
@@ -1567,11 +1504,10 @@ function forminator_addcslashes( $value, $char = '"\\/' ) {
  *
  * @param string $link_for Accepts: 'docs', 'plugin', 'rate', 'support', 'roadmap'.
  * @param string $campaign  Utm campaign tag to be used in link. Default: ''.
- * @param string $adv_path  Advanced path. Default: ''.
  *
  * @return string
  */
-function forminator_get_link( $link_for, $campaign = '', $adv_path = '' ) {
+function forminator_get_link( $link_for, $campaign = '' ) {
 	$domain   = 'https://wpmudev.com';
 	$wp_org   = 'https://wordpress.org';
 	$utm_tags = "?utm_source=forminator&utm_medium=plugin&utm_campaign={$campaign}";
@@ -1587,13 +1523,10 @@ function forminator_get_link( $link_for, $campaign = '', $adv_path = '' ) {
 			$link = "{$wp_org}/support/plugin/forminator/reviews/#new-post";
 			break;
 		case 'support':
-			$link = FORMINATOR_PRO ? "{$domain}/get-support/" : "{$wp_org}/support/plugin/forminator/";
+			$link = "{$wp_org}/support/plugin/forminator/";
 			break;
 		case 'roadmap':
 			$link = "{$domain}/roadmap/";
-			break;
-		case 'pro_link':
-			$link = "{$domain}/$adv_path";
 			break;
 		default:
 			$link = '';

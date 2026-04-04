@@ -63,6 +63,25 @@ class AmeliaEventsListModule implements DependencyInterface
                 $shortcode .= ' event=' . implode(',', $event);
             }
 
+            $event_to_show = $attrs['event_to_show']['innerContent']['desktop']['value'] ?? 'all';
+            if (count($event) === 0 && $event_to_show !== 'all') {
+                if ($event_to_show === 'custom') {
+                    $start_date = $attrs['start_date']['innerContent']['desktop']['value'] ?? '';
+                    $end_date = $attrs['end_date']['innerContent']['desktop']['value'] ?? '';
+
+                    $has_valid_start = $start_date && preg_match('/^\d{4}-\d{2}-\d{2}$/', $start_date);
+                    $has_valid_end = $end_date && preg_match('/^\d{4}-\d{2}-\d{2}$/', $end_date);
+
+                    if (!$has_valid_start || !$has_valid_end) {
+                        return '';
+                    }
+
+                    $shortcode .= ' range="' . esc_attr($start_date) . ' - ' . esc_attr($end_date) . '"';
+                } else {
+                    $shortcode .= ' range="' . esc_attr($event_to_show) . '"';
+                }
+            }
+
             $tag = $attrs['tags']['innerContent']['desktop']['value'] ?? [];
             if ($tag && count($tag) > 0) {
                 $shortcode .= ' tag="' . implode(',', array_map(function ($t) {

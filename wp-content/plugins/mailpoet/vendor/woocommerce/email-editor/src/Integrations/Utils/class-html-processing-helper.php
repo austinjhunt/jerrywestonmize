@@ -421,6 +421,12 @@ class Html_Processing_Helper {
  }
  return '<img ' . implode( ' ', $sanitized_attributes ) . '>';
  }
+ public static function extract_url_from_text( string $text ): string {
+ if ( preg_match( '/(?<![a-zA-Z0-9.-])https?:\/\/[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}[a-zA-Z0-9\/?=&%_.~+#-]*(?![a-zA-Z0-9._~+#-])/', $text, $matches ) ) {
+ return $matches[0];
+ }
+ return '';
+ }
  private static function sanitize_image_styles( string $style_value ): string {
  $sanitized_styles = array();
  $style_parts = explode( ';', $style_value );

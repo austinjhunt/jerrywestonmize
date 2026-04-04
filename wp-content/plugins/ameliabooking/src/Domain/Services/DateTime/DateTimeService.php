@@ -7,6 +7,8 @@
 
 namespace AmeliaBooking\Domain\Services\DateTime;
 
+use DateTimeZone;
+
 /**
  * Class DateTimeService
  *

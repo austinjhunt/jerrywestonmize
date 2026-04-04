@@ -122,8 +122,6 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
 
             if ($data['description']) {
                 $stripeData['description'] = $data['description'];
-            } else if (!empty($data['metaData']['Customer Name'])) {
-                $stripeData['description'] = 'Payment for ' . $data['metaData']['Customer Name'] . ' - ' . $data['metaData']['Customer Email'] . ' - ' . $data['metaData']['Service'] . '';
             }
 
             $customerId = $this->createCustomer($data, $additionalStripeData);
@@ -134,8 +132,6 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
 
             if (!empty($data['customerData']) && !empty($data['customerData']['email'])) {
                 $stripeData['receipt_email'] = $data['customerData']['email'];
-            }  else if (!empty($data['metaData']['Customer Email'])) {
-                $stripeData['receipt_email'] = $data['metaData']['Customer Email'];
             }
 
             $stripeData = apply_filters(
@@ -505,10 +501,9 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
     }
 
     /**
-     * @return array
      * @throws Exception
      */
-    public function getAccounts()
+    public function getAccounts(): array
     {
         $stripeSettings = $this->settingsService->getSetting('payments', 'stripe');
 
@@ -524,13 +519,38 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
             $result[] = [
                 'id'    => $account['id'],
                 'email' => $account['email'],
-                'type'  => $account['type'],
+                'type'  => $this->resolveStripeAccountType($account),
             ];
         }
 
         return $result;
     }
 
+    private function resolveStripeAccountType(array $account): ?string
+    {
+        $type = $account['type'] ?? null;
+
+        if ($type && $type !== 'none') {
+            return $type;
+        }
+
+        $controller = $account['controller'] ?? [];
+        $controllerType = $controller['type'] ?? null;
+
+        if ($controllerType === 'account') {
+            return 'standard';
+        }
+
+        if ($controllerType === 'application') {
+            $dashboardType = is_array($controller['stripe_dashboard'] ?? null)
+                ? ($controller['stripe_dashboard']['type'] ?? 'none')
+                : 'none';
+
+            return ($dashboardType === 'express') ? 'express' : 'custom';
+        }
+
+        return null;
+    }
 
     /**
      * @throws ApiErrorException
@@ -683,5 +703,65 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
         }
 
         return $existingStripeConnects->toArray();
+    }
+
+    /**
+     * Validate Stripe API keys
+     *
+     * @param string $publishableKey
+     * @param string $secretKey
+     * @param bool $testMode
+     *
+     * @return array
+     */
+    public function validateKeys(string $publishableKey, string $secretKey, bool $testMode): array
+    {
+        try {
+            // Publishable key format
+            $expectedPrefix = $testMode ? 'pk_test_' : 'pk_live_';
+            if (strpos($publishableKey, $expectedPrefix) !== 0) {
+                return [
+                    'valid' => false,
+                    'message' => sprintf(
+                        'Invalid publishable key format. Expected key to start with "%s"',
+                        $expectedPrefix
+                    )
+                ];
+            }
+
+            // Secret key format
+            $expectedSecretPrefix = $testMode ? 'sk_test_' : 'sk_live_';
+            if (strpos($secretKey, $expectedSecretPrefix) !== 0) {
+                return [
+                    'valid' => false,
+                    'message' => sprintf(
+                        'Invalid secret key format. Expected key to start with "%s"',
+                        $expectedSecretPrefix
+                    )
+                ];
+            }
+
+            Stripe::setApiKey($secretKey);
+
+            try {
+                // Account information
+                Account::retrieve();
+
+                return [
+                    'valid' => true,
+                    'message' => 'Stripe keys are valid'
+                ];
+            } catch (ApiErrorException $e) {
+                return [
+                    'valid' => false,
+                    'message' => 'Invalid Stripe secret key: ' . $e->getMessage()
+                ];
+            }
+        } catch (Exception $e) {
+            return [
+                'valid' => false,
+                'message' => 'Error validating Stripe keys: ' . $e->getMessage()
+            ];
+        }
     }
 }

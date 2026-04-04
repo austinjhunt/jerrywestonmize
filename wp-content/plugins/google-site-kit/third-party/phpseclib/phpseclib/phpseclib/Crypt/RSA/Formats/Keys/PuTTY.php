@@ -51,7 +51,10 @@ abstract class PuTTY extends \Google\Site_Kit_Dependencies\phpseclib3\Crypt\Comm
         if (!isset($components['private'])) {
             return $components;
         }
-        \extract($components);
+        $type = $components['type'];
+        $comment = $components['comment'];
+        $public = $components['public'];
+        $private = $components['private'];
         unset($components['public'], $components['private']);
         $isPublicKey = \false;
         $result = \Google\Site_Kit_Dependencies\phpseclib3\Common\Functions\Strings::unpackSSH2('ii', $public);

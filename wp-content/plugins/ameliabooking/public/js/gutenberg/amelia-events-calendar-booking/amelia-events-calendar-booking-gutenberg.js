@@ -3,13 +3,10 @@
 
   var el = wp.element.createElement
   var components = wp.components
-  var blockControls = wp.editor.BlockControls
-  var inspectorControls = wp.editor.InspectorControls
+  var blockControls = wp.blockEditor.BlockControls
+  var inspectorControls = wp.blockEditor.InspectorControls
+  var useBlockProps = wp.blockEditor.useBlockProps
   var data = wpAmeliaLabels.data
-
-  var blockStyle = {
-    color: 'red'
-  }
 
   var entityNames = ['events', 'tags', 'locations']
   var entities = {}
@@ -30,6 +27,7 @@
 
   // Registering the Block for events shortcode
   wp.blocks.registerBlockType('amelia/events-calendar-booking-gutenberg-block', {
+    apiVersion: 3,
     title: wpAmeliaLabels.events_calendar_booking_gutenberg_block.title,
     description: wpAmeliaLabels.events_calendar_booking_gutenberg_block.description,
     icon: window.ameliaBlockIcon,
@@ -189,6 +187,8 @@
         return shortCode
       }
 
+      var blockProps = useBlockProps()
+
       if (entities.events.length !== 0) {
         inspectorElements.push(el(components.PanelRow,
           {},
@@ -202,10 +202,10 @@
           })
         ))
 
-        inspectorElements.push(el('div', {style: {'margin-bottom': '1em'}}, ''))
+        inspectorElements.push(el('div', {style: {marginBottom: '1em'}}, ''))
 
         if (attributes.parametars) {
-          inspectorElements.push(el('div', {class: 'amelia-gutenberg-multi-select-note'}, wpAmeliaLabels.multiselect_note))
+          inspectorElements.push(el('div', {className: 'amelia-gutenberg-multi-select-note'}, wpAmeliaLabels.multiselect_note))
 
           if (entities.tags.length) {
             inspectorElements.push(el(components.SelectControl, {
@@ -234,7 +234,7 @@
               }
             }))
 
-            inspectorElements.push(el('div', {style: {'margin-bottom': '1em'}}, ''))
+            inspectorElements.push(el('div', {style: {marginBottom: '1em'}}, ''))
 
             inspectorElements.push(el(components.PanelRow,
               {},
@@ -263,7 +263,7 @@
             }))
           }
 
-          inspectorElements.push(el('div', {style: {'margin-bottom': '1em'}}, ''))
+          inspectorElements.push(el('div', {style: {marginBottom: '1em'}}, ''))
 
           inspectorElements.push(el(components.TextControl, {
             id: 'amelia-js-trigger',
@@ -302,43 +302,69 @@
           attributes.tag = ''
         }
 
-        return [
+        return el('div', blockProps,
           el(blockControls, {key: 'controls'}),
           el(inspectorControls, {key: 'inspector'},
             el(components.PanelBody, {initialOpen: true},
               inspectorElements
             )
           ),
-          el('div', {},
-            getShortCode(props, props.attributes)
+          el('div', {className: 'amelia-gutenberg-placeholder'},
+            el('div', {className: 'amelia-gutenberg-placeholder__header'},
+              el('div', {className: 'amelia-gutenberg-placeholder__icon'}, window.ameliaBlockIcon || ''),
+              el('div', {className: 'amelia-gutenberg-placeholder__title'}, 'Amelia - Events Calendar Booking')
+            ),
+            el('div', {className: 'amelia-gutenberg-placeholder__shortcode'},
+              getShortCode(props, props.attributes)
+            )
           )
-        ]
+        )
       } else {
-        inspectorElements.push(el('p', {style: {'margin-bottom': '1em'}}, 'Please create event first. You can find instructions in our documentation on link below.'))
-        inspectorElements.push(el('a', {href: 'https://wpamelia.com/quickstart/', target: '_blank', style: {'margin-bottom': '1em'}}, 'Start working with Amelia WordPress Appointment Booking plugin'))
+        inspectorElements.push(el('p', {style: {marginBottom: '1em'}}, 'Please create event first. You can find instructions in our documentation on link below.'))
+        inspectorElements.push(el('a', {href: 'https://wpamelia.com/documentation/service-quick-start/', target: '_blank', style: {marginBottom: '1em'}}, 'Start working with Amelia WordPress Appointment Booking plugin'))
 
-        return [
+        return el('div', blockProps,
           el(blockControls, {key: 'controls'}),
           el(inspectorControls, {key: 'inspector'},
             el(components.PanelBody, {initialOpen: true},
               inspectorElements
             )
           ),
-          el('div',
-            {style: blockStyle},
-            getShortCode(props, props.attributes)
+          el('div', {className: 'amelia-gutenberg-placeholder'},
+            el('div', {className: 'amelia-gutenberg-placeholder__header'},
+              el('div', {className: 'amelia-gutenberg-placeholder__icon'}, window.ameliaBlockIcon || ''),
+              el('div', {className: 'amelia-gutenberg-placeholder__title'}, 'Amelia - Events Calendar Booking')
+            ),
+            el('div', {className: 'amelia-gutenberg-placeholder__shortcode'},
+              getShortCode(props, props.attributes)
+            )
           )
-        ]
+        )
       }
     },
 
-    save: function (props) {
-      return (
-        el('div', {},
-          props.attributes.short_code
-        )
-      )
-    }
+    save: function () {
+      return null
+    },
+    deprecated: [
+      {
+        attributes: {
+          short_code: {type: 'string', default: '[ameliaeventscalendarbooking]'},
+          trigger: {type: 'string', default: ''},
+          trigger_type: {type: 'string', default: 'id'},
+          in_dialog: {type: 'boolean', default: false},
+          event: {type: 'array', default: []},
+          recurring: {type: 'boolean', default: false},
+          tag: {type: 'array', default: []},
+          location: {type: 'array', default: []},
+          eventOptions: {type: 'string', default: ''},
+          parametars: {type: 'boolean', default: false}
+        },
+        save: function (props) {
+          return el('div', {}, props.attributes.short_code)
+        }
+      }
+    ]
   })
 })(
   window.wp

@@ -61,7 +61,7 @@ class Statement
      * Repositories previously called execute($params); this now works.
      *
      * @param array $params
-     * @return bool
+     * @return void
      */
     public function execute(array $params = [])
     {
@@ -101,7 +101,7 @@ class Statement
         if ($result === false) {
             $this->results = [];
             $this->affectedRows = 0;
-            return false;
+            throw new \RuntimeException($this->wpdb->last_error ?: 'Database query failed.');
         }
 
         // Capture affected rows immediately so it's stable even if other WP queries run later
@@ -112,8 +112,6 @@ class Statement
         $this->results = array_map(function ($row) {
             return (array) $row;
         }, $this->wpdb->last_result ?? []);
-
-        return true;
     }
 
     /**

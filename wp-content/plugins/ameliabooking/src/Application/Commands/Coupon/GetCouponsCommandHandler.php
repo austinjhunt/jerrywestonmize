@@ -9,12 +9,15 @@ namespace AmeliaBooking\Application\Commands\Coupon;
 
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
+use AmeliaBooking\Application\Commands\SortParamsTrait;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
+use AmeliaBooking\Application\Services\User\UserApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
+use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Coupon\Coupon;
 use AmeliaBooking\Domain\Entity\Entities;
-use AmeliaBooking\Domain\Services\Settings\SettingsService;
+use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\WholeNumber;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageCustomerRepository;
@@ -30,6 +33,8 @@ use AmeliaBooking\Infrastructure\Repository\Coupon\CouponRepository;
  */
 class GetCouponsCommandHandler extends CommandHandler
 {
+    use SortParamsTrait;
+
     /**
      * @param GetCouponsCommand $command
      *
@@ -43,8 +48,31 @@ class GetCouponsCommandHandler extends CommandHandler
      */
     public function handle(GetCouponsCommand $command)
     {
+        /** @var UserApplicationService $userAS */
+        $userAS = $this->getContainer()->get('application.user.service');
+
         if (!$command->getPermissionService()->currentUserCanRead(Entities::COUPONS)) {
-            throw new AccessDeniedException('You are not allowed to read coupons.');
+            try {
+                /** @var AbstractUser $user */
+                $user = $userAS->authorization(
+                    null,
+                    Entities::PROVIDER
+                );
+            } catch (AuthorizationException $e) {
+                $result = new CommandResult();
+                $result->setResult(CommandResult::RESULT_ERROR);
+                $result->setData(
+                    [
+                        'reauthorize' => true
+                    ]
+                );
+
+                return $result;
+            }
+
+            if ($userAS->isCustomer($user)) {
+                throw new AccessDeniedException('You are not allowed to read coupons.');
+            }
         }
 
         $result = new CommandResult();
@@ -65,50 +93,54 @@ class GetCouponsCommandHandler extends CommandHandler
         /** @var PackageRepository $packageRepository */
         $packageRepository = $this->container->get('domain.bookable.package.repository');
 
-        /** @var SettingsService $settingsService */
-        $settingsService = $this->container->get('domain.settings.service');
+        $params = $this->parseSortParams($params, ['discount', 'deduction', 'times_used']);
 
-        $sort = !empty($params['sort']) ? $params['sort'] : null;
-        if ($sort) {
-            $isDescending   = substr($sort, 0, 1) === '-';
-            $params['sort'] = [
-                'field' => $isDescending ? substr($sort, 1) : $sort,
-                'order' => $isDescending ? 'DESC' : 'ASC',
-            ];
-        }
-
-        /** @var Collection $coupons */
         $coupons = $couponRepository->getFiltered(
             $params,
             $params['limit'] ?? 10
         );
 
-        if ($coupons->length()) {
-            /** @var Collection $couponsWithUsedBookings */
-            $couponsWithUsedBookings = $couponRepository->getAllByCriteria(
-                [
-                    'couponIds' => $coupons->keys(),
-                ]
+        if (!empty($params['includeCoupons'])) {
+            $additionalCoupons = $couponRepository->getFiltered(
+                ['ids' => $params['includeCoupons']],
+                0
             );
 
-            /** @var Coupon $couponWithUsedBookings */
-            foreach ($couponsWithUsedBookings->getItems() as $couponWithUsedBookings) {
-                /** @var Coupon $coupon */
-                $coupon = $coupons->getItem($couponWithUsedBookings->getId()->getValue());
+            foreach ($additionalCoupons->getItems() as $couponId => $couponData) {
+                if (!$coupons->keyExists($couponId)) {
+                    $coupons->addItem($couponData, $couponId);
+                }
+            }
+        }
 
-                /** @var PackageCustomerRepository $packageCustomerRepository */
-                $packageCustomerRepository = $this->container->get('domain.bookable.packageCustomer.repository');
-
-                $packageCustomerRecords = $packageCustomerRepository->getByEntityId(
-                    $couponWithUsedBookings->getId()->getValue(),
-                    'couponId'
+        if ($coupons->length()) {
+            if (empty($params['skipBookings'])) {
+                /** @var Collection $couponsWithUsedBookings */
+                $couponsWithUsedBookings = $couponRepository->getAllByCriteria(
+                    [
+                        'couponIds' => $coupons->keys(),
+                    ]
                 );
 
-                $coupon->setUsed(
-                    new WholeNumber(
-                        $couponWithUsedBookings->getUsed()->getValue() + $packageCustomerRecords->length()
-                    )
-                );
+                /** @var Coupon $couponWithUsedBookings */
+                foreach ($couponsWithUsedBookings->getItems() as $couponWithUsedBookings) {
+                    /** @var Coupon $coupon */
+                    $coupon = $coupons->getItem($couponWithUsedBookings->getId()->getValue());
+
+                    /** @var PackageCustomerRepository $packageCustomerRepository */
+                    $packageCustomerRepository = $this->container->get('domain.bookable.packageCustomer.repository');
+
+                    $packageCustomerRecords = $packageCustomerRepository->getByEntityId(
+                        $couponWithUsedBookings->getId()->getValue(),
+                        'couponId'
+                    );
+
+                    $coupon->setUsed(
+                        new WholeNumber(
+                            $couponWithUsedBookings->getUsed()->getValue() + $packageCustomerRecords->length()
+                        )
+                    );
+                }
             }
 
             /** @var Collection $allServices */

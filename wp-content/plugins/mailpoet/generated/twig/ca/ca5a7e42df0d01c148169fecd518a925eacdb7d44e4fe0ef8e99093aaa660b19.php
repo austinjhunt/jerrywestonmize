@@ -51,8 +51,12 @@ class __TwigTemplate_2bbd0548d5462e9781dcc2649091521a405c5b3b1847f123d5fb51dce2e
     {
         $macros = $this->macros;
         // line 4
-        yield "
-<tr>
+        if ($this->extensions['MailPoet\Twig\Functions']->isGarden()) {
+            // line 5
+            yield from             $this->loadTemplate("emails/statsNotificationAutomatedEmailsGarden.html", "emails/statsNotificationAutomatedEmails.html", 5)->unwrap()->yield($context);
+        } else {
+            // line 7
+            yield "<tr>
   <td class=\"mailpoet_content\" align=\"center\" style=\"border-collapse:collapse\">
     <table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-spacing:0;mso-table-lspace:0;mso-table-rspace:0;border-collapse:collapse\">
       <tbody>
@@ -63,24 +67,31 @@ class __TwigTemplate_2bbd0548d5462e9781dcc2649091521a405c5b3b1847f123d5fb51dce2e
             <tr>
               <td class=\"mailpoet_spacer\" height=\"36\" valign=\"top\" style=\"border-collapse:collapse\"></td>
             </tr>
-            <tr>
+            ";
+            // line 18
+            if ( !$this->extensions['MailPoet\Twig\Functions']->isGarden()) {
+                // line 19
+                yield "            <tr>
               <td class=\"mailpoet_image mailpoet_padded_vertical mailpoet_padded_side\" align=\"center\" valign=\"top\" style=\"border-collapse:collapse;padding-bottom:20px;padding-left:20px;padding-right:20px\">
                 <img src=\"";
-        // line 18
-        yield $this->extensions['MailPoet\Twig\Assets']->generateCdnUrl("logo-orange-400x122.png");
-        yield "\" width=\"80\" alt=\"new_logo_orange\" style=\"height:auto;max-width:100%;-ms-interpolation-mode:bicubic;border:0;display:block;outline:none;text-align:center\" />
+                // line 21
+                yield $this->extensions['MailPoet\Twig\Assets']->generateCdnUrl("logo-orange-400x122.png");
+                yield "\" width=\"80\" alt=\"new_logo_orange\" style=\"height:auto;max-width:100%;-ms-interpolation-mode:bicubic;border:0;display:block;outline:none;text-align:center\" />
               </td>
             </tr>
-            <tr>
+            ";
+            }
+            // line 25
+            yield "            <tr>
               <td class=\"mailpoet_spacer\" height=\"26\" valign=\"top\" style=\"border-collapse:collapse\"></td>
             </tr>
             <tr>
               <td class=\"mailpoet_text mailpoet_padded_vertical mailpoet_padded_side\" valign=\"top\" style=\"word-break:break-word;word-wrap:break-word;padding-top:0;border-collapse:collapse;padding-bottom:20px;padding-left:20px;padding-right:20px\">
                 <h1 style=\"text-align:center;padding:0;font-style:normal;font-weight:normal;margin:0 0 12px;color:#111111;font-family:'Trebuchet MS','Lucida Grande','Lucida Sans Unicode','Lucida Sans',Tahoma,sans-serif;font-size:40px;line-height:64px\">
                   <strong>";
-        // line 27
-        yield $this->extensions['MailPoet\Twig\I18n']->translate("Your monthly stats are in!");
-        yield "</strong>
+            // line 31
+            yield $this->extensions['MailPoet\Twig\I18n']->translate("Your monthly stats are in!");
+            yield "</strong>
                 </h1>
               </td>
             </tr>
@@ -97,12 +108,12 @@ class __TwigTemplate_2bbd0548d5462e9781dcc2649091521a405c5b3b1847f123d5fb51dce2e
 </tr>
 
 ";
-        // line 43
-        $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable(($context["newsletters"] ?? null));
-        foreach ($context['_seq'] as $context["_key"] => $context["newsletter"]) {
-            // line 44
-            yield "  <tr>
+            // line 47
+            $context['_parent'] = $context;
+            $context['_seq'] = CoreExtension::ensureTraversable(($context["newsletters"] ?? null));
+            foreach ($context['_seq'] as $context["_key"] => $context["newsletter"]) {
+                // line 48
+                yield "  <tr>
     <td class=\"mailpoet_content\" align=\"center\" style=\"border-collapse:collapse\">
       <table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse:collapse;border-spacing:0;mso-table-lspace:0;mso-table-rspace:0\">
         <tbody>
@@ -125,13 +136,13 @@ class __TwigTemplate_2bbd0548d5462e9781dcc2649091521a405c5b3b1847f123d5fb51dce2e
                   <h2 class=\"title\" style=\"margin:0 0 7.8px;color:#222222;font-family:lato,'helvetica neue',helvetica,arial,sans-serif;font-size:26px;line-height:31.2px;margin-bottom:0;text-align:center;padding:0;font-style:normal;font-weight:normal\">
                     <strong>
                       <a href=\"";
-            // line 66
-            yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "linkStats", [], "any", false, false, false, 66), "html", null, true);
-            yield "\" style=\"color:#0074a2;text-decoration:underline\">
+                // line 70
+                yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "linkStats", [], "any", false, false, false, 70), "html", null, true);
+                yield "\" style=\"color:#0074a2;text-decoration:underline\">
                         ";
-            // line 67
-            yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "subject", [], "any", false, false, false, 67), "html", null, true);
-            yield "
+                // line 71
+                yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "subject", [], "any", false, false, false, 71), "html", null, true);
+                yield "
                       </a>
                     </strong>
                   </h2>
@@ -173,9 +184,9 @@ class __TwigTemplate_2bbd0548d5462e9781dcc2649091521a405c5b3b1847f123d5fb51dce2e
                             <!--[if mso]>
                             <v:roundrect xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:w=\"urn:schemas-microsoft-com:office:word\"
                                          href=\"";
-            // line 108
-            yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "linkStats", [], "any", false, false, false, 108), "html", null, true);
-            yield "\"
+                // line 112
+                yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "linkStats", [], "any", false, false, false, 112), "html", null, true);
+                yield "\"
                                          style=\"height:20px;
                              width:50px;
                              v-text-anchor:middle;\"
@@ -183,28 +194,28 @@ class __TwigTemplate_2bbd0548d5462e9781dcc2649091521a405c5b3b1847f123d5fb51dce2e
                                          strokeweight=\"0px\"
                                          strokecolor=\"#0074a2\"
                                          fillcolor=\"";
-            // line 115
-            yield $this->extensions['MailPoet\Twig\Functions']->statsColor(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "clicked", [], "any", false, false, false, 115));
-            yield "\">
+                // line 119
+                yield $this->extensions['MailPoet\Twig\Functions']->statsColor(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "clicked", [], "any", false, false, false, 119));
+                yield "\">
                               <w:anchorlock/>
                               <center style=\"color:#ffffff; font-family:Arial; font-size:10px; font-weight:bold;\">
                                 ";
-            // line 118
-            yield $this->extensions['MailPoet\Twig\Functions']->clickedStatsText(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "clicked", [], "any", false, false, false, 118));
-            yield "
+                // line 122
+                yield $this->extensions['MailPoet\Twig\Functions']->clickedStatsText(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "clicked", [], "any", false, false, false, 122));
+                yield "
                               </center>
                             </v:roundrect>
                             <![endif]-->
                             <a class=\"mailpoet_button\" href=\"";
-            // line 122
-            yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "linkStats", [], "any", false, false, false, 122), "html", null, true);
-            yield "\" style=\"color:#ffffff;text-decoration:none !important;display:inline-block;-webkit-text-size-adjust:none;mso-hide:all;text-align:center;background-color:";
-            yield $this->extensions['MailPoet\Twig\Functions']->statsColor(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "clicked", [], "any", false, false, false, 122));
-            yield ";border-color:#0074a2;border-width:0px;border-radius:3px;border-style:solid;width:80px;line-height:20px;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:10px;font-weight:normal\">
+                // line 126
+                yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "linkStats", [], "any", false, false, false, 126), "html", null, true);
+                yield "\" style=\"color:#ffffff;text-decoration:none !important;display:inline-block;-webkit-text-size-adjust:none;mso-hide:all;text-align:center;background-color:";
+                yield $this->extensions['MailPoet\Twig\Functions']->statsColor(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "clicked", [], "any", false, false, false, 126));
+                yield ";border-color:#0074a2;border-width:0px;border-radius:3px;border-style:solid;width:80px;line-height:20px;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:10px;font-weight:normal\">
                               ";
-            // line 123
-            yield $this->extensions['MailPoet\Twig\Functions']->clickedStatsText(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "clicked", [], "any", false, false, false, 123));
-            yield "
+                // line 127
+                yield $this->extensions['MailPoet\Twig\Functions']->clickedStatsText(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "clicked", [], "any", false, false, false, 127));
+                yield "
                             </a>
                           </td>
                         </tr>
@@ -216,22 +227,22 @@ class __TwigTemplate_2bbd0548d5462e9781dcc2649091521a405c5b3b1847f123d5fb51dce2e
                   <td class=\"mailpoet_text mailpoet_padded_vertical mailpoet_padded_side\" valign=\"top\" style=\"border-collapse:collapse;padding-top:10px;padding-bottom:10px;padding-left:20px;padding-right:20px;word-break:break-word;word-wrap:break-word\">
                     <h3 style=\"margin:0 0 5.4px;color:#333333;font-family:'Courier New',Courier,'Lucida Sans Typewriter','Lucida Typewriter',monospace;font-size:18px;line-height:21.6px;margin-bottom:0;text-align:center;padding:0;font-style:normal;font-weight:normal\">
                       <span style=\"color: ";
-            // line 134
-            yield $this->extensions['MailPoet\Twig\Functions']->statsColor(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "clicked", [], "any", false, false, false, 134));
-            yield ";\">
+                // line 138
+                yield $this->extensions['MailPoet\Twig\Functions']->statsColor(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "clicked", [], "any", false, false, false, 138));
+                yield ";\">
                         <strong>
                           <span style=\"color: ";
-            // line 136
-            yield $this->extensions['MailPoet\Twig\Functions']->statsColor(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "clicked", [], "any", false, false, false, 136));
-            yield ";\">";
-            yield $this->extensions['MailPoet\Twig\Functions']->statsNumberFormatI18n(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "clicked", [], "any", false, false, false, 136));
-            yield "%</span>
+                // line 140
+                yield $this->extensions['MailPoet\Twig\Functions']->statsColor(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "clicked", [], "any", false, false, false, 140));
+                yield ";\">";
+                yield $this->extensions['MailPoet\Twig\Functions']->statsNumberFormatI18n(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "clicked", [], "any", false, false, false, 140));
+                yield "%</span>
                         </strong>
                         <span style=\"color: #000000;\">
                           ";
-            // line 139
-            yield $this->extensions['MailPoet\Twig\I18n']->translate("clicked");
-            yield "
+                // line 143
+                yield $this->extensions['MailPoet\Twig\I18n']->translate("clicked");
+                yield "
                         </span>
                       </span>
                     </h3>
@@ -273,11 +284,11 @@ class __TwigTemplate_2bbd0548d5462e9781dcc2649091521a405c5b3b1847f123d5fb51dce2e
                     <h3 style=\"margin:0 0 5.4px;color:#333333;font-family:'Courier New',Courier,'Lucida Sans Typewriter','Lucida Typewriter',monospace;font-size:18px;line-height:21.6px;margin-bottom:0;text-align:center;padding:0;font-style:normal;font-weight:normal\">
                       <span>
                         <strong>";
-            // line 180
-            yield $this->extensions['MailPoet\Twig\Functions']->statsNumberFormatI18n(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "opened", [], "any", false, false, false, 180));
-            yield "%</strong> ";
-            yield $this->extensions['MailPoet\Twig\I18n']->translate("opened");
-            yield "
+                // line 184
+                yield $this->extensions['MailPoet\Twig\Functions']->statsNumberFormatI18n(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "opened", [], "any", false, false, false, 184));
+                yield "%</strong> ";
+                yield $this->extensions['MailPoet\Twig\I18n']->translate("opened");
+                yield "
                       </span>
                     </h3>
                   </td>
@@ -297,11 +308,11 @@ class __TwigTemplate_2bbd0548d5462e9781dcc2649091521a405c5b3b1847f123d5fb51dce2e
                     <h3 style=\"margin:0 0 5.4px;color:#333333;font-family:'Courier New',Courier,'Lucida Sans Typewriter','Lucida Typewriter',monospace;font-size:18px;line-height:21.6px;margin-bottom:0;text-align:center;padding:0;font-style:normal;font-weight:normal\">
                       <span>
                         <strong>";
-            // line 199
-            yield $this->extensions['MailPoet\Twig\Functions']->statsNumberFormatI18n(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "machineOpened", [], "any", false, false, false, 199));
-            yield "%</strong> ";
-            yield $this->extensions['MailPoet\Twig\I18n']->translate("machine-opened");
-            yield "
+                // line 203
+                yield $this->extensions['MailPoet\Twig\Functions']->statsNumberFormatI18n(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "machineOpened", [], "any", false, false, false, 203));
+                yield "%</strong> ";
+                yield $this->extensions['MailPoet\Twig\I18n']->translate("machine-opened");
+                yield "
                       </span>
                     </h3>
                   </td>
@@ -342,11 +353,11 @@ class __TwigTemplate_2bbd0548d5462e9781dcc2649091521a405c5b3b1847f123d5fb51dce2e
                     <h3 style=\"margin:0 0 5.4px;color:#333333;font-family:'Courier New',Courier,'Lucida Sans Typewriter','Lucida Typewriter',monospace;font-size:18px;line-height:21.6px;margin-bottom:0;text-align:center;padding:0;font-style:normal;font-weight:normal\">
                       <span>
                         <strong>";
-            // line 239
-            yield $this->extensions['MailPoet\Twig\Functions']->statsNumberFormatI18n(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "unsubscribed", [], "any", false, false, false, 239));
-            yield "%</strong> ";
-            yield $this->extensions['MailPoet\Twig\I18n']->translate("unsubscribed");
-            yield "
+                // line 243
+                yield $this->extensions['MailPoet\Twig\Functions']->statsNumberFormatI18n(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "unsubscribed", [], "any", false, false, false, 243));
+                yield "%</strong> ";
+                yield $this->extensions['MailPoet\Twig\I18n']->translate("unsubscribed");
+                yield "
                       </span>
                     </h3>
                   </td>
@@ -366,11 +377,11 @@ class __TwigTemplate_2bbd0548d5462e9781dcc2649091521a405c5b3b1847f123d5fb51dce2e
                     <h3 style=\"margin:0 0 5.4px;color:#333333;font-family:'Courier New',Courier,'Lucida Sans Typewriter','Lucida Typewriter',monospace;font-size:18px;line-height:21.6px;margin-bottom:0;text-align:center;padding:0;font-style:normal;font-weight:normal\">
                       <span>
                         <strong>";
-            // line 258
-            yield $this->extensions['MailPoet\Twig\Functions']->statsNumberFormatI18n(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "bounced", [], "any", false, false, false, 258));
-            yield "%</strong> ";
-            yield $this->extensions['MailPoet\Twig\I18n']->translate("bounced");
-            yield "
+                // line 262
+                yield $this->extensions['MailPoet\Twig\Functions']->statsNumberFormatI18n(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "bounced", [], "any", false, false, false, 262));
+                yield "%</strong> ";
+                yield $this->extensions['MailPoet\Twig\I18n']->translate("bounced");
+                yield "
                       </span>
                     </h3>
                   </td>
@@ -391,17 +402,17 @@ class __TwigTemplate_2bbd0548d5462e9781dcc2649091521a405c5b3b1847f123d5fb51dce2e
     </td>
   </tr>
 ";
-        }
-        $_parent = $context['_parent'];
-        unset($context['_seq'], $context['_iterated'], $context['_key'], $context['newsletter'], $context['_parent'], $context['loop']);
-        $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 279
-        yield "
+            }
+            $_parent = $context['_parent'];
+            unset($context['_seq'], $context['_iterated'], $context['_key'], $context['newsletter'], $context['_parent'], $context['loop']);
+            $context = array_intersect_key($context, $_parent) + $_parent;
+            // line 283
+            yield "
 <tr>
   <td class=\"mailpoet_spacer\" height=\"55\" valign=\"top\" style=\"border-collapse:collapse\"></td>
 </tr>
-
 ";
+        }
         return; yield '';
     }
 
@@ -426,7 +437,7 @@ class __TwigTemplate_2bbd0548d5462e9781dcc2649091521a405c5b3b1847f123d5fb51dce2e
      */
     public function getDebugInfo()
     {
-        return array (  396 => 279,  367 => 258,  343 => 239,  298 => 199,  274 => 180,  230 => 139,  222 => 136,  217 => 134,  203 => 123,  197 => 122,  190 => 118,  184 => 115,  174 => 108,  130 => 67,  126 => 66,  102 => 44,  98 => 43,  79 => 27,  67 => 18,  51 => 4,  47 => 3,  36 => 1,);
+        return array (  407 => 283,  378 => 262,  354 => 243,  309 => 203,  285 => 184,  241 => 143,  233 => 140,  228 => 138,  214 => 127,  208 => 126,  201 => 122,  195 => 119,  185 => 112,  141 => 71,  137 => 70,  113 => 48,  109 => 47,  90 => 31,  82 => 25,  75 => 21,  71 => 19,  69 => 18,  56 => 7,  53 => 5,  51 => 4,  47 => 3,  36 => 1,);
     }
 
     public function getSourceContext()

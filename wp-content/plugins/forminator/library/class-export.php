@@ -682,7 +682,7 @@ class Forminator_Export {
 								$data[] = '';
 							}
 						} else {
-							$data = self::add_meta_value( $data, $mapper, $entry );
+							$data = self::add_meta_value( $data, $mapper, $entry, $model );
 						}
 					}
 
@@ -738,9 +738,10 @@ class Forminator_Export {
 	 * @param array  $data Saved data.
 	 * @param array  $mapper Mapper.
 	 * @param object $entry Entry object.
+	 * @param object $model Form Model.
 	 * @return array Updated data.
 	 */
-	private static function add_meta_value( $data, $mapper, $entry ) {
+	private static function add_meta_value( $data, $mapper, $entry, $model ) {
 		$copies = array_filter(
 			$entry->meta_data,
 			function ( $key ) use ( $mapper ) {
@@ -772,7 +773,8 @@ class Forminator_Export {
 						$meta_value
 					);
 				}
-				$temp_data[ $mapper['type'] ][] = Forminator_Form_Entry_Model::meta_value_to_string( $mapper['type'], $meta_value );
+				$meta_value                     = Forminator_Form_Entry_Model::meta_value_to_string( $mapper['type'], $meta_value, false, PHP_INT_MAX, $mapper['field'] );
+				$temp_data[ $mapper['type'] ][] = $meta_value;
 			} else {
 
 				// sub_metas available.
@@ -781,7 +783,10 @@ class Forminator_Export {
 					if ( ! empty( $meta_value[ $sub_key ] ) ) {
 						$value      = $meta_value[ $sub_key ];
 						$field_type = $mapper['type'] . '.' . $sub_key;
-
+						// format payment amount.
+						if ( 'amount' === $sub_key && in_array( $mapper['type'], array( 'paypal', 'stripe', 'stripe-ocs' ), true ) ) {
+							$value = Forminator_Field::get_formatted_amount( $mapper['field'], $meta_value, $model );
+						}
 						$temp_data[ $sub_key ][] = Forminator_Form_Entry_Model::meta_value_to_string( $field_type, $value );
 					} else {
 						$temp_data[ $sub_key ][] = '';
@@ -999,6 +1004,7 @@ class Forminator_Export {
 			$mapper['meta_key'] = $field->slug; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- false positive.
 			$mapper['label']    = $field->get_label_for_entry();
 			$mapper['type']     = $field_type;
+			$mapper['field']    = $field->to_array();
 
 			if ( $group_field ) {
 				$mapper['label'] = $group_field->get_label_for_entry() . ' - ' . $mapper['label'];
@@ -1867,7 +1873,10 @@ class Forminator_Export {
 						foreach ( $mapper['sub_metas'] as $sub_meta ) {
 							$sub_key = $sub_meta['key'];
 							if ( isset( $meta_value[ $sub_key ] ) && ! empty( $meta_value[ $sub_key ] ) ) {
-								$value            = $meta_value[ $sub_key ];
+								$value = $meta_value[ $sub_key ];
+								if ( 'amount' === $sub_key ) {
+									$value = Forminator_Field::get_formatted_amount( $mapper['field_object'], $value );
+								}
 								$field_type       = $mapper['type'] . '.' . $sub_key;
 								$data[ $sub_key ] = Forminator_Form_Entry_Model::meta_value_to_string( $field_type, $value );
 							} else {

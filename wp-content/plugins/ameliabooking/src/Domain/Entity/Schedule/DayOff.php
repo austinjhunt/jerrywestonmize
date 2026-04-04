@@ -10,6 +10,7 @@ namespace AmeliaBooking\Domain\Entity\Schedule;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\DateTime\DateTimeValue;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\DateRepeat;
+use AmeliaBooking\Domain\ValueObjects\String\DayOffType;
 use AmeliaBooking\Domain\ValueObjects\String\Name;
 
 /**
@@ -34,6 +35,9 @@ class DayOff
     /** @var DateRepeat */
     private $repeat;
 
+    /** @var DayOffType */
+    private $type;
+
     /**
      * DayOff constructor.
      *
@@ -52,6 +56,7 @@ class DayOff
         $this->startDate = $startDate;
         $this->endDate   = $endDate;
         $this->repeat    = $repeat;
+        $this->type      = new DayOffType(DayOffType::DAY_OFF);
     }
 
     /**
@@ -135,6 +140,22 @@ class DayOff
     }
 
     /**
+     * @return DayOffType
+     */
+    public function getType(): DayOffType
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param DayOffType $type
+     */
+    public function setType(DayOffType $type)
+    {
+        $this->type = $type;
+    }
+
+    /**
      * @return array
      */
     public function toArray()
@@ -145,6 +166,7 @@ class DayOff
             'startDate' => $this->startDate->getValue()->format('Y-m-d'),
             'endDate'   => $this->endDate->getValue()->format('Y-m-d'),
             'repeat'    => $this->repeat->getValue(),
+            'type'      => $this->type->getValue(),
         ];
     }
 }

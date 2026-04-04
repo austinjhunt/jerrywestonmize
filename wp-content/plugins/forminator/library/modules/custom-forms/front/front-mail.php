@@ -109,6 +109,46 @@ class Forminator_CForm_Front_Mail extends Forminator_Mail {
 	}
 
 	/**
+	 * Check if attachments exceed size limit.
+	 *
+	 * @since 1.52.0
+	 *
+	 * @param array $files Files to check.
+	 * @return bool
+	 */
+	private function is_attachment_size_limit_exceeded( $files ) {
+		$total_size = 0;
+
+		foreach ( $files as $file_path ) {
+			if ( empty( $file_path ) || ! file_exists( $file_path ) ) {
+				continue;
+			}
+
+			$file_size = filesize( $file_path );
+			if ( false !== $file_size ) {
+				$total_size += $file_size;
+			}
+		}
+
+		$limit = 15 * MB_IN_BYTES;
+
+		/**
+		 * Filter maximum total attachment size for email notifications.
+		 * Return 0 or negative value to disable the limit.
+		 *
+		 * @since 1.52.0
+		 *
+		 * @param int   $limit Default 15 MB.
+		 * @param array $files Files to be attached.
+		 * @param Forminator_CForm_Front_Mail $this Current mail instance.
+		 */
+		$limit = apply_filters( 'forminator_mail_attachment_max_bytes', $limit, $files, $this );
+		$limit = is_numeric( $limit ) ? (int) $limit : 15 * MB_IN_BYTES;
+
+		return ( $limit > 0 && $total_size >= $limit );
+	}
+
+	/**
 	 * Process mail
 	 *
 	 * @since 1.0
@@ -139,8 +179,10 @@ class Forminator_CForm_Front_Mail extends Forminator_Mail {
 				$data['current_url'] = forminator_get_current_url();
 			}
 
-			$files = $this->get_files( $custom_form, $entry );
-			$entry = $this->maybe_remove_stripe_quantity( $entry );
+			$files       = $this->get_files( $custom_form, $entry );
+			$exceeded    = $this->is_attachment_size_limit_exceeded( $files );
+			$attachments = $exceeded ? array() : $files;
+			$entry       = $this->maybe_remove_stripe_quantity( $entry );
 
 			/**
 			 * Message data filter
@@ -238,6 +280,10 @@ class Forminator_CForm_Front_Mail extends Forminator_Mail {
 					 *
 					 * @return string $message
 					 */
+					if ( $exceeded && isset( $notification['email-attachment'] ) && 'true' === $notification['email-attachment'] ) {
+						$message .= '<p style="color:#f2ac40;"><em>' . esc_html__( 'Note: Attachments were not included due to size limits.', 'forminator' ) . '</em></p>';
+					}
+
 					$message = apply_filters( 'forminator_custom_form_mail_admin_message', $message, $custom_form, $data, $entry, $this );
 
 					$headers = $this->prepare_headers( $notification, $custom_form, $data, $entry );
@@ -247,8 +293,8 @@ class Forminator_CForm_Front_Mail extends Forminator_Mail {
 					$this->set_recipients( $recipients );
 					$this->set_message_with_vars( $this->message_vars, $message );
 					$this->set_pdfs( $notification );
-					if ( ! empty( $files ) && isset( $notification['email-attachment'] ) && 'true' === $notification['email-attachment'] ) {
-						$this->set_attachment( $files, $custom_form, $entry );
+					if ( ! empty( $attachments ) && isset( $notification['email-attachment'] ) && 'true' === $notification['email-attachment'] ) {
+						$this->set_attachment( $attachments, $custom_form, $entry );
 					} else {
 						$this->set_attachment( array(), $custom_form, $entry );
 					}
@@ -367,8 +413,11 @@ class Forminator_CForm_Front_Mail extends Forminator_Mail {
 		 * @param array                        $data        POST data.
 		 * @param Forminator_Form_Entry_Model  $entry       entry model.
 		 * @param Forminator_CForm_Front_Mail  $this        mail class.
+		 *
+		 * @since 1.51.0 Added $notification parameter.
+		 * @param array $notification Notification.
 		 */
-		$cc_addresses = apply_filters( 'forminator_custom_form_mail_admin_cc_addresses', $cc_addresses, $custom_form, $data, $entry, $this );
+		$cc_addresses = apply_filters( 'forminator_custom_form_mail_admin_cc_addresses', $cc_addresses, $custom_form, $data, $entry, $this, $notification );
 
 		$notification_bcc_addresses = $this->replace_placeholders( $notification, 'bcc-email', $custom_form, $entry );
 		$notification_bcc_addresses = array_map( 'trim', explode( ',', $notification_bcc_addresses ) );

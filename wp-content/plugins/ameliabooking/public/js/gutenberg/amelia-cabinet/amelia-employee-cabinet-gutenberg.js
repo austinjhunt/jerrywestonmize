@@ -1,11 +1,13 @@
 (function (wp) {
   var el = wp.element.createElement
   var components = wp.components
-  var blockControls = wp.editor.BlockControls
-  var inspectorControls = wp.editor.InspectorControls
+  var blockControls = wp.blockEditor.BlockControls
+  var inspectorControls = wp.blockEditor.InspectorControls
+  var useBlockProps = wp.blockEditor.useBlockProps
 
   // Registering the Block for employee cabinet shortcode
   wp.blocks.registerBlockType('amelia/employee-cabinet-gutenberg-block', {
+    apiVersion: 3,
     title: wpAmeliaLabels.employee_cabinet_gutenberg_block.title,
     description: wpAmeliaLabels.employee_cabinet_gutenberg_block.description,
     icon: window.ameliaBlockIcon,
@@ -110,7 +112,7 @@
         })
       ))
 
-      inspectorElements.push(el('div', {style: {'margin-bottom': '1em'}}, ''))
+      inspectorElements.push(el('div', {style: {marginBottom: '1em'}}, ''))
 
       inspectorElements.push(el(components.TextControl, {
         id: 'amelia-js-trigger',
@@ -122,26 +124,43 @@
         }
       }))
 
-      return [
+      var blockProps = useBlockProps()
+      return el('div', blockProps,
         el(blockControls, {key: 'controls'}),
         el(inspectorControls, {key: 'inspector'},
           el(components.PanelBody, {initialOpen: true},
             inspectorElements
           )
         ),
-        el('div', {},
-          getShortCode(props, props.attributes)
-        )
-      ]
-    },
-
-    save: function (props) {
-      return (
-        el('div', {},
-          props.attributes.short_code
+        el('div', {className: 'amelia-gutenberg-placeholder'},
+          el('div', {className: 'amelia-gutenberg-placeholder__header'},
+            el('div', {className: 'amelia-gutenberg-placeholder__icon'}, window.ameliaBlockIcon || ''),
+            el('div', {className: 'amelia-gutenberg-placeholder__title'}, 'Amelia - Employee Panel')
+          ),
+          el('div', {className: 'amelia-gutenberg-placeholder__shortcode'},
+            getShortCode(props, props.attributes)
+          )
         )
       )
-    }
+    },
+
+    save: function () {
+      return null
+    },
+    deprecated: [
+      {
+        attributes: {
+          short_code: { type: 'string', default: '[ameliaemployeepanel]' },
+          trigger: { type: 'string', default: '' },
+          appointmentsPanel: { type: 'boolean', default: true },
+          eventsPanel: { type: 'boolean', default: true },
+          profilePanel: { type: 'boolean', default: false }
+        },
+        save: function (props) {
+          return el('div', {}, props.attributes.short_code)
+        }
+      }
+    ]
   })
 })(
   window.wp

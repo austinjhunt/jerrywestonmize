@@ -23,6 +23,8 @@ class EventsTicketsTable extends AbstractDatabaseTable
     {
         $table = self::getTableName();
 
+        $charsetCollate = self::getCharsetCollate();
+
         $name = Name::MAX_LENGTH;
 
         return "CREATE TABLE {$table} (
@@ -36,6 +38,6 @@ class EventsTicketsTable extends AbstractDatabaseTable
                    `waitingListSpots` int(11) NOT NULL,
                    `translations` TEXT NULL DEFAULT NULL,
                     PRIMARY KEY (`id`)
-                ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
+                ) {$charsetCollate};";
     }
 }

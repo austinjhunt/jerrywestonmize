@@ -27,6 +27,8 @@ class TaxesTable extends AbstractDatabaseTable
     {
         $table = self::getTableName();
 
+        $charsetCollate = self::getCharsetCollate();
+
         return "CREATE TABLE {$table} (
                    `id` int(11) NOT NULL AUTO_INCREMENT,
                    `name` VARCHAR(255) NOT NULL COLLATE utf8_bin,
@@ -38,6 +40,6 @@ class TaxesTable extends AbstractDatabaseTable
                    `allPackages` TINYINT(1) NOT NULL DEFAULT 0,
                    `allExtras` TINYINT(1) NOT NULL DEFAULT 0,
                     PRIMARY KEY (`id`)
-                ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
+                ) {$charsetCollate};";
     }
 }

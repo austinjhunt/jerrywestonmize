@@ -3,11 +3,9 @@
 namespace AmeliaBooking\Infrastructure\Licence\Lite;
 
 use AmeliaBooking\Application\Commands;
-use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Licence\LicenceConstants;
 use AmeliaBooking\Infrastructure\Routes;
-use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
 use Slim\App;
 
 /**
@@ -67,7 +65,6 @@ class Licence
             Commands\Booking\Event\UpdateEventBookingCommand::class                       => new Commands\Booking\Event\UpdateEventBookingCommandHandler($c),
             Commands\Booking\Event\DeleteEventCommand::class                              => new Commands\Booking\Event\DeleteEventCommandHandler($c),
             Commands\Booking\Event\DeleteEventsCommand::class                             => new Commands\Booking\Event\DeleteEventsCommandHandler($c),
-            Commands\Booking\Event\GetEventDeleteEffectCommand::class                     => new Commands\Booking\Event\GetEventDeleteEffectCommandHandler($c),
             Commands\Booking\Event\GetCalendarEventsCommand::class                        => new Commands\Booking\Event\GetCalendarEventsCommandHandler($c),
             // Booking/Appointment
             Commands\Booking\Appointment\AddAppointmentCommand::class                     => new Commands\Booking\Appointment\AddAppointmentCommandHandler($c),
@@ -86,12 +83,12 @@ class Licence
             new Commands\Booking\Appointment\DeleteAppointmentCommandHandler($c),
             Commands\Booking\Appointment\GetAppointmentCommand::class                     => new Commands\Booking\Appointment\GetAppointmentCommandHandler($c),
             Commands\Booking\Appointment\GetAppointmentsCommand::class                    => new Commands\Booking\Appointment\GetAppointmentsCommandHandler($c),
-            Commands\Booking\Appointment\GetPackageAppointmentsCommand::class             =>
-            new Commands\Booking\Appointment\GetPackageAppointmentsCommandHandler($c),
             Commands\Booking\Appointment\GetIcsCommand::class                             => new Commands\Booking\Appointment\GetIcsCommandHandler($c),
             Commands\Booking\Appointment\GetTimeSlotsCommand::class                       => new Commands\Booking\Appointment\GetTimeSlotsCommandHandler($c),
             Commands\Booking\Appointment\UpdateAppointmentCommand::class                  =>
             new Commands\Booking\Appointment\UpdateAppointmentCommandHandler($c),
+            Commands\Booking\Appointment\UpdateAppointmentNoteCommand::class              =>
+            new Commands\Booking\Appointment\UpdateAppointmentNoteCommandHandler($c),
             Commands\Booking\Appointment\UpdateAppointmentStatusCommand::class            =>
             new Commands\Booking\Appointment\UpdateAppointmentStatusCommandHandler($c),
             Commands\Booking\Appointment\UpdateAppointmentTimeCommand::class              =>
@@ -119,11 +116,12 @@ class Licence
             new Commands\Notification\UpdateSMSNotificationHistoryDirectlyCommandHandler($c),
             Commands\Notification\GetSMSNotificationsHistoryCommand::class                =>
             new Commands\Notification\GetSMSNotificationsHistoryCommandHandler($c),
+            Commands\Notification\ValidateSMTPCredentialsCommand::class                   =>
+                new Commands\Notification\ValidateSMTPCredentialsCommandHandler($c),
             // Payment
             Commands\Payment\AddPaymentCommand::class                                     => new Commands\Payment\AddPaymentCommandHandler($c),
             Commands\Payment\DeletePaymentCommand::class                                  => new Commands\Payment\DeletePaymentCommandHandler($c),
             Commands\Payment\GetPaymentCommand::class                                     => new Commands\Payment\GetPaymentCommandHandler($c),
-            Commands\Payment\GetPaymentDetailsCommand::class                              => new Commands\Payment\GetPaymentDetailsCommandHandler($c),
             Commands\Payment\GetPaymentsCommand::class                                    => new Commands\Payment\GetPaymentsCommandHandler($c),
             Commands\Payment\UpdatePaymentCommand::class                                  => new Commands\Payment\UpdatePaymentCommandHandler($c),
             Commands\Payment\CalculatePaymentAmountCommand::class                         => new Commands\Payment\CalculatePaymentAmountCommandHandler($c),
@@ -148,6 +146,7 @@ class Licence
             Commands\User\Customer\GetCustomerCommand::class                              => new Commands\User\Customer\GetCustomerCommandHandler($c),
             Commands\User\Customer\GetCustomersCommand::class                             => new Commands\User\Customer\GetCustomersCommandHandler($c),
             Commands\User\Customer\UpdateCustomerCommand::class                           => new Commands\User\Customer\UpdateCustomerCommandHandler($c),
+            Commands\User\Customer\UpdateCustomerNoteCommand::class                       => new Commands\User\Customer\UpdateCustomerNoteCommandHandler($c),
             // User
             Commands\User\DeleteUserCommand::class                                        => new Commands\User\DeleteUserCommandHandler($c),
             Commands\User\GetCurrentUserCommand::class                                    => new Commands\User\GetCurrentUserCommandHandler($c),
@@ -166,7 +165,9 @@ class Licence
             Commands\Calendar\GetCalendarEventsCommand::class                             => new Commands\Calendar\GetCalendarEventsCommandHandler($c),
             Commands\Calendar\GetCalendarSlotAvailabilityCommand::class                   => new Commands\Calendar\GetCalendarSlotAvailabilityHandler($c),
             Commands\Calendar\GetCalendarSlotEntitiesCommand::class                       => new Commands\Calendar\GetCalendarSlotEntitiesCommandHandler($c),
-            Commands\Calendar\CalendarRescheduleEventCommand::class                       => new Commands\Calendar\CalendarRescheduleEventCommandHandler($c),
+            Commands\Calendar\ManageCalendarBlockTimeCommand::class                       => new Commands\Calendar\ManageCalendarBlockTimeCommandHandler($c),
+            Commands\Calendar\GetBlockTimeCommand::class                                  => new Commands\Calendar\GetBlockTimeCommandHandler($c),
+            Commands\Calendar\DeleteBlockTimeCommand::class                               => new Commands\Calendar\DeleteBlockTimeCommandHandler($c),
             // Import customers
             Commands\Import\ImportCustomersCommand::class                                 => new Commands\Import\ImportCustomersCommandHandler($c),
         ];

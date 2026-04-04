@@ -33,6 +33,7 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Lite\Licence
                 Commands\Activation\DeactivatePluginCommand::class                 => new Commands\Activation\DeactivatePluginCommandHandler($c),
                 Commands\Activation\DeactivatePluginEnvatoCommand::class           => new Commands\Activation\DeactivatePluginEnvatoCommandHandler($c),
                 Commands\Activation\ParseDomainCommand::class                      => new Commands\Activation\ParseDomainCommandHandler($c),
+                Commands\Activation\ValidateActivationCommand::class               => new Commands\Activation\ValidateActivationCommandHandler($c),
                 // Bookable/Extra
                 Commands\Bookable\Extra\AddExtraCommand::class                     => new Commands\Bookable\Extra\AddExtraCommandHandler($c),
                 Commands\Bookable\Extra\DeleteExtraCommand::class                  => new Commands\Bookable\Extra\DeleteExtraCommandHandler($c),
@@ -47,12 +48,15 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Lite\Licence
                 Commands\Coupon\GetValidCouponCommand::class                       => new Commands\Coupon\GetValidCouponCommandHandler($c),
                 Commands\Coupon\UpdateCouponCommand::class                         => new Commands\Coupon\UpdateCouponCommandHandler($c),
                 Commands\Coupon\UpdateCouponStatusCommand::class                   => new Commands\Coupon\UpdateCouponStatusCommandHandler($c),
+                // Google
+                Commands\Google\VerifyRecaptchaCommand::class                       => new Commands\Google\VerifyRecaptchaCommandHandler($c),
                 // Report
                 Commands\Report\GetAppointmentsCommand::class                      => new Commands\Report\GetAppointmentsCommandHandler($c),
                 Commands\Report\GetCouponsCommand::class                           => new Commands\Report\GetCouponsCommandHandler($c),
                 Commands\Report\GetCustomersCommand::class                         => new Commands\Report\GetCustomersCommandHandler($c),
                 Commands\Report\GetPaymentsCommand::class                          => new Commands\Report\GetPaymentsCommandHandler($c),
                 Commands\Report\GetEventAttendeesCommand::class                    => new Commands\Report\GetEventAttendeesCommandHandler($c),
+                Commands\Report\GetEventBookingsCommand::class                     => new Commands\Report\GetEventBookingsCommandHandler($c),
                 // Search
                 Commands\Search\GetSearchCommand::class                            => new Commands\Search\GetSearchCommandHandler($c),
                 // User/Customer

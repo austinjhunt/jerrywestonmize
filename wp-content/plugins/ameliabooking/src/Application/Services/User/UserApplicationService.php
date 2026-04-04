@@ -46,13 +46,9 @@ use Slim\Exception\ContainerValueNotFoundException;
  */
 class UserApplicationService
 {
-    private $container;
+    private Container $container;
 
     /**
-     * ProviderApplicationService constructor.
-     *
-     * @param Container $container
-     *
      * @throws \InvalidArgumentException
      */
     public function __construct(Container $container)

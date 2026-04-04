@@ -6,9 +6,11 @@ use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Booking\EventApplicationService;
+use AmeliaBooking\Application\Services\CustomField\AbstractCustomFieldApplicationService;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Application\Services\User\ProviderApplicationService;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
+use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
@@ -18,6 +20,7 @@ use AmeliaBooking\Domain\Entity\Booking\Event\EventTicket;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Entity\User\Provider;
+use AmeliaBooking\Domain\Factory\Booking\Appointment\CustomerBookingFactory;
 use AmeliaBooking\Domain\Factory\Booking\Event\EventFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
@@ -25,6 +28,7 @@ use AmeliaBooking\Domain\ValueObjects\String\BookableType;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
+use AmeliaBooking\Infrastructure\Repository\CustomField\CustomFieldRepository;
 use Exception;
 
 /**
@@ -58,8 +62,12 @@ class GetEventBookingsCommandHandler extends CommandHandler
         $eventApplicationService = $this->container->get('application.booking.event.service');
         /** @var CustomerBookingRepository $bookingRepository */
         $bookingRepository = $this->container->get('domain.booking.customerBooking.repository');
+        /** @var CustomFieldRepository $customFieldRepository */
+        $customFieldRepository = $this->container->get('domain.customField.repository');
         /** @var ProviderApplicationService $providerAS */
         $providerAS = $this->container->get('application.user.provider.service');
+        /** @var AbstractCustomFieldApplicationService $customFieldService */
+        $customFieldService = $this->container->get('application.customField.service');
 
         $params = $command->getField('params');
 
@@ -217,6 +225,7 @@ class GetEventBookingsCommandHandler extends CommandHandler
         $bookings = $bookingRepository->getEventBookingsByIds(
             $bookingIds,
             array_merge(
+                !empty($params['sort']) ? ['sort' => $params['sort']] : [],
                 !empty($params['dates']) ? ['dates' => $params['dates']] : [],
                 [
                     'fetchBookingsPayments' => true,
@@ -229,6 +238,9 @@ class GetEventBookingsCommandHandler extends CommandHandler
         );
 
 
+        /** @var Collection $customFieldsCollection */
+        $customFieldsCollection = $customFieldRepository->getAll([], false);
+
         $customersNoShowCountIds = [];
 
         $noShowTagEnabled = $settingsDS->isFeatureEnabled('noShowTag');
@@ -236,6 +248,8 @@ class GetEventBookingsCommandHandler extends CommandHandler
         $eventBookings = [];
 
         foreach ($bookings as &$booking) {
+            $customFields = [];
+
             ksort($booking['payments']);
 
             if ($noShowTagEnabled) {
@@ -281,6 +295,7 @@ class GetEventBookingsCommandHandler extends CommandHandler
 
             $wcTax = 0;
             $wcDiscount = 0;
+            $paid = 0;
 
             foreach ($booking['payments'] as $payment) {
                 $paymentAS->addWcFields($payment);
@@ -288,7 +303,15 @@ class GetEventBookingsCommandHandler extends CommandHandler
                 $wcTax += !empty($payment['wcItemTaxValue']) ? $payment['wcItemTaxValue'] : 0;
 
                 $wcDiscount += !empty($payment['wcItemCouponValue']) ? $payment['wcItemCouponValue'] : 0;
+
+                $paid = $paid + $payment['amount'];
             }
+
+            $customFields = $customFieldService->reformatCustomField(
+                CustomerBookingFactory::create($booking),
+                $customFields,
+                $customFieldsCollection
+            );
 
             $eventBooking = [
                 'id' => $booking['id'],
@@ -329,10 +352,13 @@ class GetEventBookingsCommandHandler extends CommandHandler
                 'payment' => [
                     'status' => $paymentAS->getFullStatus($booking, BookableType::EVENT),
                     'total'  => $paymentAS->calculateAppointmentPrice($booking, BookableType::EVENT) + $wcTax - $wcDiscount,
+                    'paid'   => $paid,
                 ],
+                'customFields' => $customFields,
                 'payments' => array_values($booking['payments']),
                 'qrCodes' => !empty($booking['qrCodes']) ? $booking['qrCodes'] : null,
                 'cancelable' => $eventApplicationService->isCancelable(EventFactory::create($booking['event']), $user),
+                'created' => !empty($booking['created']) ? explode(' ', $booking['created'])[0] : null,
             ];
 
             if ($isCabinetPage) {

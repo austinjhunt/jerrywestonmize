@@ -11,12 +11,13 @@ declare (strict_types=1);
  */
 namespace Google\Site_Kit_Dependencies\Monolog\Handler;
 
+use Google\Site_Kit_Dependencies\MongoDB\Client;
+use Google\Site_Kit_Dependencies\MongoDB\Collection;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\Manager;
-use Google\Site_Kit_Dependencies\MongoDB\Client;
-use Google\Site_Kit_Dependencies\Monolog\Logger;
 use Google\Site_Kit_Dependencies\Monolog\Formatter\FormatterInterface;
 use Google\Site_Kit_Dependencies\Monolog\Formatter\MongoDBFormatter;
+use Google\Site_Kit_Dependencies\Monolog\Logger;
 /**
  * Logs to a MongoDB database.
  *
@@ -32,12 +33,12 @@ use Google\Site_Kit_Dependencies\Monolog\Formatter\MongoDBFormatter;
  */
 class MongoDBHandler extends \Google\Site_Kit_Dependencies\Monolog\Handler\AbstractProcessingHandler
 {
-    /** @var \MongoDB\Collection */
+    /** @var Collection */
     private $collection;
     /** @var Client|Manager */
     private $manager;
-    /** @var string */
-    private $namespace;
+    /** @var string|null */
+    private $namespace = null;
     /**
      * Constructor.
      *
@@ -51,7 +52,7 @@ class MongoDBHandler extends \Google\Site_Kit_Dependencies\Monolog\Handler\Abstr
             throw new \InvalidArgumentException('MongoDB\\Client or MongoDB\\Driver\\Manager instance required');
         }
         if ($mongodb instanceof \Google\Site_Kit_Dependencies\MongoDB\Client) {
-            $this->collection = $mongodb->selectCollection($database, $collection);
+            $this->collection = \method_exists($mongodb, 'getCollection') ? $mongodb->getCollection($database, $collection) : $mongodb->selectCollection($database, $collection);
         } else {
             $this->manager = $mongodb;
             $this->namespace = $database . '.' . $collection;

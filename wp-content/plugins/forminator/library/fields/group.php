@@ -132,7 +132,8 @@ class Forminator_Group extends Forminator_Field {
 
 		$i = 1;
 		do {
-			$html .= '<div class="forminator-grouped-fields" data-options="' . esc_attr( wp_json_encode( $options ) ) . '">';
+			$suffix_attr = 1 < $i ? ' data-suffix="' . intval( $i ) . '"' : '';
+			$html       .= '<div class="forminator-grouped-fields" data-options="' . esc_attr( wp_json_encode( $options ) ) . '"' . $suffix_attr . '>';
 
 			if ( 1 < $i ) {
 				$wrappers = array_map(

@@ -152,6 +152,24 @@ class AbstractCollection
     }
 
     /**
+     * Prepend an item to the collection
+     *
+     * @param $item
+     * @param $key
+     * @param $force
+     *
+     * @throws InvalidArgumentException
+     */
+    public function prependItem($item, $key, $force)
+    {
+        if ($force === false && $this->keyExists($key)) {
+            throw new InvalidArgumentException("Key {$key} already in use.");
+        }
+
+        $this->items = [$key => $item] + $this->items;
+    }
+
+    /**
      * Return an array of collection items
      *
      * @param $isFrontEndRequest

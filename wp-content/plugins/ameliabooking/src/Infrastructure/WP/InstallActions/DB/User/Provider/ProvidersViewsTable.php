@@ -22,6 +22,8 @@ class ProvidersViewsTable extends AbstractDatabaseTable
     {
         $table = self::getTableName();
 
+        $charsetCollate = self::getCharsetCollate();
+
         return "CREATE TABLE {$table}  (
                   `id` INT(11) NOT NULL AUTO_INCREMENT,
                   `userId` INT(11) NOT NULL,
@@ -29,6 +31,6 @@ class ProvidersViewsTable extends AbstractDatabaseTable
                   `views` INT(11) NOT NULL,
                   PRIMARY KEY (`id`),
                   UNIQUE KEY `id` (`id`)
-                ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
+                ) {$charsetCollate};";
     }
 }

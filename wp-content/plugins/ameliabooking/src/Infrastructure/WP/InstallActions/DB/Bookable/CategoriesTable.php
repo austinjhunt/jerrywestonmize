@@ -25,6 +25,8 @@ class CategoriesTable extends AbstractDatabaseTable
     {
         $table = self::getTableName();
 
+        $charsetCollate = self::getCharsetCollate();
+
         $name    = Name::MAX_LENGTH;
         $color   = Color::MAX_LENGTH;
         $picture = Picture::MAX_LENGTH;
@@ -39,6 +41,6 @@ class CategoriesTable extends AbstractDatabaseTable
                    `pictureFullPath` varchar ({$picture}) NULL,
                    `pictureThumbPath` varchar ({$picture}) NULL,
                     PRIMARY KEY (`id`)
-                ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
+                ) {$charsetCollate};";
     }
 }

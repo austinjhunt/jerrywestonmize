@@ -196,6 +196,17 @@ class AppointmentApplicationService
 
         $bookIfPending = $isFrontEndBooking && $settingsDS->getSetting('appointments', 'allowBookingIfPending');
 
+        // prevent booking in existing canceled/rejected appointment on frontend based on capacity and settings
+        if (
+            $service->getMaxCapacity()->getValue() === 1 &&
+            (
+                $appointmentData['bookings'][0]['status'] === BookingStatus::APPROVED ||
+                !$settingsDS->getSetting('appointments', 'allowBookingIfPending')
+            )
+        ) {
+            return null;
+        }
+
         $personsCount = 0;
 
         foreach ($appointmentData['bookings'] as $bookingData) {
@@ -1610,7 +1621,7 @@ class AppointmentApplicationService
                 ($customPricing['enabled'] === true || $customPricing['enabled'] === 'duration') &&
                 array_key_exists($booking->getDuration()->getValue(), $customPricing['durations'])
             ) {
-                return $customPricing['durations'][$booking->getDuration()->getValue()]['price'];
+                return $customPricing['durations'][$booking->getDuration()->getValue()]['price'] ?: 0;
             } elseif (
                 $customPricing !== null &&
                 $customPricing['enabled'] === 'person' &&

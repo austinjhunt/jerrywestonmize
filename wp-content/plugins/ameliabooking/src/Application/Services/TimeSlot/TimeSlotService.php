@@ -5,6 +5,7 @@ namespace AmeliaBooking\Application\Services\TimeSlot;
 use AmeliaBooking\Application\Services\Booking\EventApplicationService;
 use AmeliaBooking\Application\Services\Location\AbstractLocationApplicationService;
 use AmeliaBooking\Application\Services\Resource\AbstractResourceApplicationService;
+use AmeliaBooking\Application\Services\User\ProviderApplicationService;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\SlotsEntities;
@@ -18,6 +19,7 @@ use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Services\TimeSlot\TimeSlotService as DomainTimeSlotService;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
+use AmeliaBooking\Domain\Services\User\ProviderService;
 use AmeliaBooking\Domain\ValueObjects\String\Status;
 use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
@@ -272,6 +274,9 @@ class TimeSlotService
         /** @var EventApplicationService $eventApplicationService */
         $eventApplicationService = $this->container->get('application.booking.event.service');
 
+        /** @var ProviderApplicationService $providerApplicationService */
+        $providerApplicationService = $this->container->get('application.user.provider.service');
+
         try {
             $googleCalendarService->removeSlotsFromGoogleCalendar(
                 $providers,
@@ -311,6 +316,14 @@ class TimeSlotService
                 DateTimeService::getCustomDateTimeObject($props['startDateTime']->format('Y-m-d H:i:s'))
                     ->modify('+2 years')
                     ->format('Y-m-d H:i:s')
+            ]
+        );
+
+        $providerApplicationService->removeSlotsFromBlockTime(
+            $providers,
+            [
+                $props['startDateTime']->format('Y-m-d H:i:s'),
+                $props['endDateTime']->format('Y-m-d H:i:s')
             ]
         );
     }

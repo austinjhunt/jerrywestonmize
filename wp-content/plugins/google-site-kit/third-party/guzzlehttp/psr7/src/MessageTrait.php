@@ -22,6 +22,9 @@ trait MessageTrait
     {
         return $this->protocol;
     }
+    /**
+     * @return static
+     */
     public function withProtocolVersion($version) : \Google\Site_Kit_Dependencies\Psr\Http\Message\MessageInterface
     {
         if ($this->protocol === $version) {
@@ -52,6 +55,9 @@ trait MessageTrait
     {
         return \implode(', ', $this->getHeader($header));
     }
+    /**
+     * @return static
+     */
     public function withHeader($header, $value) : \Google\Site_Kit_Dependencies\Psr\Http\Message\MessageInterface
     {
         $this->assertHeader($header);
@@ -65,6 +71,9 @@ trait MessageTrait
         $new->headers[$header] = $value;
         return $new;
     }
+    /**
+     * @return static
+     */
     public function withAddedHeader($header, $value) : \Google\Site_Kit_Dependencies\Psr\Http\Message\MessageInterface
     {
         $this->assertHeader($header);
@@ -80,6 +89,9 @@ trait MessageTrait
         }
         return $new;
     }
+    /**
+     * @return static
+     */
     public function withoutHeader($header) : \Google\Site_Kit_Dependencies\Psr\Http\Message\MessageInterface
     {
         $normalized = \strtolower($header);
@@ -98,6 +110,9 @@ trait MessageTrait
         }
         return $this->stream;
     }
+    /**
+     * @return static
+     */
     public function withBody(\Google\Site_Kit_Dependencies\Psr\Http\Message\StreamInterface $body) : \Google\Site_Kit_Dependencies\Psr\Http\Message\MessageInterface
     {
         if ($body === $this->stream) {
@@ -137,9 +152,6 @@ trait MessageTrait
     {
         if (!\is_array($value)) {
             return $this->trimAndValidateHeaderValues([$value]);
-        }
-        if (\count($value) === 0) {
-            throw new \InvalidArgumentException('Header value can not be an empty array.');
         }
         return $this->trimAndValidateHeaderValues($value);
     }

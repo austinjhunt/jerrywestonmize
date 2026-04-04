@@ -26,6 +26,8 @@ class ServicesTable extends AbstractDatabaseTable
     {
         $table = self::getTableName();
 
+        $charsetCollate = self::getCharsetCollate();
+
         $name        = Name::MAX_LENGTH;
         $description = Description::MAX_LENGTH;
         $color       = Color::MAX_LENGTH;
@@ -66,6 +68,6 @@ class ServicesTable extends AbstractDatabaseTable
                    `maxExtraPeople` int(11) NULL DEFAULT NULL,
                    `limitPerCustomer` TEXT NULL DEFAULT NULL,
                     PRIMARY KEY (`id`)
-                ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
+                ) {$charsetCollate};";
     }
 }

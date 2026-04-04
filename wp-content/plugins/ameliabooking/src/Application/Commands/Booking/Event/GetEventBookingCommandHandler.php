@@ -197,6 +197,12 @@ class GetEventBookingCommandHandler extends CommandHandler
                 'location' =>
                 $event->getCustomLocation() ?
                     ['name' => $event->getCustomLocation()->getValue()] : ($event->getLocationId() ? $event->getLocation()->toArray() : null),
+                'periods' => array_map(function ($period) {
+                    return [
+                        'periodStart' => $period['periodStart'],
+                        'periodEnd' => $period['periodEnd']
+                    ];
+                }, $event->getPeriods()->toArray()),
             ]
         );
 

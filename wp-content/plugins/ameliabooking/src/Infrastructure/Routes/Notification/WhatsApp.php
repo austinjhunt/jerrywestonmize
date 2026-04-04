@@ -8,6 +8,7 @@
 namespace AmeliaBooking\Infrastructure\Routes\Notification;
 
 use AmeliaBooking\Application\Controller\Notification\SendTestWhatsAppController;
+use AmeliaBooking\Application\Controller\Notification\ValidateWhatsAppCredentialsController;
 use AmeliaBooking\Application\Controller\Notification\WhatsAppWebhookController;
 use AmeliaBooking\Application\Controller\Notification\WhatsAppWebhookRegisterController;
 use Slim\App;
@@ -29,5 +30,7 @@ class WhatsApp
         $app->get('/notifications/whatsapp/webhook', WhatsAppWebhookRegisterController::class);
 
         $app->post('/notifications/whatsapp/webhook', WhatsAppWebhookController::class);
+
+        $app->post('/notifications/whatsapp/validate', ValidateWhatsAppCredentialsController::class);
     }
 }

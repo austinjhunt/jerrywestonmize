@@ -40,7 +40,7 @@ class PropertyMetadata extends MemberMetadata
  }
  }
  $member = new \ReflectionProperty($objectOrClassName, $this->getName());
- $member->setAccessible(\true);
+ if (PHP_VERSION_ID < 80100) { $member->setAccessible( \true ); }
  return $member;
  }
 }

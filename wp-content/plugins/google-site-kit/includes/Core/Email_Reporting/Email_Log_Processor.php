@@ -81,11 +81,13 @@ class Email_Log_Processor {
 	 * Processes a single email log record.
 	 *
 	 * @since 1.170.0
+	 * @since 1.172.0 Adds optional shared payloads to reuse per-module data.
 	 *
-	 * @param int    $post_id   Email log post ID.
-	 * @param string $frequency Frequency slug.
+	 * @param int    $post_id         Email log post ID.
+	 * @param string $frequency       Frequency slug.
+	 * @param array  $shared_payloads Optional. Pre-fetched module payloads keyed by module slug. Default empty.
 	 */
-	public function process( $post_id, $frequency ) {
+	public function process( $post_id, $frequency, array $shared_payloads = array() ) {
 		$this->batch_query->increment_attempt( $post_id );
 
 		$email_log = $this->get_email_log( $post_id );
@@ -99,13 +101,24 @@ class Email_Log_Processor {
 			return;
 		}
 
+		$template_type = $this->get_template_type_from_log( $email_log );
+
+		if ( Email_Log::TEMPLATE_TYPE_SUBSCRIBE_SUCCESS === $template_type ) {
+			$this->process_subscription_confirmation_log( $post_id, $user, $frequency );
+			return;
+		}
+
 		$date_range = $this->get_date_range_for_log( $email_log );
 		if ( is_wp_error( $date_range ) ) {
 			$this->mark_failed( $post_id, $date_range );
 			return;
 		}
 
-		$raw_payload = $this->data_requests->get_user_payload( $user->ID, $date_range );
+		if ( empty( $shared_payloads ) ) {
+			$raw_payload = $this->data_requests->get_user_payload( $user->ID, $date_range );
+		} else {
+			$raw_payload = $this->data_requests->get_user_payload( $user->ID, $date_range, $shared_payloads );
+		}
 		if ( is_wp_error( $raw_payload ) ) {
 			$this->mark_failed( $post_id, $raw_payload );
 			return;
@@ -117,7 +130,7 @@ class Email_Log_Processor {
 			return;
 		}
 
-		$template_payload = $this->build_template_payload_for_log( $sections, $frequency, $date_range );
+		$template_payload = $this->build_template_payload_for_log( $sections, $frequency, $date_range, $user );
 		if ( is_wp_error( $template_payload ) ) {
 			$this->mark_failed( $post_id, $template_payload );
 			return;
@@ -127,6 +140,33 @@ class Email_Log_Processor {
 		$template_data    = isset( $template_payload['template_data'] ) ? $template_payload['template_data'] : array();
 
 		$send_result = $this->report_sender->send( $user, $sections_payload, $template_data );
+		if ( is_wp_error( $send_result ) ) {
+			$this->mark_failed( $post_id, $send_result );
+			return;
+		}
+
+		$this->mark_sent( $post_id );
+	}
+
+	/**
+	 * Processes a subscription confirmation log.
+	 *
+	 * @since 1.174.0
+	 *
+	 * @param int     $post_id   Email log post ID.
+	 * @param WP_User $user      Recipient user.
+	 * @param string  $frequency Frequency slug.
+	 */
+	private function process_subscription_confirmation_log( $post_id, WP_User $user, $frequency ) {
+		$template_data = $this->template_formatter->prepare_subscription_confirmation_template_data( $frequency );
+
+		$send_result = $this->report_sender->send(
+			$user,
+			array(),
+			$template_data,
+			'subscription-confirmation'
+		);
+
 		if ( is_wp_error( $send_result ) ) {
 			$this->mark_failed( $post_id, $send_result );
 			return;
@@ -155,6 +195,20 @@ class Email_Log_Processor {
 		}
 
 		return $email_log;
+	}
+
+	/**
+	 * Gets the template type for an email log.
+	 *
+	 * @since 1.174.0
+	 *
+	 * @param WP_Post $email_log Email log post.
+	 * @return string Template type.
+	 */
+	private function get_template_type_from_log( WP_Post $email_log ) {
+		$template_type = get_post_meta( $email_log->ID, Email_Log::META_TEMPLATE_TYPE, true );
+
+		return Email_Log::sanitize_template_type( $template_type );
 	}
 
 	/**
@@ -231,13 +285,14 @@ class Email_Log_Processor {
 	 *
 	 * @since 1.170.0
 	 *
-	 * @param array  $sections   Sections data.
-	 * @param string $frequency  Frequency slug.
-	 * @param array  $date_range Date range.
+	 * @param array   $sections   Sections data.
+	 * @param string  $frequency  Frequency slug.
+	 * @param array   $date_range Date range.
+	 * @param WP_User $user      Recipient user.
 	 * @return array|WP_Error Template payload or WP_Error.
 	 */
-	private function build_template_payload_for_log( $sections, $frequency, $date_range ) {
-		return $this->template_formatter->build_template_payload( $sections, $frequency, $date_range );
+	private function build_template_payload_for_log( $sections, $frequency, $date_range, WP_User $user ) {
+		return $this->template_formatter->build_template_payload( $sections, $frequency, $date_range, $user );
 	}
 
 	/**

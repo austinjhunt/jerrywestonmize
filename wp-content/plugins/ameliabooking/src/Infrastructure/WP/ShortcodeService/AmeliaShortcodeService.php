@@ -42,10 +42,7 @@ class AmeliaShortcodeService
 
         $settingsService = new SettingsService(new SettingsStorage());
 
-        // Enqueue Scripts
-        if ($settingsService->getSetting('payments', 'payPal')['enabled'] === true) {
-            wp_enqueue_script('amelia_paypal_script', 'https://www.paypalobjects.com/api/checkout.js');
-        }
+        self::enqueuePaypalScript($settingsService);
 
         if ($settingsService->getSetting('payments', 'razorpay')['enabled'] === true) {
             wp_enqueue_script('amelia_razorpay_script', 'https://checkout.razorpay.com/v1/checkout.js');
@@ -218,5 +215,29 @@ class AmeliaShortcodeService
 
         do_action('ameliaScriptsLoaded');
         do_action('amelia_scripts_loaded');
+    }
+
+    /**
+     * Enqueue PayPal script
+     */
+    protected static function enqueuePaypalScript(SettingsService $settingsService): void
+    {
+        if ($settingsService->getSetting('payments', 'payPal')['enabled'] === true) {
+            $payPalSettings = $settingsService->getSetting('payments', 'payPal');
+            $payPalClientId  = $payPalSettings['sandboxMode']
+                ? ($payPalSettings['testApiClientId'] ?? '')
+                : ($payPalSettings['liveApiClientId'] ?? '');
+            $payPalCurrency  = $settingsService->getSetting('payments', 'currency') ?: 'USD';
+            wp_enqueue_script(
+                'amelia_paypal_script',
+                'https://www.paypal.com/sdk/js?client-id=' . urlencode($payPalClientId)
+                    . '&currency=' . urlencode($payPalCurrency)
+                    . '&components=buttons'
+                    . '&disable-funding=venmo,paylater,card,sepa,bancontact,blik,eps,giropay,ideal,mercadopago,mybank,p24,sofort',
+                [],
+                null,
+                false
+            );
+        }
     }
 }

@@ -11,12 +11,13 @@ use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Bookable\BookableApplicationService;
+use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
+use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageRepository;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ServiceRepository;
-use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
 
 /**
@@ -34,7 +35,6 @@ class DeleteServiceCommandHandler extends CommandHandler
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      * @throws AccessDeniedException
-     * @throws ContainerException
      */
     public function handle(DeleteServiceCommand $command)
     {
@@ -51,14 +51,6 @@ class DeleteServiceCommandHandler extends CommandHandler
 
         $appointmentsCount = $bookableApplicationService->getAppointmentsCountForServices([$command->getArg('id')]);
 
-        /** @var ServiceRepository $serviceRepository */
-        $serviceRepository = $this->container->get('domain.bookable.service.repository');
-
-        /** @var Service $service */
-        $service = $serviceRepository->getByCriteria(
-            ['services' => [$command->getArg('id')]]
-        )->getItem($command->getArg('id'));
-
         if ($appointmentsCount['futureAppointments']) {
             $result->setResult(CommandResult::RESULT_CONFLICT);
             $result->setMessage('Could not delete service.');
@@ -66,6 +58,28 @@ class DeleteServiceCommandHandler extends CommandHandler
 
             return $result;
         }
+
+        /** @var PackageRepository $packageRepository */
+        $packageRepository = $this->container->get('domain.bookable.package.repository');
+
+        /** @var Collection $packages */
+        $packages = $packageRepository->getByCriteria(['services' => [$command->getArg('id')]]);
+
+        if ($packages->length()) {
+            $result->setResult(CommandResult::RESULT_CONFLICT);
+            $result->setMessage('Could not delete service.');
+            $result->setData([]);
+
+            return $result;
+        }
+
+        /** @var ServiceRepository $serviceRepository */
+        $serviceRepository = $this->container->get('domain.bookable.service.repository');
+
+        /** @var Service $service */
+        $service = $serviceRepository->getByCriteria(
+            ['services' => [$command->getArg('id')]]
+        )->getItem($command->getArg('id'));
 
         $serviceRepository->beginTransaction();
 

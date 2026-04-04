@@ -7,6 +7,7 @@
 
 namespace AmeliaBooking\Application\Services\Notification;
 
+use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
@@ -16,8 +17,6 @@ use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
-use Interop\Container\Exception\ContainerException;
-use Slim\Exception\ContainerValueNotFoundException;
 
 /**
  * Class ApplicationNotificationService
@@ -44,7 +43,6 @@ class ApplicationNotificationService
      *
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
-     * @throws ContainerException
      */
     public function sendAppointmentProviderStatusNotifications(
         $appointment,
@@ -98,7 +96,7 @@ class ApplicationNotificationService
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      * @throws NotFoundException
-     * @throws ContainerException
+     * @throws AccessDeniedException
      */
     public function sendAppointmentCustomersStatusNotifications(
         $appointment,
@@ -359,7 +357,6 @@ class ApplicationNotificationService
      *
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
-     * @throws ContainerException
      */
     public function sendEventQrNotification($event, $bookingKey)
     {

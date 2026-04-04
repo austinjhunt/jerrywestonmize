@@ -20,7 +20,7 @@ class WhatsAppService
     /** @var Container */
     private $container;
 
-    public const URL = 'https://graph.facebook.com/v20.0/';
+    public const URL = 'https://graph.facebook.com/v22.0/';
 
     /**
      * WhatsAppService constructor.
@@ -42,14 +42,14 @@ class WhatsAppService
      *
      * @return mixed
      */
-    public function sendRequest($route, $method, $data = null, $authorize = true)
+    public function sendRequest($route, $method, $data = null, $authorize = true, $token = null)
     {
         $ch = curl_init($route);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
-        $accessToken     = $settingsService->getSetting('notifications', 'whatsAppAccessToken');
+        $accessToken     = $token ?: $settingsService->getSetting('notifications', 'whatsAppAccessToken');
 
         if ($authorize) {
             curl_setopt(
@@ -76,8 +76,6 @@ class WhatsAppService
         $response = curl_exec($ch);
 
         $response = json_decode($response, true);
-
-        curl_close($ch);
 
         return $response;
     }
@@ -132,6 +130,18 @@ class WhatsAppService
         return $this->sendRequest($route, 'GET', null, false);
     }
 
+    /**
+     * @param $token
+     * @param $businessId
+     * @return mixed
+     */
+    public function getPhoneNumbers($token, $businessId)
+    {
+        $route = self::URL . $businessId . '/phone_numbers';
+
+        return $this->sendRequest($route, 'GET', null, true, $token);
+    }
+
 
     /**
      * @param $to
@@ -163,5 +173,12 @@ class WhatsAppService
         }
 
         return null;
+    }
+
+    public function getTokenInfo($token)
+    {
+        $route = self::URL . 'debug_token?input_token=' . $token;
+
+        return $this->sendRequest($route, 'GET', null, true, $token);
     }
 }

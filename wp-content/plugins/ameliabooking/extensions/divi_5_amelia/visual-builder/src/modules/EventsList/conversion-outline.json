@@ -40,6 +40,9 @@
   "module": {
     "booking_params": "booking_params.innerContent.*",
     "events": "events.innerContent.*",
+    "event_to_show": "event_to_show.innerContent.*",
+    "start_date": "start_date.innerContent.*",
+    "end_date": "end_date.innerContent.*",
     "tags": "tags.innerContent.*",
     "recurring": "recurring.innerContent.*",
     "locations": "locations.innerContent.*",

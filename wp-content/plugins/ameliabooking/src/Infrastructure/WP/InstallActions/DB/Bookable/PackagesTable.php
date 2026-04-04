@@ -26,6 +26,8 @@ class PackagesTable extends AbstractDatabaseTable
     {
         $table = self::getTableName();
 
+        $charsetCollate = self::getCharsetCollate();
+
         $name        = Name::MAX_LENGTH;
         $description = Description::MAX_LENGTH;
         $color       = Color::MAX_LENGTH;
@@ -55,6 +57,6 @@ class PackagesTable extends AbstractDatabaseTable
                    `quantity` INT(11) DEFAULT 1,
                    `limitPerCustomer` TEXT NULL DEFAULT NULL,
                     PRIMARY KEY (`id`)
-                ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
+                ) {$charsetCollate};";
     }
 }

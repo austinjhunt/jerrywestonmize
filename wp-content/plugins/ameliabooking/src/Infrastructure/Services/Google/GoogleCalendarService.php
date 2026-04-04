@@ -53,10 +53,10 @@ use Exception;
  */
 class GoogleCalendarService extends AbstractGoogleCalendarService
 {
-    /** @var Client $client */
+    /** @var Client|null $client */
     private $client;
 
-    /** @var Calendar $service */
+    /** @var Calendar|null $service */
     private $service;
 
     /** @var mixed */
@@ -159,7 +159,9 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
         $calendars = [];
 
         if ($provider && $provider->getGoogleCalendar() && $this->isCalendarEnabled()) {
-            $this->authorizeProvider($provider);
+            if (!$this->authorizeProvider($provider)) {
+                return $calendars;
+            }
 
             $calendarList = $this->service->calendarList->listCalendarList(['minAccessRole' => 'writer']);
 
@@ -297,7 +299,9 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
                 ($provider->getGoogleCalendarId() && $provider->getGoogleCalendarId()->getValue())
             )
         ) {
-            $this->authorizeProvider($provider);
+            if (!$this->authorizeProvider($provider)) {
+                return;
+            }
 
             switch ($commandSlug) {
                 case AppointmentAddedEventHandler::APPOINTMENT_ADDED:
@@ -375,7 +379,9 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
                     ($provider->getGoogleCalendarId() && $provider->getGoogleCalendarId()->getValue())
                 )
             ) {
-                $this->authorizeProvider($provider);
+                if (!$this->authorizeProvider($provider)) {
+                    return;
+                }
 
                 /** @var EventPeriod $period */
                 foreach ($periods->getItems() as $period) {
@@ -445,7 +451,9 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
                 ($provider->getGoogleCalendarId() && $provider->getGoogleCalendarId()->getValue())
             )
         ) {
-            $this->authorizeProvider($provider);
+            if (!$this->authorizeProvider($provider)) {
+                return $finalEvents;
+            }
 
             $googleCalendarId = $provider->getGoogleCalendar() ?
                 $provider->getGoogleCalendar()->getCalendarId()->getValue() :
@@ -529,7 +537,9 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
 
                 if ($provider && ($provider->getGoogleCalendar() || $provider->getGoogleCalendarId())) {
                     if (!array_key_exists($provider->getId()->getValue(), self::$providersGoogleEvents)) {
-                        $this->authorizeProvider($provider);
+                        if (!$this->authorizeProvider($provider)) {
+                            continue;
+                        }
 
                         $this->timeZone = $this->service->calendars->get('primary')->getTimeZone();
 
@@ -1053,26 +1063,61 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
      */
     private function authorizeProvider($provider)
     {
-        if ($this->googleCalendarSettings['accessToken'] && !$provider->getGoogleCalendar()) {
+        if ($this->googleCalendarSettings['accessToken']) {
             $googleCalendarMiddlewareService = $this->container->get('infrastructure.google.calendar.middleware.service');
-            $this->client = $googleCalendarMiddlewareService->getClient($provider->getGoogleCalendar());
+
+            $providerGoogleCalendar = $provider->getGoogleCalendar() ? $provider->getGoogleCalendar()->toArray() : null;
+            $client = $googleCalendarMiddlewareService->getClient($providerGoogleCalendar);
+
+            if ($client === null) {
+                $this->client = null;
+                $this->service = null;
+                return false;
+            }
+
+            $this->client = $client;
             $this->service = new Calendar($this->client);
 
             return true;
         }
-        $this->client = new Client();
-        $this->client->setClientId($this->googleCalendarSettings['clientID']);
-        $this->client->setClientSecret($this->googleCalendarSettings['clientSecret']);
 
-        $this->client->setAccessToken($provider->getGoogleCalendar()->getToken()->getValue());
+        if ($provider->getGoogleCalendar()) {
+            $token = $provider->getGoogleCalendar()->getToken()
+                ? $provider->getGoogleCalendar()->getToken()->getValue()
+                : null;
 
-        if ($this->client->isAccessTokenExpired()) {
-            $this->refreshToken($provider);
+            if (empty($token)) {
+                error_log('GoogleCalendar: Provider has no valid token for legacy auth');
+                $this->client = null;
+                $this->service = null;
+                return false;
+            }
+
+            $this->client = new Client();
+            $this->client->setClientId($this->googleCalendarSettings['clientID']);
+            $this->client->setClientSecret($this->googleCalendarSettings['clientSecret']);
+
+            $this->client->setAccessToken($token);
+
+            try {
+                if ($this->client->isAccessTokenExpired()) {
+                    $this->refreshToken($provider);
+                }
+            } catch (Exception $e) {
+                error_log('GoogleCalendar: Failed to refresh provider token - ' . $e->getMessage());
+                $this->client = null;
+                $this->service = null;
+                return false;
+            }
+
+            $this->service = new Calendar($this->client);
+
+            return true;
         }
 
-        $this->service = new Calendar($this->client);
-
-        return true;
+        $this->client = null;
+        $this->service = null;
+        return false;
     }
 
     /**

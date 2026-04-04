@@ -463,6 +463,7 @@ class EventPlaceholderService extends PlaceholderService
                 'employee_note'             => $provider['note'],
                 'employee_description'      => $userDescription,
                 'employee_phone'            => $provider['phone'],
+                'employee_phone_country'    => $provider['countryPhoneIso'],
                 'employee_email'            => $provider['email'],
                 'employee_name_email_phone' =>
                     (sizeof($event['providers']) > 1 ? $liStartTag : '') .

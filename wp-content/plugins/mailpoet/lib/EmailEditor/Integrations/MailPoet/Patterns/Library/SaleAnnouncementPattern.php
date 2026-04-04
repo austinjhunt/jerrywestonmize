@@ -15,7 +15,7 @@ class SaleAnnouncementPattern extends Pattern {
   protected $name = 'sale-announcement';
   protected $block_types = ['core/post-content']; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
   protected $template_types = ['email-template']; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
-  protected $categories = ['newsletter'];
+  protected $categories = ['sales-announcement'];
   protected $post_types = [EmailEditor::MAILPOET_EMAIL_POST_TYPE]; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 
   /**
@@ -28,22 +28,22 @@ class SaleAnnouncementPattern extends Pattern {
     <!-- wp:group {"style":{"spacing":{"padding":{"right":"var:preset|spacing|40","left":"var:preset|spacing|40"}}},"layout":{"type":"constrained"}} -->
     <div class="wp-block-group" style="padding-right:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40)"><!-- wp:heading {"level":1} -->
       <h1 class="wp-block-heading">' .
-      /* translators: [X]% is a placeholder for the discount percentage */
-      __('[X]% off sitewide!', 'mailpoet') . '</h1>
+      /* translators: XX% is placeholder text that merchants replace with their own content. */
+      __('XX% off sitewide!', 'mailpoet') . '</h1>
       <!-- /wp:heading -->
 
       <!-- wp:paragraph {"style":{"typography":{"fontSize":"16px"}}} -->
       <p style="font-size:16px">' . __('Big news! Our sitewide sale is officially ON!', 'mailpoet') . '</p>
       <!-- /wp:paragraph -->
 
-      <!-- wp:image -->
-      <figure class="wp-block-image"><img alt=""/></figure>
+      <!-- wp:image {"sizeSlug":"full"} -->
+      <figure class="wp-block-image size-full"><img src="' . esc_url($this->cdnAssetUrl->generateCdnUrl('email-editor/sale-announcement.jpg')) . '" alt="' . esc_attr__('Sale announcement image', 'mailpoet') . '"/></figure>
       <!-- /wp:image -->
 
       <!-- wp:paragraph {"style":{"typography":{"fontSize":"16px"}}} -->
       <p style="font-size:16px">' .
-      /* translators: [X]% is a placeholder for the discount percentage */
-      __('Get [X]% OFF EVERYTHING in the store for a limited time.', 'mailpoet') . '</p>
+      /* translators: XX% OFF EVERYTHING is placeholder text that merchants replace with their own content. */
+      __('Get XX% OFF EVERYTHING in the store for a limited time.', 'mailpoet') . '</p>
       <!-- /wp:paragraph -->
 
       <!-- wp:paragraph {"style":{"typography":{"fontSize":"16px"}}} -->
@@ -60,8 +60,8 @@ class SaleAnnouncementPattern extends Pattern {
 
       <!-- wp:paragraph {"fontSize":"medium"} -->
       <p class="has-medium-font-size">' .
-      /* translators: [End Date] is a placeholder for the sale end date */
-      __("Don't wait too long – this offer ends on [End Date].", 'mailpoet') . '</p>
+      /* translators: MONTH DAY is placeholder text that merchants replace with their own content. */
+      __("Don't wait too long – this offer ends on MONTH DAY.", 'mailpoet') . '</p>
       <!-- /wp:paragraph -->
     </div>
     <!-- /wp:group -->

@@ -45,6 +45,13 @@ class Forminator_CForm_View_Page extends Forminator_Admin_View_Page {
 	protected $flatten_field_mappers = array();
 
 	/**
+	 * Custom form model
+	 *
+	 * @var Forminator_Form_Model|null
+	 */
+	protected static $custom_form_model = null;
+
+	/**
 	 * Initialise variables
 	 *
 	 * @param int|null $form_id Form id.
@@ -59,9 +66,10 @@ class Forminator_CForm_View_Page extends Forminator_Admin_View_Page {
 			$this->model_id = $request_form_id;
 			$this->form_id  = ! empty( $form_id ) ? $form_id : $request_form_id;
 			parent::before_render();
-			$form_id           = (int) $this->form_id;
-			$custom_form_model = $this->model;
-			$visible_fields    = $this->get_visible_fields();
+			$form_id                 = (int) $this->form_id;
+			$custom_form_model       = $this->model;
+			self::$custom_form_model = $custom_form_model;
+			$visible_fields          = $this->get_visible_fields();
 
 			/**
 			 * Fires on custom form page entries render before request and result processed
@@ -323,6 +331,7 @@ class Forminator_CForm_View_Page extends Forminator_Admin_View_Page {
 		$mapper['meta_key'] = $field->slug; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- false positive
 		$mapper['label']    = $field->get_label_for_entry();
 		$mapper['type']     = $field_type;
+		$mapper['field']    = $field->to_array();
 
 		if ( 'textarea' === $field_type ) {
 			$field_array    = $field->to_array();
@@ -585,7 +594,7 @@ class Forminator_CForm_View_Page extends Forminator_Admin_View_Page {
 			foreach ( $fields_mappers as $fields_mapper ) {
 				if ( ! isset( $fields_mapper['sub_metas'] ) ) {
 					$flatten_fields_mappers[] = $fields_mapper;
-				} elseif ( 'group' !== $fields_mapper['type'] ) {
+				} else {
 					foreach ( $fields_mapper['sub_metas'] as $sub_meta ) {
 						$sub_meta['parent']       = $fields_mapper;
 						$flatten_fields_mappers[] = $sub_meta;
@@ -836,6 +845,10 @@ class Forminator_CForm_View_Page extends Forminator_Admin_View_Page {
 					$detail_args['max_rating'] = $mapper['max_rating'];
 				}
 
+				if ( ! empty( $mapper['separators'] ) ) {
+					$detail_args['separators'] = $mapper['separators'];
+				}
+
 				$detail_items[] = $detail_args;
 			}
 
@@ -894,6 +907,12 @@ class Forminator_CForm_View_Page extends Forminator_Admin_View_Page {
 				}
 
 				$sub_entry_value = call_user_func_array( $sub_meta['transform_callback'], $transform_args );
+			}
+			if ( 'amount' === $submeta_key && in_array( $mapper['type'], array( 'paypal', 'stripe', 'stripe-ocs' ), true ) ) {
+				if ( ! empty( $mapper['meta_key'] ) && ! empty( $entry->meta_data[ $mapper['meta_key'] ]['value'] ) ) {
+					$sub_entry_value = $entry->meta_data[ $mapper['meta_key'] ]['value'];
+				}
+				$sub_entry_value = Forminator_Field::get_formatted_amount( $mapper['field'], $sub_entry_value, self::$custom_form_model );
 			}
 			$sub_entry = array(
 				'key'   => $sub_meta['key'],

@@ -314,6 +314,7 @@ class AppointmentFactory
                         'email'     => $row['customer_email'],
                         'note'      => $row['customer_note'],
                         'phone'     => $row['customer_phone'],
+                        'countryPhoneIso' => !empty($row['customer_countryPhoneIso']) ? $row['customer_countryPhoneIso'] : null,
                         'gender'    => $row['customer_gender'],
                         'status'    => $row['customer_status'],
                         'birthday'  => !empty($row['customer_birthday']) ? $row['customer_birthday'] : null,
@@ -349,12 +350,14 @@ class AppointmentFactory
                         'note'      => !empty($row['provider_note']) ? $row['provider_note'] : null,
                         'description' => !empty($row['provider_description']) ? $row['provider_description'] : null,
                         'phone'     => !empty($row['provider_phone']) ? $row['provider_phone'] : null,
+                        'countryPhoneIso' => !empty($row['provider_countryPhoneIso']) ? $row['provider_countryPhoneIso'] : null,
                         'gender'    => !empty($row['provider_gender']) ? $row['provider_gender'] : null,
                         'timeZone'  => !empty($row['provider_timeZone']) ? $row['provider_timeZone'] : null,
                         'type'      => 'provider',
                         'badgeId'   => !empty($row['provider_badgeId']) ? $row['provider_badgeId'] : null,
                         'pictureFullPath' => !empty($row['provider_pictureFullPath']) ? $row['provider_pictureFullPath'] : null,
                         'pictureThumbPath' => !empty($row['provider_pictureThumbPath']) ? $row['provider_pictureThumbPath'] : null,
+                        'zoomUserId' => !empty($row['provider_zoomUserId']) ? $row['provider_zoomUserId'] : null,
                     ];
             }
 

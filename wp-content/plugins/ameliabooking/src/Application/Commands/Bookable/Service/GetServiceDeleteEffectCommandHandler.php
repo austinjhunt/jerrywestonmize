@@ -4,12 +4,13 @@ namespace AmeliaBooking\Application\Commands\Bookable\Service;
 
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Bookable\BookableApplicationService;
+use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
-use Interop\Container\Exception\ContainerException;
+use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageRepository;
 use Slim\Exception\ContainerValueNotFoundException;
 
 /**
@@ -26,7 +27,6 @@ class GetServiceDeleteEffectCommandHandler extends CommandHandler
      * @throws ContainerValueNotFoundException
      * @throws AccessDeniedException
      * @throws QueryExecutionException
-     * @throws ContainerException
      * @throws InvalidArgumentException
      */
     public function handle(GetServiceDeleteEffectCommand $command)
@@ -36,6 +36,9 @@ class GetServiceDeleteEffectCommandHandler extends CommandHandler
         }
 
         $result = new CommandResult();
+
+        /** @var PackageRepository $packageRepository */
+        $packageRepository = $this->container->get('domain.bookable.package.repository');
 
         /** @var BookableApplicationService $bookableAS */
         $bookableAS = $this->getContainer()->get('application.bookable.service');
@@ -55,11 +58,18 @@ class GetServiceDeleteEffectCommandHandler extends CommandHandler
             $messageData = ['count' => $appointmentsCount['pastAppointments']];
         }
 
+        /** @var Collection $packages */
+        $packages = $packageRepository->getByCriteria(['services' => [$command->getArg('id')]]);
+
+        if ($packages->length()) {
+            $messageKey = 'red_service_failed_to_be_deleted';
+        }
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved message.');
         $result->setData(
             [
-                'valid'   => $appointmentsCount['futureAppointments'] ? false : true,
+                'valid'       => !$appointmentsCount['futureAppointments'] && !$packages->length(),
                 'messageKey'  => $messageKey,
                 'messageData' => $messageData,
             ]

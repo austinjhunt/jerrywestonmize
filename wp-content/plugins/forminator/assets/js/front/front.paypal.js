@@ -111,8 +111,8 @@
 						paypalData.amount = self.get_field_calculation( paypalData.variable );
 					}
 
-					// Listen for form field changes
-					$form.find('input, select, textarea, .forminator-field-signature').on( 'change', function() {
+					// To handle field changes.
+					const handleFieldChange = function () {
 						if ( self.is_data_valid() && self.is_form_valid() ) {
 							actions.enable();
 							if ( $target_message.hasClass('forminator-error') ) {
@@ -121,8 +121,15 @@
 								$target_message.removeClass('forminator-show');
 							}
 						} else {
-                            actions.disable();
-                        }
+							actions.disable();
+						}
+					};
+
+					// Listen for form field changes
+					$form.find( 'input, select, textarea, .forminator-field-signature' ).on( 'change', handleFieldChange );
+					// Listen for clone group event to bind change event to new fields.
+					$form.on( 'forminator-clone-group', function (event) {
+						$( event.target ).find( 'input, select, textarea, .forminator-field-signature' ).on( 'change', handleFieldChange );
 					});
 
                     // Check if form has error to disable actions
@@ -207,6 +214,8 @@
 					});
 				},
 				onApprove: function(data, actions) {
+					const $stripe_element = $form.find('.forminator-field-stripe-ocs:not(.forminator-hidden),.forminator-field-stripe:not(.forminator-hidden)');
+					$stripe_element.addClass("forminator-hidden");
 					if( typeof self.settings.has_loader !== "undefined" && self.settings.has_loader ) {
 						// Disable form fields
 						$form.addClass('forminator-fields-disabled');

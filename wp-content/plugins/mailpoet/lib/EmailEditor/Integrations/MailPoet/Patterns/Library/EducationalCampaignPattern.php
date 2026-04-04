@@ -15,7 +15,7 @@ class EducationalCampaignPattern extends Pattern {
   protected $name = 'educational-campaign';
   protected $block_types = ['core/post-content']; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
   protected $template_types = ['email-template']; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
-  protected $categories = ['newsletter'];
+  protected $categories = ['educational-campaign'];
   protected $post_types = [EmailEditor::MAILPOET_EMAIL_POST_TYPE]; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 
   /**
@@ -29,14 +29,14 @@ class EducationalCampaignPattern extends Pattern {
     <div class="wp-block-group" style="padding-right:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--40)">
       <!-- wp:heading {"level":1} -->
       <h1 class="wp-block-heading">' .
-      /* translators: [Product Name] is a placeholder for the product name */
-      __('How to Get the Most from [Product Name]', 'mailpoet') . '</h1>
+      /* translators: PRODUCT NAME is placeholder text that merchants replace with their own content. */
+      __('How to Get the Most from PRODUCT NAME', 'mailpoet') . '</h1>
       <!-- /wp:heading -->
 
       <!-- wp:paragraph {"style":{"typography":{"fontSize":"16px"}}} -->
       <p style="font-size:16px">' .
-      /* translators: [product] is a placeholder for the product name */
-      __('Our latest guide walks you through expert tips to make the most out of your [product].', 'mailpoet') . '</p>
+      /* translators: PRODUCT NAME is placeholder text that merchants replace with their own content. */
+      __('Our latest guide walks you through expert tips to make the most out of your PRODUCT NAME.', 'mailpoet') . '</p>
       <!-- /wp:paragraph -->
 
       <!-- wp:heading -->
@@ -47,8 +47,8 @@ class EducationalCampaignPattern extends Pattern {
       <div class="wp-block-columns">
       <!-- wp:column {"style":{"spacing":{"padding":{"right":"0","left":"0"}}}} -->
       <div class="wp-block-column" style="padding-right:0;padding-left:0">
-      <!-- wp:image -->
-      <figure class="wp-block-image"><img alt=""/></figure>
+      <!-- wp:image {"sizeSlug":"full"} -->
+      <figure class="wp-block-image size-full"><img src="' . esc_url($this->cdnAssetUrl->generateCdnUrl('email-editor/educational-step-1.jpg')) . '" alt="' . esc_attr__('Step 1 image', 'mailpoet') . '"/></figure>
       <!-- /wp:image -->
       </div>
       <!-- /wp:column -->
@@ -61,8 +61,8 @@ class EducationalCampaignPattern extends Pattern {
 
       <!-- wp:paragraph -->
       <p>' .
-      /* translators: Placeholder text for a brief step description */
-      __('[Brief description]', 'mailpoet') . '</p>
+      /* translators: Placeholder text that merchants replace with their own content. */
+      __('BRIEF DESCRIPTION', 'mailpoet') . '</p>
       <!-- /wp:paragraph -->
       </div>
       <!-- /wp:column -->
@@ -83,16 +83,16 @@ class EducationalCampaignPattern extends Pattern {
 
       <!-- wp:paragraph -->
       <p>' .
-      /* translators: Placeholder text for a brief step description */
-      __('[Brief description]', 'mailpoet') . '</p>
+      /* translators: Placeholder text that merchants replace with their own content. */
+      __('BRIEF DESCRIPTION', 'mailpoet') . '</p>
       <!-- /wp:paragraph -->
       </div>
       <!-- /wp:column -->
 
       <!-- wp:column {"style":{"spacing":{"padding":{"right":"0","left":"0"}}}} -->
       <div class="wp-block-column" style="padding-right:0;padding-left:0">
-      <!-- wp:image -->
-      <figure class="wp-block-image"><img alt=""/></figure>
+      <!-- wp:image {"sizeSlug":"full"} -->
+      <figure class="wp-block-image size-full"><img src="' . esc_url($this->cdnAssetUrl->generateCdnUrl('email-editor/educational-step-2.jpg')) . '" alt="' . esc_attr__('Step 2 image', 'mailpoet') . '"/></figure>
       <!-- /wp:image -->
       </div>
       <!-- /wp:column -->
@@ -107,8 +107,8 @@ class EducationalCampaignPattern extends Pattern {
       <div class="wp-block-columns">
       <!-- wp:column {"style":{"spacing":{"padding":{"right":"0","left":"0"}}}} -->
       <div class="wp-block-column" style="padding-right:0;padding-left:0">
-      <!-- wp:image -->
-      <figure class="wp-block-image"><img alt=""/></figure>
+      <!-- wp:image {"sizeSlug":"full"} -->
+      <figure class="wp-block-image size-full"><img src="' . esc_url($this->cdnAssetUrl->generateCdnUrl('email-editor/educational-step-3.jpg')) . '" alt="' . esc_attr__('Step 3 image', 'mailpoet') . '"/></figure>
       <!-- /wp:image -->
       </div>
       <!-- /wp:column -->
@@ -120,8 +120,8 @@ class EducationalCampaignPattern extends Pattern {
 
       <!-- wp:paragraph -->
       <p>' .
-      /* translators: Placeholder text for a brief step description */
-      __('[Brief description]', 'mailpoet') . '</p>
+      /* translators: Placeholder text that merchants replace with their own content. */
+      __('BRIEF DESCRIPTION', 'mailpoet') . '</p>
       <!-- /wp:paragraph -->
       </div>
       <!-- /wp:column -->

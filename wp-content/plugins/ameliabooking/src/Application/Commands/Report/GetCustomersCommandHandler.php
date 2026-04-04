@@ -15,7 +15,7 @@ use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
-use AmeliaBooking\Domain\Services\Report\AbstractReportService;
+use AmeliaBooking\Domain\Services\Report\ReportServiceInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
 use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
@@ -45,7 +45,7 @@ class GetCustomersCommandHandler extends CommandHandler
 
         /** @var CustomerRepository $customerRepository */
         $customerRepository = $this->container->get('domain.users.customers.repository');
-        /** @var AbstractReportService $reportService */
+        /** @var ReportServiceInterface $reportService */
         $reportService = $this->container->get('infrastructure.report.csv.service');
         /** @var SettingsService $settingsDS */
         $settingsDS = $this->container->get('domain.settings.service');
@@ -114,8 +114,11 @@ class GetCustomersCommandHandler extends CommandHandler
 
             if (in_array('lastBooking', $fields, true)) {
                 $row[BackendStrings::get('last_booking')] =
-                    DateTimeService::getCustomDateTimeObject($customer['lastBooking'])
-                        ->format($dateFormat . ' ' . $timeFormat);
+                    !empty($customer['lastBooking']) ?
+                        DateTimeService::getCustomDateTimeObject(
+                            $customer['lastBooking']
+                        )->format($dateFormat . ' ' . $timeFormat) :
+                        '';
             }
 
             if (in_array('totalBookings', $fields, true)) {

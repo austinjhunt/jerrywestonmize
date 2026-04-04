@@ -455,7 +455,7 @@ class Forminator_Hubspot_Wp_Api {
 	 * @param array $args Arguments.
 	 *
 	 * @return array|mixed|object
-	 * @throws Forminator_Hubspot_Wp_Api_Exception Throws Integration Exception.
+	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function get_access_token( $args = array() ) {
 		$default_args = array(
@@ -488,7 +488,7 @@ class Forminator_Hubspot_Wp_Api {
 				$error = sprintf( esc_html__( 'Failed to process request : %s', 'forminator' ), esc_html( $response->error ) );
 			}
 
-			throw new Forminator_Hubspot_Wp_Api_Exception( $error ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception message is already escaped.
+			throw new Forminator_Integration_Exception( $error ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception message is already escaped.
 		}
 
 		return $response;
@@ -523,11 +523,27 @@ class Forminator_Hubspot_Wp_Api {
 	 */
 	public function get_contact_list( $args = array() ) {
 		$default_args = array(
-			'count'  => 200,
-			'offset' => 0,
+			'count'           => 200,
+			'offset'          => 0,
+			'processingTypes' => array( 'MANUAL', 'SNAPSHOT' ),
 		);
 		$args         = array_merge( $default_args, $args );
-		$response     = $this->send_authenticated( 'GET', 'contacts/v1/lists/static', $args );
+		$response     = $this->send_authenticated( 'POST', 'crm/v3/lists/search', $args, true );
+
+		return $response;
+	}
+
+	/**
+	 * Get v3 list id by legacy list id
+	 *
+	 * @param mixed $legacy_list_id List Id.
+	 * @return array|mixed|object
+	 */
+	public function get_v3_list_id( $legacy_list_id ) {
+		$args     = array(
+			'legacyListId' => $legacy_list_id,
+		);
+		$response = $this->send_authenticated( 'GET', 'crm/v3/lists/idmapping', $args );
 
 		return $response;
 	}
@@ -582,20 +598,15 @@ class Forminator_Hubspot_Wp_Api {
 	 * Add contact to contact list.
 	 *
 	 * @param string $contact_id Contact id.
-	 * @param string $email Email.
-	 * @param string $email_list Email list.
+	 * @param string $list_id List Id.
 	 *
 	 * @return array|mixed|object
 	 */
-	public function add_to_contact_list( $contact_id, $email, $email_list ) {
-		$args     = array(
-			'listId' => $email_list,
-			'vids'   => array( $contact_id ),
-			'emails' => array( $email ),
-		);
-		$endpoint = 'contacts/v1/lists/' . $email_list . '/add';
+	public function add_to_contact_list( $contact_id, $list_id ) {
+		$args     = array( $contact_id );
+		$endpoint = 'crm/v3/lists/' . $list_id . '/memberships/add';
 
-		$response = $this->send_authenticated( 'POST', $endpoint, $args, true );
+		$response = $this->send_authenticated( 'PUT', $endpoint, $args, true );
 
 		if ( ! is_wp_error( $response ) && ! empty( $response->updated ) ) {
 			return true;

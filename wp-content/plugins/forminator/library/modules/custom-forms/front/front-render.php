@@ -634,7 +634,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 			return;
 		}
 
-		$src                 = apply_filters( 'forminator_jquery_ui_css', 'https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.min.css' );
+		$src                 = apply_filters( 'forminator_jquery_ui_css', forminator_plugin_url() . 'assets/jquery-ui/css/jquery-ui.min.css' );
 		$version             = apply_filters( 'forminator_jquery_ui_css_version', '1' );
 		$src_slider_divi     = apply_filters( 'forminator_jquery_ui_slider_css', forminator_plugin_url() . 'assets/css/jquery-ui-slider.builder_divi.min.css' );
 		$version_slider_divi = apply_filters( 'forminator_jquery_ui__slider_css_version', '1' );
@@ -830,16 +830,15 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 */
 	public function render_wrapper_before( $wrapper ) {
 		$class = 'forminator-row';
-
+		$style = '';
 		if ( $this->is_only_hidden( $wrapper ) ) {
 			$class .= ' forminator-hidden';
-
-			if ( isset( $wrapper['fields'] ) && isset( $wrapper['fields'][0]['custom-class'] ) ) {
-				$class .= ' ' . $wrapper['fields'][0]['custom-class'];
-			}
+		} elseif ( isset( $wrapper['fields'] ) && $this->is_only_invisible_field( $wrapper['fields'] ) ) {
+			// Remove margin for wrappers with only invisible fields.
+			$style = ' style="margin: 0;"';
 		}
 
-		$html = sprintf( '<div class="%1$s">', esc_attr( $class ) );
+		$html = sprintf( '<div class="%1$s"%2$s>', esc_attr( $class ), $style );
 
 		return apply_filters( 'forminator_before_wrapper_markup', $html, $wrapper );
 	}
@@ -1435,23 +1434,60 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		}
 
 		if ( $field_object->is_available( $field ) ) {
-			if ( ! self::is_hidden( $field ) ) {
-				// Render before field markup.
-				$html .= $this->render_field_before( $field );
-			}
+
+			// Render before field markup.
+			$html .= $this->render_field_before( $field );
 
 			// Render field.
 			$html .= $this->render_field( $field );
 
-			if ( ! self::is_hidden( $field ) ) {
-				// Render after field markup.
-				$html .= $this->render_field_after( $field );
-			}
+			// Render after field markup.
+			$html .= $this->render_field_after( $field );
 		}
 
 		do_action( 'forminator_after_field_render', $field );
 
 		return $html;
+	}
+
+	/**
+	 * Check if field is invisible
+	 *
+	 * @param mixed $field Form Field.
+	 * @return bool
+	 */
+	private function is_invisible_field( $field ) {
+		if ( self::is_hidden( $field ) || 'paypal' === $field['type'] ) {
+			return true;
+		} elseif ( 'captcha' === $field['type'] && ! empty( $field['captcha_provider'] ) ) {
+			if ( ( ! empty( $field['captcha_type'] ) && 'recaptcha' === $field['captcha_provider'] && in_array( $field['captcha_type'], array( 'v2_invisible', 'v3_recaptcha' ), true )
+			&& ( ! empty( $field['captcha_badge'] ) && 'inline' !== $field['captcha_badge'] ) )
+			|| ( ! empty( $field['hcaptcha_type'] ) && 'hcaptcha' === $field['captcha_provider'] && 'hc_invisible' === $field['hcaptcha_type'] ) ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Check if all fields are invisible.
+	 *
+	 * @param mixed $fields Form Fields.
+	 * @return bool
+	 */
+	private function is_only_invisible_field( $fields ) {
+		if ( empty( $fields ) ) {
+			return false;
+		}
+
+		foreach ( $fields as $field ) {
+			if ( ! $this->is_invisible_field( $field ) ) {
+				// Found a visible field.
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
@@ -1652,7 +1688,12 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		$cols  = $this->get_cols( $field );
 		$id    = $this->get_id( $field );
 
-		$html = sprintf( '<div id="%s" class="forminator-field-%s forminator-col forminator-col-%s %s">', esc_attr( $id ), esc_attr( $field['type'] ), esc_attr( $cols ), esc_attr( $class ) );
+		$class_col = '';
+		if ( ! $this->is_invisible_field( $field ) ) {
+			$class_col = 'forminator-col';
+		}
+
+		$html = sprintf( '<div id="%s" class="forminator-field-%s %s forminator-col-%s %s">', esc_attr( $id ), esc_attr( $field['type'] ), esc_attr( $class_col ), esc_attr( $cols ), esc_attr( $class ) );
 
 		return apply_filters( 'forminator_before_field_markup', $html, $class );
 	}

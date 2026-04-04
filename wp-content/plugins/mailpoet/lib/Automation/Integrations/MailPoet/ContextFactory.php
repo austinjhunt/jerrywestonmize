@@ -5,6 +5,8 @@ namespace MailPoet\Automation\Integrations\MailPoet;
 if (!defined('ABSPATH')) exit;
 
 
+use MailPoet\Automation\Integrations\Core\Actions\DelayAction;
+use MailPoet\Automation\Integrations\MailPoet\Actions\SendEmailAction;
 use MailPoet\Config\ServicesChecker;
 use MailPoet\Segments\SegmentsRepository;
 use MailPoet\Services\AuthorizedEmailsController;
@@ -46,6 +48,8 @@ class ContextFactory {
     $data = [
       'segments' => $this->getSegments(),
       'userRoles' => $this->getUserRoles(),
+      'transactional_triggers' => SendEmailAction::TRANSACTIONAL_TRIGGERS,
+      'delay_action_key' => DelayAction::KEY,
     ];
 
     if ($this->isMSSEnabled()) {

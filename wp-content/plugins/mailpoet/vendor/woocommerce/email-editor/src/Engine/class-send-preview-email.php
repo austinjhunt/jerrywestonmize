@@ -22,12 +22,12 @@ class Send_Preview_Email {
  $email = $data['email'];
  $post_id = $data['postId'];
  $post = $this->fetch_post( $post_id );
- $subject = $post->post_title;
+ $subject = $this->get_preview_email_subject( $post );
  $email_html_content = $this->render_html( $post );
  return $this->send_email( $email, $subject, $email_html_content );
  }
  public function render_html( $post ): string {
- $subject = $post->post_title;
+ $subject = $this->get_preview_email_subject( $post );
  $language = get_bloginfo( 'language' );
  // Add filter to set preview context for block renderers.
  add_filter( 'woocommerce_email_editor_rendering_email_context', array( $this, 'add_preview_context' ) );
@@ -41,6 +41,10 @@ class Send_Preview_Email {
  remove_filter( 'woocommerce_email_editor_rendering_email_context', array( $this, 'add_preview_context' ) );
  $rendered_data = apply_filters( 'woocommerce_email_editor_send_preview_email_rendered_data', $rendered_data, $post );
  return $this->set_personalize_content( $rendered_data['html'] );
+ }
+ public function get_preview_email_subject( $post ): string {
+ $subject = (string) apply_filters( 'woocommerce_email_editor_send_preview_email_subject', $post->post_title, $post );
+ return $subject;
  }
  public function add_preview_context( $email_context ): array {
  $email_context['is_user_preview'] = true;

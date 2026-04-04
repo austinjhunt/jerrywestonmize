@@ -151,7 +151,7 @@ class UpdateProviderCommandHandler extends CommandHandler
         $newUser = UserFactory::create($newUserData);
 
         // If the phone is not set and the old phone is set, set the phone and country phone iso to null
-        if (!$providerData['phone'] && $oldUser->getPhone() && $oldUser->getPhone()->getValue()) {
+        if (empty($providerData['phone']) && $oldUser->getPhone() && $oldUser->getPhone()->getValue()) {
             $newUser->setPhone(new Phone(null));
             $newUser->setCountryPhoneIso(new Name(null));
         }

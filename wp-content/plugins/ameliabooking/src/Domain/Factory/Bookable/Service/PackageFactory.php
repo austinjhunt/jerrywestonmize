@@ -258,6 +258,10 @@ class PackageFactory
                 $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['firstName'] = $row['provider_firstName'];
                 $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['lastName'] = $row['provider_lastName'];
                 $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['email'] = $row['provider_email'];
+                $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['phone'] =
+                    !empty($row['provider_phone']) ? $row['provider_phone'] : null;
+                $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['countryPhoneIso'] =
+                    !empty($row['provider_countryPhoneIso']) ? $row['provider_countryPhoneIso'] : null;
                 $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['status'] =
                     !empty($row['provider_status']) ? $row['provider_status'] : Status::VISIBLE;
                 $packages[$packageId]['bookable'][$bookableId]['providers'][$providerId]['type'] = Entities::PROVIDER;

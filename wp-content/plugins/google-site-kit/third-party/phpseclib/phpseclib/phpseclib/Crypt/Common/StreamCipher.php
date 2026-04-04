@@ -25,7 +25,7 @@ abstract class StreamCipher extends \Google\Site_Kit_Dependencies\phpseclib3\Cry
      *
      * Stream ciphers do not have a block size
      *
-     * @see \phpseclib3\Crypt\Common\SymmetricKey::block_size
+     * @see SymmetricKey::block_size
      * @var int
      */
     protected $block_size = 0;
