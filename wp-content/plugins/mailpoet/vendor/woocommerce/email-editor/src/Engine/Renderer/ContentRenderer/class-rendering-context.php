@@ -7,9 +7,11 @@ use WP_Theme_JSON;
 class Rendering_Context {
  private WP_Theme_JSON $theme_json;
  private array $email_context;
- public function __construct( WP_Theme_JSON $theme_json, array $email_context = array() ) {
+ private ?string $language;
+ public function __construct( WP_Theme_JSON $theme_json, array $email_context = array(), ?string $language = null ) {
  $this->theme_json = $theme_json;
  $this->email_context = $email_context;
+ $this->language = $language;
  }
  public function get_theme_json(): WP_Theme_JSON {
  return $this->theme_json;
@@ -46,6 +48,9 @@ class Rendering_Context {
  public function get_email_context(): array {
  return $this->email_context;
  }
+ public function get_language(): ?string {
+ return $this->language;
+ }
  public function get_user_id(): ?int {
  return isset( $this->email_context['user_id'] ) && is_numeric( $this->email_context['user_id'] ) ? (int) $this->email_context['user_id'] : null;
  }
@@ -54,5 +59,68 @@ class Rendering_Context {
  }
  public function get( string $key, $default_value = null ) {
  return $this->email_context[ $key ] ?? $default_value;
+ }
+ public function is_rtl(): bool {
+ if ( isset( $this->email_context['is_rtl'] ) && is_bool( $this->email_context['is_rtl'] ) ) {
+ return $this->email_context['is_rtl'];
+ }
+ $primary_language = $this->get_primary_language_subtag( $this->language );
+ if ( null === $primary_language ) {
+ return false;
+ }
+ return in_array(
+ $primary_language,
+ array(
+ 'ar',
+ 'arc',
+ 'azb',
+ 'ckb',
+ 'dv',
+ 'fa',
+ 'he',
+ 'ku',
+ 'nqo',
+ 'ps',
+ 'sd',
+ 'ug',
+ 'ur',
+ 'yi',
+ ),
+ true
+ );
+ }
+ public function get_text_direction(): string {
+ return $this->is_rtl() ? 'rtl' : 'ltr';
+ }
+ public function get_default_text_align(): string {
+ return $this->is_rtl() ? 'right' : 'left';
+ }
+ public function get_start_side(): string {
+ return $this->is_rtl() ? 'right' : 'left';
+ }
+ public function get_end_side(): string {
+ return $this->is_rtl() ? 'left' : 'right';
+ }
+ public function sanitize_text_align( $alignment ): ?string {
+ if ( ! is_string( $alignment ) ) {
+ return null;
+ }
+ return in_array( $alignment, array( 'left', 'center', 'right' ), true ) ? $alignment : null;
+ }
+ public function resolve_text_align( $alignment ): string {
+ return $this->sanitize_text_align( $alignment ) ?? $this->get_default_text_align();
+ }
+ private function get_primary_language_subtag( ?string $language ): ?string {
+ if ( null === $language || '' === trim( $language ) ) {
+ return null;
+ }
+ $language = strtolower( str_replace( '_', '-', trim( $language ) ) );
+ $parts = explode( '-', $language );
+ $primary = $parts[0] ?? '';
+ $length = strlen( $primary );
+ if ( $length < 2 || $length > 3 ) {
+ return null;
+ }
+ return strspn( $primary, 'abcdefghijklmnopqrstuvwxyz' ) === $length ? $primary : null;
  }
 }

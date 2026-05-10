@@ -123,6 +123,8 @@ class SubscriberSubscribeController {
       return $meta;
     }
 
+    $submittedTimeZone = SubscriberEntity::sanitizeTimeZone($data[SubscriberEntity::TIME_ZONE_FIELD_NAME] ?? null);
+
     // only accept fields defined in the form
     $formFieldIds = array_filter(array_map(function (array $formField): ?string {
       if (!isset($formField['id'])) {
@@ -131,6 +133,9 @@ class SubscriberSubscribeController {
       return is_numeric($formField['id']) ? "cf_{$formField['id']}" : $formField['id'];
     }, $form->getBlocksByTypes(FormEntity::FORM_FIELD_TYPES)));
     $data = array_intersect_key($data, array_flip($formFieldIds));
+    if ($submittedTimeZone !== null) {
+      $data[SubscriberEntity::TIME_ZONE_FIELD_NAME] = $submittedTimeZone;
+    }
 
     // make sure we don't allow too many subscriptions with the same ip address
     $timeout = $this->throttling->throttle();
@@ -164,14 +169,17 @@ class SubscriberSubscribeController {
     // record form statistics
     $this->statisticsFormsRepository->record($form, $subscriber);
 
-    $formSettings = $form->getSettings();
-
     // add tags to subscriber if they are filled
+    $formSettings = $form->getSettings();
     $this->addTagsToSubscriber($formSettings['tags'] ?? [], $subscriber);
 
     // Confirmation email failed. We want to show the error message
     if ($subscriptionMeta['confirmationEmailResult'] instanceof \Exception) {
       $meta['error'] = $subscriptionMeta['confirmationEmailResult']->getMessage();
+      return $meta;
+    }
+    if (!empty($subscriptionMeta['error'])) {
+      $meta['error'] = $subscriptionMeta['error'];
       return $meta;
     }
 

@@ -5,6 +5,8 @@ namespace MailPoet\EmailEditor\Integrations\MailPoet;
 if (!defined('ABSPATH')) exit;
 
 
+use MailPoet\API\REST\API;
+use MailPoet\EmailEditor\Integrations\MailPoet\Endpoints\GenerateSubjectSuggestionsEndpoint;
 use MailPoet\EmailEditor\Integrations\MailPoet\Patterns\PatternsController;
 use MailPoet\EmailEditor\Integrations\MailPoet\Templates\TemplatesController;
 use MailPoet\Newsletter\NewslettersRepository;
@@ -73,6 +75,7 @@ class EmailEditor {
       $this->templatesController->initialize();
     }
     $this->extendEmailPostApi();
+    $this->registerApiRoutes();
     $this->personalizationTagManager->initialize();
   }
 
@@ -95,11 +98,20 @@ class EmailEditor {
       return $isEditorPage;
     }
     // We need to check early if we are on the email editor page. The check runs early so we can't use current_screen() here.
-    if ($this->wp->isAdmin() && isset($_GET['post']) && isset($_GET['action']) && $_GET['action'] === 'edit') {
+    if ($this->wp->isAdmin() && isset($_GET['post']) && isset($_GET['action']) && $_GET['action'] === 'edit' && is_numeric($_GET['post'])) {
       $post = $this->wp->getPost((int)$_GET['post']);
       return $post && $post->post_type === self::MAILPOET_EMAIL_POST_TYPE; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
     }
     return false;
+  }
+
+  private function registerApiRoutes(): void {
+    $this->wp->addAction(API::REST_API_INIT_ACTION, function (API $api) {
+      $api->registerPostRoute(
+        'email/generate-subject-suggestions',
+        GenerateSubjectSuggestionsEndpoint::class
+      );
+    });
   }
 
   public function extendEmailPostApi() {

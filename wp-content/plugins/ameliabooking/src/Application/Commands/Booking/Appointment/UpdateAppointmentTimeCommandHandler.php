@@ -31,7 +31,6 @@ use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepos
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
-use Interop\Container\Exception\ContainerException;
 
 /**
  * Class UpdateAppointmentTimeCommandHandler
@@ -56,7 +55,6 @@ class UpdateAppointmentTimeCommandHandler extends CommandHandler
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      * @throws NotFoundException
-     * @throws ContainerException
      */
     public function handle(UpdateAppointmentTimeCommand $command)
     {
@@ -233,6 +231,14 @@ class UpdateAppointmentTimeCommandHandler extends CommandHandler
 
         $appointment->setRescheduled(new BooleanValueObject(true));
 
+        $appointment->setInitialBookingStart(
+            new DateTimeValue($initialBookingStart)
+        );
+
+        $appointment->setInitialBookingEnd(
+            new DateTimeValue($initialBookingEnd)
+        );
+
         $bookingAS->bookingRescheduled(
             $appointment->getId()->getValue(),
             Entities::APPOINTMENT,
@@ -254,11 +260,7 @@ class UpdateAppointmentTimeCommandHandler extends CommandHandler
         $result->setMessage('Successfully updated appointment time');
         $result->setData(
             [
-                Entities::APPOINTMENT        => $appointment->toArray(),
-                'initialAppointmentDateTime' => [
-                    'bookingStart' => $initialBookingStart->format('Y-m-d H:i:s'),
-                    'bookingEnd'   => $initialBookingEnd->format('Y-m-d H:i:s'),
-                ],
+                Entities::APPOINTMENT => $appointment->toArray(),
             ]
         );
 

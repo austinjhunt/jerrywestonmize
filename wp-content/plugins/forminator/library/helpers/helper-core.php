@@ -897,6 +897,28 @@ function forminator_get_export_logs( $form_id ) {
 }
 
 /**
+ * Get the current post ID from server context (AJAX or non-AJAX).
+ *
+ * @since 1.53.0
+ *
+ * @return int Post ID or 0 if not available.
+ */
+function forminator_get_current_post_id() {
+	static $post_id;
+	if ( isset( $post_id ) ) {
+		return $post_id;
+	}
+
+	if ( ! empty( $_SERVER['REQUEST_URI'] ) && false !== strpos( esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ), 'admin-ajax.php' ) ) {
+		$post_id = (int) url_to_postid( wp_get_referer() );
+		return $post_id;
+	}
+
+	$post_id = (int) get_the_ID();
+	return $post_id;
+}
+
+/**
  * Return current page url
  *
  * @since 1.0.3
@@ -904,13 +926,14 @@ function forminator_get_export_logs( $form_id ) {
  * @return mixed
  */
 function forminator_get_current_url() {
-	if ( ! empty( $_SERVER['REQUEST_URI'] ) && false !== strpos( esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ), 'admin-ajax.php' ) ) {
-		$post_id = url_to_postid( wp_get_referer() );
-	} else {
-		$post_id = get_the_ID();
+	static $current_url;
+	if ( isset( $current_url ) ) {
+		return $current_url;
 	}
+	$post_id     = forminator_get_current_post_id();
+	$current_url = $post_id > 0 ? esc_url( get_permalink( $post_id ) ) : '';
 
-	return esc_url( get_permalink( $post_id ) );
+	return $current_url;
 }
 
 /**

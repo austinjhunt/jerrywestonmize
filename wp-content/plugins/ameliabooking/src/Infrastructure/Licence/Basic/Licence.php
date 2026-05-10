@@ -81,6 +81,7 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Starter\Licence
                 Commands\PaymentGateway\BarionPaymentNotifyCommand::class          => new Commands\PaymentGateway\BarionPaymentNotifyCommandHandler($c),
                 Commands\PaymentGateway\BarionPaymentCallbackCommand::class        => new Commands\PaymentGateway\BarionPaymentCallbackCommandHandler($c),
                 Commands\PaymentGateway\StripeValidateKeysCommand::class           => new Commands\PaymentGateway\StripeValidateKeysCommandHandler($c),
+                Commands\PaymentGateway\MollieValidateKeyCommand::class            => new Commands\PaymentGateway\MollieValidateKeyCommandHandler($c),
 
                 // Tax
                 Commands\Tax\AddTaxCommand::class                                  => new Commands\Tax\AddTaxCommandHandler($c),
@@ -91,6 +92,7 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Starter\Licence
                 Commands\Tax\UpdateTaxStatusCommand::class                         => new Commands\Tax\UpdateTaxStatusCommandHandler($c),
                 // Zoom
                 Commands\Zoom\GetUsersCommand::class                               => new Commands\Zoom\GetUsersCommandHandler($c),
+                Commands\Zoom\ValidateZoomCredentialsCommand::class                => new Commands\Zoom\ValidateZoomCredentialsCommandHandler($c),
                 // Invoices
                 Commands\Invoice\GenerateInvoiceCommand::class                     => new Commands\Invoice\GenerateInvoiceCommandHandler($c),
                 // Apple

@@ -357,10 +357,15 @@ class Forminator_Select extends Forminator_Field {
 					// We have pre-fill parameter, use its value or $value.
 					$prefill        = $this->get_prefill( $field, false );
 					$prefill_values = explode( ',', $prefill );
+					$prefill_values = array_map( 'trim', $prefill_values );
 
 					if ( in_array( $pref_value, $prefill_values ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
-						$default      = $pref_value;
 						$prefil_valid = true;
+						if ( 'multiselect' === $field_type ) {
+							$default_arr[] = $pref_value;
+						} else {
+							$default = $pref_value;
+						}
 					}
 				}
 
@@ -401,7 +406,9 @@ class Forminator_Select extends Forminator_Field {
 						$option_selected = true;
 					}
 				} elseif ( $prefil_valid ) {
-					if ( $value === $default ) {
+					if ( ! empty( $default_arr ) && in_array( $value, $default_arr, true ) ) {
+						$option_selected = true;
+					} elseif ( $value === $default ) {
 						$option_selected = true;
 					}
 				} elseif ( $option_default ) {
@@ -433,6 +440,11 @@ class Forminator_Select extends Forminator_Field {
 				if ( 'show' === $checkbox_in_dropdown ) {
 					$has_checkbox = 'true';
 				}
+
+				// For multiselect, convert default_arr to array format for data attribute.
+				if ( ! empty( $default_arr ) ) {
+					$default = wp_json_encode( $default_arr );
+				}
 			}
 			$html .= sprintf(
 				'<select %s id="%s" class="%s" data-required="%s" name="%s" data-default-value="%s"%s data-placeholder="%s" data-search="%s" data-search-placeholder="%s" data-checkbox="%s" data-allow-clear="%s" aria-labelledby="%s"%s>',
@@ -441,7 +453,7 @@ class Forminator_Select extends Forminator_Field {
 				'forminator-select--field forminator-select2 forminator-select2-multiple', // class.
 				$required,
 				$name,
-				$default,
+				esc_attr( $default ),
 				$hidden_calc_behavior,
 				esc_attr( wp_strip_all_tags( html_entity_decode( $placeholder ) ) ),
 				$search,
@@ -572,6 +584,9 @@ class Forminator_Select extends Forminator_Field {
 		$field_name = self::get_property( 'element_id', $field );
 		$field_type = self::get_property( 'value_type', $field );
 		$form_id    = Forminator_CForm_Front_Action::$module_id;
+
+		// Decode HTML entities from submitted values to match against raw option values.
+		$selected_options = array_map( 'htmlspecialchars_decode', $selected_options );
 
 		foreach ( $field['options'] as $option ) {
 			// Ski if this option was not selected.

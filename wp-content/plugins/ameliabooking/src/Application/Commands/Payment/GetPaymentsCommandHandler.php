@@ -59,7 +59,7 @@ class GetPaymentsCommandHandler extends CommandHandler
             $params['dates'][1] .= ' 23:59:59';
         }
 
-        $params = $this->parseSortParams($params, ['id', 'created', 'status']);
+        $params = $this->parseSortParams($params, ['id', 'created', 'status', 'amount', 'invoiceNumber']);
 
         $paymentsData = $paymentAS->getPaymentsData(
             $params,

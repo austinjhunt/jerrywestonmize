@@ -5,6 +5,12 @@ if (!defined('ABSPATH')) exit;
 use Automattic\WooCommerce\EmailEditor\Engine\Renderer\ContentRenderer\Rendering_Context;
 use Automattic\WooCommerce\EmailEditor\Integrations\Utils\Styles_Helper;
 class List_Block extends Abstract_Block_Renderer {
+ public function render( string $block_content, array $parsed_block, Rendering_Context $rendering_context ): string {
+ $content = $this->render_content( $block_content, $parsed_block, $rendering_context );
+ $email_attrs = $parsed_block['email_attrs'] ?? array();
+ unset( $email_attrs['margin-top'] );
+ return $this->add_spacer_with_context( $content, $email_attrs, $rendering_context );
+ }
  protected function render_content( string $block_content, array $parsed_block, Rendering_Context $rendering_context ): string {
  $html = new \WP_HTML_Tag_Processor( $block_content );
  $tag_name = ( $parsed_block['attrs']['ordered'] ?? false ) ? 'ol' : 'ul';

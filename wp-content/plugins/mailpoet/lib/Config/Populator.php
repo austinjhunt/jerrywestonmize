@@ -156,6 +156,7 @@ class Populator {
       'FarmersMarket',
       'ConfirmInterestBeforeDeactivation',
       'ConfirmInterestOrUnsubscribe',
+      'BirthdayCelebration',
     ];
     $this->entityManager = $entityManager;
     $this->scheduledTasksRepository = $scheduledTasksRepository;
@@ -496,6 +497,18 @@ class Populator {
         'newsletter_type' => NewsletterEntity::TYPE_STANDARD,
       ],
       [
+        'name' => NewsletterOptionFieldEntity::NAME_SCHEDULE_MODE,
+        'newsletter_type' => NewsletterEntity::TYPE_STANDARD,
+      ],
+      [
+        'name' => NewsletterOptionFieldEntity::NAME_SCHEDULED_LOCAL_DATE,
+        'newsletter_type' => NewsletterEntity::TYPE_STANDARD,
+      ],
+      [
+        'name' => NewsletterOptionFieldEntity::NAME_SCHEDULED_LOCAL_TIME,
+        'newsletter_type' => NewsletterEntity::TYPE_STANDARD,
+      ],
+      [
         'name' => NewsletterOptionFieldEntity::NAME_FILTER_SEGMENT_ID,
         'newsletter_type' => NewsletterEntity::TYPE_RE_ENGAGEMENT,
       ],
@@ -540,6 +553,7 @@ class Populator {
     foreach ($this->templates as $template) {
       $template = self::TEMPLATES_NAMESPACE . $template;
       $template = new $template(Env::$assetsUrl);
+      // @phpstan-ignore method.notFound (template classes live under PopulatorData/Templates which is excluded from analysis; each declares its own get())
       $templates[] = $template->get();
     }
 

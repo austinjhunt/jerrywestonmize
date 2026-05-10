@@ -175,7 +175,7 @@ class DisplayFormInWPContent {
 
     $noFormsCache = $this->wp->getTransient(DisplayFormInWPContent::NO_FORM_TRANSIENT_KEY);
     if ($noFormsCache === '1') $result = false;
-    return $result;
+    return (bool)$result;
   }
 
   private function displayFormInProductListPage(): bool {
@@ -244,19 +244,21 @@ class DisplayFormInWPContent {
 
     // (POST) non ajax success/error variables
     $templateData['success'] = (
-      (isset($_GET['mailpoet_success']))
-      &&
-      ((int)$_GET['mailpoet_success'] === $form->getId())
+      isset($_GET['mailpoet_success'])
+      && is_numeric($_GET['mailpoet_success'])
+      && (int)$_GET['mailpoet_success'] === $form->getId()
     );
     $templateData['error'] = (
-      (isset($_GET['mailpoet_error']))
-      &&
-      ((int)$_GET['mailpoet_error'] === $form->getId())
+      isset($_GET['mailpoet_error'])
+      && is_numeric($_GET['mailpoet_error'])
+      && (int)$_GET['mailpoet_error'] === $form->getId()
     );
 
     $templateData['delay'] = $formSettings['form_placement'][$displayType]['delay'] ?? 0;
     $templateData['position'] = $formSettings['form_placement'][$displayType]['position'] ?? '';
     $templateData['animation'] = $formSettings['form_placement'][$displayType]['animation'] ?? '';
+    $templateData['triggerMode'] = $formSettings['form_placement'][$displayType]['trigger_mode'] ?? 'auto';
+    $templateData['clickTriggerSelector'] = $formSettings['form_placement'][$displayType]['click_trigger_selector'] ?? '';
     $templateData['fontFamily'] = $formSettings['font_family'] ?? '';
     $templateData['enableExitIntent'] = false;
     // Set default value for cookie expiration for backward compatibility with forms without this value
@@ -328,7 +330,8 @@ class DisplayFormInWPContent {
       return true;
     }
 
-    if ($this->wp->isSingular($this->wp->applyFilters('mailpoet_display_form_supported_post_types', self::SUPPORTED_POST_TYPES))) {
+    $supportedPostTypes = $this->wp->applyFilters('mailpoet_display_form_supported_post_types', self::SUPPORTED_POST_TYPES);
+    if ($this->wp->isSingular(is_array($supportedPostTypes) || is_string($supportedPostTypes) ? $supportedPostTypes : self::SUPPORTED_POST_TYPES)) {
       if ($this->shouldDisplayFormOnPost($setup, 'posts')) return true;
       if ($this->shouldDisplayFormOnCategory($setup)) return true;
       if ($this->shouldDisplayFormOnTag($setup)) return true;

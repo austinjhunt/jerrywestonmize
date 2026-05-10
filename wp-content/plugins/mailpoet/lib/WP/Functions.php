@@ -73,7 +73,7 @@ class Functions {
    * @return bool
    */
   public function addAction($tag, $functionToAdd, $priority = 10, $acceptedArgs = 1) {
-    return call_user_func_array('add_action', func_get_args());
+    return (bool)call_user_func_array('add_action', func_get_args());
   }
 
   public function addCommentMeta($commentId, $metaKey, $metaValue, $unique = false) {
@@ -135,6 +135,10 @@ class Functions {
     return admin_url($path, $scheme);
   }
 
+  public function getAvatarUrl($idOrEmail, $args = null) {
+    return get_avatar_url($idOrEmail, $args);
+  }
+
   public function currentFilter() {
     return current_filter();
   }
@@ -149,6 +153,10 @@ class Functions {
 
   public function wpTimezoneString() {
     return wp_timezone_string();
+  }
+
+  public function wpTimezone(): \DateTimeZone {
+    return wp_timezone();
   }
 
   public function currentUserCan($capability) {
@@ -275,6 +283,10 @@ class Functions {
     return get_post($post, $output, $filter);
   }
 
+  public function getTerm(int $termId, string $taxonomy = '') {
+    return get_term($termId, $taxonomy);
+  }
+
   public function wpUpdatePost($postarr = [], bool $wp_error = false, bool $fire_after_hooks = true) {
     return wp_update_post($postarr, $wp_error, $fire_after_hooks);
   }
@@ -387,6 +399,10 @@ class Functions {
     return is_email($email);
   }
 
+  public function parseBlocks(string $content): array {
+    return parse_blocks($content);
+  }
+
   public function isMultisite() {
     return is_multisite();
   }
@@ -431,20 +447,20 @@ class Functions {
     return plugins_url($path, $plugin);
   }
 
-  public function registerActivationHook($file, $function) {
-    return register_activation_hook($file, $function);
+  public function registerActivationHook($file, $function): void {
+    register_activation_hook($file, $function);
   }
 
-  public function registerDeactivationHook($file, $function) {
-    return register_deactivation_hook($file, $function);
+  public function registerDeactivationHook($file, $function): void {
+    register_deactivation_hook($file, $function);
   }
 
   public function registerPostType($postType, $args = []) {
     return register_post_type($postType, $args);
   }
 
-  public function registerWidget($widget) {
-    return register_widget($widget);
+  public function registerWidget($widget): void {
+    register_widget($widget);
   }
 
     /**
@@ -623,6 +639,10 @@ class Functions {
 
   public function wpParseArgs($args, $defaults = '') {
     return wp_parse_args($args, $defaults);
+  }
+
+  public function sanitizeEmail(string $email): string {
+    return sanitize_email($email);
   }
 
   public function wpParseUrl($url, $component = -1) {
@@ -874,6 +894,30 @@ class Functions {
   /** @param string[]|null $protocols */
   public function escUrlRaw(string $url, ?array $protocols = null): string {
     return esc_url_raw($url, $protocols);
+  }
+
+  public function sanitizeKey(string $key): string {
+    return sanitize_key($key);
+  }
+
+  public function sanitizeTextField(string $text): string {
+    return sanitize_text_field($text);
+  }
+
+  public function sanitizeTextareaField(string $text): string {
+    return sanitize_textarea_field($text);
+  }
+
+  public function absint($maybeint): int {
+    return absint($maybeint);
+  }
+
+  /**
+   * @param mixed $value
+   * @return mixed
+   */
+  public function wpUnslash($value) {
+    return wp_unslash($value);
   }
 
   public function restUrl(string $path = '', string $scheme = 'rest'): string {

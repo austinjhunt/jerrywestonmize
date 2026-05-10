@@ -101,7 +101,7 @@ class Forminator_Address extends Forminator_Field {
 			'street_address_label'  => esc_html__( 'Street Address', 'forminator' ),
 			'address_city_label'    => esc_html__( 'City', 'forminator' ),
 			'address_state_label'   => esc_html__( 'State/Province', 'forminator' ),
-			'address_zip_label'     => esc_html__( 'ZIP / Postal Code', 'forminator' ),
+			'address_zip_label'     => esc_html__( 'ZIP / Postal code', 'forminator' ),
 			'address_country_label' => esc_html__( 'Country', 'forminator' ),
 			'address_line_label'    => esc_html__( 'Apartment, suite, etc', 'forminator' ),
 		);

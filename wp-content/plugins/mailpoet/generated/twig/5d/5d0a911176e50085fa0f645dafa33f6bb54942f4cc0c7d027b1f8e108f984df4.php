@@ -378,7 +378,7 @@ class __TwigTemplate_8581a8ede6c645c86df82d14a0f9727da4ff92aa0bb85d1970f9d521978
             yield "\"></script>
   <chat-widget
     id=\"chat\"
-    bot=\"mailpoet-chat-support\"
+    bot=\"mailpoet-workflow-support_chat\"
     avatar=\"";
             // line 178
             yield $this->extensions['MailPoet\Twig\Assets']->generateCdnUrl("chat-avatar.png");

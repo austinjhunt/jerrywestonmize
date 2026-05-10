@@ -32,6 +32,22 @@ class GoogleCalendarFactory
             $googleCalendar->setId(new Id($data['id']));
         }
 
+        if (isset($data['insertPendingAppointments'])) {
+            $googleCalendar->setInsertPendingAppointments((bool)$data['insertPendingAppointments']);
+        }
+
+        if (isset($data['includeBufferTime'])) {
+            $googleCalendar->setIncludeBufferTime((bool)$data['includeBufferTime']);
+        }
+
+        if (isset($data['title'])) {
+            $googleCalendar->setTitle($data['title']);
+        }
+
+        if (isset($data['description'])) {
+            $googleCalendar->setDescription($data['description']);
+        }
+
         return $googleCalendar;
     }
 }

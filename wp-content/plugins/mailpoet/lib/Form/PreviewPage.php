@@ -68,12 +68,13 @@ class PreviewPage {
   private function fetchFormData(int $id): ?FormEntity {
     $formData = $this->wp->getTransient(self::PREVIEW_DATA_TRANSIENT_PREFIX . $id);
     if (is_array($formData)) {
-      $form = new FormEntity($formData['name']);
-      $form->setId($formData['id'] ?? 0);
-      $form->setBody($formData['body']);
-      $form->setSettings($formData['settings']);
-      $form->setStyles($formData['styles']);
-      $form->setStatus($formData['status']);
+      $name = is_string($formData['name'] ?? null) ? $formData['name'] : '';
+      $form = new FormEntity($name);
+      $form->setId(is_int($formData['id'] ?? null) ? $formData['id'] : 0);
+      $form->setBody(is_array($formData['body'] ?? null) ? $formData['body'] : null);
+      $form->setSettings(is_array($formData['settings'] ?? null) ? $formData['settings'] : null);
+      $form->setStyles(is_string($formData['styles'] ?? null) ? $formData['styles'] : null);
+      $form->setStatus(is_string($formData['status'] ?? null) ? $formData['status'] : FormEntity::STATUS_ENABLED);
       return $form;
     }
     return $this->formRepository->findOneById($id);
@@ -97,6 +98,8 @@ class PreviewPage {
       'delay' => 1,
       'position' => $settings['form_placement'][$formDisplayType]['position'] ?? '',
       'animation' => $settings['form_placement'][$formDisplayType]['animation'] ?? '',
+      'triggerMode' => $settings['form_placement'][$formDisplayType]['trigger_mode'] ?? 'auto',
+      'clickTriggerSelector' => $settings['form_placement'][$formDisplayType]['click_trigger_selector'] ?? '',
       'fontFamily' => $settings['font_family'] ?? '',
     ];
     $formPosition = $settings['form_placement'][$formDisplayType]['position'] ?? '';

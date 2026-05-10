@@ -75,7 +75,7 @@ class GetTaxesCommandHandler extends CommandHandler
 
         /** @var Collection $taxes */
         $taxes = $taxes->length() ? $taxRepository->getWithEntities(
-            ['ids' => $taxes->keys(), 'events' => true]
+            ['ids' => $taxes->keys(), 'events' => true, 'sort' => !empty($params['sort']) ? $params['sort'] : null]
         ) : new Collection();
 
         /** @var Tax $tax */

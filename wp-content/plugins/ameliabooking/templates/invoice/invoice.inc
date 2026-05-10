@@ -123,7 +123,22 @@ switch ($localePrefix) {
 
       /* Header second line */
       .invoice-header .invoice-header-second-line {
+      }
+
+      .invoice-header .invoice-header-second-line {
           padding-bottom: 8px
+      }
+
+      .invoice-header-second-line-layout {
+          width: 100%;
+          border-spacing: 0;
+      }
+
+      .invoice-header-second-line-layout-left,
+      .invoice-header-second-line-layout-right {
+          width: 50%;
+          vertical-align: top;
+          padding: 0;
       }
 
       .invoice-header .invoice-header-second-line:after {
@@ -132,7 +147,7 @@ switch ($localePrefix) {
           clear: both;
       }
 
-      .invoice-header .invoice-header-second-line .invoice-header-table {
+       .invoice-header .invoice-header-second-line .invoice-header-table {
           width: 100%;
           font-size: 14px;
           font-weight: 400;
@@ -142,6 +157,10 @@ switch ($localePrefix) {
 
       .invoice-header .invoice-header-second-line .invoice-header-table-company {
           text-align: right;
+      }
+
+      .invoice-header-table td {
+          padding-bottom: 5px;
       }
 
       .invoice.is-rtl .invoice-header .invoice-header-second-line .invoice-header-table-company {
@@ -341,7 +360,6 @@ switch ($localePrefix) {
 </head>
 <body>
   <div class="invoice <?php echo $isRtl ? 'is-rtl' : ''; ?>">
-
     <div class="invoice-header">
       <div class="invoice-header-first-line">
         <table class="invoice-header-first-line-company">
@@ -377,108 +395,136 @@ switch ($localePrefix) {
         </h2>
       </div>
 
-      <br><br><br><br>
+      <br>
 
       <div class="invoice-header-second-line">
-        <table class="invoice-header-table">
+        <table class="invoice-header-table invoice-header-second-line-layout">
           <?php if ($isRtl) : ?>
             <tr>
-              <td class="invoice-header-table-company invoice-header-table-company-name">
-                <span><?php echo esc_html($data['company_name']) ?></span>
+              <td class="invoice-header-second-line-layout-left">
+                <table class="invoice-header-table invoice-header-table-company">
+                  <tr>
+                    <td class="invoice-header-table-company invoice-header-table-company-name">
+                      <span><?php echo esc_html($data['company_name']) ?></span>
+                    </td>
+                  </tr>
+                  <?php if (!empty($data['company_address'])) : ?>
+                    <tr>
+                      <td class="invoice-header-table-company">
+                        <span><?php echo esc_html($data['company_address']) ?></span>
+                      </td>
+                    </tr>
+                  <?php endif; ?>
+                  <?php if (!empty($data['company_email']) || !empty($data['company_phone'])) : ?>
+                    <tr>
+                      <td class="invoice-header-table-company">
+                        <?php echo !empty($data['company_email']) ? esc_html($data['company_email']) : '' ?>
+                        <?php if (!empty($data['company_email']) && !empty($data['company_phone'])) : ?>
+                          |
+                        <?php endif; ?>
+                        <?php echo !empty($data['company_phone']) ? esc_html($data['company_phone']) : '' ?>
+                      </td>
+                    </tr>
+                  <?php endif; ?>
+                  <?php if (!empty($data['company_vat_number'])) : ?>
+                    <tr>
+                      <td class="invoice-header-table-company">
+                        <?php echo esc_html($data['company_vat_number']) ?>
+                      </td>
+                    </tr>
+                  <?php endif; ?>
+                </table>
               </td>
-              <td class="invoice-header-table-invoice-number">
-                <span class="invoice-header-table-invoice-number-value">#<?php echo str_pad($data['invoice_number'], 4, '0', STR_PAD_LEFT) ?></span>
-                <span class="invoice-header-table-invoice-number-label"><?php echo BackendStrings::get('invoice') ?></span>
+              <td class="invoice-header-second-line-layout-right">
+                <table class="invoice-header-table">
+                  <tr>
+                    <td class="invoice-header-table-invoice-number">
+                      <span class="invoice-header-table-invoice-number-value">#<?php echo str_pad($data['invoice_number'], 4, '0', STR_PAD_LEFT) ?></span>
+                      <span class="invoice-header-table-invoice-number-label"><?php echo BackendStrings::get('invoice') ?></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="invoice-header-table-invoice-issued">
+                      <span class="invoice-header-table-invoice-issued-date"><?php echo esc_html($data['invoice_issued']) ?></span>
+                      <span class="invoice-header-table-invoice-issued-label"><?php echo BackendStrings::get('issued') ?></span>
+                    </td>
+                  </tr>
+                  <?php if (!empty($data['invoice_dates'])) : ?>
+                    <?php foreach ($data['invoice_dates'] as $key => $date) : ?>
+                      <tr class="invoice-header-table-invoice-issued">
+                        <td>
+                          <span class="invoice-header-table-invoice-issued-date"><?php echo esc_html($date) ?></span>
+                          <span class="invoice-header-table-invoice-issued-label"><?php echo BackendStrings::get('booking_date') ?></span>
+                        </td>
+                      </tr>
+                    <?php endforeach; ?>
+                  <?php endif; ?>
+                </table>
               </td>
             </tr>
-            <tr>
-              <td class="invoice-header-table-company">
-                <?php if (!empty($data['company_address'])) : ?>
-                  <span><?php echo esc_html($data['company_address'])?></span>
-                <?php elseif (!empty($data['company_email']) || !empty($data['company_phone'])) : ?>
-                  <?php echo !empty($data['company_email']) ? esc_html($data['company_email']) : ''?>
-                  <?php if (!empty($data['company_email']) && !empty($data['company_phone'])) : ?>
-                    |
-                  <?php endif; ?>
-                  <?php echo !empty($data['company_phone']) ? esc_html($data['company_phone']) : ''?>
-                <?php elseif (!empty($data['company_vat_number'])) : ?>
-                  <?php echo esc_html($data['company_vat_number']) ?>
-                <?php endif; ?>
-              </td>
-              <td class="invoice-header-table-invoice-issued">
-                <span class="invoice-header-table-invoice-issued-date"><?php echo esc_html($data['invoice_issued']) ?></span>
-                <span class="invoice-header-table-invoice-issued-label"><?php echo BackendStrings::get('issued') ?></span>
-              </td>
-            </tr>
-            <?php if ((!empty($data['company_email']) || !empty($data['company_phone'])) && !empty($data['company_address'])) : ?>
-              <tr>
-                <td class="invoice-header-table-company">
-                  <?php echo !empty($data['company_email']) ? esc_html($data['company_email']) : ''?>
-                  <?php if (!empty($data['company_email']) && !empty($data['company_phone'])) : ?>
-                    |
-                  <?php endif; ?>
-                  <?php echo !empty($data['company_phone']) ? esc_html($data['company_phone']) : ''?>
-                </td>
-                <td></td>
-              </tr>
-            <?php endif; ?>
-            <?php if (!empty($data['company_vat_number']) && (!empty($data['company_address']) || !empty($data['company_email']) || !empty($data['company_phone']))) : ?>
-              <tr>
-                <td class="invoice-header-table-company">
-                  <?php echo esc_html($data['company_vat_number']) ?>
-                </td>
-                <td></td>
-              </tr>
-            <?php endif; ?>
           <?php else : ?>
             <tr>
-              <td class="invoice-header-table-invoice-number">
-                <span class="invoice-header-table-invoice-number-label"><?php echo BackendStrings::get('invoice') ?></span>
-                <span class="invoice-header-table-invoice-number-value">#<?php echo str_pad($data['invoice_number'], 4, '0', STR_PAD_LEFT) ?></span>
-              </td>
-              <td class="invoice-header-table-company invoice-header-table-company-name">
-                <span><?php echo esc_html($data['company_name']) ?></span>
-              </td>
-            </tr>
-            <tr>
-              <td class="invoice-header-table-invoice-issued">
-                <span class="invoice-header-table-invoice-issued-label"><?php echo BackendStrings::get('issued') ?></span>
-                <span class="invoice-header-table-invoice-issued-date"><?php echo esc_html($data['invoice_issued']) ?></span>
-              </td>
-              <td class="invoice-header-table-company">
-                <?php if (!empty($data['company_address'])) : ?>
-                  <span><?php echo esc_html($data['company_address'])?></span>
-                <?php elseif (!empty($data['company_email']) || !empty($data['company_phone'])) : ?>
-                  <?php echo !empty($data['company_email']) ? esc_html($data['company_email']) : ''?>
-                  <?php if (!empty($data['company_email']) && !empty($data['company_phone'])) : ?>
-                    |
-                  <?php endif; ?>
-                  <?php echo !empty($data['company_phone']) ? esc_html($data['company_phone']) : ''?>
-                <?php elseif (!empty($data['company_vat_number'])) : ?>
-                  <?php echo esc_html($data['company_vat_number']) ?>
-                <?php endif; ?>
-              </td>
-            </tr>
-            <?php if ((!empty($data['company_email']) || !empty($data['company_phone'])) && !empty($data['company_address'])) : ?>
-              <tr>
-                <td></td>
-                <td class="invoice-header-table-company">
-                  <?php echo !empty($data['company_email']) ? esc_html($data['company_email']) : ''?>
-                  <?php if (!empty($data['company_email']) && !empty($data['company_phone'])) : ?>
-                    |
-                  <?php endif; ?>
-                  <?php echo !empty($data['company_phone']) ? esc_html($data['company_phone']) : ''?>
-                </td>
-              </tr>
-            <?php endif; ?>
-            <?php if (!empty($data['company_vat_number']) && (!empty($data['company_address']) || !empty($data['company_email']) || !empty($data['company_phone']))) : ?>
-              <tr>
-                <td></td>
-                <td class="invoice-header-table-company">
-                  <?php echo esc_html($data['company_vat_number']) ?>
-                </td>
-              </tr>
-            <?php endif; ?>
+                    <td class="invoice-header-second-line-layout-left">
+                        <table class="invoice-header-table">
+                            <tr>
+                                <td class="invoice-header-table-invoice-number">
+                                    <span class="invoice-header-table-invoice-number-label"><?php echo BackendStrings::get('invoice') ?></span>
+                                    <span class="invoice-header-table-invoice-number-value">#<?php echo str_pad($data['invoice_number'], 4, '0', STR_PAD_LEFT) ?></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="invoice-header-table-invoice-issued">
+                                    <span class="invoice-header-table-invoice-issued-label"><?php echo BackendStrings::get('issued') ?></span>
+                                    <span class="invoice-header-table-invoice-issued-date"><?php echo esc_html($data['invoice_issued']) ?></span>
+                                </td>
+                            </tr>
+                            <?php if (!empty($data['invoice_dates'])) : ?>
+                                <?php foreach ($data['invoice_dates'] as $key => $date) : ?>
+                                    <tr class="invoice-header-table-invoice-issued">
+                                        <td>
+                                            <span class="invoice-header-table-invoice-issued-label"><?php echo BackendStrings::get('booking_date') ?></span>
+                                            <span class="invoice-header-table-invoice-issued-date"><?php echo esc_html($date) ?></span>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </table>
+                    </td>
+                    <td class="invoice-header-second-line-layout-right">
+                        <table class="invoice-header-table invoice-header-table-company">
+                            <tr>
+                                <td class="invoice-header-table-company invoice-header-table-company-name">
+                                    <span><?php echo esc_html($data['company_name']) ?></span>
+                                </td>
+                            </tr>
+                            <?php if (!empty($data['company_address'])) : ?>
+                                <tr>
+                                    <td class="invoice-header-table-company">
+                                        <span><?php echo esc_html($data['company_address'])?></span>
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+                            <?php if (!empty($data['company_email']) || !empty($data['company_phone'])) : ?>
+                                <tr>
+                                    <td class="invoice-header-table-company">
+                                        <?php echo !empty($data['company_email']) ? esc_html($data['company_email']) : ''?>
+                                        <?php if (!empty($data['company_email']) && !empty($data['company_phone'])) : ?>
+                                            |
+                                        <?php endif; ?>
+                                        <?php echo !empty($data['company_phone']) ? esc_html($data['company_phone']) : ''?>
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+                            <?php if (!empty($data['company_vat_number'])) : ?>
+                                <tr>
+                                    <td class="invoice-header-table-company">
+                                        <?php echo esc_html($data['company_vat_number']) ?>
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+                        </table>
+                    </td>
+                  </tr>
           <?php endif; ?>
         </table>
       </div>

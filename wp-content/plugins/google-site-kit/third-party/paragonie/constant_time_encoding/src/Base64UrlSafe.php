@@ -32,7 +32,7 @@ use function pack;
  *
  * @package ParagonIE\ConstantTime
  */
-abstract class Base64UrlSafe extends \Google\Site_Kit_Dependencies\ParagonIE\ConstantTime\Base64
+abstract class Base64UrlSafe extends Base64
 {
     /**
      * Uses bitwise operators instead of table-lookups to turn 6-bit integers
@@ -45,7 +45,7 @@ abstract class Base64UrlSafe extends \Google\Site_Kit_Dependencies\ParagonIE\Con
      * @param int $src
      * @return int
      */
-    protected static function decode6Bits(int $src) : int
+    protected static function decode6Bits(int $src): int
     {
         $ret = -1;
         // if ($src > 0x40 && $src < 0x5b) $ret += $src - 0x41 + 1; // -64
@@ -67,7 +67,7 @@ abstract class Base64UrlSafe extends \Google\Site_Kit_Dependencies\ParagonIE\Con
      * @param int $src
      * @return string
      */
-    protected static function encode6Bits(int $src) : string
+    protected static function encode6Bits(int $src): string
     {
         $diff = 0x41;
         // if ($src > 25) $diff += 0x61 - 0x41 - 26; // 6
@@ -78,6 +78,6 @@ abstract class Base64UrlSafe extends \Google\Site_Kit_Dependencies\ParagonIE\Con
         $diff -= 61 - $src >> 8 & 13;
         // if ($src > 62) $diff += 0x5f - 0x2b - 1; // 3
         $diff += 62 - $src >> 8 & 49;
-        return \pack('C', $src + $diff);
+        return pack('C', $src + $diff);
     }
 }

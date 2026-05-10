@@ -134,7 +134,7 @@ class EmailAction implements Filter {
           ->setParameter('newsletter_id', $newsletterId)
           ->execute()
           ->fetchOne();
-        $queryBuilder->having('COUNT(1) = ' . $linkCount);
+        $queryBuilder->having('COUNT(1) = ' . (is_scalar($linkCount) ? (int)$linkCount : 0));
       }
     }
     $queryBuilder = $queryBuilder->andWhere($where);
@@ -149,6 +149,7 @@ class EmailAction implements Filter {
     $operator = $filterData->getParam('operator') ?? DynamicSegmentFilterData::OPERATOR_ANY;
     $action = $filterData->getAction();
     $newsletters = $filterData->getParam('newsletters');
+    $newsletters = is_array($newsletters) ? $newsletters : [];
 
     $statsSentTable = $this->entityManager->getClassMetadata(StatisticsNewsletterEntity::class)->getTableName();
     $subscribersTable = $this->entityManager->getClassMetadata(SubscriberEntity::class)->getTableName();
@@ -256,16 +257,24 @@ class EmailAction implements Filter {
     }
 
     foreach ($newsletterIds as $newsletterId) {
-      $newsletter = $this->newslettersRepository->findOneById($newsletterId);
+      if (!is_numeric($newsletterId)) {
+        continue;
+      }
+      $newsletterIdInt = (int)$newsletterId;
+      $newsletter = $this->newslettersRepository->findOneById($newsletterIdInt);
       if ($newsletter instanceof NewsletterEntity) {
-        $lookupData['newsletters'][$newsletterId] = $newsletter->getSubject();
+        $lookupData['newsletters'][$newsletterIdInt] = $newsletter->getSubject();
       }
     }
 
     foreach ($linkIds as $linkId) {
-      $link = $this->newsletterLinkRepository->findOneById($linkId);
+      if (!is_numeric($linkId)) {
+        continue;
+      }
+      $linkIdInt = (int)$linkId;
+      $link = $this->newsletterLinkRepository->findOneById($linkIdInt);
       if ($link instanceof NewsletterLinkEntity) {
-        $lookupData['links'][$linkId] = $link->getUrl();
+        $lookupData['links'][$linkIdInt] = $link->getUrl();
       }
     }
 

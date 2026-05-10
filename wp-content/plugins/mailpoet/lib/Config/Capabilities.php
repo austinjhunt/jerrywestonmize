@@ -25,7 +25,7 @@ class Capabilities {
     if ($renderer !== null) {
       $this->renderer = $renderer;
     }
-    if ($wp == null) {
+    if ($wp === null) {
       $wp = new WPFunctions;
     }
     $this->wp = $wp;

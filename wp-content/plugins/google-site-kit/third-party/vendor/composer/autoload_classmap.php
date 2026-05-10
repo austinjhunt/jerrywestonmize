@@ -963,6 +963,7 @@ return array(
     'Google\\Site_Kit_Dependencies\\Monolog\\SignalHandler' => $baseDir . '/monolog/monolog/src/Monolog/SignalHandler.php',
     'Google\\Site_Kit_Dependencies\\Monolog\\Test\\TestCase' => $baseDir . '/monolog/monolog/src/Monolog/Test/TestCase.php',
     'Google\\Site_Kit_Dependencies\\Monolog\\Utils' => $baseDir . '/monolog/monolog/src/Monolog/Utils.php',
+    'Google\\Site_Kit_Dependencies\\Normalizer' => $baseDir . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
     'Google\\Site_Kit_Dependencies\\ParagonIE\\ConstantTime\\Base32' => $baseDir . '/paragonie/constant_time_encoding/src/Base32.php',
     'Google\\Site_Kit_Dependencies\\ParagonIE\\ConstantTime\\Base32Hex' => $baseDir . '/paragonie/constant_time_encoding/src/Base32Hex.php',
     'Google\\Site_Kit_Dependencies\\ParagonIE\\ConstantTime\\Base64' => $baseDir . '/paragonie/constant_time_encoding/src/Base64.php',
@@ -1347,5 +1348,4 @@ return array(
     'Google\\Site_Kit_Dependencies\\phpseclib3\\System\\SSH\\Agent' => $baseDir . '/phpseclib/phpseclib/phpseclib/System/SSH/Agent.php',
     'Google\\Site_Kit_Dependencies\\phpseclib3\\System\\SSH\\Agent\\Identity' => $baseDir . '/phpseclib/phpseclib/phpseclib/System/SSH/Agent/Identity.php',
     'Google\\Site_Kit_Dependencies\\phpseclib3\\System\\SSH\\Common\\Traits\\ReadBytes' => $baseDir . '/phpseclib/phpseclib/phpseclib/System/SSH/Common/Traits/ReadBytes.php',
-    'Normalizer' => $baseDir . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
 );

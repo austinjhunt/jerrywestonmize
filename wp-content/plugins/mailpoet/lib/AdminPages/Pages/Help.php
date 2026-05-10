@@ -79,6 +79,7 @@ class Help {
       ],
       'cronStatus' => $this->cronHelper->getDaemon(),
       'queueStatus' => $mailerLog,
+      'activePlugins' => $this->systemReportCollector->getActivePluginsData(),
     ];
 
     $systemStatusData['cronStatus']['accessible'] = $this->cronHelper->isDaemonAccessible();

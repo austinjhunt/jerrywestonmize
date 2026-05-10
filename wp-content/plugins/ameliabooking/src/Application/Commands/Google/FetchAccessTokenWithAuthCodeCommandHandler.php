@@ -5,6 +5,7 @@ namespace AmeliaBooking\Application\Commands\Google;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Domain\Factory\Google\GoogleCalendarFactory;
+use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
 use AmeliaBooking\Infrastructure\Repository\Google\GoogleCalendarRepository;
@@ -64,13 +65,72 @@ class FetchAccessTokenWithAuthCodeCommandHandler extends CommandHandler
             $accessToken = json_encode($accessToken);
         }
 
-        $googleCalendar = GoogleCalendarFactory::create(['token' => $accessToken]);
+        $hasExistingCalendar = false;
+        try {
+            $googleCalendarRepository->getByProviderId($providerId);
+            $hasExistingCalendar = true;
+        } catch (\Exception $e) {
+            error_log('GoogleCalendar: No existing calendar found, this is the first account. ' . $e->getMessage());
+        }
+
+        $primaryCalendarId = null;
+        if (!$hasExistingCalendar) {
+            try {
+                $provider = $providerRepository->getById($providerId);
+
+                $tempGoogleCalendar = GoogleCalendarFactory::create([
+                    'token' => $accessToken,
+                    'calendarId' => null
+                ]);
+                $provider->setGoogleCalendar($tempGoogleCalendar);
+
+                $calendarList = $googleCalService->listCalendarList($provider);
+                foreach ($calendarList as $calendar) {
+                    if (!empty($calendar['primary'])) {
+                        $primaryCalendarId = $calendar['id'];
+                        break;
+                    }
+                }
+            } catch (\Exception $e) {
+                error_log('GoogleCalendar: Unable to fetch primary calendar - ' . $e->getMessage());
+            }
+        }
+
+        $googleCalendar = GoogleCalendarFactory::create([
+            'token' => $accessToken,
+            'calendarId' => $primaryCalendarId
+        ]);
 
         $googleCalendarRepository->beginTransaction();
 
         do_action('amelia_before_google_calendar_added', $googleCalendar ? $googleCalendar->toArray() : null, $command->getField('userId'));
 
-        if (!$googleCalendarRepository->add($googleCalendar, $providerId)) {
+        $additionalSettings = null;
+        if (!$hasExistingCalendar) {
+            /** @var SettingsService $settingsService */
+            $settingsService = $this->container->get('domain.settings.service');
+            $globalGoogleSettings = $settingsService->getCategorySettings('googleCalendar');
+
+            $additionalSettings = [
+                'insertPendingAppointments' => $globalGoogleSettings['insertPendingAppointments'] ?? false,
+                'includeBufferTime'         => $globalGoogleSettings['includeBufferTimeGoogleCalendar'] ?? false,
+                'title'                     => $globalGoogleSettings['title'] ?? null,
+                'description'               => $globalGoogleSettings['description'] ?? null,
+            ];
+        } else {
+            $existingAccount = $providerRepository->getGoogleCalendarAccounts($providerId)[0] ?? null;
+
+            if ($existingAccount) {
+                $additionalSettings = [
+                    'insertPendingAppointments' => $existingAccount['insertPendingAppointments'] ?? false,
+                    'includeBufferTime'         => $existingAccount['includeBufferTime']         ?? false,
+                    'title'                     => $existingAccount['title']                     ?? null,
+                    'description'               => $existingAccount['description']               ?? null,
+                ];
+            }
+        }
+
+        if (!$googleCalendarRepository->add($googleCalendar, $providerId, $additionalSettings)) {
             $googleCalendarRepository->rollback();
         }
 
@@ -78,7 +138,9 @@ class FetchAccessTokenWithAuthCodeCommandHandler extends CommandHandler
 
         do_action('amelia_after_google_calendar_added', $googleCalendar ? $googleCalendar->toArray() : null, $command->getField('userId'));
 
-        $providerRepository->updateFieldById($providerId, null, 'googleCalendarId');
+        if (!$hasExistingCalendar) {
+            $providerRepository->updateFieldById($providerId, null, 'googleCalendarId');
+        }
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully fetched access token');

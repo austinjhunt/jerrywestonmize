@@ -28,13 +28,20 @@ abstract class AbstractZoomService
      *
      * @return array
      */
-    abstract public function execute($requestUrl, $data, $method);
+    abstract public function execute($requestUrl, $data, $method, $zoomSettings = []);
 
     /**
      *
      * @return array
      */
     abstract public function getUsers();
+
+    /**
+     * @param array $zoomSettings
+     *
+     * @return array
+     */
+    abstract public function validateCredentials($zoomSettings);
 
     /**
      * @param int   $userId

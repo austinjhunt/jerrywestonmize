@@ -94,16 +94,18 @@ class Subscription {
       $checked = true;
     }
     $labelString = $this->settings->get(self::OPTIN_MESSAGE_SETTING_NAME);
-    $template = (string)$this->wp->applyFilters(
+    $defaultTemplate = wp_kses(
+      $this->getSubscriptionField($inputName, $checked, $labelString),
+      $this->allowedHtml
+    );
+    $filtered = $this->wp->applyFilters(
       'mailpoet_woocommerce_checkout_optin_template',
-      wp_kses(
-        $this->getSubscriptionField($inputName, $checked, $labelString),
-        $this->allowedHtml
-      ),
+      $defaultTemplate,
       $inputName,
       $checked,
       $labelString
     );
+    $template = is_string($filtered) ? $filtered : $defaultTemplate;
     // The template has been sanitized above and can be considered safe.
     // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
     echo $template;
@@ -253,7 +255,10 @@ class Subscription {
     $this->subscribersRepository->flush();
 
     try {
-      $this->confirmationEmailMailer->sendConfirmationEmailOnce($subscriber);
+      // Per-list confirmation settings are not resolved here because this path
+      // subscribes to the WooCommerce Customers segment (TYPE_WC_USERS),
+      // which does not support custom confirmation overrides.
+      $this->confirmationEmailMailer->sendConfirmationEmailOnce($subscriber, null, null, true);
     } catch (\Exception $e) {
       // ignore errors
     }

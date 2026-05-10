@@ -2,4 +2,4 @@
 
 if (!defined('ABSPATH')) exit;
 
- return array('version' => 'fa94003b2f9fef8cbd60');
+ return array('version' => 'a27a1f2bbbb100e81df5');

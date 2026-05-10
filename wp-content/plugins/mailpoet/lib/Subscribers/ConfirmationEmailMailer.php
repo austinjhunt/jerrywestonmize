@@ -7,6 +7,7 @@ if (!defined('ABSPATH')) exit;
 
 use Automattic\WooCommerce\EmailEditor\Engine\Renderer\Html2Text;
 use MailPoet\Cron\Workers\SendingQueue\Tasks\Shortcodes;
+use MailPoet\Entities\NewsletterEntity;
 use MailPoet\Entities\SegmentEntity;
 use MailPoet\Entities\SubscriberEntity;
 use MailPoet\Logging\LoggerFactory;
@@ -14,16 +15,22 @@ use MailPoet\Mailer\MailerError;
 use MailPoet\Mailer\MailerFactory;
 use MailPoet\Mailer\MailerLog;
 use MailPoet\Mailer\MetaInfo;
+use MailPoet\Newsletter\NewslettersRepository;
 use MailPoet\Services\AuthorizedEmailsController;
 use MailPoet\Services\Bridge;
 use MailPoet\Settings\SettingsController;
 use MailPoet\Subscription\SubscriptionUrlFactory;
 use MailPoet\Util\Helpers;
 use MailPoet\WP\Functions as WPFunctions;
+use MailPoetVendor\Carbon\Carbon;
 
 class ConfirmationEmailMailer {
 
   const MAX_CONFIRMATION_EMAILS = 3;
+  const ADMIN_CONFIRMATION_RESEND_INTERVAL_DAYS = 7;
+  protected const WC_CONFIRMATION_UNAVAILABLE = 'unavailable';
+  protected const WC_CONFIRMATION_SENT = 'sent';
+  protected const WC_CONFIRMATION_FAILED = 'failed';
 
   /** @var MailerFactory */
   private $mailerFactory;
@@ -46,6 +53,9 @@ class ConfirmationEmailMailer {
   /** @var ConfirmationEmailCustomizer */
   private $confirmationEmailCustomizer;
 
+  /** @var NewslettersRepository */
+  private $newslettersRepository;
+
   /** @var LoggerFactory */
   private $loggerFactory;
 
@@ -54,19 +64,21 @@ class ConfirmationEmailMailer {
 
   public function __construct(
     MailerFactory $mailerFactory,
-    WPFunctions $wp,
     SettingsController $settings,
     SubscribersRepository $subscribersRepository,
     SubscriptionUrlFactory $subscriptionUrlFactory,
-    ConfirmationEmailCustomizer $confirmationEmailCustomizer
+    ConfirmationEmailCustomizer $confirmationEmailCustomizer,
+    NewslettersRepository $newslettersRepository,
+    ?WPFunctions $wp = null
   ) {
     $this->mailerFactory = $mailerFactory;
-    $this->wp = $wp;
+    $this->wp = $wp ?? new WPFunctions();
     $this->settings = $settings;
     $this->mailerMetaInfo = new MetaInfo;
     $this->subscriptionUrlFactory = $subscriptionUrlFactory;
     $this->subscribersRepository = $subscribersRepository;
     $this->confirmationEmailCustomizer = $confirmationEmailCustomizer;
+    $this->newslettersRepository = $newslettersRepository;
     $this->loggerFactory = LoggerFactory::getInstance();
   }
 
@@ -74,13 +86,16 @@ class ConfirmationEmailMailer {
    * Use this method if you want to make sure the confirmation email
    * is not sent multiple times within a single request
    * e.g. if sending confirmation emails from hooks
+   * @param SubscriberEntity $subscriber The subscriber to send the confirmation email to.
+   * @param int|null $confirmationEmailId Optional ID of a specific confirmation email newsletter to use.
+   * @param int|null $confirmationPageId Optional ID of a specific page to use for the confirmation link.
    * @throws \Exception if unable to send the email.
    */
-  public function sendConfirmationEmailOnce(SubscriberEntity $subscriber): bool {
+  public function sendConfirmationEmailOnce(SubscriberEntity $subscriber, ?int $confirmationEmailId = null, ?int $confirmationPageId = null, bool $isPublicFormSend = false): bool {
     if (isset($this->sentEmails[$subscriber->getId()])) {
       return true;
     }
-    return $this->sendConfirmationEmail($subscriber);
+    return $this->sendConfirmationEmail($subscriber, $confirmationEmailId, $confirmationPageId, $isPublicFormSend);
   }
 
   public function clearSentEmailsCache(): void {
@@ -89,52 +104,46 @@ class ConfirmationEmailMailer {
 
   /**
    * Send confirmation email using WooCommerce email system.
+   *
+   * @return string
    */
-  private function sendWCConfirmationEmail(SubscriberEntity $subscriber): bool {
+  protected function sendWCConfirmationEmail(SubscriberEntity $subscriber, ?int $confirmationPageId = null): string {
     try {
-      // Get WooCommerce email instance using the correct function
       if (!function_exists('WC')) {
-        return false;
+        return self::WC_CONFIRMATION_UNAVAILABLE;
       }
 
       $wc = WC();
       if (!$wc || !method_exists($wc, 'mailer')) {
-        return false;
+        return self::WC_CONFIRMATION_UNAVAILABLE;
       }
 
       $mailer = $wc->mailer();
       $emails = $mailer->get_emails();
 
       if (!isset($emails['mailpoet_marketing_confirmation'])) {
-        return false;
+        return self::WC_CONFIRMATION_UNAVAILABLE;
       }
 
       /** @var \MailPoet\WooCommerce\Emails\MarketingConfirmation $email */
       $email = $emails['mailpoet_marketing_confirmation'];
 
       $subscriber_email = $subscriber->getEmail();
-      $activation_link = $this->subscriptionUrlFactory->getConfirmationUrl($subscriber);
+      $activation_link = $this->subscriptionUrlFactory->getConfirmationUrl($subscriber, $confirmationPageId);
       $subscriber_firstname = $subscriber->getFirstName() ?: '';
 
-      $email->trigger($subscriber_email, $activation_link, $subscriber_firstname);
-
-      // Update confirmation count
-      if (!$this->wp->isUserLoggedIn()) {
-        $subscriber->setConfirmationsCount($subscriber->getConfirmationsCount() + 1);
-        $this->subscribersRepository->persist($subscriber);
-        $this->subscribersRepository->flush();
+      if (!$email->trigger($subscriber_email, $activation_link, $subscriber_firstname)) {
+        return self::WC_CONFIRMATION_FAILED;
       }
 
-      $this->sentEmails[$subscriber->getId()] = true;
-      return true;
+      return self::WC_CONFIRMATION_SENT;
 
     } catch (\Exception $e) {
-      // Log error but don't throw - fall back to regular email
       $this->loggerFactory->getLogger(LoggerFactory::TOPIC_SENDING)->error(
         'MailPoet WC Marketing Confirmation Email Error: ' . $e->getMessage(),
         ['error' => $e, 'subscriber_id' => $subscriber->getId()]
       );
-      return false;
+      return self::WC_CONFIRMATION_FAILED;
     }
   }
 
@@ -148,7 +157,7 @@ class ConfirmationEmailMailer {
     ];
   }
 
-  public function getMailBody(array $signupConfirmation, SubscriberEntity $subscriber, array $segmentNames): array {
+  public function getMailBody(array $signupConfirmation, SubscriberEntity $subscriber, array $segmentNames, ?int $confirmationPageId = null): array {
     $body = nl2br($signupConfirmation['body']);
 
     // replace list of segments shortcode
@@ -161,7 +170,7 @@ class ConfirmationEmailMailer {
     // replace activation link
     $body = Helpers::replaceLinkTags(
       $body,
-      $this->subscriptionUrlFactory->getConfirmationUrl($subscriber),
+      $this->subscriptionUrlFactory->getConfirmationUrl($subscriber, $confirmationPageId),
       ['target' => '_blank'],
       'activation_link'
     );
@@ -179,8 +188,10 @@ class ConfirmationEmailMailer {
     return $this->buildEmailData($subject, $body, $text);
   }
 
-  public function getMailBodyWithCustomizer(SubscriberEntity $subscriber, array $segmentNames): array {
-    $newsletter = $this->confirmationEmailCustomizer->getNewsletter();
+  public function getMailBodyWithCustomizer(SubscriberEntity $subscriber, array $segmentNames, ?NewsletterEntity $newsletter = null, ?int $confirmationPageId = null): array {
+    if ($newsletter === null) {
+      $newsletter = $this->confirmationEmailCustomizer->getNewsletter();
+    }
 
     $renderedNewsletter = $this->confirmationEmailCustomizer->render($newsletter);
 
@@ -199,7 +210,7 @@ class ConfirmationEmailMailer {
         'http://[activation_link]', // See MAILPOET-5253
         '[activation_link]',
       ],
-      $this->subscriptionUrlFactory->getConfirmationUrl($subscriber),
+      $this->subscriptionUrlFactory->getConfirmationUrl($subscriber, $confirmationPageId),
       $body
     );
 
@@ -209,21 +220,129 @@ class ConfirmationEmailMailer {
       $subject,
     ] = Helpers::splitObject(Shortcodes::process($body, null, $newsletter, $subscriber, null));
 
+    // Fallback to newsletter subject if extracted subject is empty
+    if (empty($subject)) {
+      $subject = $newsletter->getSubject();
+    }
+    // Final fallback to default subject if still empty
+    if (empty($subject)) {
+      $subject = $this->settings->get('signup_confirmation.subject', __('Confirm your subscription', 'mailpoet'));
+    }
+
     return $this->buildEmailData($subject, $html, $text);
+  }
+
+  /**
+   * @param SubscriberEntity $subscriber The subscriber to send the confirmation email to.
+   * @param int|null $confirmationEmailId Optional ID of a specific confirmation email newsletter to use.
+   * @param int|null $confirmationPageId Optional ID of a specific page to use for the confirmation link.
+   * @throws \Exception if unable to send the email.
+   */
+  public function sendConfirmationEmail(SubscriberEntity $subscriber, ?int $confirmationEmailId = null, ?int $confirmationPageId = null, bool $isPublicFormSend = false) {
+    $signupConfirmation = $this->settings->get('signup_confirmation');
+    if ((bool)$signupConfirmation['enabled'] === false) {
+      return false;
+    }
+
+    if ($isPublicFormSend) {
+      return $this->subscribersRepository->sendPublicConfirmationEmailWithCap(
+        $subscriber,
+        self::MAX_CONFIRMATION_EMAILS,
+        function() use ($subscriber, $signupConfirmation, $confirmationEmailId, $confirmationPageId): bool {
+          $sent = $this->sendConfirmationEmailMessage($subscriber, $signupConfirmation, $confirmationEmailId, $confirmationPageId);
+          if ($sent) {
+            $this->sentEmails[$subscriber->getId()] = true;
+          }
+          return $sent;
+        }
+      );
+    }
+
+    if (
+      !$this->wp->isUserLoggedIn()
+      && $subscriber->getConfirmationsCount() >= self::MAX_CONFIRMATION_EMAILS
+    ) {
+      return false;
+    }
+
+    $sent = $this->sendConfirmationEmailMessage($subscriber, $signupConfirmation, $confirmationEmailId, $confirmationPageId);
+    if (!$sent) {
+      return false;
+    }
+
+    $this->recordSuccessfulConfirmationSend($subscriber);
+    $this->sentEmails[$subscriber->getId()] = true;
+
+    return true;
+  }
+
+  /**
+   * @return array{status: 'sent'|'skipped'|'send_failed', reason?: string}
+   * @throws \Exception if unable to send the email.
+   */
+  public function sendAdminConfirmationEmail(SubscriberEntity $subscriber, ?\DateTimeInterface $oldestLifecycleDate = null): array {
+    $signupConfirmation = $this->settings->get('signup_confirmation');
+    if ((bool)$signupConfirmation['enabled'] === false) {
+      return ['status' => 'skipped', 'reason' => 'confirmation_disabled'];
+    }
+
+    $claim = $this->subscribersRepository->claimAdminConfirmationEmailResend(
+      $subscriber,
+      self::MAX_CONFIRMATION_EMAILS,
+      Carbon::now()->subDays(self::ADMIN_CONFIRMATION_RESEND_INTERVAL_DAYS)->millisecond(0),
+      $oldestLifecycleDate
+    );
+    if (!$claim['claimed']) {
+      return ['status' => 'skipped', 'reason' => $claim['reason'] ?? 'not_found'];
+    }
+
+    try {
+      $sent = $this->sendConfirmationEmailMessage($subscriber, $signupConfirmation);
+    } catch (\Throwable $throwable) {
+      $this->releaseAdminConfirmationEmailClaim($subscriber, $claim);
+      throw $throwable;
+    }
+
+    if (!$sent) {
+      $this->releaseAdminConfirmationEmailClaim($subscriber, $claim);
+      return ['status' => 'send_failed', 'reason' => 'sending_method'];
+    }
+
+    $this->completeAdminConfirmationEmailClaim($subscriber, $claim);
+    $this->sentEmails[$subscriber->getId()] = true;
+    return ['status' => 'sent'];
+  }
+
+  /** @param array{claim_time?: string, previous_last_confirmation_email_sent_at?: string|null, previous_count_confirmations?: int} $claim */
+  private function releaseAdminConfirmationEmailClaim(SubscriberEntity $subscriber, array $claim): void {
+    if (!isset($claim['claim_time'], $claim['previous_count_confirmations'])) {
+      return;
+    }
+    $this->subscribersRepository->releaseAdminConfirmationEmailResendClaim(
+      $subscriber,
+      (string)$claim['claim_time'],
+      $claim['previous_last_confirmation_email_sent_at'] ?? null,
+      (int)$claim['previous_count_confirmations']
+    );
+  }
+
+  /** @param array{claim_time?: string, previous_last_confirmation_email_sent_at?: string|null, previous_count_confirmations?: int} $claim */
+  private function completeAdminConfirmationEmailClaim(SubscriberEntity $subscriber, array $claim): void {
+    if (!isset($claim['claim_time'], $claim['previous_count_confirmations'])) {
+      return;
+    }
+    $this->subscribersRepository->completeAdminConfirmationEmailResendClaim(
+      $subscriber,
+      (string)$claim['claim_time'],
+      $claim['previous_last_confirmation_email_sent_at'] ?? null,
+      (int)$claim['previous_count_confirmations']
+    );
   }
 
   /**
    * @throws \Exception if unable to send the email.
    */
-  public function sendConfirmationEmail(SubscriberEntity $subscriber) {
-    $signupConfirmation = $this->settings->get('signup_confirmation');
-    if ((bool)$signupConfirmation['enabled'] === false) {
-      return false;
-    }
-    if (!$this->wp->isUserLoggedIn() && $subscriber->getConfirmationsCount() >= self::MAX_CONFIRMATION_EMAILS) {
-      return false;
-    }
-
+  private function sendConfirmationEmailMessage(SubscriberEntity $subscriber, array $signupConfirmation, ?int $confirmationEmailId = null, ?int $confirmationPageId = null): bool {
     $authorizationEmailsValidation = $this->settings->get(AuthorizedEmailsController::AUTHORIZED_EMAIL_ADDRESSES_ERROR_SETTING);
     $unauthorizedSenderEmail = isset($authorizationEmailsValidation['invalid_sender_address']);
     if (Bridge::isMPSendingServiceEnabled() && $unauthorizedSenderEmail) {
@@ -231,8 +350,12 @@ class ConfirmationEmailMailer {
     }
 
     // Try to send using WooCommerce email first. Only available in Garden environment.
-    if ($this->sendWCConfirmationEmail($subscriber)) {
-      return true;
+    // Skip WC path when a per-list confirmation email is set, since WC doesn't support custom templates.
+    if ($confirmationEmailId === null) {
+      $wcConfirmationEmailResult = $this->sendWCConfirmationEmail($subscriber, $confirmationPageId);
+      if ($wcConfirmationEmailResult === self::WC_CONFIRMATION_SENT) {
+        return true;
+      }
     }
 
     $segments = $subscriber->getSegments()->toArray();
@@ -240,11 +363,7 @@ class ConfirmationEmailMailer {
       return $segment->getName();
     }, $segments);
 
-    $IsConfirmationEmailCustomizerEnabled = (bool)$this->settings->get(ConfirmationEmailCustomizer::SETTING_ENABLE_EMAIL_CUSTOMIZER, false);
-
-    $email = $IsConfirmationEmailCustomizerEnabled ?
-      $this->getMailBodyWithCustomizer($subscriber, $segmentNames) :
-      $this->getMailBody($signupConfirmation, $subscriber, $segmentNames);
+    $email = $this->getConfirmationEmailBody($signupConfirmation, $subscriber, $segmentNames, $confirmationEmailId, $confirmationPageId);
 
     // send email
     $extraParams = [
@@ -275,13 +394,35 @@ class ConfirmationEmailMailer {
     // E-mail was successfully sent we need to update the MailerLog
     MailerLog::incrementSentCount();
 
-    if (!$this->wp->isUserLoggedIn()) {
-      $subscriber->setConfirmationsCount($subscriber->getConfirmationsCount() + 1);
-      $this->subscribersRepository->persist($subscriber);
-      $this->subscribersRepository->flush();
-    }
-    $this->sentEmails[$subscriber->getId()] = true;
-
     return true;
+  }
+
+  private function recordSuccessfulConfirmationSend(SubscriberEntity $subscriber): void {
+    if ($this->wp->isUserLoggedIn()) {
+      return;
+    }
+    $subscriber->setConfirmationsCount($subscriber->getConfirmationsCount() + 1);
+    $this->subscribersRepository->persist($subscriber);
+    $this->subscribersRepository->flush();
+  }
+
+  /**
+   * Determines which confirmation email body to use based on settings and optional override.
+   */
+  private function getConfirmationEmailBody(array $signupConfirmation, SubscriberEntity $subscriber, array $segmentNames, ?int $confirmationEmailId = null, ?int $confirmationPageId = null): array {
+    // If a specific confirmation email ID is provided, try to use it
+    if ($confirmationEmailId !== null) {
+      $newsletter = $this->newslettersRepository->findOneById($confirmationEmailId);
+      if ($newsletter !== null && $newsletter->getType() === NewsletterEntity::TYPE_CONFIRMATION_EMAIL_CUSTOMIZER) {
+        return $this->getMailBodyWithCustomizer($subscriber, $segmentNames, $newsletter, $confirmationPageId);
+      }
+    }
+
+    // Fall back to global settings
+    $IsConfirmationEmailCustomizerEnabled = (bool)$this->settings->get(ConfirmationEmailCustomizer::SETTING_ENABLE_EMAIL_CUSTOMIZER, false);
+
+    return $IsConfirmationEmailCustomizerEnabled ?
+      $this->getMailBodyWithCustomizer($subscriber, $segmentNames, null, $confirmationPageId) :
+      $this->getMailBody($signupConfirmation, $subscriber, $segmentNames, $confirmationPageId);
   }
 }

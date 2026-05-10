@@ -164,7 +164,7 @@ class Forminator_Textarea extends Forminator_Field {
 			'id'          => $id,
 			'class'       => 'forminator-textarea',
 			'rows'        => 6,
-			'style'       => 'min-height:' . $default_height . 'px;',
+			'style'       => '--forminator-textarea-min-height:' . $default_height . 'px;',
 		);
 
 		// Add maxlength attribute if limit_type is characters.
@@ -228,8 +228,7 @@ class Forminator_Textarea extends Forminator_Field {
 		} else {
 			$html .= self::create_textarea( $textarea, '', '', $required );
 			if ( true === $editor_type && $use_ajax_load ) {
-				$args   = self::get_tinymce_args( $id );
-				$script = '<script>wp.editor.initialize("' . esc_attr( $id ) . '", ' . $args . ');</script>';
+				$script = $this->get_richtext_editor_script( $id );
 				// if it's inside group field and 'Load form using AJAX' option is disabled.
 				if ( empty( $settings['use_ajax_load'] ) && ! empty( $field['parent_group'] ) ) {
 					// wrap into document ready.

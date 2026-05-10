@@ -136,4 +136,9 @@ class StarterGoogleCalendarService extends AbstractGoogleCalendarService
         $endDateTime
     ) {
     }
+
+    public function getCalendarListsForAccounts(array $accounts, Provider $provider): array
+    {
+        return [];
+    }
 }

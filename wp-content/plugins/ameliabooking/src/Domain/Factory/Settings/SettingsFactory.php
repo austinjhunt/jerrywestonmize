@@ -24,8 +24,8 @@ use AmeliaBooking\Domain\ValueObjects\Json;
 class SettingsFactory
 {
     /**
-     * @param Json  $entityJsonData
-     * @param array $globalSettings
+     * @param Json|null $entityJsonData
+     * @param array     $globalSettings
      *
      * @return Settings
      */

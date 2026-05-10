@@ -799,8 +799,8 @@ class BookingApplicationService
     /**
      * Set entities (service, provider, location, customers) to targetAppointment
      *
-     * @param Appointment $appointment
-     * @param Collection  $filledAppointments
+     * @param Appointment     $appointment
+     * @param Collection|null $filledAppointments
      *
      * @return void
      *
@@ -808,9 +808,9 @@ class BookingApplicationService
      * @throws NotFoundException
      * @throws QueryExecutionException
      */
-    public function setAppointmentEntities($appointment, $filledAppointments)
+    public function setAppointmentEntities($appointment, $filledAppointments = null)
     {
-        if ($filledAppointments->length()) {
+        if ($filledAppointments && $filledAppointments->length()) {
             $this->setFilledAppointmentEntities($appointment, $filledAppointments);
         }
 

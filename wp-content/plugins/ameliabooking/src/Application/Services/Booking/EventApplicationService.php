@@ -707,9 +707,9 @@ class EventApplicationService
                             }
                         }
                     }
-                    if (!$bookingOpensSame) {
+                    if (!$bookingClosesSame) {
                         $periodStartClose = DateTimeService::getCustomDateTimeObject($periodStart);
-                        if (isset($eventDateDiffCloses)) {
+                        if ($eventDateDiffCloses) {
                             $periodStartClose = $periodStartClose->sub($eventDateDiffCloses);
                         }
                         $lastEvent->setBookingCloses(new DateTimeValue($periodStartClose));

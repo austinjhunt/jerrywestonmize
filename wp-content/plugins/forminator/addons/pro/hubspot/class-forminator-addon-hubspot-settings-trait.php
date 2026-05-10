@@ -336,17 +336,17 @@ trait Forminator_Hubspot_Settings_Trait {
 			if ( ! empty( $pipeline_request->results ) ) {
 				$default_status = reset( $pipeline_request->results );
 				foreach ( $pipeline_request->results as $key => $data ) {
-					if ( isset( $data->pipelineId ) ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-						$pipeline[ $data->pipelineId ] = $data->label; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-						if ( $pipeline_id === $data->pipelineId ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+					if ( isset( $data->id ) ) {
+						$pipeline[ $data->id ] = $data->label;
+						if ( $pipeline_id === $data->id ) {
 							$pipeline_status = $data->stages;
 						} else {
 							$pipeline_status = $default_status->stages;
 						}
 						if ( ! empty( $pipeline_status ) ) {
 							foreach ( $pipeline_status as $s => $stat ) {
-								if ( isset( $stat->stageId ) ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-									$status[ $stat->stageId ] = $stat->label; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+								if ( isset( $stat->id ) ) {
+									$status[ $stat->id ] = $stat->label;
 								}
 							}
 						}

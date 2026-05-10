@@ -67,7 +67,8 @@ class Daemon {
       } catch (\Exception $e) {
         Helpers::mySqlGoneAwayExceptionHandler($e);
 
-        $workerClassNameParts = explode('\\', get_class($worker));
+        $workerClass = is_object($worker) ? get_class($worker) : '';
+        $workerClassNameParts = explode('\\', $workerClass);
         $workerName = end($workerClassNameParts);
         $errors[] = [
           'worker' => $workerName,
@@ -100,8 +101,11 @@ class Daemon {
     yield $this->workersFactory->createBounceWorker();
     yield $this->workersFactory->createExportFilesCleanupWorker();
     yield $this->workersFactory->createLogCleanupWorker();
+    yield $this->workersFactory->createSendingTaskSubscribersCleanupWorker();
+    yield $this->workersFactory->createSendingQueueBodyCleanupWorker();
     yield $this->workersFactory->createSubscribersEmailCountsWorker();
     yield $this->workersFactory->createInactiveSubscribersWorker();
+    yield $this->workersFactory->createUnconfirmedSubscribersCleanupWorker();
     yield $this->workersFactory->createUnsubscribeTokensWorker();
     yield $this->workersFactory->createWooCommerceSyncWorker();
     yield $this->workersFactory->createAuthorizedSendingEmailsCheckWorker();
@@ -117,5 +121,7 @@ class Daemon {
     yield $this->workersFactory->createBackfillEngagementDataWorker();
     yield $this->workersFactory->createMixpanelWorker();
     yield $this->workersFactory->createTracksWorker();
+    yield $this->workersFactory->createStatisticsExportWorker();
+    yield $this->workersFactory->createBulkConfirmationEmailResendWorker();
   }
 }

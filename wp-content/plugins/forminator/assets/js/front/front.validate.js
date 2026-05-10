@@ -41,7 +41,7 @@
 	$.extend( ForminatorFrontValidate.prototype, {
 
 		init: function () {
-			$( '.forminator-select2' ).on('change', this.element, function (e, param1) {
+			$( '.forminator-select2, .forminator-rating' ).on('change', this.element, function (e, param1) {
 				if ( 'forminator_emulate_trigger' !== param1 ) {
 					$( this ).trigger('focusout');
 				}
@@ -786,7 +786,7 @@
 				minutes = minutesDiv.find( '.time-minutes' ).val();
 			}
 
-			meridiem = minutesDiv.next().find( 'select[name$="ampm"] option:selected' ).val();
+			meridiem = minutesDiv.next().find( 'select.time-ampm option:selected' ).val();
 		}
 
 		if (

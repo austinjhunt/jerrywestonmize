@@ -1,5 +1,6 @@
 <?php
-
+// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery -- Direct $wpdb query is required for this operation.
+// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching -- some query operations need to always receive the most up-to-date or actual data directly from the database, reducing the risk of serving stale information.
 if (!defined('UPDRAFTCENTRAL_CLIENT_DIR')) die('No access.');
 
 /**
@@ -211,7 +212,7 @@ class UpdraftCentral_Media_Commands extends UpdraftCentral_Commands {
 			$media->parent_post_title = get_the_title($media->post_parent);
 			$media->author = get_the_author_meta('display_name', $media->post_author);
 			$media->filename = basename($media->url);
-			$media->date = date('Y/m/d', strtotime($media->post_date));
+			$media->date = date('Y/m/d', strtotime($media->post_date)); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date -- post_date is stored in WP local timezone; gmdate() would produce incorrect values.
 			$media->upload_date = mysql2date(get_option('date_format'), $media->post_date);
 
 			$media->filesize = 0;
@@ -255,7 +256,7 @@ class UpdraftCentral_Media_Commands extends UpdraftCentral_Commands {
 				$image_edit_overwrite = (!defined('IMAGE_EDIT_OVERWRITE') || !IMAGE_EDIT_OVERWRITE) ? 0 : 1;
 				$media->misc = array(
 					'sizer' => $sizer,
-					'rand' => rand(1, 99999),
+					'rand' => wp_rand(1, 99999),
 					'constrained_dims' => $constrained_dims,
 					'rotate_supported' => (int) $rotate_supported,
 					'thumb' => $thumb,
@@ -322,7 +323,13 @@ class UpdraftCentral_Media_Commands extends UpdraftCentral_Commands {
 		$posts = array();
 		if (!empty($result)) {
 			foreach ($result as $post) {
-				array_push($posts, array('ID' => $post->ID, 'title' => $post->post_title));
+				array_push($posts, array(
+					'ID' => $post->ID,
+					'title' => $post->post_title,
+					'post_status' => $post->post_status,
+					'post_date_gmt' => $post->post_date_gmt,
+					'post_modified_gmt' => $post->post_modified_gmt,
+				));
 			}
 		}
 
@@ -354,7 +361,7 @@ class UpdraftCentral_Media_Commands extends UpdraftCentral_Commands {
 			$media_id = wp_insert_post($args, true);
 		} else {
 			$args['ID'] = $params['id'];
-			$args['post_modified'] = date('Y-m-d H:i:s');
+			$args['post_modified'] = date('Y-m-d H:i:s'); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date -- post_modified is stored in WP local timezone; gmdate() would produce incorrect values.
 			$args['post_modified_gmt'] = gmdate('Y-m-d H:i:s');
 
 			$media_id = wp_update_post($args, true);
@@ -449,7 +456,7 @@ class UpdraftCentral_Media_Commands extends UpdraftCentral_Commands {
 		if (!empty($date_options)) {
 			foreach ($date_options as $monthyear) {
 				$timestr = strtotime($monthyear);
-				$options[] = array('label' => date('F Y', $timestr), 'value' => date('n:Y', $timestr));
+				$options[] = array('label' => date('F Y', $timestr), 'value' => date('n:Y', $timestr)); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date -- Post dates are stored in WP local timezone; gmdate() would produce incorrect month/year values.
 			}
 		}
 
@@ -570,7 +577,11 @@ class UpdraftCentral_Media_Commands extends UpdraftCentral_Commands {
 		}
 
 		$msg = (false !== $msg) ? json_encode($msg) : $msg;
-		return $this->_response(array('content' => $msg));
+
+		$full_image = wp_get_attachment_image_src($attachment_id, 'full');
+		$full_image_url = $full_image ? $full_image[0] : '';
+
+		return $this->_response(array('content' => $msg, 'url' => $full_image_url));
 	}
 
 	/**

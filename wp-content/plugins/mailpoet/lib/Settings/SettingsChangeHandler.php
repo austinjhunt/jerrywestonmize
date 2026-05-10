@@ -5,7 +5,9 @@ namespace MailPoet\Settings;
 if (!defined('ABSPATH')) exit;
 
 
+use MailPoet\Cron\CronWorkerScheduler;
 use MailPoet\Cron\Workers\InactiveSubscribers;
+use MailPoet\Cron\Workers\UnconfirmedSubscribersCleanup;
 use MailPoet\Cron\Workers\WooCommerceSync;
 use MailPoet\Entities\ScheduledTaskEntity;
 use MailPoet\Mailer\Mailer;
@@ -28,16 +30,21 @@ class SettingsChangeHandler {
   /** @var SubscribersCountReporter */
   private $subscribersCountReporter;
 
+  /** @var CronWorkerScheduler */
+  private $cronWorkerScheduler;
+
   public function __construct(
     ScheduledTasksRepository $scheduledTasksRepository,
     SettingsController $settingsController,
     Bridge $bridge,
-    SubscribersCountReporter $subscribersCountReporter
+    SubscribersCountReporter $subscribersCountReporter,
+    CronWorkerScheduler $cronWorkerScheduler
   ) {
     $this->scheduledTasksRepository = $scheduledTasksRepository;
     $this->settingsController = $settingsController;
     $this->bridge = $bridge;
     $this->subscribersCountReporter = $subscribersCountReporter;
+    $this->cronWorkerScheduler = $cronWorkerScheduler;
   }
 
   public function onSubscribeOldWoocommerceCustomersChange(): void {
@@ -70,9 +77,13 @@ class SettingsChangeHandler {
     $this->scheduledTasksRepository->flush();
   }
 
+  public function onUnconfirmedSubscribersCleanupEnable(): void {
+    $this->cronWorkerScheduler->scheduleImmediatelyIfNotRunning(UnconfirmedSubscribersCleanup::TASK_TYPE);
+  }
+
   public function onMSSActivate($newSettings) {
     // see mailpoet/assets/js/src/wizard/create_sender_settings.jsx:freeAddress
-    $httpHost = isset($_SERVER['HTTP_HOST']) ? sanitize_text_field(wp_unslash($_SERVER['HTTP_HOST'])) : '';
+    $httpHost = isset($_SERVER['HTTP_HOST']) && is_string($_SERVER['HTTP_HOST']) ? sanitize_text_field(wp_unslash($_SERVER['HTTP_HOST'])) : '';
     $domain = str_replace('www.', '', $httpHost);
     if (
       isset($newSettings['sender']['address'])

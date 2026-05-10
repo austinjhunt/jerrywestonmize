@@ -416,10 +416,9 @@ msgstr "Lägg till dag av"
 msgid "Add Extra"
 msgstr "Lägg till extra"
 
-msgid "Add Google Map API Key to show Google static map on \"Locations\" page."
+msgid ""
+"Add Google Maps API Key to show Google static map on \"Locations\" page."
 msgstr ""
-"Lägg till Google Maps API-nyckel för att visa en statisk Google-karta på "
-"sidan \"Platser\"."
 
 msgid "Add Meta Pixel to track ad conversions and optimize marketing."
 msgstr ""
@@ -455,11 +454,17 @@ msgstr ""
 "Lägg till en omdirigerings-URL för fall där en kund försöker boka en "
 "tidslucka som redan är upptagen."
 
+msgid "Add another account"
+msgstr ""
+
 msgid "Add appointment"
 msgstr "Lägg till avtalad tid"
 
 msgid "Add booking"
 msgstr "Lägg till bokning"
+
+msgid "Add calendar"
+msgstr ""
 
 msgid "Add category"
 msgstr "Lägg till kategori"
@@ -739,6 +744,9 @@ msgstr "Låt anställda hantera sina tjänster"
 
 msgid "Allow employees to manage their special days"
 msgstr "Låt anställda hantera sina speciella dagar"
+
+msgid "Allow employees to view all customers"
+msgstr ""
 
 msgid "Allow multiple bookings per customer"
 msgstr "Tillåt flera bokningar per kund"
@@ -1074,6 +1082,9 @@ msgstr "Är du säker på att du vill ta bort dessa objekt?"
 msgid "Are you sure you want to delete this appointment?"
 msgstr "Är du säker på att du vill ta bort den här avtalade tiden?"
 
+msgid "Are you sure you want to delete this block time?"
+msgstr ""
+
 msgid "Are you sure you want to delete this category?"
 msgstr "Är du säker på att du vill ta bort denna kategori?"
 
@@ -1220,6 +1231,9 @@ msgstr "Tilldelad"
 
 msgid "Assigned Services"
 msgstr "Tilldelade tjänster"
+
+msgid "Assigned employee full name"
+msgstr ""
 
 msgid "Attachment"
 msgstr "Bilaga"
@@ -1455,21 +1469,34 @@ msgid "Block"
 msgstr ""
 
 msgid ""
-"Block booking times that overlap with busy events in the employee’s Apple "
-"Calendar."
-msgstr ""
-"Blockera bokningstider som överlappar med upptagna händelser i medarbetarens "
-"Apple-kalender."
-
-msgid ""
 "Block booking times that overlap with busy events in the employee’s Outlook "
 "Calendar."
 msgstr ""
 "Blockera bokningstider som överlappar med upptagna händelser i medarbetarens "
 "Outlook-kalender."
 
+msgid ""
+"Block booking times that overlap with events in the employee’s Apple "
+"Calendar."
+msgstr ""
+
 msgid "Block customer"
 msgstr "Blockera kund"
+
+msgid "Block time"
+msgstr ""
+
+msgid "Block time from calendars"
+msgstr ""
+
+msgid "Block time has been added."
+msgstr ""
+
+msgid "Block time has been deleted."
+msgstr ""
+
+msgid "Block time has been updated."
+msgstr ""
 
 msgid "Blog"
 msgstr "Blogg"
@@ -2579,6 +2606,9 @@ msgstr "Skapa medarbetare från WP-användare med Medarbetar-roll"
 msgid "Create New"
 msgstr "Skapa ny"
 
+msgid "Create New Tag"
+msgstr ""
+
 msgid ""
 "Create a coupon code customers can enter during booking to get a discount."
 msgstr "Skapa en rabattkod som kunder kan ange vid bokning för att få rabatt."
@@ -2613,6 +2643,9 @@ msgstr "Skapa ny"
 
 msgid "Create new badge"
 msgstr "Skapa nytt emblem"
+
+msgid "Create new tag"
+msgstr ""
 
 msgid ""
 "Create online classrooms automatically for each booked appointment or event."
@@ -2750,6 +2783,9 @@ msgid "Custom pricing spots will override Maximum allowed spots value."
 msgstr ""
 "Anpassade prispunkter kommer att åsidosätta värdet Maximalt tillåtna "
 "prispunkter."
+
+msgid "Custom range"
+msgstr ""
 
 msgid "Custom service duration"
 msgstr "Anpassad servicetid"
@@ -2952,6 +2988,9 @@ msgstr "Datum stigande"
 
 msgid "Date Desc"
 msgstr "Datum fallande"
+
+msgid "Date Picker"
+msgstr ""
 
 msgid "Date Purchased Asc"
 msgstr "Inköpsdatum stigande"
@@ -3161,6 +3200,9 @@ msgstr "Välj period att upprepa"
 
 msgid "Delete appointment"
 msgstr "Ta bort bokning"
+
+msgid "Delete block time"
+msgstr ""
 
 msgid "Delete booking"
 msgstr "Ta bort bokning"
@@ -3551,6 +3593,9 @@ msgstr "Redigera Webhook"
 
 msgid "Edit appointment"
 msgstr "Redigera möte"
+
+msgid "Edit block time"
+msgstr ""
 
 msgid "Edit booking"
 msgstr "Redigera bokning"
@@ -4436,11 +4481,28 @@ msgstr "Evenemanget börjar"
 msgid "Event status"
 msgstr "Händelsestatus"
 
+msgid "Event tags"
+msgstr ""
+
+msgid ""
+"Event tags allow you to label and organize events in Amelia based on "
+"criteria that matter most to your business."
+msgstr ""
+
+msgid "Event tags have been saved."
+msgstr ""
+
+msgid "Event tags setup"
+msgstr ""
+
 msgid "Event ticketing"
 msgstr "Biljettförsäljning"
 
 msgid "Event tickets"
 msgstr "Evenemangsbiljetter"
+
+msgid "Event time scope"
+msgstr ""
 
 msgid "Event title"
 msgstr "Evenemangstitel"
@@ -4450,6 +4512,9 @@ msgstr "Evenemangstitel och beskrivning"
 
 msgid "Event type"
 msgstr "Händelsetyp"
+
+msgid "Event_bookings"
+msgstr ""
 
 msgid "Events"
 msgstr "Evenemang"
@@ -4537,6 +4602,9 @@ msgstr "Exportera mötesdata enkelt"
 
 msgid "Export bookings"
 msgstr "Exportera bokningar"
+
+msgid "Export event booking data with ease"
+msgstr ""
 
 msgid "Express Account"
 msgstr "Expresskonto"
@@ -4869,6 +4937,9 @@ msgstr "Fullbokade evenemang"
 msgid "Fully booked"
 msgstr "Fullbokat"
 
+msgid "Future events"
+msgstr ""
+
 msgid ""
 "GSM (standard Latin) segments contain 160 characters, while UCS-2 (non-GSM - "
 "Cyrillic, emoji, non-standard symbols) contain 70 characters, etc."
@@ -4958,8 +5029,8 @@ msgstr "Google Kalender & Google Meet"
 msgid "Google Calendar setup"
 msgstr "Inställningar för Google Kalender"
 
-msgid "Google Map API key"
-msgstr "Google Maps API-nyckel"
+msgid "Google Maps API key"
+msgstr ""
 
 msgid "Google Maps failed to load. Check your API key and restrictions."
 msgstr ""
@@ -5445,6 +5516,10 @@ msgstr ""
 "fullständiga mötesuppgifter"
 
 msgid ""
+"Improve reporting accuracy by accessing complete event booking data instantly"
+msgstr ""
+
+msgid ""
 "Improved customer retention as clients return to use the remaining sessions "
 "in their package"
 msgstr ""
@@ -5590,6 +5665,9 @@ msgstr "Integrationer"
 
 msgid "Interested in unlocking this feature?"
 msgstr "Intresserad av att låsa upp denna funktion?"
+
+msgid "Invalid Mollie API key."
+msgstr ""
 
 msgid "Invalid Stripe secret key."
 msgstr "Ogiltig hemlig nyckel för Stripe."
@@ -6065,8 +6143,14 @@ msgstr "Gör extra obligatorisk"
 msgid "Make sure you are using the correct WhatsApp credentials."
 msgstr "Se till att du använder rätt WhatsApp-inloggningsuppgifter."
 
+msgid "Make sure you are using the correct Zoom credentials."
+msgstr ""
+
 msgid "Male"
 msgstr "Man"
+
+msgid "Manage Event Tags"
+msgstr ""
 
 msgid "Manage badges"
 msgstr "Hantera märken"
@@ -6083,6 +6167,9 @@ msgid ""
 msgstr ""
 "Hantera avbokningar av evenemang effektivt genom att låta kunder gå med i "
 "väntelistor och fylla lediga platser manuellt."
+
+msgid "Manage event tags"
+msgstr ""
 
 msgid "Manage languages"
 msgstr "Hantera språk"
@@ -6386,6 +6473,9 @@ msgstr "Ny uppdatering"
 msgid "New appointment"
 msgstr "Ny tid"
 
+msgid "New block time"
+msgstr ""
+
 msgid "New category"
 msgstr "Ny kategori"
 
@@ -6598,6 +6688,9 @@ msgstr "Anmärkning (intern)"
 
 msgid "Notice: Please select at least one panel."
 msgstr "Obs: Välj minst en panel."
+
+msgid "Notice: Please select start and end date."
+msgstr ""
 
 msgid "Notification"
 msgstr "Notifikation"
@@ -6919,6 +7012,9 @@ msgstr "Öppet evenemang"
 
 msgid "Open following"
 msgstr "Öppna följande"
+
+msgid "Open side menu"
+msgstr ""
 
 msgid "Opened"
 msgstr "Öppnad"
@@ -7251,6 +7347,9 @@ msgstr "Lösenorden stämmer inte överens"
 msgid "Passwords don't match."
 msgstr "Lösenorden stämmer inte överens."
 
+msgid "Past events"
+msgstr ""
+
 msgid ""
 "Paste the secret key you received after creating your API key pair in Google "
 "reCAPTCHA."
@@ -7512,6 +7611,9 @@ msgstr "Planer"
 msgid "Please Wait"
 msgstr "Vänligen vänta"
 
+msgid "Please add period"
+msgstr ""
+
 msgid "Please cancel the event first before deleting it."
 msgstr "Avbryt evenemanget först innan du tar bort det."
 
@@ -7526,6 +7628,11 @@ msgstr "Vänligen välj tid för bokning"
 
 msgid "Please confirm you are not a robot"
 msgstr "Vänligen bekräfta att du inte är en robot"
+
+msgid ""
+"Please delete this appointment. It cannot be edited due to a conflict with "
+"the associated account."
+msgstr ""
 
 msgid ""
 "Please ensure that services and employees are created and that services are "
@@ -7871,6 +7978,9 @@ msgstr "Vänligen välj tid"
 msgid "Please upload the file"
 msgstr "Ladda upp filen"
 
+msgid "Please use a different email or phone number to complete the booking."
+msgstr ""
+
 msgid ""
 "Please use the built-in Elementor shortcode widget instead of Amelia widget "
 "when adding Amelia to a popup"
@@ -8118,6 +8228,11 @@ msgstr ""
 "Ladda snabbt ner alla mötesdetaljer från sidan Bokningar, vilket gör "
 "rapportering, analys och dokumentation enkelt och effektivt."
 
+msgid ""
+"Quickly download all event booking details from the Event Bookings page, "
+"making reporting, analysis, and record-keeping simple and efficient."
+msgstr ""
+
 msgid "Radio button"
 msgstr "Radioknapp"
 
@@ -8282,8 +8397,8 @@ msgstr "Resterande del av det totala beloppet betalas på plats."
 msgid "Remind me when my SMS balance is low"
 msgstr "Påminn mig när mitt SMS-saldo är lågt"
 
-msgid "Remove Apple Calendar busy slots"
-msgstr "Ta bort upptagna tider i Apple Kalender"
+msgid "Remove Apple Calendar event slots"
+msgstr ""
 
 msgid "Remove Attendee"
 msgstr "Ta bort deltagare"
@@ -8529,6 +8644,9 @@ msgstr ""
 msgid "Save time with fast, one-click appointment exports"
 msgstr "Spara tid med snabb export av bokningar med ett enda klick"
 
+msgid "Save time with fast, one-click event booking exports"
+msgstr ""
+
 msgid "Save time with quick, hassle-free customer data exports"
 msgstr "Spara tid med snabba, smidiga exporter av kunddata"
 
@@ -8762,6 +8880,9 @@ msgstr "Välj minst ett alternativ."
 
 msgid "Select box"
 msgstr "Välj box"
+
+msgid "Select calendar"
+msgstr ""
 
 msgid "Select category"
 msgstr "Välj kategori"
@@ -9978,6 +10099,12 @@ msgstr "Flikar (Alla / Paket / Tjänster)"
 msgid "Tag"
 msgstr "Tagg"
 
+msgid "Tag label"
+msgstr ""
+
+msgid "Tag label cannot be empty"
+msgstr ""
+
 msgid "Tags"
 msgstr "Taggar"
 
@@ -10829,6 +10956,9 @@ msgid ""
 msgstr ""
 "URL som användaren omdirigeras till om bokningen inte kan avbokas på grund "
 "av värdet för ”Minsta tid som krävs före avbokning”."
+
+msgid "Unable to complete plugin activation. Please try again."
+msgstr ""
 
 msgid "Unable to deactivate plugin. Please try again later."
 msgstr "Det gick inte att inaktivera plugin. Försök igen senare."

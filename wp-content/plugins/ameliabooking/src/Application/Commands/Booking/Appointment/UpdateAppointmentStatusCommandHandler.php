@@ -150,6 +150,8 @@ class UpdateAppointmentStatusCommandHandler extends CommandHandler
             $appointment->getProviderId()->getValue()
         );
 
+        $appointment->setService($service);
+
         if (
             $requestedStatus === BookingStatus::APPROVED &&
             (

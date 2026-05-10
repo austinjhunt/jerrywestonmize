@@ -55,6 +55,7 @@ class Cli {
       $wpPost = $newsletter->getWpPost();
       if (!$wpPost) {
         WP_CLI::error("Failed to create a post for the email template {$template['name']}.");
+        return;
       }
 
       $this->wp->wpUpdatePost([

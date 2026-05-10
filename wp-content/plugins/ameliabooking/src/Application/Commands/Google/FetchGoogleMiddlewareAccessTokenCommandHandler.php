@@ -43,18 +43,78 @@ class FetchGoogleMiddlewareAccessTokenCommandHandler extends CommandHandler
             /** @var GoogleCalendarRepository $googleCalendarRepository */
             $googleCalendarRepository = $this->container->get('domain.google.calendar.repository');
 
-            $googleCalendar = GoogleCalendarFactory::create(['token' => $accessToken]);
+            /** @var AbstractGoogleCalendarMiddlewareService $googleCalendarMiddlewareService */
+            $googleCalendarMiddlewareService = $this->container->get('infrastructure.google.calendar.middleware.service');
+
+            $hasExistingCalendar = false;
+            try {
+                $googleCalendarRepository->getByProviderId($providerId);
+                $hasExistingCalendar = true;
+            } catch (\Exception $e) {
+                error_log('GoogleCalendar: No existing calendar found, this is the first account. ' . $e->getMessage());
+            }
+
+            $primaryCalendarId = null;
+            if (!$hasExistingCalendar) {
+                try {
+                    $calendarList = $googleCalendarMiddlewareService->getCalendarList(['token' => $accessToken]);
+                    foreach ($calendarList as $calendar) {
+                        if (!empty($calendar['primary'])) {
+                            $primaryCalendarId = $calendar['id'];
+                            break;
+                        }
+                    }
+                } catch (\Exception $e) {
+                    error_log('GoogleCalendar: Unable to fetch primary calendar - ' . $e->getMessage());
+                }
+            }
+
+            $googleCalendar = GoogleCalendarFactory::create([
+                'token' => $accessToken,
+                'calendarId' => $primaryCalendarId
+            ]);
+
             $googleCalendarRepository->beginTransaction();
 
-            if (!$googleCalendarRepository->add($googleCalendar, $providerId)) {
+            $additionalSettings = null;
+            if (!$hasExistingCalendar) {
+                /** @var SettingsService $settingsService */
+                $settingsService = $this->container->get('domain.settings.service');
+                $globalGoogleSettings = $settingsService->getCategorySettings('googleCalendar');
+
+                $additionalSettings = [
+                    'insertPendingAppointments' => $globalGoogleSettings['insertPendingAppointments'] ?? false,
+                    'includeBufferTime'         => $globalGoogleSettings['includeBufferTimeGoogleCalendar'] ?? false,
+                    'title'                     => $globalGoogleSettings['title'] ?? null,
+                    'description'               => $globalGoogleSettings['description'] ?? null,
+                ];
+            } else {
+                $existingAccount = $providerRepository->getGoogleCalendarAccounts($providerId)[0] ?? null;
+
+                if ($existingAccount) {
+                    $additionalSettings = [
+                        'insertPendingAppointments' => $existingAccount['insertPendingAppointments'] ?? false,
+                        'includeBufferTime'         => $existingAccount['includeBufferTime']         ?? false,
+                        'title'                     => $existingAccount['title']                     ?? null,
+                        'description'               => $existingAccount['description']               ?? null,
+                    ];
+                }
+            }
+
+            if (!$googleCalendarRepository->add($googleCalendar, $providerId, $additionalSettings)) {
                 $googleCalendarRepository->rollback();
+                $result->setResult(CommandResult::RESULT_ERROR);
+                $result->setMessage('Failed to add Google Calendar');
+                return $result;
             }
 
             $googleCalendarRepository->commit();
 
             do_action('amelia_after_google_calendar_added', $googleCalendar ? $googleCalendar->toArray() : null, $providerId);
 
-            $providerRepository->updateFieldById($providerId, null, 'googleCalendarId');
+            if (!$hasExistingCalendar) {
+                $providerRepository->updateFieldById($providerId, null, 'googleCalendarId');
+            }
 
             $result->setResult(CommandResult::RESULT_SUCCESS);
             $result->setMessage('Successfully fetched access token');

@@ -4,6 +4,7 @@ namespace Automattic\WooCommerce\EmailEditor;
 if (!defined('ABSPATH')) exit;
 use Automattic\WooCommerce\EmailEditor\Engine\Email_Editor;
 use Automattic\WooCommerce\EmailEditor\Integrations\Core\Initializer as CoreEmailEditorIntegration;
+use Automattic\WooCommerce\EmailEditor\Integrations\WooCommerce\Coupon_Code_Generator;
 use Automattic\WooCommerce\EmailEditor\Integrations\WooCommerce\Initializer as WooCommerceEmailEditorIntegration;
 class Bootstrap {
  private $email_editor;
@@ -46,6 +47,8 @@ class Bootstrap {
  10,
  1
  );
+ $coupon_generator = new Coupon_Code_Generator();
+ $coupon_generator->init();
  }
  }
  public function initialize(): void {

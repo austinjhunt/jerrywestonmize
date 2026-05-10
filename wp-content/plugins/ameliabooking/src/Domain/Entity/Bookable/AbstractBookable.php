@@ -27,7 +27,7 @@ use AmeliaBooking\Domain\ValueObjects\String\Name;
  */
 abstract class AbstractBookable
 {
-    /** @var Id */
+    /** @var Id | null */
     private $id;
 
     /** @var  Name */
@@ -71,7 +71,7 @@ abstract class AbstractBookable
 
 
     /**
-     * @return Id
+     * @return Id | null
      */
     public function getId()
     {
@@ -79,9 +79,9 @@ abstract class AbstractBookable
     }
 
     /**
-     * @param Id $id
+     * @param Id | null $id
      */
-    public function setId(Id $id)
+    public function setId($id)
     {
         $this->id = $id;
     }

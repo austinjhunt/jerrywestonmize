@@ -90,6 +90,48 @@ class EventTagsRepository extends AbstractRepository implements EventRepositoryI
     }
 
     /**
+     * Delete all tags with a given name (across all events and standalone).
+     *
+     * @param string $name
+     *
+     * @return bool
+     * @throws QueryExecutionException
+     */
+    public function deleteByName($name)
+    {
+        try {
+            $statement = $this->connection->prepare("DELETE FROM {$this->table} WHERE name = :name");
+            $statement->bindParam(':name', $name);
+            $statement->execute();
+            return true;
+        } catch (\Exception $e) {
+            throw new QueryExecutionException('Unable to delete data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+    /**
+     * Rename all tags with $oldName to $newName (across all events and standalone).
+     *
+     * @param string $oldName
+     * @param string $newName
+     *
+     * @return bool
+     * @throws QueryExecutionException
+     */
+    public function updateNameByName($oldName, $newName)
+    {
+        try {
+            $statement = $this->connection->prepare(
+                "UPDATE {$this->table} SET name = :newName WHERE name = :oldName"
+            );
+            $statement->execute([':oldName' => $oldName, ':newName' => $newName]);
+            return true;
+        } catch (\Exception $e) {
+            throw new QueryExecutionException('Unable to save data in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+    /**
      * @param int $eventId
      *
      * @return bool
@@ -129,20 +171,32 @@ class EventTagsRepository extends AbstractRepository implements EventRepositoryI
             }
 
             $where[] = 'eventId IN (' . implode(', ', $queryIds) . ')';
-        }
 
-        $where = $where ? 'WHERE ' . implode(' AND ', $where) : '';
+            $where = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
-        try {
-            $statement = $this->connection->prepare(
-                "SELECT DISTINCT(name) FROM {$this->table} {$where} ORDER BY name"
-            );
+            try {
+                $statement = $this->connection->prepare(
+                    "SELECT DISTINCT(name) FROM {$this->table} {$where} ORDER BY id DESC"
+                );
 
-            $statement->execute($params);
+                $statement->execute($params);
 
-            $rows = $statement->fetchAll();
-        } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to get data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
+                $rows = $statement->fetchAll();
+            } catch (\Exception $e) {
+                throw new QueryExecutionException('Unable to get data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
+            }
+        } else {
+            try {
+                $statement = $this->connection->prepare(
+                    "SELECT id, name FROM {$this->table} WHERE eventId IS NULL ORDER BY id DESC"
+                );
+
+                $statement->execute();
+
+                $rows = $statement->fetchAll();
+            } catch (\Exception $e) {
+                throw new QueryExecutionException('Unable to get data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
+            }
         }
 
         $items = [];

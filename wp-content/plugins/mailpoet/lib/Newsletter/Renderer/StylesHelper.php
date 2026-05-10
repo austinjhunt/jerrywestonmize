@@ -102,20 +102,25 @@ class StylesHelper {
     return $css;
   }
 
-  public static function applyTextAlignment($block) {
+  public static function applyTextAlignment($block, string $defaultAlignment = 'left', string $styleType = 'block') {
     if (is_array($block)) {
-      $textAlignment = isset($block['styles']['block']['textAlign']) ?
-        strtolower($block['styles']['block']['textAlign']) :
-        '';
-      if (preg_match('/center|right|justify/i', (string)$textAlignment)) {
+      if (!isset($block['styles']) || !is_array($block['styles'])) {
+        $block['styles'] = [];
+      }
+      if (!isset($block['styles'][$styleType]) || !is_array($block['styles'][$styleType])) {
+        $block['styles'][$styleType] = [];
+      }
+      $rawTextAlign = $block['styles'][$styleType]['textAlign'] ?? null;
+      $textAlignment = is_string($rawTextAlign) ? trim(strtolower($rawTextAlign)) : '';
+      if (in_array($textAlignment, ['center', 'right', 'justify'], true)) {
         return $block;
       }
-      $block['styles']['block']['textAlign'] = 'left';
+      $block['styles'][$styleType]['textAlign'] = $defaultAlignment;
       return $block;
     }
 
     // Check if text-align is already set to center, right, or justify
-    if (preg_match('/text-align\s*:\s*(center|justify|right)/i', (string)$block)) {
+    if (preg_match('/text-align\s*:\s*(center|justify|right)\s*(;|$)/i', (string)$block)) {
       return $block;
     }
 
@@ -125,7 +130,7 @@ class StylesHelper {
       $block .= ';';
     }
 
-    return $block . 'text-align:left;';
+    return $block . 'text-align:' . $defaultAlignment . ';';
   }
 
   /**

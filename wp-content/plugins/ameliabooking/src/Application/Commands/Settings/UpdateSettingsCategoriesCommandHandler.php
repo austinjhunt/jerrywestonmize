@@ -53,6 +53,11 @@ class UpdateSettingsCategoriesCommandHandler extends CommandHandler
             $categorySettings = $settingsService->getCategorySettings($category);
 
             if ($categorySettings) {
+                if ($category === 'general' && array_key_exists('usedLanguages', $data)) {
+                    $categorySettings['usedLanguages'] = $data['usedLanguages'];
+                    unset($data['usedLanguages']);
+                }
+
                 $categorySettings = array_replace_recursive($categorySettings, $data);
 
                 $settingsService->setCategorySettings($category, $categorySettings);

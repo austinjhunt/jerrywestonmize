@@ -2492,15 +2492,15 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
       validation: {
         validateUnsubscribeLinkPresent: ";
         // line 1886
-        yield ((((($context["mss_active"] ?? null) && (($context["is_wc_transactional_email"] ?? null) != true)) && (($context["is_confirmation_email_template"] ?? null) != true))) ? ("true") : ("false"));
+        yield ((((($context["mss_active"] ?? null) && (($context["is_wc_transactional_email"] ?? null) != true)) && (($context["is_confirmation_email_type"] ?? null) != true))) ? ("true") : ("false"));
         yield ",
         validateReEngageLinkPresent: ";
         // line 1887
-        yield ((((($context["mss_active"] ?? null) && (($context["is_wc_transactional_email"] ?? null) != true)) && (($context["is_confirmation_email_template"] ?? null) != true))) ? ("true") : ("false"));
+        yield ((((($context["mss_active"] ?? null) && (($context["is_wc_transactional_email"] ?? null) != true)) && (($context["is_confirmation_email_type"] ?? null) != true))) ? ("true") : ("false"));
         yield ",
         validateActivationLinkIsPresent: ";
         // line 1888
-        yield ((($context["is_confirmation_email_template"] ?? null)) ? ("true") : ("false"));
+        yield ((($context["is_confirmation_email_type"] ?? null)) ? ("true") : ("false"));
         yield ",
       },
       urls: {
@@ -2594,7 +2594,7 @@ class __TwigTemplate_aa06caf4713b6d5ac2d6909b4a0a21f60afeea73e802e676faab4d7dcfd
         }
         // line 1931
         yield "      ";
-        if (($context["is_confirmation_email_template"] ?? null)) {
+        if (($context["is_confirmation_email_type"] ?? null)) {
             // line 1932
             yield "      hiddenWidgets: ['automatedLatestContentLayout', 'coupon', 'header', 'footer', 'posts', 'products', 'dynamicProducts'],
       ";

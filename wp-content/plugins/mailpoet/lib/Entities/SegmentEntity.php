@@ -83,6 +83,18 @@ class SegmentEntity {
    */
   private $displayInManageSubscriptionPage = false;
 
+  /**
+   * @ORM\Column(type="integer", nullable=true)
+   * @var int|null
+   */
+  private $confirmationEmailId;
+
+  /**
+   * @ORM\Column(type="integer", nullable=true)
+   * @var int|null
+   */
+  private $confirmationPageId;
+
   public function __construct(
     string $name,
     string $type,
@@ -181,6 +193,22 @@ class SegmentEntity {
     $this->displayInManageSubscriptionPage = $state;
   }
 
+  public function getConfirmationEmailId(): ?int {
+    return $this->confirmationEmailId;
+  }
+
+  public function setConfirmationEmailId(?int $confirmationEmailId): void {
+    $this->confirmationEmailId = $confirmationEmailId;
+  }
+
+  public function getConfirmationPageId(): ?int {
+    return $this->confirmationPageId;
+  }
+
+  public function setConfirmationPageId(?int $confirmationPageId): void {
+    $this->confirmationPageId = $confirmationPageId;
+  }
+
   /**
    * Returns connect operand from the first filter, when doesn't exist, then returns a default value.
    * @return string
@@ -191,6 +219,7 @@ class SegmentEntity {
     if (!$firstFilter || !$filterData) {
       return DynamicSegmentFilterData::CONNECT_TYPE_AND;
     }
-    return $filterData->getParam('connect') ?: DynamicSegmentFilterData::CONNECT_TYPE_AND;
+    $connect = $filterData->getParam('connect');
+    return is_string($connect) && $connect !== '' ? $connect : DynamicSegmentFilterData::CONNECT_TYPE_AND;
   }
 }

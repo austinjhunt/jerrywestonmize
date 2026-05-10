@@ -18,7 +18,7 @@ namespace Google\Site_Kit_Dependencies\phpseclib3\Crypt\Common;
  *
  * @author  Jim Wigginton <terrafrost@php.net>
  */
-abstract class StreamCipher extends \Google\Site_Kit_Dependencies\phpseclib3\Crypt\Common\SymmetricKey
+abstract class StreamCipher extends SymmetricKey
 {
     /**
      * Block Length of the cipher

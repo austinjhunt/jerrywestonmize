@@ -70,10 +70,10 @@ class SegmentEntity extends \MailPoet\Entities\SegmentEntity implements \MailPoe
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'name', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'type', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'description', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'dynamicFilters', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'averageEngagementScore', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'averageEngagementScoreUpdatedAt', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'displayInManageSubscriptionPage', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'id', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'createdAt', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'updatedAt', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'deletedAt'];
+            return ['__isInitialized__', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'name', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'type', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'description', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'dynamicFilters', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'averageEngagementScore', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'averageEngagementScoreUpdatedAt', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'displayInManageSubscriptionPage', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'confirmationEmailId', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'confirmationPageId', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'id', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'createdAt', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'updatedAt', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'deletedAt'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'name', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'type', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'description', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'dynamicFilters', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'averageEngagementScore', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'averageEngagementScoreUpdatedAt', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'displayInManageSubscriptionPage', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'id', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'createdAt', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'updatedAt', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'deletedAt'];
+        return ['__isInitialized__', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'name', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'type', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'description', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'dynamicFilters', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'averageEngagementScore', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'averageEngagementScoreUpdatedAt', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'displayInManageSubscriptionPage', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'confirmationEmailId', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'confirmationPageId', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'id', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'createdAt', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'updatedAt', '' . "\0" . 'MailPoet\\Entities\\SegmentEntity' . "\0" . 'deletedAt'];
     }
 
     /**
@@ -345,6 +345,50 @@ class SegmentEntity extends \MailPoet\Entities\SegmentEntity implements \MailPoe
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setDisplayInManageSubscriptionPage', [$state]);
 
         parent::setDisplayInManageSubscriptionPage($state);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getConfirmationEmailId(): ?int
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getConfirmationEmailId', []);
+
+        return parent::getConfirmationEmailId();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setConfirmationEmailId(?int $confirmationEmailId): void
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setConfirmationEmailId', [$confirmationEmailId]);
+
+        parent::setConfirmationEmailId($confirmationEmailId);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getConfirmationPageId(): ?int
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getConfirmationPageId', []);
+
+        return parent::getConfirmationPageId();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setConfirmationPageId(?int $confirmationPageId): void
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setConfirmationPageId', [$confirmationPageId]);
+
+        parent::setConfirmationPageId($confirmationPageId);
     }
 
     /**

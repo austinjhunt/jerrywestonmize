@@ -11,6 +11,7 @@ use MailPoet\API\JSON\Response;
 use MailPoet\API\JSON\ResponseBuilders\NewslettersResponseBuilder;
 use MailPoet\Config\AccessControl;
 use MailPoet\Cron\CronHelper;
+use MailPoet\Cron\Workers\StatisticsExport as StatisticsExportWorker;
 use MailPoet\Doctrine\Validator\ValidationException;
 use MailPoet\Entities\NewsletterEntity;
 use MailPoet\Entities\NewsletterOptionFieldEntity;
@@ -20,6 +21,7 @@ use MailPoet\InvalidStateException;
 use MailPoet\Listing;
 use MailPoet\Newsletter\Listing\NewsletterListingRepository;
 use MailPoet\Newsletter\NewsletterDeleteController;
+use MailPoet\Newsletter\NewsletterResendController;
 use MailPoet\Newsletter\NewsletterSaveController;
 use MailPoet\Newsletter\NewslettersRepository;
 use MailPoet\Newsletter\NewsletterValidator;
@@ -27,10 +29,14 @@ use MailPoet\Newsletter\Preview\SendPreviewController;
 use MailPoet\Newsletter\Preview\SendPreviewException;
 use MailPoet\Newsletter\Scheduler\PostNotificationScheduler;
 use MailPoet\Newsletter\Scheduler\Scheduler;
+use MailPoet\Newsletter\Sending\ScheduledTasksRepository;
+use MailPoet\Newsletter\Statistics\Export\StatisticsExporter;
 use MailPoet\Newsletter\Url as NewsletterUrl;
 use MailPoet\Services\AuthorizedEmailsController;
 use MailPoet\Settings\SettingsController;
+use MailPoet\Subscribers\ConfirmationEmailCustomizer;
 use MailPoet\UnexpectedValueException;
+use MailPoet\Util\License\Features\CapabilitiesManager;
 use MailPoet\Util\License\Features\Subscribers as SubscribersFeature;
 use MailPoet\WP\Emoji;
 use MailPoet\WP\Functions as WPFunctions;
@@ -80,6 +86,9 @@ class Newsletters extends APIEndpoint {
 
   private NewsletterDeleteController $newsletterDeleteController;
 
+  /** @var NewsletterResendController */
+  private $newsletterResendController;
+
   /** @var NewsletterUrl */
   private $newsletterUrl;
 
@@ -91,6 +100,15 @@ class Newsletters extends APIEndpoint {
 
   /** @var AuthorizedEmailsController */
   private $authorizedEmailsController;
+
+  /** @var ScheduledTasksRepository */
+  private $scheduledTasksRepository;
+
+  /** @var CapabilitiesManager */
+  private $capabilitiesManager;
+
+  /** @var ConfirmationEmailCustomizer */
+  private $confirmationEmailCustomizer;
 
   public function __construct(
     Listing\Handler $listingHandler,
@@ -106,10 +124,14 @@ class Newsletters extends APIEndpoint {
     SendPreviewController $sendPreviewController,
     NewsletterSaveController $newsletterSaveController,
     NewsletterDeleteController $newsletterDeleteController,
+    NewsletterResendController $newsletterResendController,
     NewsletterUrl $newsletterUrl,
     Scheduler $scheduler,
     NewsletterValidator $newsletterValidator,
-    AuthorizedEmailsController $authorizedEmailsController
+    AuthorizedEmailsController $authorizedEmailsController,
+    ScheduledTasksRepository $scheduledTasksRepository,
+    CapabilitiesManager $capabilitiesManager,
+    ConfirmationEmailCustomizer $confirmationEmailCustomizer
   ) {
     $this->listingHandler = $listingHandler;
     $this->wp = $wp;
@@ -124,10 +146,14 @@ class Newsletters extends APIEndpoint {
     $this->sendPreviewController = $sendPreviewController;
     $this->newsletterSaveController = $newsletterSaveController;
     $this->newsletterDeleteController = $newsletterDeleteController;
+    $this->newsletterResendController = $newsletterResendController;
     $this->newsletterUrl = $newsletterUrl;
     $this->scheduler = $scheduler;
     $this->newsletterValidator = $newsletterValidator;
     $this->authorizedEmailsController = $authorizedEmailsController;
+    $this->scheduledTasksRepository = $scheduledTasksRepository;
+    $this->capabilitiesManager = $capabilitiesManager;
+    $this->confirmationEmailCustomizer = $confirmationEmailCustomizer;
   }
 
   public function get($data = []) {
@@ -163,12 +189,18 @@ class Newsletters extends APIEndpoint {
         NewslettersResponseBuilder::RELATION_STATISTICS,
     ]);
     $response = $this->wp->applyFilters('mailpoet_api_newsletters_get_after', $response);
+    if (!is_array($response)) {
+      $response = [];
+    }
     $response['preview_url'] = $this->getViewInBrowserUrl($newsletter);
     return $this->successResponse($response);
   }
 
   public function save($data = []) {
     $data = $this->wp->applyFilters('mailpoet_api_newsletters_save_before', $data);
+    if (!is_array($data)) {
+      $data = [];
+    }
     $newsletter = $this->newsletterSaveController->save($data);
     $response = $this->newslettersResponseBuilder->build($newsletter, [
       NewslettersResponseBuilder::RELATION_SEGMENTS,
@@ -406,11 +438,62 @@ class Newsletters extends APIEndpoint {
       $this->wp->doAction('mailpoet_api_newsletters_delete_before', $ids);
       $this->newsletterDeleteController->bulkDelete($ids);
       $this->wp->doAction('mailpoet_api_newsletters_delete_after', $ids);
+    } elseif ($data['action'] === 'export_stats') {
+      return $this->scheduleStatsExport($ids, $data);
     } else {
       throw UnexpectedValueException::create()
         ->withErrors([APIError::BAD_REQUEST => "Invalid bulk action '{$data['action']}' provided."]);
     }
     return $this->successResponse(null, ['count' => count($ids)]);
+  }
+
+  /**
+   * Schedules an asynchronous bulk stats export task and returns its id.
+   * Premium-gated via the detailedAnalytics capability.
+   *
+   * @param int[] $ids
+   */
+  private function scheduleStatsExport(array $ids, array $data) {
+    $capability = $this->capabilitiesManager->getCapability('detailedAnalytics');
+    if ($capability === null || $capability->isRestricted) {
+      return $this->errorResponse([
+        APIError::FORBIDDEN => __('Bulk statistics export requires a MailPoet plan with detailed analytics.', 'mailpoet'),
+      ], [], Response::STATUS_FORBIDDEN);
+    }
+
+    if (empty($ids)) {
+      return $this->badRequest([
+        APIError::BAD_REQUEST => __('No newsletters selected for export.', 'mailpoet'),
+      ]);
+    }
+
+    $format = isset($data['format']) && is_string($data['format'])
+      ? strtolower($data['format'])
+      : StatisticsExporter::FORMAT_CSV;
+    if ($format !== StatisticsExporter::FORMAT_CSV && $format !== StatisticsExporter::FORMAT_XLSX) {
+      return $this->badRequest([
+        APIError::BAD_REQUEST => __('Unsupported export format. Use csv or xlsx.', 'mailpoet'),
+      ]);
+    }
+
+    $task = new ScheduledTaskEntity();
+    $task->setType(StatisticsExportWorker::TASK_TYPE);
+    $task->setStatus(ScheduledTaskEntity::STATUS_SCHEDULED);
+    $task->setScheduledAt(Carbon::now()->millisecond(0));
+    $task->setPriority(ScheduledTaskEntity::PRIORITY_HIGH);
+    $task->setMeta([
+      'job_type' => StatisticsExportWorker::JOB_TYPE_BULK,
+      'newsletter_ids' => array_values(array_map('intval', $ids)),
+      'format' => $format,
+      'requested_by' => (int)$this->wp->getCurrentUserId(),
+    ]);
+    $this->scheduledTasksRepository->persist($task);
+    $this->scheduledTasksRepository->flush();
+
+    return $this->successResponse([
+      'taskId' => (int)$task->getId(),
+      'count' => count($ids),
+    ]);
   }
 
   public function create($data = []) {
@@ -423,7 +506,27 @@ class Newsletters extends APIEndpoint {
     return $this->successResponse($response);
   }
 
-  /** @return NewsletterEntity|null */
+  public function resendToNonOpeners($data = []) {
+    $newsletter = $this->getNewsletter($data);
+    if (!$newsletter) {
+      return $this->errorResponse([
+        APIError::NOT_FOUND => __('This email does not exist.', 'mailpoet'),
+      ]);
+    }
+    $subject = isset($data['subject']) ? (string)$data['subject'] : '';
+    try {
+      $duplicate = $this->newsletterResendController->resendToNonOpeners($newsletter, $subject);
+    } catch (UnexpectedValueException $e) {
+      return $this->badRequest([
+        APIError::BAD_REQUEST => $e->getMessage(),
+      ]);
+    }
+    return $this->successResponse(
+      $this->newslettersResponseBuilder->build($duplicate),
+      ['count' => 1]
+    );
+  }
+
   private function getNewsletter(array $data) {
     return isset($data['id'])
       ? $this->newslettersRepository->findOneById((int)$data['id'])
@@ -434,5 +537,52 @@ class Newsletters extends APIEndpoint {
     $url = $this->newsletterUrl->getViewInBrowserUrl($newsletter);
     // strip protocol to avoid mix content error
     return preg_replace('/^https?:/i', '', $url);
+  }
+
+  /**
+   * Get all confirmation email newsletters for use in form editor.
+   * @return Response
+   */
+  public function getConfirmationEmails() {
+    $newsletters = $this->newslettersRepository->findBy([
+      'type' => NewsletterEntity::TYPE_CONFIRMATION_EMAIL_CUSTOMIZER,
+      'deletedAt' => null,
+    ]);
+
+    $result = [];
+    foreach ($newsletters as $newsletter) {
+      $id = $newsletter->getId();
+      if ($id === null) {
+        continue;
+      }
+      $result[] = [
+        'id' => $id,
+        'subject' => $newsletter->getSubject() ?: __('(no subject)', 'mailpoet'),
+      ];
+    }
+
+    return $this->successResponse($result);
+  }
+
+  /**
+   * Create a new confirmation email from the global default template.
+   * @return Response
+   */
+  public function createConfirmationEmail() {
+    // Get the global default confirmation email as a base
+    $defaultNewsletter = $this->confirmationEmailCustomizer->getNewsletter();
+
+    $newsletterData = [
+      'type' => NewsletterEntity::TYPE_CONFIRMATION_EMAIL_CUSTOMIZER,
+      'subject' => $defaultNewsletter->getSubject(),
+      'body' => json_encode($defaultNewsletter->getBody()),
+    ];
+
+    $newsletter = $this->newsletterSaveController->save($newsletterData);
+
+    return $this->successResponse([
+      'id' => $newsletter->getId(),
+      'subject' => $newsletter->getSubject(),
+    ]);
   }
 }

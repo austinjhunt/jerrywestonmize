@@ -167,11 +167,11 @@ class PaymentCallbackCommandHandler extends CommandHandler
                             break;
 
                         case 'mollie':
-                            $response = $paymentService->fetchPaymentLink(
-                                $command->getField('id')
+                            $molliePayment = $paymentService->fetchPayment(
+                                ['id' => $command->getField('id')]
                             );
 
-                            $status = !empty($response['paidAt']) ? 'paid' : null;
+                            $status = $molliePayment->getStatus() === 'paid' ? 'paid' : null;
 
                             $transactionId = $command->getField('id');
                             break;

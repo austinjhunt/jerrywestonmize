@@ -4,6 +4,8 @@ namespace AmeliaBooking\Application\Commands\Settings\FeaturesIntegrations;
 
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
+use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
+use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 
 class ToggleFeatureIntegrationCommandHandler extends CommandHandler
@@ -15,6 +17,10 @@ class ToggleFeatureIntegrationCommandHandler extends CommandHandler
     public function handle(ToggleFeatureIntegrationCommand $command)
     {
         $result = new CommandResult();
+
+        if (!$command->getPermissionService()->currentUserCanWrite(Entities::SETTINGS)) {
+            throw new AccessDeniedException('You are not allowed to write settings.');
+        }
 
         $this->checkMandatoryFields($command);
 

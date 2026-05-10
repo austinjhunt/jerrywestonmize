@@ -70,10 +70,10 @@ class CustomFieldEntity extends \MailPoet\Entities\CustomFieldEntity implements 
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'MailPoet\\Entities\\CustomFieldEntity' . "\0" . 'name', '' . "\0" . 'MailPoet\\Entities\\CustomFieldEntity' . "\0" . 'type', '' . "\0" . 'MailPoet\\Entities\\CustomFieldEntity' . "\0" . 'params', '' . "\0" . 'MailPoet\\Entities\\CustomFieldEntity' . "\0" . 'id', '' . "\0" . 'MailPoet\\Entities\\CustomFieldEntity' . "\0" . 'createdAt', '' . "\0" . 'MailPoet\\Entities\\CustomFieldEntity' . "\0" . 'updatedAt'];
+            return ['__isInitialized__', '' . "\0" . 'MailPoet\\Entities\\CustomFieldEntity' . "\0" . 'name', '' . "\0" . 'MailPoet\\Entities\\CustomFieldEntity' . "\0" . 'type', '' . "\0" . 'MailPoet\\Entities\\CustomFieldEntity' . "\0" . 'params', '' . "\0" . 'MailPoet\\Entities\\CustomFieldEntity' . "\0" . 'id', '' . "\0" . 'MailPoet\\Entities\\CustomFieldEntity' . "\0" . 'createdAt', '' . "\0" . 'MailPoet\\Entities\\CustomFieldEntity' . "\0" . 'deletedAt', '' . "\0" . 'MailPoet\\Entities\\CustomFieldEntity' . "\0" . 'updatedAt'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'MailPoet\\Entities\\CustomFieldEntity' . "\0" . 'name', '' . "\0" . 'MailPoet\\Entities\\CustomFieldEntity' . "\0" . 'type', '' . "\0" . 'MailPoet\\Entities\\CustomFieldEntity' . "\0" . 'params', '' . "\0" . 'MailPoet\\Entities\\CustomFieldEntity' . "\0" . 'id', '' . "\0" . 'MailPoet\\Entities\\CustomFieldEntity' . "\0" . 'createdAt', '' . "\0" . 'MailPoet\\Entities\\CustomFieldEntity' . "\0" . 'updatedAt'];
+        return ['__isInitialized__', '' . "\0" . 'MailPoet\\Entities\\CustomFieldEntity' . "\0" . 'name', '' . "\0" . 'MailPoet\\Entities\\CustomFieldEntity' . "\0" . 'type', '' . "\0" . 'MailPoet\\Entities\\CustomFieldEntity' . "\0" . 'params', '' . "\0" . 'MailPoet\\Entities\\CustomFieldEntity' . "\0" . 'id', '' . "\0" . 'MailPoet\\Entities\\CustomFieldEntity' . "\0" . 'createdAt', '' . "\0" . 'MailPoet\\Entities\\CustomFieldEntity' . "\0" . 'deletedAt', '' . "\0" . 'MailPoet\\Entities\\CustomFieldEntity' . "\0" . 'updatedAt'];
     }
 
     /**
@@ -292,6 +292,28 @@ class CustomFieldEntity extends \MailPoet\Entities\CustomFieldEntity implements 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setCreatedAt', [$createdAt]);
 
         parent::setCreatedAt($createdAt);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDeletedAt()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getDeletedAt', []);
+
+        return parent::getDeletedAt();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setDeletedAt($deletedAt)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setDeletedAt', [$deletedAt]);
+
+        return parent::setDeletedAt($deletedAt);
     }
 
     /**

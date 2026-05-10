@@ -65,6 +65,9 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Lite\Licence
                 // User
                 Commands\User\LoginCabinetCommand::class                           => new Commands\User\LoginCabinetCommandHandler($c),
                 Commands\User\LogoutCabinetCommand::class                          => new Commands\User\LogoutCabinetCommandHandler($c),
+                // Event Tag
+                Commands\Booking\Event\Tag\GetEventTagsCommand::class              => new Commands\Booking\Event\Tag\GetEventTagsCommandHandler($c),
+                Commands\Booking\Event\Tag\SaveEventTagsCommand::class             => new Commands\Booking\Event\Tag\SaveEventTagsCommandHandler($c),
             ]
         );
     }
@@ -88,6 +91,8 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Lite\Licence
         Routes\Search\Search::routes($app);
 
         Routes\Cabinet\Cabinet::routes($app);
+
+        Routes\Booking\Event\EventTag::routes($app);
     }
 
     /**

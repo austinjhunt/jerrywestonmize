@@ -102,7 +102,7 @@ class GetCouponsCommandHandler extends CommandHandler
 
         if (!empty($params['includeCoupons'])) {
             $additionalCoupons = $couponRepository->getFiltered(
-                ['ids' => $params['includeCoupons']],
+                ['ids' => !is_array($params['includeCoupons']) ? explode(',', $params['includeCoupons']) : $params['includeCoupons']],
                 0
             );
 

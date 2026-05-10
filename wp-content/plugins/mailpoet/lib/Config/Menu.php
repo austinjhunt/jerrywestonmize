@@ -11,6 +11,7 @@ use MailPoet\AdminPages\Pages\AutomationEditor;
 use MailPoet\AdminPages\Pages\AutomationFlowEmbed;
 use MailPoet\AdminPages\Pages\AutomationPreviewEmbed;
 use MailPoet\AdminPages\Pages\AutomationTemplates;
+use MailPoet\AdminPages\Pages\CustomFields as CustomFieldsPage;
 use MailPoet\AdminPages\Pages\DynamicSegments;
 use MailPoet\AdminPages\Pages\ExperimentalFeatures;
 use MailPoet\AdminPages\Pages\FormEditor;
@@ -26,6 +27,7 @@ use MailPoet\AdminPages\Pages\StaticSegments;
 use MailPoet\AdminPages\Pages\Subscribers;
 use MailPoet\AdminPages\Pages\SubscribersExport;
 use MailPoet\AdminPages\Pages\SubscribersImport;
+use MailPoet\AdminPages\Pages\Tags as TagsPage;
 use MailPoet\AdminPages\Pages\Upgrade;
 use MailPoet\AdminPages\Pages\WelcomeWizard;
 use MailPoet\AdminPages\Pages\WooCommerceSetup;
@@ -49,6 +51,8 @@ class Menu {
   const SUBSCRIBERS_PAGE_SLUG = 'mailpoet-subscribers';
   const IMPORT_PAGE_SLUG = 'mailpoet-import';
   const EXPORT_PAGE_SLUG = 'mailpoet-export';
+  const TAGS_PAGE_SLUG = 'mailpoet-tags';
+  const CUSTOM_FIELDS_PAGE_SLUG = 'mailpoet-custom-fields';
   const LISTS_PAGE_SLUG = 'mailpoet-lists';
   const SEGMENTS_PAGE_SLUG = 'mailpoet-segments';
   const SETTINGS_PAGE_SLUG = 'mailpoet-settings';
@@ -153,6 +157,7 @@ class Menu {
 
     if (
       !isset($_REQUEST['page'])
+      || !is_string($_REQUEST['page'])
       || sanitize_text_field(wp_unslash($_REQUEST['page'])) !== 'mailpoet-newsletter-editor'
     ) {
       return;
@@ -384,6 +389,32 @@ class Menu {
       [
         $this,
         'export',
+      ]
+    );
+
+    // tags
+    $this->wp->addSubmenuPage(
+      self::SUBSCRIBERS_PAGE_SLUG,
+      $this->setPageTitle(__('Tags', 'mailpoet')),
+      esc_html__('Tags', 'mailpoet'),
+      AccessControl::PERMISSION_MANAGE_SUBSCRIBERS,
+      self::TAGS_PAGE_SLUG,
+      [
+        $this,
+        'tags',
+      ]
+    );
+
+    // custom fields
+    $this->wp->addSubmenuPage(
+      self::SUBSCRIBERS_PAGE_SLUG,
+      $this->setPageTitle(__('Custom Fields', 'mailpoet')),
+      esc_html__('Custom Fields', 'mailpoet'),
+      AccessControl::PERMISSION_MANAGE_SUBSCRIBERS,
+      self::CUSTOM_FIELDS_PAGE_SLUG,
+      [
+        $this,
+        'customFields',
       ]
     );
 
@@ -718,6 +749,14 @@ class Menu {
     $this->container->get(SubscribersExport::class)->render();
   }
 
+  public function tags() {
+    $this->container->get(TagsPage::class)->render();
+  }
+
+  public function customFields() {
+    $this->container->get(CustomFieldsPage::class)->render();
+  }
+
   public function formEditor() {
     $this->container->get(FormEditor::class)->render();
   }
@@ -777,7 +816,7 @@ class Menu {
   }
 
   public static function isOnMailPoetAutomationPage(): bool {
-    $screenId = isset($_REQUEST['page']) ? sanitize_text_field(wp_unslash($_REQUEST['page'])) : '';
+    $screenId = isset($_REQUEST['page']) && is_string($_REQUEST['page']) ? sanitize_text_field(wp_unslash($_REQUEST['page'])) : '';
     $automationPages = [
         'mailpoet-automation',
         'mailpoet-automation-templates',
@@ -792,7 +831,7 @@ class Menu {
 
   public static function isOnMailPoetAdminPage(?array $exclude = null, $screenId = null) {
     if (is_null($screenId)) {
-      if (empty($_REQUEST['page'])) {
+      if (empty($_REQUEST['page']) || !is_string($_REQUEST['page'])) {
         return false;
       }
       $screenId = sanitize_text_field(wp_unslash($_REQUEST['page']));
@@ -812,7 +851,7 @@ class Menu {
    * to display admin notices only
    */
   public static function addErrorPage(AccessControl $accessControl) {
-    if (!self::isOnMailPoetAdminPage() || !isset($_REQUEST['page'])) {
+    if (!self::isOnMailPoetAdminPage() || !isset($_REQUEST['page']) || !is_string($_REQUEST['page'])) {
       return false;
     }
 
@@ -842,14 +881,14 @@ class Menu {
   }
 
   public function checkPremiumKey(?ServicesChecker $checker = null) {
-    $showNotices = self::isOnMailPoetAdminPage() || (isset($_SERVER['SCRIPT_NAME'])
+    $showNotices = self::isOnMailPoetAdminPage() || (isset($_SERVER['SCRIPT_NAME']) && is_string($_SERVER['SCRIPT_NAME'])
       && stripos(sanitize_text_field(wp_unslash($_SERVER['SCRIPT_NAME'])), 'plugins.php') !== false);
     $checker = $checker ?: $this->servicesChecker;
     $this->premiumKeyValid = $checker->isPremiumKeyValid($showNotices);
   }
 
   public function getPageFromContext(): ?string {
-    $context = isset($_GET['context']) ? sanitize_text_field(wp_unslash($_GET['context'])) : null;
+    $context = isset($_GET['context']) && is_string($_GET['context']) ? sanitize_text_field(wp_unslash($_GET['context'])) : null;
     if ($context === 'automation') {
       return self::AUTOMATIONS_PAGE_SLUG;
     }

@@ -152,7 +152,7 @@ class PageRenderer {
     }
 
     $defaults = [
-      'current_page' => sanitize_text_field(wp_unslash($_GET['page'] ?? '')),
+      'current_page' => sanitize_text_field(wp_unslash(is_string($_GET['page'] ?? null) ? $_GET['page'] : '')),
       'site_name' => $this->wp->wpSpecialcharsDecode($this->wp->getOption('blogname'), ENT_QUOTES),
       'main_page' => Menu::MAIN_PAGE_SLUG,
       'site_url' => $this->wp->siteUrl(),
@@ -171,6 +171,7 @@ class PageRenderer {
       'transactional_emails_opt_in_notice_dismissed' => (bool)$this->userFlags->get('transactional_emails_opt_in_notice_dismissed'),
       'track_wizard_loaded_via_woocommerce' => (bool)$this->settings->get(WelcomeWizard::TRACK_LOADDED_VIA_WOOCOMMERCE_SETTING_NAME),
       'track_wizard_loaded_via_woocommerce_marketing_dashboard' => (bool)$this->settings->get(WelcomeWizard::TRACK_LOADDED_VIA_WOOCOMMERCE_MARKETING_DASHBOARD_SETTING_NAME),
+      // @phpstan-ignore-next-line function.alreadyNarrowedType -- is_callable() detects functions disabled at runtime via disable_functions
       'mail_function_enabled' => function_exists('mail') && is_callable('mail'),
       'admin_plugins_url' => WPFunctions::get()->adminUrl('plugins.php'),
 
@@ -229,7 +230,7 @@ class PageRenderer {
       ) {
         DIPanel::init();
       }
-      if (is_admin() && $this->subscribersCountCacheRecalculation->shouldBeScheduled()) {
+      if ($this->wp->isAdmin() && $this->subscribersCountCacheRecalculation->shouldBeScheduled()) {
         $this->subscribersCountCacheRecalculation->schedule();
       }
 

@@ -15,12 +15,15 @@ use MailPoet\Config\AccessControl;
 use MailPoet\ConflictException;
 use MailPoet\Doctrine\Validator\ValidationException;
 use MailPoet\Entities\SegmentEntity;
+use MailPoet\Entities\StatisticsUnsubscribeEntity;
 use MailPoet\Entities\SubscriberEntity;
 use MailPoet\Entities\TagEntity;
 use MailPoet\Exception;
 use MailPoet\Listing;
 use MailPoet\Segments\SegmentsRepository;
 use MailPoet\Settings\SettingsController;
+use MailPoet\Statistics\Track\Unsubscribes;
+use MailPoet\Subscribers\BulkConfirmationEmailResender;
 use MailPoet\Subscribers\ConfirmationEmailMailer;
 use MailPoet\Subscribers\SubscriberListingRepository;
 use MailPoet\Subscribers\SubscriberSaveController;
@@ -41,7 +44,7 @@ class Subscribers extends APIEndpoint {
   /** @var Listing\Handler */
   private $listingHandler;
 
-  /** @var ConfirmationEmailMailer; */
+  /** @var ConfirmationEmailMailer */
   private $confirmationEmailMailer;
 
   /** @var SubscribersRepository */
@@ -68,6 +71,12 @@ class Subscribers extends APIEndpoint {
   /** @var SettingsController */
   private $settings;
 
+  /** @var Unsubscribes */
+  private $unsubscribesTracker;
+
+  /** @var BulkConfirmationEmailResender */
+  private $bulkConfirmationEmailResender;
+
   public function __construct(
     Listing\Handler $listingHandler,
     ConfirmationEmailMailer $confirmationEmailMailer,
@@ -78,7 +87,9 @@ class Subscribers extends APIEndpoint {
     TagRepository $tagRepository,
     SubscriberSaveController $saveController,
     SubscriberSubscribeController $subscribeController,
-    SettingsController $settings
+    SettingsController $settings,
+    Unsubscribes $unsubscribesTracker,
+    BulkConfirmationEmailResender $bulkConfirmationEmailResender
   ) {
     $this->listingHandler = $listingHandler;
     $this->confirmationEmailMailer = $confirmationEmailMailer;
@@ -90,6 +101,8 @@ class Subscribers extends APIEndpoint {
     $this->saveController = $saveController;
     $this->subscribeController = $subscribeController;
     $this->settings = $settings;
+    $this->unsubscribesTracker = $unsubscribesTracker;
+    $this->bulkConfirmationEmailResender = $bulkConfirmationEmailResender;
   }
 
   public function get($data = []) {
@@ -234,9 +247,23 @@ class Subscribers extends APIEndpoint {
     $subscriber = $this->subscribersRepository->findOneById($id);
     if ($subscriber instanceof SubscriberEntity) {
       try {
-        if ($this->confirmationEmailMailer->sendConfirmationEmail($subscriber)) {
+        // Per-list confirmation settings are not resolved for manual resends;
+        // the global default is used to avoid ambiguity across multiple segments.
+        $result = $this->confirmationEmailMailer->sendAdminConfirmationEmail($subscriber);
+        if ($result['status'] === 'sent') {
           return $this->successResponse();
         } else {
+          $reason = $result['reason'] ?? null;
+          if ($reason === 'max_confirmations_reached') {
+            return $this->errorResponse([
+              APIError::BAD_REQUEST => __('The maximum number of confirmation emails has already been reached for this subscriber.', 'mailpoet'),
+            ], [], Response::STATUS_BAD_REQUEST);
+          }
+          if ($reason === 'recently_sent') {
+            return $this->errorResponse([
+              APIError::BAD_REQUEST => __('A confirmation email was sent recently. Please wait before resending it.', 'mailpoet'),
+            ], [], Response::STATUS_BAD_REQUEST);
+          }
           return $this->errorResponse([
             APIError::UNKNOWN => __('There was a problem with your sending method. Please check if your sending method is properly configured.', 'mailpoet'),
           ]);
@@ -255,6 +282,25 @@ class Subscribers extends APIEndpoint {
 
   public function bulkAction($data = []) {
     $definition = $this->listingHandler->getListingDefinition($data['listing']);
+    if (($data['action'] ?? null) === 'resendConfirmationEmails') {
+      if (!$this->bulkConfirmationEmailResender->canCurrentUserResend()) {
+        return $this->errorResponse([
+          APIError::FORBIDDEN => __('You do not have permission to resend confirmation emails.', 'mailpoet'),
+        ], [], Response::STATUS_FORBIDDEN);
+      }
+      if ($definition->getGroup() !== SubscriberEntity::STATUS_UNCONFIRMED) {
+        return $this->badRequest([
+          'invalid_group' => __('Confirmation emails can be resent in bulk only from the Unconfirmed subscribers view.', 'mailpoet'),
+        ]);
+      }
+      if (!$this->bulkConfirmationEmailResender->isSignupConfirmationEnabled()) {
+        return $this->errorResponse([
+          'confirmation_disabled' => $this->bulkConfirmationEmailResender->getConfirmationDisabledMessage(),
+        ], [], Response::STATUS_BAD_REQUEST);
+      }
+      return $this->successResponse($this->bulkConfirmationEmailResender->queue($definition, $data));
+    }
+
     $ids = $this->subscriberListingRepository->getActionableIds($definition);
 
     $count = 0;
@@ -293,6 +339,7 @@ class Subscribers extends APIEndpoint {
     } elseif ($data['action'] === 'moveToList' && $segment instanceof SegmentEntity) {
       $count = $this->subscribersRepository->bulkMoveToSegment($segment, $ids);
     } elseif ($data['action'] === 'unsubscribe') {
+      $this->trackBulkUnsubscribe($ids);
       $count = $this->subscribersRepository->bulkUnsubscribe($ids);
     } elseif ($data['action'] === 'addTag' && $tag instanceof TagEntity) {
       $count = $this->subscribersRepository->bulkAddTag($tag, $ids);
@@ -335,6 +382,21 @@ class Subscribers extends APIEndpoint {
     return isset($data['tag_id'])
       ? $this->tagRepository->findOneById((int)$data['tag_id'])
       : null;
+  }
+
+  private function trackBulkUnsubscribe(array $ids): void {
+    $subscribers = $this->subscribersRepository->findBy(['id' => $ids]);
+    foreach ($subscribers as $subscriber) {
+      if (
+        $subscriber instanceof SubscriberEntity
+        && $subscriber->getStatus() !== SubscriberEntity::STATUS_UNSUBSCRIBED
+      ) {
+        $this->unsubscribesTracker->track(
+          (int)$subscriber->getId(),
+          StatisticsUnsubscribeEntity::SOURCE_ADMINISTRATOR
+        );
+      }
+    }
   }
 
   private function getErrorMessage(ValidationException $exception): string {

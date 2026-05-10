@@ -13,6 +13,10 @@ use Slim\Http\Request;
  */
 class DisconnectFromGoogleAccountController extends Controller
 {
+    protected $allowedFields = [
+        'accountId'
+    ];
+
     /**
      * @param Request $request
      * @param         $args

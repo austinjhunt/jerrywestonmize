@@ -248,7 +248,7 @@ class CustomerBookingFactory
                 ];
             }
 
-            if ($data[$id] && $customerId && empty($data[$id]['customer'])) {
+            if ($id && $customerId && empty($data[$id]['customer'])) {
                 $data[$id]['customer'] = [
                     'id'           => $customerId,
                     'firstName'    => $row['customer_firstName'],
@@ -263,7 +263,7 @@ class CustomerBookingFactory
                 ];
             }
 
-            if ($data[$id] && $paymentId && empty($data[$id]['payments'][$paymentId])) {
+            if ($id && $paymentId && empty($data[$id]['payments'][$paymentId])) {
                 $data[$id]['payments'][$paymentId] = [
                     'id'                => $paymentId,
                     'customerBookingId' => $id,
@@ -282,7 +282,7 @@ class CustomerBookingFactory
                 ];
             }
 
-            if ($data[$id] && $couponId && empty($data[$id]['coupon'])) {
+            if ($id && $couponId && empty($data[$id]['coupon'])) {
                 $data[$id]['coupon'] = [
                     'id'            => $couponId,
                     'code'          => $row['coupon_code'],
@@ -294,7 +294,7 @@ class CustomerBookingFactory
                 ];
             }
 
-            if ($data[$id] && $bookingEventTicketId && empty($data[$id]['ticketsData'][$bookingEventTicketId])) {
+            if ($id && $bookingEventTicketId && empty($data[$id]['ticketsData'][$bookingEventTicketId])) {
                 $data[$id]['ticketsData'][$bookingEventTicketId] = [
                     'id'                => $bookingEventTicketId,
                     'eventTicketId'     => (int)$row['booking_ticket_eventTicketId'],
@@ -304,7 +304,7 @@ class CustomerBookingFactory
                 ];
             }
 
-            if ($data[$id] && $eventId && empty($data[$id]['event'])) {
+            if ($id && $eventId && empty($data[$id]['event'])) {
                 $data[$id]['event'] = [
                     'id'            => $eventId,
                     'name'          => $row['event_name'],
@@ -318,7 +318,7 @@ class CustomerBookingFactory
                 ];
             }
 
-            if ($data[$id] && $eventProviderId) {
+            if ($id && $eventProviderId) {
                 if ($data[$id]['event']['organizerId'] === $eventProviderId && empty($data[$id]['event']['organizer'])) {
                     $data[$id]['event']['organizer'] = [
                         'id'        => $eventProviderId,
@@ -340,7 +340,7 @@ class CustomerBookingFactory
                 }
             }
 
-            if ($data[$id] && $eventPeriodId && empty($data[$id]['event']['periods'][$eventPeriodId])) {
+            if ($id && $eventPeriodId && empty($data[$id]['event']['periods'][$eventPeriodId])) {
                 $data[$id]['event']['periods'][$eventPeriodId] = [
                     'id'                => $eventPeriodId,
                     'periodStart'       => $row['event_periodStart'],

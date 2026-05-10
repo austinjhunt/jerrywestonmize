@@ -24,8 +24,10 @@ use AmeliaBooking\Application\Services\WebHook\AbstractWebHookApplicationService
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Package;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
+use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Booking\Event\Event;
 use AmeliaBooking\Domain\Entity\Entities;
+use AmeliaBooking\Domain\Entity\User\Customer;
 use AmeliaBooking\Domain\Factory\Booking\Appointment\AppointmentFactory;
 use AmeliaBooking\Domain\Factory\Booking\Event\EventFactory;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
@@ -113,12 +115,13 @@ class BookingAddedEventHandler
         if (!empty($booking['couponId']) && empty($booking['coupon'])) {
             /** @var CouponRepository $couponRepository */
             $couponRepository = $container->get('domain.coupon.repository');
-            $coupon           = $couponRepository->getById($booking['couponId']);
-            if ($coupon) {
+            try {
+                $coupon = $couponRepository->getById($booking['couponId']);
                 $booking['coupon'] = $coupon->toArray();
                 unset($booking['coupon']['serviceList']);
                 unset($booking['coupon']['eventList']);
                 unset($booking['coupon']['packageList']);
+            } catch (NotFoundException $e) {
             }
         }
 
@@ -257,6 +260,18 @@ class BookingAddedEventHandler
 
             $bookingApplicationService->setReservationEntities($recurringReservationObject);
 
+            /** @var CustomerBooking $recurringBooking */
+            foreach ($recurringReservationObject->getBookings()->getItems() as $recurringBooking) {
+                foreach ($recurringData[$key][$type]['bookings'] as $recurringBookingKey => $recurringBookingData) {
+                    if (
+                        $recurringBooking->getCustomer() &&
+                        $recurringBooking->getCustomer()->getId()->getValue() === $recurringBookingData['customerId']
+                    ) {
+                        $recurringData[$key][$type]['bookings'][$recurringBookingKey]['customer'] = $recurringBooking->getCustomer()->toArray();
+                    }
+                }
+            }
+
             $recurringData[$key][$type]['provider'] = $recurringReservationObject->getProvider()->toArray();
 
             $applicationIntegrationService->handleAppointment(
@@ -330,6 +345,31 @@ class BookingAddedEventHandler
                     $reservation['status'] === BookingStatus::APPROVED
                 ) {
                     $reservation['bookings'][$bookingKey]['isChangedStatus'] = true;
+
+                    /** @var Customer $customer */
+                    $customer = $reservationObject->getBookings()->keyExists($bookingKey)
+                        ? $reservationObject->getBookings()->getItem($bookingKey)->getCustomer()
+                        : null;
+
+                    if (
+                        empty($commandResult->getData()['fromLink']) &&
+                        !empty($reservation['bookings'][$bookingKey]['payments'][0]) &&
+                        $customer
+                    ) {
+                        $reservation['bookings'][$bookingKey]['payments'][0]['paymentLinks'] =
+                            $paymentAS->createPaymentLink(
+                                array_merge(
+                                    $data,
+                                    [
+                                        'paymentId' => $reservation['bookings'][$bookingKey]['payments'][0]['id'],
+                                        'booking'   => $reservation['bookings'][$bookingKey],
+                                        'customer'  => $customer->toArray(),
+                                        'bookable'  => $reservationObject->getService()->toArray(),
+                                    ]
+                                ),
+                                $bookingKey
+                            );
+                    }
                 }
             }
         }
@@ -464,6 +504,26 @@ class BookingAddedEventHandler
                         $recurringData[$key][$type]['status'] === BookingStatus::APPROVED
                     ) {
                         $recurringData[$key][$type]['bookings'][$bookingKey]['isChangedStatus'] = true;
+
+                        if (
+                            empty($commandResult->getData()['fromLink']) &&
+                            !empty($recurringData[$key][$type]['bookings'][$bookingKey]['payments'][0]) &&
+                            $recurringData[$key][$type]['bookings'][$bookingKey]['customer']
+                        ) {
+                            $recurringData[$key][$type]['bookings'][$bookingKey]['payments'][0]['paymentLinks'] =
+                                $paymentAS->createPaymentLink(
+                                    array_merge(
+                                        $data,
+                                        [
+                                            'paymentId' => $recurringData[$key][$type]['bookings'][$bookingKey]['payments'][0]['id'],
+                                            'booking'   => $recurringData[$key][$type]['bookings'][$bookingKey],
+                                            'customer'  => $recurringData[$key][$type]['bookings'][$bookingKey]['customer'],
+                                            'bookable'  => $reservationObject->getService()->toArray(),
+                                        ]
+                                    ),
+                                    $bookingKey
+                                );
+                        }
                     }
                 }
 

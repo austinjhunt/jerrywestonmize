@@ -11,6 +11,12 @@ class Buttons extends Abstract_Block_Renderer {
  ) {
  $this->flex_layout_renderer = $flex_layout_renderer;
  }
+ public function render( string $block_content, array $parsed_block, Rendering_Context $rendering_context ): string {
+ $content = $this->render_content( $block_content, $parsed_block, $rendering_context );
+ $email_attrs = $parsed_block['email_attrs'] ?? array();
+ unset( $email_attrs['margin-top'] );
+ return $this->add_spacer_with_context( $content, $email_attrs, $rendering_context );
+ }
  protected function render_content( $block_content, array $parsed_block, Rendering_Context $rendering_context ): string {
  // Ignore font size set on the buttons block.
  // We rely on TypographyPreprocessor to set the font size on the buttons.

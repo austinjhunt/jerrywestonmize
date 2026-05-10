@@ -1088,7 +1088,7 @@ function forminator_addon_replace_custom_vars( $content, $submitted_data, Formin
 
 	$randomed_field_pattern  = 'field-\d+-\d+';
 	$increment_field_pattern = sprintf( '(%s)-\d+', implode( '|', $field_types ) );
-	$pattern                 = '/\{((' . $randomed_field_pattern . ')|(' . $increment_field_pattern . '))(\-[A-Za-z-_]+)?\}/';
+	$pattern                 = '/\{((' . $randomed_field_pattern . ')|(' . $increment_field_pattern . '))(\-[A-Za-z0-9_-]+)?\}/';
 
 	// Find all field ID's.
 	if ( preg_match_all( $pattern, $content, $matches ) ) {

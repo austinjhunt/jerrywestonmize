@@ -213,6 +213,17 @@ class OutlookCalendarMiddlewareService extends AbstractOutlookCalendarMiddleware
     }
 
     /**
+     * Public wrapper for refreshing access token
+     *
+     * @param string $refreshToken
+     * @return array|null
+     */
+    public function refreshAccessToken(string $refreshToken): ?array
+    {
+        return $this->getRefreshAccessToken($refreshToken);
+    }
+
+    /**
      * @param string $accessToken
      * @return array
      */
@@ -393,5 +404,25 @@ class OutlookCalendarMiddlewareService extends AbstractOutlookCalendarMiddleware
             error_log('OutlookCalendar: Failed to send email - ' . $e->getMessage());
             throw new Exception('Failed to send email via Outlook: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Get calendar lists for multiple Outlook accounts
+     *
+     * @param array $accounts
+     *
+     * @return array
+     */
+    public function getCalendarListsForAccounts(array $accounts): array
+    {
+        foreach ($accounts as &$account) {
+            if (isset($account['token']) && $account['token']) {
+                $account['calendarList'] = $this->getCalendarList(['token' => $account['token']]);
+            } else {
+                $account['calendarList'] = [];
+            }
+        }
+
+        return $accounts;
     }
 }

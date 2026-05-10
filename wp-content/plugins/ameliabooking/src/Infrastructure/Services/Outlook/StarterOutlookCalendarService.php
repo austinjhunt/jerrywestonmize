@@ -164,4 +164,14 @@ class StarterOutlookCalendarService extends AbstractOutlookCalendarService
         $attachments = []
     ) {
     }
+
+    public function getCalendarListsForAccounts(array $accounts, Provider $provider): array
+    {
+        return [];
+    }
+
+    public function getUserInfo(Provider $provider): array
+    {
+        return [];
+    }
 }

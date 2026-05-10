@@ -25,10 +25,11 @@ class ZoomService extends AbstractZoomService
      * @param string $accountId
      * @param string $clientId
      * @param string $clientSecret
+     * @param bool   $persist
      *
      * @return string|null
      */
-    private function getAccessToken($accountId, $clientId, $clientSecret)
+    private function getAccessToken($accountId, $clientId, $clientSecret, $persist = true)
     {
         $ch = curl_init('https://zoom.us/oauth/token');
 
@@ -67,11 +68,13 @@ class ZoomService extends AbstractZoomService
 
         $resultArray = json_decode($result, true);
 
-        $this->settingsService->setSetting(
-            'zoom',
-            'accessToken',
-            !empty($resultArray['access_token']) ? $resultArray['access_token'] : ''
-        );
+        if ($persist) {
+            $this->settingsService->setSetting(
+                'zoom',
+                'accessToken',
+                !empty($resultArray['access_token']) ? $resultArray['access_token'] : ''
+            );
+        }
 
         return !empty($resultArray['access_token']) ? $resultArray['access_token'] : null;
     }
@@ -128,9 +131,10 @@ class ZoomService extends AbstractZoomService
      *
      * @return array
      */
-    public function execute($requestUrl, $data, $method)
+    public function execute($requestUrl, $data, $method, $zoomSettings = [])
     {
-        $zoomSettings = $this->settingsService->getCategorySettings('zoom');
+        $storedZoomSettings = $this->settingsService->getCategorySettings('zoom');
+        $zoomSettings = array_merge($storedZoomSettings, $zoomSettings);
 
         $token = $zoomSettings['accessToken'] ?: $this->getAccessToken($zoomSettings['accountId'], $zoomSettings['clientId'], $zoomSettings['clientSecret']);
 
@@ -198,6 +202,47 @@ class ZoomService extends AbstractZoomService
         $response['users'] = $users;
 
         return $response;
+    }
+
+    /**
+     * @param array $zoomSettings
+     *
+     * @return array
+     */
+    public function validateCredentials($zoomSettings)
+    {
+        $token = $this->getAccessToken(
+            $zoomSettings['accountId'],
+            $zoomSettings['clientId'],
+            $zoomSettings['clientSecret'],
+            false
+        );
+
+        $resultArray = $this->request(
+            'https://api.zoom.us/v2/users',
+            null,
+            'GET',
+            $token
+        );
+
+        if (
+            !empty($resultArray['code']) &&
+            ($resultArray['code'] === 401 || $resultArray['code'] === 4711)
+        ) {
+            $resultArray = $this->request(
+                'https://api.zoom.us/v2/users',
+                null,
+                'GET',
+                $this->getAccessToken(
+                    $zoomSettings['accountId'],
+                    $zoomSettings['clientId'],
+                    $zoomSettings['clientSecret'],
+                    false
+                )
+            );
+        }
+
+        return $resultArray;
     }
 
     /**

@@ -74,7 +74,7 @@ class Forminator_GFBlock_Forms extends Forminator_GFBlock_Abstract {
 	 */
 	public function preview_block( $properties = array() ) {
 		if ( isset( $properties['module_id'] ) ) {
-			$html = forminator_form( $properties['module_id'], true, false );
+			$html = forminator_form( $properties['module_id'], true, true );
 
 			return $html;
 		}
@@ -93,7 +93,7 @@ class Forminator_GFBlock_Forms extends Forminator_GFBlock_Abstract {
 		wp_enqueue_script(
 			'forminator-block-forms',
 			forminator_gutenberg()->get_plugin_url() . '/js/forms-block.min.js',
-			array( 'wp-blocks', 'wp-i18n', 'wp-element' ),
+			array( 'wp-blocks', 'wp-i18n', 'wp-element', 'wp-block-editor' ),
 			filemtime( forminator_gutenberg()->get_plugin_dir() . 'js/forms-block.min.js' ),
 			false
 		);

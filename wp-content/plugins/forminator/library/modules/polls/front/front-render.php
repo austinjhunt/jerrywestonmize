@@ -192,7 +192,9 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 		if ( 'open' === $status_info['status'] ) {
 			$hidden_wrap = '<div role="alert" aria-live="polite" class="forminator-response-message" aria-hidden="true">';
 			if ( ! $is_preview ) {
-				$label_class  = filter_input( INPUT_GET, 'saved', FILTER_VALIDATE_BOOLEAN ) ? 'forminator-success' : 'forminator-error';
+				// Check both GET (static render) and POST (ajax load) for saved parameter.
+				$saved        = filter_input( INPUT_GET, 'saved', FILTER_VALIDATE_BOOLEAN ) || filter_input( INPUT_POST, 'saved', FILTER_VALIDATE_BOOLEAN );
+				$label_class  = $saved ? 'forminator-success' : 'forminator-error';
 				$message_wrap = '<div role="alert" aria-live="polite" class="forminator-response-message forminator-show ' . esc_attr( $label_class ) . '" >';
 			} else {
 				$message_wrap = $hidden_wrap;
@@ -205,13 +207,33 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 		$custom_message = trim( $custom_message );
 		$html          .= $custom_message;
 
-			ob_start();
+		ob_start();
 
-		if ( filter_input( INPUT_GET, 'saved', FILTER_VALIDATE_BOOLEAN ) && ! filter_input( INPUT_GET, 'results', FILTER_VALIDATE_BOOLEAN ) ) {
-			$form_id   = filter_input( INPUT_GET, 'form_id', FILTER_VALIDATE_INT );
+		// Check both GET (static render) and POST (ajax load) for URL parameters.
+		$saved   = filter_input( INPUT_GET, 'saved', FILTER_VALIDATE_BOOLEAN ) || filter_input( INPUT_POST, 'saved', FILTER_VALIDATE_BOOLEAN );
+		$results = filter_input( INPUT_GET, 'results', FILTER_VALIDATE_BOOLEAN ) || filter_input( INPUT_POST, 'results', FILTER_VALIDATE_BOOLEAN );
+
+		if ( $saved && ! $results ) {
+			$form_id = filter_input( INPUT_GET, 'form_id', FILTER_VALIDATE_INT );
+			if ( ! $form_id ) {
+				$form_id = filter_input( INPUT_POST, 'form_id', FILTER_VALIDATE_INT );
+			}
+
+			// Prefer submitted render_id from URL, then ajax-provided saved_render_id fallback.
 			$render_id = filter_input( INPUT_GET, 'render_id', FILTER_VALIDATE_INT );
-			if ( $form_id === (int) $this->model->id
-				&& $render_id === (int) self::$render_ids[ $this->model->id ] ) {
+			if ( null === $render_id || false === $render_id ) {
+				$render_id = filter_input( INPUT_POST, 'saved_render_id', FILTER_VALIDATE_INT );
+
+				if ( null === $render_id || false === $render_id ) {
+					$render_id = filter_input( INPUT_POST, 'render_id', FILTER_VALIDATE_INT );
+				}
+			}
+
+			$is_same_render = is_int( $render_id ) &&
+				isset( self::$render_ids[ $this->model->id ] ) &&
+				$render_id === (int) self::$render_ids[ $this->model->id ];
+
+			if ( $form_id === (int) $this->model->id && $is_same_render ) {
 
 				$this->track_views = false; ?>
 
@@ -219,25 +241,21 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 
 				<?php
 			}
-		} else {
-
-			$action = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_SPECIAL_CHARS );
-			if (
+		} elseif (
 				! $is_preview &&
 				! $this->model->current_user_can_vote() &&
-				! $action
+				! $custom_message &&
+				! $saved
 			) {
 
-				$this->track_views = false;
-				?>
-
-					<p class="forminator-label--<?php echo esc_attr( $label_class ); ?>"><?php esc_html_e( 'You have already voted for this poll.', 'forminator' ); ?></p>
-
-				<?php
-			}
+			// Show error when user already voted - but not right after successful submission.
+			$this->track_views = false;
+			?>
+				<p class="forminator-label--<?php echo esc_attr( $label_class ); ?>"><?php esc_html_e( 'You have already voted for this poll.', 'forminator' ); ?></p>
+			<?php
 		}
 
-			$message = ob_get_clean();
+		$message = ob_get_clean();
 
 		if ( $message ) {
 			$html .= $message_wrap . $message . '</div>';
@@ -1327,5 +1345,20 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 		);
 
 		return $options;
+	}
+
+	/**
+	 * Skip ajax loader JS when the poll was already fully rendered (user already voted).
+	 *
+	 * @param bool  $is_preview  Is preview.
+	 * @param array $preview_data Preview data.
+	 * @param array $lead_data    Lead data.
+	 * @param bool  $is_block_editor Is block editor.
+	 */
+	public function ajax_loader( $is_preview, $preview_data = array(), $lead_data = array(), $is_block_editor = false ) {
+		if ( is_object( $this->model ) && ! $this->model->current_user_can_vote() ) {
+			return;
+		}
+		parent::ajax_loader( $is_preview, $preview_data, $lead_data, $is_block_editor );
 	}
 }

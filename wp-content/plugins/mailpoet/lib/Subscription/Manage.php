@@ -82,8 +82,8 @@ class Manage {
   }
 
   public function onSave() {
-    $action = (isset($_POST['action']) ? sanitize_text_field(wp_unslash($_POST['action'])) : '');
-    $token = (isset($_POST['token']) ? sanitize_text_field(wp_unslash($_POST['token'])) : '');
+    $action = (isset($_POST['action']) && is_string($_POST['action']) ? sanitize_text_field(wp_unslash($_POST['action'])) : '');
+    $token = (isset($_POST['token']) && is_string($_POST['token']) ? sanitize_text_field(wp_unslash($_POST['token'])) : '');
 
     if ($action !== 'mailpoet_subscription_update' || empty($_POST['data'])) {
       $this->urlHelper->redirectBack();
@@ -92,11 +92,11 @@ class Manage {
     $sanitize = function ($value) {
       if (is_array($value)) {
         foreach ($value as $k => $v) {
-          $value[sanitize_text_field($k)] = sanitize_text_field($v);
+          $value[sanitize_text_field((string)$k)] = sanitize_text_field(is_scalar($v) ? (string)$v : '');
         }
         return $value;
       };
-      return sanitize_text_field($value);
+      return sanitize_text_field(is_scalar($value) ? (string)$value : '');
     };
 
     // custom sanitization via $sanitize
@@ -108,20 +108,20 @@ class Manage {
     if (!empty($subscriberData['email'])) {
       $subscriber = $this->subscribersRepository->findOneBy(['email' => $subscriberData['email']]);
 
-      if (
-        ($subscriberData['status'] === SubscriberEntity::STATUS_UNSUBSCRIBED)
-        && ($subscriber instanceof SubscriberEntity)
-        && ($subscriber->getStatus() === SubscriberEntity::STATUS_SUBSCRIBED)
-      ) {
-        $this->unsubscribesTracker->track(
-          (int)$subscriber->getId(),
-          StatisticsUnsubscribeEntity::SOURCE_MANAGE
-        );
-      }
-
       if ($subscriber && $this->linkTokens->verifyToken($subscriber, $token)) {
         if ($subscriberData['email'] !== Pages::DEMO_EMAIL) {
+          $shouldTrackUnsubscribe = (
+            ($subscriberData['status'] ?? '') === SubscriberEntity::STATUS_UNSUBSCRIBED
+            && $subscriber instanceof SubscriberEntity
+            && $subscriber->getStatus() === SubscriberEntity::STATUS_SUBSCRIBED
+          );
           $subscriber = $this->subscriberSaveController->createOrUpdate($subscriberData, $subscriber);
+          if ($shouldTrackUnsubscribe) {
+            $this->unsubscribesTracker->track(
+              (int)$subscriber->getId(),
+              StatisticsUnsubscribeEntity::SOURCE_MANAGE
+            );
+          }
           $this->subscriberSaveController->updateCustomFields($this->filterOutEmptyMandatoryFields($subscriberData), $subscriber);
           $this->updateSubscriptions($subscriber, $subscriberData);
         }
@@ -133,9 +133,10 @@ class Manage {
   }
 
   private function updateSubscriptions(SubscriberEntity $subscriber, array $subscriberData): void {
+    /** @var string[] $segmentsIds */
     $segmentsIds = [];
     if (isset($subscriberData['segments']) && is_array($subscriberData['segments'])) {
-      $segmentsIds = $subscriberData['segments'];
+      $segmentsIds = array_map('strval', array_filter($subscriberData['segments'], 'is_scalar'));
     }
 
     // Unsubscribe from all other segments already subscribed to
@@ -216,7 +217,7 @@ class Manage {
    */
   private function getMandatory(): array {
     $mandatory = [];
-    $requiredCustomFields = $this->customFieldsRepository->findAll();
+    $requiredCustomFields = $this->customFieldsRepository->findAllActive();
     foreach ($requiredCustomFields as $customField) {
       $params = $customField->getParams();
       if (

@@ -27,6 +27,7 @@ use AmeliaBooking\Domain\Entity\Coupon\Coupon;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
+use AmeliaBooking\Domain\Entity\User\Customer;
 use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Domain\Factory\Bookable\Service\PackageCustomerFactory;
 use AmeliaBooking\Domain\Factory\Bookable\Service\PackageFactory;
@@ -56,10 +57,10 @@ use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageCustomerServ
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
-use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
 use AmeliaBooking\Infrastructure\Repository\Cache\CacheRepository;
 use AmeliaBooking\Infrastructure\Repository\Coupon\CouponRepository;
 use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
+use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\AppointmentEditedEventHandler;
@@ -121,13 +122,7 @@ class WooCommerceService
             add_action('woocommerce_order_status_on-hold', [self::class, 'orderStatusChanged'], 10, 1);
             add_action('woocommerce_order_status_processing', [self::class, 'orderStatusChanged'], 10, 1);
         } else {
-            add_action("woocommerce_order_status_pending", [self::class, 'orderStatusChanged'], 10, 1);
-            add_action("woocommerce_order_status_on-hold", [self::class, 'orderStatusChanged'], 10, 1);
-            add_action("woocommerce_order_status_processing", [self::class, 'orderStatusChanged'], 10, 1);
-            add_action("woocommerce_order_status_completed", [self::class, 'orderStatusChanged'], 10, 1);
-            add_action("woocommerce_order_status_cancelled", [self::class, 'orderStatusChanged'], 10, 1);
-            add_action("woocommerce_order_status_refunded", [self::class, 'orderStatusChanged'], 10, 1);
-            add_action("woocommerce_order_status_failed", [self::class, 'orderStatusChanged'], 10, 1);
+            add_action("woocommerce_order_status_changed", [self::class, 'orderStatusChanged'], 10, 1);
         }
 
         add_filter('woocommerce_thankyou', [self::class, 'redirectAfterOrderReceived'], 10, 2);
@@ -1724,11 +1719,21 @@ class WooCommerceService
                     }
                 }
 
+                /** @var CustomerRepository $customerRepository */
+                $customerRepository = self::$container->get('domain.users.customers.repository');
+
+                /** @var Customer $customer */
+                $customer = !empty($wc_item[self::AMELIA]['bookings'][0]['customer'])
+                    ? UserFactory::create($wc_item[self::AMELIA]['bookings'][0]['customer'])
+                    : $customerRepository->getById($wc_item[self::AMELIA]['bookings'][0]['customerId']);
+
+                $wc_item[self::AMELIA]['bookings'][0]['customer'] = $customer ? $customer->toArray() : [];
+
                 $placeholderData = $placeholderService->getPlaceholdersData(
                     $reservationData,
                     0,
                     'email',
-                    UserFactory::create($wc_item[self::AMELIA]['bookings'][0]['customer'])
+                    $customer
                 );
 
                 $placeholderData['customer_firstName'] = $wc_item[self::AMELIA]['bookings'][0]['customer']['firstName'];
@@ -1849,7 +1854,7 @@ class WooCommerceService
         $taxes = self::getTaxes();
 
         /** @var Coupon $coupon */
-        $coupon = !empty($bookableData['coupons'][$wcItemAmeliaCache['couponId']])
+        $coupon = !empty($wcItemAmeliaCache['couponId']) && !empty($bookableData['coupons'][$wcItemAmeliaCache['couponId']])
             ? CouponFactory::create($bookableData['coupons'][$wcItemAmeliaCache['couponId']])
             : null;
 
@@ -2375,6 +2380,7 @@ class WooCommerceService
             $result->setData(
                 [
                     Entities::APPOINTMENT          => $bookingData[Entities::APPOINTMENT],
+                    'oldAppointmentStatus'         => $bookingData['oldAppointmentStatus'],
                     'appointmentStatusChanged'     => $bookingData['appointmentStatusChanged'],
                     'appointmentRescheduled'       => false,
                     'bookingsWithChangedStatus'    => [$bookingData[Entities::BOOKING]],
@@ -2411,6 +2417,8 @@ class WooCommerceService
         /** @var CustomerBooking $booking */
         $booking = $bookingRepository->getById($payment->getCustomerBookingId()->getValue());
 
+        $oldBookingStatus = $booking->getStatus()->getValue();
+
         $bookingData = $reservationService->updateStatus($booking, $requestedStatus);
 
         if ($runActions) {
@@ -2421,7 +2429,7 @@ class WooCommerceService
                     'type'                 => Entities::EVENT,
                     Entities::EVENT        => $bookingData[Entities::EVENT],
                     Entities::BOOKING      => $bookingData[Entities::BOOKING],
-                    'bookingStatusChanged' => true,
+                    'bookingStatusChanged' => $oldBookingStatus !== $requestedStatus,
                 ]
             );
 
@@ -2663,6 +2671,16 @@ class WooCommerceService
                             ) {
                                 $cacheData['request']['state']['appointment']['bookings'][0]['customer'] =
                                     $data['bookings'][0]['customer'];
+                            }
+
+                            if (
+                                !empty($cacheData['request']['state']['customerInfo']) &&
+                                !empty($data['bookings'][0]['customer'])
+                            ) {
+                                $cacheData['request']['state']['customerInfo'] = array_merge(
+                                    $cacheData['request']['state']['customerInfo'],
+                                    $data['bookings'][0]['customer']
+                                );
                             }
 
                             return array_merge(
@@ -2921,7 +2939,7 @@ class WooCommerceService
         $order = new \WC_Order($order_id);
 
         if (self::isAmeliaOrder($order)) {
-            if (self::isAmeliaOrderProcessed($order)) {
+            if (self::isAmeliaOrderValidForBooking($order) && self::isAmeliaOrderProcessed($order)) {
                 self::manageOrderUpdateStatus($order);
             } elseif (self::isAmeliaOrderValidForBooking($order)) {
                 if (self::isAmeliaOrderFromPaymentLink($order)) {
@@ -3194,6 +3212,7 @@ class WooCommerceService
 
             try {
                 if (
+                    $data &&
                     (!$inspectRules || self::isValid($order->get_status(), $data) !== false) &&
                     !array_key_exists($key, self::$processedAmeliaItems) &&
                     !array_key_exists('booked', $data) &&
@@ -3305,6 +3324,7 @@ class WooCommerceService
 
             try {
                 if (
+                    $data &&
                     self::isValid($order->get_status(), $data) !== false &&
                     !array_key_exists($key, self::$processedAmeliaItems) &&
                     !array_key_exists('booked', $data) &&
@@ -3372,9 +3392,9 @@ class WooCommerceService
 
                         $reservation = $reservationService->getReservationByPayment($payment, true);
 
-                        $data = $reservation->getData();
+                        $reservationData = $reservation->getData();
 
-                        $bookableSettings     = $data['bookable']['settings'];
+                        $bookableSettings     = $reservationData['bookable']['settings'];
                         $entitySettings       = !empty($bookableSettings) && json_decode($bookableSettings, true) ? json_decode($bookableSettings, true) : null;
                         $paymentLinksSettings =
                             !empty($entitySettings) && !empty($entitySettings['payments']['paymentLinks']) ?
@@ -3387,8 +3407,8 @@ class WooCommerceService
                                 $settingsDS->getSetting('payments', 'paymentLinks')['changeBookingStatus'];
 
                         //call woo (update or create?) rules here
-                        if ($changeBookingStatus && $data['booking']['status'] !== BookingStatus::APPROVED) {
-                            $appointmentAS->approveBooking($data['booking']['id']);
+                        if ($changeBookingStatus && $reservationData['booking']['status'] !== BookingStatus::APPROVED) {
+                            $appointmentAS->approveBooking($reservationData['booking']['id']);
                         }
                     }
 
@@ -3421,6 +3441,7 @@ class WooCommerceService
             $data = wc_get_order_item_meta($item_id, self::AMELIA);
 
             if (
+                $data &&
                 self::isValid($order->get_status(), $data) !== false &&
                 isset($data['processed'], $data['payment']['wcOrderId'])
             ) {

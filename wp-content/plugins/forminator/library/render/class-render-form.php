@@ -192,13 +192,14 @@ abstract class Forminator_Render_Form {
 
 		$is_preview = apply_filters( 'forminator_render_shortcode_is_preview', $is_preview );
 
-		$preview_data = isset( $atts['preview_data'] ) ? $atts['preview_data'] : array();
+		$preview_data    = isset( $atts['preview_data'] ) ? $atts['preview_data'] : array();
+		$is_block_editor = isset( $atts['is_block_editor'] ) ? $atts['is_block_editor'] : false;
 
 		ob_start();
 
 		$view->display( $id, $is_preview, $preview_data );
 		$lead_data = ! empty( static::$lead_data ) ? static::$lead_data : array();
-		$view->ajax_loader( $is_preview, $preview_data, $lead_data );
+		$view->ajax_loader( $is_preview, $preview_data, $lead_data, $is_block_editor );
 
 		return ob_get_clean();
 	}
@@ -1307,8 +1308,9 @@ abstract class Forminator_Render_Form {
 	 * @param bool  $is_preview Is preview.
 	 * @param array $preview_data Preview data.
 	 * @param array $lead_data Lead data.
+	 * @param array $is_block_editor Is block editor.
 	 */
-	public function ajax_loader( $is_preview, $preview_data = array(), $lead_data = array() ) {
+	public function ajax_loader( $is_preview, $preview_data = array(), $lead_data = array(), $is_block_editor = false ) {
 
 		if ( ! $this->model instanceof Forminator_Base_Form_Model ) {
 			return;
@@ -1347,6 +1349,10 @@ abstract class Forminator_Render_Form {
 				'referer_url'      => '', // Original referer url where the user come from. This field will be set via JS.
 			),
 		);
+
+		if ( $is_block_editor ) {
+			$ajax_options['is_block_editor'] = $is_block_editor;
+		}
 
 		if ( ! empty( $lead_data ) ) {
 			$ajax_options['has_lead'] = $lead_data['has_lead'];

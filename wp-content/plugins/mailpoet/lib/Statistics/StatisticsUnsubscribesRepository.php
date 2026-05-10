@@ -6,7 +6,10 @@ if (!defined('ABSPATH')) exit;
 
 
 use MailPoet\Doctrine\Repository;
+use MailPoet\Entities\NewsletterEntity;
+use MailPoet\Entities\SendingQueueEntity;
 use MailPoet\Entities\StatisticsUnsubscribeEntity;
+use MailPoet\Entities\SubscriberEntity;
 use MailPoetVendor\Carbon\Carbon;
 
 /**
@@ -40,5 +43,59 @@ class StatisticsUnsubscribesRepository extends Repository {
       ->setParameter('dateTime', $from)
       ->getQuery()
       ->getResult();
+  }
+
+  public function findOneBySubscriberAndQueue(SubscriberEntity $subscriber, SendingQueueEntity $queue, NewsletterEntity $newsletter): ?StatisticsUnsubscribeEntity {
+    $statistics = $this->findOneBy([
+      'queue' => $queue,
+      'newsletter' => $newsletter,
+      'subscriber' => $subscriber,
+    ]);
+    return $statistics instanceof StatisticsUnsubscribeEntity ? $statistics : null;
+  }
+
+  public function findLatestForSubscriber(SubscriberEntity $subscriber): ?StatisticsUnsubscribeEntity {
+    $result = $this->entityManager->createQueryBuilder()
+      ->select('stats')
+      ->from(StatisticsUnsubscribeEntity::class, 'stats')
+      ->andWhere('stats.subscriber = :subscriber')
+      ->setParameter('subscriber', $subscriber)
+      ->orderBy('stats.createdAt', 'DESC')
+      ->addOrderBy('stats.id', 'DESC')
+      ->setMaxResults(1)
+      ->getQuery()
+      ->getOneOrNullResult();
+
+    return $result instanceof StatisticsUnsubscribeEntity ? $result : null;
+  }
+
+  public function getReasonCountsForNewsletter(NewsletterEntity $newsletter): array {
+    $reasonCounts = $this->entityManager->createQueryBuilder()
+      ->select('stats.reason as reason, count(stats.id) as count')
+      ->from(StatisticsUnsubscribeEntity::class, 'stats')
+      ->andWhere('stats.newsletter = :newsletter')
+      ->andWhere('stats.reason IS NOT NULL')
+      ->groupBy('stats.reason')
+      ->setParameter('newsletter', $newsletter)
+      ->getQuery()
+      ->getArrayResult();
+
+    $unspecifiedCount = $this->entityManager->createQueryBuilder()
+      ->select('count(stats.id)')
+      ->from(StatisticsUnsubscribeEntity::class, 'stats')
+      ->andWhere('stats.newsletter = :newsletter')
+      ->andWhere('stats.reason IS NULL')
+      ->setParameter('newsletter', $newsletter)
+      ->getQuery()
+      ->getSingleScalarResult();
+
+    if ((int)$unspecifiedCount > 0) {
+      $reasonCounts[] = [
+        'reason' => StatisticsUnsubscribeEntity::REASON_UNSPECIFIED,
+        'count' => $unspecifiedCount,
+      ];
+    }
+
+    return $reasonCounts;
   }
 }

@@ -16,6 +16,7 @@ class Subscription {
   const ACTION_CONFIRM = 'confirm';
   const ACTION_MANAGE = 'manage';
   const ACTION_UNSUBSCRIBE = 'unsubscribe';
+  const ACTION_UNSUBSCRIBE_REASON = 'unsubscribeReason';
   const ACTION_CONFIRM_UNSUBSCRIBE = 'confirmUnsubscribe';
   const ACTION_RE_ENGAGEMENT = 'reEngagement';
 
@@ -23,6 +24,7 @@ class Subscription {
     self::ACTION_CONFIRM,
     self::ACTION_MANAGE,
     self::ACTION_UNSUBSCRIBE,
+    self::ACTION_UNSUBSCRIBE_REASON,
     self::ACTION_CONFIRM_UNSUBSCRIBE,
     self::ACTION_RE_ENGAGEMENT,
   ];
@@ -85,12 +87,36 @@ class Subscription {
       }
     } else {
       // For GET requests, we render the confirmUnsubscribe page, unless it is preview request of successful unsubscribe
+      // or the subscriber is already unsubscribed.
       if (isset($data['preview']) && $data['preview'] && !isset($data['token'])) {
         $this->performUnsubscribe($data, StatisticsUnsubscribeEntity::METHOD_LINK);
+      } elseif ($this->renderUnsubscribePageForAlreadyUnsubscribedSubscriber($data)) {
+        return;
       } else {
         $this->confirmUnsubscribe($data);
       }
     }
+  }
+
+  public function unsubscribeReason($data) {
+    if (!$this->request->isPost()) {
+      $this->wp->wpSafeRedirect($this->wp->homeUrl());
+      exit;
+    }
+
+    $nonce = $this->request->getStringParam('_wpnonce');
+    if (!$this->wp->wpVerifyNonce($nonce, 'mailpoet_unsubscribe_reason')) {
+      $this->wp->wpDie(__('Security check failed.', 'mailpoet'), '', ['response' => 403]);
+      exit;
+    }
+
+    $subscription = $this->initSubscriptionPage(UserSubscription\Pages::ACTION_UNSUBSCRIBE, $data);
+    $reason = strtolower($this->wp->sanitizeKey((string)$this->request->getStringParam('reason')));
+    $reasonText = $this->request->getTextareaParam('reason_text');
+
+    $saved = $reason !== '' && $subscription->saveUnsubscribeReason($reason, $reasonText);
+    $this->wp->wpSafeRedirect($subscription->getUnsubscribeReasonRedirectUrl($saved));
+    exit;
   }
 
   public function reEngagement($data) {
@@ -99,6 +125,16 @@ class Subscription {
 
   private function initSubscriptionPage($action, $data) {
     return $this->subscriptionPages->init($action, $data, true, true);
+  }
+
+  private function renderUnsubscribePageForAlreadyUnsubscribedSubscriber($data): bool {
+    $subscription = $this->subscriptionPages->init(UserSubscription\Pages::ACTION_UNSUBSCRIBE, $data, false, false);
+    if (!$subscription->isSubscriberUnsubscribed()) {
+      return false;
+    }
+
+    $this->initSubscriptionPage(UserSubscription\Pages::ACTION_UNSUBSCRIBE, $data);
+    return true;
   }
 
   private function performUnsubscribe($data, string $method): void {

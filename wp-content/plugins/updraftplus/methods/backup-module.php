@@ -9,6 +9,13 @@ abstract class UpdraftPlus_BackupModule {
 	private $_instance_id;
 
 	private $_storage;
+
+	/**
+	 * Indicates whether the connection test was successful.
+	 *
+	 * @var bool
+	 */
+	protected $is_connection_successful = false;
 	
 	/**
 	 * Store options (within this class) for this remote storage module. There is also a parameter for saving to the permanent storage (i.e. database).
@@ -89,6 +96,7 @@ abstract class UpdraftPlus_BackupModule {
 			'input_select_folder_label' => __('Select existing folder', 'updraftplus'),
 			'input_confirm_label' => __('Confirm', 'updraftplus'),
 			'input_cancel_label' => __('Cancel', 'updraftplus'),
+			'hostname_error_label' => __('Error:', 'updraftplus').' '.__('A host name cannot be an URL or contain a slash.', 'updraftplus'),
 		);
 	}
 
@@ -668,8 +676,12 @@ abstract class UpdraftPlus_BackupModule {
 	 * Check the authentication is valid before proceeding to call the authentication method
 	 */
 	public function action_authenticate_storage() {
-		if (isset($_GET['updraftplus_'.$this->get_id().'auth']) && 'doit' == $_GET['updraftplus_'.$this->get_id().'auth'] && !empty($_GET['updraftplus_instance']) && preg_match('/^[-A-Z0-9]+$/i', $_GET['updraftplus_instance']) && isset($_GET['nonce']) && wp_verify_nonce($_GET['nonce'], 'storage_auth_nonce')) {
-			$this->authenticate_storage((string) $_GET['updraftplus_instance']);
+		$updraftplus_auth = UpdraftPlus_Manipulation_Functions::fetch_superglobal('get', 'updraftplus_'.$this->get_id().'auth');
+		$updraftplus_instance = UpdraftPlus_Manipulation_Functions::fetch_superglobal('get', 'updraftplus_instance');
+		$nonce = UpdraftPlus_Manipulation_Functions::fetch_superglobal('get', 'nonce');
+		
+		if (isset($updraftplus_auth) && 'doit' == $updraftplus_auth && !empty($updraftplus_instance) && preg_match('/^[-A-Z0-9]+$/i', $updraftplus_instance) && isset($nonce) && wp_verify_nonce($nonce, 'storage_auth_nonce')) {
+			$this->authenticate_storage((string) $updraftplus_instance);
 		}
 	}
 	
@@ -712,8 +724,12 @@ abstract class UpdraftPlus_BackupModule {
 	 * Check the deauthentication is valid before proceeding to call the deauthentication method
 	 */
 	public function action_deauthenticate_storage() {
-		if (isset($_GET['updraftplus_'.$this->get_id().'auth']) && 'deauth' == $_GET['updraftplus_'.$this->get_id().'auth'] && !empty($_GET['nonce']) && !empty($_GET['updraftplus_instance']) && preg_match('/^[-A-Z0-9]+$/i', $_GET['updraftplus_instance']) && wp_verify_nonce($_GET['nonce'], $this->get_id().'_deauth_nonce')) {
-			$this->deauthenticate_storage($_GET['updraftplus_instance']);
+		$updraftplus_auth = UpdraftPlus_Manipulation_Functions::fetch_superglobal('get', 'updraftplus_'.$this->get_id().'auth');
+		$updraftplus_instance = UpdraftPlus_Manipulation_Functions::fetch_superglobal('get', 'updraftplus_instance');
+		$nonce = UpdraftPlus_Manipulation_Functions::fetch_superglobal('get', 'nonce');
+
+		if (isset($updraftplus_auth) && 'deauth' == $updraftplus_auth && !empty($nonce) && !empty($updraftplus_instance) && preg_match('/^[-A-Z0-9]+$/i', $updraftplus_instance) && wp_verify_nonce($nonce, $this->get_id().'_deauth_nonce')) {
+			$this->deauthenticate_storage($updraftplus_instance);
 		}
 	}
 	
@@ -879,5 +895,28 @@ abstract class UpdraftPlus_BackupModule {
 		}
 		// Mark the script as output for this ID.
 		$script_output[$id] = true;
+	}
+
+	/**
+	 * Set the connection status.
+	 *
+	 * This method is intended to be used internally or by subclasses
+	 * to update the connection result in a controlled way.
+	 *
+	 * @param bool $status True if connection is successful, false otherwise.
+	 *
+	 * @return void
+	 */
+	protected function set_connection_status($status) {
+		$this->is_connection_successful = (bool) $status;
+	}
+
+	/**
+	 * Check if the connection was successful.
+	 *
+	 * @return bool True if connected successfully, false otherwise.
+	 */
+	public function is_connection_successful() {
+		return $this->is_connection_successful;
 	}
 }

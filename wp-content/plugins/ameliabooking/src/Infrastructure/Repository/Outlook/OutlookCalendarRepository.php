@@ -21,25 +21,60 @@ class OutlookCalendarRepository extends AbstractRepository
     /**
      * @param OutlookCalendar $outlookCalendar
      * @param int            $userId
+     * @param array|null     $additionalSettings
      *
      * @return int
      * @throws QueryExecutionException
      */
-    public function add($outlookCalendar, $userId)
+    public function add($outlookCalendar, $userId, $additionalSettings = null)
     {
         $data = $outlookCalendar->toArray();
 
         $params = [
             ':userId' => $userId,
-            ':token'  => $data['token']
+            ':token'  => $data['token'],
+            ':calendarId' => $data['calendarId']
         ];
+
+        $fields = ['userId', 'token', 'calendarId'];
+        $placeholders = [':userId', ':token', ':calendarId'];
+
+        if ($additionalSettings !== null) {
+            if (isset($additionalSettings['insertPendingAppointments'])) {
+                $fields[] = 'insertPendingAppointments';
+                $placeholders[] = ':insertPendingAppointments';
+                $params[':insertPendingAppointments'] = (int)$additionalSettings['insertPendingAppointments'];
+            }
+
+            if (isset($additionalSettings['includeBufferTime'])) {
+                $fields[] = 'includeBufferTime';
+                $placeholders[] = ':includeBufferTime';
+                $params[':includeBufferTime'] = (int)$additionalSettings['includeBufferTime'];
+            }
+
+            if (isset($additionalSettings['title'])) {
+                $fields[] = 'title';
+                $placeholders[] = ':title';
+                $params[':title'] = is_array($additionalSettings['title'])
+                    ? json_encode($additionalSettings['title'])
+                    : $additionalSettings['title'];
+            }
+
+            if (isset($additionalSettings['description'])) {
+                $fields[] = 'description';
+                $placeholders[] = ':description';
+                $params[':description'] = is_array($additionalSettings['description'])
+                    ? json_encode($additionalSettings['description'])
+                    : $additionalSettings['description'];
+            }
+        }
 
         try {
             $statement = $this->connection->prepare(
                 "INSERT INTO {$this->table}
-                (`userId`, `token`)
+                (`" . implode('`, `', $fields) . "`)
                 VALUES
-                (:userId, :token)"
+                (" . implode(', ', $placeholders) . ")"
             );
 
             $statement->execute($params);

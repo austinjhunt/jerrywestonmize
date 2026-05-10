@@ -235,7 +235,7 @@ class UserService
 
         $user = $userRepository->getByEntityId($userId, 'externalId');
 
-        if (!$user || $user->length() === 0) {
+        if ($user->length() === 0) {
             return;
         }
 

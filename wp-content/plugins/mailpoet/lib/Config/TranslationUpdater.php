@@ -182,7 +182,7 @@ class TranslationUpdater {
   }
 
   protected function logError(string $message): void {
-    if (class_exists(Debugger::class)) {
+    if (class_exists(Debugger::class) && Debugger::$logDirectory) {
       Debugger::log($message, ILogger::ERROR);
     }
     if (function_exists('error_log')) {

@@ -58,7 +58,7 @@ class API {
   private $wp;
   /** @var LoggerFactory */
   private $loggerFactory;
-  /** @var mixed|null It is an instance of \CurlHandle in PHP8 and aboove but a resource in PHP7 */
+  /** @var mixed|null It is an instance of \CurlHandle in PHP8 and above but a resource in PHP7 */
   private $curlHandle = null;
 
   public $urlMe = 'https://bridge.mailpoet.com/api/v0/me';
@@ -233,7 +233,9 @@ class API {
       // translators: %d is the error code.
       $fallbackError = sprintf(__('An error has happened while performing a request, the server has responded with response code %d', 'mailpoet'), $responseCode);
 
-      $error = is_array($errorResponseData) && isset($errorResponseData['error']) ? $errorResponseData['error'] : $fallbackError;
+      $error = is_array($errorResponseData) && isset($errorResponseData['error']) && is_string($errorResponseData['error'])
+        ? $errorResponseData['error']
+        : $fallbackError;
       return $this->createErrorResponse((int)$responseCode, $error);
     }
 
@@ -290,7 +292,9 @@ class API {
       // translators: %d will be replaced by an error code
       $fallbackError = sprintf(__('An error has happened while performing a request, the server has responded with response code %d', 'mailpoet'), $responseCode);
 
-      $error = is_array($responseBody) && isset($responseBody['error']) ? $responseBody['error'] : $fallbackError;
+      $error = is_array($responseBody) && isset($responseBody['error']) && is_string($responseBody['error'])
+        ? $responseBody['error']
+        : $fallbackError;
       return $this->createErrorResponse((int)$responseCode, $error);
     }
 
@@ -324,7 +328,8 @@ class API {
         // we need to return the body as it is, but for consistency we add status and translated error message
         $response = is_array($responseBody) ? $responseBody : [];
         $response['status'] = self::RESPONSE_STATUS_ERROR;
-        $response['message'] = $this->getTranslatedErrorMessage($response['error']);
+        $errorMessage = isset($response['error']) && is_string($response['error']) ? $response['error'] : '';
+        $response['message'] = $this->getTranslatedErrorMessage($errorMessage);
         return $response;
       }
       $logData = [
@@ -336,7 +341,9 @@ class API {
       // translators: %d will be replaced by an error code
       $fallbackError = sprintf(__('An error has happened while performing a request, the server has responded with response code %d', 'mailpoet'), $responseCode);
 
-      $error = is_array($responseBody) && isset($responseBody['error']) ? $responseBody['error'] : $fallbackError;
+      $error = is_array($responseBody) && isset($responseBody['error']) && is_string($responseBody['error'])
+        ? $responseBody['error']
+        : $fallbackError;
       return $this->createErrorResponse((int)$responseCode, $error);
     }
 
@@ -416,10 +423,19 @@ class API {
   }
 
   private function logCurlError(WP_Error $error) {
+    // $this->curlHandle is set by setCurlHandle() from a WP Requests action; type is
+    // \CurlHandle on PHP 8+ and resource on PHP 7.4. PHPStan stubs (min PHP 7.4) only
+    // declare `resource` for curl_*(), so the PHP 8 path needs inline ignores.
+    /** @phpstan-ignore-next-line argument.type */
+    $errno = $this->curlHandle ? curl_errno($this->curlHandle) : 'n/a';
+    /** @phpstan-ignore-next-line argument.type */
+    $errMsg = $this->curlHandle ? curl_error($this->curlHandle) : $error->get_error_message();
+    /** @phpstan-ignore-next-line argument.type */
+    $info = $this->curlHandle ? curl_getinfo($this->curlHandle) : 'n/a';
     $logData = [
-      'curl_errno' => $this->curlHandle ? curl_errno($this->curlHandle) : 'n/a',
-      'curl_error' => $this->curlHandle ? curl_error($this->curlHandle) : $error->get_error_message(),
-      'curl_info' => $this->curlHandle ? curl_getinfo($this->curlHandle) : 'n/a',
+      'curl_errno' => $errno,
+      'curl_error' => $errMsg,
+      'curl_info' => $info,
     ];
     $this->loggerFactory->getLogger(LoggerFactory::TOPIC_MSS)->error('requests-curl.failed', $logData);
   }

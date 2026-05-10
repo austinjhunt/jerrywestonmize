@@ -23,6 +23,7 @@
 		    render_id: '',
 		    is_preview: '',
 		    instant_preview: '',
+			is_block_editor: '',
 		    preview_data: [],
 			 nonce: false,
 		    last_submit_data: {},
@@ -56,6 +57,7 @@
 			var param = (decodeURI(document.location.search)).replace(/(^\?)/, '').split("&").map(function (n) {
 				return n = n.split("="), this[n[0]] = n[1], this
 			}.bind({}))[0];
+			var saved_render_id = param.render_id;
 
 			param.action           = this.settings.action;
 			param.type             = this.settings.type;
@@ -68,9 +70,15 @@
 			param.extra            = this.settings.extra;
 			param.nonce				  = this.settings.nonce;
 
+			if ( 'undefined' !== typeof saved_render_id ) {
+				param.saved_render_id = saved_render_id;
+			}
 			if ( 'undefined' !== typeof this.settings.has_lead ) {
 				param.has_lead         = this.settings.has_lead;
 				param.leads_id         = this.settings.leads_id;
+			}
+			if ( 'undefined' !== typeof this.settings.is_block_editor ) {
+				param.is_block_editor  = this.settings.is_block_editor;
 			}
 
 			this.load_ajax(param);
@@ -122,7 +130,8 @@
 
 								self.leadFrontOptions = response.lead_options || null;
 
-								if (typeof window.Forminator_Cform_Paginations === "undefined" && self.leadFrontOptions.pagination_config) {
+								if ( ( typeof window.Forminator_Cform_Paginations === "undefined" || typeof window.Forminator_Cform_Paginations[param.leads_id] === "undefined" )
+									&& self.leadFrontOptions.pagination_config ) {
 									window.Forminator_Cform_Paginations           = window.Forminator_Cform_Paginations || [];
 									window.Forminator_Cform_Paginations[param.leads_id] = self.leadFrontOptions.pagination_config;
 								}
@@ -339,10 +348,18 @@
 			var render_id        = this.settings.render_id;
 			var options          = this.frontOptions || null;
 			var lead_options     = this.leadFrontOptions || null;
+			var $module          = $( '#forminator-module-' + id + '[data-forminator-render="' + render_id + '"]' );
+
+			// Ensures SUI Select2 dropdownParent behaves correctly within modal context.
+			if ( this.settings.is_preview ) {
+				var $dialog = $module.closest( '.sui-box' );
+				if ( $dialog.length ) {
+					$dialog.addClass( 'sui-dialog-content' );
+				}
+			}
 
 			if (options) {
-				$('#forminator-module-' + id + '[data-forminator-render="' + render_id + '"]')
-					.forminatorFront(options);
+				$module.forminatorFront(options);
 			}
 			if ( 'undefined' !== typeof this.settings.has_lead && lead_options) {
 				var leads_id = this.settings.leads_id;

@@ -418,9 +418,10 @@ msgstr "Adaugă zile libere"
 msgid "Add Extra"
 msgstr "Adaugă Extra"
 
-msgid "Add Google Map API Key to show Google static map on \"Locations\" page."
+msgid ""
+"Add Google Maps API Key to show Google static map on \"Locations\" page."
 msgstr ""
-"Adaugă cheia API Google Maps pentru a afișa harta statică Google pe pagina "
+"Adăugați cheia API Google Maps pentru a afișa harta statică Google pe pagina "
 "„Locații”."
 
 msgid "Add Meta Pixel to track ad conversions and optimize marketing."
@@ -457,11 +458,17 @@ msgstr ""
 "Adaugă un URL de redirecționare pentru cazurile în care un client încearcă "
 "să rezerve un interval de timp care a fost deja ocupat."
 
+msgid "Add another account"
+msgstr ""
+
 msgid "Add appointment"
 msgstr "Adăugați o întâlnire"
 
 msgid "Add booking"
 msgstr "Adăugați rezervare"
+
+msgid "Add calendar"
+msgstr ""
 
 msgid "Add category"
 msgstr "Adaugă categorie"
@@ -746,6 +753,9 @@ msgstr "Permiteți angajaților să își gestioneze serviciile"
 
 msgid "Allow employees to manage their special days"
 msgstr "Permiteți angajaților să își gestioneze zilele speciale"
+
+msgid "Allow employees to view all customers"
+msgstr "Permiteți angajaților să vizualizeze toți clienții"
 
 msgid "Allow multiple bookings per customer"
 msgstr "Permiteți mai multe rezervări per client"
@@ -1081,6 +1091,9 @@ msgstr "Sigur doriți să ștergeți aceste elemente?"
 msgid "Are you sure you want to delete this appointment?"
 msgstr "Sigur doriți să ștergeți această rezervare?"
 
+msgid "Are you sure you want to delete this block time?"
+msgstr "Sunteți sigur că doriți să ștergeți acest interval de timp?"
+
 msgid "Are you sure you want to delete this category?"
 msgstr "Sigur doriți să ștergeți această categorie?"
 
@@ -1227,6 +1240,9 @@ msgstr "Atribuit"
 
 msgid "Assigned Services"
 msgstr "Servicii atribuite"
+
+msgid "Assigned employee full name"
+msgstr "Numele complet al angajatului desemnat"
 
 msgid "Attachment"
 msgstr "Atașament"
@@ -1463,21 +1479,36 @@ msgid "Block"
 msgstr "Bloc"
 
 msgid ""
-"Block booking times that overlap with busy events in the employee’s Apple "
-"Calendar."
-msgstr ""
-"Blocați perioadele de rezervare care se suprapun cu evenimentele aglomerate "
-"din calendarul Apple al angajatului."
-
-msgid ""
 "Block booking times that overlap with busy events in the employee’s Outlook "
 "Calendar."
 msgstr ""
 "Blocați perioadele de rezervare care se suprapun cu evenimentele aglomerate "
 "din calendarul Outlook al angajatului."
 
+msgid ""
+"Block booking times that overlap with events in the employee’s Apple "
+"Calendar."
+msgstr ""
+"Blochează intervalele de rezervare care se suprapun cu evenimentele din "
+"Calendarul Apple al angajatului."
+
 msgid "Block customer"
 msgstr "Blochează clientul"
+
+msgid "Block time"
+msgstr "Timpul blocului"
+
+msgid "Block time from calendars"
+msgstr ""
+
+msgid "Block time has been added."
+msgstr "A fost adăugat timpul de blocare."
+
+msgid "Block time has been deleted."
+msgstr "Timpul blocului a fost șters."
+
+msgid "Block time has been updated."
+msgstr "Timpul blocului a fost actualizat."
 
 msgid "Blog"
 msgstr ""
@@ -2594,6 +2625,9 @@ msgstr "Creați angajați din utilizatorii WP cu rol de angajat Amelia"
 msgid "Create New"
 msgstr "Crează un Nou"
 
+msgid "Create New Tag"
+msgstr "Creează o etichetă nouă"
+
 msgid ""
 "Create a coupon code customers can enter during booking to get a discount."
 msgstr ""
@@ -2630,6 +2664,9 @@ msgstr "Creați nou"
 
 msgid "Create new badge"
 msgstr "Creează o insignă nouă"
+
+msgid "Create new tag"
+msgstr "Creează o etichetă nouă"
 
 msgid ""
 "Create online classrooms automatically for each booked appointment or event."
@@ -2770,6 +2807,9 @@ msgid "Custom pricing spots will override Maximum allowed spots value."
 msgstr ""
 "Punctele de preț personalizate vor înlocui valoarea maximă permisă a "
 "spoturilor."
+
+msgid "Custom range"
+msgstr "Interval personalizat"
 
 msgid "Custom service duration"
 msgstr "Durata serviciului personalizat"
@@ -2972,6 +3012,9 @@ msgstr "Dată Asc"
 
 msgid "Date Desc"
 msgstr "Dată Desc"
+
+msgid "Date Picker"
+msgstr "Selector de dată"
 
 msgid "Date Purchased Asc"
 msgstr "Data achiziției ascendent"
@@ -3188,6 +3231,9 @@ msgstr "Șterge perioada"
 
 msgid "Delete appointment"
 msgstr "Șterge programarea"
+
+msgid "Delete block time"
+msgstr "Ștergeți timpul blocat"
 
 msgid "Delete booking"
 msgstr "Șterge rezervarea"
@@ -3584,6 +3630,9 @@ msgstr "Editează Webhook"
 
 msgid "Edit appointment"
 msgstr "Editează programarea"
+
+msgid "Edit block time"
+msgstr "Editează timpul blocului"
 
 msgid "Edit booking"
 msgstr "Editează rezervarea"
@@ -4477,11 +4526,31 @@ msgstr "Evenimentul începe"
 msgid "Event status"
 msgstr "Starea evenimentului"
 
+msgid "Event tags"
+msgstr "Etichete de eveniment"
+
+msgid ""
+"Event tags allow you to label and organize events in Amelia based on "
+"criteria that matter most to your business."
+msgstr ""
+"Etichetele de evenimente vă permit să etichetați și să organizați "
+"evenimentele în Amelia pe baza criteriilor care contează cel mai mult pentru "
+"afacerea dvs."
+
+msgid "Event tags have been saved."
+msgstr "Etichetele evenimentului au fost salvate."
+
+msgid "Event tags setup"
+msgstr "Configurarea etichetelor de evenimente"
+
 msgid "Event ticketing"
 msgstr "Bilete la evenimente"
 
 msgid "Event tickets"
 msgstr "Bilete la eveniment"
+
+msgid "Event time scope"
+msgstr "Intervalul de timp al evenimentului"
 
 msgid "Event title"
 msgstr "Titlul evenimentului"
@@ -4491,6 +4560,9 @@ msgstr "Titlul și descrierea evenimentului"
 
 msgid "Event type"
 msgstr "Tipul evenimentului"
+
+msgid "Event_bookings"
+msgstr "Rezervări_evenimente"
 
 msgid "Events"
 msgstr "Evenimente"
@@ -4579,6 +4651,9 @@ msgstr "Exportați datele programărilor cu ușurință"
 
 msgid "Export bookings"
 msgstr "Exportă rezervările"
+
+msgid "Export event booking data with ease"
+msgstr "Exportați cu ușurință datele de rezervare a evenimentelor"
 
 msgid "Express Account"
 msgstr "Cont Express"
@@ -4920,6 +4995,9 @@ msgstr "Evenimente complete"
 msgid "Fully booked"
 msgstr "Complet rezervat"
 
+msgid "Future events"
+msgstr "Evenimente viitoare"
+
 msgid ""
 "GSM (standard Latin) segments contain 160 characters, while UCS-2 (non-GSM - "
 "Cyrillic, emoji, non-standard symbols) contain 70 characters, etc."
@@ -5009,8 +5087,8 @@ msgstr "Google Calendar și Google Meet"
 msgid "Google Calendar setup"
 msgstr "Configurarea Calendarului Google"
 
-msgid "Google Map API key"
-msgstr "Cheie API Google Maps"
+msgid "Google Maps API key"
+msgstr "Cheia API Google Maps"
 
 msgid "Google Maps failed to load. Check your API key and restrictions."
 msgstr "Google Maps nu s-a încărcat. Verificați cheia API și restricțiile."
@@ -5497,6 +5575,12 @@ msgstr ""
 "programărilor"
 
 msgid ""
+"Improve reporting accuracy by accessing complete event booking data instantly"
+msgstr ""
+"Îmbunătățiți acuratețea raportării accesând instantaneu datele complete "
+"despre rezervările de evenimente"
+
+msgid ""
 "Improved customer retention as clients return to use the remaining sessions "
 "in their package"
 msgstr ""
@@ -5645,6 +5729,9 @@ msgstr "Integrări"
 
 msgid "Interested in unlocking this feature?"
 msgstr "Vă interesează să deblocați această funcție?"
+
+msgid "Invalid Mollie API key."
+msgstr "Cheie API Mollie nevalidă."
 
 msgid "Invalid Stripe secret key."
 msgstr "Cheie secretă Stripe invalidă."
@@ -6122,8 +6209,14 @@ msgstr "Fă opțiunea suplimentară obligatorie"
 msgid "Make sure you are using the correct WhatsApp credentials."
 msgstr "Asigură-te că folosești datele de autentificare WhatsApp corecte."
 
+msgid "Make sure you are using the correct Zoom credentials."
+msgstr "Asigurați-vă că utilizați datele de autentificare corecte pentru Zoom."
+
 msgid "Male"
 msgstr "Bărbat"
+
+msgid "Manage Event Tags"
+msgstr "Gestionare etichete eveniment"
 
 msgid "Manage badges"
 msgstr "Gestionați insignele"
@@ -6140,6 +6233,9 @@ msgid ""
 msgstr ""
 "Gestionează eficient anulările de evenimente, permițând clienților să se "
 "alăture listelor de așteptare și să ocupe locurile libere manual."
+
+msgid "Manage event tags"
+msgstr "Gestionare etichete evenimente"
 
 msgid "Manage languages"
 msgstr "Gestionați limbile"
@@ -6444,6 +6540,9 @@ msgstr "Actualizare nouă"
 msgid "New appointment"
 msgstr "Nouă programare"
 
+msgid "New block time"
+msgstr "Timpul noului bloc"
+
 msgid "New category"
 msgstr "Categorie nouă"
 
@@ -6656,6 +6755,9 @@ msgstr "Notă (internă)"
 
 msgid "Notice: Please select at least one panel."
 msgstr "Notă: Vă rugăm să selectați cel puțin un panou."
+
+msgid "Notice: Please select start and end date."
+msgstr "Atenție: Vă rugăm să selectați data de începere și data de încheiere."
 
 msgid "Notification"
 msgstr "Notificare"
@@ -6982,6 +7084,9 @@ msgstr "Eveniment deschis"
 
 msgid "Open following"
 msgstr "Deschideți următorul"
+
+msgid "Open side menu"
+msgstr "Deschide meniul lateral"
 
 msgid "Opened"
 msgstr "Deschis"
@@ -7314,6 +7419,9 @@ msgstr "Parolele nu se potrivesc"
 msgid "Passwords don't match."
 msgstr "Parolele nu se potrivesc."
 
+msgid "Past events"
+msgstr "Evenimente trecute"
+
 msgid ""
 "Paste the secret key you received after creating your API key pair in Google "
 "reCAPTCHA."
@@ -7575,6 +7683,9 @@ msgstr "Planuri"
 msgid "Please Wait"
 msgstr "Vă rugăm așteptați"
 
+msgid "Please add period"
+msgstr "Vă rugăm să adăugați perioada"
+
 msgid "Please cancel the event first before deleting it."
 msgstr "Vă rugăm să anulați întâi evenimentul înainte de a-l șterge."
 
@@ -7589,6 +7700,13 @@ msgstr "Vă rugăm să alegeți ora programării"
 
 msgid "Please confirm you are not a robot"
 msgstr "Vă rugăm să confirmați că nu sunteți un robot"
+
+msgid ""
+"Please delete this appointment. It cannot be edited due to a conflict with "
+"the associated account."
+msgstr ""
+"Vă rugăm să ștergeți această programare. Aceasta nu poate fi editată din "
+"cauza unui conflict cu contul asociat."
 
 msgid ""
 "Please ensure that services and employees are created and that services are "
@@ -7937,6 +8055,11 @@ msgstr "Vă rugăm să selectați ora"
 msgid "Please upload the file"
 msgstr "Vă rugăm să încărcați fișierul"
 
+msgid "Please use a different email or phone number to complete the booking."
+msgstr ""
+"Vă rugăm să utilizați o altă adresă de e-mail sau un alt număr de telefon "
+"pentru a finaliza rezervarea."
+
 msgid ""
 "Please use the built-in Elementor shortcode widget instead of Amelia widget "
 "when adding Amelia to a popup"
@@ -8184,6 +8307,14 @@ msgstr ""
 "Descărcați rapid toate detaliile programărilor din pagina Rezervări, "
 "simplificând și eficientizând raportarea, analiza și păstrarea evidențelor."
 
+msgid ""
+"Quickly download all event booking details from the Event Bookings page, "
+"making reporting, analysis, and record-keeping simple and efficient."
+msgstr ""
+"Descărcați rapid toate detaliile rezervării evenimentelor de pe pagina "
+"Rezervări evenimente, simplificând și eficientizând raportarea, analiza și "
+"păstrarea evidențelor."
+
 msgid "Radio button"
 msgstr "Buton radio"
 
@@ -8348,8 +8479,8 @@ msgstr "Restul sumei totale va fi plătită la fața locului."
 msgid "Remind me when my SMS balance is low"
 msgstr "Amintește-mi când soldul meu SMS este scăzut"
 
-msgid "Remove Apple Calendar busy slots"
-msgstr "Eliminați intervalele orare ocupate din Calendarul Apple"
+msgid "Remove Apple Calendar event slots"
+msgstr "Elimină intervalele de evenimente din Calendarul Apple"
 
 msgid "Remove Attendee"
 msgstr "Eliminați participantul"
@@ -8596,6 +8727,11 @@ msgid "Save time with fast, one-click appointment exports"
 msgstr ""
 "Economisiți timp cu exporturi rapide ale programărilor, cu un singur clic"
 
+msgid "Save time with fast, one-click event booking exports"
+msgstr ""
+"Economisiți timp cu exporturi rapide, cu un singur clic, ale rezervărilor de "
+"evenimente"
+
 msgid "Save time with quick, hassle-free customer data exports"
 msgstr ""
 "Economisiți timp cu exporturi rapide și fără probleme ale datelor clienților"
@@ -8831,6 +8967,9 @@ msgstr "Selectați cel puțin o opțiune"
 
 msgid "Select box"
 msgstr "Casetă de selecție"
+
+msgid "Select calendar"
+msgstr ""
 
 msgid "Select category"
 msgstr "Selectați categoria"
@@ -10061,6 +10200,12 @@ msgstr "File (Toate / Pachete / Servicii)"
 msgid "Tag"
 msgstr "Etichetă"
 
+msgid "Tag label"
+msgstr "Etichetă"
+
+msgid "Tag label cannot be empty"
+msgstr "Eticheta nu poate fi goală"
+
 msgid "Tags"
 msgstr "Etichete"
 
@@ -10924,6 +11069,10 @@ msgid ""
 msgstr ""
 "URL-ul către care va fi redirecționat utilizatorul dacă programarea nu poate "
 "fi anulată din cauza valorii „Timp minim necesar înainte de anulare”"
+
+msgid "Unable to complete plugin activation. Please try again."
+msgstr ""
+"Nu s-a putut finaliza activarea pluginului. Vă rugăm să încercați din nou."
 
 msgid "Unable to deactivate plugin. Please try again later."
 msgstr ""

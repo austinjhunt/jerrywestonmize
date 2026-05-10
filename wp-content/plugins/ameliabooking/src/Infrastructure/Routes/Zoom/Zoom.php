@@ -8,6 +8,7 @@
 namespace AmeliaBooking\Infrastructure\Routes\Zoom;
 
 use AmeliaBooking\Application\Controller\Zoom\GetUsersController;
+use AmeliaBooking\Application\Controller\Zoom\ValidateZoomCredentialsController;
 use Slim\App;
 
 /**
@@ -23,5 +24,7 @@ class Zoom
     public static function routes(App $app)
     {
         $app->get('/zoom/users', GetUsersController::class);
+
+        $app->post('/zoom/validate', ValidateZoomCredentialsController::class);
     }
 }

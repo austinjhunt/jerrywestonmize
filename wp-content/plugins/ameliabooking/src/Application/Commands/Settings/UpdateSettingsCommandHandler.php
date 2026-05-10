@@ -256,36 +256,17 @@ class UpdateSettingsCommandHandler extends CommandHandler
             $settingsFields['pageColumnSettings'] = $currentPageColumnSettings;
         }
 
-        if (!empty($command->getField('appleCalendar')['clientID']) && !empty($command->getField('appleCalendar')['clientSecret'])) {
-            /** @var AbstractAppleCalendarService $appleCalendarService */
-            $appleCalendarService = $this->container->get('infrastructure.apple.calendar.service');
+        if ($command->getField('appleCalendar') !== null) {
+            $appleResult = $this->handleAppleCalendarSettings(
+                $command->getField('appleCalendar'),
+                $settingsService->getCategorySettings('appleCalendar')
+            );
 
-            $appleId       = $command->getField('appleCalendar')['clientID'];
-            $applePassword = $command->getField('appleCalendar')['clientSecret'];
-
-            $credentials = $appleCalendarService->handleAppleCredentials($appleId, $applePassword);
-
-            if (!$credentials) {
-                $result->setDataInResponse(true);
-                $result->setResult(CommandResult::RESULT_ERROR);
-                $result->setMessage('Make sure you are using the correct iCloud email address and app-specific password.');
-
-                return $result;
+            if ($appleResult instanceof CommandResult) {
+                return $appleResult;
             }
-        }
 
-        if (
-            $command->getField('appleCalendar') &&
-            empty($command->getField('appleCalendar')['clientID']) &&
-            empty($command->getField('appleCalendar')['clientSecret'])
-        ) {
-            $providerRepository = $this->container->get('domain.users.providers.repository');
-            /** @var Collection $providers */
-            $providers = $providerRepository->getAll();
-            foreach ($providers->getItems() as $provider) {
-                $providerRepository->updateFieldById($provider->getId()->getValue(), null, 'employeeAppleCalendar');
-                $providerRepository->updateFieldById($provider->getId()->getValue(), null, 'appleCalendarId');
-            }
+            $settingsFields['appleCalendar'] = $appleResult;
         }
 
         if (!empty($command->getField('customizedData'))) {
@@ -320,5 +301,74 @@ class UpdateSettingsCommandHandler extends CommandHandler
         );
 
         return $result;
+    }
+
+    /**
+     * Validates and merges incoming Apple Calendar settings with the saved ones.
+     *
+     * @param array $appleSettings
+     * @param array $savedAppleSettings
+     *
+     * @return CommandResult|array
+     */
+    private function handleAppleCalendarSettings(array $appleSettings, array $savedAppleSettings)
+    {
+        $clientIdProvided     = array_key_exists('clientID', $appleSettings);
+        $clientSecretProvided = array_key_exists('clientSecret', $appleSettings);
+
+        if ($clientIdProvided || $clientSecretProvided) {
+            $incomingClientId     = $clientIdProvided ? (string)($appleSettings['clientID'] ?? '') : '';
+            $incomingClientSecret = $clientSecretProvided ? (string)($appleSettings['clientSecret'] ?? '') : '';
+
+            $savedClientId     = !empty($savedAppleSettings['clientID']) ? $savedAppleSettings['clientID'] : '';
+            $savedClientSecret = !empty($savedAppleSettings['clientSecret']) ? $savedAppleSettings['clientSecret'] : '';
+
+            $hasClientId     = $clientIdProvided && $incomingClientId !== '';
+            $hasClientSecret = $clientSecretProvided && $incomingClientSecret !== '';
+
+            if ($hasClientId !== $hasClientSecret) {
+                $result = new CommandResult();
+                $result->setDataInResponse(true);
+                $result->setResult(CommandResult::RESULT_ERROR);
+                $result->setMessage('Both iCloud email address and app-specific password are required.');
+
+                return $result;
+            }
+
+            if ($hasClientId && $hasClientSecret) {
+                $credentialsChanged = ($incomingClientId !== $savedClientId) || ($incomingClientSecret !== $savedClientSecret);
+
+                if ($credentialsChanged) {
+                    /** @var AbstractAppleCalendarService $appleCalendarService */
+                    $appleCalendarService = $this->container->get('infrastructure.apple.calendar.service');
+
+                    if (!$appleCalendarService->handleAppleCredentials($incomingClientId, $incomingClientSecret)) {
+                        $result = new CommandResult();
+                        $result->setDataInResponse(true);
+                        $result->setResult(CommandResult::RESULT_ERROR);
+                        $result->setMessage('Make sure you are using the correct iCloud email address and app-specific password.');
+
+                        return $result;
+                    }
+                }
+            }
+
+            if (!$hasClientId && !$hasClientSecret && (!empty($savedClientId) || !empty($savedClientSecret))) {
+                $providerRepository = $this->container->get('domain.users.providers.repository');
+                /** @var Collection $providers */
+                $providers = $providerRepository->getAll();
+                foreach ($providers->getItems() as $provider) {
+                    $providerRepository->updateFieldById($provider->getId()->getValue(), null, 'employeeAppleCalendar');
+                    $providerRepository->updateFieldById($provider->getId()->getValue(), null, 'appleCalendarId');
+                }
+            }
+        }
+
+        $merged = $savedAppleSettings;
+        foreach ($appleSettings as $key => $value) {
+            $merged[$key] = $value;
+        }
+
+        return $merged;
     }
 }

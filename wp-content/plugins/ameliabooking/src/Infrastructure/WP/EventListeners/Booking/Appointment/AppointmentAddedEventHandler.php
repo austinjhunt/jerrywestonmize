@@ -20,6 +20,8 @@ use AmeliaBooking\Application\Services\WebHook\AbstractWebHookApplicationService
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
+use AmeliaBooking\Domain\Entity\User\Customer;
+use AmeliaBooking\Domain\Factory\User\UserFactory;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Factory\Booking\Appointment\AppointmentFactory;
 use AmeliaBooking\Domain\Factory\Booking\Appointment\CustomerBookingFactory;
@@ -29,6 +31,7 @@ use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
+use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
 use Interop\Container\Exception\ContainerException;
 
 /**
@@ -72,6 +75,8 @@ class AppointmentAddedEventHandler
         $paymentAS = $container->get('application.payment.service');
         /** @var BookingApplicationService $bookingApplicationService */
         $bookingApplicationService = $container->get('application.booking.booking.service');
+        /** @var CustomerRepository $customerRepository */
+        $customerRepository = $container->get('domain.users.customers.repository');
 
         $recurringData = $commandResult->getData()['recurring'];
 
@@ -113,19 +118,25 @@ class AppointmentAddedEventHandler
             foreach ($recurringReservationData[Entities::APPOINTMENT]['bookings'] as $bookingKey => $recurringReservationBooking) {
                 if (in_array($recurringReservationBooking['customerId'], $firstAppointmentCustomersIds) && !$pastRecurringAppointment) {
                     $booking = $recurringData[$key][Entities::APPOINTMENT]['bookings'][$bookingKey];
+
                     if ($booking['status'] === BookingStatus::APPROVED || $booking['status'] === BookingStatus::PENDING) {
                         $paymentId = !empty($booking['payments'][0]['id']) ? $booking['payments'][0]['id'] : null;
 
-                        $data = [
-                            'booking' => $booking,
-                            'type' => Entities::APPOINTMENT,
-                            'appointment' => $recurringReservationObject->toArray(),
-                            'paymentId' => $paymentId,
-                            'bookable' => $appointmentObject->getService()->toArray(),
-                            'customer' => $booking['customer']
-                        ];
+                        if (!empty($paymentId)) {
+                            /** @var Customer $customer */
+                            $customer = !empty($booking['customer'])
+                                ? UserFactory::create($booking['customer'])
+                                : $customerRepository->getById($booking['customerId']);
 
-                        if (!empty($paymentId) && !empty($appointment['createPaymentLinks'])) {
+                            $data = [
+                                'booking'     => $booking,
+                                'type'        => Entities::APPOINTMENT,
+                                'appointment' => $recurringReservationObject->toArray(),
+                                'paymentId'   => $paymentId,
+                                'bookable'    => $appointmentObject->getService()->toArray(),
+                                'customer'    => $customer->toArray(),
+                            ];
+
                             $recurringData[$key][Entities::APPOINTMENT]['bookings'][$bookingKey]['payments'][0]['paymentLinks'] =
                                 $paymentAS->createPaymentLink($data, $bookingKey);
                         }
@@ -161,17 +172,22 @@ class AppointmentAddedEventHandler
 
                     $paymentId = !empty($booking['payments'][0]['id']) ? $booking['payments'][0]['id'] : null;
 
-                    $data = [
-                        'booking' => $booking,
-                        'type' => Entities::APPOINTMENT,
-                        'appointment' => $appointmentObject->toArray(),
-                        'paymentId' => $paymentId,
-                        'bookable' => $appointmentObject->getService()->toArray(),
-                        'customer' => $booking['customer']
-                    ];
+                    if (!empty($paymentId)) {
+                        /** @var Customer $customer */
+                        $customer = !empty($booking['customer'])
+                            ? UserFactory::create($booking['customer'])
+                            : $customerRepository->getById($booking['customerId']);
 
-                    if (!empty($paymentId) && !empty($appointment['createPaymentLinks'])) {
-                        $appointment['bookings'][$index]['payments'][0]['paymentLinks'] = $paymentAS->createPaymentLink($data, $index);
+                         $data = [
+                            'booking'     => $booking,
+                            'type'        => Entities::APPOINTMENT,
+                            'appointment' => $appointmentObject->toArray(),
+                            'paymentId'   => $paymentId,
+                            'bookable'    => $appointmentObject->getService()->toArray(),
+                            'customer'    => $customer->toArray(),
+                         ];
+
+                         $appointment['bookings'][$index]['payments'][0]['paymentLinks'] = $paymentAS->createPaymentLink($data, $index);
                     }
                 }
 
@@ -203,10 +219,7 @@ class AppointmentAddedEventHandler
 
                 $applicationNotificationService->sendAppointmentCustomersStatusNotifications(
                     $appointmentObject,
-                    $waitingBookings,
-                    true,
-                    true,
-                    false
+                    $waitingBookings
                 );
             }
         }
@@ -222,6 +235,31 @@ class AppointmentAddedEventHandler
                 foreach ($recurringReservationData[Entities::APPOINTMENT]['bookings'] as $bookingKey => $recurringReservationBooking) {
                     if (in_array($recurringReservationBooking['customerId'], $firstAppointmentCustomersIds)) {
                         $recurringData[$key][Entities::APPOINTMENT]['bookings'][$bookingKey]['skipNotification'] = true;
+                    }
+
+                    $paymentId = !empty($recurringData[$key][Entities::APPOINTMENT]['bookings'][$bookingKey]['payments'][0]['id'])
+                        ? $recurringData[$key][Entities::APPOINTMENT]['bookings'][$bookingKey]['payments'][0]['id']
+                        : null;
+
+                    if (!empty($paymentId)) {
+                        /** @var Customer $customer */
+                        $customer = !empty($recurringData[$key][Entities::APPOINTMENT]['bookings'][$bookingKey]['customer'])
+                            ? UserFactory::create($recurringData[$key][Entities::APPOINTMENT]['bookings'][$bookingKey]['customer'])
+                            : $customerRepository->getById($recurringData[$key][Entities::APPOINTMENT]['bookings'][$bookingKey]['customerId']);
+
+                        $data = [
+                            'booking'     => $recurringReservationBooking,
+                            'type'        => Entities::APPOINTMENT,
+                            'appointment' => $recurringReservationObject->toArray(),
+                            'paymentId'   => $paymentId,
+                            'bookable'    => $appointmentObject->getService()->toArray(),
+                            'customer'    => $customer->toArray(),
+                        ];
+
+                        $recurringData[$key][Entities::APPOINTMENT]['bookings'][$bookingKey]['payments'][0]['paymentLinks'] = $paymentAS->createPaymentLink(
+                            $data,
+                            $bookingKey
+                        );
                     }
                 }
 

@@ -1128,16 +1128,12 @@ class Forminator_Stripe extends Forminator_Field {
 	 * @return bool
 	 */
 	private static function is_valid_payment_intent( $intent_id ): bool {
-		if ( empty( Forminator_CForm_Front_Action::$info['stripe_field']['type'] )
-				|| 'stripe-ocs' !== Forminator_CForm_Front_Action::$info['stripe_field']['type'] ) {
-			return true;
-		}
 		$payment_intents = get_option( 'forminator_stripe_payment_intents', array() );
 
 		if ( is_array( $payment_intents ) && in_array( $intent_id, $payment_intents, true ) ) {
 			// Remove payment intent after handling it.
 			add_action(
-				'forminator_custom_form_mail_before_send_mail',
+				'forminator_after_handle_form',
 				function () use ( $intent_id ) {
 					$option_key      = 'forminator_stripe_payment_intents';
 					$payment_intents = get_option( $option_key, array() );
@@ -1446,8 +1442,7 @@ class Forminator_Stripe extends Forminator_Field {
 						$field_object = Forminator_Core::get_field_object( $form_field['type'] );
 						if ( $field_object ) {
 
-							$field_id             = $form_field['element_id'];
-							$submitted_field_data = isset( $submitted_data[ $field_id ] ) ? $submitted_data[ $field_id ] : null;
+							$submitted_field_data = $submitted_data[ $amount_var ] ?? null;
 							$payment_amount       = $field_object::get_calculable_value( $submitted_field_data, $form_field );
 						}
 					}

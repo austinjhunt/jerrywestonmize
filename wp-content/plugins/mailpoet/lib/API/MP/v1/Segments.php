@@ -101,7 +101,7 @@ class Segments {
         str_replace(
           '%1$s',
           "'" . join("', '", $activelyUsedNewslettersSubjects[$listId]) . "'",
-          // translators: %1$s is a comma-seperated list of emails for which the segment is used.
+          // translators: %1$s is a comma-separated list of emails for which the segment is used.
           _x('List cannot be deleted because it’s used for %1$s email', 'Alert shown when trying to delete segment, which is assigned to any automatic emails.', 'mailpoet')
         ),
         APIException::LIST_USED_IN_EMAIL
@@ -114,7 +114,7 @@ class Segments {
         str_replace(
           '%1$s',
           "'" . join("', '", $activelyUsedFormNames[$listId]) . "'",
-          // translators: %1$s is a comma-seperated list of forms for which the segment is used.
+          // translators: %1$s is a comma-separated list of forms for which the segment is used.
           _nx(
             'List cannot be deleted because it’s used for %1$s form',
             'List cannot be deleted because it’s used for %1$s forms',
@@ -155,11 +155,15 @@ class Segments {
   }
 
   /**
-   * Throws an exception when the segment's name is invalid
+   * Throws an exception when the segment's name is invalid.
+   * Validates against the sanitized name so whitespace-only inputs that
+   * collapse to empty after sanitize_text_field() are rejected up front
+   * instead of being silently saved as an empty list name.
    * @return void
    */
   private function validateSegmentName(array $data): void {
-    if (empty($data['name'])) {
+    $name = isset($data['name']) && is_string($data['name']) ? sanitize_text_field($data['name']) : '';
+    if ($name === '') {
       throw new APIException(
         __('List name is required.', 'mailpoet'),
         APIException::LIST_NAME_REQUIRED
@@ -167,7 +171,7 @@ class Segments {
     }
 
     $segmentId = isset($data['id']) ? (int)$data['id'] : null;
-    if (!$this->segmentsRepository->isNameUnique($data['name'], $segmentId)) {
+    if (!$this->segmentsRepository->isNameUnique($name, $segmentId)) {
       throw new APIException(
         __('This list already exists.', 'mailpoet'),
         APIException::LIST_EXISTS

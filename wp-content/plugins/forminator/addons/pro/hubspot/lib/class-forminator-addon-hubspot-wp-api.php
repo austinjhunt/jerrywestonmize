@@ -556,25 +556,43 @@ class Forminator_Hubspot_Wp_Api {
 	 * @return array|mixed|object
 	 */
 	public function add_update_contact( $data ) {
-		$props = array();
+		$email   = ! empty( $data['email'] ) ? $data['email'] : '';
+		$args    = array( 'properties' => $data );
+		$contact = $this->get_contact( $email );
 
-		foreach ( $data as $key => $value ) {
-
-			$props[] = array(
-				'property' => $key,
-				'value'    => $value,
-			);
-		}
-		$email    = ! empty( $data['email'] ) ? $data['email'] : '';
-		$args     = array( 'properties' => $props );
-		$endpoint = 'contacts/v1/contact/createOrUpdate/email/' . $email;
-
-		$response = $this->send_authenticated( 'POST', $endpoint, $args, true );
-
-		if ( ! is_wp_error( $response ) && ! empty( $response->vid ) ) {
-			return $response->vid;
+		// Add contact if not exist, otherwise update it.
+		if ( empty( $contact->id ) ) {
+			$endpoint = 'crm/v3/objects/contacts';
+			$response = $this->send_authenticated( 'POST', $endpoint, $args, true );
+		} else {
+			$endpoint = 'crm/v3/objects/contacts/' . $email . '?idProperty=email';
+			$response = $this->send_authenticated( 'PATCH', $endpoint, $args, true );
 		}
 
+		if ( ! is_wp_error( $response ) && ! empty( $response->id ) ) {
+			return $response->id;
+		}
+
+		return $response;
+	}
+
+	/**
+	 * Get contact by email.
+	 *
+	 * @param string $email Contact email.
+	 *
+	 * @return mixed
+	 */
+	public function get_contact( $email ) {
+		$args     = array( 'idProperty' => 'email' );
+		$endpoint = 'crm/v3/objects/contacts/' . $email;
+
+		try {
+			$response = $this->send_authenticated( 'GET', $endpoint, $args );
+		} catch ( Forminator_Integration_Exception $e ) {
+			// Return false if contact not found or any error occurs.
+			return false;
+		}
 		return $response;
 	}
 
@@ -587,7 +605,7 @@ class Forminator_Hubspot_Wp_Api {
 	 */
 	public function delete_contact( $data ) {
 		$args     = array();
-		$endpoint = 'contacts/v1/contact/vid/' . $data;
+		$endpoint = 'crm/v3/objects/contacts/' . $data;
 
 		$response = $this->send_authenticated( 'DELETE', $endpoint, $args, true );
 
@@ -627,7 +645,7 @@ class Forminator_Hubspot_Wp_Api {
 	 * @return array|mixed|object
 	 */
 	public function get_pipeline( $args = array() ) {
-		$response = $this->send_authenticated( 'GET', 'crm-pipelines/v1/pipelines/tickets', $args );
+		$response = $this->send_authenticated( 'GET', 'crm/v3/pipelines/tickets', $args );
 
 		return $response;
 	}
@@ -648,17 +666,14 @@ class Forminator_Hubspot_Wp_Api {
 			'hs_pipeline_stage' => $ticket['status_id'],
 			'hs_file_upload'    => $ticket['supported_file'],
 		);
-		$i       = 0;
-		foreach ( $request as $key => $value ) {
-			$args[ $i ]['name']  = $key;
-			$args[ $i ]['value'] = $value;
-			++$i;
-		}
-		$endpoint = 'crm-objects/v1/objects/tickets';
+
+		$args['properties'] = $request;
+
+		$endpoint = 'crm/v3/objects/tickets';
 		$response = $this->send_authenticated( 'POST', $endpoint, $args, true );
 
-		if ( ! is_wp_error( $response ) && ! empty( $response->objectId ) ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-			return $response->objectId; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+		if ( ! is_wp_error( $response ) && ! empty( $response->id ) ) {
+			return $response->id;
 		}
 
 		return $response;
@@ -667,19 +682,26 @@ class Forminator_Hubspot_Wp_Api {
 	/**
 	 * Associate ticket with contact
 	 *
-	 * @param array $args Arguments.
+	 * @param int $ticket_id Ticket Id.
+	 * @param int $contact_id Contact Id.
 	 *
 	 * @return array|mixed|object
 	 */
-	public function ticket_associate_contact( $args = array() ) {
-		$default_args = array(
-			'category'     => 'HUBSPOT_DEFINED',
-			'definitionId' => 16,
+	public function ticket_associate_contact( $ticket_id, $contact_id ) {
+		$args['inputs'] = array(
+			array(
+				'from' => array(
+					'id' => $ticket_id,
+				),
+				'to'   => array(
+					'id' => $contact_id,
+				),
+				'type' => 'ticket_to_contact',
+			),
 		);
-		$args         = array_merge( $default_args, $args );
 
-		$endpoint = 'crm-associations/v1/associations';
-		$response = $this->send_authenticated( 'PUT', $endpoint, $args, true );
+		$endpoint = 'crm/v3/associations/tickets/contacts/batch/create';
+		$response = $this->send_authenticated( 'POST', $endpoint, $args, true );
 
 		return $response;
 	}
@@ -693,7 +715,7 @@ class Forminator_Hubspot_Wp_Api {
 	 */
 	public function delete_ticket( $data ) {
 		$args     = array();
-		$endpoint = 'crm-objects/v1/objects/tickets/' . $data;
+		$endpoint = 'crm/v3/objects/tickets/' . $data;
 
 		$response = $this->send_authenticated( 'DELETE', $endpoint, $args, true );
 
@@ -708,9 +730,11 @@ class Forminator_Hubspot_Wp_Api {
 	 * @return array|mixed|object
 	 */
 	public function get_properties( $args = array() ) {
-		$response = $this->send_authenticated( 'GET', 'properties/v1/contacts/properties', $args );
-
-		return $response;
+		$response = $this->send_authenticated( 'GET', 'crm/v3/properties/contacts', $args );
+		if ( isset( $response->results ) ) {
+			return $response->results;
+		}
+		return array();
 	}
 
 	/**
@@ -723,7 +747,7 @@ class Forminator_Hubspot_Wp_Api {
 	 * @return array|mixed|object
 	 */
 	public function get_property( $property, $field, $args ) {
-		$response = $this->send_authenticated( 'GET', 'properties/v1/contacts/properties/named/' . $field, $args );
+		$response = $this->send_authenticated( 'GET', 'crm/v3/properties/contacts/' . $field, $args );
 
 		if ( property_exists( $response, $property ) ) {
 			return $response->$property;

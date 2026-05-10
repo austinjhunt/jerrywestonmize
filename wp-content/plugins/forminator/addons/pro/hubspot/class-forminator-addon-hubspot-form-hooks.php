@@ -197,10 +197,8 @@ class Forminator_Hubspot_Form_Hooks extends Forminator_Integration_Form_Hooks {
 				$object_id = $api->create_ticket( $ticket );
 
 				if ( ! is_null( $to_object_id ) && ! is_object( $object_id ) && (int) $object_id > 0 ) {
-					$from_object_id            = $object_id;
-					$associate['fromObjectId'] = $from_object_id;
-					$associate['toObjectId']   = $to_object_id;
-					$api->ticket_associate_contact( $associate );
+					$from_object_id = $object_id;
+					$api->ticket_associate_contact( $from_object_id, $to_object_id );
 				}
 			}
 

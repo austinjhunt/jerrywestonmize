@@ -22,7 +22,10 @@ class WordPress {
     return remove_action($hookName, $callback, $priority);
   }
 
-  /** @param mixed ...$arg */
+  /**
+   * @param non-empty-string $hookName
+   * @param mixed ...$arg
+   */
   public function doAction(string $hookName, ...$arg): void {
     do_action($hookName, ...$arg);
   }
@@ -36,6 +39,7 @@ class WordPress {
   }
 
   /**
+   * @param non-empty-string $hookName
    * @param mixed $value
    * @param mixed ...$args
    * @return mixed
@@ -80,10 +84,11 @@ class WordPress {
   }
 
   /**
-   * @param string|array $args
+   * @param string|array<string, mixed> $args
    * @return WP_Comment[]|int[]|int
    */
   public function getComments($args = '') {
+    /* @phpstan-ignore-next-line argument.type -- thin pass-through; WP stub declares a closed array shape that we do not enforce in this wrapper. */
     return get_comments($args);
   }
 
@@ -104,10 +109,11 @@ class WordPress {
   }
 
   /**
-   * @param array|string $args
+   * @param array<string, mixed>|string $args
    * @return WP_Term[]|int[]|string[]|string|WP_Error
    */
   public function getTerms($args = []) {
+    /* @phpstan-ignore-next-line argument.type -- thin pass-through; WP stub declares a closed array shape that we do not enforce in this wrapper. */
     return get_terms($args);
   }
 

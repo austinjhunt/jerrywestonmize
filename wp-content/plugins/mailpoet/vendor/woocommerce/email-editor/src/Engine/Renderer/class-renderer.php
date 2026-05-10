@@ -4,6 +4,7 @@ namespace Automattic\WooCommerce\EmailEditor\Engine\Renderer;
 if (!defined('ABSPATH')) exit;
 use Automattic\WooCommerce\EmailEditor\Engine\Renderer\ContentRenderer\Content_Renderer;
 use Automattic\WooCommerce\EmailEditor\Engine\Renderer\ContentRenderer\Process_Manager;
+use Automattic\WooCommerce\EmailEditor\Engine\Renderer\ContentRenderer\Rendering_Context;
 use Automattic\WooCommerce\EmailEditor\Engine\Templates\Templates;
 use Automattic\WooCommerce\EmailEditor\Engine\Theme_Controller;
 use Automattic\WooCommerce\EmailEditor\Engine\PersonalizationTags\Personalization_Tags_Registry;
@@ -33,12 +34,16 @@ class Renderer {
  $this->personalization_tags_registry = $personalization_tags_registry;
  $this->process_manager = $process_manager;
  }
- public function render( \WP_Post $post, string $subject, string $pre_header, string $language, string $meta_robots = '', string $template_slug = '' ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+ public function render( \WP_Post $post, string $subject, string $pre_header, string $language, string $meta_robots = '', string $template_slug = '' ): array {
  if ( ! $template_slug ) {
  $template_slug = get_page_template_slug( $post ) ? get_page_template_slug( $post ) : 'email-general';
  }
  // phpcs:ignore Generic.Commenting.DocComment.MissingShort -- used for phpstan
  $template = $this->templates->get_block_template( $template_slug );
+ $previous_rendering_context = $this->content_renderer->get_current_rendering_context();
+ try {
+ $rendering_context = $this->content_renderer->create_rendering_context( $language, $post, $template );
+ $this->content_renderer->set_rendering_context( $rendering_context );
  $email_styles = $this->theme_controller->get_styles();
  $content_result = $this->content_renderer->render_without_css_inline( $post, $template );
  $template_html = $content_result['html'];
@@ -57,8 +62,17 @@ class Renderer {
  'font-family' => $email_styles['typography']['fontFamily'] ?? 'inherit',
  'line-height' => $email_styles['typography']['lineHeight'] ?? '1.5',
  'font-size' => $email_styles['typography']['fontSize'] ?? 'inherit',
+ 'direction' => $rendering_context->get_text_direction(),
+ 'text-align' => $rendering_context->get_default_text_align(),
  ),
  'body, .email_layout_wrapper'
+ );
+ $template_styles .= WP_Style_Engine::compile_css(
+ array(
+ 'direction' => $rendering_context->get_text_direction(),
+ 'text-align' => $rendering_context->get_default_text_align(),
+ ),
+ '.email_content_wrapper, .email_preheader'
  );
  $template_styles .= '.email_layout_wrapper { box-sizing: border-box;}';
  $template_styles .= file_get_contents( __DIR__ . '/' . self::TEMPLATE_STYLES_FILE );
@@ -68,6 +82,7 @@ class Renderer {
  $rendered_template = $this->inline_css_styles( $all_styles . $rendered_template );
  // Postprocess after CSS inlining (border normalization, CSS variable replacement, etc.).
  $rendered_template = $this->process_manager->postprocess( $rendered_template );
+ $rendered_template = $this->apply_html_attributes( $rendered_template, $rendering_context );
  // This is a workaround to support link :hover in some clients. Ideally we would remove the ability to set :hover
  // however this is not possible using the color panel from Gutenberg.
  if ( isset( $email_styles['elements']['link'][':hover']['color']['text'] ) ) {
@@ -77,9 +92,24 @@ class Renderer {
  'html' => $rendered_template,
  'text' => $this->render_text_version( $rendered_template ),
  );
+ } finally {
+ $this->content_renderer->restore_rendering_context( $previous_rendering_context );
+ }
  }
  private function inline_css_styles( $template ) {
  return $this->css_inliner->from_html( $template )->inline_css()->render();
+ }
+ private function apply_html_attributes( string $template, Rendering_Context $rendering_context ): string {
+ $processor = new \WP_HTML_Tag_Processor( $template );
+ if ( ! $processor->next_tag( array( 'tag_name' => 'html' ) ) ) {
+ return $template;
+ }
+ $language = $rendering_context->get_language();
+ if ( $language ) {
+ $processor->set_attribute( 'lang', str_replace( '_', '-', $language ) );
+ }
+ $processor->set_attribute( 'dir', $rendering_context->get_text_direction() );
+ return $processor->get_updated_html();
  }
  private function render_text_version( $template ) {
  $template = ( mb_detect_encoding( $template, 'UTF-8', true ) ) ? $template : mb_convert_encoding( $template, 'UTF-8', mb_list_encodings() );

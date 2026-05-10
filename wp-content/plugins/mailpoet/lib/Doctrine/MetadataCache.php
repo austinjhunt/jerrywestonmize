@@ -7,7 +7,6 @@ if (!defined('ABSPATH')) exit;
 
 use MailPoetVendor\Doctrine\Common\Cache\CacheProvider;
 use ReflectionClass;
-use ReflectionException;
 
 // Simple filesystem-based cache storage for Doctrine Metadata.
 //
@@ -49,11 +48,7 @@ class MetadataCache extends CacheProvider {
       if (!isset($classMetadata->name) || (!class_exists($classMetadata->name) && !interface_exists($classMetadata->name))) {
         return false;
       }
-      try {
-        $reflection = new ReflectionClass($classMetadata->name);
-      } catch (ReflectionException $e) {
-        return false;
-      }
+      $reflection = new ReflectionClass($classMetadata->name);
       clearstatcache();
       return filemtime((string)$filename) >= filemtime((string)$reflection->getFileName());
     }

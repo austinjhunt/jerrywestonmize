@@ -13,13 +13,13 @@ use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
+use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ProviderServiceRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
 use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarMiddlewareService;
 use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarMiddlewareService;
 use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
-use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
 
 /**
@@ -36,7 +36,6 @@ class GetProviderCommandHandler extends CommandHandler
      * @throws ContainerValueNotFoundException
      * @throws AccessDeniedException
      * @throws QueryExecutionException
-     * @throws ContainerException
      * @throws InvalidArgumentException
      */
     public function handle(GetProviderCommand $command)
@@ -71,6 +70,8 @@ class GetProviderCommandHandler extends CommandHandler
         $outlookCalendarService = $this->container->get('infrastructure.outlook.calendar.service');
         /** @var ProviderRepository $providerRepository */
         $providerRepository = $this->container->get('domain.users.providers.repository');
+        /** @var ProviderServiceRepository $providerServiceRepository */
+        $providerServiceRepository = $this->container->get('domain.bookable.service.providerService.repository');
         /** @var AbstractGoogleCalendarMiddlewareService $googleCalendarMiddlewareService */
         $googleCalendarMiddlewareService = $this->container->get(
             'infrastructure.google.calendar.middleware.service'
@@ -112,16 +113,60 @@ class GetProviderCommandHandler extends CommandHandler
         $providerArray['outlookCalendar']['calendarId'] = null;
 
         if ($settingsService->isFeatureEnabled('googleCalendar')) {
+            $googleCalendarAccounts = $providerRepository->getGoogleCalendarAccounts($providerId);
+
+            $providerArray['googleCalendar']['accounts'] = $googleCalendarAccounts;
+
+            $googleCalendarIdFromAccounts = null;
+            foreach ($googleCalendarAccounts as $account) {
+                if (!empty($account['calendarId'])) {
+                    $googleCalendarIdFromAccounts = $account['calendarId'];
+                    break;
+                }
+            }
+
+            $providerArray['googleCalendar']['insertPendingAppointments'] = $providerArray['googleCalendar']['insertPendingAppointments'] ?? false;
+            $providerArray['googleCalendar']['includeBufferTime'] = $providerArray['googleCalendar']['includeBufferTime'] ?? false;
+
+            $googleCalendarGlobalSettings = $settingsService->getCategorySettings('googleCalendar');
+            $providerArray['googleCalendar']['title'] = $providerArray['googleCalendar']['title'] ??
+                ($googleCalendarGlobalSettings['title'] ?? ['appointment' => '%service_name%', 'event' => '%event_name%']);
+            $providerArray['googleCalendar']['description'] = $providerArray['googleCalendar']['description'] ??
+                ($googleCalendarGlobalSettings['description'] ?? ['appointment' => '', 'event' => '']);
+
+            $blockedCalendars = [];
+            foreach ($googleCalendarAccounts as $account) {
+                if (!empty($account['blockedCalendars'])) {
+                    foreach ($account['blockedCalendars'] as $calendarId) {
+                        if (!in_array($calendarId, $blockedCalendars)) {
+                            $blockedCalendars[] = $calendarId;
+                        }
+                    }
+                }
+            }
+            $providerArray['googleCalendar']['blockedCalendars'] = $blockedCalendars;
             try {
                 $googleCalendar = $settingsService->getCategorySettings('googleCalendar');
                 if (!$googleCalendar['accessToken']) {
                     $providerArray['googleCalendar']['calendarList'] = $googleCalService->listCalendarList($provider);
                     $providerArray['googleCalendar']['calendarId'] = $googleCalService->getProviderGoogleCalendarId($provider);
+
+                    if (!empty($providerArray['googleCalendar']['accounts'])) {
+                        $providerArray['googleCalendar']['accounts'] = $googleCalService->getCalendarListsForAccounts(
+                            $providerArray['googleCalendar']['accounts'],
+                            $provider
+                        );
+                    }
                 } else {
                     $providerArray['googleCalendar']['calendarList'] = $googleCalendarMiddlewareService->getCalendarList($providerArray['googleCalendar']);
-                    $providerArray['googleCalendar']['calendarId'] = $provider->getGoogleCalendar() ?
-                        $provider->getGoogleCalendar()->getCalendarId()->getValue() :
-                        null;
+                    $providerArray['googleCalendar']['calendarId'] = $googleCalendarIdFromAccounts;
+
+                    // Fetch calendar lists for all accounts
+                    if (!empty($providerArray['googleCalendar']['accounts'])) {
+                        $providerArray['googleCalendar']['accounts'] = $googleCalendarMiddlewareService->getCalendarListsForAccounts(
+                            $providerArray['googleCalendar']['accounts']
+                        );
+                    }
                 }
             } catch (\Exception $e) {
                 $providerArray['googleCalendar']['calendarId'] = !empty($providerArray['googleCalendar']['calendarId'])
@@ -133,19 +178,67 @@ class GetProviderCommandHandler extends CommandHandler
                 $providerRepository->updateErrorColumn($providerId, $e->getMessage());
                 $successfulGoogleConnection = false;
             }
+
+            if ($googleCalendarIdFromAccounts) {
+                $providerArray['googleCalendar']['calendarId'] = $googleCalendarIdFromAccounts;
+            }
         }
 
         if ($settingsService->isFeatureEnabled('outlookCalendar')) {
+            $outlookCalendarAccounts = $providerRepository->getOutlookCalendarAccounts($providerId);
+
+            $providerArray['outlookCalendar']['accounts'] = $outlookCalendarAccounts;
+
+            $outlookCalendarIdFromAccounts = null;
+            foreach ($outlookCalendarAccounts as $account) {
+                if (!empty($account['calendarId'])) {
+                    $outlookCalendarIdFromAccounts = $account['calendarId'];
+                    break;
+                }
+            }
+
+            $providerArray['outlookCalendar']['insertPendingAppointments'] = $providerArray['outlookCalendar']['insertPendingAppointments'] ?? false;
+            $providerArray['outlookCalendar']['includeBufferTime'] = $providerArray['outlookCalendar']['includeBufferTime'] ?? false;
+
+            $outlookCalendarGlobalSettings = $settingsService->getCategorySettings('outlookCalendar');
+            $providerArray['outlookCalendar']['title'] = $providerArray['outlookCalendar']['title'] ??
+                ($outlookCalendarGlobalSettings['title'] ?? ['appointment' => '%service_name%', 'event' => '%event_name%']);
+            $providerArray['outlookCalendar']['description'] = $providerArray['outlookCalendar']['description'] ??
+                ($outlookCalendarGlobalSettings['description'] ?? ['appointment' => '', 'event' => '']);
+
+            $blockedCalendars = [];
+            foreach ($outlookCalendarAccounts as $account) {
+                if (!empty($account['blockedCalendars'])) {
+                    foreach ($account['blockedCalendars'] as $calendarId) {
+                        if (!in_array($calendarId, $blockedCalendars)) {
+                            $blockedCalendars[] = $calendarId;
+                        }
+                    }
+                }
+            }
+            $providerArray['outlookCalendar']['blockedCalendars'] = $blockedCalendars;
             try {
                 $outlookCalendar = $settingsService->getCategorySettings('outlookCalendar');
                 if (!$outlookCalendar['accessToken']) {
                     $providerArray['outlookCalendar']['calendarList'] = $outlookCalendarService->listCalendarList($provider);
                     $providerArray['outlookCalendar']['calendarId'] = $outlookCalendarService->getProviderOutlookCalendarId($provider);
+
+                    if (!empty($providerArray['outlookCalendar']['accounts'])) {
+                        $providerArray['outlookCalendar']['accounts'] = $outlookCalendarService->getCalendarListsForAccounts(
+                            $providerArray['outlookCalendar']['accounts'],
+                            $provider
+                        );
+                    }
                 } else {
                     $providerArray['outlookCalendar']['calendarList'] = $outlookCalendarMiddlewareService->getCalendarList($providerArray['outlookCalendar']);
-                    $providerArray['outlookCalendar']['calendarId'] = $provider->getOutlookCalendar() ?
-                        $provider->getOutlookCalendar()->getCalendarId()->getValue() :
-                        null;
+                    $providerArray['outlookCalendar']['calendarId'] = $outlookCalendarIdFromAccounts;
+
+                    // Fetch calendar lists for all accounts
+                    if (!empty($providerArray['outlookCalendar']['accounts'])) {
+                        $providerArray['outlookCalendar']['accounts'] = $outlookCalendarMiddlewareService->getCalendarListsForAccounts(
+                            $providerArray['outlookCalendar']['accounts']
+                        );
+                    }
                 }
             } catch (\Exception $e) {
                 $providerArray['outlookCalendar']['calendarId'] = !empty($providerArray['outlookCalendar']['calendarId'])
@@ -157,9 +250,13 @@ class GetProviderCommandHandler extends CommandHandler
                 $providerRepository->updateErrorColumn($providerId, $e->getMessage());
                 $successfulOutlookConnection = false;
             }
+
+            if ($outlookCalendarIdFromAccounts) {
+                $providerArray['outlookCalendar']['calendarId'] = $outlookCalendarIdFromAccounts;
+            }
         }
 
-        $providerArray['mandatoryServicesIds'] = $providerService->getMandatoryServicesIds($providerId);
+        $providerArray['mandatoryServicesIds'] = $providerServiceRepository->getMandatoryServicesIdsForProvider($providerId);
 
         $providerArray['eventList'] = array_map(
             function ($event) {

@@ -24,7 +24,7 @@ class Cookies {
     $value = json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     $error = json_last_error();
     if ($error || ($value === false)) {
-      throw new InvalidArgumentException();
+      throw new InvalidArgumentException('Failed to JSON-encode cookie value');
     }
 
     setcookie(
@@ -35,10 +35,10 @@ class Cookies {
   }
 
   public function get($name) {
-    if (!array_key_exists($name, $_COOKIE)) {
+    if (!array_key_exists($name, $_COOKIE) || !is_string($_COOKIE[$name])) {
       return null;
     }
-    $value = json_decode(sanitize_text_field(wp_unslash(($_COOKIE[$name]))), true);
+    $value = json_decode(sanitize_text_field(wp_unslash($_COOKIE[$name])), true);
     $error = json_last_error();
     if ($error) {
       return null;

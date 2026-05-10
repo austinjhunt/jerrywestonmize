@@ -65,7 +65,7 @@ class Submenu
             remove_submenu_page('amelia', 'wpamelia-welcome');
         });
 
-        if (!Licence::isPremium()) {
+        if (!Licence::isPremium() && current_user_can('manage_options')) {
             $this->addUpgradeMenuItem();
         }
     }
@@ -98,6 +98,14 @@ class Submenu
                 AMELIA_URL . 'public/css/backend/admin-menu.css',
                 [],
                 AMELIA_VERSION
+            );
+
+            wp_enqueue_script(
+                'amelia-admin-menu',
+                AMELIA_URL . 'public/js/backend/admin-menu.js',
+                ['jquery'],
+                AMELIA_VERSION,
+                true
             );
         });
     }

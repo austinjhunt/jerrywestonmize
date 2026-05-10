@@ -786,6 +786,8 @@ class AppointmentReservationService extends AbstractReservationService
         /** @var Appointment $appointment */
         $appointment = $appointmentRepository->getById($booking->getAppointmentId()->getValue());
 
+        $oldAppointmentStatus = $appointment->getStatus()->getValue();
+
         $capacity = $providerRepository->getMaxCapacityByServiceId(
             $appointment->getProviderId()->getValue(),
             $appointment->getServiceId()->getValue()
@@ -909,6 +911,7 @@ class AppointmentReservationService extends AbstractReservationService
         return [
             Entities::APPOINTMENT      => $appointment->toArray(),
             'appointmentStatusChanged' => $appStatusChanged,
+            'oldAppointmentStatus'     => $oldAppointmentStatus,
             Entities::BOOKING          => $booking->toArray()
         ];
     }

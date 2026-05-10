@@ -150,7 +150,7 @@ class SubscriberSaveController {
     $subscriber = $this->createOrUpdate($data, $oldSubscriber);
 
     $this->updateCustomFields($data, $subscriber);
-    $this->updateTags($data, $subscriber);
+    $this->updateTags($data['tags'] ?? [], $subscriber);
 
     $segments = isset($data['segments']) ? $this->findSegments($data['segments']) : null;
     // check for status change
@@ -238,6 +238,15 @@ class SubscriberSaveController {
     if (isset($data['subscribed_ip'])) $subscriber->setSubscribedIp($data['subscribed_ip']);
     if (isset($data['confirmed_ip'])) $subscriber->setConfirmedIp($data['confirmed_ip']);
     if (isset($data['is_woocommerce_user'])) $subscriber->setIsWoocommerceUser((bool)$data['is_woocommerce_user']);
+    if ($this->settings->isSettingEnabled('collect_subscriber_timezones.enabled')) {
+      $timeZone = SubscriberEntity::sanitizeTimeZone($data[SubscriberEntity::TIME_ZONE_FIELD_NAME] ?? null);
+      if ($timeZone !== null) {
+        $subscriber->setTimeZone($timeZone);
+        $subscriber->setTimeZoneSource(SubscriberEntity::TIME_ZONE_SOURCE_FORM);
+        $subscriber->setTimeZoneConfidence(SubscriberEntity::TIME_ZONE_CONFIDENCE_BROWSER);
+        $subscriber->setTimeZoneUpdatedAt(Carbon::now()->millisecond(0));
+      }
+    }
     $createdAt = isset($data['created_at']) ? Carbon::createFromFormat('Y-m-d H:i:s', $data['created_at']) : null;
     if ($createdAt) $subscriber->setCreatedAt($createdAt);
     $confirmedAt = isset($data['confirmed_at']) ? Carbon::createFromFormat('Y-m-d H:i:s', $data['confirmed_at']) : null;
@@ -316,21 +325,28 @@ class SubscriberSaveController {
       return;
     }
 
-    $customFields = $this->customFieldsRepository->findBy(['id' => array_keys($customFieldsMap)]);
+    $customFields = $this->customFieldsRepository->findBy(['id' => array_keys($customFieldsMap), 'deletedAt' => null]);
     foreach ($customFields as $customField) {
-      $this->subscriberCustomFieldRepository->createOrUpdate($subscriber, $customField, $customFieldsMap[$customField->getId()]);
+      $customFieldId = $customField->getId();
+      if ($customFieldId === null || !array_key_exists($customFieldId, $customFieldsMap)) {
+        continue;
+      }
+      $this->subscriberCustomFieldRepository->createOrUpdate($subscriber, $customField, $customFieldsMap[$customFieldId]);
     }
   }
 
-  private function updateTags(array $data, SubscriberEntity $subscriber): void {
+  /**
+   * Replaces the subscriber's tags with the given list.
+   *
+   * $tags is either an array of arrays containing name, id etc. of the tag or an array of strings - the names
+   * of the tag. The tag names are used to upsert tags; any existing tag not present in the list is removed.
+   *
+   * Fires the `mailpoet_subscriber_tag_added` and `mailpoet_subscriber_tag_removed` WP actions, which is how
+   * tag automations are triggered.
+   */
+  public function updateTags(array $tags, SubscriberEntity $subscriber): void {
     $removedTags = [];
 
-    /**
-     * $data['tags'] is either an array of arrays containing name, id etc. of the tag or an array of strings - the names
-     * of the tag.
-     *
-     * Therefore we map it to be only an array of strings, containing the names of the tag.
-     */
     $tags = array_map(
       function($tag): string {
         if (is_array($tag)) {
@@ -338,7 +354,7 @@ class SubscriberSaveController {
         }
         return (string)$tag;
       },
-      (array)$data['tags']
+      $tags
     );
     foreach ($subscriber->getSubscriberTags() as $subscriberTag) {
       $tag = $subscriberTag->getTag();

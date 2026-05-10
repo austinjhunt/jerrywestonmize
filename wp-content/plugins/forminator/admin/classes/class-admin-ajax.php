@@ -229,6 +229,30 @@ class Forminator_Admin_AJAX {
 			$template->notifications = $quiz_data['notifications'];
 		}
 
+		// Server-side validation for personality and question titles.
+		if ( 'forminator_save_quiz_nowrong' === $template->type && isset( $template->results ) ) {
+			foreach ( $template->results as $result ) {
+				if ( empty( $result['title'] ) ) {
+					wp_send_json_error( esc_html__( 'Personality cannot be empty. Please enter a valid personality.', 'forminator' ) );
+				}
+			}
+		}
+
+		if ( isset( $template->questions ) ) {
+			foreach ( $template->questions as $question ) {
+				if ( empty( $question['title'] ) ) {
+					wp_send_json_error( esc_html__( 'Question cannot be empty. Please enter a valid question.', 'forminator' ) );
+				}
+
+				$answers = isset( $question['answers'] ) ? $question['answers'] : array();
+				foreach ( $answers as $answer ) {
+					if ( empty( $answer['title'] ) && empty( $answer['image'] ) ) {
+						wp_send_json_error( esc_html__( 'Answer cannot be empty. Please enter a valid answer.', 'forminator' ) );
+					}
+				}
+			}
+		}
+
 		$id = Forminator_Quiz_Admin::update( $id, $title, $status, $template );
 		if ( is_wp_error( $id ) ) {
 			wp_send_json_error( $id->get_error_message() );

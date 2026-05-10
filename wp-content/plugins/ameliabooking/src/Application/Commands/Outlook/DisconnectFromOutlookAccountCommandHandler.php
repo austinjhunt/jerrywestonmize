@@ -9,10 +9,8 @@ use AmeliaBooking\Application\Services\User\UserApplicationService;
 use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Entities;
-use AmeliaBooking\Domain\Entity\Outlook\OutlookCalendar;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
-use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Outlook\OutlookCalendarRepository;
 use Interop\Container\Exception\ContainerException;
@@ -29,7 +27,6 @@ class DisconnectFromOutlookAccountCommandHandler extends CommandHandler
      *
      * @return CommandResult
      * @throws AccessDeniedException
-     * @throws NotFoundException
      * @throws QueryExecutionException
      * @throws ContainerException
      * @throws InvalidArgumentException
@@ -69,6 +66,27 @@ class DisconnectFromOutlookAccountCommandHandler extends CommandHandler
         /** @var OutlookCalendarRepository $outlookCalendarRepository */
         $outlookCalendarRepository = $this->container->get('domain.outlook.calendar.repository');
 
+        $accountId = $command->getField('accountId');
+
+        if ($accountId) {
+            try {
+                if ($outlookCalendarRepository->delete($accountId)) {
+                    do_action('amelia_after_outlook_calendar_deleted', ['accountId' => $accountId], $command->getArg('id'));
+
+                    $result->setResult(CommandResult::RESULT_SUCCESS);
+                    $result->setMessage('Outlook calendar account successfully disconnected.');
+                } else {
+                    $result->setResult(CommandResult::RESULT_ERROR);
+                    $result->setMessage('Unable to delete outlook calendar account.');
+                }
+            } catch (\Exception $e) {
+                $result->setResult(CommandResult::RESULT_ERROR);
+                $result->setMessage('Unable to delete outlook calendar account.');
+            }
+
+            return $result;
+        }
+
         if (!$command->getArg('id')) {
             /** @var SettingsService $settingsService */
             $settingsService = $this->getContainer()->get('domain.settings.service');
@@ -85,16 +103,29 @@ class DisconnectFromOutlookAccountCommandHandler extends CommandHandler
             return $result;
         }
 
-        /** @var OutlookCalendar $outlookCalendar */
-        $outlookCalendar = $outlookCalendarRepository->getByProviderId($command->getArg('id'));
+        $providerId = $command->getArg('id');
 
-        do_action('amelia_before_outlook_calendar_deleted', $outlookCalendar ? $outlookCalendar->toArray() : null, $command->getArg('id'));
+        try {
+            $outlookCalendars = $outlookCalendarRepository->getByEntityId($providerId, 'userId');
 
-        if ($outlookCalendarRepository->delete($outlookCalendar->getId()->getValue())) {
-            do_action('amelia_after_outlook_calendar_deleted', $outlookCalendar->toArray(), $command->getArg('id'));
+            foreach ($outlookCalendars->getItems() as $outlookCalendar) {
+                do_action('amelia_before_outlook_calendar_deleted', $outlookCalendar->toArray(), $providerId);
+            }
 
-            $result->setResult(CommandResult::RESULT_SUCCESS);
-            $result->setMessage('Outlook calendar successfully disconnected.');
+            if ($outlookCalendarRepository->deleteByEntityId($providerId, 'userId')) {
+                foreach ($outlookCalendars->getItems() as $outlookCalendar) {
+                    do_action('amelia_after_outlook_calendar_deleted', $outlookCalendar->toArray(), $providerId);
+                }
+
+                $result->setResult(CommandResult::RESULT_SUCCESS);
+                $result->setMessage('Outlook calendar successfully disconnected.');
+            } else {
+                $result->setResult(CommandResult::RESULT_ERROR);
+                $result->setMessage('Unable to delete outlook calendar accounts.');
+            }
+        } catch (\Exception $e) {
+            $result->setResult(CommandResult::RESULT_ERROR);
+            $result->setMessage('Unable to delete outlook calendar accounts.');
         }
 
         return $result;

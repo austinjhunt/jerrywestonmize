@@ -46,4 +46,9 @@ class StarterOutlookCalendarMiddlewareService extends AbstractOutlookCalendarMid
         array $attachments = []
     ): void {
     }
+
+    public function getCalendarListsForAccounts(array $accounts): array
+    {
+        return [];
+    }
 }

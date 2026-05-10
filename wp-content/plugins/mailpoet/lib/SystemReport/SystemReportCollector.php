@@ -111,6 +111,11 @@ class SystemReportCollector {
     $ApiKeyState = $this->settings->get(Bridge::API_KEY_STATE_SETTING_NAME . '.state');
     $premiumKeyState = $this->settings->get(Bridge::PREMIUM_KEY_STATE_SETTING_NAME . '.state');
 
+    $activePluginFiles = $this->wp->getOption('active_plugins', []);
+    $activePluginFiles = is_array($activePluginFiles)
+      ? array_map(static fn($v): string => is_scalar($v) ? (string)$v : '', $activePluginFiles)
+      : [];
+
     // the HelpScout Beacon API has a limit of 20 attribute-value pairs (https://developer.helpscout.com/beacon-2/web/javascript-api/#beacon-session-data)
     return [
       'PHP version' => PHP_VERSION,
@@ -119,7 +124,7 @@ class SystemReportCollector {
       'MailPoet Premium/MSS key' => $premiumKey,
       'WordPress version' => $this->wp->getBloginfo('version'),
       'Database version' => $dbVersion,
-      'Web server' => (!empty($_SERVER["SERVER_SOFTWARE"])) ? sanitize_text_field(wp_unslash($_SERVER["SERVER_SOFTWARE"])) : 'N/A',
+      'Web server' => is_string($_SERVER['SERVER_SOFTWARE'] ?? null) && $_SERVER['SERVER_SOFTWARE'] !== '' ? sanitize_text_field(wp_unslash($_SERVER['SERVER_SOFTWARE'])) : 'N/A',
       'Server OS' => (function_exists('php_uname')) ? php_uname() : 'N/A',
       'WP info' => $this->formatCompositeField([
         'WP_MEMORY_LIMIT' => WP_MEMORY_LIMIT,
@@ -137,7 +142,7 @@ class SystemReportCollector {
       'Multisite environment?' => (is_multisite() ? 'Yes' : 'No'),
       'Current Theme' => $currentTheme->get('Name') .
         ' (version ' . $currentTheme->get('Version') . ')',
-      'Active Plugin names' => join(", ", $this->wp->getOption('active_plugins')),
+      'Active Plugin names' => join(", ", $activePluginFiles),
       'Sending Method' => $mta['method'],
       'MailPoet Sending Service' => $this->formatCompositeField([
         'Is reachable' => $this->bridge->validateBridgePingResponse($pingBridgeResponse) ? 'Yes' : 'No',
@@ -182,6 +187,63 @@ class SystemReportCollector {
       ]),
       'Data inconsistency status' => $this->formatCompositeField($this->convertKeysToTitleCase($inconsistencyStatus)),
     ];
+  }
+
+  /**
+   * @return array<int, array{
+   *   plugin: string,
+   *   name: string,
+   *   author: string,
+   *   version: string,
+   *   versionLatest: ?string
+   * }>
+   */
+  public function getActivePluginsData(): array {
+    if (!function_exists('get_plugins')) {
+      require_once ABSPATH . 'wp-admin/includes/plugin.php';
+    }
+
+    $activePluginFiles = $this->wp->getOption('active_plugins', []);
+    $activePluginFiles = is_array($activePluginFiles)
+      ? array_map(static fn($v): string => is_scalar($v) ? (string)$v : '', $activePluginFiles)
+      : [];
+    $allPlugins = $this->wp->getPlugins();
+    $updateTransient = $this->wp->getSiteTransient('update_plugins');
+    $updateResponses = (
+      is_object($updateTransient) &&
+      isset($updateTransient->response) &&
+      is_array($updateTransient->response)
+    ) ? $updateTransient->response : [];
+
+    $activePlugins = [];
+    foreach ($activePluginFiles as $pluginFile) {
+      $plugin = $allPlugins[$pluginFile] ?? [];
+      $authorName = (string)($plugin['AuthorName'] ?? '');
+      if ($authorName === '') {
+        $authorName = $this->wp->wpStripAllTags((string)($plugin['Author'] ?? ''));
+      }
+      if ($authorName === '') {
+        $authorName = __('Unknown', 'mailpoet');
+      }
+
+      $latestVersion = null;
+      $pluginUpdate = $updateResponses[$pluginFile] ?? null;
+      if (is_object($pluginUpdate) && !empty($pluginUpdate->new_version)) { // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+        $latestVersion = (string)$pluginUpdate->new_version; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+      } elseif (is_array($pluginUpdate) && isset($pluginUpdate['new_version']) && (is_string($pluginUpdate['new_version']) || is_int($pluginUpdate['new_version']) || is_float($pluginUpdate['new_version'])) && $pluginUpdate['new_version'] !== '') {
+        $latestVersion = (string)$pluginUpdate['new_version'];
+      }
+
+      $activePlugins[] = [
+        'plugin' => (string)$pluginFile,
+        'name' => (string)($plugin['Name'] ?? $pluginFile),
+        'author' => $authorName,
+        'version' => (string)($plugin['Version'] ?? __('Unknown', 'mailpoet')),
+        'versionLatest' => $latestVersion,
+      ];
+    }
+
+    return $activePlugins;
   }
 
   public function getCronPingResponse(): string {

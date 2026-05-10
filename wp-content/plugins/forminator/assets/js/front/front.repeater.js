@@ -21,6 +21,34 @@
 		forminator_add_listener_on_repeater_add_remove();
 	} );
 
+	// Reset group field repeater copies after successful form submission.
+	// forminator:form:submit:success fires only on submission, not on pagination,
+	// so repeater items are not incorrectly wiped when navigating multi-page forms.
+	$( document ).on( 'forminator:form:submit:success', ( e ) => {
+		const form = $( e.target );
+
+		if ( ! form.is( 'form.forminator-custom-form' ) ) {
+			return;
+		}
+
+		form.find( '.forminator-all-group-copies' ).each( function() {
+			const groupField = $( this ),
+				firstBlock = groupField.find( '>.forminator-grouped-fields:first-child' ),
+				fieldOptions = firstBlock.data('options');
+
+			if ( ! fieldOptions || ! fieldOptions.is_repeater ) {
+				return;
+			}
+
+			// Remove all cloned copies - keep only the original first block.
+			groupField.find( '>.forminator-grouped-fields:not(:first-child)' ).remove();
+
+			// Re-add minimum required items and refresh action button visibility.
+			// forminatorChangedRepeaterMin already calls forminatorHideIrrelevantActions internally.
+			forminatorChangedRepeaterMin( groupField, forminatorGetMin( fieldOptions, form ) );
+		} );
+	} );
+
 	function forminator_handle_all_group_field_copies() {
 	setTimeout( function() {
 		// Init Group fields. Clone group fields if minimum more than 1.

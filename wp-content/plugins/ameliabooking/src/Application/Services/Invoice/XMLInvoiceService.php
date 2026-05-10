@@ -39,8 +39,10 @@ class XMLInvoiceService
         $this->xml->addChild('CustomizationID', 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0', $this->cbc);
         $this->xml->addChild('ProfileID', 'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0', $this->cbc);
         $this->xml->addChild('ID', htmlspecialchars($this->invoiceData['invoice_number']), $this->cbc);
-        $this->xml->addChild('IssueDate', date('Y-m-d', strtotime($this->invoiceData['invoice_issued'])), $this->cbc);
-
+        $this->xml->addChild('IssueDate', $this->invoiceData['invoice_issued_xml'], $this->cbc);
+        if (!empty($this->invoiceData['invoice_dates_xml'])) {
+            $this->xml->addChild('TaxPointDate', $this->invoiceData['invoice_dates_xml'][0], $this->cbc);
+        }
 
         $this->xml->addChild('InvoiceTypeCode', '380', $this->cbc); // 380 = Commercial invoice
         $this->xml->addChild('DocumentCurrencyCode', $this->currency, $this->cbc);

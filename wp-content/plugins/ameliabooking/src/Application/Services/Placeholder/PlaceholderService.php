@@ -82,6 +82,8 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
         unset($data['invoice_items_booking']);
         unset($data['invoice_items_extras']);
         unset($data['invoice_items_event']);
+        unset($data['invoice_dates']);
+        unset($data['invoice_dates_xml']);
         unset($data['items']);
         unset($data['qr_code_tickets']);
 
@@ -474,6 +476,9 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
                 'payment_created'                   => $payment && !empty($payment['created'])
                     ? date_i18n($dateFormat, strtotime($payment['created']))
                     : '',
+                'payment_created_xml'               => $payment && !empty($payment['created'])
+                   ? date_i18n('Y-m-d', strtotime($payment['created']))
+                   : '',
                 'payment_invoice_number'            => $payment ? $payment['invoiceNumber'] : '',
                 'payment_gateway_title'             => $payment ? $payment['gatewayTitle'] : '',
                 "payment_due_amount"                => $paymentDueAmount,
@@ -718,7 +723,7 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
 
                 $bookingCustomFields = !empty($booking['customFields']) ? json_decode($booking['customFields'], true) : null;
 
-                if ($booking['customerId'] && !isset($booking['customer'])) {
+                if ($booking['customerId'] && (!isset($booking['customer']) || !isset($booking['customer']['customFields']))) {
                     /** @var UserRepository $userRepository */
                     $userRepository = $this->container->get('domain.users.repository');
 
@@ -826,7 +831,7 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
 
             if (
                 !empty($appointment['bookings'][$bookingKey]['customerId']) &&
-                !isset($appointment['bookings'][$bookingKey]['customer'])
+                (!isset($appointment['bookings'][$bookingKey]['customer']) || !isset($appointment['bookings'][$bookingKey]['customer']['customFields']))
             ) {
                 /** @var UserRepository $userRepository */
                 $userRepository = $this->container->get('domain.users.repository');
@@ -1286,9 +1291,11 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
             return $value;
         }
 
-        $date = DateTime::createFromFormat('Y-m-d', $savedDate);
+        // Parse/format datepicker values in UTC to preserve the selected calendar date
+        // regardless of customer or site timezone offsets.
+        $date = DateTime::createFromFormat('!Y-m-d', $savedDate, new \DateTimeZone('UTC'));
         if ($date instanceof DateTime) {
-            return date_i18n($dateFormat, $date->getTimestamp());
+            return wp_date($dateFormat, $date->getTimestamp(), new \DateTimeZone('UTC'));
         }
 
         return $value;

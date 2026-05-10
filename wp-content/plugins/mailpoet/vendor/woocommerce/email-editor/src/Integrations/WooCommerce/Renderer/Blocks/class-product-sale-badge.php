@@ -17,10 +17,10 @@ class Product_Sale_Badge extends Abstract_Product_Block_Renderer {
  $attributes = $parsed_block['attrs'] ?? array();
  $sale_text = apply_filters( 'woocommerce_sale_badge_text', __( 'Sale', 'woocommerce' ), $product );
  $badge_html = $this->build_badge_html( $sale_text, $attributes, $rendering_context );
- return $this->apply_email_wrapper( $badge_html, $parsed_block );
+ return $this->apply_email_wrapper( $badge_html, $parsed_block, $rendering_context );
  }
  private function build_badge_html( string $sale_text, array $attributes, Rendering_Context $rendering_context ): string {
- $align = $attributes['align'] ?? 'left';
+ $align = $rendering_context->resolve_text_align( $attributes['align'] ?? null );
  $position_style = $this->get_position_style( $align );
  $badge_styles = array_merge(
  array(
@@ -80,8 +80,8 @@ class Product_Sale_Badge extends Abstract_Product_Block_Renderer {
  );
  }
  }
- private function apply_email_wrapper( string $badge_html, array $parsed_block ): string {
- $align = $parsed_block['attrs']['align'] ?? 'left';
+ private function apply_email_wrapper( string $badge_html, array $parsed_block, Rendering_Context $rendering_context ): string {
+ $align = $rendering_context->resolve_text_align( $parsed_block['attrs']['align'] ?? null );
  $wrapper_styles = array(
  'border-collapse' => 'collapse',
  'width' => '100%',

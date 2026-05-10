@@ -333,7 +333,7 @@ abstract class Forminator_Front_Action {
 			if ( $response['success'] ) {
 				if ( isset( $response['url'] ) && ( ! isset( $response['newtab'] ) || 'sametab' === $response['newtab'] ) ) {
 					$url = apply_filters( 'forminator_' . static::$module_slug . '_submit_url', $response['url'], self::$module_id );
-					wp_safe_redirect( $url );
+					wp_redirect( $url ); // phpcs:ignore WordPress.Security.SafeRedirect.wp_redirect_wp_redirect
 					exit;
 				} else {
 					add_action( 'forminator_' . static::$module_slug . '_post_message', array( $this, 'form_response_message' ), 10, 2 );

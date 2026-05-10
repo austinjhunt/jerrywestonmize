@@ -23,6 +23,7 @@ use AmeliaBooking\Infrastructure\Repository\Bookable\Service\CategoryRepository;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ServiceRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventTagsRepository;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
+use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use Exception;
 
 /**
@@ -32,10 +33,7 @@ use Exception;
  */
 class GutenbergBlock
 {
-    /** @var Container $container */
-    private static $container;
-
-    /** @var  Collection */
+    /** @var array */
     private static $entities;
 
     public static function init()
@@ -185,16 +183,6 @@ class GutenbergBlock
     }
 
     /**
-     * Set Amelia Container
-     *
-     * @param $container
-     */
-    public static function setContainer($container)
-    {
-        self::$container = $container;
-    }
-
-    /**
      * Get entities data for front-end
      */
     public static function getEntitiesData()
@@ -212,21 +200,22 @@ class GutenbergBlock
         }
 
         try {
-            self::setContainer(require AMELIA_PATH . '/src/Infrastructure/ContainerConfig/container.php');
+            /** @var Container $container */
+            $container = require AMELIA_PATH . '/src/Infrastructure/ContainerConfig/container.php';
 
             /** @var AbstractLocationApplicationService $locationAS */
-            $locationAS = self::$container->get('application.location.service');
+            $locationAS = $container->get('application.location.service');
 
             $locations = $locationAS->getAllOrderedByName();
 
             $resultData['locations'] = $locations->toArray();
 
             /** @var ServiceRepository $serviceRepository */
-            $serviceRepository = self::$container->get('domain.bookable.service.repository');
+            $serviceRepository = $container->get('domain.bookable.service.repository');
             /** @var CategoryRepository $categoryRepository */
-            $categoryRepository = self::$container->get('domain.bookable.category.repository');
+            $categoryRepository = $container->get('domain.bookable.category.repository');
             /** @var BookableApplicationService $bookableAS */
-            $bookableAS = self::$container->get('application.bookable.service');
+            $bookableAS = $container->get('application.bookable.service');
 
             $services = $serviceRepository->getAllArrayIndexedById();
 
@@ -237,10 +226,10 @@ class GutenbergBlock
             $resultData['categories'] = $categories->toArray();
 
             /** @var ProviderRepository $providerRepository */
-            $providerRepository = self::$container->get('domain.users.providers.repository');
+            $providerRepository = $container->get('domain.users.providers.repository');
 
             /** @var ProviderApplicationService $providerAS */
-            $providerAS = self::$container->get('application.user.provider.service');
+            $providerAS = $container->get('application.user.provider.service');
 
             /** @var Collection $providers */
             $providers = $providerRepository->getByFieldValue('type', 'provider');
@@ -248,13 +237,13 @@ class GutenbergBlock
             $providerServicesData = $providerRepository->getProvidersServices();
 
             foreach ((array)$providerServicesData as $providerKey => $providerServices) {
-                /** @var Provider $provider */
+                /** @var Provider|null $provider */
                 $provider = $providers->getItem($providerKey);
 
                 $providerServiceList = new Collection();
 
                 foreach ((array)$providerServices as $serviceKey => $providerService) {
-                    /** @var Service $service */
+                    /** @var Service|null $service */
                     $service = $services->getItem($serviceKey);
 
                     if ($service && $provider) {
@@ -269,7 +258,7 @@ class GutenbergBlock
             }
 
             /** @var Provider $currentUser */
-            $currentUser = self::$container->get('logged.in.user');
+            $currentUser = $container->get('logged.in.user');
 
             $resultData['employees'] = $providerAS->removeAllExceptUser(
                 $providers->toArray(),
@@ -279,7 +268,7 @@ class GutenbergBlock
             $finalData = self::getOnlyCatSerLocEmp($resultData);
 
             /** @var EventApplicationService $eventAS */
-            $eventAS = self::$container->get('application.booking.event.service');
+            $eventAS = $container->get('application.booking.event.service');
 
             /** @var Collection $events */
             $events = $eventAS->getEventsByCriteria(
@@ -295,22 +284,29 @@ class GutenbergBlock
             $finalData['events'] = $events->toArray();
 
             /** @var EventDomainService $eventDS */
-            $eventDS = self::$container->get('domain.booking.event.service');
+            $eventDS = $container->get('domain.booking.event.service');
 
-            $finalData['events'] = $eventDS->getShortcodeForEventList(self::$container, $finalData['events']);
+            /** @var SettingsService $settingsDS */
+            $settingsDS = $container->get('domain.settings.service');
 
-            /** @var EventTagsRepository $eventTagsRepository */
-            $eventTagsRepository = self::$container->get('domain.booking.event.tag.repository');
+            $finalData['events'] = $eventDS->getShortcodeForEventList($container, $finalData['events']);
 
-            /** @var Collection $tags * */
-            $tags = $eventTagsRepository->getAllDistinctByCriteria(
-                [
-                    'eventIds' => array_column($finalData['events'], 'id')
-                ]
-            );
+            $tags = new Collection();
+
+            if ($settingsDS->isFeatureEnabled('eventTags')) {
+                /** @var EventTagsRepository $eventTagsRepository */
+                $eventTagsRepository = $container->get('domain.booking.event.tag.repository');
+
+                /** @var Collection $tags * */
+                $tags = $eventTagsRepository->getAllDistinctByCriteria(
+                    [
+                        'eventIds' => array_column($finalData['events'], 'id')
+                    ]
+                );
+            }
 
             /** @var AbstractPackageApplicationService $packageApplicationService */
-            $packageApplicationService = self::$container->get('application.bookable.package');
+            $packageApplicationService = $container->get('application.bookable.package');
 
             $finalData['packages'] = $packageApplicationService->getPackagesArray();
 

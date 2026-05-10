@@ -361,16 +361,27 @@ class Forminator_Date extends Forminator_Field {
 			} elseif ( 'today' === $default_date ) {
 				list( $day, $month, $year ) = explode( ' ', current_time( 'j n Y' ) );
 			} elseif ( 'custom' === $default_date && ! empty( $default_date_value ) ) {
-				if ( empty( strtotime( $default_date_value ) ) ) {
-					if ( false !== strpos( $date_format, '-' ) || false !== strpos( $date_format, '.' ) ) {
-						$default_date_value = str_replace( array( '.', '-' ), '/', $default_date_value );
-					} elseif ( false !== strpos( $date_format, '/' ) ) {
-						$default_date_value = str_replace( '/', '-', $default_date_value );
+				$parsed = self::parse_date( $default_date_value, $date_format );
+				if ( ! $this->check_date( $parsed['month'], $parsed['day'], $parsed['year'] ) ) {
+					// The date format may have changed since the default date was saved.
+					// Try all formats with the same separator to find a valid parse.
+					if ( false !== strpos( $default_date_value, '.' ) ) {
+						$fallback_formats = array( 'mm.dd.yy', 'dd.mm.yy', 'yy.mm.dd' );
+					} elseif ( false !== strpos( $default_date_value, '/' ) ) {
+						$fallback_formats = array( 'mm/dd/yy', 'dd/mm/yy', 'yy/mm/dd' );
+					} else {
+						$fallback_formats = array( 'mm-dd-yy', 'dd-mm-yy', 'yy-mm-dd' );
+					}
+					foreach ( $fallback_formats as $fallback_fmt ) {
+						$parsed = self::parse_date( $default_date_value, $fallback_fmt );
+						if ( $this->check_date( $parsed['month'], $parsed['day'], $parsed['year'] ) ) {
+							break;
+						}
 					}
 				}
-				$day   = gmdate( 'j', strtotime( $default_date_value ) );
-				$month = gmdate( 'n', strtotime( $default_date_value ) );
-				$year  = gmdate( 'Y', strtotime( $default_date_value ) );
+				$day   = $parsed['day'];
+				$month = $parsed['month'];
+				$year  = $parsed['year'];
 			} else {
 				$day               = '';
 				$month             = '';

@@ -432,13 +432,16 @@
 				// set sender random from 1 to 99 number to avoid duplicate ids
 				render = Math.floor(Math.random() * 99) + 1;
 			}
+			if( render ) {
+				render = '-' + render;
+			}
 
 			steps.each( function() {
 
 				var $step        = $( this ),
 					$stepLabel   = self.encodeHTMLEntities( $step.data( 'label' ) ),
 					$stepNumb    = $step.data('step') - 1,
-					$stepControl = 'forminator-custom-form-' + self.form_id + '-' + render + '--page-' + $stepNumb,
+					$stepControl = 'forminator-custom-form-' + self.form_id + render + '--page-' + $stepNumb,
 					$stepId      = $stepControl + '-label'
 				;
 
@@ -457,7 +460,7 @@
 				var $step   = $(this),
 					label   = self.encodeHTMLEntities( $step.data( 'label' ) ),
 					numb    = steps.length,
-					control = 'forminator-custom-form-' + self.form_id + '-' + render + '--page-' + numb,
+					control = 'forminator-custom-form-' + self.form_id + render + '--page-' + numb,
 					stepid  = control + '-label'
 				;
 
@@ -642,13 +645,21 @@
 			var submitButtonClass = this.settings.submitButtonClass;
 			if ( this.actualStep === ( this.totalActiveSteps - 1 ) && ! this.finished ) {
 
-				var submit_button_text = this.$el.find('.forminator-pagination-submit').html(),
+				var submit_button_text = this.$form.hasClass('forminator-design--material')
+						? this.$el.find('.forminator-pagination-submit .forminator-button--text').html()
+						: this.$el.find('.forminator-pagination-submit').html(),
+					display_submit_button_text = $.trim( $( '<div />' ).html( submit_button_text ).text() ),
+					hasSubmitRightAway = this.$el.find( '.forminator-submit-rightaway').length,
 					loadingText = this.$el.find('.forminator-pagination-submit').data('loading'),
 					last_button_txt = ( this.custom_label[ 'pagination-labels' ] === 'custom'
 						&& this.custom_label['last-previous'] !== '' ) ? this.custom_label['last-previous'] : this.prev_button,
 					forminatorPayment = self.$el.find('.forminator-payment'),
 					nextBtn = this.$el.find('.forminator-button-next'),
 					submitButton = this.$el.find( '.forminator-button-submit' );
+
+				if ( this.$form.hasClass('forminator-quiz') && ! display_submit_button_text && hasSubmitRightAway ) {
+					submit_button_text = window.ForminatorFront.quiz.view_results;
+				}
 
 				if ( this.$form.hasClass('forminator-design--material') ) {
 
@@ -659,9 +670,10 @@
 						function() {
 							nextBtn
 							.addClass('forminator-button-submit ' + submitButtonClass )
+							.attr('data-loading', loadingText)
 							.find('.forminator-button--text')
 							.html('')
-							.html(submit_button_text).data('loading', loadingText);
+							.html(submit_button_text);
 							self.$el.trigger( 'forminator.front.pagination.buttons.updated' );
 						},
 						20
@@ -674,7 +686,7 @@
 						function() {
 							nextBtn
 							.addClass( 'forminator-button-submit ' + submitButtonClass )
-							.html( submit_button_text ).data('loading', loadingText);
+							.html(submit_button_text).data('loading', loadingText);
 							self.$el.trigger( 'forminator.front.pagination.buttons.updated' );
 						},
 						20
@@ -685,16 +697,21 @@
 				setTimeout(
 					function() {
 						submitButton = self.$el.find( '.forminator-button-submit' );
+
+						if ( self.$form.hasClass('forminator-quiz') && ! display_submit_button_text ) {
+							submitButton.addClass('forminator-hidden');
+
+							if ( hasSubmitRightAway ) {
+								if ( self.$form.hasClass('forminator-design--material') ) {
+									submitButton.find( '.forminator-button--text' ).html( window.ForminatorFront.quiz.view_results );
+								} else {
+									submitButton.html( window.ForminatorFront.quiz.view_results );
+								}
+							}
+						}
 					},
 					30
 				);
-
-				if ( this.$form.hasClass('forminator-quiz') && ! submit_button_text ) {
-					submitButton.addClass('forminator-hidden');
-					if ( this.$el.find( '.forminator-submit-rightaway').length ) {
-						submitButton.html( window.ForminatorFront.quiz.view_results );
-					}
-				}
 
 				if( this.custom_label['has-paypal'] === true ) {
 					forminatorPayment.attr('id', 'forminator-paypal-submit');

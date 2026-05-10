@@ -24,7 +24,6 @@ use MailPoet\Segments\SegmentListingRepository;
 use MailPoet\Segments\SegmentSaveController;
 use MailPoet\Segments\SegmentsRepository;
 use MailPoet\Segments\SegmentSubscribersRepository;
-use MailPoet\Segments\WooCommerce;
 use MailPoet\Segments\WP;
 use MailPoet\Subscribers\SubscribersRepository;
 use MailPoet\UnexpectedValueException;
@@ -48,9 +47,6 @@ class Segments extends APIEndpoint {
 
   /** @var SubscribersRepository */
   private $subscribersRepository;
-
-  /** @var WooCommerce */
-  private $wooCommerceSync;
 
   /** @var WP */
   private $wpSegment;
@@ -78,14 +74,12 @@ class Segments extends APIEndpoint {
     SegmentSaveController $segmentSavecontroller,
     SegmentSubscribersRepository $segmentSubscribersRepository,
     SubscribersRepository $subscribersRepository,
-    WooCommerce $wooCommerce,
     WP $wpSegment,
     NewsletterSegmentRepository $newsletterSegmentRepository,
     CronWorkerScheduler $cronWorkerScheduler,
     FormsRepository $formsRepository
   ) {
     $this->listingHandler = $listingHandler;
-    $this->wooCommerceSync = $wooCommerce;
     $this->segmentsRepository = $segmentsRepository;
     $this->segmentsResponseBuilder = $segmentsResponseBuilder;
     $this->segmentSavecontroller = $segmentSavecontroller;
@@ -195,7 +189,7 @@ class Segments extends APIEndpoint {
         APIError::BAD_REQUEST => str_replace(
           '%1$s',
           "'" . join("', '", $activelyUsedNewslettersSubjects[$segment->getId()]) . "'",
-          // translators: %1$s is a comma-seperated list of emails for which the segment is used.
+          // translators: %1$s is a comma-separated list of emails for which the segment is used.
           _x('List cannot be deleted because it’s used for %1$s email', 'Alert shown when trying to delete segment, which is assigned to any automatic emails.', 'mailpoet')
         ),
       ]);
@@ -207,7 +201,7 @@ class Segments extends APIEndpoint {
         APIError::BAD_REQUEST => str_replace(
           '%1$s',
           "'" . join("', '", $activelyUsedFormNames[$segment->getId()]) . "'",
-          // translators: %1$s is a comma-seperated list of forms for which the segment is used.
+          // translators: %1$s is a comma-separated list of forms for which the segment is used.
           _nx(
             'List cannot be deleted because it’s used for %1$s form',
             'List cannot be deleted because it’s used for %1$s forms',

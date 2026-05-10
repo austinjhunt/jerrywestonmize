@@ -59,19 +59,31 @@ class __TwigTemplate_0caa1806b4e6bad50c4bb59fbbdec799771fc97376dbc0dd12d0fe0df7e
         // line 7
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(($context["items_per_page"] ?? null), "html", null, true);
         yield ";
+    var mailpoet_segments_api = ";
+        // line 8
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["api"] ?? null));
+        yield ";
+    var mailpoet_confirmation_emails = ";
+        // line 9
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["confirmation_emails"] ?? null));
+        yield ";
+    var mailpoet_pages = ";
+        // line 10
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["pages"] ?? null));
+        yield ";
   </script>
 
   ";
-        // line 10
-        yield from         $this->loadTemplate("segments/translations.html", "segments/static.html", 10)->unwrap()->yield($context);
+        // line 13
+        yield from         $this->loadTemplate("segments/translations.html", "segments/static.html", 13)->unwrap()->yield($context);
         return; yield '';
     }
 
-    // line 14
+    // line 17
     public function block_after_translations($context, array $blocks = [])
     {
         $macros = $this->macros;
-        // line 15
+        // line 18
         yield "  ";
         yield do_action("mailpoet_segments_translations_after");
         yield "
@@ -100,7 +112,7 @@ class __TwigTemplate_0caa1806b4e6bad50c4bb59fbbdec799771fc97376dbc0dd12d0fe0df7e
      */
     public function getDebugInfo()
     {
-        return array (  72 => 15,  68 => 14,  63 => 10,  57 => 7,  52 => 4,  48 => 3,  37 => 1,);
+        return array (  84 => 18,  80 => 17,  75 => 13,  69 => 10,  65 => 9,  61 => 8,  57 => 7,  52 => 4,  48 => 3,  37 => 1,);
     }
 
     public function getSourceContext()

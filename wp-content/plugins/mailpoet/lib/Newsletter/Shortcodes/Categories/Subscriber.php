@@ -5,6 +5,7 @@ namespace MailPoet\Newsletter\Shortcodes\Categories;
 if (!defined('ABSPATH')) exit;
 
 
+use MailPoet\Entities\CustomFieldEntity;
 use MailPoet\Entities\NewsletterEntity;
 use MailPoet\Entities\SendingQueueEntity;
 use MailPoet\Entities\SubscriberCustomFieldEntity;
@@ -21,12 +22,17 @@ class Subscriber implements CategoryInterface {
   /** @var SubscriberCustomFieldRepository */
   private $subscriberCustomFieldRepository;
 
+  /** @var WPFunctions */
+  private $wp;
+
   public function __construct(
     SubscribersRepository $subscribersRepository,
-    SubscriberCustomFieldRepository $subscriberCustomFieldRepository
+    SubscriberCustomFieldRepository $subscriberCustomFieldRepository,
+    WPFunctions $wp
   ) {
     $this->subscribersRepository = $subscribersRepository;
     $this->subscriberCustomFieldRepository = $subscriberCustomFieldRepository;
+    $this->wp = $wp;
   }
 
   public function process(
@@ -53,7 +59,7 @@ class Subscriber implements CategoryInterface {
       case 'displayname':
         if ($subscriber->getWpUserId()) {
           $wpUser = WPFunctions::get()->getUserdata($subscriber->getWpUserId());
-          return $wpUser->user_login; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+          return $wpUser->display_name; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
         }
         return $defaultValue;
       case 'count':
@@ -67,9 +73,31 @@ class Subscriber implements CategoryInterface {
             'subscriber' => $subscriber,
             'customField' => $customField[1],
           ]);
-          return ($customField instanceof SubscriberCustomFieldEntity && !empty($customField->getValue()))
-            ? htmlspecialchars($customField->getValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401)
-            : $defaultValue;
+          if (!($customField instanceof SubscriberCustomFieldEntity) || empty($customField->getValue())) {
+            return $defaultValue;
+          }
+          $customFieldDefinition = $customField->getCustomField();
+          if (
+            $shortcodeDetails['action_argument'] === 'format'
+            && $customFieldDefinition instanceof CustomFieldEntity
+            && $customFieldDefinition->getType() === CustomFieldEntity::TYPE_DATE
+          ) {
+            $timestamp = strtotime($customField->getValue());
+            if ($timestamp !== false) {
+              return $this->wp->dateI18n($shortcodeDetails['action_argument_value'], $timestamp);
+            }
+            return $defaultValue;
+          }
+          if (
+            $customFieldDefinition instanceof CustomFieldEntity &&
+            $customFieldDefinition->getType() === CustomFieldEntity::TYPE_CHECKBOX &&
+            $customField->getValue() === '1'
+          ) {
+            $params = $customFieldDefinition->getParams();
+            $label = (is_array($params) && isset($params['values'][0]['value'])) ? (string)$params['values'][0]['value'] : '';
+            return $label !== '' ? htmlspecialchars($label, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401) : $defaultValue;
+          }
+          return htmlspecialchars($customField->getValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401);
         }
         return null;
     }

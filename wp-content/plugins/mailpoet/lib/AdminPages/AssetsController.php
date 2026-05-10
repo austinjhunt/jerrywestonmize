@@ -47,6 +47,32 @@ class AssetsController {
     $this->enqueueJsEntrypoint('settings');
   }
 
+  public function setupTagsDependencies(): void {
+    $this->enqueueJsEntrypoint('tags');
+    $this->setupDataViewsDependencies();
+    $this->wp->wpEnqueueStyle('mailpoet_tags', $this->getCssUrl('mailpoet-tags.css'));
+  }
+
+  public function setupCustomFieldsDependencies(): void {
+    $this->enqueueJsEntrypoint('custom_fields');
+    $this->setupDataViewsDependencies();
+    $this->wp->wpEnqueueStyle('mailpoet_custom_fields', $this->getCssUrl('mailpoet-custom-fields.css'));
+  }
+
+  /**
+   * Enqueue the WordPress component + DataViews styles required by listings
+   * that render `@wordpress/dataviews`. Listings already shipped via the
+   * shared admin JS bundle (e.g. Forms) only need the styles enqueued; their
+   * JS lives in `webpack-admin-index`.
+   *
+   * `wp-components` is registered by WordPress core. `wp-dataviews` is
+   * package-shipped, so we bundle its build-style into `mailpoet-dataviews.css`.
+   */
+  public function setupDataViewsDependencies(): void {
+    $this->wp->wpEnqueueStyle('wp-components');
+    $this->wp->wpEnqueueStyle('mailpoet_dataviews', $this->getCssUrl('mailpoet-dataviews.css'));
+  }
+
   public function setupDynamicSegmentsDependencies(): void {
     $this->wp->wpEnqueueStyle('mailpoet_templates', $this->getCssUrl('mailpoet-templates.css'));
     $this->wp->wpEnqueueStyle('mailpoet_dynamic_segments', $this->getCssUrl('mailpoet-dynamic-segments.css'));
@@ -54,6 +80,7 @@ class AssetsController {
 
   public function setupAutomationListingDependencies(): void {
     $this->enqueueJsEntrypoint('automation');
+    $this->setupDataViewsDependencies();
     $this->wp->wpEnqueueStyle('mailpoet_automation', $this->getCssUrl('mailpoet-automation.css'));
   }
 

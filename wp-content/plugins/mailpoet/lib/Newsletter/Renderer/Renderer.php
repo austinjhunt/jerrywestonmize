@@ -9,6 +9,9 @@ use Automattic\WooCommerce\EmailEditor\Email_Editor_Container;
 use Automattic\WooCommerce\EmailEditor\Engine\Renderer\Html2Text;
 use Automattic\WooCommerce\EmailEditor\Engine\Renderer\Renderer as GuntenbergRenderer;
 use MailPoet\Config\Env;
+use MailPoet\EmailEditor\Integrations\MailPoet\Coupons\CouponBlockFailureTranslator;
+use MailPoet\EmailEditor\Integrations\MailPoet\Coupons\CouponBlockGenerationFailureCollector;
+use MailPoet\EmailEditor\Integrations\MailPoet\Coupons\EmailContextBuilder;
 use MailPoet\Entities\NewsletterEntity;
 use MailPoet\Entities\SendingQueueEntity;
 use MailPoet\Logging\LoggerFactory;
@@ -50,6 +53,12 @@ class Renderer {
 
   private CapabilitiesManager $capabilitiesManager;
 
+  private CouponBlockGenerationFailureCollector $couponBlockFailureCollector;
+
+  private EmailContextBuilder $emailContextBuilder;
+
+  private CouponBlockFailureTranslator $couponBlockFailureTranslator;
+
   public function __construct(
     BodyRenderer $bodyRenderer,
     Preprocessor $preprocessor,
@@ -58,7 +67,10 @@ class Renderer {
     LoggerFactory $loggerFactory,
     NewslettersRepository $newslettersRepository,
     SendingQueuesRepository $sendingQueuesRepository,
-    CapabilitiesManager $capabilitiesManager
+    CapabilitiesManager $capabilitiesManager,
+    CouponBlockGenerationFailureCollector $couponBlockFailureCollector,
+    EmailContextBuilder $emailContextBuilder,
+    CouponBlockFailureTranslator $couponBlockFailureTranslator
   ) {
     $this->bodyRenderer = $bodyRenderer;
     $this->guntenbergRenderer = Email_Editor_Container::container()->get(GuntenbergRenderer::class);
@@ -69,6 +81,9 @@ class Renderer {
     $this->newslettersRepository = $newslettersRepository;
     $this->sendingQueuesRepository = $sendingQueuesRepository;
     $this->capabilitiesManager = $capabilitiesManager;
+    $this->couponBlockFailureCollector = $couponBlockFailureCollector;
+    $this->emailContextBuilder = $emailContextBuilder;
+    $this->couponBlockFailureTranslator = $couponBlockFailureTranslator;
   }
 
   public function render(NewsletterEntity $newsletter, ?SendingQueueEntity $sendingQueue = null, $type = false) {
@@ -81,48 +96,36 @@ class Renderer {
 
   private function _render(NewsletterEntity $newsletter, ?SendingQueueEntity $sendingQueue = null, $type = false, $preview = false, $subject = null) {
     $language = $this->wp->getBloginfo('language');
+    $isRtl = (bool)$this->wp->isRtl();
     $metaRobots = $preview ? '<meta name="robots" content="noindex, nofollow" />' : '';
     $subject = $subject ?: $newsletter->getSubject();
     $wpPostEntity = $newsletter->getWpPost();
     $wpPost = $wpPostEntity ? $wpPostEntity->getWpPostInstance() : null;
     if ($wpPost instanceof \WP_Post) {
-      // Only add the email context filter for automation emails.
-      // For bulk emails like newsletters, the first subscriber in the task isn't the unique recipient.
-      $automationTypes = [
-        NewsletterEntity::TYPE_AUTOMATION,
-        NewsletterEntity::TYPE_AUTOMATION_NOTIFICATION,
-        NewsletterEntity::TYPE_AUTOMATION_TRANSACTIONAL,
-      ];
-      $isAutomationType = in_array($newsletter->getType(), $automationTypes, true);
+      $this->couponBlockFailureCollector->clear();
+      $renderContext = $this->emailContextBuilder->build($newsletter, $sendingQueue, (bool)$preview);
+      $filterCallback = function (array $context) use ($renderContext): array {
+        return array_merge($context, $renderContext);
+      };
+      $this->wp->addFilter('woocommerce_email_editor_rendering_email_context', $filterCallback);
 
-      $filterCallback = null;
-      if ($isAutomationType && $sendingQueue) {
-        $task = $sendingQueue->getTask();
-        $subscribers = $task ? $task->getSubscribers() : null;
-        $firstSubscriber = $subscribers ? $subscribers->first() : null;
-        $subscriber = $firstSubscriber ? $firstSubscriber->getSubscriber() : null;
-        $recipientEmail = $subscriber ? $subscriber->getEmail() : null;
-
-        $filterCallback = function (array $context) use ($newsletter, $recipientEmail): array {
-          if ($recipientEmail) {
-            $context['recipient_email'] = $recipientEmail;
-          }
-          $context['email_type'] = $newsletter->getType();
-          return $context;
-        };
-        $this->wp->addFilter('woocommerce_email_editor_rendering_email_context', $filterCallback);
-      }
-
-      $renderedNewsletter = $this->guntenbergRenderer->render($wpPost, $subject, $newsletter->getPreheader(), $language, $metaRobots);
-
-      if ($filterCallback) {
+      try {
+        $renderedNewsletter = $this->guntenbergRenderer->render($wpPost, $subject, $newsletter->getPreheader(), $language, $metaRobots);
+        if ($this->couponBlockFailureCollector->hasFailures()) {
+          throw NewsletterProcessingException::create()
+            ->withMessage($this->couponBlockFailureTranslator->getFailureMessage($this->couponBlockFailureCollector));
+        }
+        $filteredHtml = $this->wp->applyFilters(
+          self::FILTER_POST_PROCESS,
+          $renderedNewsletter['html']
+        );
+        if (is_string($filteredHtml)) {
+          $renderedNewsletter['html'] = $filteredHtml;
+        }
+      } finally {
         $this->wp->removeFilter('woocommerce_email_editor_rendering_email_context', $filterCallback);
+        $this->couponBlockFailureCollector->clear();
       }
-
-      $renderedNewsletter['html'] = $this->wp->applyFilters(
-        self::FILTER_POST_PROCESS,
-        $renderedNewsletter['html']
-      );
     } else {
       $body = (is_array($newsletter->getBody()))
         ? $newsletter->getBody()
@@ -144,7 +147,7 @@ class Renderer {
       $renderedBody = "";
       try {
         $content = $this->preprocessor->process($newsletter, $content, $preview, $sendingQueue);
-        $renderedBody = $this->bodyRenderer->renderBody($newsletter, $content);
+        $renderedBody = $this->bodyRenderer->renderBody($newsletter, $content, $isRtl);
       } catch (NewsletterProcessingException $e) {
         $this->loggerFactory->getLogger(LoggerFactory::TOPIC_COUPONS)->error(
           $e->getMessage(),
@@ -162,10 +165,13 @@ class Renderer {
         (string)file_get_contents(dirname(__FILE__) . '/' . self::NEWSLETTER_TEMPLATE),
         [
           $language,
+          $isRtl ? ' dir="rtl"' : '',
           $metaRobots,
           htmlspecialchars($subject, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401),
           $renderedStyles,
           $customFontsLinks,
+          $isRtl ? ' style="direction: rtl;"' : '',
+          $isRtl ? ';direction:rtl' : '',
           EHelper::escapeHtmlText($newsletter->getPreheader()),
           $renderedBody,
         ]
@@ -268,11 +274,11 @@ class Renderer {
       $anchor->href = $href;
     }
     $template = $templateDom->__toString();
-    $template = $this->wp->applyFilters(
+    $filtered = $this->wp->applyFilters(
       self::FILTER_POST_PROCESS,
       $template
     );
-    return $template;
+    return is_string($filtered) ? $filtered : $template;
   }
 
   /**

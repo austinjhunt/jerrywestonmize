@@ -31,6 +31,21 @@ class OutlookCalendarFactory
         if (isset($data['id'])) {
             $outlookCalendar->setId(new Id($data['id']));
         }
+        if (isset($data['insertPendingAppointments'])) {
+            $outlookCalendar->setInsertPendingAppointments((bool)$data['insertPendingAppointments']);
+        }
+
+        if (isset($data['includeBufferTime'])) {
+            $outlookCalendar->setIncludeBufferTime((bool)$data['includeBufferTime']);
+        }
+
+        if (isset($data['title'])) {
+            $outlookCalendar->setTitle($data['title']);
+        }
+
+        if (isset($data['description'])) {
+            $outlookCalendar->setDescription($data['description']);
+        }
 
         return $outlookCalendar;
     }

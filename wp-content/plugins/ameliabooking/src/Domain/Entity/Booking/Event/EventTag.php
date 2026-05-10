@@ -20,7 +20,7 @@ class EventTag
     /** @var Id */
     private $id;
 
-    /** @var Id */
+    /** @var Id | null */
     private $eventId;
 
     /** @var  Name */
@@ -43,7 +43,7 @@ class EventTag
     }
 
     /**
-     * @return Id
+     * @return Id | null
      */
     public function getEventId()
     {
@@ -51,9 +51,9 @@ class EventTag
     }
 
     /**
-     * @param Id $eventId
+     * @param Id | null $eventId
      */
-    public function setEventId(Id $eventId)
+    public function setEventId(?Id $eventId)
     {
         $this->eventId = $eventId;
     }

@@ -8,9 +8,11 @@ if (!defined('ABSPATH')) exit;
 use MailPoet\CustomFields\CustomFieldsRepository;
 use MailPoet\Entities\NewsletterEntity;
 use MailPoet\Entities\SegmentEntity;
+use MailPoet\Entities\StatisticsUnsubscribeEntity;
 use MailPoet\Entities\SubscriberCustomFieldEntity;
 use MailPoet\Entities\SubscriberEntity;
 use MailPoet\Statistics\StatisticsUnsubscribesRepository;
+use MailPoet\Statistics\UnsubscribeReasonTracker;
 use MailPoet\Subscribers\SubscriberCustomFieldRepository;
 use MailPoetVendor\Doctrine\ORM\EntityManager;
 
@@ -29,16 +31,21 @@ class SubscribersResponseBuilder {
   /** @var EntityManager */
   private $entityManager;
 
+  /** @var UnsubscribeReasonTracker */
+  private $unsubscribeReasonTracker;
+
   public function __construct(
     EntityManager $entityManager,
     CustomFieldsRepository $customFieldsRepository,
     SubscriberCustomFieldRepository $subscriberCustomFieldRepository,
-    StatisticsUnsubscribesRepository $statisticsUnsubscribesRepository
+    StatisticsUnsubscribesRepository $statisticsUnsubscribesRepository,
+    UnsubscribeReasonTracker $unsubscribeReasonTracker
   ) {
     $this->statisticsUnsubscribesRepository = $statisticsUnsubscribesRepository;
     $this->customFieldsRepository = $customFieldsRepository;
     $this->subscriberCustomFieldRepository = $subscriberCustomFieldRepository;
     $this->entityManager = $entityManager;
+    $this->unsubscribeReasonTracker = $unsubscribeReasonTracker;
   }
 
   public function buildForListing(array $subscribers): array {
@@ -123,11 +130,16 @@ class SubscribersResponseBuilder {
       'createdAt' => 'desc',
     ]);
     $result = [];
+    $reasonLabels = $this->unsubscribeReasonTracker->getReasonLabels();
     foreach ($unsubscribes as $unsubscribe) {
       $mapped = [
         'source' => $unsubscribe->getSource(),
         'meta' => $unsubscribe->getMeta(),
         'createdAt' => $unsubscribe->getCreatedAt(),
+        'reason' => $unsubscribe->getReason(),
+        'reasonLabel' => $this->getUnsubscribeReasonLabel($unsubscribe->getReason(), $reasonLabels),
+        'reasonText' => $unsubscribe->getReasonText(),
+        'reasonSubmittedAt' => $unsubscribe->getReasonSubmittedAt(),
       ];
       $newsletter = $unsubscribe->getNewsletter();
       if ($newsletter instanceof NewsletterEntity) {
@@ -139,8 +151,21 @@ class SubscribersResponseBuilder {
     return $result;
   }
 
+  /**
+   * @param array<string, string> $reasonLabels
+   */
+  private function getUnsubscribeReasonLabel(?string $reason, array $reasonLabels): ?string {
+    if ($reason === null) {
+      return null;
+    }
+    if ($reason === '' || $reason === StatisticsUnsubscribeEntity::REASON_UNSPECIFIED) {
+      return __('No reason provided', 'mailpoet');
+    }
+    return $reasonLabels[$reason] ?? $reason;
+  }
+
   private function buildCustomFields(SubscriberEntity $subscriberEntity, array $data): array {
-    $customFields = $this->customFieldsRepository->findAll();
+    $customFields = $this->customFieldsRepository->findAllActive();
 
     foreach ($customFields as $customField) {
       $subscriberCustomField = $this->subscriberCustomFieldRepository->findOneBy(

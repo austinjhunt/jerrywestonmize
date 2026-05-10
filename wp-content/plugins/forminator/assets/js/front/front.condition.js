@@ -681,8 +681,14 @@
 			;
 
 			const $element_id = this.get_form_field(condition.field);
+			// A hidden dependency field has no value; treat it as empty for condition evaluation.
+			if ( forminatorUtils().is_hidden( $element_id ) ) {
+				const oppositeOperators = [ 'is_not', 'does_not_contain', 'day_is_not', 'month_is_not' ];
+				const isValidValue      = value2 != null && value2 !== '';
+				return oppositeOperators.includes( operator ) && isValidValue;
+			}
 
-			return ! forminatorUtils().is_hidden($element_id) && this.is_matching(value1, value2, operator);
+			return this.is_matching(value1, value2, operator);
 		},
 
 		is_matching: function (value1, value2, operator) {

@@ -7,8 +7,10 @@ use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaVendor\Dompdf\Dompdf;
-use Endroid\QrCode\Builder\Builder;
-use Endroid\QrCode\Writer\PngWriter;
+use BaconQrCode\Renderer\ImageRenderer;
+use BaconQrCode\Renderer\Image\SvgImageBackEnd;
+use BaconQrCode\Renderer\RendererStyle\RendererStyle;
+use BaconQrCode\Writer;
 
 /**
  * Class QrCodeInfrastructureService
@@ -18,37 +20,33 @@ use Endroid\QrCode\Writer\PngWriter;
 class QrCodeInfrastructureService extends AbstractQrCodeInfrastructureService
 {
     /**
-     * @param array $qrData
-     * @return array
      * @throws InvalidArgumentException
      * @throws NotFoundException
      * @throws QueryExecutionException
      */
-    public function generateQrCode($qrData)
+    public function generateQrCode(array $qrData): array
     {
-        /** @var SettingsService $settingsService */
-        $settingsService = $this->container->get('domain.settings.service');
-
-        $dateFormat = $settingsService->getSetting('wordpress', 'dateFormat');
-        $timeFormat = $settingsService->getSetting('wordpress', 'timeFormat');
-
         $eventStart = strtotime($qrData['eventStartDateTime']);
 
         if (!$eventStart) {
             throw new InvalidArgumentException('Invalid eventStartDateTime provided.');
         }
 
-        $result = Builder::create()
-            ->writer(new PngWriter())
-            ->data($qrData['qrCodeData'])
-            ->size(300)
-            ->margin(10)
-            ->build();
+        /** @var SettingsService $settingsService */
+        $settingsService = $this->container->get('domain.settings.service');
+
+        $dateFormat = $settingsService->getSetting('wordpress', 'dateFormat');
+        $timeFormat = $settingsService->getSetting('wordpress', 'timeFormat');
+
+        $renderer = new ImageRenderer(
+            new RendererStyle(300, 2),
+            new SvgImageBackEnd()
+        );
 
         $qrDataItem = [
             'type'               => $qrData['type'],
-            'data'               => base64_encode($result->getString()),
-            'mimeType'           => $result->getMimeType(),
+            'data'               => base64_encode((new Writer($renderer))->writeString($qrData['qrCodeData'])),
+            'mimeType'           => 'image/svg+xml',
             'ticketManualCode'   => $qrData['ticketManualCode'],
             'bookingId'          => $qrData['bookingId'],
             'eventName'          => $qrData['eventName'],
@@ -83,9 +81,9 @@ class QrCodeInfrastructureService extends AbstractQrCodeInfrastructureService
                 : '') . ' - ' . $qrDataItem['eventName'] . '.pdf';
 
         return [
-            'name'       => $ticketPdfName,
-            'type'       => 'application/pdf',
-            'content'    => $dompdf->output(),
+            'name'    => $ticketPdfName,
+            'type'    => 'application/pdf',
+            'content' => $dompdf->output(),
         ];
     }
 }

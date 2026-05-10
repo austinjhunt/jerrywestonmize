@@ -415,6 +415,7 @@ class Forminator_Googlesheet_Quiz_Hooks extends Forminator_Integration_Quiz_Hook
 
 		if ( isset( $quiz_settings['hasLeads'] ) && $quiz_settings['hasLeads'] ) {
 			$form_fields     = $this->lead_settings_instance->get_form_fields();
+			$form_fields     = self::maybe_add_group_cloned_fields( $form_fields );
 			$lead_form_field = array();
 			if ( ! empty( $form_fields ) ) {
 				foreach ( $form_fields as $form_field ) {

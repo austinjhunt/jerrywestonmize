@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Amelia\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-25 11:33+0000\n"
+"POT-Creation-Date: 2026-04-20 08:21+0000\n"
 "PO-Revision-Date: 2025-11-20 16:11+0100\n"
 "Last-Translator: \n"
 "Language-Team: Amelia\n"
@@ -33,6 +33,9 @@ msgstr ""
 msgid ""
 "It seems that Envato API is currently busy (please try again) or you don't "
 "have a valid purchase of Amelia"
+msgstr ""
+
+msgid "Unable to complete plugin activation. Please try again."
 msgstr ""
 
 msgid "You have reached maximum number of registered domains"
@@ -474,7 +477,7 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Block booking times that overlap with busy events in the employee’s Apple "
+"Block booking times that overlap with events in the employee’s Apple "
 "Calendar."
 msgstr ""
 
@@ -883,6 +886,9 @@ msgid "Appointment initial start time"
 msgstr ""
 
 msgid "Appointment initial end time"
+msgstr ""
+
+msgid "Assigned employee full name"
 msgstr ""
 
 msgid "Appointment deposit"
@@ -1781,6 +1787,9 @@ msgid "Sort"
 msgstr ""
 
 msgid "Start date"
+msgstr ""
+
+msgid "Make sure you are using the correct Zoom credentials."
 msgstr ""
 
 msgid "Zoom user"
@@ -3696,9 +3705,6 @@ msgstr ""
 msgid "Apply to future recurring events"
 msgstr ""
 
-msgid "Apply"
-msgstr ""
-
 msgid "{count} Appointment | {count} Appointments"
 msgstr ""
 
@@ -3706,9 +3712,6 @@ msgid "Appointment not found."
 msgstr ""
 
 msgid "Appointment note"
-msgstr ""
-
-msgid "Appointment has been updated."
 msgstr ""
 
 msgid "{count}x Appointment | {count}x Appointments"
@@ -3774,9 +3777,6 @@ msgstr ""
 msgid ""
 "{count} customers were not imported due to missing First Name, Last Name, "
 "invalid Email, Phone number, or a combination of these reasons."
-msgstr ""
-
-msgid "Customer note has been added."
 msgstr ""
 
 msgid "Repeat"
@@ -3878,9 +3878,6 @@ msgstr ""
 msgid "Failed to load package details. Please try again later."
 msgstr ""
 
-msgid "Filter"
-msgstr ""
-
 msgid "Frontend & Backend"
 msgstr ""
 
@@ -3919,6 +3916,9 @@ msgid "Max"
 msgstr ""
 
 msgid "Missing required fields:"
+msgstr ""
+
+msgid "Invalid Mollie API key."
 msgstr ""
 
 msgid "{count} Month | {count} Months"
@@ -4199,9 +4199,6 @@ msgid "WhatsApp setup"
 msgstr ""
 
 msgid "Total number of appointments"
-msgstr ""
-
-msgid "An unexpected error occurred. Please try again later."
 msgstr ""
 
 msgid "View packages"
@@ -4919,6 +4916,15 @@ msgstr ""
 msgid "Show on website"
 msgstr ""
 
+msgid "Add another account"
+msgstr ""
+
+msgid "Block time from calendars"
+msgstr ""
+
+msgid "Add calendar"
+msgstr ""
+
 msgid ""
 "Check this option if you want your<br> customers to have the option to "
 "choose<br> whether they will pay a full amount<br> or just a deposit. If "
@@ -5206,6 +5212,12 @@ msgid "Day of the Week"
 msgstr ""
 
 msgid "Specific Date & Time"
+msgstr ""
+
+msgid "Delete appointment"
+msgstr ""
+
+msgid "Open side menu"
 msgstr ""
 
 msgid "Appointment Date:"
@@ -6008,6 +6020,18 @@ msgstr ""
 msgid "Select or Create Tag"
 msgstr ""
 
+msgid "Manage Event Tags"
+msgstr ""
+
+msgid "Create New Tag"
+msgstr ""
+
+msgid "Tag label"
+msgstr ""
+
+msgid "Tag label cannot be empty"
+msgstr ""
+
 msgid "Export"
 msgstr ""
 
@@ -6658,6 +6682,12 @@ msgstr ""
 msgid "Enter booking ID"
 msgstr ""
 
+msgid "Select calendar"
+msgstr ""
+
+msgid "Insert pending appointments"
+msgstr ""
+
 msgid "Admin"
 msgstr ""
 
@@ -6969,6 +6999,9 @@ msgstr ""
 msgid "Allow employees to manage customers"
 msgstr ""
 
+msgid "Allow employees to view all customers"
+msgstr ""
+
 msgid "API base URL: "
 msgstr ""
 
@@ -7147,10 +7180,11 @@ msgstr ""
 msgid "Facebook app secret"
 msgstr ""
 
-msgid "Google Map API key"
+msgid "Google Maps API key"
 msgstr ""
 
-msgid "Add Google Map API Key to show Google static map on \"Locations\" page."
+msgid ""
+"Add Google Maps API Key to show Google static map on \"Locations\" page."
 msgstr ""
 
 msgid "Client ID"
@@ -7187,9 +7221,6 @@ msgid "Log In"
 msgstr ""
 
 msgid "Identify country code by user's IP address"
-msgstr ""
-
-msgid "Insert pending appointments"
 msgstr ""
 
 msgid "Create meetings for pending appointments"
@@ -7287,7 +7318,7 @@ msgstr ""
 msgid "Remove Outlook Calendar busy slots"
 msgstr ""
 
-msgid "Remove Apple Calendar busy slots"
+msgid "Remove Apple Calendar event slots"
 msgstr ""
 
 msgid "Redirect URL for successfully rejected booking"
@@ -8837,6 +8868,9 @@ msgstr ""
 msgid "How many attendees do you want to book event for?"
 msgstr ""
 
+msgid "Filter"
+msgstr ""
+
 msgid "Event card"
 msgstr ""
 
@@ -9157,6 +9191,9 @@ msgstr ""
 msgid "Appointment note has been updated."
 msgstr ""
 
+msgid "Appointment has been updated."
+msgstr ""
+
 msgid ""
 "The total number of persons ({approvedPersonsCount}) exceeds the maximum "
 "capacity of {maxAppointmentCapacity}."
@@ -9315,6 +9352,9 @@ msgstr ""
 msgid "Customer Desc"
 msgstr ""
 
+msgid "Customer note has been added."
+msgstr ""
+
 msgid "Customers detected in file:"
 msgstr ""
 
@@ -9331,9 +9371,6 @@ msgid "Date Asc"
 msgstr ""
 
 msgid "Date Desc"
-msgstr ""
-
-msgid "Delete appointment"
 msgstr ""
 
 msgid "Delete booking"
@@ -10547,6 +10584,9 @@ msgstr ""
 msgid "Unblock customer"
 msgstr ""
 
+msgid "An unexpected error occurred. Please try again later."
+msgstr ""
+
 msgid "Hide event"
 msgstr ""
 
@@ -11028,6 +11068,9 @@ msgstr ""
 msgid "Employee name"
 msgstr ""
 
+msgid "Apply"
+msgstr ""
+
 msgid "Appointment title"
 msgstr ""
 
@@ -11082,6 +11125,31 @@ msgid "New block time"
 msgstr ""
 
 msgid "Edit block time"
+msgstr ""
+
+msgid ""
+"Please delete this appointment. It cannot be edited due to a conflict with "
+"the associated account."
+msgstr ""
+
+msgid "Event tags"
+msgstr ""
+
+msgid ""
+"Event tags allow you to label and organize events in Amelia based on "
+"criteria that matter most to your business."
+msgstr ""
+
+msgid "Create new tag"
+msgstr ""
+
+msgid "Manage event tags"
+msgstr ""
+
+msgid "Event tags setup"
+msgstr ""
+
+msgid "Event tags have been saved."
 msgstr ""
 
 msgid "Add to Calendar"
@@ -11184,6 +11252,9 @@ msgid "Total Number of People:"
 msgstr ""
 
 msgid "View"
+msgstr ""
+
+msgid "Please use a different email or phone number to complete the booking."
 msgstr ""
 
 msgid "Email Address"

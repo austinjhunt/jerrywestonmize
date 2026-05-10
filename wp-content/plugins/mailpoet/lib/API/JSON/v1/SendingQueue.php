@@ -23,6 +23,7 @@ use MailPoet\Newsletter\NewslettersRepository;
 use MailPoet\Newsletter\NewsletterValidator;
 use MailPoet\Newsletter\Sending\ScheduledTasksRepository;
 use MailPoet\Newsletter\Sending\SendingQueuesRepository;
+use MailPoet\Newsletter\Sending\TimeZoneCampaignScheduler;
 use MailPoet\Segments\SubscribersFinder;
 use MailPoet\Settings\SettingsController;
 use MailPoet\Util\License\Features\Subscribers as SubscribersFeature;
@@ -66,6 +67,9 @@ class SendingQueue extends APIEndpoint {
   /** @var CronHelper */
   private $cronHelper;
 
+  /** @var TimeZoneCampaignScheduler */
+  private $timeZoneCampaignScheduler;
+
   public function __construct(
     SubscribersFeature $subscribersFeature,
     NewslettersRepository $newsletterRepository,
@@ -77,7 +81,8 @@ class SendingQueue extends APIEndpoint {
     DaemonTrigger $actionSchedulerDaemonTriggerAction,
     NewsletterValidator $newsletterValidator,
     SendingQueuesResponseBuilder $sendingQueuesResponseBuilder,
-    CronHelper $cronHelper
+    CronHelper $cronHelper,
+    TimeZoneCampaignScheduler $timeZoneCampaignScheduler
   ) {
     $this->subscribersFeature = $subscribersFeature;
     $this->subscribersFinder = $subscribersFinder;
@@ -90,6 +95,7 @@ class SendingQueue extends APIEndpoint {
     $this->newsletterValidator = $newsletterValidator;
     $this->sendingQueuesResponseBuilder = $sendingQueuesResponseBuilder;
     $this->cronHelper = $cronHelper;
+    $this->timeZoneCampaignScheduler = $timeZoneCampaignScheduler;
   }
 
   public function add($data = []) {
@@ -123,6 +129,25 @@ class SendingQueue extends APIEndpoint {
     try {
       // check that the sending method has been configured properly by verifying that default mailer can be build
       $this->mailerFactory->getDefaultMailer();
+
+      $isScheduled = (bool)$newsletter->getOptionValue('isScheduled');
+      if ($isScheduled && $this->timeZoneCampaignScheduler->isSubscriberTimeZoneMode($newsletter)) {
+        $sendingQueue = $this->timeZoneCampaignScheduler->schedule($newsletter);
+        WordPress::resetRunInterval();
+        $this->triggerSending($newsletter);
+        return $this->successResponse($this->sendingQueuesResponseBuilder->build($sendingQueue));
+      }
+      // Existing time zone batches must be reconciled regardless of the new send mode (scheduled or
+      // immediate). Otherwise orphaned time zone queues survive in the DB and may later be picked up
+      // by the scheduler cron, causing duplicate sends. Both calls are no-ops when the newsletter
+      // has no time zone queues.
+      if (!$this->timeZoneCampaignScheduler->canReplaceScheduledCampaign($newsletter)) {
+        throw new \Exception(
+          __('This email can no longer be edited because one or more time zone batches have already started.', 'mailpoet'),
+          Response::STATUS_BAD_REQUEST
+        );
+      }
+      $this->timeZoneCampaignScheduler->deleteScheduledCampaignQueues($newsletter);
 
       $sendingQueue = $this->sendingQueuesRepository->findOneByNewsletterAndTaskStatus($newsletter, null);
 
@@ -158,7 +183,7 @@ class SendingQueue extends APIEndpoint {
       $this->scheduledTasksRepository->flush();
 
       WordPress::resetRunInterval();
-      if ((bool)$newsletter->getOptionValue('isScheduled')) {
+      if ($isScheduled) {
         // set newsletter status
         $newsletter->setStatus(NewsletterEntity::STATUS_SCHEDULED);
 
@@ -193,9 +218,18 @@ class SendingQueue extends APIEndpoint {
         ($newsletter->getLatestQueue() instanceof SendingQueueEntity) ? $this->sendingQueuesResponseBuilder->build($newsletter->getLatestQueue()) : null
       );
     } catch (\Exception $e) {
+      $errorCode = APIError::UNKNOWN;
+      $statusCode = Response::STATUS_NOT_FOUND;
+      if ($e->getCode() === Response::STATUS_FORBIDDEN) {
+        $errorCode = APIError::FORBIDDEN;
+        $statusCode = Response::STATUS_FORBIDDEN;
+      } elseif ($e->getCode() === Response::STATUS_BAD_REQUEST) {
+        $errorCode = APIError::BAD_REQUEST;
+        $statusCode = Response::STATUS_BAD_REQUEST;
+      }
       return $this->errorResponse([
-        $e->getCode() => $e->getMessage(),
-      ]);
+        $errorCode => $e->getMessage(),
+      ], [], $statusCode);
     }
   }
 
@@ -214,7 +248,11 @@ class SendingQueue extends APIEndpoint {
           APIError::UNKNOWN => __('This newsletter has not been sent yet.', 'mailpoet'),
         ]);
       } else {
-        $this->sendingQueuesRepository->pause($queue);
+        if ($this->timeZoneCampaignScheduler->isTimeZoneQueue($queue)) {
+          $this->timeZoneCampaignScheduler->pauseCampaign($queue);
+        } else {
+          $this->sendingQueuesRepository->pause($queue);
+        }
         return $this->successResponse();
       }
     } else {
@@ -244,7 +282,11 @@ class SendingQueue extends APIEndpoint {
           APIError::UNKNOWN => __('This newsletter has not been sent yet.', 'mailpoet'),
         ]);
       } else {
-        $this->sendingQueuesRepository->resume($queue);
+        if ($this->timeZoneCampaignScheduler->isTimeZoneQueue($queue)) {
+          $this->timeZoneCampaignScheduler->resumeCampaign($queue);
+        } else {
+          $this->sendingQueuesRepository->resume($queue);
+        }
         $this->triggerSending($newsletter);
         return $this->successResponse();
       }

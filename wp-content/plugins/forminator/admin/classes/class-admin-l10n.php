@@ -351,7 +351,8 @@ class Forminator_Admin_L10n {
 				'display_name'          => esc_html__( 'User Display Name', 'forminator' ),
 				'user_email'            => esc_html__( 'User Email', 'forminator' ),
 				'user_login'            => esc_html__( 'User Login', 'forminator' ),
-				'shortcode_copied'      => esc_html__( 'Shortcode has been copied successfully.', 'forminator' ),
+				// translators: %s: Shortcode string, e.g. [forminator_form id="276"].
+				'shortcode_copied'      => esc_html__( 'Shortcode %s has been copied successfully.', 'forminator' ),
 				'uri_copied'            => esc_html__( 'URI has been copied successfully.', 'forminator' ),
 			),
 			'commons'       => array(
@@ -445,7 +446,7 @@ class Forminator_Admin_L10n {
 				'month_names'   => self::get_months_names(),
 			),
 			'exporter'      => array(
-				'export_nonce' => wp_create_nonce( 'forminator_export' ),
+				'export_nonce' => forminator_is_user_allowed( 'forminator-entries' ) ? wp_create_nonce( 'forminator_export' ) : '',
 				'form_id'      => forminator_get_form_id_helper(),
 				'form_type'    => forminator_get_form_type_helper(),
 				'enabled'      => filter_var( forminator_get_exporter_info( 'enabled', forminator_get_form_id_helper() . forminator_get_form_type_helper() ), FILTER_VALIDATE_BOOLEAN ),

@@ -474,9 +474,30 @@ class SMSNotificationService extends AbstractNotificationService
         /** @var SMSAPIService $smsApiService */
         $smsApiService = $this->container->get('application.smsApi.service');
 
+        $smsData = apply_filters(
+            'amelia_manipulate_sms_data',
+            [
+                'text' => $data['body'],
+                'to'   => $data['sendTo']
+            ]
+        );
+
+        $data = array_merge(
+            $data,
+            [
+                'text' => $data['body'],
+                'to'   => $data['sendTo']
+            ],
+            is_array($smsData) ? $smsData : []
+        );
+
+        if (!empty($data['skipSending'])) {
+            return;
+        }
+
         $apiResponse = $smsApiService->send(
-            $data['sendTo'],
-            $data['body'],
+            $data['to'],
+            $data['text'],
             AMELIA_ACTION_URL . '/notifications/sms/history/' . $data['historyId']
         );
 

@@ -153,7 +153,15 @@
 				env: paypalData.mode,
 				style: style_data,
 				onClick: function () {
-					if( ! $form.valid() && paypalData.amount <= 0 ) {
+					if ( paypalData.amount_type === 'variable' && paypalData.variable !== '' ) {
+						paypalData.amount = self.get_field_calculation( paypalData.variable );
+					}
+
+					if ( ! $form.valid() ) {
+						$target_message.removeClass('forminator-accessible').addClass('forminator-error').html('').removeAttr( 'aria-hidden' );
+						$target_message.html('<label class="forminator-label--error"><span>' + generalMessage.form_has_error + '</span></label>');
+						self.focus_to_element($target_message);
+				} else if ( paypalData.amount <= 0 ) {
 						$target_message.removeClass('forminator-accessible').addClass('forminator-error').html('').removeAttr( 'aria-hidden' );
 						$target_message.html('<label class="forminator-label--error"><span>' + generalMessage.payment_require_amount_error + '</span></label>');
 						self.focus_to_element($target_message);
@@ -161,20 +169,12 @@
 						$target_message.removeClass('forminator-accessible').addClass('forminator-error').html('').removeAttr( 'aria-hidden' );
 						$target_message.html('<label class="forminator-label--error"><span>' + generalMessage.payment_require_ssl_error + '</span></label>');
 						self.focus_to_element($target_message);
-					} else if ( ! $form.valid() ) {
-						$target_message.removeClass('forminator-accessible').addClass('forminator-error').html('').removeAttr( 'aria-hidden' );
-						$target_message.html('<label class="forminator-label--error"><span>' + generalMessage.form_has_error + '</span></label>');
-						self.focus_to_element($target_message);
-                    } else {
+					} else {
 						$form.trigger( 'forminator:preSubmit:paypal', [ $target_message ] );
 						if ( $target_message.find( '.forminator-invalid-captcha' ).html() ) {
 							self.focus_to_element($target_message);
 							return false;
 						}
-					}
-
-					if ( paypalData.amount_type === 'variable' && paypalData.variable !== '' ) {
-						paypalData.amount = self.get_field_calculation( paypalData.variable );
 					}
 				},
 				createOrder: function(data, actions) {

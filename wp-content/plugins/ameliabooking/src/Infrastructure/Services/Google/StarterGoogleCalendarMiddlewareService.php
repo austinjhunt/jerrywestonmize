@@ -78,4 +78,9 @@ class StarterGoogleCalendarMiddlewareService extends AbstractGoogleCalendarMiddl
     {
         return null;
     }
+
+    public function getCalendarListsForAccounts(array $accounts): array
+    {
+        return [];
+    }
 }

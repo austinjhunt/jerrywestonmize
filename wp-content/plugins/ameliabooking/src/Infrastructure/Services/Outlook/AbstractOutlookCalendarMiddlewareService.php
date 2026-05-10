@@ -74,4 +74,13 @@ abstract class AbstractOutlookCalendarMiddlewareService
         array $bccEmails = [],
         array $attachments = []
     );
+
+    /**
+     * Get calendar lists for multiple Outlook accounts
+     *
+     * @param array $accounts
+     *
+     * @return array
+     */
+    abstract public function getCalendarListsForAccounts(array $accounts): array;
 }

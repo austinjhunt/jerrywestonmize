@@ -55,22 +55,25 @@ class Registration {
           id="mailpoet_subscribe_on_register"
           value="1"
           name="mailpoet[subscribe_on_register]"
-        />&nbsp;' . esc_attr($label) . '
+        />&nbsp;' . esc_html($label) . '
       </label>
     </p>';
 
-    $form = (string)$this->wp->applyFilters('mailpoet_register_form_extend', $form);
+    $filtered = $this->wp->applyFilters('mailpoet_register_form_extend', $form);
+    $form = is_string($filtered) ? $filtered : $form;
 
     // We control the template and $form can be considered safe.
     // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-    print $form;
+    echo $form;
   }
 
   public function onMultiSiteRegister($result) {
     if (empty($result['errors']->errors)) {
+      // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- type narrowing only, value is read as bool
+      $mailpoetPost = isset($_POST['mailpoet']) && is_array($_POST['mailpoet']) ? $_POST['mailpoet'] : [];
       if (
-        isset($_POST['mailpoet']['subscribe_on_register'])
-        && (bool)$_POST['mailpoet']['subscribe_on_register'] === true
+        isset($mailpoetPost['subscribe_on_register'])
+        && (bool)$mailpoetPost['subscribe_on_register'] === true
         && !empty($result['user_email'])
       ) {
         $this->subscribeNewUser(
@@ -87,10 +90,12 @@ class Registration {
     $userLogin,
     $userEmail = null
   ) {
+    // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- type narrowing only, value is read as bool
+    $mailpoetPost = isset($_POST['mailpoet']) && is_array($_POST['mailpoet']) ? $_POST['mailpoet'] : [];
     if (
       empty($errors->errors)
-      && isset($_POST['mailpoet']['subscribe_on_register'])
-      && (bool)$_POST['mailpoet']['subscribe_on_register'] === true
+      && isset($mailpoetPost['subscribe_on_register'])
+      && (bool)$mailpoetPost['subscribe_on_register'] === true
       && !empty($userEmail)
     ) {
       $this->subscribeNewUser(

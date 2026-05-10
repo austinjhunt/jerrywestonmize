@@ -25,7 +25,7 @@ use MailPoet\WooCommerce\Helper as WooCommerceHelper;
 use MailPoet\WP\Functions as WPFunctions;
 
 class PatternsController {
-  private const MIN_WOOCOMMERCE_VERSION_FOR_COUPON_BLOCK = '10.5.0';
+  private const MIN_WOOCOMMERCE_VERSION_FOR_GENERATED_COUPON_BLOCK = '10.8.0';
 
   private CdnAssetUrl $cdnAssetUrl;
   private WPFunctions $wp;
@@ -64,10 +64,11 @@ class PatternsController {
           'properties' => $pattern->get_properties(),
         ], $pattern);
 
-        if (!is_array($patternData) || !isset($patternData['properties'])) {
+        if (!is_array($patternData) || !isset($patternData['properties']) || !is_array($patternData['properties'])) {
           return null;
         }
-        return $patternData['properties']['content'] ?? null;
+        $content = $patternData['properties']['content'] ?? null;
+        return is_string($content) ? $content : null;
       }
     }
 
@@ -99,11 +100,11 @@ class PatternsController {
         new AbandonedCartPattern($this->cdnAssetUrl),
       ]);
 
-      // Patterns using the coupon block require WooCommerce 10.5.0+
+      // Patterns using generated coupons require WooCommerce 10.8.0+
       $wooCommerceVersion = $this->wooCommerceHelper->getWooCommerceVersion();
       // Strip pre-release suffixes (e.g., -rc1, -beta1) to ensure RC/beta versions pass the check
       $wooCommerceVersion = $wooCommerceVersion ? preg_replace('/[^0-9.].*/', '', $wooCommerceVersion) : null;
-      if ($wooCommerceVersion && version_compare($wooCommerceVersion, self::MIN_WOOCOMMERCE_VERSION_FOR_COUPON_BLOCK, '>=')) {
+      if ($wooCommerceVersion && version_compare($wooCommerceVersion, self::MIN_WOOCOMMERCE_VERSION_FOR_GENERATED_COUPON_BLOCK, '>=')) {
         $this->patterns = array_merge($this->patterns, [
           new WelcomeWithDiscountEmailPattern($this->cdnAssetUrl),
           new WinBackCustomerPattern($this->cdnAssetUrl),
@@ -134,15 +135,19 @@ class PatternsController {
         'email_content' => $pattern->get_email_content(),
       ], $pattern);
 
-      if (!is_array($patternData) || !isset($patternData['name']) || !isset($patternData['properties'])) {
+      if (
+        !is_array($patternData)
+        || !isset($patternData['name']) || !is_string($patternData['name'])
+        || !isset($patternData['properties']) || !is_array($patternData['properties'])
+      ) {
         continue;
       }
 
-      register_block_pattern($patternData['name'], $patternData['properties']);
+      register_block_pattern($patternData['name'], $patternData['properties']); // @phpstan-ignore argument.type (validated as array<string, mixed> just above; register_block_pattern's strict shape is enforced at runtime)
 
       // Build email content registry: store email_content when it differs from preview content
-      $previewContent = $patternData['properties']['content'] ?? '';
-      $emailContent = $patternData['email_content'] ?? $previewContent;
+      $previewContent = isset($patternData['properties']['content']) && is_string($patternData['properties']['content']) ? $patternData['properties']['content'] : '';
+      $emailContent = isset($patternData['email_content']) && is_string($patternData['email_content']) ? $patternData['email_content'] : $previewContent;
       if ($emailContent !== $previewContent) {
         $this->emailContentRegistry[$patternData['name']] = $emailContent;
       }
@@ -185,9 +190,13 @@ class PatternsController {
 
     $modified = false;
     foreach ($data as $index => $pattern) {
-      $patternName = $pattern['name'] ?? '';
-      if (isset($this->emailContentRegistry[$patternName])) {
-        $data[$index]['email_content'] = $this->emailContentRegistry[$patternName];
+      if (!is_array($pattern)) {
+        continue;
+      }
+      $patternName = isset($pattern['name']) && is_string($pattern['name']) ? $pattern['name'] : '';
+      if ($patternName !== '' && isset($this->emailContentRegistry[$patternName])) {
+        $pattern['email_content'] = $this->emailContentRegistry[$patternName];
+        $data[$index] = $pattern;
         $modified = true;
       }
     }

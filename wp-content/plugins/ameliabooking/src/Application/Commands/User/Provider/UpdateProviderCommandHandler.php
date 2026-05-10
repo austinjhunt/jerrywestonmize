@@ -150,6 +150,15 @@ class UpdateProviderCommandHandler extends CommandHandler
         /** @var Provider $newUser */
         $newUser = UserFactory::create($newUserData);
 
+        $oldExternalId = $oldUser->getExternalId() ? $oldUser->getExternalId()->getValue() : null;
+        $newExternalId = $newUser->getExternalId() ? $newUser->getExternalId()->getValue() : null;
+
+        if ($oldExternalId !== $newExternalId && (!$currentUser || $currentUser->getType() !== AbstractUser::USER_ROLE_ADMIN)) {
+            $result->setResult(CommandResult::RESULT_ERROR);
+            $result->setMessage('Could not update user.');
+            return $result;
+        }
+
         // If the phone is not set and the old phone is set, set the phone and country phone iso to null
         if (empty($providerData['phone']) && $oldUser->getPhone() && $oldUser->getPhone()->getValue()) {
             $newUser->setPhone(new Phone(null));
@@ -224,10 +233,28 @@ class UpdateProviderCommandHandler extends CommandHandler
         do_action('amelia_before_provider_updated', $newUser ? $newUser->toArray() : null, $oldUser ? $oldUser->toArray() : null);
 
         try {
-            if (!$providerAS->update($oldUser, $newUser)) {
+            if (!$providerAS->update($oldUser, $newUser, $providerData)) {
                 $providerRepository->rollback();
                 return $result;
             }
+
+            if (isset($providerData['googleCalendar']['blockedCalendars'])) {
+                $providerAS->updateProviderGoogleCalendarBlockedCalendars(
+                    $userId,
+                    $providerData['googleCalendar']['blockedCalendars']
+                );
+            }
+
+            $providerData = $this->getGoogleCalendarProviderData($providerData, $providerAS, $userId);
+
+            if (isset($providerData['outlookCalendar']['blockedCalendars'])) {
+                $providerAS->updateProviderOutlookCalendarBlockedCalendars(
+                    $userId,
+                    $providerData['outlookCalendar']['blockedCalendars']
+                );
+            }
+
+            $providerData = $this->getOutlookCalendarProviderData($providerData, $providerAS, $userId);
 
             if ($command->getField('externalId') === 0) {
                 /** @var UserApplicationService $userAS */
@@ -280,5 +307,75 @@ class UpdateProviderCommandHandler extends CommandHandler
         do_action('amelia_after_provider_updated', $newUser ? $newUser->toArray() : null, $oldUser ? $oldUser->toArray() : null);
 
         return $result;
+    }
+
+    /**
+     * @param array $providerData
+     * @param ProviderApplicationService $providerAS
+     * @param $userId
+     * @return array
+     * @throws QueryExecutionException
+     */
+    public function getGoogleCalendarProviderData(array $providerData, ProviderApplicationService $providerAS, $userId): array
+    {
+        if (isset($providerData['googleCalendar'])) {
+            $googleCalendarSettings = [];
+
+            if (isset($providerData['googleCalendar']['insertPendingAppointments'])) {
+                $googleCalendarSettings['insertPendingAppointments'] = $providerData['googleCalendar']['insertPendingAppointments'];
+            }
+
+            if (isset($providerData['googleCalendar']['includeBufferTime'])) {
+                $googleCalendarSettings['includeBufferTime'] = $providerData['googleCalendar']['includeBufferTime'];
+            }
+
+            if (isset($providerData['googleCalendar']['title'])) {
+                $googleCalendarSettings['title'] = $providerData['googleCalendar']['title'];
+            }
+
+            if (isset($providerData['googleCalendar']['description'])) {
+                $googleCalendarSettings['description'] = $providerData['googleCalendar']['description'];
+            }
+
+            if (!empty($googleCalendarSettings)) {
+                $providerAS->updateProviderGoogleCalendarAccountSettings($userId, $googleCalendarSettings);
+            }
+        }
+        return $providerData;
+    }
+
+    /**
+     * @param array $providerData
+     * @param ProviderApplicationService $providerAS
+     * @param $userId
+     * @return array
+     * @throws QueryExecutionException
+     */
+    public function getOutlookCalendarProviderData(array $providerData, ProviderApplicationService $providerAS, $userId): array
+    {
+        if (isset($providerData['outlookCalendar'])) {
+            $outlookCalendarSettings = [];
+
+            if (isset($providerData['outlookCalendar']['insertPendingAppointments'])) {
+                $outlookCalendarSettings['insertPendingAppointments'] = $providerData['outlookCalendar']['insertPendingAppointments'];
+            }
+
+            if (isset($providerData['outlookCalendar']['includeBufferTime'])) {
+                $outlookCalendarSettings['includeBufferTime'] = $providerData['outlookCalendar']['includeBufferTime'];
+            }
+
+            if (isset($providerData['outlookCalendar']['title'])) {
+                $outlookCalendarSettings['title'] = $providerData['outlookCalendar']['title'];
+            }
+
+            if (isset($providerData['outlookCalendar']['description'])) {
+                $outlookCalendarSettings['description'] = $providerData['outlookCalendar']['description'];
+            }
+
+            if (!empty($outlookCalendarSettings)) {
+                $providerAS->updateProviderOutlookCalendarAccountSettings($userId, $outlookCalendarSettings);
+            }
+        }
+        return $providerData;
     }
 }

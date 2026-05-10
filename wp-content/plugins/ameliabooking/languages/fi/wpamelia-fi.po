@@ -419,10 +419,9 @@ msgstr "Lisää vapaapäivä"
 msgid "Add Extra"
 msgstr "Lisää lisäpalvelu"
 
-msgid "Add Google Map API Key to show Google static map on \"Locations\" page."
+msgid ""
+"Add Google Maps API Key to show Google static map on \"Locations\" page."
 msgstr ""
-"Lisää Google Map API -avain, jotta Google-staattinen kartta näkyy "
-"\"Sijainnit\"-sivulla."
 
 msgid "Add Meta Pixel to track ad conversions and optimize marketing."
 msgstr ""
@@ -458,11 +457,17 @@ msgstr ""
 "Lisää uudelleenohjaus-URL tapauksia varten, joissa asiakas yrittää varata jo "
 "varatun aikavälin."
 
+msgid "Add another account"
+msgstr ""
+
 msgid "Add appointment"
 msgstr "Lisää ajanvaraus"
 
 msgid "Add booking"
 msgstr "Lisää varaus"
+
+msgid "Add calendar"
+msgstr ""
 
 msgid "Add category"
 msgstr "Lisää kategoria"
@@ -745,6 +750,9 @@ msgstr "Anna työntekijöiden hallita palveluitaan"
 
 msgid "Allow employees to manage their special days"
 msgstr "Anna työntekijöiden hallita omia erityispäiviään"
+
+msgid "Allow employees to view all customers"
+msgstr ""
 
 msgid "Allow multiple bookings per customer"
 msgstr "Salli useita varauksia asiakasta kohden"
@@ -1077,6 +1085,9 @@ msgstr "Haluatko varmasti poistaa nämä kohteet?"
 msgid "Are you sure you want to delete this appointment?"
 msgstr "Haluatko varmasti poistaa tämän ajanvarauksen?"
 
+msgid "Are you sure you want to delete this block time?"
+msgstr ""
+
 msgid "Are you sure you want to delete this category?"
 msgstr "Haluatko varmasti poistaa tämän kategorian"
 
@@ -1223,6 +1234,9 @@ msgstr "Määritetty"
 
 msgid "Assigned Services"
 msgstr "Määritetyt palvelut"
+
+msgid "Assigned employee full name"
+msgstr ""
 
 msgid "Attachment"
 msgstr "Liite"
@@ -1459,21 +1473,34 @@ msgid "Block"
 msgstr "Estä"
 
 msgid ""
-"Block booking times that overlap with busy events in the employee’s Apple "
-"Calendar."
-msgstr ""
-"Estä varausajat, jotka ovat päällekkäisiä työntekijän Apple-kalenterissa "
-"olevien kiireisten tapahtumien kanssa."
-
-msgid ""
 "Block booking times that overlap with busy events in the employee’s Outlook "
 "Calendar."
 msgstr ""
 "Estä varausajat, jotka ovat päällekkäisiä työntekijän Outlook-kalenterin "
 "kiireisten tapahtumien kanssa."
 
+msgid ""
+"Block booking times that overlap with events in the employee’s Apple "
+"Calendar."
+msgstr ""
+
 msgid "Block customer"
 msgstr "Estä asiakas"
+
+msgid "Block time"
+msgstr ""
+
+msgid "Block time from calendars"
+msgstr ""
+
+msgid "Block time has been added."
+msgstr ""
+
+msgid "Block time has been deleted."
+msgstr ""
+
+msgid "Block time has been updated."
+msgstr ""
 
 msgid "Blog"
 msgstr "Blogi"
@@ -2577,6 +2604,9 @@ msgstr "Luo työntekijöitä WP-käyttäjistä Amelia-työntekijäroolilla"
 msgid "Create New"
 msgstr "Luo uusi"
 
+msgid "Create New Tag"
+msgstr ""
+
 msgid ""
 "Create a coupon code customers can enter during booking to get a discount."
 msgstr ""
@@ -2613,6 +2643,9 @@ msgstr "Luo uusi"
 
 msgid "Create new badge"
 msgstr "Luo uusi merkki"
+
+msgid "Create new tag"
+msgstr ""
 
 msgid ""
 "Create online classrooms automatically for each booked appointment or event."
@@ -2755,6 +2788,9 @@ msgid "Custom pricing spots will override Maximum allowed spots value."
 msgstr ""
 "Mukautettujen hintojen paikat tulevat ylikirjoittamaan maksimimäärän "
 "hyväksyttyjen paikkojen arvon."
+
+msgid "Custom range"
+msgstr ""
 
 msgid "Custom service duration"
 msgstr "Mukautettu palvelun kesto"
@@ -2949,6 +2985,9 @@ msgstr "Päivämäärä nouseva"
 
 msgid "Date Desc"
 msgstr "Päivämäärä Kuvaus"
+
+msgid "Date Picker"
+msgstr ""
 
 msgid "Date Purchased Asc"
 msgstr "Ostopäivä Asc"
@@ -3163,6 +3202,9 @@ msgstr "Valitse toistojakso"
 
 msgid "Delete appointment"
 msgstr "Poista tapaaminen"
+
+msgid "Delete block time"
+msgstr ""
 
 msgid "Delete booking"
 msgstr "Poista varaus"
@@ -3556,6 +3598,9 @@ msgstr "Muokkaa Webhook"
 
 msgid "Edit appointment"
 msgstr "Muokkaa tapaamista"
+
+msgid "Edit block time"
+msgstr ""
 
 msgid "Edit booking"
 msgstr "Muokkaa varausta"
@@ -4442,11 +4487,28 @@ msgstr "Tapahtuma alkaa"
 msgid "Event status"
 msgstr "Tapahtuman tila"
 
+msgid "Event tags"
+msgstr ""
+
+msgid ""
+"Event tags allow you to label and organize events in Amelia based on "
+"criteria that matter most to your business."
+msgstr ""
+
+msgid "Event tags have been saved."
+msgstr ""
+
+msgid "Event tags setup"
+msgstr ""
+
 msgid "Event ticketing"
 msgstr "Tapahtumalippujen myynti"
 
 msgid "Event tickets"
 msgstr "Tapahtuman liput"
+
+msgid "Event time scope"
+msgstr ""
 
 msgid "Event title"
 msgstr "Tapahtuman nimi"
@@ -4456,6 +4518,9 @@ msgstr "Tapahtuman nimi ja kuvaus"
 
 msgid "Event type"
 msgstr "Tapahtuman tyyppi"
+
+msgid "Event_bookings"
+msgstr ""
 
 msgid "Events"
 msgstr "Tapahtumat"
@@ -4543,6 +4608,9 @@ msgstr "Vie tapaamisetiedot helposti"
 
 msgid "Export bookings"
 msgstr "Vie varaukset"
+
+msgid "Export event booking data with ease"
+msgstr ""
 
 msgid "Express Account"
 msgstr "Express-tili"
@@ -4876,6 +4944,9 @@ msgstr "Kaikki tapahtumat"
 msgid "Fully booked"
 msgstr "Täynnä"
 
+msgid "Future events"
+msgstr ""
+
 msgid ""
 "GSM (standard Latin) segments contain 160 characters, while UCS-2 (non-GSM - "
 "Cyrillic, emoji, non-standard symbols) contain 70 characters, etc."
@@ -4964,8 +5035,8 @@ msgstr "Google-kalenteri ja Google Meet"
 msgid "Google Calendar setup"
 msgstr "Google-kalenterin asetukset"
 
-msgid "Google Map API key"
-msgstr "Google Map API -avain"
+msgid "Google Maps API key"
+msgstr ""
 
 msgid "Google Maps failed to load. Check your API key and restrictions."
 msgstr ""
@@ -5446,6 +5517,10 @@ msgstr ""
 "tapaamistietoihin"
 
 msgid ""
+"Improve reporting accuracy by accessing complete event booking data instantly"
+msgstr ""
+
+msgid ""
 "Improved customer retention as clients return to use the remaining sessions "
 "in their package"
 msgstr ""
@@ -5593,6 +5668,9 @@ msgstr "Integraatiot"
 
 msgid "Interested in unlocking this feature?"
 msgstr "Haluatko avata tämän ominaisuuden?"
+
+msgid "Invalid Mollie API key."
+msgstr ""
 
 msgid "Invalid Stripe secret key."
 msgstr "Virheellinen Stripe-salainen avain."
@@ -6069,8 +6147,14 @@ msgstr "Lisää pakollinen"
 msgid "Make sure you are using the correct WhatsApp credentials."
 msgstr "Varmista, että käytät oikeita WhatsApp-tunnistetietoja."
 
+msgid "Make sure you are using the correct Zoom credentials."
+msgstr ""
+
 msgid "Male"
 msgstr "Mies"
+
+msgid "Manage Event Tags"
+msgstr ""
 
 msgid "Manage badges"
 msgstr "Hallitse merkkejä"
@@ -6087,6 +6171,9 @@ msgid ""
 msgstr ""
 "Hallitse tapahtumien peruutuksia tehokkaasti antamalla asiakkaiden liittyä "
 "jonotuslistoille ja täyttämällä avoimet paikat manuaalisesti."
+
+msgid "Manage event tags"
+msgstr ""
 
 msgid "Manage languages"
 msgstr "Hallinnoi kieliasetuksia"
@@ -6390,6 +6477,9 @@ msgstr "Uusi päivitys"
 msgid "New appointment"
 msgstr "Uusi tapaaminen"
 
+msgid "New block time"
+msgstr ""
+
 msgid "New category"
 msgstr "Uusi kategoria"
 
@@ -6603,6 +6693,9 @@ msgstr "Huomautus (sisäinen)"
 
 msgid "Notice: Please select at least one panel."
 msgstr "Huomio: Valitse vähintään yksi paneeli."
+
+msgid "Notice: Please select start and end date."
+msgstr ""
 
 msgid "Notification"
 msgstr "Ilmoitukset"
@@ -6923,6 +7016,9 @@ msgstr "Avoin tapahtuma"
 
 msgid "Open following"
 msgstr "Avaa tulevat"
+
+msgid "Open side menu"
+msgstr ""
 
 msgid "Opened"
 msgstr "Avattu"
@@ -7255,6 +7351,9 @@ msgstr "Salasanat eivät täsmää"
 msgid "Passwords don't match."
 msgstr "Salasanat eivät täsmää."
 
+msgid "Past events"
+msgstr ""
+
 msgid ""
 "Paste the secret key you received after creating your API key pair in Google "
 "reCAPTCHA."
@@ -7513,6 +7612,9 @@ msgstr "Suunnitelmat"
 msgid "Please Wait"
 msgstr "Odota"
 
+msgid "Please add period"
+msgstr ""
+
 msgid "Please cancel the event first before deleting it."
 msgstr "Peruuta tapahtuma ennen sen poistamista."
 
@@ -7527,6 +7629,11 @@ msgstr "Valitse yksi ajanvaraus aika"
 
 msgid "Please confirm you are not a robot"
 msgstr "Vahvista, ettet ole robotti"
+
+msgid ""
+"Please delete this appointment. It cannot be edited due to a conflict with "
+"the associated account."
+msgstr ""
 
 msgid ""
 "Please ensure that services and employees are created and that services are "
@@ -7873,6 +7980,9 @@ msgstr "Valitse aika"
 msgid "Please upload the file"
 msgstr "Lataa tiedosto"
 
+msgid "Please use a different email or phone number to complete the booking."
+msgstr ""
+
 msgid ""
 "Please use the built-in Elementor shortcode widget instead of Amelia widget "
 "when adding Amelia to a popup"
@@ -8118,6 +8228,11 @@ msgstr ""
 "Lataa nopeasti kaikki tapaamisten tiedot Varaukset-sivulta, jolloin "
 "raportointi, analysointi ja kirjanpito sujuvat helposti ja tehokkaasti."
 
+msgid ""
+"Quickly download all event booking details from the Event Bookings page, "
+"making reporting, analysis, and record-keeping simple and efficient."
+msgstr ""
+
 msgid "Radio button"
 msgstr "Valintapainike"
 
@@ -8281,8 +8396,8 @@ msgstr "Loppusumma maksetaan paikan päällä."
 msgid "Remind me when my SMS balance is low"
 msgstr "Muistuta minua, kun tekstiviestien saldo on vähissä"
 
-msgid "Remove Apple Calendar busy slots"
-msgstr "Poista Apple-kalenterin varatut aikavälit"
+msgid "Remove Apple Calendar event slots"
+msgstr ""
 
 msgid "Remove Attendee"
 msgstr "Poista osallistuja"
@@ -8531,6 +8646,9 @@ msgstr ""
 "Säästä aikaa nopealla, yhdellä napsautuksella tapahtuvalla tapaamisten "
 "viennillä"
 
+msgid "Save time with fast, one-click event booking exports"
+msgstr ""
+
 msgid "Save time with quick, hassle-free customer data exports"
 msgstr "Säästä aikaa nopealla ja vaivattomalla asiakastietojen viennillä"
 
@@ -8764,6 +8882,9 @@ msgstr "Valitse vähintään yksi vaihtoehto."
 
 msgid "Select box"
 msgstr "Valintaruutu"
+
+msgid "Select calendar"
+msgstr ""
 
 msgid "Select category"
 msgstr "Valitse kategoria"
@@ -9980,6 +10101,12 @@ msgstr "Välilehdet (Kaikki / Paketit / Palvelut)"
 msgid "Tag"
 msgstr "Valitse tai luo tunniste"
 
+msgid "Tag label"
+msgstr ""
+
+msgid "Tag label cannot be empty"
+msgstr ""
+
 msgid "Tags"
 msgstr "Tunnisteet"
 
@@ -10827,6 +10954,9 @@ msgid ""
 msgstr ""
 "URL, johon käyttäjä ohjataan, jos tapaamista ei voida peruuttaa "
 "\"Peruuttamiseen vaadittava vähimmäisaika\" -arvon vuoksi."
+
+msgid "Unable to complete plugin activation. Please try again."
+msgstr ""
 
 msgid "Unable to deactivate plugin. Please try again later."
 msgstr "Lisäosan poistaminen käytöstä ei onnistu. Yritä myöhemmin uudelleen."

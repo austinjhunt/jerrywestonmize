@@ -2,8 +2,6 @@
 
 namespace AmeliaBooking\Infrastructure\Services\QrCode;
 
-use Interop\Container\Exception\ContainerException;
-
 /**
  * Class StarterQrCodeInfrastructureService
  *
@@ -11,14 +9,7 @@ use Interop\Container\Exception\ContainerException;
  */
 class StarterQrCodeInfrastructureService extends AbstractQrCodeInfrastructureService
 {
-    /**
-     * @param array $qrData
-     *
-     * @return array
-     *
-     * @throws ContainerException
-     */
-    public function generateQrCode($qrData)
+    public function generateQrCode(array $qrData): array
     {
         return [];
     }

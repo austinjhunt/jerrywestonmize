@@ -19,6 +19,8 @@ use AmeliaBooking\Domain\Entity\User\Customer;
 use AmeliaBooking\Domain\Factory\User\UserFactory;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
+use AmeliaBooking\Domain\ValueObjects\String\Name;
+use AmeliaBooking\Domain\ValueObjects\String\Phone;
 use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageCustomerRepository;
@@ -185,14 +187,40 @@ class CustomerApplicationService extends UserApplicationService
             ) {
                 $result->setResult(CommandResult::RESULT_ERROR);
                 $result->setData($userWithSameMail ? ['emailError' => true] : ['phoneError' => true]);
-            } elseif (
-                empty($userWithSameValue->getEmail()->getValue()) && !empty($user->getEmail())
-            ) {
-                $userRepository->updateFieldById(
-                    $userWithSameValue->getId()->getValue(),
-                    $user->getEmail()->getValue(),
-                    'email'
-                );
+            } else {
+                if (empty($userWithSameValue->getEmail()->getValue()) && !empty($user->getEmail())) {
+                    $userRepository->updateFieldById(
+                        $userWithSameValue->getId()->getValue(),
+                        $user->getEmail()->getValue(),
+                        'email'
+                    );
+                    $userWithSameValue->setEmail($user->getEmail());
+                }
+
+                if (
+                    empty($userWithSameValue->getPhone() ? $userWithSameValue->getPhone()->getValue() : null) &&
+                    !empty($user->getPhone() ? $user->getPhone()->getValue() : null)
+                ) {
+                    $userRepository->updateFieldById(
+                        $userWithSameValue->getId()->getValue(),
+                        $user->getPhone()->getValue(),
+                        'phone'
+                    );
+                    $userWithSameValue->setPhone(new Phone($user->getPhone()->getValue()));
+
+                    if (
+                        empty($userWithSameValue->getCountryPhoneIso() ? $userWithSameValue->getCountryPhoneIso()->getValue() : null) &&
+                        !empty($user->getCountryPhoneIso() ? $user->getCountryPhoneIso()->getValue() : null)
+                    ) {
+                        $userRepository->updateFieldById(
+                            $userWithSameValue->getId()->getValue(),
+                            $user->getCountryPhoneIso()->getValue(),
+                            'countryPhoneIso'
+                        );
+
+                        $userWithSameValue->setCountryPhoneIso(new Name($user->getCountryPhoneIso()->getValue()));
+                    }
+                }
             }
 
             return $userWithSameValue;

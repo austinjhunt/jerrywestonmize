@@ -89,6 +89,14 @@ class REST_Email_Reporting_Controller {
 	private $email_log_batch_query;
 
 	/**
+	 * Cron health check instance.
+	 *
+	 * @since 1.176.0
+	 * @var Cron_Health_Check
+	 */
+	private $health_check;
+
+	/**
 	 * Email sender instance.
 	 *
 	 * @since 1.173.0
@@ -111,6 +119,7 @@ class REST_Email_Reporting_Controller {
 	 * @since 1.170.0 Added modules and user email reporting settings dependencies.
 	 * @since 1.173.0 Added eligible subscribers query and email sender dependencies and removed unused user options dependency.
 	 * @since 1.174.0 Added golinks dependency.
+	 * @since 1.176.0 Added cron health check dependency.
 	 *
 	 * @param Email_Reporting_Settings      $settings                       Email_Reporting_Settings instance.
 	 * @param Modules                       $modules                        Modules instance.
@@ -118,6 +127,7 @@ class REST_Email_Reporting_Controller {
 	 * @param Eligible_Subscribers_Query    $eligible_subscribers_query     Eligible subscribers query instance.
 	 * @param Email                         $email_sender                   Email sender instance.
 	 * @param Golinks                       $golinks                        Golinks instance.
+	 * @param Cron_Health_Check             $health_check                   Cron health check instance.
 	 */
 	public function __construct(
 		Email_Reporting_Settings $settings,
@@ -125,7 +135,8 @@ class REST_Email_Reporting_Controller {
 		User_Email_Reporting_Settings $user_email_reporting_settings,
 		Eligible_Subscribers_Query $eligible_subscribers_query,
 		Email $email_sender,
-		Golinks $golinks
+		Golinks $golinks,
+		Cron_Health_Check $health_check
 	) {
 		$this->settings                      = $settings;
 		$this->modules                       = $modules;
@@ -134,6 +145,7 @@ class REST_Email_Reporting_Controller {
 		$this->email_log_batch_query         = new Email_Log_Batch_Query();
 		$this->email_sender                  = $email_sender;
 		$this->golinks                       = $golinks;
+		$this->health_check                  = $health_check;
 	}
 
 	/**
@@ -157,6 +169,7 @@ class REST_Email_Reporting_Controller {
 					array(
 						'/' . REST_Routes::REST_ROOT . '/core/site/data/email-reporting',
 						'/' . REST_Routes::REST_ROOT . '/core/site/data/email-reporting-eligible-subscribers',
+						'/' . REST_Routes::REST_ROOT . '/core/site/data/email-reporting-errors',
 					)
 				);
 			}
@@ -196,7 +209,7 @@ class REST_Email_Reporting_Controller {
 
 							return new WP_REST_Response( $this->settings->get() );
 						},
-						'permission_callback' => $can_access,
+						'permission_callback' => $can_manage,
 						'args'                => array(
 							'data' => array(
 								'type'       => 'object',
@@ -285,6 +298,7 @@ class REST_Email_Reporting_Controller {
 					array(
 						'methods'             => WP_REST_Server::READABLE,
 						'callback'            => function () {
+							$this->health_check->check_stale_tasks();
 							$errors = $this->email_log_batch_query->get_latest_batch_error();
 
 							return new WP_REST_Response( is_string( $errors ) ? json_decode( $errors, true ) : array() );
@@ -373,8 +387,8 @@ class REST_Email_Reporting_Controller {
 
 		$template_renderer = new Email_Template_Renderer();
 		$template_data     = $this->prepare_invitation_template_data();
-		$html_content      = $template_renderer->render( 'invitation-email', $template_data );
-		$text_content      = $template_renderer->render_text( 'invitation-email', $template_data );
+		$html_content      = $template_renderer->render( 'simple-email', $template_data );
+		$text_content      = $template_renderer->render_text( 'simple-email', $template_data );
 
 		if ( '' === trim( $html_content ) || '' === trim( $text_content ) ) {
 			return $this->invite_error(
@@ -426,12 +440,13 @@ class REST_Email_Reporting_Controller {
 		$settings = get_user_meta( $user->ID, $meta_key, true );
 
 		return array(
-			'id'          => (int) $user->ID,
-			'displayName' => $user->display_name,
-			'email'       => $user->user_email,
-			'role'        => $this->get_primary_role( $user ),
-			'subscribed'  => is_array( $settings ) && ! empty( $settings['subscribed'] ),
-			'invited'     => $this->is_invite_rate_limited( $user->ID ),
+			'id'              => (int) $user->ID,
+			'displayName'     => $user->display_name,
+			'email'           => $user->user_email,
+			'role'            => $this->get_primary_role( $user ),
+			'roleDisplayName' => $this->get_primary_role_display_name( $user ),
+			'subscribed'      => is_array( $settings ) && ! empty( $settings['subscribed'] ),
+			'invited'         => $this->is_invite_rate_limited( $user->ID ),
 		);
 	}
 
@@ -451,6 +466,22 @@ class REST_Email_Reporting_Controller {
 		$roles = array_values( $user->roles );
 
 		return (string) reset( $roles );
+	}
+
+	/**
+	 * Gets the primary role display name of the user.
+	 *
+	 * @since 1.178.0
+	 *
+	 * @param WP_User $user User object.
+	 * @return string
+	 */
+	private function get_primary_role_display_name( WP_User $user ) {
+		$role_slug = $this->get_primary_role( $user );
+
+		$role_name = wp_roles()->get_names()[ $role_slug ] ?? $role_slug;
+
+		return translate_user_role( $role_name );
 	}
 
 	/**
@@ -566,7 +597,7 @@ class REST_Email_Reporting_Controller {
 			),
 			'body'                   => Content_Map::get_body( 'invitation-email' ),
 			'inviter_email'          => $inviter_email,
-			'learn_more_url'         => 'https://sitekit.withgoogle.com/documentation/email-reports/',
+			'learn_more_url'         => add_query_arg( 'doc', 'email-reporting', 'https://sitekit.withgoogle.com/support/' ),
 			'primary_call_to_action' => array(
 				'label' => __( 'Get your report', 'google-site-kit' ),
 				'url'   => $this->golinks->get_url( 'manage-subscription-email-reporting' ),
@@ -574,6 +605,8 @@ class REST_Email_Reporting_Controller {
 			'footer'                 => array(
 				'copy' => __( 'You received this email because your site admin invited you to use Site Kit email reports feature', 'google-site-kit' ),
 			),
+			'graphic'                => Content_Map::get_graphic_config( 'invitation-email' ),
+			'footer_type'            => 'inline',
 		);
 	}
 

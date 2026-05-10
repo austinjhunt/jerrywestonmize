@@ -47,7 +47,7 @@ abstract class AbstractUser
     /** @var Picture */
     protected $picture;
 
-    /** @var Id */
+    /** @var Id|null */
     protected $externalId;
 
     /** @var Email */
@@ -208,7 +208,7 @@ abstract class AbstractUser
     }
 
     /**
-     * @return ID
+     * @return ID|null
      */
     public function getExternalId()
     {

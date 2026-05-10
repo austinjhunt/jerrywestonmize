@@ -179,6 +179,59 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
     }
 
     /**
+     * Get calendar lists for multiple Google accounts
+     *
+     * @param array $accounts
+     *
+     * @return array
+     */
+    public function getCalendarListsForAccounts(array $accounts, $provider): array
+    {
+        foreach ($accounts as &$account) {
+            if (isset($account['token']) && $account['token']) {
+                try {
+                    $client = new Client();
+                    $client->setClientId($this->googleCalendarSettings['clientID']);
+                    $client->setClientSecret($this->googleCalendarSettings['clientSecret']);
+                    $client->setAccessToken($account['token']);
+
+                    if ($client->isAccessTokenExpired()) {
+                        $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
+
+                        $newTokenJson = json_encode($client->getAccessToken());
+                        /** @var ProviderRepository $providerRepository */
+                        $providerRepository = $this->container->get('domain.users.providers.repository');
+                        $providerRepository->updateGoogleCalendarAccountToken($account['id'], $newTokenJson);
+
+                        $account['token'] = $newTokenJson;
+                    }
+
+                    $service = new Calendar($client);
+                    $calendarList = $service->calendarList->listCalendarList(['minAccessRole' => 'writer']);
+
+                    $calendars = [];
+                    foreach ($calendarList->getItems() as $calendar) {
+                        $calendars[] = [
+                            'id'      => $calendar->getId(),
+                            'primary' => $calendar->getPrimary(),
+                            'summary' => $calendar->getSummary()
+                        ];
+                    }
+
+                    $account['calendarList'] = $calendars;
+                } catch (\Exception $e) {
+                    error_log('GoogleCalendar: Error fetching calendar list for account ' . $account['id'] . ': ' . $e->getMessage());
+                    $account['calendarList'] = [];
+                }
+            } else {
+                $account['calendarList'] = [];
+            }
+        }
+
+        return $accounts;
+    }
+
+    /**
      * Get Provider's Google Calendar ID.
      *
      * @param Provider $provider
@@ -240,6 +293,36 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
 
             $appointmentRepository->updateErrorColumn($appointment->getId()->getValue(), $e->getMessage());
         }
+    }
+
+    /**
+     * Get insertPendingAppointments setting
+     *
+     * @param Provider $provider
+     * @return bool
+     */
+    private function getInsertPendingAppointments($provider)
+    {
+        if ($provider && $provider->getGoogleCalendar()) {
+            return $provider->getGoogleCalendar()->getInsertPendingAppointments();
+        }
+
+        return (bool)($this->googleCalendarSettings['insertPendingAppointments'] ?? false);
+    }
+
+    /**
+     * Get includeBufferTime setting
+     *
+     * @param Provider $provider
+     * @return bool
+     */
+    private function getIncludeBufferTime($provider)
+    {
+        if ($provider && $provider->getGoogleCalendar()) {
+            return $provider->getGoogleCalendar()->getIncludeBufferTime();
+        }
+
+        return (bool)($this->googleCalendarSettings['includeBufferTimeGoogleCalendar'] ?? false);
     }
 
     /**
@@ -315,7 +398,7 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
 
                     // When status is pending we must first insert the event to get event ID
                     // because if we update the status later to 'Approved' we must have ID of the event
-                    if ($appointmentStatus === 'pending' && $this->googleCalendarSettings['insertPendingAppointments'] === false) {
+                    if ($appointmentStatus === 'pending' && $this->getInsertPendingAppointments($provider) === false) {
                         $this->deleteEvent($appointment, $provider);
                     }
                     break;
@@ -327,7 +410,7 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
                 case BookingRejectedEventHandler::BOOKING_REJECTED:
                     if (
                         $appointmentStatus === 'canceled' || $appointmentStatus === 'rejected' ||
-                        ($appointmentStatus === 'pending' && $this->googleCalendarSettings['insertPendingAppointments'] === false)
+                        ($appointmentStatus === 'pending' && $this->getInsertPendingAppointments($provider) === false)
                     ) {
                         $this->deleteEvent($appointment, $provider);
                         break;
@@ -402,7 +485,11 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
                             break;
                         case BookingAddedEventHandler::BOOKING_ADDED:
                         case BookingCanceledEventHandler::BOOKING_CANCELED:
-                            $this->patchEvent($event, $provider, $period);
+                            if (!$period->getGoogleCalendarEventId()) {
+                                $this->insertEvent($event, $provider, $period);
+                            } else {
+                                $this->patchEvent($event, $provider, $period);
+                            }
                             break;
                         case EventStatusUpdatedEventHandler::EVENT_STATUS_UPDATED:
                             if ($event->getStatus()->getValue() === 'rejected') {
@@ -531,6 +618,9 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
         }
 
         if ($this->googleCalendarSettings['removeGoogleCalendarBusySlots'] === true) {
+            /** @var ProviderRepository $providerRepository */
+            $providerRepository = $this->container->get('domain.users.providers.repository');
+
             foreach ($providers->keys() as $providerKey) {
                 /** @var Provider $provider */
                 $provider = $providers->getItem($providerKey);
@@ -548,82 +638,257 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
                         $startDateTimeCopy->modify('-1 days');
 
                         $endDateTimeCopy = clone $endDateTime;
-
                         $endDateTimeCopy->modify('+1 days');
 
-                        $googleCalendarId = $provider->getGoogleCalendar() ?
-                            $provider->getGoogleCalendar()->getCalendarId()->getValue() :
-                            $provider->getGoogleCalendarId()->getValue();
+                        // Process main calendar events
+                        if (!array_key_exists($provider->getId()->getValue(), self::$providersGoogleEvents)) {
+                            $this->authorizeProvider($provider);
 
-                        $events = $this->service->events->listEvents(
-                            $googleCalendarId,
-                            [
-                                'maxResults'   => $this->googleCalendarSettings['maximumNumberOfEventsReturned'],
-                                'orderBy'      => 'startTime',
-                                'singleEvents' => true,
-                                'timeMin'      => DateTimeService::getCustomDateTimeRFC3339(
-                                    $startDateTimeCopy->format('Y-m-d')
-                                ),
-                                'timeMax'      => DateTimeService::getCustomDateTimeRFC3339(
-                                    $endDateTimeCopy->format('Y-m-d')
-                                ),
-                            ]
-                        );
+                            $this->timeZone = $this->service->calendars->get('primary')->getTimeZone();
 
-                        self::$providersGoogleEvents[$provider->getId()->getValue()] = $events;
-                    } else {
-                        $events = self::$providersGoogleEvents[$provider->getId()->getValue()];
-                    }
+                            $googleCalendarId = $provider->getGoogleCalendar() ?
+                                $provider->getGoogleCalendar()->getCalendarId()->getValue() :
+                                $provider->getGoogleCalendarId()->getValue();
 
-                    /** @var Calendar\Event $event */
-                    foreach ($events->getItems() as $event) {
-                        // Continue if event is set to "Free"
-                        if ($event->getTransparency() === 'transparent') {
-                            continue;
-                        }
+                            $events = $this->service->events->listEvents(
+                                $googleCalendarId,
+                                [
+                                    'maxResults' => $this->googleCalendarSettings['maximumNumberOfEventsReturned'],
+                                    'orderBy' => 'startTime',
+                                    'singleEvents' => true,
+                                    'timeMin' => DateTimeService::getCustomDateTimeRFC3339(
+                                        $startDateTimeCopy->format('Y-m-d')
+                                    ),
+                                    'timeMax' => DateTimeService::getCustomDateTimeRFC3339(
+                                        $endDateTimeCopy->format('Y-m-d')
+                                    ),
+                                ]
+                            );
 
-                        $extendedProperties = $event->getExtendedProperties();
-                        if ($extendedProperties !== null) {
-                            $shared = $extendedProperties->shared;
-                            if (
-                                is_array($shared) &&
-                                array_key_exists('ameliaEvent', $shared) &&
-                                $excludeAppointmentId !== null &&
-                                array_key_exists('ameliaAppointmentId', $shared) &&
-                                (int)$shared['ameliaAppointmentId'] === (int)$excludeAppointmentId
-                            ) {
-                                continue;
-                            }
-                        }
-
-                        if ($event->getStart()->dateTime === null) {
-                            $eventStartString = $this->getEventDateTimeStringFromEventDate($event->getStart()->date);
-
-                            $eventEndString = $this->getEventDateTimeStringFromEventDate($event->getEnd()->date);
+                            self::$providersGoogleEvents[$provider->getId()->getValue()] = $events;
                         } else {
-                            $eventStartString = $this->getEventDateTimeStringFromEventDateTime($event->getStart()->dateTime);
-
-                            $eventEndString = $this->getEventDateTimeStringFromEventDateTime($event->getEnd()->dateTime);
+                            $events = self::$providersGoogleEvents[$provider->getId()->getValue()];
                         }
 
-                        /** @var Appointment $appointment */
-                        $appointment = AppointmentFactory::create(
-                            [
-                                'bookingStart'       => $eventStartString,
-                                'bookingEnd'         => $eventEndString,
-                                'notifyParticipants' => false,
-                                'serviceId'          => 0,
-                                'providerId'         => $provider->getId()->getValue(),
-                            ]
-                        );
+                        $this->processGoogleCalendarEvents($events, $provider, $excludeAppointmentId);
 
-                        $provider->getAppointmentList()->addItem($appointment);
+                        // Process blocked calendars events
+                        $this->processBlockedCalendarsEvents(
+                            $provider,
+                            $providerRepository,
+                            $startDateTimeCopy,
+                            $endDateTimeCopy,
+                            $excludeAppointmentId
+                        );
                     }
                 }
             }
         }
     }
 
+    /**
+     * Process events from blocked calendars and add them as fake appointments
+     *
+     * @param Provider           $provider
+     * @param ProviderRepository $providerRepository
+     * @param \DateTime          $startDateTime
+     * @param \DateTime          $endDateTime
+     * @param int|null           $excludeAppointmentId
+     *
+     * @throws QueryExecutionException
+     * @throws InvalidArgumentException
+     */
+    private function processBlockedCalendarsEvents(
+        $provider,
+        $providerRepository,
+        $startDateTime,
+        $endDateTime,
+        $excludeAppointmentId
+    ) {
+        $providerId = $provider->getId()->getValue();
+        $cacheKey = $providerId . '_blocked';
+
+        if (array_key_exists($cacheKey, self::$providersGoogleEvents)) {
+            return;
+        }
+
+        $accounts = $providerRepository->getGoogleCalendarAccounts($providerId);
+
+        $this->fetchBlockedCalendarEventsFromAccounts(
+            $accounts,
+            $startDateTime,
+            $endDateTime,
+            $provider,
+            $excludeAppointmentId
+        );
+
+        self::$providersGoogleEvents[$cacheKey] = true;
+    }
+
+    /**
+     * Fetch events from blocked calendars for each account
+     *
+     * @param array     $accounts
+     * @param \DateTime $startDateTime
+     * @param \DateTime $endDateTime
+     * @param Provider  $provider
+     * @param int|null  $excludeAppointmentId
+     *
+     * @throws InvalidArgumentException
+     */
+    private function fetchBlockedCalendarEventsFromAccounts(
+        $accounts,
+        $startDateTime,
+        $endDateTime,
+        $provider,
+        $excludeAppointmentId
+    ) {
+        $eventListParams = [
+            'maxResults'   => $this->googleCalendarSettings['maximumNumberOfEventsReturned'],
+            'orderBy'      => 'startTime',
+            'singleEvents' => true,
+            'timeMin'      => DateTimeService::getCustomDateTimeRFC3339($startDateTime->format('Y-m-d')),
+            'timeMax'      => DateTimeService::getCustomDateTimeRFC3339($endDateTime->format('Y-m-d')),
+        ];
+
+        foreach ($accounts as $account) {
+            if (empty($account['blockedCalendars']) || empty($account['token'])) {
+                continue;
+            }
+
+            $service = $this->createCalendarServiceForAccount($account);
+
+            if ($service === null) {
+                continue;
+            }
+
+            foreach ($account['blockedCalendars'] as $calendarId) {
+                try {
+                    $events = $service->events->listEvents($calendarId, $eventListParams);
+                    $this->processGoogleCalendarEvents($events, $provider, $excludeAppointmentId);
+                } catch (\Exception $e) {
+                    continue;
+                }
+            }
+        }
+    }
+
+    /**
+     * Create a Calendar service for a given account, handling token refresh if needed
+     *
+     * @param array $account
+     *
+     * @return Calendar|null
+     */
+    private function createCalendarServiceForAccount($account)
+    {
+        try {
+            // Check if using global connection (middleware) or direct connection (clientId/clientSecret)
+            if ($this->googleCalendarSettings['accessToken']) {
+                $client = new Client();
+                $client->setAccessToken($account['token']);
+
+                if ($client->isAccessTokenExpired()) {
+                    $tokenData = json_decode($account['token'], true);
+
+                    if (!isset($tokenData['refresh_token'])) {
+                        return null;
+                    }
+
+                    /** @var GoogleCalendarMiddlewareService $middlewareService */
+                    $middlewareService = $this->container->get('infrastructure.google.calendar.middleware.service');
+                    $newAccessToken = $middlewareService->refreshAccessToken($tokenData['refresh_token']);
+
+                    if ($newAccessToken === null) {
+                        return null;
+                    }
+
+                    $newTokenJson = json_encode($newAccessToken);
+                    $client->setAccessToken($newTokenJson);
+
+                    /** @var ProviderRepository $providerRepository */
+                    $providerRepository = $this->container->get('domain.users.providers.repository');
+                    $providerRepository->updateGoogleCalendarAccountToken($account['id'], $newTokenJson);
+                }
+            } else {
+                $client = new Client();
+                $client->setClientId($this->googleCalendarSettings['clientID']);
+                $client->setClientSecret($this->googleCalendarSettings['clientSecret']);
+                $client->setAccessToken($account['token']);
+
+                if ($client->isAccessTokenExpired()) {
+                    $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
+
+                    $newTokenJson = json_encode($client->getAccessToken());
+                    /** @var ProviderRepository $providerRepository */
+                    $providerRepository = $this->container->get('domain.users.providers.repository');
+                    $providerRepository->updateGoogleCalendarAccountToken($account['id'], $newTokenJson);
+                }
+            }
+
+            return new Calendar($client);
+        } catch (\Exception $e) {
+            error_log('GoogleCalendar: Error creating service for account - ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Process Google Calendar events and add them as fake appointments to block slots
+     *
+     * @param Calendar\Events $events
+     * @param Provider        $provider
+     * @param int|null        $excludeAppointmentId
+     *
+     * @throws InvalidArgumentException
+     */
+    private function processGoogleCalendarEvents($events, $provider, $excludeAppointmentId)
+    {
+        /** @var Calendar\Event $event */
+        foreach ($events->getItems() as $event) {
+            // Continue if event is set to "Free"
+            if ($event->getTransparency() === 'transparent') {
+                continue;
+            }
+
+            $extendedProperties = $event->getExtendedProperties();
+            if ($extendedProperties !== null) {
+                $shared = $extendedProperties->shared;
+                if (
+                    is_array($shared) &&
+                    array_key_exists('ameliaEvent', $shared) &&
+                    $excludeAppointmentId !== null &&
+                    array_key_exists('ameliaAppointmentId', $shared) &&
+                    (int)$shared['ameliaAppointmentId'] === (int)$excludeAppointmentId
+                ) {
+                    continue;
+                }
+            }
+
+            if ($event->getStart()->dateTime === null) {
+                $eventStartString = $this->getEventDateTimeStringFromEventDate($event->getStart()->date);
+
+                $eventEndString = $this->getEventDateTimeStringFromEventDate($event->getEnd()->date);
+            } else {
+                $eventStartString = $this->getEventDateTimeStringFromEventDateTime($event->getStart()->dateTime);
+
+                $eventEndString = $this->getEventDateTimeStringFromEventDateTime($event->getEnd()->dateTime);
+            }
+
+            /** @var Appointment $appointment */
+            $appointment = AppointmentFactory::create(
+                [
+                    'bookingStart'       => $eventStartString,
+                    'bookingEnd'         => $eventEndString,
+                    'notifyParticipants' => false,
+                    'serviceId'          => 0,
+                    'providerId'         => $provider->getId()->getValue(),
+                ]
+            );
+
+            $provider->getAppointmentList()->addItem($appointment);
+        }
+    }
 
 
     /**
@@ -867,7 +1132,7 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
             $end = clone $appointment->getBookingEnd()->getValue();
         }
 
-        if ($this->googleCalendarSettings['includeBufferTimeGoogleCalendar'] === true && $type === Entities::APPOINTMENT) {
+        if ($this->getIncludeBufferTime($provider) === true && $type === Entities::APPOINTMENT) {
             $timeBefore = $appointment->getService()->getTimeBefore() ?
                 $appointment->getService()->getTimeBefore()->getValue() : 0;
 
@@ -876,6 +1141,44 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
 
             $start->modify('-' . $timeBefore . ' second');
             $end->modify('+' . $timeAfter . ' second');
+        }
+
+        $eventType = $period ? 'event' : 'appointment';
+
+        if ($provider->getGoogleCalendar()) {
+            $providerTitle = $provider->getGoogleCalendar()->getTitle();
+            $providerDescription = $provider->getGoogleCalendar()->getDescription();
+
+            if (
+                is_array($providerTitle) &&
+                array_key_exists($eventType, $providerTitle) &&
+                $providerTitle[$eventType] !== '' &&
+                $providerTitle[$eventType] !== null
+            ) {
+                $titleSettings = $providerTitle;
+            } else {
+                $titleSettings = [
+                    'appointment' => '%service_name%',
+                    'event' => '%event_name%'
+                ];
+            }
+
+            if (
+                is_array($providerDescription) &&
+                array_key_exists($eventType, $providerDescription) &&
+                $providerDescription[$eventType] !== '' &&
+                $providerDescription[$eventType] !== null
+            ) {
+                $descriptionSettings = $providerDescription;
+            } else {
+                $descriptionSettings = [
+                    'appointment' => '',
+                    'event' => ''
+                ];
+            }
+        } else {
+            $titleSettings = $this->googleCalendarSettings['title'];
+            $descriptionSettings = $this->googleCalendarSettings['description'];
         }
 
         $eventData = [
@@ -890,7 +1193,7 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
             'guestsCanSeeOtherGuests' => $this->googleCalendarSettings['showAttendees'],
             'attendees'               => $attendees,
             'description'             => $placeholderService->applyPlaceholders(
-                $period ? $this->googleCalendarSettings['description']['event'] : $this->googleCalendarSettings['description']['appointment'],
+                $period ? $descriptionSettings['event'] : $descriptionSettings['appointment'],
                 $placeholderData
             ),
             'extendedProperties'      => [
@@ -903,7 +1206,7 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
             'locked'                  => true,
             'status'                  => $this->googleCalendarSettings['status'],
             'summary'                 => $placeholderService->applyPlaceholders(
-                $period ? $this->googleCalendarSettings['title']['event'] : $this->googleCalendarSettings['title']['appointment'],
+                $period ? $titleSettings['event'] : $titleSettings['appointment'],
                 $placeholderData
             )
         ];
@@ -1031,7 +1334,7 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
 
                 if (
                     $bookingStatus === 'approved' ||
-                    ($bookingStatus === 'pending' && $this->googleCalendarSettings['insertPendingAppointments'] === true)
+                    ($bookingStatus === 'pending' && $this->getInsertPendingAppointments($provider) === true)
                 ) {
                     $customer = $customerRepository->getById($booking->getCustomerId()->getValue());
 
@@ -1077,7 +1380,6 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
 
             $this->client = $client;
             $this->service = new Calendar($this->client);
-
             return true;
         }
 

@@ -337,6 +337,9 @@ class EventPlaceholderService extends PlaceholderService
         $data['invoice_number'] = $placeholders['payment_invoice_number'];
         $data['invoice_method'] = !empty($placeholders['payment_gateway_title']) ? $placeholders['payment_gateway_title'] : $placeholders['payment_type'];
         $data['invoice_issued'] = $placeholders['payment_created'];
+        $data['invoice_issued_xml'] = $placeholders['payment_created_xml'];
+        $data['invoice_dates']  = [$placeholders['event_start_date']];
+        $data['invoice_dates_xml']  = [$placeholders['event_start_date_xml']];
 
         $data['customer_custom_fields'] = array_filter($placeholders, function ($key) {
             return strpos($key, 'invoice_custom_field_') === 0;
@@ -996,6 +999,7 @@ class EventPlaceholderService extends PlaceholderService
             'zoom_join_url_date_time'  => count($eventZoomJoinDateTimeList) === 0 ?
                 '' : $ulStartTag . implode('', $eventZoomJoinDateTimeList) . $ulEndTag,
             'event_start_date'         => date_i18n($dateFormat, $eventStartDateTime->getTimestamp()),
+            'event_start_date_xml'     => date_i18n('Y-m-d', $eventStartDateTime->getTimestamp()),
             'event_end_date'           => date_i18n($dateFormat, $eventEndDateTime->getTimestamp()),
             'event_start_date_time'    => date_i18n(
                 $dateFormat . ' ' . $timeFormat,

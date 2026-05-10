@@ -193,6 +193,7 @@ class AppointmentNotificationService
      *
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
+     * @throws NotFoundException
      */
     public function sendRescheduledNotifications(
         $notificationService,
@@ -248,6 +249,14 @@ class AppointmentNotificationService
                                 $booking->getStatus()->getValue() === BookingStatus::PENDING
                             )
                         ) {
+                            if (
+                                $customerNotification->getContent() &&
+                                $customerNotification->getContent()->getValue() &&
+                                strpos($customerNotification->getContent()->getValue(), '%payment_link_') !== false
+                            ) {
+                                $this->setPaymentLink($appointment, $bookingKey);
+                            }
+
                             $notificationService->sendNotification(
                                 $appointment->toArray(),
                                 $customerNotification,

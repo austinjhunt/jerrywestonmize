@@ -8,6 +8,7 @@ if (!defined('ABSPATH')) exit;
 use MailPoet\Captcha\CaptchaHooks;
 use MailPoet\Captcha\ReCaptchaHooks;
 use MailPoet\Cron\CronTrigger;
+use MailPoet\EmailEditor\Integrations\MailPoet\Coupons\CouponBlockGenerator;
 use MailPoet\Form\DisplayFormInWPContent;
 use MailPoet\Mailer\WordPress\WordpressMailerReplacer;
 use MailPoet\Newsletter\Scheduler\PostNotificationScheduler;
@@ -105,6 +106,8 @@ class Hooks {
   /** @var AdminUserSubscription */
   private $adminUserSubscription;
 
+  private CouponBlockGenerator $couponBlockGenerator;
+
   public function __construct(
     Form $subscriptionForm,
     Comment $subscriptionComment,
@@ -126,7 +129,8 @@ class Hooks {
     WooSystemInfoController $wooSystemInfoController,
     CronTrigger $cronTrigger,
     WooHelper $wooHelper,
-    AdminUserSubscription $adminUserSubscription
+    AdminUserSubscription $adminUserSubscription,
+    CouponBlockGenerator $couponBlockGenerator
   ) {
     $this->subscriptionForm = $subscriptionForm;
     $this->subscriptionComment = $subscriptionComment;
@@ -149,6 +153,7 @@ class Hooks {
     $this->cronTrigger = $cronTrigger;
     $this->wooHelper = $wooHelper;
     $this->adminUserSubscription = $adminUserSubscription;
+    $this->couponBlockGenerator = $couponBlockGenerator;
   }
 
   public function init() {
@@ -163,6 +168,7 @@ class Hooks {
     $this->setupAutomateWooSubscriptionEvents();
     $this->setupPostNotifications();
     $this->setupWooCommerceSettings();
+    $this->couponBlockGenerator->init();
     $this->setupWoocommerceSystemInfo();
     $this->setupFooter();
     $this->setupSettingsLinkInPluginPage();
@@ -649,7 +655,7 @@ class Hooks {
       );
     }
 
-    $nonce = isset($_POST['nonce']) ? sanitize_text_field(wp_unslash($_POST['nonce'])) : '';
+    $nonce = isset($_POST['nonce']) && is_string($_POST['nonce']) ? sanitize_text_field(wp_unslash($_POST['nonce'])) : '';
 
     if (!$this->wp->wpVerifyNonce($nonce, 'mailpoet-rated')) {
       $this->wp->wpDie(

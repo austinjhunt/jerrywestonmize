@@ -159,19 +159,21 @@ class Shortcodes {
       );
     } else {
       $title = $this->wp->applyFilters('mailpoet_archive_title', '');
-      if (!empty($title)) {
-        $html .= '<h3 class="mailpoet_archive_title">' . $title . '</h3>';
+      if (!empty($title) && is_scalar($title)) {
+        $html .= '<h3 class="mailpoet_archive_title">' . (string)$title . '</h3>';
       }
       $html .= '<ul class="mailpoet_archive">';
       foreach ($newsletters as $newsletter) {
         $queue = $newsletter->getLatestQueue();
+        $processedDate = $this->wp->applyFilters('mailpoet_archive_email_processed_date', $newsletter);
+        $subjectLine = $this->wp->applyFilters('mailpoet_archive_email_subject_line', $newsletter, $subscriber, $queue);
 
         $html .= '<li>' .
           '<span class="mailpoet_archive_date">' .
-            $this->wp->applyFilters('mailpoet_archive_email_processed_date', $newsletter) .
+            (is_scalar($processedDate) ? (string)$processedDate : '') .
           '</span>
           <span class="mailpoet_archive_subject">' .
-            $this->wp->applyFilters('mailpoet_archive_email_subject_line', $newsletter, $subscriber, $queue) .
+            (is_scalar($subjectLine) ? (string)$subjectLine : '') .
           '</span>
         </li>';
       }
@@ -193,13 +195,13 @@ class Shortcodes {
       return $parsedParams;
     }
 
-    if (!empty($params['segments'])) {
+    if (!empty($params['segments']) && is_string($params['segments'])) {
       $parsedParams['segmentIds'] = array_map(function($segmentId) {
         return (int)trim($segmentId);
       }, explode(',', $params['segments']));
     }
 
-    if ($params['start_date'] ?? null) {
+    if (isset($params['start_date']) && is_string($params['start_date']) && $params['start_date'] !== '') {
       try {
         $parsedParams['startDate'] = new CarbonImmutable(trim($params['start_date']));
       } catch (\Throwable $throwable) {
@@ -207,7 +209,7 @@ class Shortcodes {
       }
     }
 
-    if ($params['end_date'] ?? null) {
+    if (isset($params['end_date']) && is_string($params['end_date']) && $params['end_date'] !== '') {
       try {
         $parsedParams['endDate'] = new CarbonImmutable(trim($params['end_date']));
       } catch (\Throwable $throwable) {
@@ -216,17 +218,17 @@ class Shortcodes {
     }
 
     $lastDays = $params['in_the_last_days'] ?? null;
-    if ($lastDays && intval(($lastDays) > 0)) {
+    if (is_scalar($lastDays) && $lastDays > 0) {
       $parsedParams['endDate'] = null;
       $parsedParams['startDate'] = CarbonImmutable::now()->subDays(intval($lastDays))->startOfDay();
     }
 
-    if ($params['subject_contains'] ?? null) {
+    if (isset($params['subject_contains']) && is_string($params['subject_contains']) && $params['subject_contains'] !== '') {
       $parsedParams['subjectContains'] = trim($params['subject_contains']);
     }
 
     $limit = $params['limit'] ?? null;
-    if ($limit && intval($limit) > 0) {
+    if (is_scalar($limit) && intval($limit) > 0) {
       $parsedParams['limit'] = intval($limit);
     }
 

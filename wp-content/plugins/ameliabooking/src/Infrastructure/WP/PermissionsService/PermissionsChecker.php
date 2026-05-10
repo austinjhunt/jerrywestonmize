@@ -18,7 +18,7 @@ use AmeliaBooking\Domain\Services\Permissions\PermissionsCheckerInterface;
 class PermissionsChecker implements PermissionsCheckerInterface
 {
     /**
-     * @param AbstractUser $user
+     * @param AbstractUser|null $user
      * @param string       $object
      * @param string       $permission
      *
@@ -42,7 +42,19 @@ class PermissionsChecker implements PermissionsCheckerInterface
 
         // If user is guest check does it have capability
         $wpRole = get_role($wpRoleName);
-        return $wpRole !== null && isset($wpRole->capabilities[$wpCapability]) ?
-            (bool)$wpRole->capabilities[$wpCapability] : false;
+        return $wpRole !== null && isset($wpRole->capabilities[$wpCapability]) && (bool)$wpRole->capabilities[$wpCapability];
+    }
+
+    /**
+     * @param string $type
+     * @param string $capability
+     *
+     * @return bool
+     */
+    public function hasCapability($type, $capability)
+    {
+        $role = get_role("wpamelia-$type");
+
+        return $role !== null && $role->has_cap($capability);
     }
 }

@@ -993,9 +993,16 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 				break;
 		}
 
+		$slug = 'forminator-cform';
+		if ( 'poll' === static::$module_slug ) {
+			$slug = 'forminator-poll';
+		} elseif ( 'quiz' === static::$module_slug ) {
+			$slug = 'forminator-quiz';
+		}
 		// Verify nonce.
 		$nonce = Forminator_Core::sanitize_text_field( $nonce_name );
-		if ( ! $nonce || ! wp_verify_nonce( $nonce, $nonce_action ) ) {
+		if ( ! $nonce || ! wp_verify_nonce( $nonce, $nonce_action )
+			|| ! forminator_is_user_allowed( $slug ) ) {
 			return;
 		}
 

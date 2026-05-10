@@ -174,8 +174,8 @@ class AmeliaShortcodeService
             array_keys($allowedUploadedFileExtensions)
         );
 
-        if ($settingsService->getSetting('activation', 'stash') && self::$counter === 1) {
-            $container = $container ?: require AMELIA_PATH . '/src/Infrastructure/ContainerConfig/container.php';
+        if ($settingsService->getSetting('activation', 'stash')) {
+            $container = require AMELIA_PATH . '/src/Infrastructure/ContainerConfig/container.php';
 
             /** @var StashApplicationService $stashAS */
             $stashAS = $container->get('application.stash.service');

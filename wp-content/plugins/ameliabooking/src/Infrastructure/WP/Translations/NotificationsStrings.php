@@ -1856,6 +1856,7 @@ Thank you for choosing our company,
                             <li>Customers: <strong>%customer_full_name%</strong></li>
                             <li>Location: <strong>%location_name%</strong></li>
                             <li>Extras: <strong>%service_extras%</strong></li>
+                            <li>Employee: <strong>%assigned_employee_name%</strong></li>
                         </ul><br>Thank you,<br>
                     <strong>%company_name%</strong>',
                 'status'    => $status
@@ -1895,7 +1896,8 @@ Thank you for choosing our company,
 Details of the appointment on %appointment_date_time% have changed:
     Customers: %customer_full_name%,
     Location: %location_name%,
-    Extras: %service_extras%
+    Extras: %service_extras%,
+    Employee: %assigned_employee_name%
     
 Thank you,
 %company_name%',

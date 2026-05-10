@@ -960,9 +960,9 @@ class TimeSlotService
                             . sprintf('%02d', floor(($timeSlot / 60) % 60));
 
                         if ($timeSlot <= 86400) {
-                            if (!$structured) {
+                            if (!$structured && $time !== '24:00') {
                                 $availableResult[$dateKey][$time] = $data;
-                            } else {
+                            } elseif ($time !== '24:00') {
                                 foreach ($data as $item) {
                                     $availableResult[$dateKey][$time][] = [
                                         'e' => $item[0],

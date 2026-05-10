@@ -19,7 +19,7 @@ use Google\Site_Kit_Dependencies\phpseclib3\Math\Common\FiniteField\Integer as B
  *
  * @author  Jim Wigginton <terrafrost@php.net>
  */
-class Integer extends \Google\Site_Kit_Dependencies\phpseclib3\Math\Common\FiniteField\Integer
+class Integer extends Base
 {
     /**
      * Holds the PrimeField's value
@@ -85,7 +85,7 @@ class Integer extends \Google\Site_Kit_Dependencies\phpseclib3\Math\Common\Finit
      * @param int $instanceID
      * @return void
      */
-    public static function setModulo($instanceID, \Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger $modulo)
+    public static function setModulo($instanceID, BigInteger $modulo)
     {
         static::$modulo[$instanceID] = $modulo;
     }
@@ -99,7 +99,7 @@ class Integer extends \Google\Site_Kit_Dependencies\phpseclib3\Math\Common\Finit
     {
         static::$reduce[$instanceID] = $function;
         if (!isset(static::$zero[$instanceID])) {
-            static::$zero[$instanceID] = new \Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger();
+            static::$zero[$instanceID] = new BigInteger();
         }
     }
     /**
@@ -133,7 +133,7 @@ class Integer extends \Google\Site_Kit_Dependencies\phpseclib3\Math\Common\Finit
     public static function checkInstance(self $x, self $y)
     {
         if ($x->instanceID != $y->instanceID) {
-            throw new \UnexpectedValueException('The instances of the two PrimeField\\Integer objects do not match');
+            throw new \UnexpectedValueException('The instances of the two PrimeField\Integer objects do not match');
         }
     }
     /**
@@ -212,7 +212,7 @@ class Integer extends \Google\Site_Kit_Dependencies\phpseclib3\Math\Common\Finit
      *
      * @return static
      */
-    public function pow(\Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger $x)
+    public function pow(BigInteger $x)
     {
         $temp = new static($this->instanceID);
         $temp->value = $this->value->powMod($x, static::$modulo[$this->instanceID]);
@@ -227,8 +227,8 @@ class Integer extends \Google\Site_Kit_Dependencies\phpseclib3\Math\Common\Finit
     public function squareRoot()
     {
         if (!isset(static::$one[$this->instanceID])) {
-            static::$one[$this->instanceID] = new \Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger(1);
-            static::$two[$this->instanceID] = new \Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger(2);
+            static::$one[$this->instanceID] = new BigInteger(1);
+            static::$two[$this->instanceID] = new BigInteger(2);
         }
         $one =& static::$one[$this->instanceID];
         $two =& static::$two[$this->instanceID];
@@ -236,7 +236,7 @@ class Integer extends \Google\Site_Kit_Dependencies\phpseclib3\Math\Common\Finit
         $reduce =& static::$reduce[$this->instanceID];
         $p_1 = $modulo->subtract($one);
         $q = clone $p_1;
-        $s = \Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger::scan1divide($q);
+        $s = BigInteger::scan1divide($q);
         list($pow) = $p_1->divide($two);
         for ($z = $one; !$z->equals($modulo); $z = $z->add($one)) {
             $temp = $z->powMod($pow, $modulo);
@@ -244,7 +244,7 @@ class Integer extends \Google\Site_Kit_Dependencies\phpseclib3\Math\Common\Finit
                 break;
             }
         }
-        $m = new \Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger($s);
+        $m = new BigInteger($s);
         $c = $z->powMod($q, $modulo);
         $t = $this->value->powMod($q, $modulo);
         list($temp) = $q->add($one)->divide($two);
@@ -296,7 +296,7 @@ class Integer extends \Google\Site_Kit_Dependencies\phpseclib3\Math\Common\Finit
     {
         if (isset(static::$modulo[$this->instanceID])) {
             $length = static::$modulo[$this->instanceID]->getLengthInBytes();
-            return \str_pad($this->value->toBytes(), $length, "\x00", \STR_PAD_LEFT);
+            return str_pad($this->value->toBytes(), $length, "\x00", \STR_PAD_LEFT);
         }
         return $this->value->toBytes();
     }
@@ -307,7 +307,7 @@ class Integer extends \Google\Site_Kit_Dependencies\phpseclib3\Math\Common\Finit
      */
     public function toHex()
     {
-        return \Google\Site_Kit_Dependencies\phpseclib3\Common\Functions\Strings::bin2hex($this->toBytes());
+        return Strings::bin2hex($this->toBytes());
     }
     /**
      * Converts an Integer to a bit string (eg. base-2).
@@ -321,7 +321,7 @@ class Integer extends \Google\Site_Kit_Dependencies\phpseclib3\Math\Common\Finit
         if (!isset($length)) {
             $length = static::$modulo[$this->instanceID]->getLength();
         }
-        return \str_pad($this->value->toBits(), $length, '0', \STR_PAD_LEFT);
+        return str_pad($this->value->toBits(), $length, '0', \STR_PAD_LEFT);
     }
     /**
      * Returns the w-ary non-adjacent form (wNAF)
@@ -333,8 +333,8 @@ class Integer extends \Google\Site_Kit_Dependencies\phpseclib3\Math\Common\Finit
     {
         $w++;
         $zero =& static::$zero[$this->instanceID];
-        $mask = new \Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger((1 << $w) - 1);
-        $sub = new \Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger(1 << $w);
+        $mask = new BigInteger((1 << $w) - 1);
+        $sub = new BigInteger(1 << $w);
         //$sub = new BigInteger(1 << ($w - 1));
         $d = $this->toBigInteger();
         $d_i = [];

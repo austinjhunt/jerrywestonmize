@@ -235,13 +235,15 @@ class FormEditor {
       $this->renderTemplateSelection();
       return;
     }
-    if (isset($_GET['template_id'])) {
+    if (is_string($_GET['template_id'] ?? null)) {
       $template = $this->templatesRepository->getFormTemplate(sanitize_text_field(wp_unslash($_GET['template_id'])));
       $form = $template->toFormEntity();
     } else {
-      $form = $this->getFormData((int)$_GET['id']);
+      // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- is_numeric guard plus int cast is the sanitization
+      $idParam = $_GET['id'] ?? null;
+      $form = $this->getFormData(is_numeric($idParam) ? (int)$idParam : 0);
     }
-    $customFields = $this->customFieldsRepository->findAll();
+    $customFields = $this->customFieldsRepository->findAllActive();
     if (!$form instanceof FormEntity) {
       throw new NotFoundException('Form does not exist');
     }

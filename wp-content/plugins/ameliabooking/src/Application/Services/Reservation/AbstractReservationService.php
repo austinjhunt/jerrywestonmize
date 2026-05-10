@@ -67,6 +67,7 @@ use AmeliaBooking\Infrastructure\Services\Mailchimp\AbstractMailchimpService;
 use AmeliaBooking\Infrastructure\Services\Recaptcha\AbstractRecaptchaService;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingAddedEventHandler;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
+use AmeliaBooking\Infrastructure\WP\Translations\LiteFrontendStrings;
 use DateTime;
 use Exception;
 use Slim\Exception\ContainerValueNotFoundException;
@@ -409,6 +410,13 @@ abstract class AbstractReservationService implements ReservationServiceInterface
             $user = $userRepository->getById(
                 $appointmentData['bookings'][0]['customerId'] ?: $appointmentData['bookings'][0]['customer']['id']
             );
+        }
+
+        if ($user && $user->getType() === AbstractUser::USER_ROLE_PROVIDER) {
+            $result->setResult(CommandResult::RESULT_ERROR);
+            $result->setData(['message' => LiteFrontendStrings::getCommonStrings()['error_use_diff_email_or_phone']]);
+
+            return;
         }
 
         if (!isset($appointmentData['isBackendOrCabinet']) && $user && $user->getStatus() && $user->getStatus()->getValue() === Status::BLOCKED) {

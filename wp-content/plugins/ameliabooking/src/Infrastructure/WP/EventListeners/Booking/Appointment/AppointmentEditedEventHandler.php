@@ -8,19 +8,17 @@
 namespace AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment;
 
 use AmeliaBooking\Application\Commands\CommandResult;
+use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\Booking\IcsApplicationService;
 use AmeliaBooking\Application\Services\Integration\ApplicationIntegrationService;
 use AmeliaBooking\Application\Services\Notification\ApplicationNotificationService;
 use AmeliaBooking\Application\Services\WaitingList\WaitingListService;
-use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Application\Services\WebHook\AbstractWebHookApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
-use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Entities;
-use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Domain\Factory\Booking\Appointment\AppointmentFactory;
 use AmeliaBooking\Domain\Factory\Booking\Appointment\CustomerBookingFactory;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
@@ -28,8 +26,7 @@ use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
-use Exception;
-use Slim\Exception\ContainerValueNotFoundException;
+use Microsoft\Graph\Exception\GraphException;
 
 /**
  * Class AppointmentEditedEventHandler
@@ -59,6 +56,9 @@ class AppointmentEditedEventHandler
      * @param CommandResult $commandResult
      * @param Container $container
      * @throws InvalidArgumentException
+     * @throws NotFoundException
+     * @throws QueryExecutionException
+     * @throws GraphException
      */
     public static function handle($commandResult, $container)
     {
@@ -72,8 +72,6 @@ class AppointmentEditedEventHandler
         $webHookService = $container->get('application.webHook.service');
         /** @var BookingApplicationService $bookingApplicationService */
         $bookingApplicationService = $container->get('application.booking.booking.service');
-        /** @var PaymentApplicationService $paymentAS */
-        $paymentAS = $container->get('application.payment.service');
         /** @var IcsApplicationService $icsService */
         $icsService = $container->get('application.ics.service');
 
@@ -130,31 +128,6 @@ class AppointmentEditedEventHandler
                 $customerBooking->setIcsFiles(
                     $icsService->getIcsData(Entities::APPOINTMENT, $customerBooking->getId()->getValue(), [], true)
                 );
-            }
-
-            if (!empty($appointment['createPaymentLinks'])) {
-                /** @var Payment $payment */
-                $payment = $customerBooking->getPayments()->length()
-                    ? $customerBooking->getPayments()->getItem(0)
-                    : null;
-
-                if ($payment) {
-                    $paymentLinks = $paymentAS->createPaymentLink(
-                        [
-                            'booking'     => $customerBooking->toArray(),
-                            'type'        => Entities::APPOINTMENT,
-                            'appointment' => $reservationObject->toArray(),
-                            'paymentId'   => $payment->getId()->getValue(),
-                            'bookable'    => $reservationObject->getService()->toArray(),
-                            'customer'    => $customerBooking->getCustomer()->toArray(),
-                        ],
-                        $index
-                    );
-
-                    if ($paymentLinks) {
-                        $payment->setPaymentLinks($paymentLinks);
-                    }
-                }
             }
         }
 

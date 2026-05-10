@@ -9,12 +9,15 @@ use MailPoet\API\JSON\ResponseBuilders\SubscribersResponseBuilder;
 use MailPoet\Entities\SegmentEntity;
 use MailPoet\Entities\StatisticsUnsubscribeEntity;
 use MailPoet\Entities\SubscriberEntity;
+use MailPoet\Entities\SubscriberTagEntity;
+use MailPoet\Entities\TagEntity;
 use MailPoet\Listing\ListingDefinition;
 use MailPoet\Newsletter\Scheduler\WelcomeScheduler;
 use MailPoet\Segments\SegmentsRepository;
 use MailPoet\Settings\SettingsController;
 use MailPoet\Statistics\Track\Unsubscribes;
 use MailPoet\Subscribers\ConfirmationEmailMailer;
+use MailPoet\Subscribers\ConfirmationEmailResolver;
 use MailPoet\Subscribers\NewSubscriberNotificationMailer;
 use MailPoet\Subscribers\RequiredCustomFieldValidator;
 use MailPoet\Subscribers\Source;
@@ -22,6 +25,8 @@ use MailPoet\Subscribers\SubscriberListingRepository;
 use MailPoet\Subscribers\SubscriberSaveController;
 use MailPoet\Subscribers\SubscriberSegmentRepository;
 use MailPoet\Subscribers\SubscribersRepository;
+use MailPoet\Subscribers\SubscriberTagRepository;
+use MailPoet\Tags\TagRepository;
 use MailPoet\Util\Helpers;
 use MailPoet\WP\Functions as WPFunctions;
 use MailPoetVendor\Carbon\Carbon;
@@ -69,6 +74,15 @@ class Subscribers {
   /** @var Unsubscribes */
   private $unsubscribesTracker;
 
+  /** @var TagRepository */
+  private $tagRepository;
+
+  /** @var SubscriberTagRepository */
+  private $subscriberTagRepository;
+
+  /** @var ConfirmationEmailResolver */
+  private $confirmationEmailResolver;
+
   public function __construct (
     ConfirmationEmailMailer $confirmationEmailMailer,
     NewSubscriberNotificationMailer $newSubscriberNotificationMailer,
@@ -82,7 +96,10 @@ class Subscribers {
     RequiredCustomFieldValidator $requiredCustomFieldsValidator,
     SubscriberListingRepository $subscriberListingRepository,
     WPFunctions $wp,
-    Unsubscribes $unsubscribesTracker
+    Unsubscribes $unsubscribesTracker,
+    TagRepository $tagRepository,
+    SubscriberTagRepository $subscriberTagRepository,
+    ConfirmationEmailResolver $confirmationEmailResolver
   ) {
     $this->confirmationEmailMailer = $confirmationEmailMailer;
     $this->newSubscriberNotificationMailer = $newSubscriberNotificationMailer;
@@ -97,6 +114,9 @@ class Subscribers {
     $this->wp = $wp;
     $this->subscriberListingRepository = $subscriberListingRepository;
     $this->unsubscribesTracker = $unsubscribesTracker;
+    $this->tagRepository = $tagRepository;
+    $this->subscriberTagRepository = $subscriberTagRepository;
+    $this->confirmationEmailResolver = $confirmationEmailResolver;
   }
 
   public function getSubscriber($subscriberIdOrEmail): array {
@@ -137,6 +157,10 @@ class Subscribers {
     }
     $defaultFields['source'] = Source::API;
 
+    // Pre-resolve tag names before any persistence so invalid tags fail fast
+    // and don't leave a half-created subscriber behind.
+    $resolvedTagNames = array_key_exists('tags', $data) ? $this->resolveTagNames((array)$data['tags']) : null;
+
     try {
       $subscriberEntity = $this->subscriberSaveController->createOrUpdate($defaultFields, null);
     } catch (\Exception $e) {
@@ -151,10 +175,22 @@ class Subscribers {
       $this->subscriberSaveController->updateCustomFields($customFields, $subscriberEntity);
     } catch (\Exception $e) {
       throw new APIException(
-      // translators: %s is an error message
+        // translators: %s is an error message
         sprintf(__('Failed to save subscriber custom fields: %s', 'mailpoet'), $e->getMessage()),
         APIException::FAILED_TO_SAVE_SUBSCRIBER
       );
+    }
+
+    if ($resolvedTagNames !== null) {
+      try {
+        $this->subscriberSaveController->updateTags($resolvedTagNames, $subscriberEntity);
+      } catch (\Exception $e) {
+        throw new APIException(
+          // translators: %s is an error message
+          sprintf(__('Failed to save subscriber tags: %s', 'mailpoet'), $e->getMessage()),
+          APIException::FAILED_TO_SAVE_SUBSCRIBER
+        );
+      }
     }
 
     // subscribe to segments and optionally: 1) send confirmation email, 2) schedule welcome email(s)
@@ -191,6 +227,10 @@ class Subscribers {
     }
     $defaultFields['source'] = Source::API;
 
+    // Pre-resolve tag names before any persistence so invalid tags fail fast
+    // and don't leave the subscriber partially updated.
+    $resolvedTagNames = array_key_exists('tags', $data) ? $this->resolveTagNames((array)$data['tags']) : null;
+
     try {
       $subscriberEntity = $this->subscriberSaveController->createOrUpdate($defaultFields, $subscriber);
     } catch (\Exception $e) {
@@ -211,7 +251,70 @@ class Subscribers {
       );
     }
 
+    if ($resolvedTagNames !== null) {
+      try {
+        $this->subscriberSaveController->updateTags($resolvedTagNames, $subscriberEntity);
+      } catch (\Exception $e) {
+        throw new APIException(
+        // translators: %s is an error message
+          sprintf(__('Failed to save subscriber tags: %s', 'mailpoet'), $e->getMessage()),
+          APIException::FAILED_TO_SAVE_SUBSCRIBER
+        );
+      }
+    }
+
     return $this->subscribersResponseBuilder->build($subscriberEntity);
+  }
+
+  /**
+   * Adds a tag to a subscriber. Idempotent: no-op if the subscriber already has the tag.
+   * Accepts a tag id (int or numeric string) or name. Names that don't match an existing tag are created.
+   *
+   * @param int|string $subscriberIdOrEmail
+   * @param int|string $tagIdOrName
+   * @throws APIException
+   */
+  public function tagSubscriber($subscriberIdOrEmail, $tagIdOrName): array {
+    $this->checkSubscriberParam($subscriberIdOrEmail);
+    $subscriber = $this->findSubscriber($subscriberIdOrEmail);
+    $tag = $this->resolveOrCreateTag($tagIdOrName);
+
+    $subscriberTag = $subscriber->getSubscriberTag($tag);
+    if (!$subscriberTag) {
+      $subscriberTag = new SubscriberTagEntity($tag, $subscriber);
+      $subscriber->getSubscriberTags()->add($subscriberTag);
+      $this->subscriberTagRepository->persist($subscriberTag);
+      $this->subscriberTagRepository->flush();
+      $this->wp->doAction('mailpoet_subscriber_tag_added', $subscriberTag);
+    }
+
+    $this->subscribersRepository->refresh($subscriber);
+    return $this->subscribersResponseBuilder->build($subscriber);
+  }
+
+  /**
+   * Removes a tag from a subscriber. Idempotent: no-op if the subscriber doesn't have the tag.
+   * Accepts a tag id (int or numeric string) or name. Name must match an existing tag.
+   *
+   * @param int|string $subscriberIdOrEmail
+   * @param int|string $tagIdOrName
+   * @throws APIException
+   */
+  public function untagSubscriber($subscriberIdOrEmail, $tagIdOrName): array {
+    $this->checkSubscriberParam($subscriberIdOrEmail);
+    $subscriber = $this->findSubscriber($subscriberIdOrEmail);
+    $tag = $this->resolveTag($tagIdOrName);
+
+    $subscriberTag = $subscriber->getSubscriberTag($tag);
+    if ($subscriberTag) {
+      $subscriber->getSubscriberTags()->removeElement($subscriberTag);
+      $this->subscriberTagRepository->remove($subscriberTag);
+      $this->subscriberTagRepository->flush();
+      $this->wp->doAction('mailpoet_subscriber_tag_removed', $subscriberTag);
+    }
+
+    $this->subscribersRepository->refresh($subscriber);
+    return $this->subscribersResponseBuilder->build($subscriber);
   }
 
   /**
@@ -280,7 +383,8 @@ class Subscribers {
 
     // send confirmation email
     if ($sendConfirmationEmail) {
-      $this->_sendConfirmationEmail($subscriber);
+      [$confirmationEmailId, $confirmationPageId] = $this->confirmationEmailResolver->resolveFromSegments($foundSegments);
+      $this->_sendConfirmationEmail($subscriber, $confirmationEmailId, $confirmationPageId);
     }
 
     if (!$skipSubscriberNotification && ($subscriber->getStatus() === SubscriberEntity::STATUS_SUBSCRIBED)) {
@@ -341,9 +445,9 @@ class Subscribers {
    * @param array $filter {
    *     Filters to retrieve subscribers.
    *
-   *     @type string        $status       One of values: subscribed, unconfirmed, unsubscribed, inactive, bounced
-   *     @type int           $listId       id of a list or dynamic segment
-   *     @type \DateTime|int $minUpdatedAt DateTime object or timestamp of last update of subscriber.
+   *     @type string                 $status       One of values: subscribed, unconfirmed, unsubscribed, inactive, bounced
+   *     @type int                    $listId       id of a list or dynamic segment
+   *     @type \DateTimeInterface|int $minUpdatedAt DateTime/DateTimeImmutable instance or timestamp of last update of subscriber.
    * }
    */
   private function buildListingDefinition(array $filter, int $limit = 50, int $offset = 0): ListingDefinition {
@@ -355,7 +459,7 @@ class Subscribers {
     }
     // Set filtering by minimal updatedAt
     if (isset($filter['minUpdatedAt'])) {
-      if ($filter['minUpdatedAt'] instanceof \DateTime) {
+      if ($filter['minUpdatedAt'] instanceof \DateTimeInterface) {
         $listingFilters['minUpdatedAt'] = $filter['minUpdatedAt'];
       } elseif (is_int($filter['minUpdatedAt'])) {
         $listingFilters['minUpdatedAt'] = Carbon::createFromTimestamp($filter['minUpdatedAt']);
@@ -383,9 +487,9 @@ class Subscribers {
   /**
    * @throws APIException
    */
-  protected function _sendConfirmationEmail(SubscriberEntity $subscriberEntity) {
+  protected function _sendConfirmationEmail(SubscriberEntity $subscriberEntity, ?int $confirmationEmailId = null, ?int $confirmationPageId = null) {
     try {
-      $this->confirmationEmailMailer->sendConfirmationEmailOnce($subscriberEntity);
+      $this->confirmationEmailMailer->sendConfirmationEmailOnce($subscriberEntity, $confirmationEmailId, $confirmationPageId);
     } catch (\Exception $e) {
       throw new APIException(
         // translators: %s is the error message
@@ -493,6 +597,111 @@ class Subscribers {
     }
 
     return $foundSegments;
+  }
+
+  /**
+   * Resolves a tag by id (int or numeric string) or existing name. Throws when the tag cannot be found.
+   *
+   * @param int|string $tagIdOrName
+   * @throws APIException
+   */
+  private function resolveTag($tagIdOrName): TagEntity {
+    $tag = $this->findTag($tagIdOrName);
+    if (!$tag instanceof TagEntity) {
+      throw new APIException(__('The tag does not exist.', 'mailpoet'), APIException::TAG_NOT_EXISTS);
+    }
+    return $tag;
+  }
+
+  /**
+   * Like resolveTag(), but when given a non-numeric name that doesn't match an existing tag,
+   * the tag is created. Numeric id lookups still throw when no tag matches (never auto-created).
+   *
+   * @param int|string $tagIdOrName
+   * @throws APIException
+   */
+  private function resolveOrCreateTag($tagIdOrName): TagEntity {
+    $tag = $this->findTag($tagIdOrName);
+    if ($tag instanceof TagEntity) {
+      return $tag;
+    }
+
+    if (!is_string($tagIdOrName) || (string)(int)$tagIdOrName === $tagIdOrName) {
+      throw new APIException(__('The tag does not exist.', 'mailpoet'), APIException::TAG_NOT_EXISTS);
+    }
+
+    return $this->tagRepository->createOrUpdate(['name' => $this->sanitizeTagName($tagIdOrName)]);
+  }
+
+  /**
+   * Looks up a tag by id (int/numeric-string) or existing name. Returns null if not found.
+   * Throws when the input is unusable (non-string/non-int, or an empty/sanitizes-to-empty name).
+   *
+   * @param int|string $tagIdOrName
+   * @throws APIException
+   */
+  private function findTag($tagIdOrName): ?TagEntity {
+    if (is_int($tagIdOrName) || (is_string($tagIdOrName) && (string)(int)$tagIdOrName === $tagIdOrName)) {
+      return $this->tagRepository->findOneById((int)$tagIdOrName);
+    }
+
+    if (!is_string($tagIdOrName)) {
+      throw new APIException(__('Tag name is required.', 'mailpoet'), APIException::TAG_NAME_REQUIRED);
+    }
+
+    $name = $this->sanitizeTagName($tagIdOrName);
+    $tag = $this->tagRepository->findOneBy(['name' => $name]);
+    return $tag instanceof TagEntity ? $tag : null;
+  }
+
+  /**
+   * Normalizes the `tags` key from addSubscriber/updateSubscriber data to an array of tag names.
+   * Accepts:
+   *   - integer or numeric-string scalars: the id of an existing tag (resolved to its name);
+   *   - non-numeric string scalars: a tag name (sanitized);
+   *   - `['id' => ...]`: id of an existing tag (resolved to its name);
+   *   - `['name' => ...]`: a tag name (sanitized).
+   *
+   * Unrecognized entries (null, booleans, arrays without `id`/`name`, empty names) throw so
+   * callers don't silently drop tags - `updateTags` replaces the full tag set.
+   *
+   * @param array $tags
+   * @return string[]
+   * @throws APIException
+   */
+  private function resolveTagNames(array $tags): array {
+    $names = [];
+    foreach ($tags as $tag) {
+      if (is_array($tag)) {
+        if (array_key_exists('id', $tag)) {
+          $names[] = $this->resolveTag($tag['id'])->getName();
+          continue;
+        }
+        if (array_key_exists('name', $tag) && is_string($tag['name'])) {
+          $names[] = $this->sanitizeTagName($tag['name']);
+          continue;
+        }
+        throw new APIException(__('Tag name is required.', 'mailpoet'), APIException::TAG_NAME_REQUIRED);
+      }
+      if (is_int($tag) || (is_string($tag) && (string)(int)$tag === $tag)) {
+        $names[] = $this->resolveTag($tag)->getName();
+        continue;
+      }
+      if (is_string($tag)) {
+        $names[] = $this->sanitizeTagName($tag);
+        continue;
+      }
+      throw new APIException(__('Tag name is required.', 'mailpoet'), APIException::TAG_NAME_REQUIRED);
+    }
+    return $names;
+  }
+
+  private function sanitizeTagName(string $name): string {
+    $sanitized = sanitize_text_field($name);
+    if (trim($sanitized) === '') {
+      throw new APIException(__('Tag name is required.', 'mailpoet'), APIException::TAG_NAME_REQUIRED);
+    }
+    return $sanitized;
   }
 
   /**

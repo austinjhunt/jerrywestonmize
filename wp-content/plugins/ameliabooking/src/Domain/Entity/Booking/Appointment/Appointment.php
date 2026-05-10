@@ -40,6 +40,9 @@ class Appointment extends AbstractBooking
     /** @var Id */
     private $providerId;
 
+    /** @var Id */
+    private $assignedEmployeeId;
+
     /** @var Provider */
     private $provider;
 
@@ -172,6 +175,22 @@ class Appointment extends AbstractBooking
     public function setProviderId(Id $providerId)
     {
         $this->providerId = $providerId;
+    }
+
+    /**
+     * @return Id
+     */
+    public function getAssignedEmployeeId()
+    {
+        return $this->assignedEmployeeId;
+    }
+
+    /**
+     * @param Id $assignedEmployeeId
+     */
+    public function setAssignedEmployeeId(Id $assignedEmployeeId)
+    {
+        $this->assignedEmployeeId = $assignedEmployeeId;
     }
 
     /**
@@ -507,6 +526,7 @@ class Appointment extends AbstractBooking
                 'serviceId'              => $this->getServiceId()->getValue(),
                 'parentId'               => $this->getParentId() ? $this->getParentId()->getValue() : null,
                 'providerId'             => $this->getProviderId()->getValue(),
+                'assignedEmployeeId'     => $this->getAssignedEmployeeId() ? $this->getAssignedEmployeeId()->getValue() : null,
                 'locationId'             => null !== $this->getLocationId() ? $this->getLocationId()->getValue() : null,
                 'provider'               => null !== $this->getProvider() ? $this->getProvider()->toArray() : null,
                 'service'                => null !== $this->getService() ? $this->getService()->toArray() : null,

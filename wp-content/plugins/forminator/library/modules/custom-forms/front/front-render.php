@@ -546,6 +546,12 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 					&& function_exists( 'wp_enqueue_editor' ) ) {
 				wp_enqueue_editor();
 			}
+
+			if ( $this->has_field_type_with_setting_value( 'postdata', 'post_content_media', true )
+					&& function_exists( 'wp_enqueue_media' )
+					&& current_user_can( 'upload_files' ) ) {
+				wp_enqueue_media();
+			}
 		}
 
 		// Load selected google font.
@@ -1002,6 +1008,14 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 			}
 
 			$has_pagination = false;
+
+			// Avoid rendering an empty row when a Field Group has no child fields.
+			if ( $this->is_single_field( $wrapper )
+				&& isset( $wrapper['fields'][0]['type'], $wrapper['fields'][0]['element_id'] )
+				&& 'group' === $wrapper['fields'][0]['type']
+				&& empty( self::get_grouped_wrappers( $wrapper['fields'][0]['element_id'] ) ) ) {
+				continue;
+			}
 
 			// Skip row markup if pagination field.
 			if ( ! $this->is_pagination_row( $wrapper ) ) {
@@ -2637,23 +2651,34 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 						$pagination_config = $options['pagination_config'];
 						unset( $options['pagination_config'] );
 						?>
-				window.Forminator_Cform_Paginations[<?php echo esc_attr( $form_properties['id'] ); ?>] =
-						<?php echo wp_json_encode( $pagination_config ); ?>;
+						window.Forminator_Cform_Paginations[<?php echo esc_attr( $form_properties['id'] ); ?>] =
+								<?php echo wp_json_encode( $pagination_config ); ?>;
 
-				var runForminatorFront = function () {
-					jQuery('#forminator-module-<?php echo esc_attr( $form_properties['id'] ); ?>[data-forminator-render="<?php echo esc_attr( $form_properties['render_id'] ); ?>"]')
-						.forminatorFront(<?php echo wp_json_encode( $options ); ?>);
-				}
+						var runForminatorFront = function ( isElementorCall ) {
+							var $form = jQuery('#forminator-module-<?php echo esc_attr( $form_properties['id'] ); ?>[data-forminator-render="<?php echo esc_attr( $form_properties['render_id'] ); ?>"]');
 
-				if (window.elementorFrontend) {
-					if (typeof elementorFrontend.hooks !== "undefined") {
-						elementorFrontend.hooks.addAction('frontend/element_ready/global', function () {
-							runForminatorFront();
-						});
-					}
-				} else {
-					runForminatorFront();
-				}
+							// Skip direct init for forms inside Elementor popups — they defer to element_ready/global.
+							if ( !isElementorCall && $form.length && $form.closest('[data-elementor-type="popup"]').length > 0 ) {
+								return;
+							}
+
+							// Prevent duplicate initialization
+							if ( $form.length && !$form.hasClass('forminator-initialized') ) {
+								$form.addClass('forminator-initialized');
+								$form.forminatorFront(<?php echo wp_json_encode( $options ); ?>);
+							}
+						}
+
+						if (window.elementorFrontend && typeof elementorFrontend.hooks !== "undefined") {
+							elementorFrontend.hooks.addAction('frontend/element_ready/global', function ( $scope ) {
+								if ( $scope.find('#forminator-module-<?php echo esc_attr( $form_properties['id'] ); ?>').length > 0 ) {
+									// Add small delay to ensure DOM is ready
+									setTimeout(function () { runForminatorFront(true); }, 100);
+								}
+							});
+						}
+
+						runForminatorFront(false);
 
 						<?php
 					}
@@ -3161,16 +3186,19 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 			$this->set_forms_properties( $render_id );
 		} else {
 			$form_settings = $this->get_form_settings();
-			?>
-			<div class="forminator-custom-form">
+			$form_expired  = $this->model->check_form_expired( $form_settings );
+			if ( true === $form_expired['expired'] ) {
+				?>
+				<div class="forminator-custom-form">
+					<?php
+					if ( isset( $form_settings['expire_message'] ) && '' !== $form_settings['expire_message'] ) {
+						$message = $form_settings['expire_message'];
+						?>
+						<label class="forminator-label--info"><span><?php echo esc_html( $message ); ?></span></label>
+					<?php } ?>
+				</div>
 				<?php
-				if ( isset( $form_settings['expire_message'] ) && '' !== $form_settings['expire_message'] ) {
-					$message = $form_settings['expire_message'];
-					?>
-					<label class="forminator-label--info"><span><?php echo esc_html( $message ); ?></span></label>
-				<?php } ?>
-			</div>
-			<?php
+			}
 		}
 
 		$html = ob_get_clean();

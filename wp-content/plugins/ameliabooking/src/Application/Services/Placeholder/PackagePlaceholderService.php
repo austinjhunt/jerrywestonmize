@@ -211,6 +211,9 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
         /** @var PackageCustomerServiceRepository $packageCustomerServiceRepository */
         $packageCustomerServiceRepository = $this->container->get('domain.bookable.packageCustomerService.repository');
 
+        /** @var PackageCustomerRepository $packageCustomerRepository */
+        $packageCustomerRepository = $this->container->get('domain.bookable.packageCustomer.repository');
+
         /** @var Collection $packageCustomerServices */
         $packageCustomerServices = !empty($package['packageCustomerId']) ? $packageCustomerServiceRepository->getByCriteria(
             ['packageCustomerIds' => [$package['packageCustomerId']]]
@@ -233,9 +236,6 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
 
         /** @var PackageCustomerService $packageCustomerService */
         foreach ($packageCustomerServices->getItems() as $packageCustomerService) {
-            /** @var PackageCustomerRepository $packageCustomerRepository */
-            $packageCustomerRepository = $this->container->get('domain.bookable.packageCustomer.repository');
-
             /** @var PackageCustomer $packageCustomer */
             $packageCustomer = $packageCustomerRepository->getById(
                 $packageCustomerService->getPackageCustomer()->getId()->getValue()
@@ -294,6 +294,10 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
                         $invoiceItem['invoice_issued'] =
                             !empty($payment->toArray()['created']) ?
                                 date_i18n($dateFormat, strtotime($payment->toArray()['created'])) :
+                                '';
+                        $invoiceItem['invoice_issued_xml'] =
+                            !empty($payment->toArray()['created']) ?
+                                date_i18n('Y-m-d', strtotime($payment->toArray()['created'])) :
                                 '';
                         $invoiceItem['invoice_method'] = $payment->getGatewayTitle() ? $payment->getGatewayTitle()->getValue() : $method;
                     }
@@ -391,6 +395,21 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
         $invoiceItem['invoice_subtotal']     = $amountData['subtotal'];
         $invoiceItem['invoice_qty']          = 1;
 
+        $invoiceDates = [];
+        $invoiceDatesXml = [];
+        if ($packageCustomer) {
+            $packageCustomers = $packageCustomerRepository->getFiltered(
+                [$packageCustomer->getId()->getValue()],
+            );
+
+            if (!empty($packageCustomers->toArray()[0]['appointments'])) {
+                foreach ($packageCustomers->toArray()[0]['appointments'] as $appointment) {
+                    $invoiceDates[] = date_i18n($dateFormat, strtotime($appointment['bookingStart']));
+                    $invoiceDatesXml[] = date_i18n('Y-m-d', strtotime($appointment['bookingStart']));
+                }
+            }
+        }
+
         $locale = !empty($package['isForCustomer']) && !empty($package['customer']['translations']) ?
             $helperService->getLocaleFromTranslations(
                 $package['customer']['translations']
@@ -443,8 +462,11 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
             'items'                   => [$invoiceItem],
             'invoice_number'          => isset($invoiceItem['invoice_number']) ? $invoiceItem['invoice_number'] : '',
             'invoice_issued'          => isset($invoiceItem['invoice_issued']) ? $invoiceItem['invoice_issued'] : '',
+            'invoice_issued_xml'      => isset($invoiceItem['invoice_issued_xml']) ? $invoiceItem['invoice_issued_xml'] : '',
             'invoice_method'          => isset($invoiceItem['invoice_method']) ? $invoiceItem['invoice_method'] : '',
             'invoice_tax'             => isset($amountData['total_tax']) ? $amountData['total_tax'] : '',
+            'invoice_dates'           => $invoiceDates,
+            'invoice_dates_xml'       => $invoiceDatesXml,
         ];
     }
 

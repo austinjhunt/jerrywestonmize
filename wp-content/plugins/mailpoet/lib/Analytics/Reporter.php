@@ -392,7 +392,7 @@ class Reporter {
       },
       $automationsWithCustomTrigger
     )));
-    $customActionHooks = array_unique(array_values(array_map(
+    $customActionHooksPerAutomation = array_map(
       function(Automation $automation): array {
         $customActionSteps = array_filter(
           $automation->getSteps(),
@@ -413,8 +413,8 @@ class Reporter {
 
       },
       $activeAutomations
-    )));
-    $customActionHooks = array_values(array_filter(array_merge(...$customActionHooks)));
+    );
+    $customActionHooks = array_values(array_unique(array_filter(array_merge(...$customActionHooksPerAutomation))));
     return [
       'Automation > Number of active automations' => $activeAutomationCount,
       'Automation > Number of draft automations' => count($draftAutomations),

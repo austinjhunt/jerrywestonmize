@@ -351,8 +351,30 @@ abstract class Forminator_Mail {
 		// Set email context to false to avoid replacing images in PDFs.
 		$old_value              = self::$is_email_context;
 		self::$is_email_context = false;
+		$attachment             = $this->filter_attachments( $attachment );
 		$this->attachment       = apply_filters( 'forminator_custom_form_mail_attachment', $attachment, $custom_form, $entry, $this->pdfs );
 		self::$is_email_context = $old_value;
+	}
+
+	/**
+	 * Filter attachments to make sure only files in upload dir can be attached.
+	 *
+	 * @param array $attachments Attachments to filter.
+	 * @return array
+	 */
+	private function filter_attachments( $attachments ) {
+		if ( ! empty( $attachments ) ) {
+			$upload_dir = wp_upload_dir();
+			if ( ! empty( $upload_dir['basedir'] ) ) {
+				foreach ( $attachments as $key => $attachment ) {
+					if ( 0 !== strpos( $attachment, $upload_dir['basedir'] ) ) {
+						unset( $attachments[ $key ] );
+					}
+				}
+			}
+		}
+
+		return $attachments;
 	}
 
 	/**
@@ -499,26 +521,5 @@ abstract class Forminator_Mail {
 		}
 
 		return false;
-	}
-
-	/**
-	 * Get the result slug for Personality Quiz
-	 *
-	 * @since   1.15.3
-	 *
-	 * @param   array $form_data Submitted data.
-	 *
-	 * @return  string
-	 */
-	public static function get_result_slug( $form_data ) {
-		if ( ! empty( $form_data ) ) {
-			if ( isset( $form_data['entry'] ) ) {
-				if ( isset( $form_data['entry'][0]['value']['result'] ) ) {
-					return $form_data['entry'][0]['value']['result']['slug'];
-				}
-			}
-		}
-
-		return '';
 	}
 }

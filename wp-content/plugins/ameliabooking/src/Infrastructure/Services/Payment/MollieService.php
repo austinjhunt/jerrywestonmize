@@ -9,214 +9,253 @@ namespace AmeliaBooking\Infrastructure\Services\Payment;
 
 use AmeliaBooking\Domain\Services\Payment\AbstractPaymentService;
 use AmeliaBooking\Domain\Services\Payment\PaymentServiceInterface;
-use Omnipay\Mollie\Gateway;
-use Omnipay\Omnipay;
+use AmeliaBooking\Infrastructure\Services\Mollie\MollieClient;
+use AmeliaBooking\Infrastructure\Services\Mollie\MollieResponse;
 
 /**
  * Class MollieService
+ *
+ * All Mollie communication goes through MollieClient which uses a single
+ * direct HTTP call per operation (no Omnipay dependency).
+ * The Mollie settings are resolved once per request and cached in
+ * $paymentsSettings so getCategorySettings() is called at most once.
+ *
+ * @package AmeliaBooking\Infrastructure\Services\Payment
  */
 class MollieService extends AbstractPaymentService implements PaymentServiceInterface
 {
-    /**
-     *
-     * @return mixed
-     * @throws \Exception
-     */
-    private function getGateway()
-    {
-        /** @var Gateway $gateway */
-        $gateway = Omnipay::create('Mollie');
-
-        $gateway->setApiKey(
-            $this->settingsService->getCategorySettings('payments')['mollie']['testMode'] ?
-                $this->settingsService->getCategorySettings('payments')['mollie']['testApiKey'] :
-                $this->settingsService->getCategorySettings('payments')['mollie']['liveApiKey']
-        );
-
-        return $gateway;
-    }
+    /** @var array|null Cached `payments` settings category. */
+    private $paymentsSettings = null;
 
     /**
-     * @param array $data
-     * @param array $transfers
-     *
-     * @return mixed
-     * @throws \Exception
-     */
-    public function execute($data, &$transfers)
-    {
-        try {
-            $mollieData = [
-                'returnUrl'  => $data['returnUrl'],
-                'notifyUrl'  => $data['notifyUrl'],
-                'amount'     => $data['amount'],
-                'currency'   => $this->settingsService->getCategorySettings('payments')['currency'],
-            ];
-
-            if ($data['description']) {
-                $mollieData['description'] = $data['description'];
-            }
-
-            if ($data['metaData']) {
-                $mollieData['metaData'] = $data['metaData'];
-            }
-
-            if ($data['method']) {
-                $mollieData['method'] = $data['method'];
-            }
-
-            return $this->getGateway()->purchase($mollieData)->send();
-        } catch (\Exception $e) {
-            throw $e;
-        }
-    }
-
-    /**
-     * @param array $data
-     *
-     * @return mixed
-     * @throws \Exception
-     */
-    public function fetchPayment($data)
-    {
-        try {
-            return $this->getGateway()->fetchTransaction(
-                [
-                    'transactionReference' => $data['id'],
-                ]
-            )->send();
-        } catch (\Exception $e) {
-            throw $e;
-        }
-    }
-
-    /**
-     * @param array $data
+     * Lazy-load and return the full `payments` settings array.
      *
      * @return array
-     * @throws \Exception
      */
-    public function getPaymentLink($data)
+    private function getPaymentsSettings(): array
     {
-        $apiKey = $this->settingsService->getCategorySettings('payments')['mollie']['testMode'] ?
-            $this->settingsService->getCategorySettings('payments')['mollie']['testApiKey'] :
-            $this->settingsService->getCategorySettings('payments')['mollie']['liveApiKey'];
-
-        $curl = curl_init();
-
-        curl_setopt_array(
-            $curl,
-            array(
-            CURLOPT_URL => 'https://api.mollie.com/v2/payment-links',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => json_encode($data),
-            CURLOPT_HTTPHEADER =>
-                array(
-                    'Authorization: Bearer ' . $apiKey,
-                    'Content-Type: application/json'
-                ),
-            )
-        );
-
-        $response = curl_exec($curl);
-
-        $response = json_decode($response, true);
-        if (!empty($response) && !empty($response['_links']) && !empty($response['_links']['paymentLink'])) {
-            return [
-                'link' => $response['_links']['paymentLink']['href'],
-                'status' => 200
-                ];
+        if ($this->paymentsSettings === null) {
+            $this->paymentsSettings = $this->settingsService->getCategorySettings('payments');
         }
-        return [
-            'message' => $response['detail'],
-            'status' => $response['status']
+
+        return $this->paymentsSettings;
+    }
+
+    /**
+     * Return the active Mollie API key (test or live) from cached settings.
+     *
+     * @return string
+     */
+    private function getApiKey(): string
+    {
+        $mollie = $this->getPaymentsSettings()['mollie'] ?? [];
+
+        if (empty($mollie['testApiKey']) && empty($mollie['liveApiKey'])) {
+            throw new \RuntimeException('Mollie API key not configured');
+        }
+
+        return !empty($mollie['testMode']) ? $mollie['testApiKey'] : $mollie['liveApiKey'];
+    }
+
+    /**
+     * Return a configured MollieClient for the current API key.
+     *
+     * @return MollieClient
+     */
+    private function getClient(): MollieClient
+    {
+        return new MollieClient($this->getApiKey());
+    }
+
+    /**
+     * Create a new Mollie payment and return a response object.
+     *
+     * On success, $response->isRedirect() is true and
+     * $response->getRedirectUrl() returns the checkout URL.
+     *
+     * @param array $data      Payment parameters (returnUrl, notifyUrl, amount, ...).
+     * @param array $transfers Unused for Mollie; kept for interface compatibility.
+     *
+     * @return MollieResponse
+     * @throws \RuntimeException
+     */
+    public function execute($data, &$transfers): MollieResponse
+    {
+        $payload = [
+            'amount'      => [
+                'value'    => number_format((float)$data['amount'], 2, '.', ''),
+                'currency' => $this->getPaymentsSettings()['currency'],
+            ],
+            'redirectUrl' => $data['returnUrl'],
+            'webhookUrl'  => $data['notifyUrl'],
         ];
 
-//        $response = $this->execute($data);
-//        if ($response->isRedirect() && $response->getData() && $response->getData()['_links'] && count($response->getData()['_links']) > 1) {
-//            return $response->getData()['_links']['checkout']['href'];
-//        }
-//        return null;
+        if (!empty($data['description'])) {
+            $payload['description'] = $data['description'];
+        }
+
+        if (!empty($data['metaData'])) {
+            $payload['metadata'] = $data['metaData'];
+        }
+
+        if (!empty($data['method'])) {
+            $payload['method'] = $data['method'];
+        }
+
+        return new MollieResponse($this->getClient()->createPayment($payload));
     }
 
-
-    public function fetchPaymentLink($id)
+    /**
+     * Fetch an existing Mollie payment and wrap it in a MollieResponse.
+     *
+     * Callers use $response->getStatus() to read the payment status.
+     *
+     * @param array $data Must contain `id` (Mollie transaction reference).
+     *
+     * @return MollieResponse
+     * @throws \RuntimeException
+     */
+    public function fetchPayment(array $data): MollieResponse
     {
-        $apiKey = $this->settingsService->getCategorySettings('payments')['mollie']['testMode'] ?
-            $this->settingsService->getCategorySettings('payments')['mollie']['testApiKey'] :
-            $this->settingsService->getCategorySettings('payments')['mollie']['liveApiKey'];
+        return new MollieResponse($this->getClient()->getPayment($data['id']));
+    }
+
+    /**
+     * Create a Mollie payment (not a payment-link) and return a normalised result array.
+     *
+     * We intentionally use POST /v2/payments here rather than /v2/payment-links
+     * because Mollie test-mode payment-links require Mollie dashboard authentication
+     * to view their checkout page, while regular test payments at
+     * checkout.mollie.com/pay/test/xxx are publicly accessible.
+     * The webhook and redirect behaviour is identical between the two resource types.
+     *
+     * On success: ['link' => 'https://checkout.mollie.com/pay/...', 'status' => 200]
+     * On failure: ['message' => '...', 'status' => <http_code>]
+     *
+     * @param array $data Payment body (amount, description, redirectUrl, webhookUrl).
+     *
+     * @return array
+     */
+    public function getPaymentLink($data): array
+    {
+        $response = $this->getClient()->createPayment([
+            'amount'      => $data['amount'],
+            'description' => $data['description'] ?? '',
+            'redirectUrl' => $data['redirectUrl'],
+            'webhookUrl'  => $data['webhookUrl'],
+        ]);
+
+        // Regular Mollie payments expose the checkout URL at _links.checkout.href
+        if (!empty($response['_links']['checkout']['href'])) {
+            return [
+                'link'   => $response['_links']['checkout']['href'],
+                'status' => 200,
+            ];
+        }
+
+        return [
+            'message' => $response['detail'] ?? $response['title'] ?? $response['message'] ?? 'Unknown error',
+            'status'  => (int)($response['_http_code'] ?? 500),
+        ];
+    }
+
+    /**
+     * Retrieve the details of a Mollie payment link by ID.
+     *
+     * @param string $id Payment-link ID (e.g. pl_ZtVHNuxWLs).
+     *
+     * @return array|null Decoded response or null on empty result.
+     */
+    public function fetchPaymentLink($id): ?array
+    {
+        $response = $this->getClient()->getPaymentLink($id);
+
+        return !empty($response) ? $response : null;
+    }
+
+    /**
+     * Issue a refund for a Mollie payment.
+     *
+     * Returns ['error' => false] on success or ['error' => '<message>'] on
+     * failure, matching the interface expected by RefundPaymentCommandHandler.
+     *
+     * @param array $data Must contain `id`; optionally `amount`.
+     *
+     * @return array
+     * @throws \RuntimeException
+     */
+    public function refund($data): array
+    {
+        $amount = !empty($data['amount'])
+            ? $data['amount']
+            : $this->getTransactionAmount($data['id'], null);
+
+        if ($amount === null) {
+            return ['error' => 'Unable to determine refund amount'];
+        }
+
+        $payload = [
+            'amount' => [
+                'value'    => number_format((float)$amount, 2, '.', ''),
+                'currency' => $this->getPaymentsSettings()['currency'],
+            ],
+        ];
+
+        $response = $this->getClient()->createRefund($data['id'], $payload);
+
+        $httpCode = $response['_http_code'] ?? 0;
+
+        return [
+            'error' => ($httpCode >= 200 && $httpCode < 300)
+                ? false
+                : ($response['detail'] ?? $response['title'] ?? $response['message'] ?? 'Refund failed'),
+        ];
+    }
+
+    /**
+     * Return the charged amount value for a Mollie payment.
+     *
+     * @param string     $id        Mollie payment ID.
+     * @param array|null $transfers Unused; kept for interface compatibility.
+     *
+     * @return string|null Amount string (e.g. "10.00") or null on error.
+     * @throws \RuntimeException
+     */
+    public function getTransactionAmount($id, $transfers): ?string
+    {
+        $response = $this->getClient()->getPayment($id);
+
+        return !empty($response['amount']['value']) ? $response['amount']['value'] : null;
+    }
+
+    /**
+     * Validates a Mollie API key by checking its format and making a test API call.
+     */
+    public function validateKey(string $apiKey, bool $testMode): array
+    {
+        $expectedPrefix = $testMode ? 'test_' : 'live_';
+
+        if (strpos($apiKey, $expectedPrefix) !== 0) {
+            return ['valid' => false, 'message' => 'Invalid Mollie API key.'];
+        }
 
         $curl = curl_init();
 
-        curl_setopt_array(
-            $curl,
-            array(
-            CURLOPT_URL => 'https://api.mollie.com/v2/payment-links/' . $id,
+        curl_setopt_array($curl, [
+            CURLOPT_URL            => 'https://api.mollie.com/v2/methods',
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET',
-            CURLOPT_HTTPHEADER => array(
-                'Authorization: Bearer ' . $apiKey
-            ),
-            )
-        );
+            CURLOPT_TIMEOUT        => 10,
+            CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+            CURLOPT_HTTPHEADER     => ['Authorization: Bearer ' . $apiKey],
+        ]);
 
-        $response = curl_exec($curl);
+        curl_exec($curl);
+        $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
-        $response = json_decode($response, true);
-        if (!empty($response)) {
-            return $response;
+        if ($httpCode === 200) {
+            return ['valid' => true, 'message' => 'Mollie API key is valid'];
         }
-        return null;
-    }
 
-
-    /**
-     * @param array $data
-     *
-     * @return array
-     * @throws \Exception
-     */
-    public function refund($data)
-    {
-        $amount = $this->getTransactionAmount($data['id'], null);
-
-        $response = $this->getGateway()->refund(
-            array(
-                'transactionReference' => $data['id'],
-                'amount'               => !empty($data['amount']) ? $data['amount'] : $amount,
-                'currency'             => $this->settingsService->getCategorySettings('payments')['currency']
-            )
-        )->send();
-
-        return ['error' => $response->getData()['status'] !== 200 ? $response->getData()['detail'] : false];
-    }
-
-    /**
-     * @param string $id
-     * @param array|null $transfers
-     *
-     * @return mixed
-     * @throws \Exception
-     */
-    public function getTransactionAmount($id, $transfers)
-    {
-        try {
-            $response = $this->getGateway()->fetchTransaction(['transactionReference' => $id])->send();
-
-            return $response->getData()['status'] ? $response->getData()['amount']['value'] : null;
-        } catch (\Exception $e) {
-            throw $e;
-        }
+        return ['valid' => false, 'message' => 'Invalid Mollie API key.'];
     }
 }

@@ -19,7 +19,7 @@ use Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger\Engines\BCMath\Base;
  *
  * @author  Jim Wigginton <terrafrost@php.net>
  */
-abstract class EvalBarrett extends \Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger\Engines\BCMath\Base
+abstract class EvalBarrett extends Base
 {
     /**
      * Custom Reduction Function
@@ -49,18 +49,18 @@ abstract class EvalBarrett extends \Google\Site_Kit_Dependencies\phpseclib3\Math
      * @param string $class
      * @return callable|void
      */
-    protected static function generateCustomReduction(\Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger\Engines\BCMath $m, $class)
+    protected static function generateCustomReduction(BCMath $m, $class)
     {
-        $m_length = \strlen($m);
+        $m_length = strlen($m);
         if ($m_length < 5) {
             $code = 'return self::BCMOD_THREE_PARAMS ? bcmod($x, $n, 0) : bcmod($x, $n);';
             eval('$func = function ($n) { ' . $code . '};');
             self::$custom_reduction = $func;
             return;
         }
-        $lhs = '1' . \str_repeat('0', $m_length + ($m_length >> 1));
-        $u = \bcdiv($lhs, $m, 0);
-        $m1 = \bcsub($lhs, \bcmul($u, $m, 0), 0);
+        $lhs = '1' . str_repeat('0', $m_length + ($m_length >> 1));
+        $u = bcdiv($lhs, $m, 0);
+        $m1 = bcsub($lhs, bcmul($u, $m, 0), 0);
         $cutoff = $m_length + ($m_length >> 1);
         $m = "'{$m}'";
         $u = "'{$u}'";
@@ -80,7 +80,7 @@ abstract class EvalBarrett extends \Google\Site_Kit_Dependencies\phpseclib3\Math
             $result = bcsub($n, $temp, 0);
 
             if ($result[0] == \'-\') {
-                $temp = \'1' . \str_repeat('0', $m_length + 1) . '\';
+                $temp = \'1' . str_repeat('0', $m_length + 1) . '\';
                 $result = bcadd($result, $temp, 0);
             }
 

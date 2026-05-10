@@ -78,6 +78,10 @@ class AppointmentFactory
             $appointment->setProvider(UserFactory::create($data['provider']));
         }
 
+        if (!empty($data['assignedEmployeeId'])) {
+            $appointment->setAssignedEmployeeId(new Id($data['assignedEmployeeId']));
+        }
+
         if (isset($data['service'])) {
             $appointment->setService(ServiceFactory::create($data['service']));
         }

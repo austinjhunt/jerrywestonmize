@@ -15,6 +15,10 @@ class SettingsController {
   const DEFAULT_SENDING_FREQUENCY_EMAILS = 25;
   const DEFAULT_SENDING_FREQUENCY_INTERVAL = 5; // in minutes
   const DEFAULT_DEACTIVATE_SUBSCRIBER_AFTER_INACTIVE_DAYS = 365;
+  const DEFAULT_SENDING_STATUS_RETENTION_DAYS = '';
+  const DEFAULT_SENDING_QUEUE_BODY_RETENTION_DAYS = 30;
+  const DEFAULT_DELETE_UNCONFIRMED_SUBSCRIBERS_AFTER_DAYS = '';
+  const ALLOWED_DELETE_UNCONFIRMED_SUBSCRIBERS_AFTER_DAYS = ['', '30'];
 
   private $loaded = false;
 
@@ -50,6 +54,9 @@ class SettingsController {
     if (is_array($setting) && is_array($default)) {
       return array_replace_recursive($default, $setting);
     }
+    if ($key === 'delete_unconfirmed_subscribers_after_days') {
+      return $this->normalizeDeleteUnconfirmedSubscribersAfterDays($setting);
+    }
     return $setting;
   }
 
@@ -74,11 +81,23 @@ class SettingsController {
         'tracking' => [
           'level' => TrackingConfig::LEVEL_FULL,
         ],
+        'subscription' => [
+          'unsubscribe_survey' => [
+            'enabled' => true,
+            'allow_other_text' => false,
+          ],
+        ],
         'analytics' => [
           'enabled' => false,
         ],
+        'collect_subscriber_timezones' => [
+          'enabled' => true,
+        ],
         'display_nps_poll' => true,
         'deactivate_subscriber_after_inactive_days' => self::DEFAULT_DEACTIVATE_SUBSCRIBER_AFTER_INACTIVE_DAYS,
+        'delete_unconfirmed_subscribers_after_days' => self::DEFAULT_DELETE_UNCONFIRMED_SUBSCRIBERS_AFTER_DAYS,
+        'sending_status_retention_days' => self::DEFAULT_SENDING_STATUS_RETENTION_DAYS,
+        'sending_queue_body_retention_days' => self::DEFAULT_SENDING_QUEUE_BODY_RETENTION_DAYS,
       ];
     }
 
@@ -150,7 +169,9 @@ class SettingsController {
 
   public function getAll() {
     $this->ensureLoaded();
-    return array_replace_recursive($this->getAllDefaults(), $this->settings);
+    $settings = array_replace_recursive($this->getAllDefaults(), $this->settings);
+    $settings['delete_unconfirmed_subscribers_after_days'] = $this->normalizeDeleteUnconfirmedSubscribersAfterDays($settings['delete_unconfirmed_subscribers_after_days']);
+    return $settings;
   }
 
   public function set($key, $value) {
@@ -193,6 +214,16 @@ class SettingsController {
     return $this->get($key, 'unset') !== 'unset';
   }
 
+  /**
+   * Returns true if the setting value is a truthy boolean. Settings are persisted as
+   * strings, integers, or booleans depending on how they were written, so this helper
+   * normalizes the check across all three representations.
+   */
+  public function isSettingEnabled(string $key): bool {
+    $value = $this->get($key);
+    return $value === true || $value === '1' || $value === 1;
+  }
+
   private function ensureLoaded() {
     if ($this->loaded) {
       return;
@@ -216,6 +247,13 @@ class SettingsController {
     }
 
     return $default;
+  }
+
+  private function normalizeDeleteUnconfirmedSubscribersAfterDays($value): string {
+    if (in_array($value, self::ALLOWED_DELETE_UNCONFIRMED_SUBSCRIBERS_AFTER_DAYS, true)) {
+      return $value;
+    }
+    return self::DEFAULT_DELETE_UNCONFIRMED_SUBSCRIBERS_AFTER_DAYS;
   }
 
   private function fetchValue($key) {

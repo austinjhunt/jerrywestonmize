@@ -525,6 +525,13 @@
 												var defaultValue = $(value).data('default-value');
 												if ( '' === defaultValue ) {
 													defaultValue = $(value).val();
+												} else if ( 'string' === typeof defaultValue && defaultValue.startsWith('[') ) {
+													// Parse JSON array for multiselect
+													try {
+														defaultValue = JSON.parse(defaultValue);
+													} catch (e) {
+														// If parsing fails, keep as string
+													}
 												}
 												$(value).val(defaultValue).trigger("change.select2");
 											});
@@ -574,6 +581,12 @@
 												$slide.slider('value', $value);
 											}
 										});
+
+										// Reset rating fields.
+										var ratingFields = $this.find('.forminator-rating');
+										if ( ratingFields.length && 'function' === typeof FUI.rating ) {
+											FUI.rating( ratingFields );
+										}
 
 										self.multi_upload_disable( $this, false );
 
@@ -1019,6 +1032,10 @@
 				e.preventDefault();
 				e.stopPropagation();
 
+				if ( form.data( 'quizSubmitting' ) ) {
+					return false;
+				}
+
 				// Enable all inputs
 				self.$el.find( '.forminator-has-been-disabled' ).removeAttr( 'disabled' );
 
@@ -1073,15 +1090,18 @@
 					});
 				}
 
-				var pagination = !! self.$el.find('.forminator-pagination');
+				var pagination = self.$el.find('.forminator-pagination').length > 0;
 
 				$.ajax({
 					type: 'POST',
 					url: window.ForminatorFront.ajaxUrl,
 					data: ajaxData,
 					beforeSend: function() {
+						form.data( 'quizSubmitting', true );
 						if ( ! pagination ) {
 							self.$el.find( 'button' ).attr( 'disabled', 'disabled' );
+						} else {
+							self.$el.find( '.forminator-button-next, .forminator-button-submit' ).attr( 'disabled', 'disabled' );
 						}
 						form.trigger( 'before:forminator:quiz:submit', [ ajaxData, formData ] );
 					},
@@ -1191,6 +1211,10 @@
 						}
 					}
 				}).always(function () {
+					form.data( 'quizSubmitting', false );
+					if ( pagination ) {
+						self.$el.find( '.forminator-button-next, .forminator-button-submit' ).removeAttr( 'disabled' );
+					}
 					form.trigger('after:forminator:quiz:submit', [ ajaxData, formData ] );
 					form.nextAll( '.leads-quiz-loader' ).remove();
 				});

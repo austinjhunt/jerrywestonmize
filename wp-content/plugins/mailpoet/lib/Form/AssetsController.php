@@ -103,6 +103,7 @@ class AssetsController {
       'captcha_reload_title' => esc_js(__('Reload CAPTCHA', 'mailpoet')),
       'captcha_audio_title' => esc_js(__('Play CAPTCHA', 'mailpoet')),
       'assets_url' => Env::$assetsUrl,
+      'collect_subscriber_timezones' => $this->settings->isSettingEnabled('collect_subscriber_timezones.enabled'),
     ]);
   }
 

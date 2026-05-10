@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'f4941980246b5ec3973a7b075901df6be4bc4f0e',
+        'reference' => 'cae33cb43b9116cece36bfec3be6af5e5557adb2',
         'name' => 'updraftplus/updraftplus',
         'dev' => false,
     ),
@@ -248,12 +248,12 @@
             'dev_requirement' => false,
         ),
         'phpseclib/phpseclib' => array(
-            'pretty_version' => '2.0.51',
-            'version' => '2.0.51.0',
+            'pretty_version' => '2.0.54',
+            'version' => '2.0.54.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpseclib/phpseclib',
             'aliases' => array(),
-            'reference' => 'ed661e7cdaeb8c419e609e2f3203551a13c2ed48',
+            'reference' => 'a96a835067c39ee7a709329fe70869817da18081',
             'dev_requirement' => false,
         ),
         'psr/http-message' => array(
@@ -367,7 +367,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'f4941980246b5ec3973a7b075901df6be4bc4f0e',
+            'reference' => 'cae33cb43b9116cece36bfec3be6af5e5557adb2',
             'dev_requirement' => false,
         ),
         'vakata/jstree' => array(

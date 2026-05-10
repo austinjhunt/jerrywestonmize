@@ -121,10 +121,10 @@ class HelperService
     }
 
     /**
-     * @param string $email
-     * @param string $secret
-     * @param int    $expireTimeStamp
-     * @param int    $loginType
+     * @param string   $email
+     * @param string   $secret
+     * @param int|null $expireTimeStamp
+     * @param int      $loginType
      *
      * @return mixed
      * @throws Exception
@@ -249,9 +249,9 @@ class HelperService
     }
 
     /**
-     * @param string $locale
-     * @param string $entityTranslation
-     * @param string $type
+     * @param string      $locale
+     * @param string      $entityTranslation
+     * @param string|null $type
      *
      * @return array|null
      */

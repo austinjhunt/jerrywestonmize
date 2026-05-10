@@ -1,11 +1,11 @@
-=== Limit Login Attempts Reloaded – Login Security, 2FA, Brute Force Protection & Firewall ===
+=== Limit Login Attempts Reloaded - Login Security, Brute Force Protection, Firewall ===
 Contributors: wpchefgadget, nikitaglobal
 Donate link: https://www.paypal.com/donate?hosted_button_id=FKD4MYFCMNVQQ
 Tags: brute force, login security, security, firewall, 2FA
 License: GPLv2 or later
 Requires at least: 3.0
 Tested up to: 6.9
-Stable tag: 3.0.2
+Stable tag: 3.2.1
 
 Block excessive login attempts and protect your site against brute force attacks. Simple, yet powerful tools to improve site performance.
 
@@ -60,6 +60,7 @@ https://www.youtube.com/watch?v=JfkvIiQft14
 * **CSV Download of IP Data** - Download IP data direclty from the cloud.
 * **Supports IPV6 Ranges For Safelist/Denylist**
 * **Unlock The Locked Admin** - Easily <a href="https://www.limitloginattempts.com/how-to-unlock-your-site-if-you-are-locked-out-by-limit-login-attempts-reloaded/">unlock the locked admin</a> through the cloud.
+* **Registration Page Protection** - Protect the registration page based on your rules and a real-time database of malicious IPs. Also protects WooCommerce and other supported plugins.
 
 *Some features require higher level plans.
 
@@ -147,6 +148,20 @@ The settings are explained within the plugin in great detail. If you are unsure,
 By default, you will need to copy and paste the lists to each site manually. For the <a href="https://www.limitloginattempts.com/plans/?from=wp-details">premium service</a>, sites are grouped within the same private cloud account. Each site within that group can be configured if it shares its lockouts and access lists with other group members. The setting is located in the plugin's interface. The default options are recommended.
 
 == Changelog ==
+
+= 3.2.1 =
+* Fixed rescue link behavior and updated the format.
+* 2FA is pre-selected for administrators; when no user groups are selected, 2FA stays disabled.
+
+= 3.2.0 =
+* Improved WooCommerce registration protection in cloud mode.
+* Refactored third-party integrations into a unified architecture (WooCommerce, MemberPress).
+
+= 3.1.0 =
+* Added technical details to the network issue notice.
+* Fixed logo rendering in Gmail MFA notifications.
+* Improved local risk indicator thresholds and refactored rendering.
+* Improved compatibility with WPS Hide Login, WooCommerce, and MemberPress login flows; added WooCommerce cloud registration checks.
 
 = 3.0.2 =
 * Hardened admin tab parameter (whitelist, strict checks) before loading tab views.

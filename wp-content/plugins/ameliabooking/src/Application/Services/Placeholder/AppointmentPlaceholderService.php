@@ -91,6 +91,7 @@ class AppointmentPlaceholderService extends PlaceholderService
             'appointment_date_time'   => $appointment_date_time,
             'appointment_start_time'  => $appointment_start_time,
             'appointment_end_time'    => $appointment_end_time,
+            'assigned_employee_name'  => 'Richard Roe',
             'appointment_notes'       => 'Appointment note',
             'appointment_price'       => $helperService->getFormattedPrice(100),
             'payment_due_amount'      => $helperService->getFormattedPrice(80),
@@ -240,7 +241,7 @@ class AppointmentPlaceholderService extends PlaceholderService
     {
         $type = 'email';
 
-        $data = ['customer_custom_fields' => []];
+        $data = ['customer_custom_fields' => [], 'invoice_dates' => [], 'invoice_dates_xml' => []];
 
         $appointment = $reservationData['appointment'];
         $bookingKey  = array_search($reservationData['booking']['id'], array_column($appointment['bookings'], 'id'));
@@ -263,6 +264,7 @@ class AppointmentPlaceholderService extends PlaceholderService
             }
             $data['invoice_method'] = !empty($placeholders['payment_gateway_title']) ? $placeholders['payment_gateway_title'] : $placeholders['payment_type'];
             $data['invoice_issued'] = $placeholders['payment_created'];
+            $data['invoice_issued_xml'] = $placeholders['payment_created_xml'];
 
             $index = "service_{$appointment['serviceId']}_{$recurringAppointment['booking']['price']}";
             if (!empty($data['items'][$index])) {
@@ -277,6 +279,8 @@ class AppointmentPlaceholderService extends PlaceholderService
                 $data['items'][$index] = $invoiceItem;
                 $data['items'][$index]['item_name'] = $placeholders['service_name'];
             }
+            $data['invoice_dates'][] = $placeholders['appointment_date'];
+            $data['invoice_dates_xml'][] = $placeholders['appointment_date_xml'];
 
             $extraItems      = $placeholders['invoice_items_extras'];
             $extraItemsTaxes = $invoiceItem['invoice_extras_items'];
@@ -484,6 +488,7 @@ class AppointmentPlaceholderService extends PlaceholderService
             'appointment_status'     => BackendStrings::get($appointment['status']),
             'appointment_notes'      => !empty($appointment['internalNotes']) ? $appointment['internalNotes'] : '',
             'appointment_date'       => date_i18n($dateFormat, $bookingStart->getTimestamp()),
+            'appointment_date_xml'   => date_i18n('Y-m-d', $bookingStart->getTimestamp()),
             'appointment_date_time'  => date_i18n($dateFormat . ' ' . $timeFormat, $bookingStart->getTimestamp()),
             'appointment_start_time' => date_i18n($timeFormat, $bookingStart->getTimestamp()),
             'appointment_end_time'   => date_i18n($timeFormat, $bookingEnd->getTimestamp()),
@@ -864,12 +869,34 @@ class AppointmentPlaceholderService extends PlaceholderService
             'description'
         ) ?: ($user->getDescription() ? $user->getDescription()->getValue() : '');
 
+        $assignedProviderId = !empty($appointment['assignedEmployeeId'])
+            ? (int)$appointment['assignedEmployeeId']
+            : $appointment['providerId'];
+
+        /** @var Provider $assignedUser */
+        $assignedUser = $assignedProviderId === $appointment['providerId']
+            ? $user
+            : $userRepository->getById($assignedProviderId);
+
+        $assignedFirstName = $helperService->getBookingTranslation(
+            $bookingKey !== null ? $locale : null,
+            $assignedUser->getTranslations() ? $assignedUser->getTranslations()->getValue() : null,
+            'firstName'
+        ) ?: $assignedUser->getFirstName()->getValue();
+
+        $assignedLastName = $helperService->getBookingTranslation(
+            $bookingKey !== null ? $locale : null,
+            $assignedUser->getTranslations() ? $assignedUser->getTranslations()->getValue() : null,
+            'lastName'
+        ) ?: $assignedUser->getLastName()->getValue();
+
         return [
             'employee_id'          => $user->getId()->getValue(),
             'employee_email'       => $user->getEmail()->getValue(),
             'employee_first_name'  => $firstName,
             'employee_last_name'   => $lastName,
             'employee_full_name'   => $firstName . ' ' . $lastName,
+            'assigned_employee_name' => $assignedFirstName . ' ' . $assignedLastName,
             'employee_phone'       => $user->getPhone()->getValue(),
             'employee_phone_country' => $user->getCountryPhoneIso() ? $user->getCountryPhoneIso()->getValue() : null,
             'employee_note'        => $user->getNote() ? $user->getNote()->getValue() : '',

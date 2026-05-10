@@ -6,10 +6,13 @@
 
 namespace AmeliaBooking\Infrastructure\WP\InstallActions;
 
+use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\String\Token;
 use AmeliaBooking\Infrastructure\Licence\Licence;
+use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking\EventsTagsTable;
 use AmeliaBooking\Infrastructure\WP\SettingsService\SettingsStorage;
+use AmeliaBooking\Infrastructure\WP\PermissionsService\PermissionsChecker;
 use Exception;
 
 /**
@@ -1827,31 +1830,31 @@ This message does not have an option for responding. If you need additional info
                             'order'   => 'on-hold',
                             'booking' => 'default',
                             'payment' => 'paid',
-                            'update'  => false,
+                            'update'  => true,
                         ],
                         [
                             'order'   => 'processing',
                             'booking' => 'default',
                             'payment' => 'paid',
-                            'update'  => false,
+                            'update'  => true,
                         ],
                         [
                             'order'   => 'completed',
                             'booking' => 'default',
                             'payment' => 'paid',
-                            'update'  => false,
+                            'update'  => true,
                         ],
                         [
                             'order'   => 'cancelled',
                             'booking' => 'canceled',
                             'payment' => 'pending',
-                            'update'  => false,
+                            'update'  => true,
                         ],
                         [
                             'order'   => 'failed',
                             'booking' => 'canceled',
                             'payment' => 'pending',
-                            'update'  => false,
+                            'update'  => true,
                         ],
                     ],
                     'package'     => [
@@ -1859,31 +1862,31 @@ This message does not have an option for responding. If you need additional info
                             'order'   => 'on-hold',
                             'booking' => 'approved',
                             'payment' => 'paid',
-                            'update'  => false,
+                            'update'  => true,
                         ],
                         [
                             'order'   => 'processing',
                             'booking' => 'approved',
                             'payment' => 'paid',
-                            'update'  => false,
+                            'update'  => true,
                         ],
                         [
                             'order'   => 'completed',
                             'booking' => 'approved',
                             'payment' => 'paid',
-                            'update'  => false,
+                            'update'  => true,
                         ],
                         [
                             'order'   => 'cancelled',
                             'booking' => 'canceled',
                             'payment' => 'pending',
-                            'update'  => false,
+                            'update'  => true,
                         ],
                         [
                             'order'   => 'failed',
                             'booking' => 'canceled',
                             'payment' => 'pending',
-                            'update'  => false,
+                            'update'  => true,
                         ],
                     ],
                     'event'       => [
@@ -1897,31 +1900,31 @@ This message does not have an option for responding. If you need additional info
                             'order'   => 'on-hold',
                             'booking' => 'approved',
                             'payment' => 'paid',
-                            'update'  => false,
+                            'update'  => true,
                         ],
                         [
                             'order'   => 'processing',
                             'booking' => 'approved',
                             'payment' => 'paid',
-                            'update'  => false,
+                            'update'  => true,
                         ],
                         [
                             'order'   => 'completed',
                             'booking' => 'approved',
                             'payment' => 'paid',
-                            'update'  => false,
+                            'update'  => true,
                         ],
                         [
                             'order'   => 'cancelled',
                             'booking' => 'canceled',
                             'payment' => 'pending',
-                            'update'  => false,
+                            'update'  => true,
                         ],
                         [
                             'order'   => 'failed',
                             'booking' => 'canceled',
                             'payment' => 'pending',
-                            'update'  => false,
+                            'update'  => true,
                         ],
                     ],
                 ],
@@ -2164,6 +2167,8 @@ This message does not have an option for responding. If you need additional info
      */
     public static function getDefaultRolesSettings()
     {
+        $permissionChecker = new PermissionsChecker();
+
         return [
             'allowConfigureSchedule'      => false,
             'allowConfigureDaysOff'       => false,
@@ -2171,6 +2176,10 @@ This message does not have an option for responding. If you need additional info
             'allowConfigureServices'      => false,
             'allowWriteAppointments'      => false,
             'allowWriteCustomers'         => false,
+            'allowReadAllCustomers'       => $permissionChecker->hasCapability(
+                Entities::PROVIDER,
+                'amelia_read_others_customers'
+            ),
             'automaticallyCreateCustomer' => false,
             'inspectCustomerInfo'         => false,
             'allowCustomerReschedule'     => false,
@@ -2448,7 +2457,7 @@ This message does not have an option for responding. If you need additional info
                         // Scalar string with no deeper path possible — skip this path.
                         continue 2;
                     }
-                } elseif (!is_array($current[$key]) && !is_null($current[$key])) {
+                } elseif (!is_array($current[$key])) {
                     // Boolean / int leaf where a nested array is expected — skip.
                     continue 2;
                 }
@@ -2643,6 +2652,9 @@ This message does not have an option for responding. If you need additional info
             ],
             'eTickets'              => [
                 'enabled' => $proAndUp && (!$old || !empty($saved['appointments']['qrCodeEvents']['enabled'])),
+            ],
+            'eventTags'             => [
+                'enabled' => $starterAndUp && (!$old || EventsTagsTable::hasTags()),
             ],
         ];
 

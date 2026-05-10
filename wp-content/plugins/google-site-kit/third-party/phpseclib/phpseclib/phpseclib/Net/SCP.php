@@ -37,7 +37,7 @@ use Google\Site_Kit_Dependencies\phpseclib3\Exception\FileNotFoundException;
  *
  * @author  Jim Wigginton <terrafrost@php.net>
  */
-class SCP extends \Google\Site_Kit_Dependencies\phpseclib3\Net\SSH2
+class SCP extends SSH2
 {
     /**
      * Reads data from a local file.
@@ -94,67 +94,67 @@ class SCP extends \Google\Site_Kit_Dependencies\phpseclib3\Net\SSH2
             // remote file cannot be blank
             return \false;
         }
-        if (!$this->exec('scp -t ' . \escapeshellarg($remote_file), \false)) {
+        if (!$this->exec('scp -t ' . escapeshellarg($remote_file), \false)) {
             // -t = to
             return \false;
         }
         $temp = $this->get_channel_packet(self::CHANNEL_EXEC, \true);
-        if ($temp !== \chr(0)) {
+        if ($temp !== chr(0)) {
             $this->close_channel(self::CHANNEL_EXEC, \true);
             return \false;
         }
         $packet_size = $this->packet_size_client_to_server[self::CHANNEL_EXEC] - 4;
-        $remote_file = \basename($remote_file);
+        $remote_file = basename($remote_file);
         $dataCallback = \false;
         switch (\true) {
-            case \is_resource($data):
+            case is_resource($data):
                 $mode = $mode & ~self::SOURCE_LOCAL_FILE;
-                $info = \stream_get_meta_data($data);
+                $info = stream_get_meta_data($data);
                 if (isset($info['wrapper_type']) && $info['wrapper_type'] == 'PHP' && $info['stream_type'] == 'Input') {
-                    $fp = \fopen('php://memory', 'w+');
-                    \stream_copy_to_stream($data, $fp);
-                    \rewind($fp);
+                    $fp = fopen('php://memory', 'w+');
+                    stream_copy_to_stream($data, $fp);
+                    rewind($fp);
                 } else {
                     $fp = $data;
                 }
                 break;
             case $mode & self::SOURCE_LOCAL_FILE:
-                if (!\is_file($data)) {
-                    throw new \Google\Site_Kit_Dependencies\phpseclib3\Exception\FileNotFoundException("{$data} is not a valid file");
+                if (!is_file($data)) {
+                    throw new FileNotFoundException("{$data} is not a valid file");
                 }
-                $fp = @\fopen($data, 'rb');
+                $fp = @fopen($data, 'rb');
                 if (!$fp) {
                     $this->close_channel(self::CHANNEL_EXEC, \true);
                     return \false;
                 }
         }
         if (isset($fp)) {
-            $stat = \fstat($fp);
+            $stat = fstat($fp);
             $size = !empty($stat) ? $stat['size'] : 0;
         } else {
-            $size = \strlen($data);
+            $size = strlen($data);
         }
         $sent = 0;
         $size = $size < 0 ? ($size & 0x7fffffff) + 0x80000000 : $size;
         $temp = 'C0644 ' . $size . ' ' . $remote_file . "\n";
         $this->send_channel_packet(self::CHANNEL_EXEC, $temp);
         $temp = $this->get_channel_packet(self::CHANNEL_EXEC, \true);
-        if ($temp !== \chr(0)) {
+        if ($temp !== chr(0)) {
             $this->close_channel(self::CHANNEL_EXEC, \true);
             return \false;
         }
         $sent = 0;
         while ($sent < $size) {
-            $temp = $mode & self::SOURCE_STRING ? \substr($data, $sent, $packet_size) : \fread($fp, $packet_size);
+            $temp = $mode & self::SOURCE_STRING ? substr($data, $sent, $packet_size) : fread($fp, $packet_size);
             $this->send_channel_packet(self::CHANNEL_EXEC, $temp);
-            $sent += \strlen($temp);
-            if (\is_callable($callback)) {
-                \call_user_func($callback, $sent);
+            $sent += strlen($temp);
+            if (is_callable($callback)) {
+                call_user_func($callback, $sent);
             }
         }
         $this->close_channel(self::CHANNEL_EXEC, \true);
         if ($mode != self::SOURCE_STRING) {
-            \fclose($fp);
+            fclose($fp);
         }
         return \true;
     }
@@ -175,29 +175,29 @@ class SCP extends \Google\Site_Kit_Dependencies\phpseclib3\Net\SSH2
         if (!($this->bitmap & self::MASK_LOGIN)) {
             return \false;
         }
-        if (!$this->exec('scp -f ' . \escapeshellarg($remote_file), \false)) {
+        if (!$this->exec('scp -f ' . escapeshellarg($remote_file), \false)) {
             // -f = from
             return \false;
         }
-        $this->send_channel_packet(self::CHANNEL_EXEC, \chr(0));
+        $this->send_channel_packet(self::CHANNEL_EXEC, chr(0));
         $info = $this->get_channel_packet(self::CHANNEL_EXEC, \true);
         // per https://goteleport.com/blog/scp-familiar-simple-insecure-slow/ non-zero responses mean there are errors
-        if ($info[0] === \chr(1) || $info[0] == \chr(2)) {
-            $type = $info[0] === \chr(1) ? 'warning' : 'error';
-            $this->scp_errors[] = "{$type}: " . \substr($info, 1);
+        if ($info[0] === chr(1) || $info[0] == chr(2)) {
+            $type = $info[0] === chr(1) ? 'warning' : 'error';
+            $this->scp_errors[] = "{$type}: " . substr($info, 1);
             $this->close_channel(self::CHANNEL_EXEC, \true);
             return \false;
         }
-        $this->send_channel_packet(self::CHANNEL_EXEC, \chr(0));
-        if (!\preg_match('#(?<perms>[^ ]+) (?<size>\\d+) (?<name>.+)#', \rtrim($info), $info)) {
+        $this->send_channel_packet(self::CHANNEL_EXEC, chr(0));
+        if (!preg_match('#(?<perms>[^ ]+) (?<size>\d+) (?<name>.+)#', rtrim($info), $info)) {
             $this->close_channel(self::CHANNEL_EXEC, \true);
             return \false;
         }
         $fclose_check = \false;
-        if (\is_resource($local_file)) {
+        if (is_resource($local_file)) {
             $fp = $local_file;
-        } elseif (!\is_null($local_file)) {
-            $fp = @\fopen($local_file, 'wb');
+        } elseif (!is_null($local_file)) {
+            $fp = @fopen($local_file, 'wb');
             if (!$fp) {
                 $this->close_channel(self::CHANNEL_EXEC, \true);
                 return \false;
@@ -216,28 +216,28 @@ class SCP extends \Google\Site_Kit_Dependencies\phpseclib3\Net\SSH2
                 return \false;
             }
             // SCP usually seems to split stuff out into 16k chunks
-            $length = \strlen($data);
+            $length = strlen($data);
             $size += $length;
             $end = $size > $info['size'];
             if ($end) {
                 $diff = $size - $info['size'];
                 $offset = $length - $diff;
-                if ($data[$offset] === \chr(0)) {
-                    $data = \substr($data, 0, -$diff);
+                if ($data[$offset] === chr(0)) {
+                    $data = substr($data, 0, -$diff);
                 } else {
-                    $type = $data[$offset] === \chr(1) ? 'warning' : 'error';
-                    $this->scp_errors[] = "{$type}: " . \substr($data, 1);
+                    $type = $data[$offset] === chr(1) ? 'warning' : 'error';
+                    $this->scp_errors[] = "{$type}: " . substr($data, 1);
                     $this->close_channel(self::CHANNEL_EXEC, \true);
                     return \false;
                 }
             }
-            if (\is_null($local_file)) {
+            if (is_null($local_file)) {
                 $content .= $data;
             } else {
-                \fputs($fp, $data);
+                fputs($fp, $data);
             }
-            if (\is_callable($progressCallback)) {
-                \call_user_func($progressCallback, $size);
+            if (is_callable($progressCallback)) {
+                call_user_func($progressCallback, $size);
             }
             if ($end) {
                 break;
@@ -245,7 +245,7 @@ class SCP extends \Google\Site_Kit_Dependencies\phpseclib3\Net\SSH2
         }
         $this->close_channel(self::CHANNEL_EXEC, \true);
         if ($fclose_check) {
-            \fclose($fp);
+            fclose($fp);
         }
         // if $content isn't set that means a file was written to
         return isset($content) ? $content : \true;
@@ -266,6 +266,6 @@ class SCP extends \Google\Site_Kit_Dependencies\phpseclib3\Net\SSH2
      */
     public function getLastSCPError()
     {
-        return \count($this->scp_errors) ? $this->scp_errors[\count($this->scp_errors) - 1] : '';
+        return count($this->scp_errors) ? $this->scp_errors[count($this->scp_errors) - 1] : '';
     }
 }

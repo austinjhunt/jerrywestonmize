@@ -20,6 +20,8 @@
   "newsletter_editor.js": "newsletter_editor.js",
   "form_editor.js": "form_editor.js",
   "settings.js": "settings.js",
+  "tags.js": "tags.js",
+  "custom_fields.js": "custom_fields.js",
   "runtime.js": "runtime.js",
   "commons.js": "commons.js",
   "skins/ui/oxide/skin.css": "skins/ui/oxide/skin.css",

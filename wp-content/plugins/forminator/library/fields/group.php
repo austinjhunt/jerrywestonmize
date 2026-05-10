@@ -102,6 +102,12 @@ class Forminator_Group extends Forminator_Field {
 	public function markup( $field, $views_obj ) {
 		$name     = self::get_property( 'element_id', $field );
 		$wrappers = $views_obj::get_grouped_wrappers( $name );
+
+		// Don't render field group if it has no fields inside.
+		if ( empty( $wrappers ) ) {
+			return '';
+		}
+
 		$options  = self::prepare_field_options( $field );
 		$settings = $views_obj->model->settings;
 		$html     = '';

@@ -13,7 +13,7 @@ class Product_Price extends Abstract_Product_Block_Renderer {
  }
  $attributes = $parsed_block['attrs'] ?? array();
  $price_content = $this->generate_price_html( $product, $attributes, $rendering_context );
- return $this->apply_email_wrapper( $price_content, $parsed_block );
+ return $this->apply_email_wrapper( $price_content, $parsed_block, $rendering_context );
  }
  private function generate_price_html( \WC_Product $product, array $attributes, Rendering_Context $rendering_context ): string {
  $price_html = $this->build_price_from_scratch( $product );
@@ -110,8 +110,8 @@ class Product_Price extends Abstract_Product_Block_Renderer {
  wc_price( (float) $max_price, array( 'in_span' => false ) )
  );
  }
- private function apply_email_wrapper( string $price_html, array $parsed_block ): string {
- $align = $parsed_block['attrs']['textAlign'] ?? 'left';
+ private function apply_email_wrapper( string $price_html, array $parsed_block, Rendering_Context $rendering_context ): string {
+ $align = $rendering_context->resolve_text_align( $parsed_block['attrs']['textAlign'] ?? null );
  $wrapper_styles = array(
  'border-collapse' => 'collapse',
  'width' => '100%',

@@ -623,7 +623,7 @@ function forminator_list_pagination( $total, $type = 'listings', $is_ajax = fals
 					$dots = true;
 				} elseif ( $dots ) {
 					?>
-					<li class="sui-pagination-dots"><span><?php esc_html_e( '&hellip;', 'forminator' ); ?></span></li>
+					<li class="sui-pagination-dots"><span>&hellip;</span></li>
 					<?php
 					$dots = false;
 				}

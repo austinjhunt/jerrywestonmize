@@ -1,5 +1,5 @@
 <?php
-namespace Automattic\Jetpack\Autoloader\jp13ec9dc4f0acceb81c184f4bbaa2b56c\al5_0_8;
+namespace Automattic\Jetpack\Autoloader\jp83dc6912ee72af67396c96cffa1f9fed\al5_0_8;
 if (!defined('ABSPATH')) exit;
  // phpcs:ignore
 class Version_Selector {

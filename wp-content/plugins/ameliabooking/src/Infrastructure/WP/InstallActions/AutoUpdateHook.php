@@ -58,7 +58,7 @@ class AutoUpdateHook
      * Add our self-hosted description to the filter
      *
      * @param bool  $response
-     * @param array $action
+     * @param string $action
      * @param       $args
      *
      * @return bool|object

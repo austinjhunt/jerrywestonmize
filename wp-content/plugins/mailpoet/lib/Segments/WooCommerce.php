@@ -317,11 +317,11 @@ class WooCommerce {
 
     $processedOrders = [];
     foreach ($result as $item) {
-      if (!$this->validator->validateEmail($item['email'])) {
+      if (!is_string($item['email']) || !$this->validator->validateEmail($item['email']) || !is_numeric($item['order_id'])) {
         continue;
       }
       // because data in result are sorted by id, we can replace the previous order id
-      $processedOrders[(string)$item['email']] = (int)$item['order_id'];
+      $processedOrders[$item['email']] = (int)$item['order_id'];
     }
 
     if (count($processedOrders)) {
@@ -422,7 +422,12 @@ class WooCommerce {
       if (!$row['meta_value']) {
         continue;
       }
-      $subscribersData[$row['post_id']][$row['meta_key']] = $row['meta_value'];
+      $postId = is_numeric($row['post_id']) ? (int)$row['post_id'] : 0;
+      $metaKey = is_string($row['meta_key']) ? $row['meta_key'] : '';
+      if ($postId === 0 || $metaKey === '') {
+        continue;
+      }
+      $subscribersData[$postId][$metaKey] = $row['meta_value'];
     }
 
     $now = (Carbon::now())->format('Y-m-d H:i:s');

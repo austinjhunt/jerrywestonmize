@@ -3,7 +3,7 @@
 Plugin Name: Amelia
 Plugin URI: https://wpamelia.com/
 Description: Amelia is a simple yet powerful automated booking specialist, working 24/7 to make sure your customers can make appointments and events even while you sleep!
-Version: 9.3
+Version: 9.4
 Author: Melograno Ventures
 Author URI: https://melograno.io/
 Text Domain: wpamelia
@@ -58,13 +58,13 @@ if (!defined('AMELIA_PATH')) {
 // Const for uploads path
 if (!defined('AMELIA_UPLOADS_PATH')) {
     $uploadDir = wp_upload_dir();
-    define('AMELIA_UPLOADS_PATH', $uploadDir['basedir']);
+    define('AMELIA_UPLOADS_PATH', !empty($uploadDir['basedir']) ? $uploadDir['basedir'] : '');
 }
 
 // Const for uploads url
 if (!defined('AMELIA_UPLOADS_URL')) {
     $uploadUrl = wp_upload_dir();
-    define('AMELIA_UPLOADS_URL', set_url_scheme($uploadUrl['baseurl']));
+    define('AMELIA_UPLOADS_URL', !empty($uploadUrl['baseurl']) ? set_url_scheme($uploadUrl['baseurl']) : '');
 }
 
 // Const for uploads url
@@ -113,7 +113,7 @@ if (!defined('AMELIA_LOGIN_URL')) {
 
 // Const for Amelia version
 if (!defined('AMELIA_VERSION')) {
-    define('AMELIA_VERSION', '9.3');
+    define('AMELIA_VERSION', '9.4');
 }
 
 // Const for site URL
@@ -633,7 +633,18 @@ class Plugin
         ];
 
         if (Licence\Licence::getLicence() === LicenceConstants::LITE) {
-            $links[] = '<a href="https://wpamelia.com/pricing/?utm_source=wp_org&utm_medium=wp_org&utm_content=plugin_row&utm_campaign=wp_org" style="color: #5951F6; font-weight: bold;" target="_blank">Get Amelia Pro</a>';
+            $deactivate = [];
+            if (isset($links['deactivate'])) {
+                $deactivate = ['deactivate' => $links['deactivate']];
+                unset($links['deactivate']);
+            }
+
+            return array_merge(
+                $primaryLinks,
+                $links,
+                ['<a href="https://wpamelia.com/pricing/?utm_source=wp_org&utm_medium=wp_org&utm_content=plugin_row&utm_campaign=wp_org" style="color: #5951F6; font-weight: bold;" target="_blank">Get Amelia Pro</a>'],
+                $deactivate
+            );
         }
 
         return array_merge($primaryLinks, $links);

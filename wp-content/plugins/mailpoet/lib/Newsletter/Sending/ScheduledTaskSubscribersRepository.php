@@ -12,6 +12,7 @@ use MailPoet\Entities\SubscriberEntity;
 use MailPoet\InvalidStateException;
 use MailPoetVendor\Carbon\Carbon;
 use MailPoetVendor\Doctrine\DBAL\ArrayParameterType;
+use MailPoetVendor\Doctrine\DBAL\ParameterType;
 use MailPoetVendor\Doctrine\ORM\QueryBuilder;
 
 /**
@@ -45,7 +46,7 @@ class ScheduledTaskSubscribersRepository extends Repository {
     if (!$taskSubscriber) {
       $task = $this->entityManager->getReference(ScheduledTaskEntity::class, (int)$data['task_id']);
       $subscriber = $this->entityManager->getReference(SubscriberEntity::class, (int)$data['subscriber_id']);
-      if (!$task || !$subscriber) throw new InvalidStateException();
+      if (!$task || !$subscriber) throw new InvalidStateException('Task or subscriber not found');
 
       $taskSubscriber = new ScheduledTaskSubscriberEntity($task, $subscriber);
       $this->persist($taskSubscriber);
@@ -123,6 +124,41 @@ class ScheduledTaskSubscribersRepository extends Repository {
     $stmt->bindValue('subscribed', SubscriberEntity::STATUS_SUBSCRIBED);
     $stmt->bindValue('unconfirmed', SubscriberEntity::STATUS_UNCONFIRMED);
     $stmt->executeQuery();
+  }
+
+  /** @param int[] $subscriberIds */
+  public function addSubscribersByIds(ScheduledTaskEntity $task, array $subscriberIds): int {
+    $subscriberIds = array_values(array_unique(array_filter(array_map('intval', $subscriberIds))));
+    if ($subscriberIds === []) {
+      return 0;
+    }
+
+    $scheduledTaskSubscribersTable = $this->entityManager->getClassMetadata(ScheduledTaskSubscriberEntity::class)->getTableName();
+    $subscribersTable = $this->entityManager->getClassMetadata(SubscriberEntity::class)->getTableName();
+
+    $result = $this->entityManager->getConnection()->executeQuery(
+      "INSERT IGNORE INTO $scheduledTaskSubscribersTable
+       (task_id, subscriber_id, processed)
+       SELECT DISTINCT ? as task_id, subscribers.`id` as subscriber_id, ? as processed
+       FROM $subscribersTable subscribers
+       WHERE subscribers.`deleted_at` IS NULL
+       AND subscribers.`status` = ?
+       AND subscribers.`id` IN (?)",
+      [
+        $task->getId(),
+        ScheduledTaskSubscriberEntity::STATUS_UNPROCESSED,
+        SubscriberEntity::STATUS_SUBSCRIBED,
+        $subscriberIds,
+      ],
+      [
+        ParameterType::INTEGER,
+        ParameterType::INTEGER,
+        ParameterType::STRING,
+        ArrayParameterType::INTEGER,
+      ]
+    );
+
+    return (int)$result->rowCount();
   }
 
   /** @param int[] $ids */
@@ -204,6 +240,56 @@ class ScheduledTaskSubscribersRepository extends Repository {
 
   public function countUnprocessed(ScheduledTaskEntity $scheduledTaskEntity): int {
     return $this->countBy(['task' => $scheduledTaskEntity, 'processed' => ScheduledTaskSubscriberEntity::STATUS_UNPROCESSED]);
+  }
+
+  public function purgeOldTaskSubscribers(int $daysToKeep, int $taskBatchSize, int $rowLimit): int {
+    $stTable = $this->entityManager->getClassMetadata(ScheduledTaskEntity::class)->getTableName();
+    $stsTable = $this->entityManager->getClassMetadata(ScheduledTaskSubscriberEntity::class)->getTableName();
+    $cutoff = Carbon::now()->subDays($daysToKeep)->toDateTimeString();
+
+    $taskIds = $this->entityManager->getConnection()->executeQuery(
+      "SELECT DISTINCT st.`id`
+       FROM `{$stTable}` st
+       INNER JOIN `{$stsTable}` sts ON sts.`task_id` = st.`id`
+       WHERE st.`type` = :type
+         AND st.`status` = :status
+         AND st.`processed_at` < :cutoff
+         AND st.`deleted_at` IS NULL
+       LIMIT :taskBatchSize",
+      [
+        'type' => 'sending',
+        'status' => ScheduledTaskEntity::STATUS_COMPLETED,
+        'cutoff' => $cutoff,
+        'taskBatchSize' => $taskBatchSize,
+      ],
+      [
+        'type' => ParameterType::STRING,
+        'status' => ParameterType::STRING,
+        'cutoff' => ParameterType::STRING,
+        'taskBatchSize' => ParameterType::INTEGER,
+      ]
+    )->fetchFirstColumn();
+
+    if (!$taskIds) {
+      return 0;
+    }
+
+    /** @var int[] $taskIds */
+    $taskIdsList = implode(',', array_map('intval', $taskIds));
+
+    $deleted = $this->entityManager->getConnection()->executeStatement(
+      "DELETE FROM `{$stsTable}`
+       WHERE `task_id` IN ({$taskIdsList})
+       LIMIT :rowLimit",
+      [
+        'rowLimit' => $rowLimit,
+      ],
+      [
+        'rowLimit' => ParameterType::INTEGER,
+      ]
+    );
+
+    return (int)$deleted;
   }
 
   private function checkCompleted(ScheduledTaskEntity $task): void {

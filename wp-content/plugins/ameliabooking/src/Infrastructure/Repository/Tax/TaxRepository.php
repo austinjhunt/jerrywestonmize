@@ -218,6 +218,17 @@ class TaxRepository extends AbstractRepository
     {
         $where = !empty($criteria['ids']) ? "WHERE t.id IN (" . implode(', ', $criteria['ids']) . ")" : '';
 
+        $allowedSortFields = ['id', 'name', 'type'];
+        $field             = 'id';
+        $direction         = 'ASC';
+        if (!empty($criteria['sort'])) {
+            $candidateField     = (string)($criteria['sort']['field'] ?? '');
+            $candidateDirection = strtoupper((string)($criteria['sort']['order'] ?? 'ASC'));
+            $field              = in_array($candidateField, $allowedSortFields, true) ? $candidateField : 'id';
+            $direction          = $candidateDirection === 'DESC' ? 'DESC' : 'ASC';
+        }
+        $order = "ORDER BY t.`{$field}` {$direction}, t.id ASC";
+
         try {
             $statement = $this->connection->prepare(
                 "SELECT
@@ -235,7 +246,7 @@ class TaxRepository extends AbstractRepository
                     FROM {$this->table} t
                     LEFT JOIN {$this->taxesToEntitiesTable} te ON te.taxId = t.id
                     {$where}
-                    ORDER BY t.id"
+                    {$order}"
             );
 
             $statement->execute();
@@ -387,10 +398,16 @@ class TaxRepository extends AbstractRepository
             (int)$itemsPerPage
         );
 
-        $order = "ORDER BY id";
+        $allowedSortFieldsFiltered = ['id', 'name', 'type'];
+        $filteredField             = 'id';
+        $filteredDirection         = 'ASC';
         if (!empty($criteria['sort'])) {
-            $order = "ORDER BY {$criteria['sort']['field']} {$criteria['sort']['order']}";
+            $candidateField     = (string)($criteria['sort']['field'] ?? '');
+            $candidateDirection = strtoupper((string)($criteria['sort']['order'] ?? 'ASC'));
+            $filteredField      = in_array($candidateField, $allowedSortFieldsFiltered, true) ? $candidateField : 'id';
+            $filteredDirection  = $candidateDirection === 'DESC' ? 'DESC' : 'ASC';
         }
+        $order = "ORDER BY t.`{$filteredField}` {$filteredDirection}, t.id ASC";
 
         try {
             $statement = $this->connection->prepare(

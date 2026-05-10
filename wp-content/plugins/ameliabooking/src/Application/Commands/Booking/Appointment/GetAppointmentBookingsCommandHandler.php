@@ -212,7 +212,9 @@ class GetAppointmentBookingsCommandHandler extends CommandHandler
                     $customersNoShowCountIds[] = $booking->getCustomerId()->getValue();
                 }
 
-                $bookedSpots += $booking->getPersons()->getValue();
+                if (in_array($booking->getStatus()->getValue(), ['approved', 'pending'], true)) {
+                    $bookedSpots += $booking->getPersons()->getValue();
+                }
 
                 $bookings[] = [
                     'id'       => $booking->getId()->getValue(),

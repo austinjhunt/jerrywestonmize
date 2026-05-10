@@ -11,7 +11,6 @@
 namespace Google\Site_Kit\Core\Email_Reporting;
 
 use Google\Site_Kit\Context;
-use Google\Site_Kit\Core\Conversion_Tracking\Conversion_Tracking;
 use Google\Site_Kit\Core\Modules\Module_With_Service_Entity;
 use Google\Site_Kit\Core\Modules\Modules;
 use Google\Site_Kit\Core\Permissions\Permissions;
@@ -77,14 +76,6 @@ class Email_Reporting_Data_Requests {
 	private $context;
 
 	/**
-	 * Conversion tracking instance.
-	 *
-	 * @since 1.168.0
-	 * @var Conversion_Tracking
-	 */
-	private $conversion_tracking;
-
-	/**
 	 * Module audience settings instance.
 	 *
 	 * @since 1.168.0
@@ -117,16 +108,14 @@ class Email_Reporting_Data_Requests {
 	 *
 	 * @since 1.168.0
 	 *
-	 * @param Context             $context             Plugin context.
-	 * @param Modules             $modules             Modules instance.
-	 * @param Conversion_Tracking $conversion_tracking Conversion tracking instance.
-	 * @param Transients          $transients          Transients instance.
-	 * @param User_Options|null   $user_options        Optional. User options instance. Default new instance.
+	 * @param Context           $context      Plugin context.
+	 * @param Modules           $modules      Modules instance.
+	 * @param Transients        $transients   Transients instance.
+	 * @param User_Options|null $user_options Optional. User options instance. Default new instance.
 	 */
 	public function __construct(
 		Context $context,
 		Modules $modules,
-		Conversion_Tracking $conversion_tracking,
 		Transients $transients,
 		?User_Options $user_options = null
 	) {
@@ -134,7 +123,6 @@ class Email_Reporting_Data_Requests {
 		$this->modules      = $modules;
 		$this->user_options = $user_options ?: new User_Options( $this->context );
 
-		$this->conversion_tracking              = $conversion_tracking;
 		$this->audience_settings                = new Module_Audience_Settings( new Options( $this->context ) );
 		$this->custom_dimensions_data_available = new Custom_Dimensions_Data_Available( $transients );
 	}
@@ -179,14 +167,14 @@ class Email_Reporting_Data_Requests {
 		try {
 			$this->maybe_reset_runtime_caches_for_user_change( $user_id );
 
-			$active_modules = $this->modules->get_active_modules();
+			$shareable_modules = $this->modules->get_shareable_modules();
 
 			if ( ! empty( $allowed_module_slugs ) ) {
 				// Flip slugs to keys so we can intersect by module slug.
-				$active_modules = array_intersect_key( $active_modules, array_flip( $allowed_module_slugs ) );
+				$shareable_modules = array_intersect_key( $shareable_modules, array_flip( $allowed_module_slugs ) );
 			}
 
-			$available_modules = $this->filter_modules_for_user( $active_modules, $user );
+			$available_modules = $this->filter_modules_for_user( $shareable_modules, $user );
 
 			if ( empty( $available_modules ) ) {
 				return array();
@@ -241,8 +229,10 @@ class Email_Reporting_Data_Requests {
 	 * @return WP_Error The categorized error with an added 'category' data field.
 	 */
 	public function categorize_error( WP_Error $error, $module_slug ) {
-		$status = $error->get_error_data()['status'];
-		$reason = $error->get_error_data()['reason'];
+		$error_data = $error->get_error_data();
+
+		$status = $error_data['status'] ?? null;
+		$reason = $error_data['reason'] ?? null;
 
 		$category = 'report_error';
 		if ( in_array( $status, self::PERMISSIONS_ERROR_STATUSES, true ) || in_array( $reason, self::PERMISSIONS_ERROR_REASONS, true ) ) {
@@ -253,7 +243,7 @@ class Email_Reporting_Data_Requests {
 			$error->get_error_code(),
 			$error->get_error_message(),
 			array_merge(
-				$error->get_error_data(),
+				$error_data ?? array(),
 				array(
 					'category_id' => $category,
 					'module_slug' => $module_slug,
@@ -335,9 +325,7 @@ class Email_Reporting_Data_Requests {
 	 */
 	private function collect_analytics_payloads( $module, $date_range ) {
 		$report_options = new Analytics_4_Report_Options( $date_range, array(), $this->context );
-		$settings       = $module->get_settings()->get();
 
-		$report_options->set_conversion_events( $settings['detectedEvents'] ?? array() );
 		$report_options->set_audience_segmentation_enabled( $this->is_audience_segmentation_enabled() );
 		$report_options->set_custom_dimension_availability(
 			array(
@@ -384,10 +372,6 @@ class Email_Reporting_Data_Requests {
 			)
 		);
 
-		if ( is_wp_error( $response ) ) {
-			return $response;
-		}
-
 		return $request_assembler->map_responses( $response, $request_map );
 	}
 
@@ -404,15 +388,30 @@ class Email_Reporting_Data_Requests {
 		$allowed = array();
 
 		foreach ( $modules as $slug => $module ) {
-			if ( ! $module->is_connected() || $module->is_recoverable() ) {
+			if ( $module->is_recoverable() ) {
 				continue;
 			}
 
+			// Module owner; data fetch uses their own (= owner) tokens.
+			if ( $user->ID === $this->get_module_owner_id( $slug ) ) {
+				$allowed[ $slug ] = $module;
+				continue;
+			}
+
+			// Recipient's role is in the module's shared roles; the data fetch
+			// resolves to the owner's OAuth client in Module::get_oauth_client_for_datapoint(),
+			// matching the dashboard-sharing path. Applies to any role (editor,
+			// admin, etc.) whose role is in sharedRoles.
+			if ( user_can( $user, Permissions::READ_SHARED_MODULE_DATA, $slug ) ) {
+				$allowed[ $slug ] = $module;
+				continue;
+			}
+
+			// Admin not in shared roles; preserves the authenticated-admin-with-
+			// own-Google path: preflight with the recipient's own tokens and only
+			// include the module if they personally have access.
 			if ( user_can( $user, Permissions::MANAGE_OPTIONS ) ) {
-				if (
-					$module instanceof Module_With_Service_Entity
-					&& $user->ID !== $this->get_module_owner_id( $slug )
-				) {
+				if ( $module instanceof Module_With_Service_Entity ) {
 					$access = $module->check_service_entity_access();
 
 					if ( true !== $access ) {
@@ -421,12 +420,6 @@ class Email_Reporting_Data_Requests {
 				}
 
 				$allowed[ $slug ] = $module;
-				continue;
-			}
-
-			if ( user_can( $user, Permissions::READ_SHARED_MODULE_DATA, $slug ) ) {
-				$allowed[ $slug ] = $module;
-				continue;
 			}
 		}
 
@@ -453,29 +446,6 @@ class Email_Reporting_Data_Requests {
 		}
 
 		return $owner_id;
-	}
-
-	/**
-	 * Gets the connected AdSense account ID if available.
-	 *
-	 * @since 1.168.0
-	 *
-	 * @param object $module Module instance.
-	 * @return string Account ID or empty string if unavailable.
-	 */
-	private function get_adsense_account_id( $module ) {
-		if ( ! method_exists( $module, 'get_settings' ) ) {
-			return '';
-		}
-
-		$settings = $module->get_settings();
-		if ( ! is_object( $settings ) || ! method_exists( $settings, 'get' ) ) {
-			return '';
-		}
-
-		$values = $settings->get();
-
-		return isset( $values['accountID'] ) ? (string) $values['accountID'] : '';
 	}
 
 	/**

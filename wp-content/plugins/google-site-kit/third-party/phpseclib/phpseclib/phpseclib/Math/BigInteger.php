@@ -82,12 +82,12 @@ class BigInteger implements \JsonSerializable
     public static function setEngine($main, array $modexps = ['DefaultEngine'])
     {
         self::$engines = [];
-        $fqmain = '\\Google\\Site_Kit_Dependencies\\phpseclib3\\Math\\BigInteger\\Engines\\' . $main;
-        if (!\class_exists($fqmain) || !\method_exists($fqmain, 'isValidEngine')) {
+        $fqmain = '\\Google\\Site_Kit_Dependencies\\phpseclib3\Math\BigInteger\Engines\\' . $main;
+        if (!class_exists($fqmain) || !method_exists($fqmain, 'isValidEngine')) {
             throw new \InvalidArgumentException("{$main} is not a valid engine");
         }
         if (!$fqmain::isValidEngine()) {
-            throw new \Google\Site_Kit_Dependencies\phpseclib3\Exception\BadConfigurationException("{$main} is not setup correctly on this system");
+            throw new BadConfigurationException("{$main} is not setup correctly on this system");
         }
         /** @var class-string<Engine> $fqmain */
         self::$mainEngine = $fqmain;
@@ -101,7 +101,7 @@ class BigInteger implements \JsonSerializable
             }
         }
         if (!$found) {
-            throw new \Google\Site_Kit_Dependencies\phpseclib3\Exception\BadConfigurationException("No valid modular exponentiation engine found for {$main}");
+            throw new BadConfigurationException("No valid modular exponentiation engine found for {$main}");
         }
         self::$engines = [$main, $modexp];
     }
@@ -123,7 +123,7 @@ class BigInteger implements \JsonSerializable
         if (!isset(self::$mainEngine)) {
             $engines = [['GMP', ['DefaultEngine']], ['PHP64', ['OpenSSL']], ['BCMath', ['OpenSSL']], ['PHP32', ['OpenSSL']], ['PHP64', ['DefaultEngine']], ['PHP32', ['DefaultEngine']]];
             // per https://phpseclib.com/docs/speed PHP 8.4.0+ _significantly_ sped up BCMath
-            if (\version_compare(\PHP_VERSION, '8.4.0') >= 0) {
+            if (version_compare(\PHP_VERSION, '8.4.0') >= 0) {
                 $engines[1][0] = 'BCMath';
                 $engines[2][0] = 'PHP64';
             }
@@ -151,7 +151,7 @@ class BigInteger implements \JsonSerializable
         self::initialize_static_variables();
         if ($x instanceof self::$mainEngine) {
             $this->value = clone $x;
-        } elseif ($x instanceof \Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger\Engines\Engine) {
+        } elseif ($x instanceof Engine) {
             $this->value = new static("{$x}");
             $this->value->setPrecision($x->getPrecision());
         } else {
@@ -222,7 +222,7 @@ class BigInteger implements \JsonSerializable
      * @param BigInteger $y
      * @return BigInteger
      */
-    public function add(\Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger $y)
+    public function add(BigInteger $y)
     {
         return new static($this->value->add($y->value));
     }
@@ -232,7 +232,7 @@ class BigInteger implements \JsonSerializable
      * @param BigInteger $y
      * @return BigInteger
      */
-    public function subtract(\Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger $y)
+    public function subtract(BigInteger $y)
     {
         return new static($this->value->subtract($y->value));
     }
@@ -242,7 +242,7 @@ class BigInteger implements \JsonSerializable
      * @param BigInteger $x
      * @return BigInteger
      */
-    public function multiply(\Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger $x)
+    public function multiply(BigInteger $x)
     {
         return new static($this->value->multiply($x->value));
     }
@@ -271,7 +271,7 @@ class BigInteger implements \JsonSerializable
      * @param BigInteger $y
      * @return BigInteger[]
      */
-    public function divide(\Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger $y)
+    public function divide(BigInteger $y)
     {
         list($q, $r) = $this->value->divide($y->value);
         return [new static($q), new static($r)];
@@ -284,7 +284,7 @@ class BigInteger implements \JsonSerializable
      * @param BigInteger $n
      * @return BigInteger
      */
-    public function modInverse(\Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger $n)
+    public function modInverse(BigInteger $n)
     {
         return new static($this->value->modInverse($n->value));
     }
@@ -296,7 +296,7 @@ class BigInteger implements \JsonSerializable
      * @param BigInteger $n
      * @return BigInteger[]
      */
-    public function extendedGCD(\Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger $n)
+    public function extendedGCD(BigInteger $n)
     {
         $extended = $this->value->extendedGCD($n->value);
         $gcd = $extended['gcd'];
@@ -312,7 +312,7 @@ class BigInteger implements \JsonSerializable
      * @param BigInteger $n
      * @return BigInteger
      */
-    public function gcd(\Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger $n)
+    public function gcd(BigInteger $n)
     {
         return new static($this->value->gcd($n->value));
     }
@@ -439,7 +439,7 @@ class BigInteger implements \JsonSerializable
      * @param BigInteger $n
      * @return BigInteger
      */
-    public function powMod(\Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger $e, \Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger $n)
+    public function powMod(BigInteger $e, BigInteger $n)
     {
         return new static($this->value->powMod($e->value, $n->value));
     }
@@ -450,7 +450,7 @@ class BigInteger implements \JsonSerializable
      * @param BigInteger $n
      * @return BigInteger
      */
-    public function modPow(\Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger $e, \Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger $n)
+    public function modPow(BigInteger $e, BigInteger $n)
     {
         return new static($this->value->modPow($e->value, $n->value));
     }
@@ -472,7 +472,7 @@ class BigInteger implements \JsonSerializable
      * @return int in case < 0 if $this is less than $y; > 0 if $this is greater than $y, and 0 if they are equal.
      * @see self::equals()
      */
-    public function compare(\Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger $y)
+    public function compare(BigInteger $y)
     {
         return $this->value->compare($y->value);
     }
@@ -484,7 +484,7 @@ class BigInteger implements \JsonSerializable
      * @param BigInteger $x
      * @return bool
      */
-    public function equals(\Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger $x)
+    public function equals(BigInteger $x)
     {
         return $this->value->equals($x->value);
     }
@@ -503,7 +503,7 @@ class BigInteger implements \JsonSerializable
      * @param BigInteger $x
      * @return BigInteger
      */
-    public function bitwise_and(\Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger $x)
+    public function bitwise_and(BigInteger $x)
     {
         return new static($this->value->bitwise_and($x->value));
     }
@@ -513,7 +513,7 @@ class BigInteger implements \JsonSerializable
      * @param BigInteger $x
      * @return BigInteger
      */
-    public function bitwise_or(\Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger $x)
+    public function bitwise_or(BigInteger $x)
     {
         return new static($this->value->bitwise_or($x->value));
     }
@@ -523,7 +523,7 @@ class BigInteger implements \JsonSerializable
      * @param BigInteger $x
      * @return BigInteger
      */
-    public function bitwise_xor(\Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger $x)
+    public function bitwise_xor(BigInteger $x)
     {
         return new static($this->value->bitwise_xor($x->value));
     }
@@ -645,7 +645,7 @@ class BigInteger implements \JsonSerializable
      * @param BigInteger $max
      * @return false|BigInteger
      */
-    public static function randomRangePrime(\Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger $min, \Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger $max)
+    public static function randomRangePrime(BigInteger $min, BigInteger $max)
     {
         $class = self::$mainEngine;
         return new static($class::randomRangePrime($min->value, $max->value));
@@ -663,7 +663,7 @@ class BigInteger implements \JsonSerializable
      * @param BigInteger $max
      * @return BigInteger
      */
-    public static function randomRange(\Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger $min, \Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger $max)
+    public static function randomRange(BigInteger $min, BigInteger $max)
     {
         $class = self::$mainEngine;
         return new static($class::randomRange($min->value, $max->value));
@@ -700,7 +700,7 @@ class BigInteger implements \JsonSerializable
      * @param BigInteger $n
      * @return BigInteger
      */
-    public function pow(\Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger $n)
+    public function pow(BigInteger $n)
     {
         return new static($this->value->pow($n->value));
     }
@@ -710,10 +710,10 @@ class BigInteger implements \JsonSerializable
      * @param BigInteger ...$nums
      * @return BigInteger
      */
-    public static function min(\Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger ...$nums)
+    public static function min(BigInteger ...$nums)
     {
         $class = self::$mainEngine;
-        $nums = \array_map(function ($num) {
+        $nums = array_map(function ($num) {
             return $num->value;
         }, $nums);
         return new static($class::min(...$nums));
@@ -724,10 +724,10 @@ class BigInteger implements \JsonSerializable
      * @param BigInteger ...$nums
      * @return BigInteger
      */
-    public static function max(\Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger ...$nums)
+    public static function max(BigInteger ...$nums)
     {
         $class = self::$mainEngine;
-        $nums = \array_map(function ($num) {
+        $nums = array_map(function ($num) {
             return $num->value;
         }, $nums);
         return new static($class::max(...$nums));
@@ -739,7 +739,7 @@ class BigInteger implements \JsonSerializable
      * @param BigInteger $max
      * @return bool
      */
-    public function between(\Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger $min, \Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger $max)
+    public function between(BigInteger $min, BigInteger $max)
     {
         return $this->value->between($min->value, $max->value);
     }
@@ -797,7 +797,7 @@ class BigInteger implements \JsonSerializable
      * @param BigInteger $r
      * @return int
      */
-    public static function scan1divide(\Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger $r)
+    public static function scan1divide(BigInteger $r)
     {
         $class = self::$mainEngine;
         return $class::scan1divide($r->value);
@@ -813,7 +813,7 @@ class BigInteger implements \JsonSerializable
     public function createRecurringModuloFunction()
     {
         $func = $this->value->createRecurringModuloFunction();
-        return function (\Google\Site_Kit_Dependencies\phpseclib3\Math\BigInteger $x) use($func) {
+        return function (BigInteger $x) use ($func) {
             return new static($func($x->value));
         };
     }
@@ -827,7 +827,7 @@ class BigInteger implements \JsonSerializable
      */
     public function bitwise_split($split)
     {
-        return \array_map(function ($val) {
+        return array_map(function ($val) {
             return new static($val);
         }, $this->value->bitwise_split($split));
     }

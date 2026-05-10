@@ -63,95 +63,99 @@ class __TwigTemplate_756448057f537f5715d1a262e5a4bc2ae04cea7f694f005ae4bcfe6c686
         // line 8
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(($context["items_per_page"] ?? null), "html", null, true);
         yield ";
-    var mailpoet_custom_fields = ";
+    var mailpoet_segments_api = ";
         // line 9
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["api"] ?? null));
+        yield ";
+    var mailpoet_custom_fields = ";
+        // line 10
         yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["custom_fields"] ?? null));
         yield ";
     var mailpoet_static_segments_list = ";
-        // line 10
+        // line 11
         yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["static_segments_list"] ?? null));
         yield ";
     var wordpress_editable_roles_list = ";
-        // line 11
+        // line 12
         yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["wordpress_editable_roles_list"] ?? null));
         yield ";
     var mailpoet_newsletters_list = ";
-        // line 12
+        // line 13
         yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["newsletters_list"] ?? null));
         yield ";
     var mailpoet_product_attributes = ";
-        // line 13
+        // line 14
         yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["product_attributes"] ?? null));
         yield ";
     var mailpoet_local_product_attributes = ";
-        // line 14
+        // line 15
         yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["local_product_attributes"] ?? null));
         yield ";
     var mailpoet_product_categories = ";
-        // line 15
+        // line 16
         yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["product_categories"] ?? null));
         yield ";
     var mailpoet_product_tags = ";
-        // line 16
+        // line 17
         yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["product_tags"] ?? null));
         yield ";
     var mailpoet_products = ";
-        // line 17
+        // line 18
         yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["products"] ?? null));
         yield ";
     var mailpoet_membership_plans = ";
-        // line 18
+        // line 19
         yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["membership_plans"] ?? null));
         yield ";
     var mailpoet_subscription_products = ";
-        // line 19
+        // line 20
         yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["subscription_products"] ?? null));
         yield ";
     var mailpoet_can_use_woocommerce_memberships = ";
-        // line 20
+        // line 21
         yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["can_use_woocommerce_memberships"] ?? null));
         yield ";
     var mailpoet_can_use_woocommerce_subscriptions = ";
-        // line 21
+        // line 22
         yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["can_use_woocommerce_subscriptions"] ?? null));
         yield ";
     var mailpoet_woocommerce_currency_symbol = ";
-        // line 22
+        // line 23
         yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["woocommerce_currency_symbol"] ?? null));
         yield ";
     var mailpoet_woocommerce_countries = ";
-        // line 23
+        // line 24
         yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["woocommerce_countries"] ?? null));
         yield ";
     var mailpoet_woocommerce_payment_methods = ";
-        // line 24
+        // line 25
         yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["woocommerce_payment_methods"] ?? null));
         yield ";
     var mailpoet_woocommerce_shipping_methods = ";
-        // line 25
+        // line 26
         yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["woocommerce_shipping_methods"] ?? null));
         yield ";
     var mailpoet_signup_forms = ";
-        // line 26
+        // line 27
         yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["signup_forms"] ?? null));
         yield ";
     var mailpoet_automations = ";
-        // line 27
+        // line 28
         yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["automations"] ?? null));
         yield ";
   </script>
 
   ";
-        // line 30
-        yield from         $this->loadTemplate("segments/translations.html", "segments/dynamic.html", 30)->unwrap()->yield($context);
+        // line 31
+        yield from         $this->loadTemplate("segments/translations.html", "segments/dynamic.html", 31)->unwrap()->yield($context);
         return; yield '';
     }
 
-    // line 34
+    // line 35
     public function block_after_translations($context, array $blocks = [])
     {
         $macros = $this->macros;
-        // line 35
+        // line 36
         yield "  ";
         yield do_action("mailpoet_segments_translations_after");
         yield "
@@ -180,7 +184,7 @@ class __TwigTemplate_756448057f537f5715d1a262e5a4bc2ae04cea7f694f005ae4bcfe6c686
      */
     public function getDebugInfo()
     {
-        return array (  152 => 35,  148 => 34,  143 => 30,  137 => 27,  133 => 26,  129 => 25,  125 => 24,  121 => 23,  117 => 22,  113 => 21,  109 => 20,  105 => 19,  101 => 18,  97 => 17,  93 => 16,  89 => 15,  85 => 14,  81 => 13,  77 => 12,  73 => 11,  69 => 10,  65 => 9,  61 => 8,  57 => 7,  52 => 4,  48 => 3,  37 => 1,);
+        return array (  156 => 36,  152 => 35,  147 => 31,  141 => 28,  137 => 27,  133 => 26,  129 => 25,  125 => 24,  121 => 23,  117 => 22,  113 => 21,  109 => 20,  105 => 19,  101 => 18,  97 => 17,  93 => 16,  89 => 15,  85 => 14,  81 => 13,  77 => 12,  73 => 11,  69 => 10,  65 => 9,  61 => 8,  57 => 7,  52 => 4,  48 => 3,  37 => 1,);
     }
 
     public function getSourceContext()

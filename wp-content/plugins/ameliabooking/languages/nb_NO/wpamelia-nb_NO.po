@@ -416,10 +416,9 @@ msgstr "Legg til fridag"
 msgid "Add Extra"
 msgstr "Legg til Tillegg"
 
-msgid "Add Google Map API Key to show Google static map on \"Locations\" page."
+msgid ""
+"Add Google Maps API Key to show Google static map on \"Locations\" page."
 msgstr ""
-"Legg til Google Map API-nøkkel for å vise statisk Google-kart på siden "
-"«Steder»."
 
 msgid "Add Meta Pixel to track ad conversions and optimize marketing."
 msgstr ""
@@ -455,11 +454,17 @@ msgstr ""
 "Legg til en omdirigerings-URL for tilfeller der en kunde prøver å bestille "
 "et tidsvindu som allerede er opptatt."
 
+msgid "Add another account"
+msgstr ""
+
 msgid "Add appointment"
 msgstr "Legg til avtale"
 
 msgid "Add booking"
 msgstr "Legg til bestilling"
+
+msgid "Add calendar"
+msgstr ""
 
 msgid "Add category"
 msgstr "Legg til kategori"
@@ -737,6 +742,9 @@ msgstr "Tillat ansatte å administrere sine tjenester"
 
 msgid "Allow employees to manage their special days"
 msgstr "La ansatte administrere sine spesielle dager"
+
+msgid "Allow employees to view all customers"
+msgstr ""
 
 msgid "Allow multiple bookings per customer"
 msgstr "Tillat flere bestillinger per kunde"
@@ -1069,6 +1077,9 @@ msgstr "Er du sikker på at du vil slette disse elementene?"
 msgid "Are you sure you want to delete this appointment?"
 msgstr "Er du sikker på at du vil slette denne avtalen?"
 
+msgid "Are you sure you want to delete this block time?"
+msgstr ""
+
 msgid "Are you sure you want to delete this category?"
 msgstr "Er du sikker på at du vil slette denne kategorien?"
 
@@ -1215,6 +1226,9 @@ msgstr "Tildelt"
 
 msgid "Assigned Services"
 msgstr "Tilordnede tjenester"
+
+msgid "Assigned employee full name"
+msgstr ""
 
 msgid "Attachment"
 msgstr "Vedlegg"
@@ -1451,21 +1465,34 @@ msgid "Block"
 msgstr "Blokker"
 
 msgid ""
-"Block booking times that overlap with busy events in the employee’s Apple "
-"Calendar."
-msgstr ""
-"Blokker bestillingstider som overlapper med travle hendelser i den ansattes "
-"Apple-kalender."
-
-msgid ""
 "Block booking times that overlap with busy events in the employee’s Outlook "
 "Calendar."
 msgstr ""
 "Blokker bestillingstider som overlapper med travle hendelser i den ansattes "
 "Outlook-kalender."
 
+msgid ""
+"Block booking times that overlap with events in the employee’s Apple "
+"Calendar."
+msgstr ""
+
 msgid "Block customer"
 msgstr "Blokker kunde"
+
+msgid "Block time"
+msgstr ""
+
+msgid "Block time from calendars"
+msgstr ""
+
+msgid "Block time has been added."
+msgstr ""
+
+msgid "Block time has been deleted."
+msgstr ""
+
+msgid "Block time has been updated."
+msgstr ""
 
 msgid "Blog"
 msgstr "Blogg"
@@ -2569,6 +2596,9 @@ msgstr "Lag ansatt fra WP bruker med rolle som Amelia ansatt"
 msgid "Create New"
 msgstr "Lag ny"
 
+msgid "Create New Tag"
+msgstr ""
+
 msgid ""
 "Create a coupon code customers can enter during booking to get a discount."
 msgstr ""
@@ -2605,6 +2635,9 @@ msgstr "Opprett ny"
 
 msgid "Create new badge"
 msgstr "Opprett nytt merke"
+
+msgid "Create new tag"
+msgstr ""
 
 msgid ""
 "Create online classrooms automatically for each booked appointment or event."
@@ -2743,6 +2776,9 @@ msgstr "Tilpasset prissetting"
 msgid "Custom pricing spots will override Maximum allowed spots value."
 msgstr ""
 "Egendefinerte pris plasser vil overstyre maksimalt tillatte plass-verdier."
+
+msgid "Custom range"
+msgstr ""
 
 msgid "Custom service duration"
 msgstr "Tilpasset tjenestetid"
@@ -2946,6 +2982,9 @@ msgstr "Dato Asc"
 
 msgid "Date Desc"
 msgstr "Dato Beskrivelse"
+
+msgid "Date Picker"
+msgstr ""
 
 msgid "Date Purchased Asc"
 msgstr "Kjøpsdato Asc"
@@ -3155,6 +3194,9 @@ msgstr "Velg gjentakelsesperiode"
 
 msgid "Delete appointment"
 msgstr "Slett avtale"
+
+msgid "Delete block time"
+msgstr ""
 
 msgid "Delete booking"
 msgstr "Slett bestilling"
@@ -3546,6 +3588,9 @@ msgstr "Rediger webhook"
 
 msgid "Edit appointment"
 msgstr "Rediger avtale"
+
+msgid "Edit block time"
+msgstr ""
 
 msgid "Edit booking"
 msgstr "Rediger bestilling"
@@ -4428,11 +4473,28 @@ msgstr "Arrangementet starter"
 msgid "Event status"
 msgstr "Hendelsesstatus"
 
+msgid "Event tags"
+msgstr ""
+
+msgid ""
+"Event tags allow you to label and organize events in Amelia based on "
+"criteria that matter most to your business."
+msgstr ""
+
+msgid "Event tags have been saved."
+msgstr ""
+
+msgid "Event tags setup"
+msgstr ""
+
 msgid "Event ticketing"
 msgstr "Billettsalg til arrangementer"
 
 msgid "Event tickets"
 msgstr "Arrangement billetter"
+
+msgid "Event time scope"
+msgstr ""
 
 msgid "Event title"
 msgstr "Arrangementets tittel"
@@ -4442,6 +4504,9 @@ msgstr "Tittel og beskrivelse av arrangementet"
 
 msgid "Event type"
 msgstr "Hendelsestype"
+
+msgid "Event_bookings"
+msgstr ""
 
 msgid "Events"
 msgstr "Arrangementer"
@@ -4529,6 +4594,9 @@ msgstr "Eksporter avtaledata med letthet"
 
 msgid "Export bookings"
 msgstr "Eksporter bestillinger"
+
+msgid "Export event booking data with ease"
+msgstr ""
 
 msgid "Express Account"
 msgstr "Express-konto"
@@ -4861,6 +4929,9 @@ msgstr "Alle hendelser"
 msgid "Fully booked"
 msgstr "Fullbooket"
 
+msgid "Future events"
+msgstr ""
+
 msgid ""
 "GSM (standard Latin) segments contain 160 characters, while UCS-2 (non-GSM - "
 "Cyrillic, emoji, non-standard symbols) contain 70 characters, etc."
@@ -4949,8 +5020,8 @@ msgstr "Google Kalender og Google Meet"
 msgid "Google Calendar setup"
 msgstr "Google Kalender-oppsett"
 
-msgid "Google Map API key"
-msgstr "Google Map API-nøkkel"
+msgid "Google Maps API key"
+msgstr ""
 
 msgid "Google Maps failed to load. Check your API key and restrictions."
 msgstr ""
@@ -5427,6 +5498,10 @@ msgid ""
 msgstr ""
 
 msgid ""
+"Improve reporting accuracy by accessing complete event booking data instantly"
+msgstr ""
+
+msgid ""
 "Improved customer retention as clients return to use the remaining sessions "
 "in their package"
 msgstr ""
@@ -5549,6 +5624,9 @@ msgstr "Integrasjoner"
 
 msgid "Interested in unlocking this feature?"
 msgstr "Interessert i å låse opp denne funksjonen?"
+
+msgid "Invalid Mollie API key."
+msgstr ""
 
 msgid "Invalid Stripe secret key."
 msgstr "Ugyldig Stripe-hemmelig nøkkel."
@@ -6023,8 +6101,14 @@ msgstr "Gjør ekstra obligatorisk"
 msgid "Make sure you are using the correct WhatsApp credentials."
 msgstr "Sørg for at du bruker riktige WhatsApp-påloggingsopplysninger."
 
+msgid "Make sure you are using the correct Zoom credentials."
+msgstr ""
+
 msgid "Male"
 msgstr "Mann"
+
+msgid "Manage Event Tags"
+msgstr ""
 
 msgid "Manage badges"
 msgstr "Administrer merker"
@@ -6041,6 +6125,9 @@ msgid ""
 msgstr ""
 "Administrer avbestillinger av arrangementer effektivt ved å la kundene melde "
 "seg på ventelister og fylle ledige plasser manuelt."
+
+msgid "Manage event tags"
+msgstr ""
 
 msgid "Manage languages"
 msgstr "Administrere språk"
@@ -6344,6 +6431,9 @@ msgstr "Ny oppdatering"
 msgid "New appointment"
 msgstr "Ny avtale"
 
+msgid "New block time"
+msgstr ""
+
 msgid "New category"
 msgstr "Ny kategori"
 
@@ -6556,6 +6646,9 @@ msgstr "Merknad (intern)"
 
 msgid "Notice: Please select at least one panel."
 msgstr "Merknad: Vennligst velg minst ett panel."
+
+msgid "Notice: Please select start and end date."
+msgstr ""
 
 msgid "Notification"
 msgstr "Varsel"
@@ -6879,6 +6972,9 @@ msgstr "Åpen arrangement"
 
 msgid "Open following"
 msgstr "Åpne følgende"
+
+msgid "Open side menu"
+msgstr ""
 
 msgid "Opened"
 msgstr "Åpnet"
@@ -7212,6 +7308,9 @@ msgstr "Passordene er ikke like"
 msgid "Passwords don't match."
 msgstr "Passordene stemmer ikke overens."
 
+msgid "Past events"
+msgstr ""
+
 msgid ""
 "Paste the secret key you received after creating your API key pair in Google "
 "reCAPTCHA."
@@ -7474,6 +7573,9 @@ msgstr "Planer"
 msgid "Please Wait"
 msgstr "Vennligst vent"
 
+msgid "Please add period"
+msgstr ""
+
 msgid "Please cancel the event first before deleting it."
 msgstr "Vennligst avbryt arrangementet før du sletter den."
 
@@ -7488,6 +7590,11 @@ msgstr "Vennligst velg avtale tid"
 
 msgid "Please confirm you are not a robot"
 msgstr "Vennligst bekreft at du ikke er en robot"
+
+msgid ""
+"Please delete this appointment. It cannot be edited due to a conflict with "
+"the associated account."
+msgstr ""
 
 msgid ""
 "Please ensure that services and employees are created and that services are "
@@ -7834,6 +7941,9 @@ msgstr "Vennligst velg klokkeslett"
 msgid "Please upload the file"
 msgstr "Vennligst last opp filen"
 
+msgid "Please use a different email or phone number to complete the booking."
+msgstr ""
+
 msgid ""
 "Please use the built-in Elementor shortcode widget instead of Amelia widget "
 "when adding Amelia to a popup"
@@ -8081,6 +8191,11 @@ msgstr ""
 "Last raskt ned alle avtaleopplysninger fra siden Bookings, slik at "
 "rapportering, analyse og journalføring blir enkelt og effektivt."
 
+msgid ""
+"Quickly download all event booking details from the Event Bookings page, "
+"making reporting, analysis, and record-keeping simple and efficient."
+msgstr ""
+
 msgid "Radio button"
 msgstr "Radioknapp"
 
@@ -8244,8 +8359,8 @@ msgstr "Resterende beløp betales på stedet."
 msgid "Remind me when my SMS balance is low"
 msgstr "Minn meg på når SMS saldoen er lav"
 
-msgid "Remove Apple Calendar busy slots"
-msgstr "Fjern opptatte tidsluker fra Apple Kalender"
+msgid "Remove Apple Calendar event slots"
+msgstr ""
 
 msgid "Remove Attendee"
 msgstr "Fjern deltaker"
@@ -8491,6 +8606,9 @@ msgstr ""
 msgid "Save time with fast, one-click appointment exports"
 msgstr "Spar tid med rask eksport av avtaler med ett klikk"
 
+msgid "Save time with fast, one-click event booking exports"
+msgstr ""
+
 msgid "Save time with quick, hassle-free customer data exports"
 msgstr "Spar tid med rask og problemfri eksport av kundedata"
 
@@ -8724,6 +8842,9 @@ msgstr "Velg minst ett alternativ."
 
 msgid "Select box"
 msgstr "Velg boks"
+
+msgid "Select calendar"
+msgstr ""
 
 msgid "Select category"
 msgstr "Velg kategori"
@@ -9939,6 +10060,12 @@ msgstr "Faner (Alle / Pakker / Tjenester)"
 msgid "Tag"
 msgstr "Fane"
 
+msgid "Tag label"
+msgstr ""
+
+msgid "Tag label cannot be empty"
+msgstr ""
+
 msgid "Tags"
 msgstr "Faner"
 
@@ -10791,6 +10918,9 @@ msgid ""
 msgstr ""
 "URL som brukeren blir omdirigert til hvis avtalen ikke kan avbestilles på "
 "grunn av verdien for «Minimum tid før avbestilling»."
+
+msgid "Unable to complete plugin activation. Please try again."
+msgstr ""
 
 msgid "Unable to deactivate plugin. Please try again later."
 msgstr "Kan ikke deaktivere utvidelse. Prøv igjen senere."

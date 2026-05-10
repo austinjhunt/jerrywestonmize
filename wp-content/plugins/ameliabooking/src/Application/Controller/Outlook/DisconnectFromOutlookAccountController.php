@@ -13,6 +13,10 @@ use Slim\Http\Request;
  */
 class DisconnectFromOutlookAccountController extends Controller
 {
+    protected $allowedFields = [
+        'accountId'
+    ];
+
     /**
      * @param Request $request
      * @param         $args

@@ -566,10 +566,11 @@ abstract class Forminator_Field {
 	 * @param bool    $required Required.
 	 * @param string  $default_height Height.
 	 * @param integer $limit Limit.
+	 * @param bool    $media_buttons Whether to show media buttons or not.
 	 *
 	 * @return mixed
 	 */
-	public static function create_wp_editor( $attr = array(), $label = '', $description = '', $required = false, $default_height = '140', $limit = 0 ) {
+	public static function create_wp_editor( $attr = array(), $label = '', $description = '', $required = false, $default_height = '140', $limit = 0, $media_buttons = false ) {
 		$html = '';
 
 		$content = isset( $attr['content'] ) ? $attr['content'] : '';
@@ -609,7 +610,7 @@ abstract class Forminator_Field {
 			$editor_id,
 			array(
 				'textarea_name' => isset( $attr['name'] ) ? $attr['name'] : '',
-				'media_buttons' => false,
+				'media_buttons' => $media_buttons,
 				'editor_class'  => $wp_editor_class,
 				'editor_height' => $default_height,
 			)
@@ -1084,7 +1085,8 @@ abstract class Forminator_Field {
 
 			if ( in_array( $element_id, Forminator_CForm_Front_Action::$hidden_fields, true ) ) {
 				$current_is_hidden      = true;
-				$is_condition_fulfilled = isset( $condition['rule'] ) && 'is_not' === $condition['rule']
+				$opposite_operators     = array( 'is_not', 'does_not_contain', 'day_is_not', 'month_is_not' );
+				$is_condition_fulfilled = isset( $condition['rule'] ) && in_array( $condition['rule'], $opposite_operators, true )
 					&& isset( $condition['value'] ) && ! is_null( $condition['value'] ) && '' !== $condition['value'];
 			} else {
 				$current_is_hidden      = false;
@@ -2080,9 +2082,10 @@ abstract class Forminator_Field {
 	 * Get TinyMCE arguments for js on front-end
 	 *
 	 * @param string $id Editor ID.
+	 * @param bool   $media_buttons Whether to show the Add Media button.
 	 * @return string
 	 */
-	public static function get_tinymce_args( $id ) {
+	public static function get_tinymce_args( $id, $media_buttons = false ) {
 		$args = "{
 			tinymce: {
 				wpautop  : true,
@@ -2130,7 +2133,8 @@ abstract class Forminator_Field {
 
 			},
 			quicktags: true,
-		}";
+			mediaButtons: " . ( $media_buttons ? 'true' : 'false' ) . ',
+		}';
 
 		/**
 		 * Filter TinyMCE arguments for js on front-end.
@@ -2468,7 +2472,10 @@ abstract class Forminator_Field {
 			}
 			$module = Forminator_Front_Action::$module_object;
 		}
-		$field          = $module->get_field( $amount_variable, false );
+		$field = $module->get_field( $amount_variable, false );
+		if ( ! $field ) {
+			return $amount;
+		}
 		$field_settings = $field->to_formatted_array();
 		if ( ! $field_settings ) {
 			return $amount;
@@ -2476,5 +2483,34 @@ abstract class Forminator_Field {
 		// Remove the currency key since it's displayed separately.
 		unset( $field_settings['currency'] );
 		return self::forminator_number_formatting( $field_settings, $amount );
+	}
+
+	/**
+	 * Get rich text editor script
+	 *
+	 * @since 1.53
+	 *
+	 * @param string $id Editor ID.
+	 * @param bool   $media_buttons Whether to show the Add Media button.
+	 * @return string
+	 */
+	public function get_richtext_editor_script( $id, $media_buttons = false ) {
+		$args            = self::get_tinymce_args( $id, $media_buttons );
+		$is_block_editor = filter_input( INPUT_POST, 'is_block_editor', FILTER_VALIDATE_BOOLEAN );
+		if ( $is_block_editor ) {
+			// Message to show when rich text editor preview is not available in Gutenberg block editor.
+			$message = '<div style="all: initial;"><div class="block-editor-warning"><div class="block-editor-warning__contents"><p class="block-editor-warning__message">'
+						. esc_html__( 'The rich text editor can\'t be previewed in the block editor. Save the post and view the form on the frontend to see it.', 'forminator' )
+						. '</p></div></div></div>';
+			$script  = '<script>
+				if ( typeof wp !== "undefined" && wp.editor && typeof wp.editor.initialize === "function" ) {
+					wp.editor.initialize("' . esc_attr( $id ) . '", ' . $args . ');
+				} else {
+					 document.getElementById("' . esc_attr( $id ) . '").outerHTML = \'' . $message . '\';
+				}</script>';
+		} else {
+			$script = '<script>wp.editor.initialize("' . esc_attr( $id ) . '", ' . $args . ');</script>';
+		}
+		return $script;
 	}
 }

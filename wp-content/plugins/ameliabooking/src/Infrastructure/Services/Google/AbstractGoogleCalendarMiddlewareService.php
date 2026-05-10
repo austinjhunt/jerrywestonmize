@@ -60,4 +60,14 @@ abstract class AbstractGoogleCalendarMiddlewareService
      * @return Client|null
      */
     abstract public function getClient($providerGoogleCalendar);
+
+
+    /**
+     * Get calendar lists for multiple Google accounts
+     *
+     * @param array $accounts
+     *
+     * @return array
+     */
+    abstract public function getCalendarListsForAccounts(array $accounts): array;
 }

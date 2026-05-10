@@ -86,7 +86,7 @@ $data = $qrDataItem;
 <body>
   <div class="am-ticket">
     <div class="am-ticket__qr">
-      <?php echo '<img src="data:' . $data['mimeType'] . ';base64,' .$data['data'] . ' " alt="'. $data['eventName'] . 'Ticket" />'; ?>
+      <?php echo '<img src="data:' . $data['mimeType'] . ';base64,' . $data['data'] . '" alt="' . htmlspecialchars($data['eventName']) . ' Ticket" />'; ?>
     </div>
     <div class="am-ticket__content">
       <div class="am-ticket__title">

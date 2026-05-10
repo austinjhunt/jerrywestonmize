@@ -126,6 +126,11 @@ class Forminator_Googlesheet_Form_Hooks extends Forminator_Integration_Form_Hook
 			}
 			$form_entry_fields = $keyed_form_entry_fields;
 
+			$print_value = ! empty( $module->settings['print_value'] )
+				? filter_var( $module->settings['print_value'], FILTER_VALIDATE_BOOLEAN ) : false;
+
+			$raw_data = Forminator_CForm_Front_Action::$prepared_data;
+
 			$values = array();
 			foreach ( $header_fields as $element_id => $header_field ) {
 				$field_type = Forminator_Core::get_field_type( $element_id );
@@ -146,7 +151,14 @@ class Forminator_Googlesheet_Form_Hooks extends Forminator_Integration_Form_Hook
 						$meta_value['amount'] = Forminator_Field::get_formatted_amount( $field, $meta_value, $module );
 					}
 				}
-				$form_value = Forminator_Form_Entry_Model::meta_value_to_string( $field_type, $meta_value, false, PHP_INT_MAX, $field );
+
+				// For choice fields, resolve labels/values based on the print_value setting.
+				// Use raw prepared data since $submitted_data has already been stringified.
+				if ( in_array( $field_type, array( 'select', 'radio', 'checkbox' ), true ) ) {
+					$form_value = forminator_replace_field_data( $module, $element_id, $raw_data, false, $print_value );
+				} else {
+					$form_value = Forminator_Form_Entry_Model::meta_value_to_string( $field_type, $meta_value, false, PHP_INT_MAX, $field );
+				}
 
 				// Replace custom_option with actual custom value.
 				if ( false !== strpos( $form_value, 'custom_option' ) && isset( $submitted_data[ 'custom-' . $element_id ] ) ) {
@@ -225,47 +237,6 @@ class Forminator_Googlesheet_Form_Hooks extends Forminator_Integration_Form_Hook
 				'connection_name' => $connection_settings['name'],
 			);
 		}
-	}
-
-	/**
-	 * Maybe add group fields which were cloned by repeater.
-	 *
-	 * @param array $form_fields Form fields.
-	 * @return array
-	 */
-	private static function maybe_add_group_cloned_fields( $form_fields ) {
-		$prepared_data = Forminator_CForm_Front_Action::$prepared_data;
-		if ( empty( $prepared_data ) ) {
-			return $form_fields;
-		}
-
-		$result       = array();
-		$group_fields = array();
-
-		foreach ( $form_fields as $key => $field ) {
-			$parent      = $field['parent_group'] ?? '';
-			$next_parent = $form_fields[ $key + 1 ]['parent_group'] ?? '';
-
-			$result[] = $field;
-
-			if ( $parent ) {
-				$group_fields[ $parent ][] = $field;
-
-				// When leaving a group, append all clones for that group.
-				if ( $next_parent !== $parent ) {
-					for ( $i = 2; isset( $prepared_data[ $group_fields[ $parent ][0]['element_id'] . '-' . $i ] ); $i++ ) {
-						foreach ( $group_fields[ $parent ] as $gf ) {
-							$cloned_id = $gf['element_id'] . '-' . $i;
-							if ( isset( $prepared_data[ $cloned_id ] ) ) {
-								$result[] = array_merge( $gf, array( 'element_id' => $cloned_id ) );
-							}
-						}
-					}
-				}
-			}
-		}
-
-		return $result;
 	}
 
 	/**

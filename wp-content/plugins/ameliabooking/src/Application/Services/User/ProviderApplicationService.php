@@ -10,7 +10,6 @@ use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
-use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Location\Location;
 use AmeliaBooking\Domain\Entity\Schedule\BlockTime;
@@ -66,6 +65,10 @@ use AmeliaBooking\Infrastructure\Repository\Schedule\WeekDayRepository;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 use AmeliaVendor\Psr\Container\ContainerExceptionInterface;
+use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarMiddlewareService;
+use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
+use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarMiddlewareService;
+use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
 
@@ -284,7 +287,6 @@ class ProviderApplicationService
      * @return CommandResult
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
-     * @throws ContainerException
      */
     public function createProvider($fields, $bb = false)
     {
@@ -364,9 +366,8 @@ class ProviderApplicationService
      * @throws ContainerValueNotFoundException
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
-     * @throws ContainerException
      */
-    public function update($oldUser, $newUser)
+    public function update($oldUser, $newUser, $providerData = [])
     {
         /** @var UserRepositoryInterface $userRepository */
         $userRepository = $this->container->get('domain.users.repository');
@@ -380,11 +381,17 @@ class ProviderApplicationService
         $this->updateProviderSpecialDays($oldUser, $newUser);
 
         if ($newUser->getGoogleCalendar() && $newUser->getGoogleCalendar()->getId()) {
-            $this->updateProviderGoogleCalendar($newUser);
+            $googleCalendarData = !empty($providerData['googleCalendar'])
+                ? $providerData['googleCalendar']
+                : [];
+            $this->updateProviderGoogleCalendar($newUser, $googleCalendarData);
         }
 
         if ($newUser->getOutlookCalendar() && $newUser->getOutlookCalendar()->getId()) {
-            $this->updateProviderOutlookCalendar($newUser);
+            $outlookCalendarData = !empty($providerData['outlookCalendar'])
+                ? $providerData['outlookCalendar']
+                : [];
+            $this->updateProviderOutlookCalendar($newUser, $outlookCalendarData);
         }
 
         return true;
@@ -938,7 +945,6 @@ class ProviderApplicationService
      * @return array
      * @throws ContainerValueNotFoundException
      * @throws QueryExecutionException
-     * @throws ContainerException
      */
     public function manageProvidersActivity($providers, $companyDayOff)
     {
@@ -1027,7 +1033,6 @@ class ProviderApplicationService
      * @param AbstractUser $currentUser
      *
      * @return array
-     * @throws ContainerException
      */
     public function removeAllExceptUser($providers, $currentUser)
     {
@@ -1053,12 +1058,53 @@ class ProviderApplicationService
 
     /**
      * @param Provider $newUser
+     * @param array    $googleCalendarData
      *
      * @throws QueryExecutionException
-     * @throws ContainerException
      */
-    public function updateProviderGoogleCalendar($newUser)
+    public function updateProviderGoogleCalendar($newUser, $googleCalendarData = [])
     {
+        $selectedCalendarId = $newUser->getGoogleCalendar()->getCalendarId()
+            ? $newUser->getGoogleCalendar()->getCalendarId()->getValue()
+            : null;
+
+        $accounts = !empty($googleCalendarData['accounts']) ? $googleCalendarData['accounts'] : [];
+
+        $correctAccountId = null;
+
+        if ($selectedCalendarId && $accounts) {
+            foreach ($accounts as $account) {
+                if (empty($account['id']) || empty($account['calendarList'])) {
+                    continue;
+                }
+                foreach ($account['calendarList'] as $calendar) {
+                    if (isset($calendar['id']) && (string)$calendar['id'] === (string)$selectedCalendarId) {
+                        $correctAccountId = (int)$account['id'];
+                        break 2;
+                    }
+                }
+            }
+        }
+
+        if ($correctAccountId) {
+            /** @var ProviderRepository $providerRepository */
+            $providerRepository = $this->container->get('domain.users.providers.repository');
+
+            $allDbAccounts = $providerRepository->getGoogleCalendarAccounts(
+                $newUser->getId()->getValue()
+            );
+
+            foreach ($allDbAccounts as $dbAccount) {
+                $providerRepository->updateGoogleCalendarCalendarIdByAccountId(
+                    (int)$dbAccount['id'],
+                    (int)$dbAccount['id'] === $correctAccountId ? $selectedCalendarId : null
+                );
+            }
+
+            return;
+        }
+
+        // Fallback: single-account or token-refresh path – update by entity id.
         /** @var GoogleCalendarRepository $googleCalendarRepository */
         $googleCalendarRepository = $this->container->get('domain.google.calendar.repository');
 
@@ -1069,13 +1115,146 @@ class ProviderApplicationService
     }
 
     /**
-     * @param Provider $newUser
+     * Update blocked calendars for a provider's Google Calendar accounts
+     *
+     * @param int   $providerId
+     * @param array $blockedCalendars
+     *
+     * @throws QueryExecutionException
+     */
+    public function updateProviderGoogleCalendarBlockedCalendars($providerId, $blockedCalendars)
+    {
+        /** @var ProviderRepository $providerRepository */
+        $providerRepository = $this->container->get('domain.users.providers.repository');
+
+        /** @var SettingsService $settingsDS */
+        $settingsDS = $this->container->get('domain.settings.service');
+
+        $googleSettings = $settingsDS->getCategorySettings('googleCalendar');
+
+        // Get existing accounts
+        $existingAccounts = $providerRepository->getGoogleCalendarAccounts($providerId);
+
+        if (empty($existingAccounts)) {
+            return;
+        }
+
+        $blockedCalendars = array_unique(array_filter($blockedCalendars, function ($calendarId) {
+            return !empty($calendarId);
+        }));
+        $blockedCalendars = array_values($blockedCalendars);
+
+        if (!empty($googleSettings['accessToken'])) {
+            /** @var AbstractGoogleCalendarMiddlewareService $googleCalendarMiddlewareService */
+            $googleCalendarMiddlewareService = $this->container->get('infrastructure.google.calendar.middleware.service');
+
+            $accountsWithCalendars = $googleCalendarMiddlewareService->getCalendarListsForAccounts($existingAccounts);
+        } else {
+            /** @var AbstractGoogleCalendarService $googleCalendarService */
+            $googleCalendarService = $this->container->get('infrastructure.google.calendar.service');
+            $provider = $providerRepository->getById($providerId);
+
+            $accountsWithCalendars = $googleCalendarService->getCalendarListsForAccounts($existingAccounts, $provider);
+        }
+
+        $calendarToAccountMap = [];
+        foreach ($accountsWithCalendars as $account) {
+            if (!empty($account['calendarList'])) {
+                foreach ($account['calendarList'] as $calendar) {
+                    $calendarToAccountMap[$calendar['id']] = $account['id'];
+                }
+            }
+        }
+
+        // Group blocked calendars by account
+        $blockedCalendarsByAccount = [];
+        foreach ($existingAccounts as $account) {
+            $blockedCalendarsByAccount[$account['id']] = [];
+        }
+
+        foreach ($blockedCalendars as $calendarId) {
+            // Find which account owns this calendar
+            if (isset($calendarToAccountMap[$calendarId])) {
+                $accountId = $calendarToAccountMap[$calendarId];
+                $blockedCalendarsByAccount[$accountId][] = $calendarId;
+            }
+        }
+
+        // Update each account's blocked calendars
+        foreach ($existingAccounts as $account) {
+            $providerRepository->updateGoogleCalendarBlockedCalendars(
+                $account['id'],
+                $blockedCalendarsByAccount[$account['id']]
+            );
+        }
+    }
+
+    /**
+     * Update Google Calendar account settings (insertPendingAppointments, includeBufferTime, title, description)
+     *
+     * @param int   $providerId
+     * @param array $settings
      *
      * @throws QueryExecutionException
      * @throws ContainerException
      */
-    public function updateProviderOutlookCalendar($newUser)
+    public function updateProviderGoogleCalendarAccountSettings($providerId, $settings)
     {
+        /** @var ProviderRepository $providerRepository */
+        $providerRepository = $this->container->get('domain.users.providers.repository');
+
+        $providerRepository->updateGoogleCalendarAccountSettings($providerId, $settings);
+    }
+
+    /**
+     * @param Provider $newUser
+     * @param array    $outlookCalendarData
+     *
+     * @throws QueryExecutionException
+     * @throws ContainerException
+     */
+    public function updateProviderOutlookCalendar($newUser, $outlookCalendarData = [])
+    {
+        $selectedCalendarId = $newUser->getOutlookCalendar()->getCalendarId()
+            ? $newUser->getOutlookCalendar()->getCalendarId()->getValue()
+            : null;
+
+        $accounts = !empty($outlookCalendarData['accounts']) ? $outlookCalendarData['accounts'] : [];
+
+        $correctAccountId = null;
+
+        if ($selectedCalendarId && $accounts) {
+            foreach ($accounts as $account) {
+                if (empty($account['id']) || empty($account['calendarList'])) {
+                    continue;
+                }
+                foreach ($account['calendarList'] as $calendar) {
+                    if (isset($calendar['id']) && (string)$calendar['id'] === (string)$selectedCalendarId) {
+                        $correctAccountId = (int)$account['id'];
+                        break 2;
+                    }
+                }
+            }
+        }
+
+        if ($correctAccountId) {
+            /** @var ProviderRepository $providerRepository */
+            $providerRepository = $this->container->get('domain.users.providers.repository');
+
+            $allAccounts = $providerRepository->getOutlookCalendarAccounts(
+                $newUser->getId()->getValue()
+            );
+
+            foreach ($allAccounts as $account) {
+                $providerRepository->updateOutlookCalendarCalendarIdByAccountId(
+                    (int)$account['id'],
+                    (int)$account['id'] === $correctAccountId ? $selectedCalendarId : null
+                );
+            }
+
+            return;
+        }
+
         /** @var OutlookCalendarRepository $outlookCalendarRepository */
         $outlookCalendarRepository = $this->container->get('domain.outlook.calendar.repository');
 
@@ -1083,6 +1262,95 @@ class ProviderApplicationService
             $newUser->getOutlookCalendar(),
             $newUser->getOutlookCalendar()->getId()->getValue()
         );
+    }
+
+    /**
+     * Update blocked calendars for a provider's Outlook Calendar accounts
+     *
+     * @param int   $providerId
+     * @param array $blockedCalendars
+     *
+     * @throws QueryExecutionException
+     * @throws ContainerException
+     */
+    public function updateProviderOutlookCalendarBlockedCalendars($providerId, $blockedCalendars)
+    {
+        /** @var ProviderRepository $providerRepository */
+        $providerRepository = $this->container->get('domain.users.providers.repository');
+
+        /** @var SettingsService $settingsDS */
+        $settingsDS = $this->container->get('domain.settings.service');
+
+        $outlookSettings = $settingsDS->getCategorySettings('outlookCalendar');
+
+        $existingAccounts = $providerRepository->getOutlookCalendarAccounts($providerId);
+
+        if (empty($existingAccounts)) {
+            return;
+        }
+
+        $blockedCalendars = array_unique(array_filter($blockedCalendars, function ($calendarId) {
+            return !empty($calendarId);
+        }));
+        $blockedCalendars = array_values($blockedCalendars);
+
+        if (!empty($outlookSettings['accessToken'])) {
+            /** @var AbstractOutlookCalendarMiddlewareService $outlookCalendarMiddlewareService */
+            $outlookCalendarMiddlewareService = $this->container->get('infrastructure.outlook.calendar.middleware.service');
+
+            $accountsWithCalendars = $outlookCalendarMiddlewareService->getCalendarListsForAccounts($existingAccounts);
+        } else {
+            /** @var AbstractOutlookCalendarService $outlookCalendarService */
+            $outlookCalendarService = $this->container->get('infrastructure.outlook.calendar.service');
+            $provider = $providerRepository->getById($providerId);
+
+            $accountsWithCalendars = $outlookCalendarService->getCalendarListsForAccounts($existingAccounts, $provider);
+        }
+
+        $calendarToAccountMap = [];
+        foreach ($accountsWithCalendars as $account) {
+            if (!empty($account['calendarList'])) {
+                foreach ($account['calendarList'] as $calendar) {
+                    $calendarToAccountMap[$calendar['id']] = $account['id'];
+                }
+            }
+        }
+
+        $blockedCalendarsByAccount = [];
+        foreach ($existingAccounts as $account) {
+            $blockedCalendarsByAccount[$account['id']] = [];
+        }
+
+        foreach ($blockedCalendars as $calendarId) {
+            if (isset($calendarToAccountMap[$calendarId])) {
+                $accountId = $calendarToAccountMap[$calendarId];
+                $blockedCalendarsByAccount[$accountId][] = $calendarId;
+            }
+        }
+
+        foreach ($existingAccounts as $account) {
+            $providerRepository->updateOutlookCalendarBlockedCalendars(
+                $account['id'],
+                $blockedCalendarsByAccount[$account['id']]
+            );
+        }
+    }
+
+    /**
+     * Update Outlook Calendar account settings (insertPendingAppointments, includeBufferTime, title, description)
+     *
+     * @param int   $providerId
+     * @param array $settings
+     *
+     * @throws QueryExecutionException
+     * @throws ContainerException
+     */
+    public function updateProviderOutlookCalendarAccountSettings($providerId, $settings)
+    {
+        /** @var ProviderRepository $providerRepository */
+        $providerRepository = $this->container->get('domain.users.providers.repository');
+
+        $providerRepository->updateOutlookCalendarAccountSettings($providerId, $settings);
     }
 
     /**
@@ -1132,7 +1400,6 @@ class ProviderApplicationService
      * @param Provider $newUser
      *
      * @throws QueryExecutionException
-     * @throws ContainerException
      */
     private function updateProviderLocations($oldUser, $newUser)
     {
@@ -1169,7 +1436,6 @@ class ProviderApplicationService
      *
      * @return void
      * @throws QueryExecutionException
-     * @throws ContainerException
      */
     private function updateProviderServices($newUser)
     {
@@ -1225,7 +1491,6 @@ class ProviderApplicationService
      * @return boolean
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
-     * @throws ContainerException
      */
     private function updateProviderDaysOff($oldUser, $newUser)
     {
@@ -1648,93 +1913,6 @@ class ProviderApplicationService
             $providerRepository->deleteViewStats($provider->getId()->getValue()) &&
             $resourceEntitiesRepository->deleteByEntityIdAndEntityType($provider->getId()->getValue(), 'employee') &&
             $userRepository->delete($provider->getId()->getValue());
-    }
-
-    /**
-     * @param AbstractUser $currentUser
-     *
-     * @return Collection
-     *
-     * @throws ContainerValueNotFoundException
-     * @throws ContainerException
-     * @throws QueryExecutionException
-     * @throws InvalidArgumentException
-     */
-    public function getAllowedCustomers($currentUser)
-    {
-        /** @var UserRepository $userRepository */
-        $userRepository = $this->container->get('domain.users.repository');
-
-        /** @var Collection $customers */
-        $customers = $userRepository->getAllWithAllowedBooking();
-
-        // user_can added here, because currentUser is null in logged.in.user service for cabinet
-        if (
-            $currentUser !== null &&
-            $currentUser->getType() === Entities::PROVIDER &&
-            !$this->container->getPermissionsService()->currentUserCanReadOthers(Entities::CUSTOMERS) &&
-            !(
-                $currentUser->getExternalId() !== null &&
-                user_can($currentUser->getExternalId()->getValue(), 'amelia_read_others_customers')
-            )
-        ) {
-            /** @var AppointmentRepository $appointmentRepository */
-            $appointmentRepository = $this->container->get('domain.booking.appointment.repository');
-
-            /** @var Collection $appointments */
-            $appointments = $appointmentRepository->getFiltered(
-                ['providerId' => $currentUser->getId()->getValue()]
-            );
-
-            /** @var Collection $customersWithoutBooking */
-            $customersWithoutBooking = $userRepository->getAllWithoutBookings();
-
-            /** @var Appointment $appointment */
-            foreach ($appointments->getItems() as $appointment) {
-                /** @var CustomerBooking $booking */
-                foreach ($appointment->getBookings()->getItems() as $booking) {
-                    if (!$customersWithoutBooking->keyExists($booking->getCustomerId()->getValue())) {
-                        $customersWithoutBooking->addItem(
-                            $customers->getItem($booking->getCustomerId()->getValue()),
-                            $booking->getCustomerId()->getValue()
-                        );
-                    }
-                }
-            }
-
-            $customersWithoutBookingArray = $customersWithoutBooking->getItems();
-
-            usort(
-                $customersWithoutBookingArray,
-                function ($a, $b) {
-                    return strcmp(
-                        $a->getFirstName()->getValue() . ' ' . $a->getLastName()->getValue(),
-                        $b->getFirstName()->getValue() . ' ' . $b->getLastName()->getValue()
-                    );
-                }
-            );
-
-
-            return new Collection($customersWithoutBookingArray);
-        }
-
-        return $customers;
-    }
-
-    /**
-     * @param int $providerId
-     *
-     * @return array
-     * @throws ContainerValueNotFoundException
-     * @throws QueryExecutionException
-     * @throws ContainerException
-     */
-    public function getMandatoryServicesIds($providerId)
-    {
-        /** @var ProviderServiceRepository $providerServiceRepository */
-        $providerServiceRepository = $this->container->get('domain.bookable.service.providerService.repository');
-
-        return $providerServiceRepository->getMandatoryServicesIdsForProvider($providerId);
     }
 
 

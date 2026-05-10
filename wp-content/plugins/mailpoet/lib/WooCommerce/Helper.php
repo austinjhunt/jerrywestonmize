@@ -49,6 +49,8 @@ class Helper {
   public function isWooCommerceCustomOrdersTableEnabled(): bool {
     if (
       $this->isWooCommerceActive()
+      // Stubs reflect the current WC version; the runtime check guards older WooCommerce installs that lack this helper.
+      // @phpstan-ignore-next-line function.alreadyNarrowedType
       && method_exists('\Automattic\WooCommerce\Utilities\OrderUtil', 'custom_orders_table_usage_is_enabled')
       && \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled()
     ) {
@@ -64,6 +66,17 @@ class Helper {
 
   public function wcGetCustomerOrderCount($userId) {
     return wc_get_customer_order_count($userId);
+  }
+
+  public function wcGetCustomer(int $userId): ?\WC_Customer {
+    if (!class_exists(\WC_Customer::class)) {
+      return null;
+    }
+    try {
+      return new \WC_Customer($userId);
+    } catch (\Throwable $e) {
+      return null;
+    }
   }
 
   public function wcGetOrder($order = false) {
@@ -101,7 +114,7 @@ class Helper {
     return wc_get_price_decimals();
   }
 
-  public function wcGetPriceDecimalSeperator(): string {
+  public function wcGetPriceDecimalSeparator(): string {
     return wc_get_price_decimal_separator();
   }
 
@@ -184,6 +197,7 @@ class Helper {
   }
 
   public function getOrdersTableName() {
+    // @phpstan-ignore function.impossibleType (WC stub omits this method; the runtime check is meaningful for older WC versions)
     if (!method_exists('\Automattic\WooCommerce\Internal\DataStores\Orders\OrdersTableDataStore', 'get_orders_table_name')) {
       throw new RuntimeException('Cannot get orders table name when running a WooCommerce version that doesn\'t support custom order tables.');
     }
@@ -192,6 +206,7 @@ class Helper {
   }
 
   public function getAddressesTableName() {
+    // @phpstan-ignore function.impossibleType (WC stub omits this method; the runtime check is meaningful for older WC versions)
     if (!method_exists('\Automattic\WooCommerce\Internal\DataStores\Orders\OrdersTableDataStore', 'get_addresses_table_name')) {
       throw new RuntimeException('Cannot get addresses table name when running a WooCommerce version that doesn\'t support custom order tables.');
     }
@@ -205,6 +220,10 @@ class Helper {
 
   public function wcGetCouponCodeById(int $id): string {
     return wc_get_coupon_code_by_id($id);
+  }
+
+  public function wcGetCouponIdByCode(string $code): int {
+    return (int)wc_get_coupon_id_by_code($code);
   }
 
   /**
@@ -258,10 +277,6 @@ class Helper {
     $result = array_merge($includeCoupons, $this->wp->getPosts($args));
     $result = array_unique($result, SORT_REGULAR);
     return array_values($result);
-  }
-
-  public function wcGetPriceDecimalSeparator() {
-    return wc_get_price_decimal_separator();
   }
 
   public function getLatestCoupon(): ?string {
@@ -319,7 +334,7 @@ class Helper {
   public function getWoocommerceStoreConfig(): array {
     return [
       'precision' => $this->wcGetPriceDecimals(),
-      'decimalSeparator' => $this->wcGetPriceDecimalSeperator(),
+      'decimalSeparator' => $this->wcGetPriceDecimalSeparator(),
       'thousandSeparator' => $this->wcGetPriceThousandSeparator(),
       'code' => $this->getWoocommerceCurrency(),
       'symbol' => html_entity_decode($this->getWoocommerceCurrencySymbol(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401),
@@ -353,7 +368,9 @@ class Helper {
    * @return bool
    */
   public function isCheckoutRequest(): bool {
-    $requestUri = !empty($_SERVER['REQUEST_URI']) ? sanitize_text_field(wp_unslash($_SERVER['REQUEST_URI'])) : '';
+    $requestUri = is_string($_SERVER['REQUEST_URI'] ?? null) && $_SERVER['REQUEST_URI'] !== ''
+      ? sanitize_text_field(wp_unslash($_SERVER['REQUEST_URI']))
+      : '';
     $isRegularCheckout = is_checkout();
     $isBlockCheckout = WC()->is_rest_api_request()
       && (strpos($requestUri, 'wc/store/checkout') !== false || strpos($requestUri, 'wc/store/v1/checkout') !== false);

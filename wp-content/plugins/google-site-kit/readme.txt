@@ -2,9 +2,9 @@
 
 Contributors:      google
 Requires at least: 5.2
-Tested up to:      6.9
+Tested up to:      7.0
 Requires PHP:      7.4
-Stable tag:        1.175.0
+Stable tag:        1.178.0
 License:           Apache License 2.0
 License URI:       https://www.apache.org/licenses/LICENSE-2.0
 Tags:              google, search-console, analytics, adsense, pagespeed-insights
@@ -34,6 +34,9 @@ Site Kit shows key metrics and insights from different Google products:
 * **AdSense:** Keep track of how much your site is earning you.
 * **PageSpeed Insights:** See how your pages perform compared to other real-world sites. Improve performance with actionable tips from PageSpeed Insights.
 * **Tag Manager:** Use Site Kit to easily set up Tag Manager- no code editing required. Then, manage your tags in Tag Manager.
+* **Sign in with Google:** Allows visitors to sign up and log in to your site with their existing Google account.
+* **Reader Revenue Manager:** Helps you grow, retain, and engage your site visitors via subscription, contribution, newsletters, surveys, and custom prompts.
+* **Ads:** Get customers and sell more with targeted traffic from Google Ads.
 
 == Installation ==
 
@@ -109,31 +112,27 @@ Please create a new topic on our [WordPress.org support forum](https://wordpress
 
 == Changelog ==
 
-= 1.175.0 =
+= 1.178.0 =
 
 **Enhanced**
 
-* Fix bug that caused admins without module access to get emails for modules. See [#12200](https://github.com/google/site-kit-wp/issues/12200).
-* Prevent the shared Key Metrics feature tour and Audience Segmentation introductory overlay from appearing when the Welcome modal is present for secondary admins and view-only users. See [#12066](https://github.com/google/site-kit-wp/issues/12066).
-* Update the Email Reporting settings panel to show the preview state while data is being loaded. See [#12065](https://github.com/google/site-kit-wp/issues/12065).
-* Add GA event tracking for user interaction with the updated help menu. See [#12032](https://github.com/google/site-kit-wp/issues/12032).
-* Add GA event tracking for user interaction with the "connect more services" notification. See [#12029](https://github.com/google/site-kit-wp/issues/12029).
-* Improve user filtering and requests for subscriptions. See [#11889](https://github.com/google/site-kit-wp/issues/11889).
-* Include user analytics in email reporting feature. See [#11863](https://github.com/google/site-kit-wp/issues/11863).
-* Add support for conversion events in email reports. See [#11844](https://github.com/google/site-kit-wp/issues/11844).
-* Add in-email notices support for Email Reporting emails. See [#11843](https://github.com/google/site-kit-wp/issues/11843).
-* Send emails to site admins when entire batches of emails fail to send. See [#11841](https://github.com/google/site-kit-wp/issues/11841).
-* Add dark mode support to email templates. See [#11833](https://github.com/google/site-kit-wp/issues/11833).
-* Improve Reader Revenue Manager publication data synchronization efficiency. See [#10518](https://github.com/google/site-kit-wp/issues/10518).
-* Fix bug with ad blocking banner overlapping other elements on some screen sizes. See [#10415](https://github.com/google/site-kit-wp/issues/10415).
+* Improve copy in enhanced conversions notifications for Ads. See [#12535](https://github.com/google/site-kit-wp/issues/12535).
+* Improve copy in enhanced conversions notifications for Analytics. See [#12534](https://github.com/google/site-kit-wp/issues/12534).
+* Add the `pdfGeneration` feature flag for the upcoming feature. See [#12506](https://github.com/google/site-kit-wp/issues/12506).
+* Fix the browser back button on the Key Metrics setup screen, which does not navigate back to the Analytics setup screen. See [#12503](https://github.com/google/site-kit-wp/issues/12503).
+* Update the dashboard's Welcome modal for mobile viewports. See [#12462](https://github.com/google/site-kit-wp/issues/12462).
+* Add the new Site Goals section. See [#12423](https://github.com/google/site-kit-wp/issues/12423).
+* Improve enhanced conversion tracking for Easy Digital Downloads to include additional details. See [#11743](https://github.com/google/site-kit-wp/issues/11743).
+* Update "Customize settings" link after Sign in with Google setup. See [#11666](https://github.com/google/site-kit-wp/issues/11666).
+* Remove Ads Conversion ID entirely from Analytics module. See [#11303](https://github.com/google/site-kit-wp/issues/11303).
+
+**Changed**
+
+* Upgrade WordPress packages and TypeScript versions. See [#12058](https://github.com/google/site-kit-wp/issues/12058).
 
 **Fixed**
 
-* Fix styling for the "Start a feature tour" help menu item. See [#12240](https://github.com/google/site-kit-wp/issues/12240).
-* Fix the Search Console-only dashboard tour to include the "Activate Analytics" step based on whether the notification is present. See [#12235](https://github.com/google/site-kit-wp/issues/12235).
-* Adjust/improve email template styles. Props 04cb. See [#12202](https://github.com/google/site-kit-wp/issues/12202).
-* Fix Analytics account creation in the new setup flow. Props fresh3nough. See [#12194](https://github.com/google/site-kit-wp/issues/12194).
-* Fix positioning bug on some panels when using mobile viewports. See [#12053](https://github.com/google/site-kit-wp/issues/12053).
-* Scroll to Email reporting settings from the "Edit settings" link. See [#12025](https://github.com/google/site-kit-wp/issues/12025).
+* Prevent overlay notifications from appearing when the dashboard tour is active. See [#12478](https://github.com/google/site-kit-wp/issues/12478).
+* Fix Welcome Modal reappearing after dismissing and resubmitting Key Metrics answers. Props anishesg. See [#12477](https://github.com/google/site-kit-wp/issues/12477).
 
 [See changelog for all versions](https://raw.githubusercontent.com/google/site-kit-wp/main/changelog.txt).

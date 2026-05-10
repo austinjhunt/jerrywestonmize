@@ -379,10 +379,21 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
                 (int)$itemsPerPage
             );
 
-            $order = "ORDER BY id";
+            $allowedSortFields = [
+                'id', 'code', 'discount', 'deduction', 'limit', 'customerLimit',
+                'status', 'startDate', 'expirationDate', 'times_used',
+            ];
+            $field     = 'id';
+            $direction = 'ASC';
             if (!empty($criteria['sort'])) {
-                $order = "ORDER BY {$criteria['sort']['field']} {$criteria['sort']['order']}";
+                $candidateField     = (string)($criteria['sort']['field'] ?? '');
+                $candidateDirection = strtoupper((string)($criteria['sort']['order'] ?? 'ASC'));
+                $field              = in_array($candidateField, $allowedSortFields, true) ? $candidateField : 'id';
+                $direction          = $candidateDirection === 'DESC' ? 'DESC' : 'ASC';
             }
+            $order = $field === 'times_used'
+                ? "ORDER BY times_used {$direction}, c.id ASC"
+                : "ORDER BY c.`{$field}` {$direction}";
 
             $statement = $this->connection->prepare(
                 "SELECT
@@ -399,7 +410,8 @@ class CouponRepository extends AbstractRepository implements CouponRepositoryInt
                     c.startDate AS coupon_startDate,
                     c.allServices AS coupon_allServices,
                     c.allEvents AS coupon_allEvents,
-                    c.allPackages AS coupon_allPackages
+                    c.allPackages AS coupon_allPackages,
+                    COALESCE((SELECT COUNT(*) FROM {$this->bookingsTable} cb WHERE cb.couponId = c.id), 0) AS times_used
                 FROM {$this->table} c
                 {$where}
                 {$order}

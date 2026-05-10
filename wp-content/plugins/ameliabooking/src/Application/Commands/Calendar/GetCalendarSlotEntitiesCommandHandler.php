@@ -9,15 +9,10 @@ namespace AmeliaBooking\Application\Commands\Calendar;
 
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
-use AmeliaBooking\Application\Services\Bookable\BookableApplicationService;
 use AmeliaBooking\Domain\Services\Entity\EntityService;
 use AmeliaBooking\Domain\Services\TimeSlot\TimeSlotService;
 use AmeliaBooking\Application\Services\TimeSlot\TimeSlotService as ApplicationTimeSlotService;
-use AmeliaBooking\Domain\Collection\Collection;
-use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
-use AmeliaBooking\Domain\Entity\Booking\SlotsEntities;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
-use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use Exception;
 
 class GetCalendarSlotEntitiesCommandHandler extends CommandHandler
@@ -76,13 +71,6 @@ class GetCalendarSlotEntitiesCommandHandler extends CommandHandler
                 array_merge($props, ['serviceId' => $serviceId]),
                 $slotsEntities
             );
-
-            /** @var Service $service */
-            $service = $filteredSlotEntities->getServices()->getItem($serviceId);
-
-            if (!$service->getShow()->getValue()) {
-                continue;
-            }
 
             $startDateTime = DateTimeService::getCustomDateTimeObject($searchStartDateString);
 

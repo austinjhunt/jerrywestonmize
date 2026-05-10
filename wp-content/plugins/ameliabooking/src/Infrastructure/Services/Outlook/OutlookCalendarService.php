@@ -57,6 +57,7 @@ use Microsoft\Graph\Model\OnlineMeetingProviderType;
 use Microsoft\Graph\Model\OutlookGeoCoordinates;
 use Microsoft\Graph\Model\PhysicalAddress;
 use Microsoft\Graph\Model\SingleValueLegacyExtendedProperty;
+use Microsoft\Graph\Model\User;
 use WP_Error;
 
 /**
@@ -102,21 +103,22 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      */
     public function createAuthUrl($providerId)
     {
+        $params = [
+            'client_id'     => $this->outlookCalendarSettings['clientID'],
+            'response_type' => 'code',
+            'redirect_uri'  => !AMELIA_DEV
+                ? str_replace('http://', 'https://', $this->outlookCalendarSettings['redirectURI'])
+                : $this->outlookCalendarSettings['redirectURI'],
+            'scope'         => $providerId
+                ? 'offline_access calendars.readwrite'
+                : 'offline_access calendars.readwrite mail.send',
+            'response_mode' => 'query',
+            'state'         => 'amelia-outlook-calendar-auth-' . $providerId,
+            'prompt'        => 'select_account',
+        ];
+
         return add_query_arg(
-            urlencode_deep(
-                [
-                'client_id'     => $this->outlookCalendarSettings['clientID'],
-                'response_type' => 'code',
-                    'redirect_uri'  => !AMELIA_DEV
-                        ? str_replace('http://', 'https://', $this->outlookCalendarSettings['redirectURI'])
-                        : $this->outlookCalendarSettings['redirectURI'],
-                'scope'         => $providerId
-                    ? 'offline_access calendars.readwrite'
-                    : 'offline_access calendars.readwrite mail.send',
-                'response_mode' => 'query',
-                'state'         => 'amelia-outlook-calendar-auth-' . $providerId,
-                ]
-            ),
+            urlencode_deep($params),
             'https://login.microsoftonline.com/common/oauth2/v2.0/authorize'
         );
     }
@@ -138,7 +140,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                         'type'  => 'outlook'
                         ]
                     ),
-                    admin_url($id ? 'admin.php?page=wpamelia-employees' : 'admin.php?page=wpamelia-settings')
+                    admin_url($id ? 'admin.php?page=wpamelia-employees#/manage/' . $id . '/integrations/outlook-calendar' : 'admin.php?page=wpamelia-settings')
                 )
             );
         }
@@ -210,15 +212,35 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      */
     private function authorize($token)
     {
-        if ($expiredToken = $this->isAccessTokenExpired($token)) {
-            $token = $this->refreshToken($token);
+        try {
+            if (empty($token)) {
+                error_log('OutlookCalendar: Empty token provided to authorize()');
+                return '';
+            }
+
+            if ($expiredToken = $this->isAccessTokenExpired($token)) {
+                $token = $this->refreshToken($token);
+
+                if (empty($token)) {
+                    error_log('OutlookCalendar: Failed to refresh expired token');
+                    return '';
+                }
+            }
+
+            $tokenArray = json_decode($token, true);
+
+            if (!$tokenArray || !isset($tokenArray['access_token'])) {
+                error_log('OutlookCalendar: Invalid token format - missing access_token');
+                return '';
+            }
+
+            $this->graph->setAccessToken($tokenArray['access_token']);
+
+            return $expiredToken ? $token : '';
+        } catch (\Exception $e) {
+            error_log('OutlookCalendar: Error in authorize() - ' . $e->getMessage());
+            return '';
         }
-
-        $tokenArray = json_decode($token, true);
-
-        $this->graph->setAccessToken($tokenArray['access_token']);
-
-        return $expiredToken ? $token : '';
     }
 
     /**
@@ -271,26 +293,68 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
         }
 
         if ($this->isCalendarEnabled() && $provider->getOutlookCalendar()) {
-            if ($token = $this->authorize($provider->getOutlookCalendar()->getToken()->getValue())) {
-                /** @var ProviderApplicationService $providerApplicationService */
-                $providerApplicationService = $this->container->get('application.user.provider.service');
+            try {
+                $token = $provider->getOutlookCalendar()->getToken()->getValue();
 
-                $provider->setOutlookCalendar(
-                    OutlookCalendarFactory::create(
-                        [
-                            'id'         => $provider->getOutlookCalendar()->getId()->getValue(),
-                            'token'      => $token,
-                            'calendarId' => $provider->getOutlookCalendar()->getCalendarId()->getValue()
-                        ]
-                    )
-                );
+                if (empty($token)) {
+                    error_log('OutlookCalendar: Empty token for provider ' . $provider->getId()->getValue());
+                    return false;
+                }
 
-                $providerApplicationService->updateProviderOutlookCalendar($provider);
+                if ($authorizedToken = $this->authorize($token)) {
+                    /** @var ProviderApplicationService $providerApplicationService */
+                    $providerApplicationService = $this->container->get('application.user.provider.service');
+
+                    $provider->setOutlookCalendar(
+                        OutlookCalendarFactory::create(
+                            [
+                                'id'         => $provider->getOutlookCalendar()->getId()->getValue(),
+                                'token'      => $authorizedToken,
+                                'calendarId' => $provider->getOutlookCalendar()->getCalendarId()->getValue()
+                            ]
+                        )
+                    );
+
+                    $providerApplicationService->updateProviderOutlookCalendar($provider);
+                }
+                return true;
+            } catch (\Exception $e) {
+                error_log('OutlookCalendar: Failed to authorize provider ' . $provider->getId()->getValue() . ': ' . $e->getMessage());
+                return false;
             }
-            return true;
         }
 
         return false;
+    }
+
+    /**
+     * Get insertPendingAppointments
+     *
+     * @param Provider $provider
+     * @return bool
+     */
+    private function getInsertPendingAppointments($provider)
+    {
+        if ($provider && $provider->getOutlookCalendar()) {
+            return (bool)$provider->getOutlookCalendar()->getInsertPendingAppointments();
+        }
+
+        return (bool)($this->outlookCalendarSettings['insertPendingAppointments'] ?? false);
+    }
+
+    /**
+     * Get includeBufferTime setting
+     *
+     * @param Provider $provider
+     * @return bool
+     */
+    private function getIncludeBufferTime($provider)
+    {
+        if ($provider && $provider->getOutlookCalendar()) {
+            return (bool)$provider->getOutlookCalendar()->getIncludeBufferTime();
+        }
+
+        return (bool)($this->outlookCalendarSettings['includeBufferTimeOutlookCalendar'] ?? false);
     }
 
     /**
@@ -329,6 +393,39 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
         }
 
         return $calendars;
+    }
+
+    /**
+     * Get Outlook account user info
+     *
+     * @param Provider $provider
+     *
+     * @return array|null
+     * @throws GraphException
+     */
+    public function getUserInfo($provider)
+    {
+        if (!$provider || !$provider->getOutlookCalendar()) {
+            return null;
+        }
+
+        if (!$this->authorizeProvider($provider)) {
+            return null;
+        }
+
+        try {
+            $user = $this->graph->createRequest('GET', '/me')
+                ->setReturnType(User::class)
+                ->execute();
+
+            return [
+                'name'    => $user->getDisplayName(),
+                'email'   => $user->getMail() ?? $user->getUserPrincipalName(),
+            ];
+        } catch (GraphException $e) {
+            error_log('OutlookCalendar: Failed to fetch user info - ' . $e->getMessage());
+            return null;
+        }
     }
 
     /**
@@ -458,7 +555,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
             switch ($commandSlug) {
                 case AppointmentAddedEventHandler::APPOINTMENT_ADDED:
                 case BookingAddedEventHandler::BOOKING_ADDED:
-                    if ($appointmentStatus === 'pending' && $this->outlookCalendarSettings['insertPendingAppointments'] === false) {
+                    if ($appointmentStatus === 'pending' && $this->getInsertPendingAppointments($provider) === false) {
                         break;
                     }
 
@@ -478,7 +575,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                 case BookingRejectedEventHandler::BOOKING_REJECTED:
                     if (
                         $appointmentStatus === 'canceled' || $appointmentStatus === 'rejected' ||
-                        ($appointmentStatus === 'pending' && $this->outlookCalendarSettings['insertPendingAppointments'] === false)
+                        ($appointmentStatus === 'pending' && $this->getInsertPendingAppointments($provider) === false)
                     ) {
                         $this->deleteEvent($appointment, $provider);
                         break;
@@ -486,7 +583,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
 
                     if (
                         $appointmentStatus === 'approved' && $oldStatus && $oldStatus !== 'approved' &&
-                        $this->outlookCalendarSettings['insertPendingAppointments'] === false
+                        $this->getInsertPendingAppointments($provider) === false
                     ) {
                         $this->insertEvent($appointment, $provider);
                         break;
@@ -553,7 +650,11 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                             break;
                         case BookingAddedEventHandler::BOOKING_ADDED:
                         case BookingCanceledEventHandler::BOOKING_CANCELED:
-                            $this->updateEvent($event, $provider, $period);
+                            if (!$period->getOutlookCalendarEventId()) {
+                                $this->insertEvent($event, $provider, $period);
+                            } else {
+                                $this->updateEvent($event, $provider, $period);
+                            }
                             break;
                         case EventStatusUpdatedEventHandler::EVENT_STATUS_UPDATED:
                             if ($event->getStatus()->getValue() === 'rejected') {
@@ -686,12 +787,23 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
         if (!$this->isCalendarEnabled() && !$this->isAccessTokenSet()) {
             return;
         }
+
         if ($this->outlookCalendarSettings['removeOutlookCalendarBusySlots'] === true) {
+            /** @var ProviderRepository $providerRepository */
+            $providerRepository = $this->container->get('domain.users.providers.repository');
+
             foreach ($providers->keys() as $providerKey) {
                 /** @var Provider $provider */
                 $provider = $providers->getItem($providerKey);
 
-                if ($provider && $provider->getOutlookCalendar()) {
+                if ($provider && ($provider->getOutlookCalendar() || $provider->getOutlookCalendarId())) {
+                    $startDateTimeCopy = clone $startDateTime;
+                    $startDateTimeCopy->modify('-1 days');
+
+                    $endDateTimeCopy = clone $endDateTime;
+                    $endDateTimeCopy->modify('+1 days');
+
+                    // Process main calendar events
                     if (!array_key_exists($provider->getId()->getValue(), self::$providersOutlookEvents)) {
                         if (!$this->authorizeProvider($provider)) {
                             continue;
@@ -701,75 +813,281 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                             $provider->getOutlookCalendar()->getCalendarId()->getValue() :
                             $provider->getOutlookCalendarId()->getValue();
 
-                        $startDateTimeCopy = clone $startDateTime;
-
-                        $startDateTimeCopy->modify('-1 days');
-
-                        $endDateTimeCopy = clone $endDateTime;
-
-                        $endDateTimeCopy->modify('+1 days');
-
-                        $request = $this->graph->createCollectionRequest(
-                            'GET',
-                            sprintf(
-                                '/me/calendars/%s/calendarView?startDateTime=%s&endDateTime=%s&$expand=%s&$orderby=%s',
-                                $outlookCalendarId,
-                                rawurlencode($startDateTimeCopy->format('c')),
-                                rawurlencode($endDateTimeCopy->format('c')),
-                                rawurlencode(
-                                    'singleValueExtendedProperties($filter=id eq \'Integer ' .
-                                    self::GUID . ' Name appointmentId\')'
-                                ),
-                                rawurlencode('start/dateTime')
+                        try {
+                            $request = $this->graph->createCollectionRequest(
+                                'GET',
+                                sprintf(
+                                    '/me/calendars/%s/calendarView?startDateTime=%s&endDateTime=%s&$expand=%s&$orderby=%s',
+                                    $outlookCalendarId,
+                                    rawurlencode($startDateTimeCopy->format('c')),
+                                    rawurlencode($endDateTimeCopy->format('c')),
+                                    rawurlencode(
+                                        'singleValueExtendedProperties($filter=id eq \'Integer ' .
+                                        self::GUID . ' Name appointmentId\')'
+                                    ),
+                                    rawurlencode('start/dateTime')
+                                )
                             )
-                        )
-                            ->setReturnType(Event::class)
-                            ->setPageSize($this->outlookCalendarSettings['maximumNumberOfEventsReturned']);
+                                ->setReturnType(Event::class)
+                                ->setPageSize($this->outlookCalendarSettings['maximumNumberOfEventsReturned']);
 
-                        $events = $request->getPage();
-                        self::$providersOutlookEvents[$provider->getId()->getValue()] = $events;
+                            $events = $request->getPage();
+                            self::$providersOutlookEvents[$provider->getId()->getValue()] = $events;
+                        } catch (\Exception $e) {
+                            $errorMessage = $e->getMessage();
+                            $isNotFound = strpos($errorMessage, '404') !== false ||
+                                          strpos($errorMessage, 'ErrorItemNotFound') !== false;
+
+                            if ($isNotFound) {
+                                error_log('Outlook Calendar: Calendar not found (ID: ' . $outlookCalendarId .
+                                    ') for provider ' . $provider->getId()->getValue() .
+                                    '. The calendar may have been deleted or the connection needs to be re-established.');
+                            } else {
+                                error_log('Outlook Calendar: Failed to fetch events for calendar ' . $outlookCalendarId . ' - ' . $errorMessage);
+                            }
+
+                            self::$providersOutlookEvents[$provider->getId()->getValue()] = [];
+                            continue;
+                        }
                     } else {
                         $events = self::$providersOutlookEvents[$provider->getId()->getValue()];
                     }
 
-                    /** @var Event $event */
-                    foreach ($events as $event) {
-                        // Continue if event is set to "Free"
-                        if ($event->getShowAs() !== null && $event->getShowAs()->is(FreeBusyStatus::FREE)) {
-                            continue;
-                        }
+                    $this->processOutlookCalendarEvents($events, $provider, $excludeAppointmentId);
 
-                        $extendedProperties = $event->getSingleValueExtendedProperties();
-                        if ($extendedProperties !== null && !$this->outlookCalendarSettings['ignoreAmeliaEvents']) {
-                            foreach ($extendedProperties as $extendedProperty) {
-                                if (
-                                    $extendedProperty['id'] === 'Integer ' . self::GUID . ' Name appointmentId' &&
-                                    $excludeAppointmentId && (int)$extendedProperty['value'] === $excludeAppointmentId
-                                ) {
-                                    continue 2;
-                                }
-                            }
-                        }
+                    // Process blocked calendars events
+                    $this->processBlockedCalendarsEvents(
+                        $provider,
+                        $providerRepository,
+                        $startDateTimeCopy,
+                        $endDateTimeCopy,
+                        $excludeAppointmentId
+                    );
+                }
+            }
+        }
+    }
 
-                        $eventStartString = DateTimeService::getCustomDateTimeFromUtc($event->getStart()->getDateTime());
+    /**
+     * Process events from blocked calendars and add them as fake appointments
+     *
+     * @param Provider           $provider
+     * @param ProviderRepository $providerRepository
+     * @param \DateTime          $startDateTime
+     * @param \DateTime          $endDateTime
+     * @param int|null           $excludeAppointmentId
+     *
+     * @throws QueryExecutionException
+     * @throws InvalidArgumentException
+     */
+    private function processBlockedCalendarsEvents(
+        $provider,
+        $providerRepository,
+        $startDateTime,
+        $endDateTime,
+        $excludeAppointmentId
+    ) {
+        $providerId = $provider->getId()->getValue();
+        $cacheKey = $providerId . '_blocked';
 
-                        $eventEndString = DateTimeService::getCustomDateTimeFromUtc($event->getEnd()->getDateTime());
+        if (array_key_exists($cacheKey, self::$providersOutlookEvents)) {
+            return;
+        }
 
-                        /** @var Appointment $appointment */
-                        $appointment = AppointmentFactory::create(
-                            [
-                                'bookingStart'       => $eventStartString,
-                                'bookingEnd'         => $eventEndString,
-                                'notifyParticipants' => false,
-                                'serviceId'          => 0,
-                                'providerId'         => $provider->getId()->getValue(),
-                            ]
-                        );
+        $accounts = $providerRepository->getOutlookCalendarAccounts($providerId);
 
-                        $provider->getAppointmentList()->addItem($appointment);
+        $this->fetchBlockedCalendarEventsFromAccounts(
+            $accounts,
+            $startDateTime,
+            $endDateTime,
+            $provider,
+            $excludeAppointmentId
+        );
+
+        self::$providersOutlookEvents[$cacheKey] = true;
+    }
+
+    /**
+     * Fetch events from blocked calendars for each account
+     *
+     * @param array     $accounts
+     * @param \DateTime $startDateTime
+     * @param \DateTime $endDateTime
+     * @param Provider  $provider
+     * @param int|null  $excludeAppointmentId
+     *
+     * @throws InvalidArgumentException
+     */
+    private function fetchBlockedCalendarEventsFromAccounts(
+        $accounts,
+        $startDateTime,
+        $endDateTime,
+        $provider,
+        $excludeAppointmentId
+    ) {
+        foreach ($accounts as $account) {
+            if (empty($account['blockedCalendars']) || empty($account['token'])) {
+                continue;
+            }
+
+            $graph = $this->createGraphForAccount($account);
+
+            if ($graph === null) {
+                continue;
+            }
+
+            foreach ($account['blockedCalendars'] as $calendarId) {
+                try {
+                    $request = $graph->createCollectionRequest(
+                        'GET',
+                        sprintf(
+                            '/me/calendars/%s/calendarView?startDateTime=%s&endDateTime=%s&$expand=%s&$orderby=%s',
+                            $calendarId,
+                            rawurlencode($startDateTime->format('c')),
+                            rawurlencode($endDateTime->format('c')),
+                            rawurlencode(
+                                'singleValueExtendedProperties($filter=id eq \'Integer ' .
+                                self::GUID . ' Name appointmentId\')'
+                            ),
+                            rawurlencode('start/dateTime')
+                        )
+                    )
+                        ->setReturnType(Event::class)
+                        ->setPageSize($this->outlookCalendarSettings['maximumNumberOfEventsReturned']);
+
+                    $events = $request->getPage();
+                    $this->processOutlookCalendarEvents($events, $provider, $excludeAppointmentId);
+                } catch (\Exception $e) {
+                    error_log('OutlookCalendar: Error fetching events from blocked calendar ' . $calendarId . ': ' . $e->getMessage());
+                    continue;
+                }
+            }
+        }
+    }
+
+    /**
+     * Create a Graph instance for a given account
+     *
+     * @param array $account
+     *
+     * @return Graph|null
+     */
+    private function createGraphForAccount($account)
+    {
+        try {
+            $token = $account['token'];
+
+            if ($this->isAccessTokenExpired($token)) {
+                $token = $this->refreshTokenForAccount($token, $account['id']);
+
+                if ($token === null) {
+                    error_log('OutlookCalendar: Failed to refresh token for account ID ' . $account['id']);
+                    return null;
+                }
+            }
+
+            $tokenArray = json_decode($token, true);
+
+            $graph = new Graph();
+            $graph->setAccessToken($tokenArray['access_token']);
+
+            return $graph;
+        } catch (\Exception $e) {
+            error_log('OutlookCalendar: Error creating graph for account - ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Refresh token for a specific account and update it in the database
+     *
+     * @param string $token
+     * @param int    $accountId
+     *
+     * @return string|null
+     */
+    private function refreshTokenForAccount($token, $accountId)
+    {
+        try {
+            if ($this->isAccessTokenSet()) {
+                /** @var OutlookCalendarMiddlewareService $outlookCalendarMiddlewareService */
+                $outlookCalendarMiddlewareService = $this->container->get(
+                    'infrastructure.outlook.calendar.middleware.service'
+                );
+
+                $decodedToken = json_decode($token, true);
+
+                if (!isset($decodedToken['refresh_token'])) {
+                    return null;
+                }
+
+                $newToken = $outlookCalendarMiddlewareService->refreshAccessToken($decodedToken['refresh_token']);
+
+                if ($newToken === null) {
+                    return null;
+                }
+
+                $newTokenJson = json_encode($newToken);
+            } else {
+                $newTokenJson = $this->refreshToken($token);
+            }
+
+            /** @var ProviderRepository $providerRepository */
+            $providerRepository = $this->container->get('domain.users.providers.repository');
+            $providerRepository->updateOutlookCalendarAccountToken($accountId, $newTokenJson);
+
+            return $newTokenJson;
+        } catch (\Exception $e) {
+            error_log('OutlookCalendar: Error refreshing token for account - ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Process Outlook Calendar events and add them as fake appointments to block slots
+     *
+     * @param array    $events
+     * @param Provider $provider
+     * @param int|null $excludeAppointmentId
+     *
+     * @throws InvalidArgumentException
+     */
+    private function processOutlookCalendarEvents($events, $provider, $excludeAppointmentId)
+    {
+        /** @var Event $event */
+        foreach ($events as $event) {
+            if ($event->getShowAs() !== null && $event->getShowAs()->is(FreeBusyStatus::FREE)) {
+                continue;
+            }
+
+            $extendedProperties = $event->getSingleValueExtendedProperties();
+            if ($extendedProperties !== null && !$this->outlookCalendarSettings['ignoreAmeliaEvents']) {
+                foreach ($extendedProperties as $extendedProperty) {
+                    if (
+                        $extendedProperty['id'] === 'Integer ' . self::GUID . ' Name appointmentId' &&
+                        $excludeAppointmentId && (int)$extendedProperty['value'] === $excludeAppointmentId
+                    ) {
+                        continue 2;
                     }
                 }
             }
+
+            $eventStartString = DateTimeService::getCustomDateTimeFromUtc($event->getStart()->getDateTime());
+
+            $eventEndString = DateTimeService::getCustomDateTimeFromUtc($event->getEnd()->getDateTime());
+
+            /** @var Appointment $appointment */
+            $appointment = AppointmentFactory::create(
+                [
+                    'bookingStart'       => $eventStartString,
+                    'bookingEnd'         => $eventEndString,
+                    'notifyParticipants' => false,
+                    'serviceId'          => 0,
+                    'providerId'         => $provider->getId()->getValue(),
+                ]
+            );
+
+            $provider->getAppointmentList()->addItem($appointment);
         }
     }
 
@@ -813,15 +1131,37 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
 
         $eventId = $event->getId();
 
-        $outlookAttendees = new Attendee($this->getAttendees($appointment, $newProviders, $removeProviders));
+        $outlookAttendees = new Attendee($this->getAttendees($appointment, $provider, $newProviders, $removeProviders));
         $event->setAttendees($outlookAttendees);
+
+        $eventType = $period ? 'event' : 'appointment';
+
+        if ($provider->getOutlookCalendar()) {
+            $providerDescription = $provider->getOutlookCalendar()->getDescription();
+
+            if (
+                is_array($providerDescription) &&
+                array_key_exists($eventType, $providerDescription) &&
+                $providerDescription[$eventType] !== '' &&
+                $providerDescription[$eventType] !== null
+            ) {
+                $descriptionSettings = $providerDescription;
+            } else {
+                $descriptionSettings = [
+                    'appointment' => '',
+                    'event' => ''
+                ];
+            }
+        } else {
+            $descriptionSettings = $this->outlookCalendarSettings['description'];
+        }
 
         $body = $event->getBody();
 
         $joinUrl = $event->getOnlineMeeting() ? $event->getOnlineMeeting()->getJoinUrl() : null;
 
         $body->setContentType(new BodyType(BodyType::HTML));
-        $body->setContent($this->getDescriptionForInsert($placeholderService, $placeholderData, $period, $joinUrl));
+        $body->setContent($this->getDescriptionForInsert($placeholderService, $placeholderData, $period, $joinUrl, $descriptionSettings));
 
         $event = apply_filters('amelia_before_outlook_calendar_event_added_filter', $event, $appointment->toArray(), $provider->toArray());
         $event->setBody($body);
@@ -886,7 +1226,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
 
             $eventId = $entity->getOutlookCalendarEventId()->getValue();
 
-            $outlookAttendees = new Attendee($this->getAttendees($appointment, $newProviders, $removeProviders));
+            $outlookAttendees = new Attendee($this->getAttendees($appointment, $provider, $newProviders, $removeProviders));
             $event->setAttendees($outlookAttendees);
 
             $type = $period ? Entities::EVENT : Entities::APPOINTMENT;
@@ -897,7 +1237,29 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
 
             $placeholderData = $placeholderService->getPlaceholdersData($appointmentArray);
 
-            $description = $this->getDescription($placeholderService, $placeholderData, $type);
+            $eventType = $period ? 'event' : 'appointment';
+
+            if ($provider->getOutlookCalendar()) {
+                $providerDescription = $provider->getOutlookCalendar()->getDescription();
+
+                if (
+                    is_array($providerDescription) &&
+                    array_key_exists($eventType, $providerDescription) &&
+                    $providerDescription[$eventType] !== '' &&
+                    $providerDescription[$eventType] !== null
+                ) {
+                    $descriptionSettings = $providerDescription;
+                } else {
+                    $descriptionSettings = [
+                        'appointment' => '',
+                        'event' => ''
+                    ];
+                }
+            } else {
+                $descriptionSettings = $this->outlookCalendarSettings['description'];
+            }
+
+            $description = $this->getDescription($placeholderService, $placeholderData, $type, $descriptionSettings);
 
             $body = $this->getBodyForInsert($eventId, $description);
 
@@ -1083,13 +1445,35 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
             $end = clone $appointment->getBookingEnd()->getValue();
         }
 
-        if ($this->outlookCalendarSettings['includeBufferTimeOutlookCalendar'] === true && $type === Entities::APPOINTMENT) {
+        if ($this->getIncludeBufferTime($provider) === true && $type === Entities::APPOINTMENT) {
             $timeBefore = $appointment->getService()->getTimeBefore() ?
                 $appointment->getService()->getTimeBefore()->getValue() : 0;
             $timeAfter  = $appointment->getService()->getTimeAfter() ?
                 $appointment->getService()->getTimeAfter()->getValue() : 0;
             $start->modify('-' . $timeBefore . ' second');
             $end->modify('+' . $timeAfter . ' second');
+        }
+
+        $eventType = $period ? 'event' : 'appointment';
+
+        if ($provider->getOutlookCalendar()) {
+            $providerTitle = $provider->getOutlookCalendar()->getTitle();
+
+            if (
+                is_array($providerTitle) &&
+                array_key_exists($eventType, $providerTitle) &&
+                $providerTitle[$eventType] !== '' &&
+                $providerTitle[$eventType] !== null
+            ) {
+                $titleSettings = $providerTitle;
+            } else {
+                $titleSettings = [
+                    'appointment' => '%service_name%',
+                    'event' => '%event_name%'
+                ];
+            }
+        } else {
+            $titleSettings = $this->outlookCalendarSettings['title'];
         }
 
         $startDateTime = new DateTimeTimeZone();
@@ -1104,7 +1488,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
 
         $event->setSubject(
             $placeholderService->applyPlaceholders(
-                $period ? $this->outlookCalendarSettings['title']['event'] : $this->outlookCalendarSettings['title']['appointment'],
+                $period ? $titleSettings['event'] : $titleSettings['appointment'],
                 $placeholderData
             )
         );
@@ -1154,10 +1538,14 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
         return $event;
     }
 
-    private function getDescription($placeholderService, $placeholderData, $type)
+    private function getDescription($placeholderService, $placeholderData, $type, $descriptionSettings = null)
     {
+        if ($descriptionSettings === null) {
+            $descriptionSettings = $this->outlookCalendarSettings['description'];
+        }
+
         $description = $placeholderService->applyPlaceholders(
-            $type === 'event' ? $this->outlookCalendarSettings['description']['event'] : $this->outlookCalendarSettings['description']['appointment'],
+            $type === 'event' ? $descriptionSettings['event'] : $descriptionSettings['appointment'],
             $placeholderData
         );
         return str_replace("\n", '<br>', $description);
@@ -1167,10 +1555,11 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
         $placeholderService,
         $placeholderData,
         $period,
-        $joinUrl
+        $joinUrl,
+        $descriptionSettings = null
     ) {
         $type        = $period ? Entities::EVENT : Entities::APPOINTMENT;
-        $description = $this->getDescription($placeholderService, $placeholderData, $type);
+        $description = $this->getDescription($placeholderService, $placeholderData, $type, $descriptionSettings);
 
         // include the joinUrl in the body content to ensure the Join button remains visible
         return $joinUrl
@@ -1214,6 +1603,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      * Get All Attendees that need to be added in Outlook Calendar Event based on "addAttendees" Settings.
      *
      * @param Appointment|\AmeliaBooking\Domain\Entity\Booking\Event\Event $appointment
+     * @param Provider $provider
      *
      * @return array
      *
@@ -1222,7 +1612,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      * @throws ContainerException
      * @throws NotFoundException
      */
-    private function getAttendees($appointment, $newProviders = null, $removeProviders = null)
+    private function getAttendees($appointment, $provider, $newProviders = null, $removeProviders = null)
     {
         $attendees = [];
 
@@ -1273,7 +1663,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
 
                 if (
                     $bookingStatus === 'approved' ||
-                    ($bookingStatus === 'pending' && $this->outlookCalendarSettings['insertPendingAppointments'] === true)
+                    ($bookingStatus === 'pending' && $this->getInsertPendingAppointments($provider) === true)
                 ) {
                     $customer = $customerRepository->getById($booking->getCustomerId()->getValue());
 
@@ -1513,5 +1903,48 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                 ->execute();
         } catch (\Exception $e) {
         }
+    }
+
+    public function getCalendarListsForAccounts(array $accounts, $provider): array
+    {
+        foreach ($accounts as &$account) {
+            if (isset($account['token']) && $account['token']) {
+                try {
+                    $graph = $this->createGraphForAccount($account);
+
+                    if (!$graph) {
+                        $account['calendarList'] = [];
+                        continue;
+                    }
+
+                    $outlookCalendars = $graph
+                        ->createCollectionRequest('GET', '/me/calendars')
+                        ->setReturnType(Calendar::class)
+                        ->setPageSize(100)
+                        ->getPage();
+
+                    $calendarList = [];
+                    /** @var Calendar $outlookCalendar */
+                    foreach ($outlookCalendars as $outlookCalendar) {
+                        if ($outlookCalendar->getCanEdit()) {
+                            $calendarList[] = [
+                                'id'    => $outlookCalendar->getId(),
+                                'name'  => $outlookCalendar->getName(),
+                                'owner' => $outlookCalendar->getOwner() ? $outlookCalendar->getOwner()->getName() : '',
+                            ];
+                        }
+                    }
+
+                    $account['calendarList'] = $calendarList;
+                } catch (\Exception $e) {
+                    error_log('OutlookCalendar: Error fetching calendar list for account ' . $account['id'] . ': ' . $e->getMessage());
+                    $account['calendarList'] = [];
+                }
+            } else {
+                $account['calendarList'] = [];
+            }
+        }
+
+        return $accounts;
     }
 }

@@ -253,6 +253,7 @@ class Forminator_Poll_Admin extends Forminator_Admin_Module {
 				'formName'           => $name,
 				'version'            => FORMINATOR_VERSION,
 				'store_submissions'  => '1',
+				'field-image-size'   => 'custom',
 			),
 			$settings
 		);

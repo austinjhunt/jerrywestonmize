@@ -233,7 +233,7 @@ class Forminator_Phone extends Forminator_Field {
 
 			// If validation is not international, replace 1st space with plus.
 			if ( 'international' !== $format_check ) {
-				$value = 0 === strpos( $value, ' ' ) ? str_replace( ' ', '+', $value ) : trim( $value );
+				$value = 0 === strpos( $value, ' ' ) ? '+' . trim( $value ) : trim( $value );
 			}
 		}
 		$browser_autofill = self::get_property( 'browser_autofill', $field, 'disabled' );

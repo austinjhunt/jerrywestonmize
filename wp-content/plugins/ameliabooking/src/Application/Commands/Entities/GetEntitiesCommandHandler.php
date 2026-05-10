@@ -110,6 +110,8 @@ class GetEntitiesCommandHandler extends CommandHandler
         /** @var SettingsService $settingsDS */
         $settingsDS = $this->container->get('domain.settings.service');
 
+        $rolesSettings = $settingsDS->getCategorySettings('roles');
+
         /** Events */
         if (in_array(Entities::EVENTS, $params['types'], true)) {
             /** @var EventApplicationService $eventAS */
@@ -215,7 +217,14 @@ class GetEntitiesCommandHandler extends CommandHandler
                         break;
 
                     case (AbstractUser::USER_ROLE_PROVIDER):
-                        $resultData['customers'] = $providerAS->getAllowedCustomers($currentUser)->toArray();
+                        /** @var Collection $customers */
+                        $customers = empty($rolesSettings['allowReadAllCustomers'])
+                            ? $userRepo->getProviderAllowedCustomers(
+                                $currentUser->getId()->getValue()
+                            )
+                            : $userRepo->getAllWithAllowedBooking();
+
+                        $resultData['customers'] = $customers->toArray();
 
                         break;
 
@@ -298,10 +307,16 @@ class GetEntitiesCommandHandler extends CommandHandler
             $calendarList = [];
 
             if ($googleCalendar) {
-                $googleCalendarMiddlewareService = $this->container->get('infrastructure.google.calendar.middleware.service');
+                try {
+                    $googleCalendarMiddlewareService = $this->container->get('infrastructure.google.calendar.middleware.service');
 
-                $accessToken = json_decode($googleCalendar, true);
-                $calendarList = $googleCalendarMiddlewareService->getCalendarList($accessToken);
+                    $accessToken = json_decode($googleCalendar, true);
+                    if (is_array($accessToken)) {
+                        $calendarList = $googleCalendarMiddlewareService->getCalendarList($accessToken);
+                    }
+                } catch (\Throwable $e) {
+                    $calendarList = [];
+                }
             }
 
             foreach ($resultData['employees'] as &$employee) {
@@ -316,10 +331,16 @@ class GetEntitiesCommandHandler extends CommandHandler
             $calendarList = [];
 
             if ($outlookCalendar) {
-                $outlookCalendarMiddlewareService = $this->container->get('infrastructure.outlook.calendar.middleware.service');
+                try {
+                    $outlookCalendarMiddlewareService = $this->container->get('infrastructure.outlook.calendar.middleware.service');
 
-                $accessToken = json_decode($outlookCalendar, true);
-                $calendarList = $outlookCalendarMiddlewareService->getCalendarList($accessToken);
+                    $accessToken = json_decode($outlookCalendar, true);
+                    if (is_array($accessToken)) {
+                        $calendarList = $outlookCalendarMiddlewareService->getCalendarList($accessToken);
+                    }
+                } catch (\Throwable $e) {
+                    $calendarList = [];
+                }
             }
 
             foreach ($resultData['employees'] as &$employee) {

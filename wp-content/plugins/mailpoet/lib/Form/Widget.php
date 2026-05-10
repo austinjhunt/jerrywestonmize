@@ -32,6 +32,9 @@ class Widget extends \WP_Widget {
   /** @var CustomFonts */
   private $customFonts;
 
+  /** @var SettingsController */
+  private $settings;
+
   public function __construct() {
     parent::__construct(
       'mailpoet_form',
@@ -41,12 +44,13 @@ class Widget extends \WP_Widget {
     $this->wp = new WPFunctions;
 
     $this->renderer = (new RendererFactory())->getRenderer();
-    $this->assetsController = new AssetsController($this->wp, $this->renderer, SettingsController::getInstance());
+    $this->settings = SettingsController::getInstance();
+    $this->assetsController = new AssetsController($this->wp, $this->renderer, $this->settings);
     $this->formRenderer = ContainerWrapper::getInstance()->get(FormRenderer::class);
     $this->formsRepository = ContainerWrapper::getInstance()->get(FormsRepository::class);
     $this->customFonts = ContainerWrapper::getInstance()->get(CustomFonts::class);
 
-    if (!is_admin()) {
+    if (!$this->wp->isAdmin()) {
       $this->setupIframe();
     } else {
       WPFunctions::get()->addAction('widgets_admin_page', [
@@ -57,7 +61,7 @@ class Widget extends \WP_Widget {
   }
 
   public function setupIframe() {
-    $formId = (isset($_GET['mailpoet_form_iframe']) ? (int)$_GET['mailpoet_form_iframe'] : 0);
+    $formId = isset($_GET['mailpoet_form_iframe']) && is_numeric($_GET['mailpoet_form_iframe']) ? (int)$_GET['mailpoet_form_iframe'] : 0;
     if (!$formId || !$this->formsRepository->findOneById($formId)) return;
 
     $formHtml = $this->widget(
@@ -77,7 +81,7 @@ class Widget extends \WP_Widget {
       $languageAttributes[] = 'dir="rtl"';
     }
 
-    if (get_option('html_type') === 'text/html') {
+    if ($this->wp->getOption('html_type') === 'text/html') {
       $languageAttributes[] = sprintf('lang="%s"', WPFunctions::get()->getBloginfo('language'));
     }
 
@@ -93,6 +97,7 @@ class Widget extends \WP_Widget {
       'mailpoet_form' => [
         'ajax_url' => WPFunctions::get()->adminUrl('admin-ajax.php', 'absolute'),
         'is_rtl' => $isRtl,
+        'collect_subscriber_timezones' => $this->settings->isSettingEnabled('collect_subscriber_timezones.enabled'),
       ],
       'fonts_link' => $this->customFonts->generateHtmlCustomFontLink(),
       'mailpoet_public_css_url' => Env::$assetsUrl . '/dist/css/' . $this->renderer->getCssAsset('mailpoet-public.css'),
@@ -171,7 +176,6 @@ class Widget extends \WP_Widget {
   }
 
   /**
-   * @phpstan-ignore-next-line $args are not passed to parent and our rendering is custom so it is ok that $args doesn't match parent's $arg shape.
    * @param array{form?: int|string, form_type?: string, before_widget?: string, after_widget?: string, before_title?: string, after_title?: string } $args Widget arguments.
    * Output the widget itself.
    */
@@ -229,7 +233,8 @@ class Widget extends \WP_Widget {
     $settings = $form->getSettings();
 
     if (!empty($body) && is_array($settings)) {
-      $formId = $this->id_base . '_' . $form->getId(); // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+      $idBase = is_string($this->id_base) ? $this->id_base : 'mailpoet_form'; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+      $formId = $idBase . '_' . $form->getId();
       $data = [
         'form_html_id' => $formId,
         'form_id' => $form->getId(),
@@ -246,14 +251,14 @@ class Widget extends \WP_Widget {
 
       // (POST) non ajax success/error variables
       $data['success'] = (
-        (isset($_GET['mailpoet_success']))
-        &&
-        ((int)$_GET['mailpoet_success'] === $form->getId())
+        isset($_GET['mailpoet_success'])
+        && is_numeric($_GET['mailpoet_success'])
+        && (int)$_GET['mailpoet_success'] === $form->getId()
       );
       $data['error'] = (
-        (isset($_GET['mailpoet_error']))
-        &&
-        ((int)$_GET['mailpoet_error'] === $form->getId())
+        isset($_GET['mailpoet_error'])
+        && is_numeric($_GET['mailpoet_error'])
+        && (int)$_GET['mailpoet_error'] === $form->getId()
       );
 
       // generate security token

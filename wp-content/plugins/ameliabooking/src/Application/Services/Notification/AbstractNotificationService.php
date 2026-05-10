@@ -317,12 +317,17 @@ abstract class AbstractNotificationService
                     }
                     // Notify each customer from customer bookings
                     foreach (array_keys($appointmentArray['bookings']) as $bookingKey) {
-                        $this->sendNotification(
-                            $appointmentArray,
-                            $customerNotification,
-                            true,
-                            $bookingKey
-                        );
+                        if (
+                            $appointmentArray['bookings'][$bookingKey]['status'] === BookingStatus::APPROVED ||
+                            $appointmentArray['bookings'][$bookingKey]['status'] === BookingStatus::PENDING
+                        ) {
+                            $this->sendNotification(
+                                $appointmentArray,
+                                $customerNotification,
+                                true,
+                                $bookingKey
+                            );
+                        }
                     }
                 }
             }
@@ -361,6 +366,10 @@ abstract class AbstractNotificationService
      */
     public function sendAppointmentUpdatedNotifications($appointmentArray, $appointmentRescheduled = null)
     {
+        if (!empty($appointmentArray['providerId'])) {
+            $appointmentArray['assignedEmployeeId'] = $appointmentArray['providerId'];
+        }
+
         // Notify customers
         if ($appointmentArray['notifyParticipants'] && !$appointmentRescheduled) {
 

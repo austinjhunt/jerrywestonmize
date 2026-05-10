@@ -548,7 +548,7 @@ class Forminator_Upload extends Forminator_Field {
 					if ( $use_library && 'submit' === $upload_type ) {
 						$upload_id = wp_insert_attachment(
 							array(
-								'guid'           => $file_path,
+								'guid'           => $file_url,
 								'post_mime_type' => $file_mime,
 								'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
 								'post_content'   => '',
@@ -675,7 +675,7 @@ class Forminator_Upload extends Forminator_Field {
 							if ( $use_library ) {
 								$upload_id = wp_insert_attachment(
 									array(
-										'guid'           => $file_path,
+										'guid'           => $file_url,
 										'post_mime_type' => $upload['mime_type'],
 										'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
 										'post_content'   => '',
@@ -923,7 +923,7 @@ class Forminator_Upload extends Forminator_Field {
 				if ( $use_library ) {
 					$upload_id = wp_insert_attachment(
 						array(
-							'guid'           => $file_path,
+							'guid'           => $file_url,
 							'post_mime_type' => $file_mime,
 							'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
 							'post_content'   => '',

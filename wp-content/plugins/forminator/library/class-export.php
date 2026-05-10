@@ -148,13 +148,22 @@ class Forminator_Export {
 		 * @since 1.27.0
 		 */
 		do_action( 'forminator_before_manual_export_download', $form_id, $type );
+		$delimiter = $this->forminator_get_csv_export_delimiter();
+
+		// Clean any output that may have been generated (e.g., PHP notices, warnings, or debug output).
+		if ( ob_get_level() > 0 ) {
+			ob_end_clean();
+		}
+
+		// Start fresh output buffering for CSV generation.
+		ob_start();
 
 		$fp = fopen( 'php://output', 'w' ); // phpcs:disable WordPress.WP.AlternativeFunctions.file_system_read_fopen -- disable phpcs because it writes memory
-		ob_start();
 		foreach ( $data as $fields ) {
 			$fields = self::get_formatted_csv_fields( $fields );
-			fputcsv( $fp, $fields, ',', '"', '\\' );
+			fputcsv( $fp, $fields, $delimiter, '"', '\\' );
 		}
+
 		$filename = sanitize_title( esc_html__( 'forminator', 'forminator' ) ) . '-' . sanitize_title( $model->name ) . '-' . gmdate( 'ymdHis' ) . '.csv';
 
 		$output = ob_get_clean();
@@ -179,14 +188,15 @@ class Forminator_Export {
 		$action = Forminator_Core::sanitize_text_field( 'action' );
 		if ( 'forminator_export_entries' === $action ) {
 			$nonce = Forminator_Core::sanitize_text_field( '_forminator_nonce' );
-			if ( ! $nonce || ! wp_verify_nonce( $nonce, 'forminator_export' ) ) {
 
-				$redirect = add_query_arg(
-					array(
-						'err_msg' => rawurlencode( esc_html__( 'Invalid request, you are not allowed to do that action.', 'forminator' ) ),
-					)
-				);
+			$redirect = add_query_arg(
+				array(
+					'err_msg' => rawurlencode( esc_html__( 'Invalid request, you are not allowed to do that action.', 'forminator' ) ),
+				)
+			);
 
+			if ( ! $nonce || ! wp_verify_nonce( $nonce, 'forminator_export' )
+					|| ! forminator_is_user_allowed( 'forminator-entries' ) ) {
 				wp_safe_redirect( $redirect );
 				exit;
 			}
@@ -773,8 +783,10 @@ class Forminator_Export {
 						$meta_value
 					);
 				}
-				$meta_value                     = Forminator_Form_Entry_Model::meta_value_to_string( $mapper['type'], $meta_value, false, PHP_INT_MAX, $mapper['field'] );
-				$temp_data[ $mapper['type'] ][] = $meta_value;
+				// Convert to string first, then apply draft label conversion if needed.
+				$value                          = Forminator_Form_Entry_Model::meta_value_to_string( $mapper['type'], $meta_value, false, PHP_INT_MAX, $mapper['field'] );
+				$value                          = forminator_maybe_get_draft_field_labels( $entry, $mapper['meta_key'], $mapper['type'], $meta_value, $value );
+				$temp_data[ $mapper['type'] ][] = $value;
 			} else {
 
 				// sub_metas available.
@@ -870,14 +882,15 @@ class Forminator_Export {
 			return false;
 		}
 
-		$output = array();
+		$output    = array();
+		$delimiter = $this->forminator_get_csv_export_delimiter();
 
 		foreach ( $fields as $value ) {
 			$f = fopen( 'php://memory', 'r+' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- fputcsv() works with file pointers and the WordPress filesystem API does not directly support working with file pointers.
 
 			$value = self::get_formatted_csv_fields( $value );
 
-			$put = fputcsv( $f, $value, ',', '"', '\\' );
+			$put = fputcsv( $f, $value, $delimiter, '"', '\\' );
 
 			if ( false === $put ) {
 				return false;
@@ -1889,5 +1902,13 @@ class Forminator_Export {
 		}
 
 		return $data;
+	}
+	/**
+	 * CSV Export Separator.
+	 *
+	 * @since 1.53.0
+	 */
+	private function forminator_get_csv_export_delimiter() {
+		return apply_filters( 'forminator_csv_export_delimiter', ',' );
 	}
 }

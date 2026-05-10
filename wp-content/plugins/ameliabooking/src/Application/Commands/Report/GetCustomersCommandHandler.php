@@ -10,15 +10,19 @@ namespace AmeliaBooking\Application\Commands\Report;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
-use AmeliaBooking\Application\Services\User\ProviderApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
+use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Report\ReportServiceInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
+use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
+use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
+use Exception;
+use Slim\Exception\ContainerValueNotFoundException;
 
 /**
  * Class GetCustomersCommandHandler
@@ -31,11 +35,11 @@ class GetCustomersCommandHandler extends CommandHandler
      * @param GetCustomersCommand $command
      *
      * @return CommandResult
-     * @throws \Slim\Exception\ContainerValueNotFoundException
+     * @throws ContainerValueNotFoundException
      * @throws AccessDeniedException
-     * @throws \AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException
-     * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException
-     * @throws \Exception
+     * @throws InvalidArgumentException
+     * @throws QueryExecutionException
+     * @throws Exception
      */
     public function handle(GetCustomersCommand $command)
     {
@@ -43,6 +47,8 @@ class GetCustomersCommandHandler extends CommandHandler
             throw new AccessDeniedException('You are not allowed to read customers.');
         }
 
+        /** @var UserRepository $userRepository */
+        $userRepository = $this->container->get('domain.users.repository');
         /** @var CustomerRepository $customerRepository */
         $customerRepository = $this->container->get('domain.users.customers.repository');
         /** @var ReportServiceInterface $reportService */
@@ -50,23 +56,33 @@ class GetCustomersCommandHandler extends CommandHandler
         /** @var SettingsService $settingsDS */
         $settingsDS = $this->container->get('domain.settings.service');
 
+        $rolesSettings = $settingsDS->getCategorySettings('roles');
+
         $result = new CommandResult();
 
         $this->checkMandatoryFields($command);
 
         $params = $command->getField('params');
 
-        if (!$command->getPermissionService()->currentUserCanReadOthers(Entities::CUSTOMERS)) {
-            /** @var ProviderApplicationService $providerAS */
-            $providerAS = $this->container->get('application.user.provider.service');
+        /** @var AbstractUser $currentUser */
+        $currentUser = $this->container->get('logged.in.user');
 
-            /** @var AbstractUser $currentUser */
-            $currentUser = $this->container->get('logged.in.user');
-
+        if (
+            $currentUser !== null &&
+            $currentUser->getType() === Entities::PROVIDER &&
+            empty($rolesSettings['allowReadAllCustomers'])
+        ) {
             /** @var Collection $providerCustomers */
-            $providerCustomers = $providerAS->getAllowedCustomers($currentUser);
+            $providerCustomers = $userRepository->getProviderAllowedCustomers(
+                $currentUser->getId()->getValue()
+            );
 
-            $params['customers'] = array_column($providerCustomers->toArray(), 'id');
+            $params['customers'] = empty($params['customers'])
+                ? $providerCustomers->keys()
+                : array_intersect(
+                    array_map('intval', $params['customers']),
+                    $providerCustomers->keys()
+                );
         }
 
         $customers = $customerRepository->getFiltered($params, null);

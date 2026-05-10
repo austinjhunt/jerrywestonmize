@@ -41,6 +41,7 @@ class WP {
   /** @var SubscriberChangesNotifier */
   private $subscriberChangesNotifier;
 
+  /** @var SubscriberSegmentRepository */
   private $subscriberSegmentRepository;
 
   /** @var Validator */
@@ -107,8 +108,11 @@ class WP {
   }
 
   private function deleteSubscriber(SubscriberEntity $subscriber): void {
-    $this->subscribersRepository->remove($subscriber);
-    $this->subscribersRepository->flush();
+    $this->entityManager->wrapInTransaction(function() use ($subscriber): void {
+      $this->subscriberSegmentRepository->deleteAllBySubscriber($subscriber);
+      $this->subscribersRepository->remove($subscriber);
+      $this->subscribersRepository->flush();
+    });
   }
 
   /**
@@ -135,7 +139,9 @@ class WP {
     $signupConfirmationEnabled = SettingsController::getInstance()->get('signup_confirmation.enabled');
     $status = $signupConfirmationEnabled ? SubscriberEntity::STATUS_UNCONFIRMED : SubscriberEntity::STATUS_SUBSCRIBED;
     // we want to mark a new subscriber as unsubscribe when the checkbox from registration is unchecked
-    if (isset($_POST['mailpoet']['subscribe_on_register_active']) && (bool)$_POST['mailpoet']['subscribe_on_register_active'] === true) {
+    // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- type narrowing only, value is read as bool
+    $mailpoetPost = isset($_POST['mailpoet']) && is_array($_POST['mailpoet']) ? $_POST['mailpoet'] : [];
+    if (isset($mailpoetPost['subscribe_on_register_active']) && (bool)$mailpoetPost['subscribe_on_register_active'] === true) {
       $status = SubscriberEntity::STATUS_UNSUBSCRIBED;
     }
 
@@ -185,10 +191,37 @@ class WP {
       return;
     }
 
+    // When updating an existing subscriber's email, remove any other subscriber
+    // that already holds the new email to avoid a unique constraint violation.
+    // This can happen when a WP user registers with email A, checks out with
+    // email B (creating a second subscriber), then changes their account email
+    // from A to B.
+    // Uses bulkDelete() to properly clean up related data (segments, tags,
+    // custom fields) and to restrict deletion to safe duplicates (non-WP,
+    // non-WooCommerce subscribers).
+    if ($subscriber !== null && $subscriber->getEmail() !== $data['email']) {
+      $existingSubscriber = $this->subscribersRepository->findOneBy(['email' => $data['email']]);
+      if ($existingSubscriber !== null && $existingSubscriber->getId() !== $subscriber->getId()) {
+        $duplicateId = $existingSubscriber->getId();
+        $this->entityManager->detach($existingSubscriber);
+        $deletedCount = $this->subscribersRepository->bulkDelete([$duplicateId]);
+        if ($deletedCount === 0) {
+          // The duplicate is a WP user or WooCommerce customer and cannot be
+          // safely removed. Skip the email update to avoid a constraint violation.
+          $logger = LoggerFactory::getInstance()->getLogger();
+          $logger->warning(
+            'Cannot update subscriber email: duplicate subscriber is a WP user or WooCommerce customer',
+            ['subscriber_id' => $subscriber->getId(), 'duplicate_id' => $duplicateId, 'email' => $data['email']]
+          );
+          return;
+        }
+      }
+    }
+
     try {
       $subscriber = $this->createOrUpdateSubscriber($data, $subscriber);
     } catch (\Exception $e) {
-      return; // fails silently as this was the behavior of this methods before the Doctrine refactor.
+      return; // fails silently as this was the behavior before the Doctrine refactor.
     }
 
     // add subscriber to the WP Users segment
@@ -219,6 +252,9 @@ class WP {
       /** @var ConfirmationEmailMailer $confirmationEmailMailer */
       $confirmationEmailMailer = ContainerWrapper::getInstance()->get(ConfirmationEmailMailer::class);
       try {
+        // Per-list confirmation settings are not resolved here because this path
+        // subscribes to the WordPress Users segment (TYPE_WP_USERS),
+        // which does not support custom confirmation overrides.
         $confirmationEmailMailer->sendConfirmationEmailOnce($subscriber);
       } catch (\Exception $e) {
         // ignore errors

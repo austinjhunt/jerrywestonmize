@@ -32,7 +32,7 @@ use function pack;
  *
  * @package ParagonIE\ConstantTime
  */
-abstract class Base32Hex extends \Google\Site_Kit_Dependencies\ParagonIE\ConstantTime\Base32
+abstract class Base32Hex extends Base32
 {
     /**
      * Uses bitwise operators instead of table-lookups to turn 5-bit integers
@@ -41,7 +41,7 @@ abstract class Base32Hex extends \Google\Site_Kit_Dependencies\ParagonIE\Constan
      * @param int $src
      * @return int
      */
-    protected static function decode5Bits(int $src) : int
+    protected static function decode5Bits(int $src): int
     {
         $ret = -1;
         // if ($src > 0x30 && $src < 0x3a) ret += $src - 0x2e + 1; // -47
@@ -57,7 +57,7 @@ abstract class Base32Hex extends \Google\Site_Kit_Dependencies\ParagonIE\Constan
      * @param int $src
      * @return int
      */
-    protected static function decode5BitsUpper(int $src) : int
+    protected static function decode5BitsUpper(int $src): int
     {
         $ret = -1;
         // if ($src > 0x30 && $src < 0x3a) ret += $src - 0x2e + 1; // -47
@@ -73,12 +73,12 @@ abstract class Base32Hex extends \Google\Site_Kit_Dependencies\ParagonIE\Constan
      * @param int $src
      * @return string
      */
-    protected static function encode5Bits(int $src) : string
+    protected static function encode5Bits(int $src): string
     {
         $src += 0x30;
         // if ($src > 0x39) $src += 0x61 - 0x3a; // 39
         $src += 0x39 - $src >> 8 & 39;
-        return \pack('C', $src);
+        return pack('C', $src);
     }
     /**
      * Uses bitwise operators instead of table-lookups to turn 8-bit integers
@@ -89,11 +89,11 @@ abstract class Base32Hex extends \Google\Site_Kit_Dependencies\ParagonIE\Constan
      * @param int $src
      * @return string
      */
-    protected static function encode5BitsUpper(int $src) : string
+    protected static function encode5BitsUpper(int $src): string
     {
         $src += 0x30;
         // if ($src > 0x39) $src += 0x41 - 0x3a; // 7
         $src += 0x39 - $src >> 8 & 7;
-        return \pack('C', $src);
+        return pack('C', $src);
     }
 }

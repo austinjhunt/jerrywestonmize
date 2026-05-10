@@ -174,11 +174,10 @@ class SettingsStorage implements SettingsStorageInterface
                 'timeSlotLength'                            => $this->getSetting('general', 'timeSlotLength'),
                 'serviceDurationAsSlot'                     => $this->getSetting('general', 'serviceDurationAsSlot'),
                 'defaultAppointmentStatus'                  => $this->getSetting('general', 'defaultAppointmentStatus'),
-                'gMapApiKey'                                => $this->getSetting('general', 'gMapApiKey'),
+                'gMapApiKey'                                => !empty($this->getSetting('general', 'gMapApiKey')),
                 'googleClientId'                            => $this->getSetting('googleCalendar', 'clientID'),
-                'googleAccessToken'                         => $this->getSetting('googleCalendar', 'accessToken'),
+                'googleAccessToken'                         => !empty($this->getSetting('googleCalendar', 'accessToken')),
                 'googleAccountData'                         => $this->getSetting('googleCalendar', 'googleAccountData'),
-                'outlookAccessToken'                        => $this->getSetting('outlookCalendar', 'accessToken'),
                 'outlookAccountData'                        => $this->getSetting('outlookCalendar', 'outlookAccountData'),
                 'addToCalendar'                             => $this->getSetting('general', 'addToCalendar'),
                 'requiredPhoneNumberField'                  => $this->getSetting('general', 'requiredPhoneNumberField'),
@@ -250,7 +249,7 @@ class SettingsStorage implements SettingsStorageInterface
                     $this->getSetting('featuresIntegrations', 'googleCalendar')
                 ),
                 'googleMeetEnabled' => $this->getSetting('googleCalendar', 'enableGoogleMeet'),
-                'accessToken' => $this->getSetting('googleCalendar', 'accessToken'),
+                'accessToken' => !empty($this->getSetting('googleCalendar', 'accessToken')),
             ],
             'outlookCalendar'        => [
                 'enabled'               =>
@@ -267,10 +266,16 @@ class SettingsStorage implements SettingsStorageInterface
                         $this->getSetting('featuresIntegrations', 'outlookCalendar')
                     ),
                 'microsoftTeamsEnabled' => $this->getSetting('outlookCalendar', 'enableMicrosoftTeams'),
-                'accessToken' => $this->getSetting('outlookCalendar', 'accessToken'),
+                'accessToken' => !empty($this->getSetting('outlookCalendar', 'accessToken')),
             ],
-            'appleCalendar'          =>
-            $this->getSetting('appleCalendar', 'clientID') && $this->getSetting('appleCalendar', 'clientSecret'),
+            'appleCalendar'          => [
+                'enabled' => Licence\Licence::isFeatureEnabledWithLicense(
+                    'appleCalendar',
+                    $this->getSetting('featuresIntegrations', 'appleCalendar')
+                ) &&
+                    $this->getSetting('appleCalendar', 'clientID') && $this->getSetting('appleCalendar', 'clientSecret'),
+
+            ],
             'zoom'                   => [
                 'enabled' => (
                     Licence\Licence::isFeatureEnabledWithLicense(
@@ -355,14 +360,13 @@ class SettingsStorage implements SettingsStorageInterface
                 'bccEmail'            => $this->getSetting('notifications', 'bccEmail'),
                 'bccSms'              => $this->getSetting('notifications', 'bccSms'),
                 'smsBalanceEmail'     => $this->getSetting('notifications', 'smsBalanceEmail'),
-                'whatsAppPhoneID'     => $this->getSetting('notifications', 'whatsAppPhoneID'),
-                'whatsAppAccessToken' => $this->getSetting('notifications', 'whatsAppAccessToken'),
-                'whatsAppBusinessID'  => $this->getSetting('notifications', 'whatsAppBusinessID'),
-                'whatsAppLanguage'    => $this->getSetting('notifications', 'whatsAppLanguage'),
                 'whatsAppEnabled'     => Licence\Licence::isFeatureEnabledWithLicense(
                     'whatsapp',
                     $this->getSetting('featuresIntegrations', 'whatsapp')
-                ),
+                ) &&
+                !empty($this->getSetting('notifications', 'whatsAppPhoneID')) &&
+                !empty($this->getSetting('notifications', 'whatsAppAccessToken')) &&
+                !empty($this->getSetting('notifications', 'whatsAppBusinessID')),
             ],
             'payments'               => [
                 'currency'                   => $this->getSetting('payments', 'symbol'),
@@ -426,9 +430,6 @@ class SettingsStorage implements SettingsStorageInterface
                     'clientLiveId'   => $this->getSetting('payments', 'square')['clientLiveId'],
                     'clientTestId'   => $this->getSetting('payments', 'square')['clientTestId'],
                     'testMode'       => $this->getSetting('payments', 'square')['testMode'],
-                    'accessTokenSet' =>
-                    !empty($this->getSetting('payments', 'square')['accessToken']) &&
-                        !empty($this->getSetting('payments', 'square')['accessToken']['access_token']),
                     'locationId'     => $this->getSetting('payments', 'square')['locationId']
                 ],
                 'razorpay'                   => [
@@ -436,10 +437,6 @@ class SettingsStorage implements SettingsStorageInterface
                 ],
                 'barion'                     => [
                     'enabled'       => $this->getSetting('payments', 'barion')['enabled'],
-                    'sandboxMode'   => $this->getSetting('payments', 'barion')['sandboxMode'],
-                    'livePOSKey'    => $this->getSetting('payments', 'barion')['livePOSKey'],
-                    'sandboxPOSKey' => $this->getSetting('payments', 'barion')['sandboxPOSKey'],
-                    'payeeEmail'    => $this->getSetting('payments', 'barion')['payeeEmail'],
                 ],
             ],
             'role'                   => $userType,
@@ -476,6 +473,7 @@ class SettingsStorage implements SettingsStorageInterface
                 'allowConfigureServices'      => $this->getSetting('roles', 'allowConfigureServices'),
                 'allowWriteAppointments'      => $this->getSetting('roles', 'allowWriteAppointments'),
                 'allowWriteCustomers'         => $this->getSetting('roles', 'allowWriteCustomers'),
+                'allowReadAllCustomers'       => $this->getSetting('roles', 'allowReadAllCustomers'),
                 'automaticallyCreateCustomer' => $this->getSetting('roles', 'automaticallyCreateCustomer'),
                 'inspectCustomerInfo'         => $this->getSetting('roles', 'inspectCustomerInfo'),
                 'allowCustomerReschedule'     => $this->getSetting('roles', 'allowCustomerReschedule'),

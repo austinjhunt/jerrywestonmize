@@ -38,8 +38,9 @@ class SubscriptionUrlFactory {
     $this->linkTokens = $linkTokens;
   }
 
-  public function getConfirmationUrl(?SubscriberEntity $subscriber = null) {
-    $post = $this->getPost($this->settings->get('subscription.pages.confirmation'));
+  public function getConfirmationUrl(?SubscriberEntity $subscriber = null, ?int $confirmationPageId = null) {
+    $pageId = $confirmationPageId ?? $this->settings->get('subscription.pages.confirmation');
+    $post = $this->getPost($pageId);
     return $this->getSubscriptionUrl($post, 'confirm', $subscriber);
   }
 
@@ -58,6 +59,12 @@ class SubscriptionUrlFactory {
     $post = $this->getPost($this->settings->get('subscription.pages.unsubscribe'));
     $data = $queueId && $subscriber ? ['queueId' => $queueId] : null;
     return $this->getSubscriptionUrl($post, 'unsubscribe', $subscriber, $data);
+  }
+
+  public function getUnsubscribeReasonUrl(?SubscriberEntity $subscriber = null, ?int $queueId = null) {
+    $post = $this->getPost($this->settings->get('subscription.pages.unsubscribe'));
+    $data = $queueId && $subscriber ? ['queueId' => $queueId] : null;
+    return $this->getSubscriptionUrl($post, 'unsubscribe_reason', $subscriber, $data);
   }
 
   public function getReEngagementUrl(?SubscriberEntity $subscriber = null) {

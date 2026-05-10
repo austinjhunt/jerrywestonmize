@@ -50,7 +50,28 @@ class ActivatePluginCommandHandler extends CommandHandler
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, apply_filters('amelia/curlopt_ssl_verifypeer', 1));
 
         // Response from the Melograno Store
-        $response = json_decode(curl_exec($ch));
+        $curlResult = curl_exec($ch);
+        $curlErrno  = curl_errno($ch);
+        $curlError  = curl_error($ch);
+
+        // Handle connection/SSL failures (curl_exec returns false on error)
+        if ($curlResult === false) {
+            $result->setResult(CommandResult::RESULT_SUCCESS);
+            $result->setMessage('cURL request failed: ' . $curlError);
+            $result->setData(
+                [
+                'valid'            => false,
+                'domainRegistered' => false,
+                'connectionError' => true,
+                'curlError'       => $curlError,
+                'curlErrno'       => $curlErrno,
+                ]
+            );
+
+            return $result;
+        }
+
+        $response = json_decode($curlResult);
 
         // Update Amelia Settings
         $settingsService->setSetting('activation', 'active', $response->valid && $response->domainRegistered);

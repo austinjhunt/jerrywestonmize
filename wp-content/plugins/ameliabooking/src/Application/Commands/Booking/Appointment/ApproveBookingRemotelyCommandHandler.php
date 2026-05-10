@@ -94,10 +94,7 @@ class ApproveBookingRemotelyCommandHandler extends CommandHandler
 
         $booking->setToken(new Token($token['token']));
 
-        if (
-            $booking->getStatus()->getValue() !== BookingStatus::WAITING &&
-            !$customerAS->isCustomerBooking($booking, $user, $command->getField('token'))
-        ) {
+        if (!$customerAS->isCustomerBooking($booking, $user, $command->getField('token'))) {
             throw new AccessDeniedException('You are not allowed to update booking status');
         }
 

@@ -46,7 +46,7 @@ class TransientCache {
   }
 
   public function setItem(string $key, array $item, int $id): void {
-    $items = $this->getItems($key) ?? [];
+    $items = $this->getItems($key);
     $items[$id] = [
       'item' => $item,
       'created_at' => Carbon::now(),

@@ -380,8 +380,19 @@ class Forminator_Admin_Report_Page {
 						$previous_send = Forminator_Form_Entry_Model::addons_data( $form_id, $meta_key, $reports['previous_start'], $reports['previous_end'] );
 						$selected_sent = Forminator_Form_Entry_Model::addons_data( $form_id, $meta_key, $reports['start_date'], $reports['end_date'] );
 
-						$integration_data[ $slug ] = array(
-							'title'       => $addon_data['title'],
+						// Get the identifier for this integration instance.
+						$settings   = $integration->get_settings_values();
+						$identifier = ! empty( $settings['identifier'] ) ? $settings['identifier'] : '';
+
+						// Build title with identifier if available (e.g., "HubSpot - Business Account").
+						$title = $addon_data['title'];
+						if ( ! empty( $identifier ) ) {
+							$title = $addon_data['title'] . ' - ' . $identifier;
+						}
+
+						// Use unique key combining slug and multi_id to support multiple instances of same integration.
+						$integration_data[ $multi_id ] = array(
+							'title'       => $title,
 							'short_title' => $addon_data['short_title'],
 							'image'       => $addon_data['image'],
 							'selected'    => $selected_sent,

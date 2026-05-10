@@ -83,11 +83,30 @@ if ( ! empty( $this->pending_admin_message ) ) {
 	$this->render_admin_notice( 'flash', $this->pending_admin_message );
 	$this->pending_admin_message = null;
 }
+if ( $this->should_show_mfa_recovery_links_expired_notice() ) {
+	$this->render_admin_notice(
+		'mfa-recovery-links-expired',
+		array(
+			'mfa_url' => $this->get_options_page_uri( 'mfa' ),
+		)
+	);
+}
 if ( ( $auto_update_choice || $auto_update_choice === null ) && ! Helpers::is_auto_update_enabled() ) {
 	$this->render_admin_notice( 'auto-update', array() );
 }
 if ( $active_tab === 'mfa' && ! is_ssl() ) {
 	$this->render_admin_notice( 'https-recommended-mfa', array() );
+}
+if ( 'debug' === $active_tab && $this->has_capability ) {
+	$foreign_authenticate_hooks = LimitLoginAttempts::get_foreign_authenticate_hooks();
+	if ( ! empty( $foreign_authenticate_hooks ) ) {
+		$this->render_admin_notice(
+			'debug-foreign-auth-hooks',
+			array(
+				'hooks' => $foreign_authenticate_hooks,
+			)
+		);
+	}
 }
 ?>
 

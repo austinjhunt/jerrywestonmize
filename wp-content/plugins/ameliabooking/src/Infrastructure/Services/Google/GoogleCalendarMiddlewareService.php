@@ -174,6 +174,8 @@ class GoogleCalendarMiddlewareService extends AbstractGoogleCalendarMiddlewareSe
     public function getClient($providerGoogleCalendar)
     {
         $accessToken = $this->googleCalendarSettings['accessToken'];
+        $isProviderToken = false;
+
         if ($accessToken === 'null') {
             $this->settingsService->setSetting('googleCalendar', 'accessToken', '');
             $this->googleCalendarSettings['accessToken'] = '';
@@ -231,5 +233,25 @@ class GoogleCalendarMiddlewareService extends AbstractGoogleCalendarMiddlewareSe
     {
         return $this->settingsService->isFeatureEnabled('googleCalendar') &&
             $this->googleCalendarSettings['accessToken'];
+    }
+
+    /**
+     * Get calendar lists for multiple Google accounts
+     *
+     * @param array $accounts
+     *
+     * @return array
+     */
+    public function getCalendarListsForAccounts(array $accounts): array
+    {
+        foreach ($accounts as &$account) {
+            if (isset($account['token']) && $account['token']) {
+                $account['calendarList'] = $this->getCalendarList(['token' => $account['token']]);
+            } else {
+                $account['calendarList'] = [];
+            }
+        }
+
+        return $accounts;
     }
 }

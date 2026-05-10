@@ -10,8 +10,6 @@ use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
-use AmeliaBooking\Domain\Entity\Google\GoogleCalendar;
-use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Google\GoogleCalendarRepository;
 use Interop\Container\Exception\ContainerException;
@@ -28,7 +26,6 @@ class DisconnectFromGoogleAccountCommandHandler extends CommandHandler
      *
      * @return CommandResult
      * @throws AccessDeniedException
-     * @throws NotFoundException
      * @throws QueryExecutionException
      * @throws ContainerException
      * @throws InvalidArgumentException
@@ -67,22 +64,50 @@ class DisconnectFromGoogleAccountCommandHandler extends CommandHandler
         /** @var GoogleCalendarRepository $googleCalendarRepository */
         $googleCalendarRepository = $this->container->get('domain.google.calendar.repository');
 
-        $googleCalendar = $googleCalendarRepository->getByProviderId($command->getArg('id'));
+        $accountId = $command->getField('accountId');
 
-        if (!$googleCalendar instanceof GoogleCalendar) {
-            $result->setResult(CommandResult::RESULT_ERROR);
-            $result->setMessage('Unable to delete google calendar.');
+        if ($accountId) {
+            try {
+                if ($googleCalendarRepository->delete($accountId)) {
+                    do_action('amelia_after_google_calendar_deleted', ['accountId' => $accountId], $command->getArg('id'));
+
+                    $result->setResult(CommandResult::RESULT_SUCCESS);
+                    $result->setMessage('Google calendar account successfully disconnected.');
+                } else {
+                    $result->setResult(CommandResult::RESULT_ERROR);
+                    $result->setMessage('Unable to delete google calendar account.');
+                }
+            } catch (\Exception $e) {
+                $result->setResult(CommandResult::RESULT_ERROR);
+                $result->setMessage('Unable to delete google calendar account.');
+            }
 
             return $result;
         }
 
-        do_action('amelia_before_google_calendar_deleted', $googleCalendar->toArray(), $command->getArg('id'));
+        $providerId = $command->getArg('id');
 
-        if ($googleCalendarRepository->delete($googleCalendar->getId()->getValue())) {
-            do_action('amelia_after_google_calendar_deleted', $googleCalendar, $command->getArg('id'));
+        try {
+            $googleCalendars = $googleCalendarRepository->getByEntityId($providerId, 'userId');
 
-            $result->setResult(CommandResult::RESULT_SUCCESS);
-            $result->setMessage('Google calendar successfully disconnected.');
+            foreach ($googleCalendars->getItems() as $googleCalendar) {
+                do_action('amelia_before_google_calendar_deleted', $googleCalendar->toArray(), $providerId);
+            }
+
+            if ($googleCalendarRepository->deleteByEntityId($providerId, 'userId')) {
+                foreach ($googleCalendars->getItems() as $googleCalendar) {
+                    do_action('amelia_after_google_calendar_deleted', $googleCalendar, $providerId);
+                }
+
+                $result->setResult(CommandResult::RESULT_SUCCESS);
+                $result->setMessage('Google calendar successfully disconnected.');
+            } else {
+                $result->setResult(CommandResult::RESULT_ERROR);
+                $result->setMessage('Unable to delete google calendar accounts.');
+            }
+        } catch (\Exception $e) {
+            $result->setResult(CommandResult::RESULT_ERROR);
+            $result->setMessage('Unable to delete google calendar accounts.');
         }
 
         return $result;

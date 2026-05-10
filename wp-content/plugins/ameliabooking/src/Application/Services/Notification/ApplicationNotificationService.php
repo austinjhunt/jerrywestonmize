@@ -156,11 +156,12 @@ class ApplicationNotificationService
 
     /**
      * @param Appointment $appointment
-     * @param bool        $notifyProvider
-     * @param bool        $notifyCustomers
+     * @param bool $notifyProvider
+     * @param bool $notifyCustomers
      *
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
+     * @throws NotFoundException
      */
     public function sendAppointmentRescheduleNotifications(
         $appointment,
@@ -274,6 +275,8 @@ class ApplicationNotificationService
         $notifyProvider = true,
         $notifyCustomers = true
     ) {
+        $appointment->setAssignedEmployeeId(new Id($appointment->getProviderId()->getValue()));
+
         $this->sendAppointmentUpdatedNotificationsForUserType(
             $appointment,
             false,
