@@ -548,7 +548,9 @@ class PackageReservationService extends AppointmentReservationService
             'timeZone'           => $customerInfo ? $customerInfo['timeZone'] : null,
             'recurring'          => [],
             'package'            => $packageAppointmentsData,
-            'deposit'            => !empty($booking) ? $booking['price'] > $booking['payments'][0]['amount'] : null,
+            'deposit'            => !empty($reservation['packageCustomer']['payments'])
+                ? $reservation['packageCustomer']['price'] > $reservation['packageCustomer']['payments'][0]['amount']
+                : (!empty($booking) ? $booking['price'] > $booking['payments'][0]['amount'] : null),
             'customer'           => array_merge(
                 [
                     'locale'             => $customerInfo ? $customerInfo['locale'] : null,
@@ -768,6 +770,8 @@ class PackageReservationService extends AppointmentReservationService
 
         $packageCustomerId = null;
 
+        $packageCustomer = null;
+
         /** @var PackageCustomerService $packageCustomerService */
         foreach ($packageCustomerServices->getItems() as $packageCustomerService) {
             $packageId = $packageCustomerService->getPackageCustomer()->getPackageId()->getValue();
@@ -775,6 +779,8 @@ class PackageReservationService extends AppointmentReservationService
             $customerId = $packageCustomerService->getPackageCustomer()->getCustomerId()->getValue();
 
             $packageCustomerId = $packageCustomerService->getPackageCustomer()->getId()->getValue();
+
+            $packageCustomer = $packageCustomerService->getPackageCustomer();
 
             break;
         }
@@ -892,6 +898,7 @@ class PackageReservationService extends AppointmentReservationService
                 'isRetry'                  => !$fromLink,
                 'fromLink'                 => $fromLink,
                 'paymentId'                => $payment->getId()->getValue(),
+                'packageCustomer'          => $packageCustomer->toArray(),
                 'packageCustomerId'        => $packageCustomerId,
                 'payment'                  => [
                     'id'           => $payment->getId()->getValue(),

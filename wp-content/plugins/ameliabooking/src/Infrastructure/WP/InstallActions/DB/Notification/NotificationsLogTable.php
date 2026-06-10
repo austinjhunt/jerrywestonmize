@@ -34,6 +34,7 @@ class NotificationsLogTable extends AbstractDatabaseTable
                     `sentDateTime` DATETIME NOT NULL,
                     `sent` TINYINT(1) NULL,
                     `data` TEXT NULL,
+                    `messageId` VARCHAR(255) DEFAULT NULL,
                     PRIMARY KEY (`id`)
                 ) {$charsetCollate};";
     }

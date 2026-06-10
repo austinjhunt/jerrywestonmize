@@ -4,7 +4,7 @@ namespace AmeliaBooking\Application\Controller\Import;
 
 use AmeliaBooking\Application\Commands\Import\ImportCustomersCommand;
 use AmeliaBooking\Application\Controller\Controller;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class ImportCustomersController
@@ -31,8 +31,16 @@ class ImportCustomersController extends Controller
     protected function instantiateCommand(Request $request, $args)
     {
         $command = new ImportCustomersCommand($args);
-        $command->setField('params', (array)$request->getParams());
+
+        $parsedBody = $request->getParsedBody();
+
+        $command->setField('params', (array) array_merge(
+            $request->getQueryParams(),
+            is_array($parsedBody) ? $parsedBody : []
+        ));
+
         $requestBody = $request->getParsedBody();
+
         $this->setCommandFields($command, $requestBody);
 
         return $command;

@@ -65,6 +65,14 @@ ameliaStyleTag.innerHTML = `
     .wc-block-components-product-details__appointment-info {
         display: none
     }
+
+    .wc-block-components-product-details__event-info {
+        display: none
+    }
+
+    .wc-block-components-product-details__package-info {
+        display: none
+    }
 `;
 
 document.head.appendChild(ameliaStyleTag);

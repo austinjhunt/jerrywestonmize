@@ -2286,11 +2286,11 @@ class Forminator_Form_Entry_Model {
 
 		foreach ( $connected_addons as $connected_addon ) {
 			try {
-				$method = "get_addon_{$module_slug}_hooks";
-				if ( ! method_exists( $connected_addon, $method ) ) {
-					throw new Exception( 'Method ' . $method . ' doesn\'t exist.' );
+				$addon_slug = $connected_addon->get_slug();
+				if ( ! method_exists( $connected_addon, 'get_addon_hooks' ) ) {
+					throw new Exception( $addon_slug . ': Method get_addon_hooks doesn\'t exist.' );
 				}
-				$module_hooks    = $connected_addon->$method( $form_id );
+				$module_hooks    = $connected_addon->get_addon_hooks( $form_id, $module_slug );
 				$addon_meta_data = forminator_find_addon_meta_data_from_entry_model( $connected_addon, $entry_model );
 				$module_hooks->on_before_delete_entry( $entry_model, $addon_meta_data );
 			} catch ( Exception $e ) {

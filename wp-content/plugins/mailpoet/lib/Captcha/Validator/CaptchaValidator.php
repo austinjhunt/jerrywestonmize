@@ -1,4 +1,4 @@
-<?php // phpcs:ignore SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing
+<?php declare(strict_types = 1);
 
 namespace MailPoet\Captcha\Validator;
 
@@ -6,6 +6,7 @@ if (!defined('ABSPATH')) exit;
 
 
 use MailPoet\Captcha\CaptchaPhrase;
+use MailPoet\Captcha\CaptchaSession;
 use MailPoet\Captcha\CaptchaUrlFactory;
 use MailPoet\Subscribers\SubscriberIPsRepository;
 use MailPoet\Subscribers\SubscribersRepository;
@@ -28,18 +29,23 @@ class CaptchaValidator {
   /** @var SubscribersRepository */
   private $subscribersRepository;
 
+  /** @var CaptchaSession */
+  private $captchaSession;
+
   public function __construct(
     CaptchaUrlFactory $urlFactory,
     CaptchaPhrase $captchaPhrase,
     WPFunctions $wp,
     SubscriberIPsRepository $subscriberIPsRepository,
-    SubscribersRepository $subscribersRepository
+    SubscribersRepository $subscribersRepository,
+    CaptchaSession $captchaSession
   ) {
     $this->captchaUrlFactory = $urlFactory;
     $this->captchaPhrase = $captchaPhrase;
     $this->wp = $wp;
     $this->subscriberIPsRepository = $subscriberIPsRepository;
     $this->subscribersRepository = $subscribersRepository;
+    $this->captchaSession = $captchaSession;
   }
 
   public function validate(array $data): bool {
@@ -47,7 +53,15 @@ class CaptchaValidator {
     if (!$isBuiltinCaptchaRequired) {
       return true;
     }
+    return $this->validateChallenge($data);
+  }
 
+  /**
+   * Validates the user's CAPTCHA answer without consulting isRequired().
+   * Use this when the caller has already decided a challenge is needed
+   * (e.g. the behavioral-signal escalation path).
+   */
+  public function validateChallenge(array $data): bool {
     // session ID must be set at this point
     $sessionId = $data['captcha_session_id'] ?? null;
     if (!$sessionId) {
@@ -84,6 +98,23 @@ class CaptchaValidator {
     }
 
     return true;
+  }
+
+  /**
+   * Creates a fresh inline CAPTCHA challenge: generates a session, primes a
+   * phrase, and returns the meta the client uses to render it inline.
+   * Optionally stashes form data so the non-JS captcha-page fallback can
+   * restore the original submission on resubmit.
+   *
+   * @param array<string, mixed>|null $formData Form data to stash, or null to skip stashing.
+   */
+  public function getInlineCaptchaChallenge(?array $formData = null): array {
+    $sessionId = $this->captchaSession->generateSessionId();
+    $this->captchaPhrase->createPhrase($sessionId);
+    if ($formData !== null) {
+      $this->captchaSession->setFormData($sessionId, $formData);
+    }
+    return $this->getInlineCaptchaData($sessionId);
   }
 
   public function isRequired($subscriberEmail = null) {
@@ -127,7 +158,7 @@ class CaptchaValidator {
     return false;
   }
 
-  private function isUserExemptFromCaptcha() {
+  public function isUserExemptFromCaptcha(): bool {
     if (!$this->wp->isUserLoggedIn()) {
       return false;
     }

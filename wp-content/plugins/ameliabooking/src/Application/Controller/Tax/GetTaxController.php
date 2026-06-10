@@ -9,7 +9,7 @@ namespace AmeliaBooking\Application\Controller\Tax;
 
 use AmeliaBooking\Application\Commands\Tax\GetTaxCommand;
 use AmeliaBooking\Application\Controller\Controller;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class GetTaxController

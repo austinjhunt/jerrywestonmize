@@ -8,6 +8,7 @@ if (!defined('ABSPATH')) exit;
 use MailPoet\API\JSON\ResponseBuilders\DynamicSegmentsResponseBuilder;
 use MailPoet\Config\AccessControl;
 use MailPoet\Listing\Handler as ListingHandler;
+use MailPoet\Listing\ListingDefinition;
 use MailPoet\Listing\ListingRepository;
 use MailPoet\Segments\DynamicSegments\DynamicSegmentsListingRepository;
 use MailPoet\WP\Functions as WPFunctions;
@@ -41,7 +42,7 @@ class DynamicSegmentsListingEndpoint extends AbstractSegmentsListingEndpoint {
     return $this->dynamicSegmentsListingRepository;
   }
 
-  protected function buildItems(array $rows): array {
+  protected function buildItems(array $rows, ListingDefinition $definition): array {
     return $this->dynamicSegmentsResponseBuilder->buildForListing($rows);
   }
 

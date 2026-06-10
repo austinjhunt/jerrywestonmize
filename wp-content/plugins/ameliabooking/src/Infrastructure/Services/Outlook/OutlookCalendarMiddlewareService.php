@@ -143,6 +143,8 @@ class OutlookCalendarMiddlewareService extends AbstractOutlookCalendarMiddleware
             $accessTokenJson = $providerOutlookCalendar['token'];
         }
 
+        $accessTokenJson = $this->normalizeAccessToken($accessTokenJson);
+
         if (!$accessTokenJson) {
             error_log('OutlookCalendar: No access token available');
             return null;
@@ -230,7 +232,7 @@ class OutlookCalendarMiddlewareService extends AbstractOutlookCalendarMiddleware
     public function getUserInfo(string $accessToken): array
     {
         // $accessToken may be a JSON envelope {"access_token":"...", ...} or a plain bearer string.
-        $decoded = json_decode($accessToken, true);
+        $decoded = json_decode($this->normalizeAccessToken($accessToken), true);
         $bearer  = (is_array($decoded) && isset($decoded['access_token']))
             ? $decoded['access_token']
             : $accessToken;
@@ -305,6 +307,28 @@ class OutlookCalendarMiddlewareService extends AbstractOutlookCalendarMiddleware
             'name'    => $name,
             'picture' => $picture,
         ];
+    }
+
+    /**
+     * @param string|null $accessToken
+     *
+     * @return string|null
+     */
+    private function normalizeAccessToken(?string $accessToken): ?string
+    {
+        if (!$accessToken) {
+            return $accessToken;
+        }
+
+        $decoded = json_decode($accessToken, true);
+
+        if (!is_array($decoded)) {
+            $decoded = json_decode(stripslashes($accessToken), true);
+        }
+
+        $encoded = is_array($decoded) ? json_encode($decoded) : false;
+
+        return $encoded ?: $accessToken;
     }
 
     /** @noinspection MoreThanThreeArgumentsInspection */

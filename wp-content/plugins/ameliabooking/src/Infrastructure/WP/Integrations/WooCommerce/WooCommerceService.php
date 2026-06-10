@@ -345,8 +345,6 @@ class WooCommerceService
             }
 
             return '';
-        } catch (ContainerException $e) {
-            return '';
         } catch (\Exception $e) {
             return '';
         }
@@ -2372,7 +2370,7 @@ class WooCommerceService
         /** @var CustomerBooking $booking */
         $booking = $bookingRepository->getById($payment->getCustomerBookingId()->getValue());
 
-        $bookingData = $reservationService->updateStatus($booking, $requestedStatus);
+        $bookingData = $reservationService->updateStatus($booking, $requestedStatus, false);
 
         if ($runActions) {
             $result = new CommandResult();
@@ -2419,7 +2417,7 @@ class WooCommerceService
 
         $oldBookingStatus = $booking->getStatus()->getValue();
 
-        $bookingData = $reservationService->updateStatus($booking, $requestedStatus);
+        $bookingData = $reservationService->updateStatus($booking, $requestedStatus, false);
 
         if ($runActions) {
             $result = new CommandResult();
@@ -2944,7 +2942,7 @@ class WooCommerceService
             } elseif (self::isAmeliaOrderValidForBooking($order)) {
                 if (self::isAmeliaOrderFromPaymentLink($order)) {
                     self::managePaymentCreatedFromPaymentLink($order);
-                } else {
+                } elseif ($order->get_status() !== 'pending') {
                     self::completeBookings($order);
                 }
             } else {
@@ -3301,7 +3299,6 @@ class WooCommerceService
 
                     wc_update_order_item_meta($item_id, self::AMELIA, $data);
                 }
-            } catch (ContainerException $e) {
             } catch (\Exception $e) {
                 if (!$paid) {
                     throw new \Exception($e->getMessage());
@@ -3416,7 +3413,6 @@ class WooCommerceService
 
                     wc_update_order_item_meta($item_id, self::AMELIA, $data);
                 }
-            } catch (ContainerException $e) {
             } catch (\Exception $e) {
             }
         }
@@ -3456,7 +3452,6 @@ class WooCommerceService
                             $payment->getEntity() ? $payment->getEntity()->getValue() : $data['type'],
                             $order
                         );
-                    } catch (ContainerException $e) {
                     } catch (\Exception $e) {
                     }
                 }
@@ -3498,7 +3493,6 @@ class WooCommerceService
 
                     try {
                         $reservationService->runPostBookingActions($result);
-                    } catch (ContainerException $e) {
                     } catch (\Exception $e) {
                     }
                 }
@@ -3572,7 +3566,6 @@ class WooCommerceService
                                 self::bookingPackageUpdated($payment, 'canceled', false);
                                 break;
                         }
-                    } catch (ContainerException $e) {
                     } catch (\Exception $e) {
                     }
                 }

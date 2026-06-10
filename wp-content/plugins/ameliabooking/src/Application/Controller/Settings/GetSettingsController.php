@@ -4,7 +4,7 @@ namespace AmeliaBooking\Application\Controller\Settings;
 
 use AmeliaBooking\Application\Commands\Settings\GetSettingsCommand;
 use AmeliaBooking\Application\Controller\Controller;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class GetSettingsController

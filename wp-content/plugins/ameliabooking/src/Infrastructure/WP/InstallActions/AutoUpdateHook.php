@@ -48,7 +48,7 @@ class AutoUpdateHook
 
         // If a newer version is available, add the update
         if ($remoteInformation && version_compare(AMELIA_VERSION, $remoteInformation->new_version, '<')) {
-            $transient->response[AMELIA_PLUGIN_SLUG] = $remoteInformation;
+            $transient->response[AMELIA_PLUGIN_BASENAME] = $remoteInformation;
         }
 
         return $transient;
@@ -81,7 +81,7 @@ class AutoUpdateHook
         /** @var string $envatoTokenEmail */
         $envatoTokenEmail = $settingsService->getSetting('activation', 'envatoTokenEmail');
 
-        if ($args->slug === AMELIA_PLUGIN_SLUG) {
+        if (in_array($args->slug, [AMELIA_PLUGIN_SLUG, 'ameliabooking'], true)) {
             return self::getRemoteInformation($purchaseCode, $envatoTokenEmail);
         }
 
@@ -150,7 +150,7 @@ class AutoUpdateHook
             AMELIA_STORE_API_URL . 'autoupdate/info',
             [
                 'body' => [
-                    'slug'             => 'ameliabooking',
+                    'slug'             => AMELIA_PLUGIN_SLUG,
                     'purchaseCode'     => trim($purchaseCode),
                     'envatoTokenEmail' => trim($envatoTokenEmail),
                     'domain'           => self::getDomain($siteUrl),
@@ -162,7 +162,20 @@ class AutoUpdateHook
         if ((!is_wp_error($request) || wp_remote_retrieve_response_code($request) === 200) && isset($request['body'])) {
             $body = json_decode($request['body']);
 
-            return $body && isset($body->info) ? unserialize($body->info) : false;
+            if (!$body || !isset($body->info)) {
+                return false;
+            }
+
+            $info = unserialize($body->info);
+
+            if ($info) {
+                // Override the slug with the actual installed folder name so WordPress
+                // recognises the plugin as already installed (not showing "Install Now").
+                // The store API always returns 'ameliabooking' but the folder can differ.
+                $info->slug = dirname(AMELIA_PLUGIN_BASENAME);
+            }
+
+            return $info;
         }
 
         return false;

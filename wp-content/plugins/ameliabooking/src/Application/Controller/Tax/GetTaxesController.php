@@ -10,7 +10,7 @@ namespace AmeliaBooking\Application\Controller\Tax;
 use AmeliaBooking\Application\Commands\Tax\GetTaxesCommand;
 use AmeliaBooking\Application\Controller\Controller;
 use RuntimeException;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class GetTaxesController

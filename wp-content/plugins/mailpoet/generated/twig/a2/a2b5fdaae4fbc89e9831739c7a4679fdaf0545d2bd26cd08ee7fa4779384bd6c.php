@@ -60,13 +60,13 @@ class __TwigTemplate_176225ef6518abb3a235b9f1785c332f068c4c798b602f397b3f290225c
   <script type=\"text/javascript\">
     ";
         // line 12
-        yield "      var mailpoet_logs = ";
-        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["logs"] ?? null));
-        yield ";
-      var mailpoet_logs_default_from = '";
-        // line 13
+        yield "      var mailpoet_logs_default_from = '";
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(($context["logs_default_from"] ?? null), "js", null, true);
         yield "';
+      var mailpoet_logs_api = ";
+        // line 13
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["api"] ?? null));
+        yield ";
     ";
         // line 15
         yield "  </script>

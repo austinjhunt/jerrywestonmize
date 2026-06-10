@@ -70,7 +70,17 @@
             <p class="text-center"><a href="#" class="open-pro-dialog button button-buy" data-pro-feature="sidebar-box">Get PRO Now</a></p>
         </div>
 
-        <div class="sidebar-box" style="margin-top: 35px;">
+    <?php
+    if (!defined('WPCAPTCHA_PLUGIN_FILE')) {
+            echo '<div id="wpcaptcha-ad" class="sidebar-box">';
+            echo '<h3 class="textcenter"><b>Having problems with spam or bots? AI scapers giving you troubles?<br><br><u>Fix all your spam problems with one plugin!</u></b></h3>';
+            echo '<p class="textcenter"><a href="#" class="textcenter install-wpcaptcha"><img style="max-width: 90%;" src="' . esc_url(plugins_url('/public/images/wp-captcha-logo.png', WPEL_Plugin::get_plugin_file())) . '" alt="Advanced Google ReCaptcha" title="Advanced Google ReCaptcha"></a></p>';
+            echo '<p class="textcenter"><br><a href="#" class="install-wpcaptcha button button-primary">Install &amp; activate the free Google ReCaptcha plugin</a></p><p><a href="https://wordpress.org/plugins/advanced-google-recaptcha/" target="_blank">Advanced Google ReCaptcha</a> is a free WP plugin maintained by the same team as WP External Links. It has <b>+200,000 users, 5-star rating</b>, and is hosted on the official WP repository.</p>';
+            echo '</div>';
+        }
+    ?>
+
+        <div class="sidebar-box">
           <p>Please <a href="https://wordpress.org/support/plugin/wp-external-links/reviews/#new-post" target="_blank">rate the plugin ★★★★★</a> to <b>keep it up-to-date &amp; maintained</b>. It only takes a second to rate. Thank you! 👋</p>
     </div>
     </div>
@@ -151,8 +161,7 @@
   </tr>
 
   <tr>
-  <td><a class="button button-buy" data-href-org="https://getwplinks.com/buy/?product=personal-launch&ref=pricing-table" href="https://getwplinks.com/buy/?product=personal-launch&ref=pricing-table" target="_blank">Lifetime License<br>$59 -&gt; BUY NOW</a>
-  <br>or <a class="button-buy" data-href-org="https://getwplinks.com/buy/?product=personal-monthly&ref=pricing-table" href="https://getwplinks.com/buy/?product=personal-monthly&ref=pricing-table" target="_blank">only $8.99 <small>/month</small></a></td>
+  <td><a class="button button-buy" data-href-org="https://getwplinks.com/buy/?product=personal-launch&ref=pricing-table" href="https://getwplinks.com/buy/?product=personal-launch&ref=pricing-table" target="_blank">Lifetime License<br>$59 -&gt; BUY NOW</a></td>
   <td><a class="button button-buy" data-href-org="https://getwplinks.com/buy/?product=team-launch&ref=pricing-table" href="https://getwplinks.com/buy/?product=team-launch&ref=pricing-table" target="_blank">Lifetime License<br>$69 -&gt; BUY NOW</a></td>
   <td><a class="button button-buy" data-href-org="https://getwplinks.com/buy/?product=agency-launch&ref=pricing-table" href="https://getwplinks.com/buy/?product=agency-launch&ref=pricing-table" target="_blank">Lifetime License<br>$119 -&gt; BUY NOW</a></td>
   </tr>

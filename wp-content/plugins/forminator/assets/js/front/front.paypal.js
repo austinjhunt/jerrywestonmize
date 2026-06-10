@@ -75,6 +75,20 @@
 			var isValid = validate.checkForm(); // Valid?
 			validate.submitted = {}; // Reset immediate form field checking mode
 
+			// For paginated forms, ignore errors from non-current pagination pages
+			if ( ! isValid && this.$el.find( '.forminator-pagination' ).length ) {
+				var hasVisibleErrors = false;
+				$.each( validate.errorList, function( i, error ) {
+					var $element = $( error.element );
+					var $page = $element.closest( '.forminator-pagination' );
+					if ( $page.length === 0 || ! $page.is( ':hidden' ) ) {
+						hasVisibleErrors = true;
+						return false;
+					}
+				});
+				isValid = ! hasVisibleErrors;
+			}
+
 			return isValid;
 		},
 
@@ -161,7 +175,7 @@
 						$target_message.removeClass('forminator-accessible').addClass('forminator-error').html('').removeAttr( 'aria-hidden' );
 						$target_message.html('<label class="forminator-label--error"><span>' + generalMessage.form_has_error + '</span></label>');
 						self.focus_to_element($target_message);
-				} else if ( paypalData.amount <= 0 ) {
+					} else if ( paypalData.amount <= 0 ) {
 						$target_message.removeClass('forminator-accessible').addClass('forminator-error').html('').removeAttr( 'aria-hidden' );
 						$target_message.html('<label class="forminator-label--error"><span>' + generalMessage.payment_require_amount_error + '</span></label>');
 						self.focus_to_element($target_message);

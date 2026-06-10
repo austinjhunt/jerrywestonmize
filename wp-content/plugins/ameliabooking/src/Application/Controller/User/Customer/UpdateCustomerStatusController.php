@@ -4,7 +4,7 @@ namespace AmeliaBooking\Application\Controller\User\Customer;
 
 use AmeliaBooking\Application\Commands\User\Customer\UpdateCustomerStatusCommand;
 use AmeliaBooking\Application\Controller\Controller;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class UpdateCustomerStatusController

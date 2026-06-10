@@ -607,7 +607,21 @@
 											window.open( self.decodeHtmlEntity( data.data.url ), '_blank' );
 										} else {
 											//same tab redirection
-											window.location.href = self.decodeHtmlEntity( data.data.url );
+											// Redirect to a unique URL to avoid cached guest page after login
+											var redirectUrl = self.decodeHtmlEntity(data.data.url);
+											var bust = Date.now();
+											try {
+												var url = new URL(redirectUrl, window.location.href); // handles relative URLs too
+												url.searchParams.set('forminator_cache_bust', bust);
+												window.location.href = url.toString();
+											} catch (e) {
+												// Fallback for malformed/edge URLs: preserve hash manually.
+												var hashIndex = redirectUrl.indexOf('#');
+												var hash = hashIndex >= 0 ? redirectUrl.slice(hashIndex) : '';
+												var base = hashIndex >= 0 ? redirectUrl.slice(0, hashIndex) : redirectUrl;
+												var separator = base.includes('?') ? '&' : '?';
+												window.location.href = base + separator + 'forminator_cache_bust=' + bust + hash;
+											}
 										}
 
 									}
@@ -877,6 +891,9 @@
 						if ( captcha_size === 'invisible' ) {
 							if ( $captcha_response.length === 0 ) {
 								window.grecaptcha.execute( captcha_widget );
+								self.waitForCaptchaResponse( function() {
+									return window.grecaptcha.getResponse( captcha_widget );
+								});
 								return false;
 							}
 						}
@@ -902,6 +919,9 @@
 					if ( captcha_size === 'invisible' ) {
 						if ( $captcha_response.length === 0 ) {
 							hcaptcha.execute( captcha_widget );
+							self.waitForCaptchaResponse( function() {
+								return hcaptcha.getResponse( captcha_widget );
+							});
 							return false;
 						}
 					}
@@ -919,15 +939,23 @@
 				} else if ( $captcha_field.hasClass( 'forminator-turnstile' ) ) {
 					var captcha_widget   = $captcha_field.data( 'forminator-turnstile-widget' ),
 						$captcha_response = $captcha_field.find( 'input[name="forminator-turnstile-response"]' ).val();
+					
+					const canResetCaptcha = typeof captcha_widget !== 'undefined' && turnstile && typeof turnstile.reset === 'function';
 
 					// Ignore CAPTCHA validation after a PayPal payment.
 					if( 'forminator:submit:paypal' === submitter ) {
-						turnstile.reset( captcha_widget );
+						if ( canResetCaptcha ) {
+							turnstile.reset( captcha_widget );
+						}
 						return true;
 					}
 
-					// reset after getResponse
-					if ( self.$el.hasClass( 'forminator_ajax' ) && 'forminator:preSubmit:paypal' !== e.type ) {
+					// Reset after getResponse.
+					if (	
+						canResetCaptcha &&
+						self.$el.hasClass( 'forminator_ajax' ) &&
+						'forminator:preSubmit:paypal' !== e.type
+					) {
 						turnstile.reset( captcha_widget );
 					}
 				}
@@ -1819,6 +1847,27 @@
 
 		disable_form_submit: function ( form, disable  ) {
 			form.$el.find( '.forminator-button-submit' ).prop( 'disabled', disable );
+		},
+
+		/**
+		 * Poll for captcha response in case the callback doesn't fire
+		 * (e.g. when form is inside a popup/modal like Divi).
+		 */
+		waitForCaptchaResponse: function ( getResponse ) {
+			var self     = this,
+				attempts = 0,
+				poll     = setInterval( function() {
+					attempts++;
+					if ( attempts > 50 ) {
+						clearInterval( poll );
+						return;
+					}
+					var response = getResponse();
+					if ( response && response.length > 0 ) {
+						clearInterval( poll );
+						self.$el.trigger( 'submit.frontSubmit' );
+					}
+				}, 100 );
 		},
 
 		showLeadsLoader: function ( quiz  ) {

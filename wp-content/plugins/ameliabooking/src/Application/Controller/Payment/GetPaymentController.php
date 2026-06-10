@@ -9,7 +9,7 @@ namespace AmeliaBooking\Application\Controller\Payment;
 
 use AmeliaBooking\Application\Commands\Payment\GetPaymentCommand;
 use AmeliaBooking\Application\Controller\Controller;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class GetPaymentController

@@ -21,10 +21,9 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
 use AmeliaBooking\Infrastructure\Repository\Location\LocationRepository;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
-use Eluceo\iCal\Component\Calendar;
-use Eluceo\iCal\Component\Event as iCalEvent;
-use Eluceo\iCal\Property\Event\Organizer as iCalOrganizer;
 use AmeliaBooking\Infrastructure\Common\Container;
+use AmeliaVendor\Sabre\VObject\Component\VCalendar;
+use AmeliaVendor\Sabre\VObject\UUIDUtil;
 use Exception;
 use Interop\Container\Exception\ContainerException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
@@ -457,53 +456,51 @@ class IcsApplicationService
     }
 
     /**
-     * @param array    $periodsData
-     * @param bool     $separateCalendars
-     * @param bool     $isTranslation
+     * @param array $periodsData
+     * @param bool  $separateCalendars
+     * @param bool  $isTranslation
      *
      * @return array
      * @throws Exception
      */
     private function getCalendar($periodsData, $separateCalendars, $isTranslation)
     {
-        $vCalendars = $separateCalendars ? [] : [new Calendar(AMELIA_URL)];
+        $vCalendars = $separateCalendars ? [] : [$this->createVCalendar()];
 
         foreach ($periodsData as $periodData) {
             foreach ($periodData['periods'] as $period) {
-                $vEvent = new iCalEvent();
+                if ($separateCalendars) {
+                    $vCalendar    = $this->createVCalendar();
+                    $vCalendars[] = $vCalendar;
+                } else {
+                    $vCalendar = $vCalendars[0];
+                }
 
-                $vEvent
-                    ->setDtStart(new \DateTime($period['start'], new \DateTimeZone('UTC')))
-                    ->setDtEnd(new \DateTime($period['end'], new \DateTimeZone('UTC')))
-                    ->setSummary(!$isTranslation ? $periodData['name'] : $periodData['nameTr']);
+                $vEvent = $vCalendar->add(
+                    'VEVENT',
+                    ['UID' => UUIDUtil::getUUID(), 'SUMMARY' => !$isTranslation ? $periodData['name'] : $periodData['nameTr']]
+                );
+
+                $vEvent->add('DTSTART', new \DateTime($period['start'], new \DateTimeZone('UTC')));
+                $vEvent->add('DTEND', new \DateTime($period['end'], new \DateTimeZone('UTC')));
 
                 if (!empty($periodData['provider'])) {
-                    $vOrganizer = new iCalOrganizer(
+                    $vEvent->add(
+                        'ORGANIZER',
                         'MAILTO:' . $periodData['provider']['email'],
-                        array('CN' => $periodData['provider']['fullName'])
+                        ['CN' => $periodData['provider']['fullName']]
                     );
-
-                    $vEvent->setOrganizer($vOrganizer);
                 }
 
                 if ($periodData['location']) {
-                    $vEvent->setLocation($periodData['location']);
+                    $vEvent->add('LOCATION', $periodData['location']);
                 }
 
                 if ($periodData['description'] || $periodData['descriptionTr']) {
-                    $vEvent->setDescription(
+                    $vEvent->add(
+                        'DESCRIPTION',
                         !$isTranslation ? $periodData['description'] : $periodData['descriptionTr']
                     );
-                }
-
-                if ($separateCalendars) {
-                    $vCalendar = new Calendar(AMELIA_URL);
-
-                    $vCalendar->addComponent($vEvent);
-
-                    $vCalendars[] = $vCalendar;
-                } else {
-                    $vCalendars[0]->addComponent($vEvent);
                 }
             }
         }
@@ -512,12 +509,23 @@ class IcsApplicationService
 
         foreach ($vCalendars as $index => $vCalendar) {
             $result[] = [
-                'name'    => sizeof($vCalendars) === 1 ? 'cal.ics' : 'cal' . ($index + 1) . '.ics',
+                'name'    => count($vCalendars) === 1 ? 'cal.ics' : 'cal' . ($index + 1) . '.ics',
                 'type'    => 'text/calendar; charset=utf-8',
-                'content' => $vCalendar->render()
+                'content' => $vCalendar->serialize(),
             ];
         }
 
         return $result;
+    }
+
+    /**
+     * @return VCalendar
+     */
+    private function createVCalendar()
+    {
+        $vCalendar         = new VCalendar();
+        $vCalendar->PRODID = '-//AMELIA//Amelia//EN';
+
+        return $vCalendar;
     }
 }

@@ -41,6 +41,9 @@ class NotificationLog
     /** @var Json */
     private $data;
 
+    /** @var string|null */
+    private $messageId;
+
     /**
      * @return Id
      */
@@ -170,7 +173,7 @@ class NotificationLog
     }
 
     /**
-     * @return Json
+     * @return Json|null
      */
     public function getData()
     {
@@ -183,6 +186,16 @@ class NotificationLog
     public function setData($data)
     {
         $this->data = $data;
+    }
+
+    public function getMessageId(): ?string
+    {
+        return $this->messageId;
+    }
+
+    public function setMessageId(?string $messageId): void
+    {
+        $this->messageId = $messageId;
     }
 
     /**
@@ -200,6 +213,7 @@ class NotificationLog
             'sentDateTime'      => $this->getSentDateTime()->getValue(),
             'sent'              => $this->getSent() ? $this->getSent()->getValue() : null,
             'data'              => $this->getData() ? $this->getData()->getValue() : null,
+            'messageId'         => $this->getMessageId(),
         ];
     }
 }

@@ -249,6 +249,30 @@ class HelperService
     }
 
     /**
+     * @param string $locale
+     * @param array  $entityTranslation
+     *
+     * @return array|null
+     */
+    private function getTranslation($locale, $entityTranslation)
+    {
+        $localeParts = explode('_', $locale);
+
+        if (!array_key_exists($locale, $entityTranslation) && count($localeParts) > 1) {
+            foreach ($entityTranslation as $key => $value) {
+                if (strpos($key, $localeParts[0] . '_') === 0) {
+                    return $value;
+                }
+            }
+        }
+
+        return
+            $entityTranslation &&
+            array_key_exists($locale, $entityTranslation) ?
+                $entityTranslation[$locale] : null;
+    }
+
+    /**
      * @param string      $locale
      * @param string      $entityTranslation
      * @param string|null $type
@@ -259,21 +283,13 @@ class HelperService
     {
         $entityTranslation = !empty($entityTranslation) ? json_decode($entityTranslation, true) : null;
 
-        if ($locale) {
-            if ($type === null) {
-                return
-                    $entityTranslation &&
-                    !empty($entityTranslation[$locale]) ?
-                        $entityTranslation[$locale] : null;
-            } else {
-                return
-                    $entityTranslation &&
-                    !empty($entityTranslation[$type][$locale]) ?
-                        $entityTranslation[$type][$locale] : null;
-            }
-        }
+        $translationScope = $type === null
+            ? $entityTranslation
+            : ($entityTranslation[$type] ?? null);
 
-        return null;
+        return $locale && is_array($translationScope)
+            ? $this->getTranslation($locale, $translationScope)
+            : null;
     }
 
     /**

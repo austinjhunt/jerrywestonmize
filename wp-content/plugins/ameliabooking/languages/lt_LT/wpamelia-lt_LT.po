@@ -421,6 +421,8 @@ msgstr "Pridėti papildomą paslaugą"
 msgid ""
 "Add Google Maps API Key to show Google static map on \"Locations\" page."
 msgstr ""
+"Pridėkite „Google Maps“ API raktą, kad puslapyje „Vietos“ būtų rodomas "
+"statinis „Google“ žemėlapio vaizdas."
 
 msgid "Add Meta Pixel to track ad conversions and optimize marketing."
 msgstr ""
@@ -457,7 +459,7 @@ msgstr ""
 "jau užimtą laiko intervalą."
 
 msgid "Add another account"
-msgstr ""
+msgstr "Pridėti dar vieną paskyrą"
 
 msgid "Add appointment"
 msgstr "Pridėti susitikimą"
@@ -466,7 +468,7 @@ msgid "Add booking"
 msgstr "Pridėti užsakymą"
 
 msgid "Add calendar"
-msgstr ""
+msgstr "Pridėti kalendorių"
 
 msgid "Add category"
 msgstr "Pridėti kategoriją"
@@ -752,7 +754,7 @@ msgid "Allow employees to manage their special days"
 msgstr "Leisti darbuotojams valdyti savo ypatingas dienas"
 
 msgid "Allow employees to view all customers"
-msgstr ""
+msgstr "Leisti darbuotojams matyti visus klientus"
 
 msgid "Allow multiple bookings per customer"
 msgstr "Leisti vienam klientui atlikti kelis užsakymus"
@@ -776,6 +778,9 @@ msgstr "Alfa siuntėjo ID"
 msgid "Alpha sender ID can't be empty"
 msgstr "Alfa siuntėjo ID negali būti tuščias"
 
+msgid "Already Paid"
+msgstr "Jau apmokėta"
+
 msgid "Already have an account?"
 msgstr "Jau turite paskyrą?"
 
@@ -790,6 +795,9 @@ msgstr "Taip pat ištrinti būsimus įvykius"
 
 msgid "Also open future events"
 msgstr "Taip pat atidaryti būsimus renginius"
+
+msgid "Amelia - Booking Button"
+msgstr "Amelia - Rezervavimo mygtukas"
 
 msgid "Amelia - Booking view"
 msgstr "Amelia – Užsakymų peržiūra"
@@ -815,6 +823,9 @@ msgstr "Amelia – Renginių kalendorius"
 msgid "Amelia - Events List"
 msgstr "Amelia – Renginių sąrašas"
 
+msgid "Amelia - Events List Button"
+msgstr "Amelia – Renginių sąrašo mygtukas"
+
 msgid "Amelia - Search view"
 msgstr "Amelia – Paieškos rodinys"
 
@@ -824,11 +835,23 @@ msgstr "Amelia – žingsnis po žingsnio užsakymas"
 msgid "Amelia Add to calendar page"
 msgstr "Amelia Pridėti į kalendorių puslapį"
 
+msgid "Amelia Events List Booking Settings"
+msgstr "Amelia renginių sąrašo rezervavimo nustatymai"
+
+msgid "Amelia Events List Booking Shortcode"
+msgstr "Amelia renginių sąrašo rezervavimo trumpasis kodas"
+
 msgid "Amelia Profile Settings"
 msgstr "Amelia profilio nustatymai"
 
 msgid "Amelia SMS"
 msgstr ""
+
+msgid "Amelia Step Booking Settings"
+msgstr "Amelia „Step Booking“ nustatymai"
+
+msgid "Amelia Step Booking Shortcode"
+msgstr "Amelia „Step Booking“ trumpasis kodas"
 
 msgid "Amelia Users Settings"
 msgstr "Amelia vartotojų nustatymai"
@@ -868,6 +891,11 @@ msgstr "„Apple“ kalendoriaus nustatymas"
 
 msgid "Application (client) ID"
 msgstr "Programos (kliento) ID"
+
+msgid ""
+"Application (client) ID must be a valid GUID (UUID), as shown in the Azure "
+"portal."
+msgstr ""
 
 msgid "Application fee amount (%)"
 msgstr "Paraiškos mokesčio suma (%)"
@@ -1089,7 +1117,7 @@ msgid "Are you sure you want to delete this appointment?"
 msgstr "Ar tikrai norite pašalinti šią rezervaciją?"
 
 msgid "Are you sure you want to delete this block time?"
-msgstr ""
+msgstr "Ar tikrai norite ištrinti šį užblokuotą laiką?"
 
 msgid "Are you sure you want to delete this category?"
 msgstr "Ar tikrai norite pašalinti šią kategoriją?"
@@ -1238,7 +1266,7 @@ msgid "Assigned Services"
 msgstr "Priskirtos paslaugos"
 
 msgid "Assigned employee full name"
-msgstr ""
+msgstr "Paskirto darbuotojo vardas ir pavardė"
 
 msgid "Attachment"
 msgstr "Priedas"
@@ -1485,24 +1513,26 @@ msgid ""
 "Block booking times that overlap with events in the employee’s Apple "
 "Calendar."
 msgstr ""
+"Blokuoti rezervacijos laikus, kurie persidengia su renginiais darbuotojo "
+"Apple kalendoriuje."
 
 msgid "Block customer"
 msgstr "Blokuoti klientą"
 
 msgid "Block time"
-msgstr ""
+msgstr "Blokuoti laiką"
 
 msgid "Block time from calendars"
-msgstr ""
+msgstr "Blokuoti laiką pagal kalendorius"
 
 msgid "Block time has been added."
-msgstr ""
+msgstr "Užblokuotas laikotarpis sėkmingai pridėtas."
 
 msgid "Block time has been deleted."
-msgstr ""
+msgstr "Laiko blokas ištrintas."
 
 msgid "Block time has been updated."
-msgstr ""
+msgstr "Laiko blokas atnaujintas."
 
 msgid "Blog"
 msgstr "Tinklaraštis"
@@ -1830,6 +1860,9 @@ msgid ""
 msgstr ""
 "Tęsdami nustatysite susitikimą laiko tarpsniu, kuriame jau yra numatytas "
 "susitikimas!"
+
+msgid "By employees"
+msgstr ""
 
 msgid ""
 "By entering your phone number you agree to receive messages via WhatsApp"
@@ -2222,6 +2255,11 @@ msgstr "Kliento laikas:"
 
 msgid "Client secret"
 msgstr "Kliento paslaptis"
+
+msgid ""
+"Client secret is too short or looks invalid. Copy the full value from the "
+"Azure portal."
+msgstr ""
 
 msgid "Close"
 msgstr "Uždaryti"
@@ -2619,7 +2657,7 @@ msgid "Create New"
 msgstr "Sukurti naują"
 
 msgid "Create New Tag"
-msgstr ""
+msgstr "Sukurti naują žymą"
 
 msgid ""
 "Create a coupon code customers can enter during booking to get a discount."
@@ -2659,7 +2697,7 @@ msgid "Create new badge"
 msgstr "Sukurti naują ženklelį"
 
 msgid "Create new tag"
-msgstr ""
+msgstr "Sukurti naują žymą"
 
 msgid ""
 "Create online classrooms automatically for each booked appointment or event."
@@ -2803,7 +2841,7 @@ msgstr ""
 "skaičių."
 
 msgid "Custom range"
-msgstr ""
+msgstr "Pasirinktinis intervalas"
 
 msgid "Custom service duration"
 msgstr "Pasirinktinis paslaugos trukmė"
@@ -3002,7 +3040,7 @@ msgid "Date Desc"
 msgstr "Data Aprašymas"
 
 msgid "Date Picker"
-msgstr ""
+msgstr "Datos pasirinkiklis"
 
 msgid "Date Purchased Asc"
 msgstr "Pirkimo data Asc"
@@ -3020,6 +3058,9 @@ msgstr "Pasirinkite klientą ir paslaugą"
 
 msgid "Date and time"
 msgstr "Data ir laikas"
+
+msgid "Date busyness indicator"
+msgstr ""
 
 msgid "Date of Birth"
 msgstr "Gimimo data"
@@ -3221,7 +3262,7 @@ msgid "Delete appointment"
 msgstr "Ištrinti susitikimą"
 
 msgid "Delete block time"
-msgstr ""
+msgstr "Ištrinti laiko bloką"
 
 msgid "Delete booking"
 msgstr "Ištrinti užsakymą"
@@ -3617,7 +3658,7 @@ msgid "Edit appointment"
 msgstr "Redaguoti susitikimą"
 
 msgid "Edit block time"
-msgstr ""
+msgstr "Redaguoti blokuotą laiką"
 
 msgid "Edit booking"
 msgstr "Redaguoti užsakymą"
@@ -4186,6 +4227,9 @@ msgstr ""
 msgid "Enter booking ID"
 msgstr "Įveskite užsakymo ID"
 
+msgid "Enter both the application (client) ID and client secret."
+msgstr ""
+
 msgid "Enter date of birth"
 msgstr "Gimimo data"
 
@@ -4511,18 +4555,20 @@ msgid "Event status"
 msgstr "Renginio statusas"
 
 msgid "Event tags"
-msgstr ""
+msgstr "Renginių žymos"
 
 msgid ""
 "Event tags allow you to label and organize events in Amelia based on "
 "criteria that matter most to your business."
 msgstr ""
+"Renginių žymos leidžia „Amelia“ sistemoje žymėti ir tvarkyti renginius pagal "
+"jūsų verslui svarbiausius kriterijus."
 
 msgid "Event tags have been saved."
-msgstr ""
+msgstr "Renginių žymos išsaugotos."
 
 msgid "Event tags setup"
-msgstr ""
+msgstr "Renginių žymų nustatymai"
 
 msgid "Event ticketing"
 msgstr "Renginių bilietų pardavimas"
@@ -4531,7 +4577,7 @@ msgid "Event tickets"
 msgstr "Renginių bilietai"
 
 msgid "Event time scope"
-msgstr ""
+msgstr "Renginio laiko apimtis"
 
 msgid "Event title"
 msgstr "Renginio pavadinimas"
@@ -4634,7 +4680,7 @@ msgid "Export bookings"
 msgstr "Eksportuoti užsakymus"
 
 msgid "Export event booking data with ease"
-msgstr ""
+msgstr "Lengvai eksportuokite renginių rezervacijų duomenis"
 
 msgid "Express Account"
 msgstr "Express sąskaita"
@@ -4967,7 +5013,7 @@ msgid "Fully booked"
 msgstr "Visiškai užsakyta"
 
 msgid "Future events"
-msgstr ""
+msgstr "Artėjantys renginiai"
 
 msgid ""
 "GSM (standard Latin) segments contain 160 characters, while UCS-2 (non-GSM - "
@@ -5058,7 +5104,7 @@ msgid "Google Calendar setup"
 msgstr "„Google“ kalendoriaus nustatymas"
 
 msgid "Google Maps API key"
-msgstr ""
+msgstr "Google Maps API prieigos raktas"
 
 msgid "Google Maps failed to load. Check your API key and restrictions."
 msgstr ""
@@ -5547,6 +5593,8 @@ msgstr ""
 msgid ""
 "Improve reporting accuracy by accessing complete event booking data instantly"
 msgstr ""
+"Pagerinkite ataskaitų tikslumą akimirksniu pasiekdami visus renginių "
+"rezervacijų duomenis"
 
 msgid ""
 "Improved customer retention as clients return to use the remaining sessions "
@@ -5696,7 +5744,10 @@ msgid "Interested in unlocking this feature?"
 msgstr "Norite atrakinti šią funkciją?"
 
 msgid "Invalid Mollie API key."
-msgstr ""
+msgstr "Neteisingas Mollie API raktas."
+
+msgid "Invalid Payment Link"
+msgstr "Neteisinga mokėjimo nuoroda"
 
 msgid "Invalid Stripe secret key."
 msgstr "Neteisingas „Stripe“ slaptasis raktas."
@@ -6166,18 +6217,21 @@ msgstr "Išlaikykite nuoseklų tvarkaraštį su pritaikomais dažniais ir modeli
 msgid "Make extra mandatory"
 msgstr "Padaryti papildomą privalomą"
 
+msgid "Make sure you are using the correct Outlook credentials."
+msgstr ""
+
 msgid "Make sure you are using the correct WhatsApp credentials."
 msgstr ""
 "Įsitikinkite, kad naudojate teisingus „WhatsApp“ prisijungimo duomenis."
 
 msgid "Make sure you are using the correct Zoom credentials."
-msgstr ""
+msgstr "Įsitikinkite, kad naudojate tinkamus Zoom prisijungimo duomenis."
 
 msgid "Male"
 msgstr "Vyras"
 
 msgid "Manage Event Tags"
-msgstr ""
+msgstr "Tvarkyti renginių žymas"
 
 msgid "Manage badges"
 msgstr "Valdyti ženklelius"
@@ -6196,7 +6250,7 @@ msgstr ""
 "prie laukimo sąrašų ir rankiniu būdu užpildydami laisvas vietas."
 
 msgid "Manage event tags"
-msgstr ""
+msgstr "Valdyti renginių žymas"
 
 msgid "Manage languages"
 msgstr "Valdyti kalbas"
@@ -6504,7 +6558,7 @@ msgid "New appointment"
 msgstr "Naujas susitikimas"
 
 msgid "New block time"
-msgstr ""
+msgstr "Naujas užblokuotas laikas"
 
 msgid "New category"
 msgstr "Nauja kategorija"
@@ -6720,7 +6774,7 @@ msgid "Notice: Please select at least one panel."
 msgstr "Pranešimas: Prašome pasirinkti bent vieną skydelį."
 
 msgid "Notice: Please select start and end date."
-msgstr ""
+msgstr "Pranešimas: pasirinkite pradžios ir pabaigos datą."
 
 msgid "Notification"
 msgstr "Pranešimai"
@@ -7017,6 +7071,9 @@ msgstr ""
 msgid "One booking can have multiple attendees/spots in it."
 msgstr "Viename užsakyme gali būti keli dalyviai/vietos."
 
+msgid "One of the phone numbers provided is invalid."
+msgstr "Vienas iš įvestų telefono numerių yra neteisingas."
+
 msgid "One spot is equal to one attendee."
 msgstr "Viena vieta lygi vienam dalyviui."
 
@@ -7047,7 +7104,7 @@ msgid "Open following"
 msgstr "Atidaryti šį failą"
 
 msgid "Open side menu"
-msgstr ""
+msgstr "Atidaryti šoninį meniu"
 
 msgid "Opened"
 msgstr "Atidaryta"
@@ -7124,6 +7181,9 @@ msgid ""
 msgstr ""
 "„Outlook Mailer“ nėra visiškai sukonfigūruotas. Užbaigti paskyros nustatymus "
 "„Outlook“ integracijos nustatymuose."
+
+msgid "Outside of working hours"
+msgstr "Ne darbo valandomis"
 
 msgid "Overridden by employee"
 msgstr "Pakeista darbuotojo"
@@ -7381,7 +7441,7 @@ msgid "Passwords don't match."
 msgstr "Slaptažodžiai nesutampa."
 
 msgid "Past events"
-msgstr ""
+msgstr "Įvykę renginiai"
 
 msgid ""
 "Paste the secret key you received after creating your API key pair in Google "
@@ -7582,8 +7642,7 @@ msgstr "Įveskite teisingą telefono numerį"
 
 msgid "Phone already exists with different name. Please check your name."
 msgstr ""
-"Šis el. pašto adresas jau susietas su kitu asmeniu. Patikrinkite, ar "
-"teisingai įvedėte savo vardą ir pavardę."
+"Šis telefono numeris jau susietas su kitu asmeniu. Patikrinkite savo vardą."
 
 msgid "Phone number"
 msgstr "Telefono numeris"
@@ -7647,7 +7706,7 @@ msgid "Please Wait"
 msgstr "Palaukite…"
 
 msgid "Please add period"
-msgstr ""
+msgstr "Pridėkite tašką sakinio pabaigoje."
 
 msgid "Please cancel the event first before deleting it."
 msgstr "Prieš ištrindami renginį, pirmiausia jį atšaukite."
@@ -7663,11 +7722,6 @@ msgstr "Prašome pasirinkti susitikimo laiką"
 
 msgid "Please confirm you are not a robot"
 msgstr "Patvirtinkite, kad nesate robotas"
-
-msgid ""
-"Please delete this appointment. It cannot be edited due to a conflict with "
-"the associated account."
-msgstr ""
 
 msgid ""
 "Please ensure that services and employees are created and that services are "
@@ -8015,6 +8069,7 @@ msgstr "Prašome įkelti failą"
 
 msgid "Please use a different email or phone number to complete the booking."
 msgstr ""
+"Norėdami užbaigti rezervaciją, naudokite kitą el. paštą arba telefono numerį."
 
 msgid ""
 "Please use the built-in Elementor shortcode widget instead of Amelia widget "
@@ -8268,6 +8323,9 @@ msgid ""
 "Quickly download all event booking details from the Event Bookings page, "
 "making reporting, analysis, and record-keeping simple and efficient."
 msgstr ""
+"Greitai atsisiųskite visą renginių rezervacijų informaciją iš puslapio "
+"„Renginių rezervacijos“, kad ataskaitų rengimas, analizė ir įrašų saugojimas "
+"būtų paprasti ir efektyvūs."
 
 msgid "Radio button"
 msgstr "Radijo mygtukas"
@@ -8433,7 +8491,7 @@ msgid "Remind me when my SMS balance is low"
 msgstr "Priminti, kai mano SMS balansas bus mažas"
 
 msgid "Remove Apple Calendar event slots"
-msgstr ""
+msgstr "Pašalinti Apple Calendar įvykių laiko tarpus"
 
 msgid "Remove Attendee"
 msgstr "Pašalinti dalyvius"
@@ -8681,6 +8739,7 @@ msgstr "Taupykite laiką greitai, vienu paspaudimu eksportuodami susitikimus"
 
 msgid "Save time with fast, one-click event booking exports"
 msgstr ""
+"Sutaupykite laiko: greitas renginių rezervacijų eksportas vienu spustelėjimu"
 
 msgid "Save time with quick, hassle-free customer data exports"
 msgstr "Taupykite laiką greitai ir be vargo eksportuodami klientų duomenis"
@@ -8835,6 +8894,13 @@ msgstr "Pasirinkite"
 msgid "Select Address"
 msgstr "Pasirinkite adresą"
 
+msgid ""
+"Select Amelia Step-By-Step Booking Button block (or its inner button) to "
+"edit shortcode options."
+msgstr ""
+"Pasirinkite „Amelia Žingsnis po žingsnio rezervacijos mygtukas“ bloką (arba "
+"jo vidinį mygtuką), kad redaguotumėte trumpojo kodo nustatymus."
+
 msgid "Select Apple Calendar"
 msgstr "Pasirinkite kalendorių"
 
@@ -8867,6 +8933,13 @@ msgstr "Pasirinkite renginį"
 
 msgid "Select Events"
 msgstr "Pasirinkite paslaugą"
+
+msgid ""
+"Select Events List Booking Button block (or its inner button) to edit "
+"shortcode options."
+msgstr ""
+"Pasirinkite bloką „Events List Booking Button“ (arba jame esantį vidinį "
+"mygtuką), kad redaguotumėte shortcode parinktis."
 
 msgid "Select Location"
 msgstr "Pasirinkite vietą"
@@ -8918,7 +8991,7 @@ msgid "Select box"
 msgstr "Pasirinkimo langelis"
 
 msgid "Select calendar"
-msgstr ""
+msgstr "Pasirinkite kalendorių"
 
 msgid "Select category"
 msgstr "Pasirinkite kategoriją"
@@ -9508,6 +9581,9 @@ msgstr "Bendrai naudojami pajėgumai visose paslaugose"
 
 msgid "Shared category capacity"
 msgstr "Bendros kategorijos talpa"
+
+msgid "Shortcode options"
+msgstr "Trumpojo kodo nustatymai"
 
 msgid "Show"
 msgstr "Rodyti"
@@ -10146,10 +10222,10 @@ msgid "Tag"
 msgstr "Žymė"
 
 msgid "Tag label"
-msgstr ""
+msgstr "Žymos pavadinimas"
 
 msgid "Tag label cannot be empty"
-msgstr ""
+msgstr "Žymos pavadinimas negali būti tuščias"
 
 msgid "Tags"
 msgstr "Žymės"
@@ -10501,6 +10577,11 @@ msgstr "Nuolaidos kuponas jau panaudotas"
 msgid "This email is already in use. Please enter a different email address."
 msgstr "Šis el. pašto adresas jau naudojamas. Įveskite kitą el. pašto adresą."
 
+msgid ""
+"This email is linked to both a customer and an employee account. Please "
+"delete and rebook."
+msgstr ""
+
 msgid "This employee is the only one assigned to {service}."
 msgstr "Šis darbuotojas yra vienintelis, priskirtas „ {service} “."
 
@@ -10522,10 +10603,12 @@ msgstr ""
 
 msgid ""
 "This is a unique security token. Copy it into the 'Verify token' field in "
-"WhatsApp when creating a webhook."
+"WhatsApp when creating a webhook. Since this token is used for logging, we "
+"recommend registering your webhook."
 msgstr ""
-"Tai unikalus saugumo žetonas. Sukurdami žiniatinklio kabliuką, nukopijuokite "
-"jį į „Patvirtinti žetoną“ laukelį „WhatsApp“."
+"Tai unikalus saugos žetonas. Nukopijuokite jį į WhatsApp lauką 'Verify "
+"token', kurdami webhooką. Kadangi šis žetonas naudojamas sistemos žurnalo "
+"įrašams, rekomenduojame užregistruoti savo webhooką."
 
 msgid "This is recurring event"
 msgstr "Tai pasikartojantis įvykis"
@@ -10607,6 +10690,13 @@ msgid ""
 msgstr ""
 "Šis paketas turi {count} susitikimą praeityje. | Šis paketas turi {count} "
 "susitikimus praeityje."
+
+msgid ""
+"This payment link is no longer valid. Please contact admin if you need "
+"assistance."
+msgstr ""
+"Ši mokėjimo nuoroda nebegalioja. Jei reikia pagalbos, susisiekite su "
+"svetainės administratoriumi."
 
 msgid "This placeholder's content will be applied wherever it is used."
 msgstr "Šio vietos laikiklio turinys bus taikomas visur, kur jis naudojamas."
@@ -11008,7 +11098,7 @@ msgstr ""
 "„Minimalaus laiko, reikalingo prieš atšaukimą“ vertės"
 
 msgid "Unable to complete plugin activation. Please try again."
-msgstr ""
+msgstr "Nepavyko užbaigti įskiepio aktyvinimo. Prašome pabandyti dar kartą."
 
 msgid "Unable to deactivate plugin. Please try again later."
 msgstr "Nepavyko išjungti papildinio. Bandykite vėliau."
@@ -11695,6 +11785,9 @@ msgstr "Jūsų vardas"
 
 msgid "Your balance has been recharged."
 msgstr "Jūsų balansas buvo papildytas."
+
+msgid "Your booking has been canceled."
+msgstr "Jūsų rezervacija buvo atšaukta."
 
 msgid ""
 "Your booking has been successfully canceled. If you have any questions or "

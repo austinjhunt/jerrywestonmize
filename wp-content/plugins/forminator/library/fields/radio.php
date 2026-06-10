@@ -511,18 +511,14 @@ class Forminator_Radio extends Forminator_Field {
 	 */
 	public function sanitize( $field, $data ) {
 		$original_data = $data;
-
-		/*
-		* Field sanitization has been moved to library\abstracts\abstract-class-front-action.php > get_post_data > Forminator_Core::sanitize_array
-		* Due to members' request to allow html, we now use wp_kses_post for sanitization of this field
-
-		// Sanitize.
+		// Due to members' request to allow html, we now use wp_kses_post for sanitization of this field.
 		if ( is_array( $data ) ) {
-			$data = forminator_sanitize_array_field( $data );
+			foreach ( $data as $key => $val ) {
+				$data[ $key ] = trim( wp_kses_post( $val ) );
+			}
 		} else {
-			$data = forminator_sanitize_field( $data );
+			$data = trim( wp_kses_post( $data ) );
 		}
-		*/
 		return apply_filters( 'forminator_field_single_sanitize', $data, $field, $original_data );
 	}
 

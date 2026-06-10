@@ -4,7 +4,7 @@ namespace AmeliaBooking\Application\Controller\Bookable\Service;
 
 use AmeliaBooking\Application\Commands\Bookable\Service\GetServiceDeleteEffectCommand;
 use AmeliaBooking\Application\Controller\Controller;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class GetServiceDeleteEffectController

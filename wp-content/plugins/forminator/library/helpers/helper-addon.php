@@ -254,6 +254,9 @@ function forminator_group_addons_by_module( $grouped_addons, $addon, $addon_sett
 						$grouped_addons['connected'][] = $addon_array;
 					}
 				}
+				if ( $addon->can_add_more_on_module( $module_type ) ) {
+					$grouped_addons['not_connected'][] = $addon_settings;
+				}
 			} else {
 				$grouped_addons['not_connected'][] = $addon_settings;
 			}

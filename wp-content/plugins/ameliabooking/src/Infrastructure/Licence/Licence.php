@@ -93,7 +93,7 @@ class Licence extends Pro\Licence
     private static function getLicenseClass()
     {
         // In production, always use the parent class (Pro)
-        if (AMELIA_PRODUCTION) {
+        if (!AMELIA_DEV) {
             return 'AmeliaBooking\Infrastructure\Licence\Pro\Licence';
         }
 
@@ -123,7 +123,7 @@ class Licence extends Pro\Licence
     {
         $currentLicense = self::$licence;
 
-        if (!AMELIA_PRODUCTION) {
+        if (AMELIA_DEV) {
             /** @var SettingsService $settingsService */
             $settingsService = new SettingsService(new SettingsStorage());
 
@@ -327,7 +327,7 @@ class Licence extends Pro\Licence
     public static function getCommands($c)
     {
         // In production, use normal inheritance (class extends were changed by build scripts)
-        if (AMELIA_PRODUCTION) {
+        if (!AMELIA_DEV) {
             return parent::getCommands($c);
         }
 
@@ -346,7 +346,7 @@ class Licence extends Pro\Licence
     public static function setRoutes($app, $container)
     {
         // In production, use normal inheritance (class extends were changed by build scripts)
-        if (AMELIA_PRODUCTION) {
+        if (!AMELIA_DEV) {
             parent::setRoutes($app, $container);
             return;
         }
@@ -364,7 +364,7 @@ class Licence extends Pro\Licence
     public static function getPaddleUrl()
     {
         // In production, use normal inheritance (class extends were changed by build scripts)
-        if (AMELIA_PRODUCTION) {
+        if (!AMELIA_DEV) {
             return parent::getPaddleUrl();
         }
 
@@ -381,7 +381,7 @@ class Licence extends Pro\Licence
      */
     public static function getLicence()
     {
-        if (!AMELIA_PRODUCTION) {
+        if (AMELIA_DEV) {
             $settingsService = new SettingsService(new SettingsStorage());
             $currentLicense = $settingsService->getSetting('activation', 'licence');
             return !empty($currentLicense) ? $currentLicense : LicenceConstants::DEVELOPER;
@@ -398,7 +398,7 @@ class Licence extends Pro\Licence
      */
     public static function isPremium()
     {
-        if (!AMELIA_PRODUCTION) {
+        if (AMELIA_DEV) {
             $settingsService = new SettingsService(new SettingsStorage());
             $currentLicense = $settingsService->getSetting('activation', 'licence');
             $currentLicense = !empty($currentLicense) ? $currentLicense : LicenceConstants::DEVELOPER;

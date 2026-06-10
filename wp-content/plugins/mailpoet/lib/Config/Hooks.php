@@ -7,6 +7,7 @@ if (!defined('ABSPATH')) exit;
 
 use MailPoet\Captcha\CaptchaHooks;
 use MailPoet\Captcha\ReCaptchaHooks;
+use MailPoet\Captcha\TurnstileHooks;
 use MailPoet\Cron\CronTrigger;
 use MailPoet\EmailEditor\Integrations\MailPoet\Coupons\CouponBlockGenerator;
 use MailPoet\Form\DisplayFormInWPContent;
@@ -15,6 +16,7 @@ use MailPoet\Newsletter\Scheduler\PostNotificationScheduler;
 use MailPoet\Segments\WP;
 use MailPoet\Settings\SettingsController;
 use MailPoet\Statistics\Track\SubscriberHandler;
+use MailPoet\Subscribers\SubscriberLimitNotificationScheduler;
 use MailPoet\Subscription\AdminUserSubscription;
 use MailPoet\Subscription\Comment;
 use MailPoet\Subscription\Form;
@@ -82,6 +84,9 @@ class Hooks {
   /** @var SubscriberChangesNotifier */
   private $subscriberChangesNotifier;
 
+  /** @var SubscriberLimitNotificationScheduler */
+  private $subscriberLimitNotificationScheduler;
+
   /** @var DotcomLicenseProvisioner */
   private $dotcomLicenseProvisioner;
 
@@ -93,6 +98,9 @@ class Hooks {
 
   /** @var ReCaptchaHooks */
   private $reCaptchaHooks;
+
+  /** @var TurnstileHooks */
+  private $turnstileHooks;
 
   /** @var WooSystemInfoController */
   private $wooSystemInfoController;
@@ -122,10 +130,12 @@ class Hooks {
     SubscriberHandler $subscriberHandler,
     HooksWooCommerce $hooksWooCommerce,
     SubscriberChangesNotifier $subscriberChangesNotifier,
+    SubscriberLimitNotificationScheduler $subscriberLimitNotificationScheduler,
     DotcomLicenseProvisioner $dotcomLicenseProvisioner,
     AutomateWooHooks $automateWooHooks,
     CaptchaHooks $captchaHooks,
     ReCaptchaHooks $reCaptchaHooks,
+    TurnstileHooks $turnstileHooks,
     WooSystemInfoController $wooSystemInfoController,
     CronTrigger $cronTrigger,
     WooHelper $wooHelper,
@@ -146,7 +156,9 @@ class Hooks {
     $this->hooksWooCommerce = $hooksWooCommerce;
     $this->captchaHooks = $captchaHooks;
     $this->reCaptchaHooks = $reCaptchaHooks;
+    $this->turnstileHooks = $turnstileHooks;
     $this->subscriberChangesNotifier = $subscriberChangesNotifier;
+    $this->subscriberLimitNotificationScheduler = $subscriberLimitNotificationScheduler;
     $this->dotcomLicenseProvisioner = $dotcomLicenseProvisioner;
     $this->automateWooHooks = $automateWooHooks;
     $this->wooSystemInfoController = $wooSystemInfoController;
@@ -173,6 +185,7 @@ class Hooks {
     $this->setupFooter();
     $this->setupSettingsLinkInPluginPage();
     $this->setupChangeNotifications();
+    $this->setupSubscriberLimitNotifications();
     $this->setupLicenseProvisioning();
     $this->setupCaptchaOnRegisterForm();
     $this->adminUserSubscription->setupHooks();
@@ -695,6 +708,10 @@ class Hooks {
     );
   }
 
+  public function setupSubscriberLimitNotifications(): void {
+    $this->subscriberLimitNotificationScheduler->setupHooks();
+  }
+
   public function setupLicenseProvisioning(): void {
     $this->wp->addFilter(
       'wpcom_marketplace_webhook_response_mailpoet-business',
@@ -764,6 +781,40 @@ class Hooks {
         $this->wp->addAction(
           'woocommerce_process_registration_errors',
           [$this->reCaptchaHooks, 'validate']
+        );
+      }
+    } else if ($this->turnstileHooks->isEnabled()) {
+      $this->wp->addAction(
+        'login_enqueue_scripts',
+        [$this->turnstileHooks, 'enqueueScripts']
+      );
+
+      $this->wp->addAction(
+        'register_form',
+        [$this->turnstileHooks, 'render']
+      );
+
+      $this->wp->addFilter(
+        'registration_errors',
+        [$this->turnstileHooks, 'validate'],
+        10,
+        3
+      );
+
+      if ($this->wooHelper->isWooCommerceActive()) {
+        $this->wp->addAction(
+          'woocommerce_before_customer_login_form',
+          [$this->turnstileHooks, 'enqueueScripts']
+        );
+
+        $this->wp->addAction(
+          'woocommerce_register_form',
+          [$this->turnstileHooks, 'render']
+        );
+
+        $this->wp->addAction(
+          'woocommerce_process_registration_errors',
+          [$this->turnstileHooks, 'validate']
         );
       }
     }

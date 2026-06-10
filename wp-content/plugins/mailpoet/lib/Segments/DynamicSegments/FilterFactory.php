@@ -32,6 +32,7 @@ use MailPoet\Segments\DynamicSegments\Filters\WooCommerceMembership;
 use MailPoet\Segments\DynamicSegments\Filters\WooCommerceNumberOfOrders;
 use MailPoet\Segments\DynamicSegments\Filters\WooCommerceNumberOfReviews;
 use MailPoet\Segments\DynamicSegments\Filters\WooCommerceProduct;
+use MailPoet\Segments\DynamicSegments\Filters\WooCommerceProductVariation;
 use MailPoet\Segments\DynamicSegments\Filters\WooCommercePurchaseDate;
 use MailPoet\Segments\DynamicSegments\Filters\WooCommercePurchasedWithAttribute;
 use MailPoet\Segments\DynamicSegments\Filters\WooCommerceSingleOrderValue;
@@ -54,6 +55,9 @@ class FilterFactory {
 
   /** @var WooCommerceProduct */
   private $wooCommerceProduct;
+
+  /** @var WooCommerceProductVariation */
+  private $wooCommerceProductVariation;
 
   /** @var WooCommerceCategory */
   private $wooCommerceCategory;
@@ -169,7 +173,8 @@ class FilterFactory {
     AutomationsEvents $automationsEvents,
     EmailsReceived $emailsReceived,
     NumberOfClicks $numberOfClicks,
-    WooCommercePurchasedWithAttribute $wooCommercePurchasedWithAttribute
+    WooCommercePurchasedWithAttribute $wooCommercePurchasedWithAttribute,
+    WooCommerceProductVariation $wooCommerceProductVariation
   ) {
     $this->emailAction = $emailAction;
     $this->userRole = $userRole;
@@ -203,6 +208,7 @@ class FilterFactory {
     $this->numberOfClicks = $numberOfClicks;
     $this->wooCommercePurchasedWithAttribute = $wooCommercePurchasedWithAttribute;
     $this->wooCommerceTag = $wooCommerceTag;
+    $this->wooCommerceProductVariation = $wooCommerceProductVariation;
   }
 
   public function getFilterForFilterEntity(DynamicSegmentFilterEntity $filter): Filter {
@@ -284,6 +290,8 @@ class FilterFactory {
   private function wooCommerce(?string $action) {
     if ($action === WooCommerceProduct::ACTION_PRODUCT) {
       return $this->wooCommerceProduct;
+    } elseif ($action === WooCommerceProductVariation::ACTION_PRODUCT_VARIATION) {
+      return $this->wooCommerceProductVariation;
     } elseif (in_array($action, WooCommerceNumberOfOrders::ACTIONS)) {
       return $this->wooCommerceNumberOfOrders;
     } elseif ($action === WooCommerceTotalSpent::ACTION_TOTAL_SPENT) {

@@ -4,7 +4,7 @@ namespace AmeliaBooking\Application\Controller\Stripe;
 
 use AmeliaBooking\Application\Controller\Controller;
 use AmeliaBooking\Application\Commands\Stripe\GetStripeAccountDashboardUrlCommand;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 class GetStripeAccountDashboardUrlController extends Controller
 {

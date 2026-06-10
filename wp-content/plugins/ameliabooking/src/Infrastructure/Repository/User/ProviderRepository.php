@@ -307,7 +307,7 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
 
             $order = '';
             if (!empty($criteria['sort'])) {
-                $orderColumn    = 'CONCAT(u.firstName, " ", u.lastName)';
+                $orderColumn    = 'CONCAT(u.firstName, \' \', u.lastName)';
                 $orderDirection = $criteria['sort'][0] === '-' ? 'DESC' : 'ASC';
                 $order          = "ORDER BY {$orderColumn} {$orderDirection}";
             }

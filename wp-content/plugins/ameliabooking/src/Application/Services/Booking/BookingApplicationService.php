@@ -17,6 +17,7 @@ use AmeliaBooking\Domain\Entity\Booking\Event\Event;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Location\Location;
 use AmeliaBooking\Domain\Entity\Payment\Payment;
+use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Entity\User\Customer;
 use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Domain\Factory\Bookable\Service\PackageFactory;
@@ -296,6 +297,14 @@ class BookingApplicationService
 
         if (isset($data['utc']) && $data['utc'] === '') {
             $data['utc'] = null;
+        }
+
+        if (isset($data['bookings'][0]['customer']) && array_key_exists('type', $data['bookings'][0]['customer'])) {
+            $data['bookings'][0]['customer']['type'] = AbstractUser::USER_ROLE_CUSTOMER;
+        }
+
+        if (isset($data['bookings'][0]['customer']) && array_key_exists('externalId', $data['bookings'][0]['customer'])) {
+            $data['bookings'][0]['customer']['externalId'] = null;
         }
 
         if (!empty($data['bookings'][0]['customer']['firstName'])) {

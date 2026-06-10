@@ -9,6 +9,7 @@ namespace AmeliaBooking\Application\Commands\Calendar;
 
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
+use AmeliaBooking\Application\Services\Calendar\CalendarProviderService;
 use AmeliaBooking\Application\Services\User\ProviderApplicationService;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Collection\Collection;
@@ -22,7 +23,6 @@ use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\ValueObjects\DateTime\DateTimeValue;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
-use AmeliaBooking\Domain\ValueObjects\String\Status;
 use AmeliaVendor\Psr\Container\ContainerExceptionInterface;
 use DateInterval;
 use DateInvalidTimeZoneException;
@@ -41,8 +41,8 @@ class GetCalendarSlotsCommandHandler extends CommandHandler
     {
         $result = new CommandResult();
 
-        $providerRepository = $this->container->get('domain.users.providers.repository');
-        $locationRepository = $this->container->get('domain.locations.repository');
+        /** @var CalendarProviderService $calendarProviderService */
+        $calendarProviderService = $this->container->get('application.calendar.provider.service');
 
         $this->userTimezone = DateTimeService::getTimeZone()->getName();
 
@@ -54,41 +54,49 @@ class GetCalendarSlotsCommandHandler extends CommandHandler
             $this->userTimezone = $providerAS->getTimeZone($user);
         }
 
-        $queryParams = $command->getField('queryParams');
         $allWorkDays = [];
-        $selectedService = $queryParams['service'] ?? null;
+        $resources = [];
+        $formattedWorkPeriods = [];
+        $queryParams = $command->getField('queryParams');
+        $isResourceView = ($queryParams['view'] ?? '') === 'resourceTimeGridDay';
 
-        $queryParams['locations'] = array_map(
-            fn($location) => $location['id'],
-            $locationRepository->getFiltered(
-                ['status' => !empty($queryParams['providers']) ? null : Status::VISIBLE],
-                0
-            )->toArray()
-        );
-
-        $criteria = ['providerStatus' => !empty($queryParams['providers']) ? null : Status::VISIBLE];
-        foreach ($queryParams as $key => $value) {
-            if ($key !== 'providerStatus') {
-                $criteria[$key] = $value;
-            }
-        }
-
-        $providers = $providerRepository->getWithSchedule($criteria)->getItems();
+        $providers = $calendarProviderService->getVisibleProviders($queryParams);
 
         foreach ($providers as $provider) {
-            if (!$selectedService) {
-                $providerWorkDays = $this->getProviderWorkDays($provider, $queryParams);
-                $this->getTimeLimitsByProvider($queryParams, $providerWorkDays, $provider);
+            $providerWorkDays = $this->getProviderWorkDays($provider, $queryParams);
+            $this->getTimeLimitsByProvider($queryParams, $providerWorkDays, $provider);
+
+            if (!$isResourceView) {
                 $this->mergeProviderWorkDays($allWorkDays, $providerWorkDays);
+
+                continue;
             }
+
+            if (empty($providerWorkDays) || $user->getType() === Entities::CUSTOMER) {
+                $this->fillEmptyWorkDays($providerWorkDays, $queryParams);
+            }
+
+            $this->processCompanyDaysOff($providerWorkDays, $queryParams);
+            $providerFormatted = $this->formatWorkDays($providerWorkDays, $provider->getId()->getValue());
+            $formattedWorkPeriods = array_merge($formattedWorkPeriods, $providerFormatted);
+            $resources[] = [
+                'id'               => $provider->getId()->getValue(),
+                'order'            => $provider->getId()->getValue(),
+                'title'            => $provider->getFullName(),
+                'pictureThumbPath' => $provider->getPicture() ? $provider->getPicture()->getThumbPath() : null,
+                'firstName'        => $provider->getFirstName()->getValue(),
+                'lastName'         => $provider->getLastName()->getValue(),
+            ];
         }
 
-        if (empty($allWorkDays) || $user->getType() === Entities::CUSTOMER) {
-            $this->fillEmptyWorkDays($allWorkDays, $queryParams);
-        }
+        if (!$isResourceView) {
+            if (empty($allWorkDays) || $user->getType() === Entities::CUSTOMER) {
+                $this->fillEmptyWorkDays($allWorkDays, $queryParams);
+            }
 
-        $this->processCompanyDaysOff($allWorkDays, $queryParams);
-        $formattedWorkPeriods = $this->formatWorkDays($allWorkDays);
+            $this->processCompanyDaysOff($allWorkDays, $queryParams);
+            $formattedWorkPeriods = $this->formatWorkDays($allWorkDays);
+        }
 
         $this->getTimeLimitsFromAppointmentsAndEvents($queryParams);
 
@@ -96,6 +104,7 @@ class GetCalendarSlotsCommandHandler extends CommandHandler
             'workPeriods' => $formattedWorkPeriods,
             'slotMinTime' => $this->timeLimits['slotMinTime'],
             'slotMaxTime' => $this->timeLimits['slotMaxTime'],
+            'resources'   => $resources,
             'now' => DateTimeService::getNowDateTime()
         ]);
 
@@ -107,11 +116,12 @@ class GetCalendarSlotsCommandHandler extends CommandHandler
      */
     private function fillEmptyWorkDays(array &$allWorkDays, array $queryParams): void
     {
-        [$this->timeLimits['slotMinTime'], $this->timeLimits['slotMaxTime']] = $this->getLimitsFromCompanyWorkHours();
+        if ($this->timeLimits['slotMinTime'] === '24:00:00' && $this->timeLimits['slotMaxTime'] === '00:00:00') {
+            [$this->timeLimits['slotMinTime'], $this->timeLimits['slotMaxTime']] = $this->getLimitsFromCompanyWorkHours();
+        }
 
         if ($this->timeLimits['slotMinTime'] === '24:00:00' && $this->timeLimits['slotMaxTime'] === '00:00:00') {
-            $this->timeLimits['slotMinTime'] = '09:00:00';
-            $this->timeLimits['slotMaxTime'] = '17:00:00';
+            [$this->timeLimits['slotMinTime'], $this->timeLimits['slotMaxTime']] = ['09:00:00', '17:00:00'];
         }
 
         $calendarStartDate = DateTime::createFromFormat('Y-m-d', $queryParams['calendarStartDate']);
@@ -344,14 +354,14 @@ class GetCalendarSlotsCommandHandler extends CommandHandler
         }
     }
 
-    private function formatWorkDays(array $allWorkDays): array
+    private function formatWorkDays(array $allWorkDays, ?int $resourceId = null): array
     {
         $formattedPeriods = [];
 
         foreach ($allWorkDays as $date => $info) {
             $periods = $info['periods'];
             if (empty($periods)) {
-                $formattedPeriods[] = $this->createPeriod($date, $date, 'notWorkHours', 'not-work-hours');
+                $formattedPeriods[] = $this->createPeriod($date, $date, 'notWorkHours', 'not-work-hours', $resourceId);
                 continue;
             }
 
@@ -362,21 +372,21 @@ class GetCalendarSlotsCommandHandler extends CommandHandler
                 $end = "{$date}T{$period['end']}";
 
                 if ($i === 0 && $period['start'] !== '00:00:00') {
-                    $formattedPeriods[] = $this->createPeriod("{$date}T00:00:00", $start, 'notWorkHours', 'not-work-hours');
+                    $formattedPeriods[] = $this->createPeriod("{$date}T00:00:00", $start, 'notWorkHours', 'not-work-hours', $resourceId);
                 }
 
                 if ($period['groupId'] === 'dayOff') {
-                    $formattedPeriods[] = $this->createPeriod($start, $end, 'dayOff', 'day-off');
+                    $formattedPeriods[] = $this->createPeriod($start, $end, 'dayOff', 'day-off', $resourceId);
                 } else {
-                    $formattedPeriods[] = $this->createPeriod($start, $end, 'workHours', 'work-hours');
+                    $formattedPeriods[] = $this->createPeriod($start, $end, 'workHours', 'work-hours', $resourceId);
                 }
 
                 if (isset($periods[$i + 1]) && $period['end'] !== $periods[$i + 1]['start']) {
-                    $formattedPeriods[] = $this->createPeriod($end, "{$date}T{$periods[$i + 1]['start']}", 'notWorkHours', 'not-work-hours');
+                    $formattedPeriods[] = $this->createPeriod($end, "{$date}T{$periods[$i + 1]['start']}", 'notWorkHours', 'not-work-hours', $resourceId);
                 }
 
                 if ($i === count($periods) - 1 && $period['end'] !== '24:00:00') {
-                    $formattedPeriods[] = $this->createPeriod($end, "{$date}T24:00:00", 'notWorkHours', 'not-work-hours');
+                    $formattedPeriods[] = $this->createPeriod($end, "{$date}T24:00:00", 'notWorkHours', 'not-work-hours', $resourceId);
                 }
             }
         }
@@ -384,15 +394,21 @@ class GetCalendarSlotsCommandHandler extends CommandHandler
         return $formattedPeriods;
     }
 
-    private function createPeriod(string $start, string $end, string $groupId, string $className): array
+    private function createPeriod(string $start, string $end, string $groupId, string $className, ?int $resourceId = null): array
     {
-        return [
-            'groupId' => $groupId,
-            'start' => $start,
-            'end' => $end,
-            'display' => 'background',
-            'className' => $className
+        $period = [
+            'groupId'   => $groupId,
+            'start'     => $start,
+            'end'       => $end,
+            'display'   => 'background',
+            'className' => $className,
         ];
+
+        if ($resourceId !== null) {
+            $period['resourceId'] = $resourceId;
+        }
+
+        return $period;
     }
 
     private function getTimeLimitsByProvider(array $queryParams, array $periods, Provider $provider): void
@@ -571,7 +587,7 @@ class GetCalendarSlotsCommandHandler extends CommandHandler
     private function processCompanyDaysOff(array &$allWorkDays, array $queryParams): void
     {
         $isDateRangeOverlapping = fn(DateTime $start1, DateTime $end1, DateTime $start2, DateTime $end2): bool =>
-            $start1 <= $end2 && $end1 >= $start2;
+        $start1 <= $end2 && $end1 >= $start2;
 
         $settingsDS = $this->container->get('domain.settings.service');
         $calendarStartDate = DateTime::createFromFormat('Y-m-d', $queryParams['calendarStartDate']);

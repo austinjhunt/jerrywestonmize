@@ -8,7 +8,6 @@ if (!defined('ABSPATH')) exit;
 use MailPoet\AdminPages\AssetsController;
 use MailPoet\AdminPages\PageRenderer;
 use MailPoet\API\JSON\ResponseBuilders\SegmentsResponseBuilder;
-use MailPoet\Listing\PageLimit;
 use MailPoet\Segments\SegmentsRepository;
 use MailPoet\Settings\UserFlagsController;
 use MailPoet\WP\Functions as WPFunctions;
@@ -19,9 +18,6 @@ class Forms {
 
   /** @var PageRenderer */
   private $pageRenderer;
-
-  /** @var PageLimit */
-  private $listingPageLimit;
 
   /** @var UserFlagsController */
   private $userFlags;
@@ -38,7 +34,6 @@ class Forms {
   public function __construct(
     AssetsController $assetsController,
     PageRenderer $pageRenderer,
-    PageLimit $listingPageLimit,
     UserFlagsController $userFlags,
     SegmentsRepository $segmentsRepository,
     SegmentsResponseBuilder $segmentsResponseBuilder,
@@ -46,7 +41,6 @@ class Forms {
   ) {
     $this->assetsController = $assetsController;
     $this->pageRenderer = $pageRenderer;
-    $this->listingPageLimit = $listingPageLimit;
     $this->userFlags = $userFlags;
     $this->wp = $wp;
     $this->segmentsRepository = $segmentsRepository;
@@ -57,7 +51,6 @@ class Forms {
     $this->assetsController->setupDataViewsDependencies();
 
     $data = [];
-    $data['items_per_page'] = $this->listingPageLimit->getLimitPerPage('forms');
     $data['segments'] = $this->segmentsResponseBuilder->buildForListing($this->segmentsRepository->findAll());
     $data['api'] = [
       'root' => rtrim($this->wp->escUrlRaw($this->wp->restUrl()), '/'),

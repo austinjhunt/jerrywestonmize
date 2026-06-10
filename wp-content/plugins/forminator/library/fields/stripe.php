@@ -526,7 +526,7 @@ class Forminator_Stripe extends Forminator_Field {
 
 		// Default options.
 		$options = array(
-			'amount'   => (int) $this->calculate_amount( $amount, $currency ),
+			'amount'   => $this->calculate_amount( $amount, $currency ),
 			'currency' => $currency,
 			'confirm'  => false,
 		);
@@ -590,26 +590,26 @@ class Forminator_Stripe extends Forminator_Field {
 	 * @param int|float $amount Amount.
 	 * @param string    $currency Currency.
 	 *
-	 * @return float|int
+	 * @return int
 	 */
 	public function calculate_amount( $amount, $currency ) {
 		$zero_decimal_currencies = $this->get_zero_decimal_currencies();
 
-		// Check if currency is zero decimal, then return original amount.
+		// Check if currency is zero decimal, then return the rounded whole-number amount.
 		if ( in_array( $currency, $zero_decimal_currencies, true ) ) {
-			return $amount;
+			return (int) round( (float) $amount );
 		}
 
 		// If JOD, amount needs to have 3 decimals and multiplied to 1000.
 		if ( 'JOD' === $currency ) {
 			$amount = number_format( $amount, 3, '.', '' );
-			return $amount * 1000;
+			return (int) round( (float) $amount * 1000 );
 		}
 
 		$amount = number_format( $amount, 2, '.', '' );
 
 		// Currency has decimals, multiply by 100.
-		return $amount * 100;
+		return (int) round( (float) $amount * 100 );
 	}
 
 	/**
@@ -650,9 +650,10 @@ class Forminator_Stripe extends Forminator_Field {
 	 * @throws Exception When there is an error.
 	 */
 	public function update_paymentIntent( $submitted_data, $field ) {
-		$mode     = self::get_property( 'mode', $field, 'test' );
-		$currency = self::get_property( 'currency', $field, $this->get_default_currency() );
-		$is_multi = self::get_property( 'automatic_payment_methods', $field, 'true' );
+		$mode      = self::get_property( 'mode', $field, 'test' );
+		$currency  = self::get_property( 'currency', $field, $this->get_default_currency() );
+		$is_multi  = self::get_property( 'automatic_payment_methods', $field, 'true' );
+		$is_intent = ! empty( $submitted_data['stripe-intent'] );
 
 		if ( ! empty( $this->payment_plan['payment_method'] ) && 'subscription' === $this->payment_plan['payment_method'] ) {
 			$response_data = array(
@@ -661,7 +662,27 @@ class Forminator_Stripe extends Forminator_Field {
 				'paymentPlan'   => $this->payment_plan_hash,
 			);
 
-			if ( 'false' === $is_multi && class_exists( 'Forminator_Stripe_Subscription' ) ) {
+			// Wallet preview: set amount for Apple/Google Pay preview from local price × qty (no Stripe API).
+			if ( $is_intent && class_exists( 'Forminator_Stripe_Subscription' ) ) {
+				try {
+					$stripe_addon = Forminator_Stripe_Subscription::get_instance();
+					$field_object = Forminator_Core::get_field_object( 'stripe' );
+					$payment_plan = $field_object->get_payment_plan( $field );
+					$price        = $stripe_addon->calculate_price( $payment_plan, Forminator_Front_Action::$module_object, $field_object, Forminator_Front_Action::$prepared_data, $field );
+					$quantity     = $stripe_addon->get_quantity( $payment_plan, Forminator_Front_Action::$module_object, $field_object, Forminator_Front_Action::$prepared_data, $field );
+					if ( $quantity < 1 ) {
+						$quantity = 1;
+					}
+					if ( $price > 0 ) {
+						$response_data['amount'] = $this->calculate_amount( $price * $quantity, $currency );
+					}
+				} catch ( Exception $e ) {
+					forminator_maybe_log( __METHOD__, $e->getMessage() );
+				}
+			}
+
+			// Cards-only: create invoice PI on submit; skip on stripe-intent to avoid duplicate incomplete subscriptions.
+			if ( ! $is_intent && 'false' === $is_multi && class_exists( 'Forminator_Stripe_Subscription' ) ) {
 				try {
 					$stripe_addon   = Forminator_Stripe_Subscription::get_instance();
 					$field_object   = Forminator_Core::get_field_object( 'stripe' );
@@ -704,7 +725,6 @@ class Forminator_Stripe extends Forminator_Field {
 		}
 		$payment_method     = filter_var( $field['automatic_payment_methods'], FILTER_VALIDATE_BOOLEAN ) ? 'dynamic' : 'card';
 		$payment_intent_key = $mode . '_' . $currency . '_' . $amount . '_' . substr( $key, -5 ) . '_' . $payment_method;
-		$is_intent          = ! empty( $submitted_data['stripe-intent'] );
 		// Check if we already have payment ID, if not generate new one.
 		if ( empty( $id ) ) {
 			$generate_new = ! $is_intent;
@@ -1070,7 +1090,7 @@ class Forminator_Stripe extends Forminator_Field {
 			}
 
 			$charge_amount     = $this->get_payment_amount( $field );
-			$expected_amount   = (int) $this->calculate_amount( $charge_amount, $currency );
+			$expected_amount   = $this->calculate_amount( $charge_amount, $currency );
 			$intent_amount     = isset( $intent->amount ) ? (int) $intent->amount : 0;
 			$intent_currency   = isset( $intent->currency ) ? strtoupper( (string) $intent->currency ) : '';
 			$expected_currency = strtoupper( (string) $currency );
@@ -1326,7 +1346,16 @@ class Forminator_Stripe extends Forminator_Field {
 		$this->payment_plan = $this->get_payment_plan( $field_settings );
 		$plan               = $this->payment_plan;
 
-		$amount                  = $this->get_payment_amount( $field_settings );
+		$amount = $this->get_payment_amount( $field_settings );
+
+		// Subscription plans use subscription_amount_* keys; include live total so paymentPlan hash changes when variable price/qty changes.
+		if ( ! empty( $plan['payment_method'] ) && 'subscription' === $plan['payment_method'] && class_exists( 'Forminator_Stripe_Subscription' ) ) {
+			$stripe_addon = Forminator_Stripe_Subscription::get_instance();
+			$price        = $stripe_addon->calculate_price( $plan, Forminator_Front_Action::$module_object, $this, Forminator_CForm_Front_Action::$prepared_data, $field_settings );
+			$quantity     = $stripe_addon->get_quantity( $plan, Forminator_Front_Action::$module_object, $this, Forminator_CForm_Front_Action::$prepared_data, $field_settings );
+			$amount       = $price * max( 1, $quantity );
+		}
+
 		$this->payment_plan_hash = md5( wp_json_encode( $plan ) . $amount );
 
 		$conditions_depends = self::get_conditions_dependent_fields( $field_settings );
@@ -1391,6 +1420,13 @@ class Forminator_Stripe extends Forminator_Field {
 				&& 'variable' === $plan['subscription_amount_type']
 				&& ! empty( $plan['subscription_variable'] ) ) {
 			$depend_field[] = $plan['subscription_variable'];
+		}
+
+		if ( 'subscription' === $plan['payment_method']
+				&& ! empty( $plan['quantity_type'] )
+				&& 'variable' === $plan['quantity_type']
+				&& ! empty( $plan['variable_quantity'] ) ) {
+			$depend_field[] = $plan['variable_quantity'];
 		}
 
 		return $depend_field;

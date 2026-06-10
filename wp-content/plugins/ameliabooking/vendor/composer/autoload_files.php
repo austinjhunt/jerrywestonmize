@@ -18,6 +18,8 @@ return array(
     '941748b3c8cae4466c827dfb5ca9602a' => $vendorDir . '/rmccue/requests/library/Deprecated.php',
     '3569eecfeed3bcf0bad3c998a494ecb8_am' => $vendorDir . '/sabre/xml/lib/Deserializer/functions.php',
     '93aa591bc4ca510c520999e34229ee79_am' => $vendorDir . '/sabre/xml/lib/Serializer/functions.php',
+    'a4a119a56e50fbb293281d9a48007e0e' => $vendorDir . '/symfony/polyfill-php80/bootstrap.php',
     'a8d3953fd9959404dd22d3dfcd0a79f0' => $vendorDir . '/google/apiclient/src/aliases.php',
     '13906c19e3d8fcd1341b24ed4d51cf72' => $vendorDir . '/razorpay/razorpay/Deprecated.php',
+    '2d223b650b5c56928c1affa16ee5cfe2' => $vendorDir . '/wordpress/abilities-api/includes/bootstrap.php',
 );

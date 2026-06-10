@@ -163,7 +163,6 @@ class Forminator_Textarea extends Forminator_Field {
 			'placeholder' => $placeholder,
 			'id'          => $id,
 			'class'       => 'forminator-textarea',
-			'rows'        => 6,
 			'style'       => '--forminator-textarea-min-height:' . $default_height . 'px;',
 		);
 

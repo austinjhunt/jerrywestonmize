@@ -5,7 +5,7 @@ namespace AmeliaBooking\Application\Controller\Test;
 use AmeliaBooking\Application\Commands\Test\TestCommand;
 use AmeliaBooking\Application\Controller\Controller;
 use RuntimeException;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class TestController

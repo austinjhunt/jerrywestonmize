@@ -8,5 +8,4 @@ $baseDir = dirname($vendorDir);
 return array(
     'Rs\\Json' => array($vendorDir . '/php-jsonpointer/php-jsonpointer/src'),
     'Pimple' => array($vendorDir . '/pimple/pimple/src'),
-    'Eluceo\\iCal' => array($vendorDir . '/eluceo/ical/src'),
 );

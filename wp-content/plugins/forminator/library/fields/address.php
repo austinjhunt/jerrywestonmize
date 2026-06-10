@@ -122,6 +122,7 @@ class Forminator_Address extends Forminator_Field {
 		$city_providers           = apply_filters( 'forminator_field_' . $this->slug . '_city_autofill', array(), $this->slug . '_city' );
 		$state_providers          = apply_filters( 'forminator_field_' . $this->slug . '_state_autofill', array(), $this->slug . '_state' );
 		$zip_providers            = apply_filters( 'forminator_field_' . $this->slug . '_zip_autofill', array(), $this->slug . '_zip' );
+		$country_providers        = apply_filters( 'forminator_field_' . $this->slug . '_country_autofill', array(), $this->slug . '_country' );
 
 		$autofill_settings = array(
 			'address-street_address' => array(
@@ -138,6 +139,9 @@ class Forminator_Address extends Forminator_Field {
 			),
 			'address-zip'            => array(
 				'values' => forminator_build_autofill_providers( $zip_providers ),
+			),
+			'address-country'        => array(
+				'values' => forminator_build_autofill_providers( $country_providers ),
 			),
 		);
 
@@ -228,13 +232,22 @@ class Forminator_Address extends Forminator_Field {
 			$address['autocomplete'] = 'off';
 		}
 
-		if ( empty( $draft_value ) ) {
+		$autofill_markup = $this->get_element_autofill_markup_attr( $address_id );
+		$is_locked       = ! empty( $autofill_markup['readonly'] );
 
-			$address = $this->replace_from_prefill( $field, $address, $slug );
+		// Always set data-default for JS autofill restore in new group rows.
+		if ( ! empty( $autofill_markup['data-default'] ) ) {
+			$address['data-default'] = $autofill_markup['data-default'];
+		}
 
+		if ( $is_locked ) {
+			// Non-editable autofill: server enforces this value, draft is ignored.
+			$address = array_merge( $address, $autofill_markup );
 		} elseif ( isset( $draft_value[ $slug ] ) ) {
-
 			$address['value'] = esc_attr( $draft_value[ $slug ] );
+		} else {
+			$address = $this->replace_from_prefill( $field, $address, $slug );
+			$address = array_merge( $address, $autofill_markup );
 		}
 
 		if ( $enabled ) {
@@ -321,14 +334,18 @@ class Forminator_Address extends Forminator_Field {
 					'autocomplete'  => 'enabled' === $browser_autofill ? 'address-level2' : 'off',
 				);
 
-				if ( isset( $draft_value['city'] ) ) {
-
+				$autofill_markup = $this->get_element_autofill_markup_attr( $city_id );
+				if ( ! empty( $autofill_markup['data-default'] ) ) {
+					$city_data['data-default'] = $autofill_markup['data-default'];
+				}
+				if ( ! empty( $autofill_markup['readonly'] ) ) {
+					// Non-editable autofill: server enforces this value, draft is ignored.
+					$city_data = array_merge( $city_data, $autofill_markup );
+				} elseif ( isset( $draft_value['city'] ) ) {
 					$city_data['value'] = esc_attr( $draft_value['city'] );
-
 				} else {
-
 					$city_data = $this->replace_from_prefill( $field, $city_data, 'address_city' );
-
+					$city_data = array_merge( $city_data, $autofill_markup );
 				}
 
 				$html .= sprintf( '<div id="%s" class="forminator-col forminator-col-%s">', $city_data['name'], $cols );
@@ -362,14 +379,18 @@ class Forminator_Address extends Forminator_Field {
 					'autocomplete'  => 'enabled' === $browser_autofill ? 'address-level1' : 'off',
 				);
 
-				if ( isset( $draft_value['state'] ) ) {
-
+				$autofill_markup = $this->get_element_autofill_markup_attr( $state_id );
+				if ( ! empty( $autofill_markup['data-default'] ) ) {
+					$state_data['data-default'] = $autofill_markup['data-default'];
+				}
+				if ( ! empty( $autofill_markup['readonly'] ) ) {
+					// Non-editable autofill: server enforces this value, draft is ignored.
+					$state_data = array_merge( $state_data, $autofill_markup );
+				} elseif ( isset( $draft_value['state'] ) ) {
 					$state_data['value'] = esc_attr( $draft_value['state'] );
-
 				} else {
-
 					$state_data = $this->replace_from_prefill( $field, $state_data, 'address_state' );
-
+					$state_data = array_merge( $state_data, $autofill_markup );
 				}
 
 				$html .= sprintf( '<div id="%s" class="forminator-col forminator-col-%s">', $state_data['name'], $cols );
@@ -451,14 +472,18 @@ class Forminator_Address extends Forminator_Field {
 					'autocomplete' => 'enabled' === $browser_autofill ? 'postal-code' : 'off',
 				);
 
-				if ( isset( $draft_value['zip'] ) ) {
-
+				$autofill_markup = $this->get_element_autofill_markup_attr( $zip_id );
+				if ( ! empty( $autofill_markup['data-default'] ) ) {
+					$zip_data['data-default'] = $autofill_markup['data-default'];
+				}
+				if ( ! empty( $autofill_markup['readonly'] ) ) {
+					// Non-editable autofill: server enforces this value, draft is ignored.
+					$zip_data = array_merge( $zip_data, $autofill_markup );
+				} elseif ( isset( $draft_value['zip'] ) ) {
 					$zip_data['value'] = esc_attr( $draft_value['zip'] );
-
 				} else {
-
 					$zip_data = $this->replace_from_prefill( $field, $zip_data, 'address_zip' );
-
+					$zip_data = array_merge( $zip_data, $autofill_markup );
 				}
 
 				$html .= sprintf( '<div id="%s" class="forminator-col forminator-col-%s">', $zip_data['name'], $cols );
@@ -487,7 +512,7 @@ class Forminator_Address extends Forminator_Field {
 					'class'            => 'forminator-select2',
 					'data-search'      => 'true',
 					'data-placeholder' => esc_html__( 'Select country', 'forminator' ),
-					'autocomplete'     => 'enabled' === $browser_autofill ? 'country-name country' : 'off',
+					'autocomplete'     => 'enabled' === $browser_autofill ? 'country-name' : 'off',
 				);
 
 				$countries = array(
@@ -501,15 +526,32 @@ class Forminator_Address extends Forminator_Field {
 				$countries = array_merge( $countries, $options );
 				$country   = false;
 
-				if ( isset( $draft_value['country'] ) ) {
+				$autofill_markup = $this->get_element_autofill_markup_attr( $country_id );
+				$is_locked       = ! empty( $autofill_markup['readonly'] );
+
+				if ( ! empty( $autofill_markup['data-default'] ) ) {
+					$country_data['data-default'] = $autofill_markup['data-default'];
+				}
+
+				if ( $is_locked ) {
+					// Non-editable autofill: server enforces this value, draft is ignored.
+					// <select> ignores `readonly`, use `disabled` instead.
+					$country                  = ! empty( $autofill_markup['value'] ) ? $autofill_markup['value'] : '';
+					$country_data['disabled'] = 'disabled';
+				} elseif ( isset( $draft_value['country'] ) ) {
 
 					$country = esc_attr( $draft_value['country'] );
 
-				} elseif ( $this->has_prefill( $field, 'address_country' ) ) {
+				} else {
 
-					// We have pre-fill parameter, use its value or $value.
-					$country = $this->get_prefill( $field, false, 'address_country' );
+					if ( $this->has_prefill( $field, 'address_country' ) ) {
+						// We have pre-fill parameter, use its value or $value.
+						$country = $this->get_prefill( $field, false, 'address_country' );
+					}
 
+					if ( ! empty( $autofill_markup['value'] ) ) {
+						$country = $autofill_markup['value'];
+					}
 				}
 
 				$new_countries = array();
@@ -539,11 +581,13 @@ class Forminator_Address extends Forminator_Field {
 
 					$html .= '<div class="forminator-field">';
 
+						$default_country = self::get_property( 'address_country_placeholder', $field );
+
 						$html .= self::create_country_select(
 							$country_data,
 							self::get_property( 'address_country_label', $field ),
 							$countries,
-							self::get_property( 'address_country_placeholder', $field ),
+							$default_country,
 							$country_desc,
 							$country_required,
 							$descr_position,

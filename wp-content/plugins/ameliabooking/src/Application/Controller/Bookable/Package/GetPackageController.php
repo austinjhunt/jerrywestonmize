@@ -10,7 +10,7 @@ namespace AmeliaBooking\Application\Controller\Bookable\Package;
 use AmeliaBooking\Application\Commands\Bookable\Package\GetPackageCommand;
 use AmeliaBooking\Application\Controller\Controller;
 use RuntimeException;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class GetPackageController

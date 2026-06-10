@@ -5,6 +5,7 @@ namespace MailPoet\AdminPages\Pages;
 if (!defined('ABSPATH')) exit;
 
 
+use MailPoet\AdminPages\AssetsController;
 use MailPoet\AdminPages\PageRenderer;
 use MailPoet\API\JSON\ResponseBuilders\CustomFieldsResponseBuilder;
 use MailPoet\CustomFields\CustomFieldsRepository;
@@ -14,10 +15,14 @@ use MailPoet\Listing\PageLimit;
 use MailPoet\Segments\SegmentsSimpleListRepository;
 use MailPoet\Settings\SettingsController;
 use MailPoet\Subscribers\BulkConfirmationEmailResender;
+use MailPoet\WP\Functions as WPFunctions;
 
 class Subscribers {
   /** @var PageRenderer */
   private $pageRenderer;
+
+  /** @var AssetsController */
+  private $assetsController;
 
   /** @var PageLimit */
   private $listingPageLimit;
@@ -37,29 +42,41 @@ class Subscribers {
   /** @var SettingsController */
   private $settings;
 
+  /** @var WPFunctions */
+  private $wp;
+
   public function __construct(
     PageRenderer $pageRenderer,
+    AssetsController $assetsController,
     PageLimit $listingPageLimit,
     Block\Date $dateBlock,
     SegmentsSimpleListRepository $segmentsListRepository,
     CustomFieldsRepository $customFieldsRepository,
     CustomFieldsResponseBuilder $customFieldsResponseBuilder,
-    SettingsController $settings
+    SettingsController $settings,
+    WPFunctions $wp
   ) {
     $this->pageRenderer = $pageRenderer;
+    $this->assetsController = $assetsController;
     $this->listingPageLimit = $listingPageLimit;
     $this->dateBlock = $dateBlock;
     $this->segmentsListRepository = $segmentsListRepository;
     $this->customFieldsRepository = $customFieldsRepository;
     $this->customFieldsResponseBuilder = $customFieldsResponseBuilder;
     $this->settings = $settings;
+    $this->wp = $wp;
   }
 
   public function render() {
     $data = [];
+    $this->assetsController->setupDataViewsDependencies();
 
     $data['items_per_page'] = $this->listingPageLimit->getLimitPerPage('subscribers');
     $data['segments'] = $this->segmentsListRepository->getListWithSubscribedSubscribersCounts();
+    $data['api'] = [
+      'root' => rtrim($this->wp->escUrlRaw($this->wp->restUrl()), '/'),
+      'nonce' => $this->wp->wpCreateNonce('wp_rest'),
+    ];
 
     $data['custom_fields'] = array_map(function(CustomFieldEntity $customField): array {
       $field = $this->customFieldsResponseBuilder->build($customField);
@@ -81,6 +98,7 @@ class Subscribers {
       'signup_confirmation.enabled'
     );
     $data['bulk_confirmation_resend_limit'] = BulkConfirmationEmailResender::BULK_CONFIRMATION_RESEND_LIMIT;
+    $this->assetsController->setupDataViewsDependencies();
     $this->pageRenderer->displayPage('subscribers/subscribers.html', $data);
   }
 }

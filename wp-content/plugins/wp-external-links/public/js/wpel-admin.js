@@ -188,11 +188,12 @@ jQuery(function ($) {
     });
   } // open_upsell
 
-  if (window.localStorage.getItem('wpel_upsell_shown') != 'true') {
-    open_upsell('welcome');
+  // show upsell popup every 3 months
+  if (window.localStorage.getItem('wpel_upsell_timestamp') === null ||
+      (new Date().getTime() / 1000 - window.localStorage.getItem('wpel_upsell_timestamp')) > (86400 * 90)) {
+    window.localStorage.setItem('wpel_upsell_timestamp', Math.round(new Date().getTime() / 1000));
 
-    window.localStorage.setItem('wpel_upsell_shown', 'true');
-    window.localStorage.setItem('wpel_upsell_shown_timestamp', new Date().getTime());
+    open_upsell('welcome');
   }
 
   if (window.location.hash == '#open-pro-dialog') {
@@ -335,6 +336,18 @@ jQuery(function ($) {
 
   $('#wpel_exit_confirmation').click(function (event) {
     event.stopPropagation();
+  });
+
+  $('.install-wpcaptcha').on('click',function(e){
+    if (!confirm('The free WP Advanced Google ReCaptcha plugin will be installed & activated from the official WordPress repository.')) {
+      return false;
+    }
+
+    jQuery('body').append('<div style="width:550px;height:450px; position:fixed;top:10%;left:50%;margin-left:-275px; color:#444; background-color: #fbfbfb;border:1px solid #DDD; border-radius:4px;box-shadow: 0px 0px 0px 4000px rgba(0, 0, 0, 0.85);z-index: 9999999;"><iframe src="' + wpel.wpcaptcha_install_url + '" style="width:100%;height:100%;border:none;" /></div>');
+    jQuery('#wpwrap').css('pointer-events', 'none');
+
+    e.preventDefault();
+    return false;
   });
 });
 

@@ -4,7 +4,7 @@ namespace AmeliaBooking\Application\Controller\Location;
 
 use AmeliaBooking\Application\Commands\Location\GetLocationsCommand;
 use AmeliaBooking\Application\Controller\Controller;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class GetLocationsController

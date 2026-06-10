@@ -96,6 +96,20 @@ class CancelBookingRemotelyCommandHandler extends CommandHandler
             throw new AccessDeniedException('You are not allowed to update booking status');
         }
 
+        if ($booking->getStatus()->getValue() === BookingStatus::CANCELED) {
+            if (!empty($command->getField('fromForm'))) {
+                $result->setData(['fromForm' => true]);
+                return $result;
+            }
+
+            if (!empty($notificationSettings['cancelSuccessUrl'])) {
+                $result->setUrl($notificationSettings['cancelSuccessUrl']);
+                return $result;
+            }
+
+            return $result->setHtml(BookingFallbackService::getFallbackHtml('canceled'));
+        }
+
         /** @var ReservationServiceInterface $reservationService */
         $reservationService = $this->container->get('application.reservation.service')->get($type);
 

@@ -31,6 +31,7 @@ global $post;
         height: 100%;
         background: #ececec;
         border: 1px solid #cacaca;
+
     }
 
     div#wp-content-wrap {
@@ -60,6 +61,58 @@ global $post;
         outline: none;
         box-shadow: none;
     }
+   .cp_customizer-editor-overlay .button.button-link,
+   .cp_customizer-editor-overlay .button.button-link:hover,
+   .cp_customizer-editor-overlay .button.button-link:focus {
+        background: transparent;
+    }
+
+
+    .cp_customizer-editor-overlay .button {
+        border: none;
+        font-weight: 400 !important;
+    }
+
+    .cp_customizer-editor-overlay .button:active,.cp_customizer-editor-overlay .button:focus,.cp_customizer-editor-overlay .button:hover {
+        border: none;
+        box-shadow: none!important
+    }
+
+    .cp_customizer-editor-overlay {
+        --wp-block-synced-color: #7a00df;
+        --wp-block-synced-color--rgb: 122,0,223;
+        --wp-bound-block-color: var(--wp-block-synced-color);
+        --wp-editor-canvas-background: #ddd;
+        --wp-admin-theme-color: #007cba;
+        --wp-admin-theme-color--rgb: 0,124,186;
+        --wp-admin-theme-color-darker-10: #006ba1;
+        --wp-admin-theme-color-darker-10--rgb: 0,107,161;
+        --wp-admin-theme-color-darker-20: #005a87;
+        --wp-admin-theme-color-darker-20--rgb: 0,90,135
+    }
+
+    .cp_customizer-editor-overlay:not(#extra-1) .button-link {
+        color: #2271b1;
+        text-decoration: underline
+    }
+
+    .cp_customizer-editor-overlay:not(#extra-1) .button-link:hover {
+        border-color: #0a4b78;
+        color: #135e96
+    }
+
+
+    .cp_customizer-editor-overlay  .button-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .cp_customizer-editor-overlay .button-primary .dashicons {
+        line-height: 1 !important;
+        aspect-ratio: 1;
+        height: auto !important;
+    }
+
 
 </style>
 
@@ -87,7 +140,7 @@ global $post;
     }
 </script>
 
-<div class="cp_customizer-editor-overlay">
+<div class="colibri-classic-editor-overlay cp_customizer-editor-overlay">
     <div class="middle-align">
         <div>
             <button onclick="cp_open_page_in_customizer(<?php echo esc_attr($post->ID); ?>)" class="button button-hero button-primary">
@@ -95,7 +148,7 @@ global $post;
 				<?php _e('Edit in Colibri', 'colibri-page-builder') //phpcs:ignore  WordPress.Security.EscapeOutput.UnsafePrintingFunction ?>
             </button>
         </div>
-        <div style="padding-top: 1em;">
+        <div class="colibri-edit-with-default-wrapper" style="padding-top: 1em;">
             <button onclick="cp_open_page_in_default_editor(event,'<?php echo esc_attr($post->ID); ?>')" class="button button-link"><?php _e('Edit In Default Editor', 'colibri-page-builder') //phpcs:ignore WordPress.Security.EscapeOutput.UnsafePrintingFunction ?></button>
         </div>
     </div>

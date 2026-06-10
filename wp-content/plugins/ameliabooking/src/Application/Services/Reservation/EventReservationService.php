@@ -1232,6 +1232,7 @@ class EventReservationService extends AbstractReservationService
                     $booking,
                     $event
                 ),
+                'bookable'                 => $event->toArray(),
                 'isRetry'                  => !$fromLink,
                 'fromLink'                 => $fromLink,
                 'paymentId'                => $payment->getId()->getValue(),

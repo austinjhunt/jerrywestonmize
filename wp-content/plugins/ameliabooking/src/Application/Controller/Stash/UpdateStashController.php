@@ -5,7 +5,7 @@ namespace AmeliaBooking\Application\Controller\Stash;
 use AmeliaBooking\Application\Commands\Stash\UpdateStashCommand;
 use AmeliaBooking\Application\Controller\Controller;
 use RuntimeException;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class UpdateStashController

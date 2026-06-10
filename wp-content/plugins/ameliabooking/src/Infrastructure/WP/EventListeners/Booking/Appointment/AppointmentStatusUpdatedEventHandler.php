@@ -79,19 +79,25 @@ class AppointmentStatusUpdatedEventHandler
 
         $bookings = $commandResult->getData()['bookingsWithChangedStatus'];
 
-        // if appointment approved add ics file to bookings
+        // If appointment status is approved/pending, attach ICS files to changed bookings before notifications.
         if ($appointment['status'] === BookingStatus::APPROVED || $appointment['status'] === BookingStatus::PENDING) {
             /** @var IcsApplicationService $icsService */
             $icsService = $container->get('application.ics.service');
 
             foreach ($appointment['bookings'] as $index => $booking) {
                 if ($appointment['bookings'][$index]['isChangedStatus'] === true) {
-                    $appointment['bookings'][$index]['icsFiles'] = $icsService->getIcsData(
+                    $icsFiles = $icsService->getIcsData(
                         Entities::APPOINTMENT,
                         $booking['id'],
                         [],
                         true
                     );
+
+                    $appointment['bookings'][$index]['icsFiles'] = $icsFiles;
+
+                    if ($reservationObject->getBookings()->keyExists($index)) {
+                        $reservationObject->getBookings()->getItem($index)->setIcsFiles($icsFiles);
+                    }
                 }
             }
         }

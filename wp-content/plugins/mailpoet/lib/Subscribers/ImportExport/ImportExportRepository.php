@@ -168,6 +168,10 @@ class ImportExportRepository {
       $keyColumnsConditions[] = "{$keyColumn} IN (:{$keyColumn})";
     }
 
+    $restoredSubscriberIds = $className === SubscriberEntity::class
+      ? $this->getDeletedSubscriberIdsByEmail($columns, $data)
+      : [];
+
     $ignoredColumns = self::IGNORED_COLUMNS_FOR_BULK_UPDATE[$className] ?? ['created_at'];
     $updateColumns = array_map(function($columnName) use ($keyColumns, $columns, $data, &$parameters): string {
       $values = [];
@@ -198,7 +202,11 @@ class ImportExportRepository {
       WHERE
       " . implode(' AND ', $keyColumnsConditions) . "
     ", $parameters, $parameterTypes);
-    $this->notifyUpdates($className, $columns, $data);
+    $updatedSubscriberIds = $this->notifyUpdates($className, $columns, $data);
+    $countChangedSubscriberIds = $this->getCountChangedSubscriberIdsForBulkUpdate($className, $columns, $updatedSubscriberIds, $restoredSubscriberIds);
+    if ($countChangedSubscriberIds) {
+      $this->subscriberChangesNotifier->subscribersCountChanged($countChangedSubscriberIds);
+    }
     if ($className === SubscriberEntity::class) {
       $this->subscribersRepository->refreshAll();
     }
@@ -263,6 +271,7 @@ class ImportExportRepository {
         {$subscriberTable}.confirmed_at,
         {$subscriberTable}.confirmed_ip,
         {$subscriberTable}.created_at,
+        {$subscriberTable}.last_subscribed_at,
         {$subscriberTable}.status AS global_status,
         {$subscriberSegmentTable}.status AS list_status
       ")
@@ -309,11 +318,26 @@ class ImportExportRepository {
     }
   }
 
-  private function notifyUpdates(string $className, array $columns, array $data): void {
+  private function notifyUpdates(string $className, array $columns, array $data): array {
     if ($className === SubscriberEntity::class) {
       $ids = $this->getIdsByEmail($className, $columns, $data);
       $this->subscriberChangesNotifier->subscribersUpdated($ids);
+      return $ids;
     }
+    return [];
+  }
+
+  private function getCountChangedSubscriberIdsForBulkUpdate(string $className, array $columns, array $updatedSubscriberIds, array $restoredSubscriberIds): array {
+    if ($className !== SubscriberEntity::class) {
+      return [];
+    }
+
+    $subscriberIds = $restoredSubscriberIds;
+    if (in_array('status', $columns, true)) {
+      $subscriberIds = array_merge($subscriberIds, $updatedSubscriberIds);
+    }
+
+    return array_values(array_unique(array_map('intval', $subscriberIds)));
   }
 
   /**
@@ -335,5 +359,38 @@ class ImportExportRepository {
       FROM {$tableName}
       WHERE email IN (:emails)
     ", ['emails' => $emails], ['emails' => ArrayParameterType::STRING])->fetchFirstColumn();
+  }
+
+  private function getDeletedSubscriberIdsByEmail(array $columns, array $data): array {
+    $emailColumnIndex = array_search('email', $columns, true);
+    if ($emailColumnIndex === false) {
+      return [];
+    }
+
+    $emails = array_map(function(array $row) use ($emailColumnIndex): string {
+      return (string)$row[$emailColumnIndex];
+    }, $data);
+
+    if (!$emails) {
+      return [];
+    }
+
+    $subscriberTable = $this->getTableName(SubscriberEntity::class);
+    $subscriberIds = $this->entityManager->getConnection()->executeQuery(
+      "SELECT `id`
+       FROM {$subscriberTable}
+       WHERE `email` IN (:emails)
+       AND `deleted_at` IS NOT NULL",
+      [
+        'emails' => $emails,
+      ],
+      [
+        'emails' => ArrayParameterType::STRING,
+      ]
+    )->fetchFirstColumn();
+
+    return array_values(array_map('intval', array_filter($subscriberIds, static function($id): bool {
+      return is_int($id) || (is_string($id) && ctype_digit($id));
+    })));
   }
 }

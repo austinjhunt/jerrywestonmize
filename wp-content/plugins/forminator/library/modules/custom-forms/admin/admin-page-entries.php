@@ -749,11 +749,19 @@ class Forminator_CForm_View_Page extends Forminator_Admin_View_Page {
 			 *
 			 * @var Forminator_Form_Entry_Model $entry */
 
-			// create placeholder.
+			$draft_link = '';
+			if ( ! empty( $entry->draft_id ) && isset( $entry->meta_data['_draft_page_id']['value'] ) ) {
+				$draft_page_id = absint( $entry->meta_data['_draft_page_id']['value'] );
+				if ( $draft_page_id ) {
+					$draft_link = Forminator_CForm_Front_Action::get_draft_link( $entry->draft_id, $draft_page_id );
+				}
+			}
+
 			$iterator = array(
 				'id'         => $numerator_id,
 				'entry_id'   => $entry->entry_id,
 				'draft_id'   => $entry->draft_id,
+				'draft_link' => $draft_link,
 				'entry_date' => $entry->time_created,
 				'status'     => $entry->status,
 				'summary'    => array(),

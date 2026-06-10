@@ -8,6 +8,7 @@ if (!defined('ABSPATH')) exit;
 use MailPoet\Config\Env;
 use MailPoet\Entities\ScheduledTaskEntity;
 use MailPoet\Newsletter\Statistics\Export\StatisticsExporter;
+use MailPoet\Router\Endpoints\ExportDownload;
 use MailPoet\Subscribers\ImportExport\Export\Export;
 use MailPoetVendor\Carbon\Carbon;
 
@@ -20,6 +21,14 @@ class ExportFilesCleanup extends SimpleWorker {
     $this->cleanup(
       Export::getExportPath() . '/' . Export::getFilePrefix() . '*.*',
       self::DELETE_FILES_AFTER_X_DAYS
+    );
+    $this->cleanup(
+      Env::$tempPath . '/' . Export::getFilePrefix() . '*.*',
+      self::DELETE_FILES_AFTER_X_DAYS
+    );
+    $this->cleanup(
+      ExportDownload::getExportDirectory() . '/' . StatisticsExporter::FILE_PREFIX . '*.*',
+      self::DELETE_STATS_FILES_AFTER_X_DAYS
     );
     $this->cleanup(
       Env::$tempPath . '/' . StatisticsExporter::FILE_PREFIX . '*.*',

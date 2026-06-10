@@ -6,7 +6,7 @@ use AmeliaBooking\Application\Commands\PaymentGateway\MolliePaymentCommand;
 use AmeliaBooking\Application\Commands\PaymentGateway\RazorpayPaymentCommand;
 use AmeliaBooking\Application\Controller\Controller;
 use RuntimeException;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class RazorpayPaymentController

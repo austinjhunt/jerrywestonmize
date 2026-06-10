@@ -136,7 +136,7 @@ class Forminator_Googlesheet_Quiz_Hooks extends Forminator_Integration_Quiz_Hook
 						if ( 'knowledge' === $this->module->quiz_type ) {
 							foreach ( $quiz_entry['value'] as $data ) {
 								$question   = isset( $data['question'] ) ? $data['question'] : '';
-								$answer     = isset( $data['answer'] ) ? $data['answer'] : '';
+								$answer     = self::get_answer( $data );
 								$is_correct = isset( $data['isCorrect'] ) ? $data['isCorrect'] : false;
 
 								$answers[] = array(

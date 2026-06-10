@@ -5,7 +5,7 @@ namespace AmeliaBooking\Application\Controller\QrCode;
 use AmeliaBooking\Application\Commands\QrCode\ScanQrCodeCommand;
 use AmeliaBooking\Application\Controller\Controller;
 use RuntimeException;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class ScanQrCodeController

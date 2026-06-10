@@ -86,6 +86,39 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	}
 
 	/**
+	 * Render Breakdance SSR preview in the required order.
+	 *
+	 * Order matters here: enqueue assets first so we can capture style handles,
+	 * print the collected styles and inline styles next, then output the HTML.
+	 *
+	 * @param bool $hide If true, display: none will be added on the form markup.
+	 * @param bool $is_preview Is preview.
+	 * @param int  $render_id Render ID.
+	 *
+	 * @return void
+	 */
+	private function render_breakdance_ssr_preview( $hide, $is_preview, $render_id ) {
+		$this->enqueue_breakdance_ssr_preview_assets( $is_preview );
+		$this->render_breakdance_ssr_preview_markup( $this->get_html( $hide, $is_preview, $render_id ), $is_preview );
+	}
+
+	/**
+	 * Enqueue Breakdance SSR preview assets and collect the generated style handles.
+	 *
+	 * @param bool $is_preview Is preview.
+	 *
+	 * @return void
+	 */
+	private function enqueue_breakdance_ssr_preview_assets( $is_preview ) {
+
+		$before_style_handles = wp_styles()->queue;
+		$assets               = $this->enqueue_form_assets( $is_preview, false );
+		$assets->load_module_css( true );
+
+		$this->set_breakdance_preview_style_handles( $before_style_handles );
+	}
+
+	/**
 	 * Whether font key should be applied to the current form or not.
 	 *
 	 * @param string $font_setting_key Font settings key.
@@ -183,6 +216,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 			return;
 		}
 
+		$this->set_breakdance_ssr_preview( $is_preview );
 		$is_ajax_load = $this->is_ajax_load( $is_preview );
 
 		if ( $quiz_model ) {
@@ -229,6 +263,11 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 			}
 			$this->enqueue_form_scripts( $is_preview, $is_ajax_load );
 
+			return;
+		}
+
+		if ( $this->is_breakdance_ssr_preview ) {
+			$this->render_breakdance_ssr_preview( $hide, $is_preview, self::$render_ids[ $id ] );
 			return;
 		}
 
@@ -370,6 +409,18 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	public function enqueue_form_scripts( $is_preview, $is_ajax_load = false ) {
 		$is_ajax_load = $is_preview || $is_ajax_load;
 
+		$this->enqueue_form_assets( $is_preview, $is_ajax_load );
+	}
+
+	/**
+	 * Enqueue form assets for the current rendering mode.
+	 *
+	 * @param bool $is_preview Is preview.
+	 * @param bool $is_ajax_load Is ajax load.
+	 *
+	 * @return Forminator_Assets_Enqueue_Form
+	 */
+	private function enqueue_form_assets( $is_preview, $is_ajax_load ) {
 		// Load assets conditionally.
 		$assets = new Forminator_Assets_Enqueue_Form( $this->model, $is_ajax_load );
 		$assets->enqueue_styles( $this );
@@ -620,6 +671,8 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		}
 
 		add_action( 'admin_footer', array( $this, 'forminator_render_front_scripts' ), 9999 );
+
+		return $assets;
 	}
 
 	/**

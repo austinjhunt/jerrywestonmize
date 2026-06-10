@@ -5,7 +5,7 @@ namespace AmeliaBooking\Application\Controller\Notification;
 use AmeliaBooking\Application\Commands\Notification\SendTestEmailCommand;
 use AmeliaBooking\Application\Commands\Notification\SendTestWhatsAppCommand;
 use AmeliaBooking\Application\Controller\Controller;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class SendTestWhatsAppController

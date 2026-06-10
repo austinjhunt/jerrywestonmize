@@ -992,14 +992,21 @@ class PaymentApplicationService
      * @param int $index
      * @param string|null $paymentMethod
      * @param string $customRedirectUrl
+     * @param bool $directLink
      *
      * @return array|null
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    public function createPaymentLink($data, $index = null, $recurringKey = null, $paymentMethod = null, $customRedirectUrl = null)
-    {
+    public function createPaymentLink(
+        $data,
+        $index = null,
+        $recurringKey = null,
+        $paymentMethod = null,
+        $customRedirectUrl = null,
+        $directLink = false
+    ) {
         try {
             /** @var PaymentApplicationService $paymentAS */
             $paymentAS = $this->container->get('application.payment.service');
@@ -1009,6 +1016,8 @@ class PaymentApplicationService
             $paymentRepository = $this->container->get('domain.payment.repository');
             /** @var CurrencyService $currencyService */
             $currencyService = $this->container->get('infrastructure.payment.currency.service');
+
+            $paymentLinks = [];
 
             $type        = $data['type'];
             $reservation = $data[$type];
@@ -1038,7 +1047,7 @@ class PaymentApplicationService
                 !$paymentLinksEnabled ||
                 ($booking && (in_array($booking['status'], [BookingStatus::CANCELED, BookingStatus::REJECTED, BookingStatus::NO_SHOW])))
             ) {
-                return null;
+                return $paymentLinks;
             }
 
             $redirectUrl = $paymentLinksSettings && !empty($paymentLinksSettings['redirectUrl']) ? $paymentLinksSettings['redirectUrl'] :
@@ -1047,7 +1056,7 @@ class PaymentApplicationService
             $redirectUrl = empty($redirectUrl) ? AMELIA_SITE_URL : $redirectUrl;
 
             $customerPanelUrl = $settingsService->getSetting('roles', 'customerCabinet')['pageUrl'];
-            $redirectUrl      = $paymentMethod ? $customerPanelUrl : $redirectUrl;
+            $redirectUrl      = $paymentMethod && !empty($data['fromPanel']) ? $customerPanelUrl : $redirectUrl;
             $redirectUrl      = $customRedirectUrl ?: $redirectUrl;
 
             $totalPrice = $this->calculateAppointmentPrice($booking, $type, $reservation);
@@ -1095,8 +1104,6 @@ class PaymentApplicationService
 
             $paymentSettings = $settingsService->getCategorySettings('payments');
 
-            $paymentLinks = [];
-
             $methods = $paymentMethod ?: [
                 'payPal'   =>
                     !empty($entitySettings) && !empty($entitySettings['payments']['payPal']) ?
@@ -1128,6 +1135,50 @@ class PaymentApplicationService
                             ($entitySettings['payments']['barion']['enabled'] && $paymentSettings['barion']['enabled']) :
                             $paymentSettings['barion']['enabled'],
             ];
+
+            if (!$directLink) {
+                /** @var CustomerBookingRepository $bookingRepository */
+                $bookingRepository = $this->container->get('domain.booking.customerBooking.repository');
+
+                /** @var PackageCustomerRepository $packageCustomerRepository */
+                $packageCustomerRepository = $this->container->get('domain.bookable.packageCustomer.repository');
+
+                $token = $type === Entities::PACKAGE
+                    ? $packageCustomerRepository->getToken($data['packageCustomerId'])['token']
+                    : $bookingRepository->getToken($booking['id'])['token'];
+
+                $basePaymentLink = AMELIA_ACTION_URL . "/payments/link/$oldPaymentId&token=" . $token;
+
+                if (!empty($methods['wc'])  && WooCommerceService::isEnabled()) {
+                    $paymentLinks['payment_link_woocommerce'] = $basePaymentLink . '&paymentMethod=wc';
+                }
+
+                if (!empty($methods['stripe'])) {
+                    $paymentLinks['payment_link_stripe'] = $basePaymentLink . '&paymentMethod=stripe';
+                }
+
+                if (!empty($methods['payPal'])) {
+                    $paymentLinks['payment_link_paypal'] = $basePaymentLink . '&paymentMethod=payPal';
+                }
+
+                if (!empty($methods['razorpay'])) {
+                    $paymentLinks['payment_link_razorpay'] = $basePaymentLink . '&paymentMethod=razorpay';
+                }
+
+                if (!empty($methods['mollie'])) {
+                    $paymentLinks['payment_link_mollie'] = $basePaymentLink . '&paymentMethod=mollie';
+                }
+
+                if (!empty($methods['square'])) {
+                    $paymentLinks['payment_link_square'] = $basePaymentLink . '&paymentMethod=square';
+                }
+
+                if (!empty($methods['barion'])) {
+                    $paymentLinks['payment_link_barion'] = $basePaymentLink . '&paymentMethod=barion';
+                }
+
+                return $paymentLinks;
+            }
 
             $methods = apply_filters('amelia_payment_link_methods', $methods, $data);
 

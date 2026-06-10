@@ -108,7 +108,7 @@ class AmeliaBookingShortcodeService extends AmeliaShortcodeService
         } else {
             wp_enqueue_script(
                 $scriptId,
-                AMELIA_URL . 'v3/public/assets/public.d56c1425.js',
+                AMELIA_URL . 'v3/public/assets/public.824d4e43.js',
                 [],
                 AMELIA_VERSION,
                 true

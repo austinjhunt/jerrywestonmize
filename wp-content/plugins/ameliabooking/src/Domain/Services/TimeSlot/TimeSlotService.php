@@ -881,7 +881,7 @@ class TimeSlotService
                             $timeSlot + $realRequiredTime + $service->getTimeAfter()->getValue() <= $freeIntervalEnd &&
                             (
                                 $startDateFormatted !== $dateKey || (
-                                    $startTimeInSeconds < $timeSlot &&
+                                    $startTimeInSeconds <= $timeSlot &&
                                     (
                                         $startDateFormatted !== $currentDateFormatted ||
                                         $currentTimeInSeconds < $timeSlot
@@ -1207,7 +1207,8 @@ class TimeSlotService
             $props,
             $slotsEntities,
             $resourcedLocationsIntervals,
-            $appointmentsCount
+            $appointmentsCount,
+            $settings['normalProvidersIntervals'] ?? []
         );
     }
 
@@ -1218,6 +1219,7 @@ class TimeSlotService
      * @param SlotsEntities $slotsEntities
      * @param array         $resourcedLocationsIntervals
      * @param array         $appointmentsCount
+     * @param array         $normalProvidersIntervals
      *
      * @return array
      * @throws Exception
@@ -1227,7 +1229,8 @@ class TimeSlotService
         $props,
         $slotsEntities,
         $resourcedLocationsIntervals,
-        $appointmentsCount
+        $appointmentsCount,
+        $normalProvidersIntervals = []
     ) {
         $freeProvidersSlots = [];
 
@@ -1348,8 +1351,31 @@ class TimeSlotService
 
             $freeSlots['appCount'][$providerKey] = $providerSlots['appCount'];
 
-            if (!empty($settings['allowAdminBookOverApp']) && !$props['isFrontEndBooking'] && $props['structured']) {
+            if (!empty($settings['allowAdminBookOverApp']) && !$props['isFrontEndBooking'] && !empty($props['structured'])) {
                 $this->setBookedTimeSlots($providerSlots);
+            }
+
+            // Mark slots outside the employee's normal working hours when allowAdminBookAtAnyTime is enabled
+            if (!empty($settings['allowAdminBookAtAnyTime']) && !empty($props['structured']) && isset($normalProvidersIntervals[$providerKey])) {
+                $weekDayIntervals    = $normalProvidersIntervals[$providerKey]['weekDays'] ?? [];
+                $specialDayIntervals = $normalProvidersIntervals[$providerKey]['specialDays'] ?? [];
+
+                foreach ($providerSlots['available'] as $dateKey => &$timeSlots) {
+                    foreach ($timeSlots as $timeKey => &$slotData) {
+                        $timeInSeconds = $this->intervalService->getSeconds($timeKey . ':00');
+
+                        if (!$this->isTimeInWorkingHours($dateKey, $timeInSeconds, $weekDayIntervals, $specialDayIntervals)) {
+                            foreach ($slotData as &$slot) {
+                                if (is_array($slot)) {
+                                    $slot['a'] = true;
+                                }
+                            }
+                            unset($slot);
+                        }
+                    }
+                    unset($slotData);
+                }
+                unset($timeSlots);
             }
 
             foreach (['available', 'occupied'] as $type) {
@@ -1383,6 +1409,56 @@ class TimeSlotService
         }
 
         return $freeSlots;
+    }
+
+    /**
+     * Determine whether a given time falls within the provider's normal working hours for a date.
+     *
+     * @param string $dateKey         e.g. "2024-03-20"
+     * @param int    $timeInSeconds   seconds since midnight (e.g. 32400 for 09:00)
+     * @param array  $weekDayIntervals  keyed by day-of-week index (1=Mon … 7=Sun)
+     * @param array  $specialDayIntervals
+     *
+     * @return bool
+     */
+    private function isTimeInWorkingHours($dateKey, $timeInSeconds, $weekDayIntervals, $specialDayIntervals)
+    {
+        $specialDayMatched = false;
+
+        foreach ($specialDayIntervals as $specialDay) {
+            if (array_key_exists($dateKey, $specialDay['dates'])) {
+                $specialDayMatched = true;
+
+                if (empty($specialDay['intervals']['free'])) {
+                    continue;
+                }
+
+                foreach ($specialDay['intervals']['free'] as $interval) {
+                    if ($timeInSeconds >= $interval[0] && $timeInSeconds < $interval[1]) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        // If we found a matching special day, return false (time not in any matching interval)
+        if ($specialDayMatched) {
+            return false;
+        }
+
+        $dayIndex = DateTimeService::getDayIndex($dateKey);
+
+        if (empty($weekDayIntervals[$dayIndex]['free'])) {
+            return false;
+        }
+
+        foreach ($weekDayIntervals[$dayIndex]['free'] as $interval) {
+            if ($timeInSeconds >= $interval[0] && $timeInSeconds < $interval[1]) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

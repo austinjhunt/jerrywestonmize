@@ -354,3 +354,6 @@ add_action(
 }, PHP_INT_MAX
 );
 
+add_action('admin_enqueue_scripts', function() {
+    wp_enqueue_style( 'colibri_admin_pages_css', assetUrl('css/adminpages.css') );
+});

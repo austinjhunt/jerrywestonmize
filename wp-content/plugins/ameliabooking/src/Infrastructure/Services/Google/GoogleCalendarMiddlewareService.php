@@ -145,7 +145,21 @@ class GoogleCalendarMiddlewareService extends AbstractGoogleCalendarMiddlewareSe
     {
         $url = $this->googleUserInfoUrl;
 
-        $accessToken = json_decode($accessToken, true);
+        $accessToken = json_decode($this->normalizeAccessToken($accessToken), true);
+
+        if (!is_array($accessToken)) {
+            $accessToken = json_decode(stripslashes($accessToken), true);
+        }
+
+        if (!is_array($accessToken) || empty($accessToken['access_token'])) {
+            error_log('GoogleCalendar: Unable to decode access token for user info');
+
+            return [
+                'email'     => null,
+                'name'      => null,
+                'picture'   => null,
+            ];
+        }
 
         $args = [
             'headers' => [
@@ -188,6 +202,8 @@ class GoogleCalendarMiddlewareService extends AbstractGoogleCalendarMiddlewareSe
             $isProviderToken = true;
         }
 
+        $accessToken = $this->normalizeAccessToken($accessToken);
+
         if (!$accessToken) {
             error_log('GoogleCalendar: No access token available');
             return null;
@@ -197,7 +213,7 @@ class GoogleCalendarMiddlewareService extends AbstractGoogleCalendarMiddlewareSe
         $client->setAccessToken($accessToken);
 
         if ($client->isAccessTokenExpired()) {
-            $tokenData = json_decode($isProviderToken ? $providerGoogleCalendar['token'] : $this->googleCalendarSettings['accessToken'], true);
+            $tokenData = json_decode($accessToken, true);
             $refreshToken = $tokenData['refresh_token'] ?? null;
 
             if (!$refreshToken) {
@@ -227,6 +243,28 @@ class GoogleCalendarMiddlewareService extends AbstractGoogleCalendarMiddlewareSe
         }
 
         return $client;
+    }
+
+    /**
+     * @param string|null $accessToken
+     *
+     * @return string|null
+     */
+    private function normalizeAccessToken(?string $accessToken): ?string
+    {
+        if (!$accessToken) {
+            return $accessToken;
+        }
+
+        $decoded = json_decode($accessToken, true);
+
+        if (!is_array($decoded)) {
+            $decoded = json_decode(stripslashes($accessToken), true);
+        }
+
+        $encoded = is_array($decoded) ? json_encode($decoded) : false;
+
+        return $encoded ?: $accessToken;
     }
 
     private function isCalendarEnabled()

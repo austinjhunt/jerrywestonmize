@@ -861,7 +861,7 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 				$config = json_decode( $template['config'], true );
 				if ( ! empty( $config['data'] ) && ! empty( $config['data']['settings'] ) ) {
 					$settings = $config['data']['settings'];
-					if ( is_wp_error( forminator_validate_registration_form_settings( $settings ) ) ) {
+					if ( is_wp_error( forminator_check_registration_form_permissions( $settings ) ) ) {
 						unset( $templates[ $key ] );
 					}
 				}

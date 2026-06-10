@@ -139,13 +139,13 @@ class DayOffRepository extends AbstractRepository
                 $params[':providerId'] = $criteria['providerId'];
             }
 
-            $userFields = '
+            $userFields = "
                 u.id AS user_id,
                 u.firstName AS user_firstName,
                 u.lastName AS user_lastName,
                 u.email AS user_email,
-                CONCAT(u.firstName, " ", u.lastName) AS user_fullName
-            ';
+                CONCAT(u.firstName, ' ', u.lastName) AS user_fullName
+            ";
 
             $userJoin = " LEFT JOIN {$userTable} u ON u.id = do.userId";
 

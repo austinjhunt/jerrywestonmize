@@ -229,8 +229,11 @@ class Forminator_Date extends Forminator_Field {
 			}
 
 			if ( 'custom' === $default_date ) {
-				$default_date_value = self::get_property( 'date', $field, '' );
-				$default_value      = $default_date_value;
+				list( $day, $month, $year ) = $this->get_default_date_parts( $field, $default_date, $date_format );
+				if ( ! empty( $day ) && ! empty( $month ) && ! empty( $year ) ) {
+					$datepicker_format = $this->normalize_date_format( $date_format );
+					$default_value     = gmdate( $datepicker_format, gmmktime( 0, 0, 0, (int) $month, (int) $day, (int) $year ) );
+				}
 			}
 
 			if ( $is_prefil_valid ) {
@@ -342,8 +345,7 @@ class Forminator_Date extends Forminator_Field {
 				$html .= self::get_description( $description, $id, $descr_position );
 			}
 
-			$default_date       = esc_html( self::get_property( 'default_date', $field, false ) );
-			$default_date_value = esc_html( self::get_property( 'date', $field, '' ) );
+			$default_date = self::get_property( 'default_date', $field, false );
 
 			if ( $is_prefil_valid ) {
 				$default_value = $prefill;
@@ -358,30 +360,8 @@ class Forminator_Date extends Forminator_Field {
 				$day   = $parsed_date['day'];
 				$month = $parsed_date['month'];
 				$year  = $parsed_date['year'];
-			} elseif ( 'today' === $default_date ) {
-				list( $day, $month, $year ) = explode( ' ', current_time( 'j n Y' ) );
-			} elseif ( 'custom' === $default_date && ! empty( $default_date_value ) ) {
-				$parsed = self::parse_date( $default_date_value, $date_format );
-				if ( ! $this->check_date( $parsed['month'], $parsed['day'], $parsed['year'] ) ) {
-					// The date format may have changed since the default date was saved.
-					// Try all formats with the same separator to find a valid parse.
-					if ( false !== strpos( $default_date_value, '.' ) ) {
-						$fallback_formats = array( 'mm.dd.yy', 'dd.mm.yy', 'yy.mm.dd' );
-					} elseif ( false !== strpos( $default_date_value, '/' ) ) {
-						$fallback_formats = array( 'mm/dd/yy', 'dd/mm/yy', 'yy/mm/dd' );
-					} else {
-						$fallback_formats = array( 'mm-dd-yy', 'dd-mm-yy', 'yy-mm-dd' );
-					}
-					foreach ( $fallback_formats as $fallback_fmt ) {
-						$parsed = self::parse_date( $default_date_value, $fallback_fmt );
-						if ( $this->check_date( $parsed['month'], $parsed['day'], $parsed['year'] ) ) {
-							break;
-						}
-					}
-				}
-				$day   = $parsed['day'];
-				$month = $parsed['month'];
-				$year  = $parsed['year'];
+			} elseif ( in_array( $default_date, array( 'today', 'custom' ), true ) ) {
+				list( $day, $month, $year ) = $this->get_default_date_parts( $field, $default_date, $date_format );
 			} else {
 				$day               = '';
 				$month             = '';
@@ -578,9 +558,10 @@ class Forminator_Date extends Forminator_Field {
 				$html .= self::get_description( $description, $id, $descr_position );
 			}
 		} elseif ( 'input' === $type ) {
-			$day_value   = '';
-			$month_value = '';
-			$year_value  = '';
+			$day_value    = '';
+			$month_value  = '';
+			$year_value   = '';
+			$default_date = self::get_property( 'default_date', $field, false );
 
 			if ( isset( $draft_value['value'] ) ) {
 				$parsed_date = $draft_value['value'];
@@ -591,6 +572,8 @@ class Forminator_Date extends Forminator_Field {
 				$day_value   = $parsed_date['day'];
 				$month_value = $parsed_date['month'];
 				$year_value  = $parsed_date['year'];
+			} elseif ( in_array( $default_date, array( 'today', 'custom' ), true ) ) {
+				list( $day_value, $month_value, $year_value ) = $this->get_default_date_parts( $field, $default_date, $date_format );
 			}
 
 			$html .= self::get_field_label( $label, 'forminator-field-' . $name, $required );
@@ -806,6 +789,56 @@ class Forminator_Date extends Forminator_Field {
 		}
 
 		return apply_filters( 'forminator_field_date_markup', $html, $field, $this );
+	}
+
+	/**
+	 * Get parsed default date parts for split date inputs.
+	 *
+	 * @since 1.54.0
+	 *
+	 * @param array  $field       Field settings.
+	 * @param string $default_date Default date setting.
+	 * @param string $date_format Current date format.
+	 *
+	 * @return array
+	 */
+	private function get_default_date_parts( $field, $default_date, $date_format ) {
+		$default_date_value = esc_html( self::get_property( 'date', $field, '' ) );
+
+		if ( 'today' === $default_date ) {
+			return explode( ' ', current_time( 'j n Y' ) );
+		}
+
+		if ( empty( $default_date_value ) ) {
+			return array( '', '', '' );
+		}
+
+		$parsed = self::parse_date( $default_date_value, $date_format );
+		if ( ! $this->check_date( $parsed['month'], $parsed['day'], $parsed['year'] ) ) {
+			if ( false !== strpos( $default_date_value, '.' ) ) {
+				$fallback_formats = array( 'mm.dd.yy', 'dd.mm.yy', 'yy.mm.dd' );
+			} elseif ( false !== strpos( $default_date_value, '/' ) ) {
+				$fallback_formats = array( 'mm/dd/yy', 'dd/mm/yy', 'yy/mm/dd' );
+			} else {
+				$fallback_formats = array( 'mm-dd-yy', 'dd-mm-yy', 'yy-mm-dd' );
+			}
+			foreach ( $fallback_formats as $fallback_fmt ) {
+				$parsed = self::parse_date( $default_date_value, $fallback_fmt );
+				if ( $this->check_date( $parsed['month'], $parsed['day'], $parsed['year'] ) ) {
+					break;
+				}
+			}
+		}
+
+		if ( ! $this->check_date( $parsed['month'], $parsed['day'], $parsed['year'] ) ) {
+			return array( '', '', '' );
+		}
+
+		return array(
+			$parsed['day'],
+			$parsed['month'],
+			$parsed['year'],
+		);
 	}
 
 	/**

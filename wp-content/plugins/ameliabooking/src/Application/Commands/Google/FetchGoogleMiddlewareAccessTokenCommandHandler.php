@@ -22,7 +22,7 @@ class FetchGoogleMiddlewareAccessTokenCommandHandler extends CommandHandler
     {
         $result = new CommandResult();
 
-        $accessToken = $command->getField('params')['access_token'] ?? null;
+        $accessToken = $this->normalizeAccessToken($command->getField('params')['access_token'] ?? null);
 
         $providerId = $command->getField('params')['providerId'] ?? null;
 
@@ -153,5 +153,29 @@ class FetchGoogleMiddlewareAccessTokenCommandHandler extends CommandHandler
         );
 
         return $result;
+    }
+
+    /**
+     * Middleware can return the token JSON as a slashed query-string value.
+     *
+     * @param string|null $accessToken
+     *
+     * @return string|null
+     */
+    private function normalizeAccessToken(?string $accessToken): ?string
+    {
+        if (!$accessToken) {
+            return $accessToken;
+        }
+
+        $decoded = json_decode($accessToken, true);
+
+        if (!is_array($decoded)) {
+            $decoded = json_decode(stripslashes($accessToken), true);
+        }
+
+        $encoded = is_array($decoded) ? json_encode($decoded) : false;
+
+        return $encoded ?: $accessToken;
     }
 }

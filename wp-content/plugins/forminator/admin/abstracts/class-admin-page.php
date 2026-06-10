@@ -211,6 +211,7 @@ abstract class Forminator_Admin_Page {
 		$vars[] = 'forminator_open_addon';
 		$vars[] = 'forminator_install_addon';
 		$vars[] = 'page_referral';
+		$vars[] = 'forminator_cache_bust';
 		if ( Forminator_Hub_Connector::hub_connector_connected() ) {
 			$vars[] = 'page_action';
 			$vars[] = 'feature';

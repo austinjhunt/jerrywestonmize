@@ -13,6 +13,7 @@ use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Schedule\BlockTime;
+use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Factory\Schedule\BlockTimeFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
@@ -57,6 +58,27 @@ class ManageCalendarBlockTimeCommandHandler extends CommandHandler
         $isUpdate = $blockTimeId !== null;
         $employeeIds = !empty($fields['employeeIds']) ? $fields['employeeIds'] : [null];
 
+        /** @var AbstractUser $currentUser */
+        $currentUser = $this->container->get('logged.in.user');
+
+        if ($currentUser && $currentUser->getType() === Entities::PROVIDER) {
+            $providerId = $currentUser->getId()->getValue();
+
+            if ($isUpdate) {
+                $blockTime = $dayOffRepository->getBlockTimeById($blockTimeId);
+                if ($blockTime->getUserId() === null || (int)$blockTime->getUserId()->getValue() !== (int)$providerId) {
+                    throw new AccessDeniedException('You are not allowed to manage this block time.');
+                }
+            }
+
+            foreach ($employeeIds as $employeeId) {
+                if ($employeeId === null || (int)$employeeId !== (int)$providerId) {
+                    throw new AccessDeniedException('You are not allowed to manage this block time.');
+                }
+            }
+            $employeeIds = [$providerId];
+        }
+
         $dayOffRepository->beginTransaction();
 
         try {
@@ -83,14 +105,7 @@ class ManageCalendarBlockTimeCommandHandler extends CommandHandler
         return $result;
     }
 
-    /**
-     * @param array $fields
-     * @param $blockTimeId
-     * @param $employeeId
-     * @return BlockTime
-     * @throws InvalidArgumentException
-     */
-    private function createBlockTime(array $fields, $blockTimeId, $employeeId): BlockTime
+    private function createBlockTime(array $fields, ?int $blockTimeId, ?int $employeeId): BlockTime
     {
         return BlockTimeFactory::create([
             'id'        => $blockTimeId,

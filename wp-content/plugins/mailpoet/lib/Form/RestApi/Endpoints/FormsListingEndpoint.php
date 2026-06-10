@@ -10,6 +10,7 @@ use MailPoet\API\REST\AbstractListingEndpoint;
 use MailPoet\Config\AccessControl;
 use MailPoet\Form\Listing\FormListingRepository;
 use MailPoet\Listing\Handler as ListingHandler;
+use MailPoet\Listing\ListingDefinition;
 use MailPoet\Listing\ListingRepository;
 use MailPoet\WP\Functions as WPFunctions;
 
@@ -38,7 +39,7 @@ class FormsListingEndpoint extends AbstractListingEndpoint {
     return $this->formListingRepository;
   }
 
-  protected function buildItems(array $rows): array {
+  protected function buildItems(array $rows, ListingDefinition $definition): array {
     return $this->formsResponseBuilder->buildForListing($rows);
   }
 

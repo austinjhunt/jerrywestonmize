@@ -131,10 +131,10 @@ class AmeliaEventsElementorWidget extends Widget_Base
 
             $selected_tag = $settings['select_tag'] ? ' tag=' . '"' . $settings['select_tag'] . '"' : '';
 
-            echo '[ameliaevents' . $selected_type . $trigger . $selected_event . $selected_tag . $show_recurring . ']';
+            echo esc_html('[ameliaevents' . $selected_type . $trigger . $selected_event . $selected_tag . $show_recurring . ']');
         } else {
             $selected_type = $settings['selected_type'] ? ' type=' . $settings['selected_type'] : '';
-            echo '[ameliaevents' . $selected_type . ']';
+            echo esc_html('[ameliaevents' . $selected_type . ']');
         }
     }
 

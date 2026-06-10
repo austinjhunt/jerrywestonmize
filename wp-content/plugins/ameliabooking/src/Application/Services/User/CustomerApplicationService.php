@@ -147,14 +147,31 @@ class CustomerApplicationService extends UserApplicationService
         /** @var AbstractUser $loggedInUser */
         $loggedInUser = $this->container->get('logged.in.user');
 
-        if ($loggedInUser) {
-            if ($loggedInUser->getType() === AbstractUser::USER_ROLE_ADMIN) {
-                $userData['type'] = AbstractUser::USER_ROLE_CUSTOMER;
+        if (
+            $loggedInUser &&
+            (
+                $loggedInUser->getType() === AbstractUser::USER_ROLE_ADMIN ||
+                $loggedInUser->getType() === AbstractUser::USER_ROLE_MANAGER
+            )
+        ) {
+            $userData['type'] = AbstractUser::USER_ROLE_CUSTOMER;
 
-                $userData['externalId'] = null;
-            } elseif ($loggedInUser->getType() === AbstractUser::USER_ROLE_MANAGER) {
-                $userData['type'] = AbstractUser::USER_ROLE_MANAGER;
-            }
+            $userData['externalId'] = null;
+        } elseif (
+            $loggedInUser &&
+            $loggedInUser->getType() === AbstractUser::USER_ROLE_CUSTOMER &&
+            $loggedInUser->getExternalId()
+        ) {
+            $userData['type'] = AbstractUser::USER_ROLE_CUSTOMER;
+
+            $userData['externalId'] = $loggedInUser->getExternalId()->getValue();
+        } elseif (
+            $loggedInUser &&
+            $loggedInUser->getType() === AbstractUser::USER_ROLE_CUSTOMER
+        ) {
+            $userData['type'] = AbstractUser::USER_ROLE_CUSTOMER;
+
+            $userData['externalId'] = null;
         }
 
         /** @var Customer $user */

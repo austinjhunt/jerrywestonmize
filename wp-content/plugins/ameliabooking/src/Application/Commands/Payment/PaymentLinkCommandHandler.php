@@ -50,7 +50,8 @@ class PaymentLinkCommandHandler extends CommandHandler
             0,
             null,
             [$data['paymentMethod'] => true],
-            $command->getField('redirectUrl')
+            $command->getField('redirectUrl'),
+            true
         );
 
         $paymentLinks = apply_filters('amelia_after_payment_from_panel_created_filter', $paymentLinks, $data);

@@ -5,7 +5,7 @@ namespace AmeliaBooking\Application\Controller\Outlook;
 use AmeliaBooking\Application\Commands\Outlook\FetchAccessTokenWithAuthCodeOutlookCommand;
 use AmeliaBooking\Application\Controller\Controller;
 use RuntimeException;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class FetchAccessTokenWithAuthCodeOutlookController

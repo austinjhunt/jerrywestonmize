@@ -122,7 +122,7 @@ class BookingCanceledEventHandler
             $applicationIntegrationService->handleEvent(
                 $reservationObject,
                 $reservationObject->getPeriods(),
-                $reservation,
+                $appointment,
                 ApplicationIntegrationService::BOOKING_CANCELED,
                 [
                     ApplicationIntegrationService::SKIP_ZOOM_MEETING => true,

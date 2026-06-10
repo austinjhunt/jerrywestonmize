@@ -114,13 +114,29 @@ class UpdateAppointmentTimeCommandHandler extends CommandHandler
             $appointment->getProviderId()->getValue()
         );
 
+        $isUserWithOnlyOneBooking = true;
+
         /** @var CustomerBooking $booking */
         foreach ($appointment->getBookings()->getItems() as $booking) {
             if (
                 $userAS->isAmeliaUser($user) &&
                 $userAS->isCustomer($user) &&
                 $bookingAS->isBookingApprovedOrPending($booking->getStatus()->getValue()) &&
-                ($service->getMinCapacity()->getValue() !== 1 || $service->getMaxCapacity()->getValue() !== 1) &&
+                ($user->getId() && $booking->getCustomerId()->getValue() !== $user->getId()->getValue())
+            ) {
+                $isUserWithOnlyOneBooking = false;
+
+                break;
+            }
+        }
+
+        /** @var CustomerBooking $booking */
+        foreach ($appointment->getBookings()->getItems() as $booking) {
+            if (
+                $userAS->isAmeliaUser($user) &&
+                $userAS->isCustomer($user) &&
+                $bookingAS->isBookingApprovedOrPending($booking->getStatus()->getValue()) &&
+                ($service->getMinCapacity()->getValue() !== 1 || $service->getMaxCapacity()->getValue() !== 1 || !$isUserWithOnlyOneBooking) &&
                 ($user->getId() && $booking->getCustomerId()->getValue() !== $user->getId()->getValue())
             ) {
                 throw new AccessDeniedException('You are not allowed to update appointment');

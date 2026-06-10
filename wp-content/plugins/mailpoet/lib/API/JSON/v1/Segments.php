@@ -18,23 +18,17 @@ use MailPoet\Doctrine\Validator\ValidationException;
 use MailPoet\Entities\SegmentEntity;
 use MailPoet\Entities\SubscriberEntity;
 use MailPoet\Form\FormsRepository;
-use MailPoet\Listing;
 use MailPoet\Newsletter\Segment\NewsletterSegmentRepository;
-use MailPoet\Segments\SegmentListingRepository;
 use MailPoet\Segments\SegmentSaveController;
 use MailPoet\Segments\SegmentsRepository;
 use MailPoet\Segments\SegmentSubscribersRepository;
 use MailPoet\Segments\WP;
 use MailPoet\Subscribers\SubscribersRepository;
-use MailPoet\UnexpectedValueException;
 
 class Segments extends APIEndpoint {
   public $permissions = [
     'global' => AccessControl::PERMISSION_MANAGE_SEGMENTS,
   ];
-
-  /** @var Listing\Handler */
-  private $listingHandler;
 
   /** @var SegmentsRepository */
   private $segmentsRepository;
@@ -51,9 +45,6 @@ class Segments extends APIEndpoint {
   /** @var WP */
   private $wpSegment;
 
-  /** @var SegmentListingRepository */
-  private $segmentListingRepository;
-
   /** @var NewsletterSegmentRepository */
   private $newsletterSegmentRepository;
 
@@ -67,9 +58,7 @@ class Segments extends APIEndpoint {
   private $segmentSubscribersRepository;
 
   public function __construct(
-    Listing\Handler $listingHandler,
     SegmentsRepository $segmentsRepository,
-    SegmentListingRepository $segmentListingRepository,
     SegmentsResponseBuilder $segmentsResponseBuilder,
     SegmentSaveController $segmentSavecontroller,
     SegmentSubscribersRepository $segmentSubscribersRepository,
@@ -79,13 +68,11 @@ class Segments extends APIEndpoint {
     CronWorkerScheduler $cronWorkerScheduler,
     FormsRepository $formsRepository
   ) {
-    $this->listingHandler = $listingHandler;
     $this->segmentsRepository = $segmentsRepository;
     $this->segmentsResponseBuilder = $segmentsResponseBuilder;
     $this->segmentSavecontroller = $segmentSavecontroller;
     $this->subscribersRepository = $subscribersRepository;
     $this->wpSegment = $wpSegment;
-    $this->segmentListingRepository = $segmentListingRepository;
     $this->newsletterSegmentRepository = $newsletterSegmentRepository;
     $this->cronWorkerScheduler = $cronWorkerScheduler;
     $this->formsRepository = $formsRepository;
@@ -104,26 +91,13 @@ class Segments extends APIEndpoint {
     }
   }
 
-  public function listing($data = []) {
-    $data['params'] = $data['params'] ?? ['lists']; // Dummy param to apply constraints properly
-    $definition = $this->listingHandler->getListingDefinition($data);
-    $items = $this->segmentListingRepository->getData($definition);
-    $count = $this->segmentListingRepository->getCount($definition);
-    $filters = $this->segmentListingRepository->getFilters($definition);
-    $groups = $this->segmentListingRepository->getGroups($definition);
-    $segments = $this->segmentsResponseBuilder->buildForListing($items);
-
-    return $this->successResponse($segments, [
-      'count' => $count,
-      'filters' => $filters,
-      'groups' => $groups,
-    ]);
-  }
-
   public function save($data = []) {
     try {
       $data['name'] = isset($data['name']) ? sanitize_text_field($data['name']) : '';
       $data['description'] = isset($data['description']) ? sanitize_textarea_field($data['description']) : '';
+      if (array_key_exists('public_description', $data)) {
+        $data['public_description'] = sanitize_textarea_field((string)$data['public_description']);
+      }
       $segment = $this->segmentSavecontroller->save($data);
     } catch (ValidationException $exception) {
       return $this->badRequest([
@@ -278,23 +252,6 @@ class Segments extends APIEndpoint {
     }
 
     return $this->successResponse(null);
-  }
-
-  public function bulkAction($data = []) {
-    $definition = $this->listingHandler->getListingDefinition($data['listing']);
-    $ids = $this->segmentListingRepository->getActionableIds($definition);
-    $count = 0;
-    if ($data['action'] === 'trash') {
-      $count = $this->segmentsRepository->bulkTrash($ids);
-    } elseif ($data['action'] === 'restore') {
-      $count = $this->segmentsRepository->bulkRestore($ids);
-    } elseif ($data['action'] === 'delete') {
-      $count = $this->segmentsRepository->bulkDelete($ids);
-    } else {
-      throw UnexpectedValueException::create()
-        ->withErrors([APIError::BAD_REQUEST => "Invalid bulk action '{$data['action']}' provided."]);
-    }
-    return $this->successResponse(null, ['count' => $count]);
   }
 
   public function subscriberCount($data = []) {

@@ -76,6 +76,7 @@ class SubscriberStats extends APIEndpoint {
     $response = [
       'email' => $subscriber->getEmail(),
       'engagement_score' => $subscriber->getEngagementScore(),
+      'engagement_score_type' => $this->subscribersStatisticsRepository->getEngagementScoreType($subscriber),
       'is_woo_active' => $isWooActive,
       'is_woocommerce_user' => $isWoocommerceUser,
       'avatar_url' => $this->wp->getAvatarUrl($subscriber->getEmail(), ['size' => 96]) ?: null,
@@ -186,6 +187,8 @@ class SubscriberStats extends APIEndpoint {
         return __('API', 'mailpoet');
       case Source::WORDPRESS_USER:
         return __('WordPress user sync', 'mailpoet');
+      case Source::WORDPRESS_USER_DELETED:
+        return __('WordPress user (deleted)', 'mailpoet');
       case Source::WOOCOMMERCE_USER:
         return __('WooCommerce customer sync', 'mailpoet');
       case Source::WOOCOMMERCE_CHECKOUT:

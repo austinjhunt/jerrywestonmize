@@ -34,6 +34,39 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 	public static $default_chart_colors = array( '#F4B414', '#1ABC9C', '#097BAA', '#18485D', '#D30606' );
 
 	/**
+	 * Render Breakdance SSR preview in the required order.
+	 *
+	 * Order matters here: enqueue assets first so we can capture style handles,
+	 * print the collected styles and inline styles next, then output the HTML.
+	 *
+	 * @param bool $hide If true, display: none will be added on the form markup.
+	 * @param bool $is_preview Is preview.
+	 *
+	 * @return void
+	 */
+	private function render_breakdance_ssr_preview( $hide, $is_preview ) {
+		$this->enqueue_breakdance_ssr_preview_assets();
+		$this->render_breakdance_ssr_preview_markup( $this->get_html( $hide, $is_preview ), $is_preview );
+		$this->graph_scripts();
+	}
+
+	/**
+	 * Enqueue Breakdance SSR preview assets and collect the generated style handles.
+	 *
+	 * @return void
+	 */
+	private function enqueue_breakdance_ssr_preview_assets() {
+
+		$before_style_handles = wp_styles()->queue;
+
+		$assets = new Forminator_Assets_Enqueue_Poll( $this->model, false );
+		$assets->enqueue_styles( $this );
+		$assets->enqueue_scripts();
+		$assets->load_module_css( true );
+		wp_enqueue_script( 'google-charts', 'https://www.gstatic.com/charts/loader.js', array( 'jquery' ), '1.0', false );
+		$this->set_breakdance_preview_style_handles( $before_style_handles );
+	}
+	/**
 	 * Display form method
 	 *
 	 * @since 1.0
@@ -69,15 +102,17 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 		}
 
 		$this->maybe_define_cache_constants();
+		$this->set_breakdance_ssr_preview( $is_preview );
 
 		// TODO: make preview and ajax load working similar.
 		$is_ajax_load = $this->is_ajax_load( $is_preview );
 
-		// Load assets conditionally.
-		$assets = new Forminator_Assets_Enqueue_Poll( $this->model, $is_ajax_load );
-		$assets->enqueue_styles( $this );
-		$assets->enqueue_scripts();
-
+		if ( ! $this->is_breakdance_ssr_preview ) {
+			// Load assets conditionally.
+			$assets = new Forminator_Assets_Enqueue_Poll( $this->model, $is_ajax_load );
+			$assets->enqueue_styles( $this );
+			$assets->enqueue_scripts();
+		}
 		if ( $is_ajax_load && $this->model->current_user_can_vote() ) {
 
 			$this->generate_render_id( $id );
@@ -92,9 +127,14 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 
 			$this->generate_render_id( $id );
 
+			if ( $this->is_breakdance_ssr_preview ) {
+				$this->render_breakdance_ssr_preview( $hide, $is_preview );
+				return;
+			}
+
 			echo $this->get_html( $hide, $is_preview ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
-			if ( is_admin() ) {
+			if ( is_admin() || $is_preview ) {
 				$this->print_styles();
 			}
 
@@ -523,7 +563,9 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 					$images_enabled   = isset( $form_settings['enable_images'] ) ? filter_var( $form_settings['enable_images'], FILTER_VALIDATE_BOOLEAN ) : false;
 					$option_image_url = array_key_exists( 'answer_image', $field ) ? $field['answer_image'] : '';
 
-					if ( ! empty( $field['title'] ) ) {
+					$field_title = isset( $field['title'] ) ? trim( (string) $field['title'] ) : '';
+
+					if ( '' !== $field_title ) {
 
 						$uniq_id = uniqid();
 						do_action( 'forminator_before_field_render', $field );

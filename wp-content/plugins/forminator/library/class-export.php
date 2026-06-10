@@ -572,8 +572,19 @@ class Forminator_Export {
 								$row   = array();
 								$row[] = 1 === $i ? $entry->time_created : '';
 								$row[] = ! empty( $answer['question'] ) ? sprintf( '"%s"', $answer['question'] ) : '';
-								$row[] = $answer['answer'];
-								if ( ! empty( $answer['answer'] ) ) {
+								if ( isset( $answer['answer'] ) ) {
+									$user_answer = $answer['answer'];
+								} elseif ( isset( $answer['answers'] ) ) {
+									$user_answer = $answer['answers'];
+								} else {
+									$user_answer = '';
+								}
+								if ( is_array( $user_answer ) ) {
+									$user_answer = implode( ', ', $user_answer );
+								}
+								$row[] = $user_answer;
+
+								if ( ! empty( $user_answer ) ) {
 									$row[] = ( ( $answer['isCorrect'] ) ? esc_html__( 'Correct', 'forminator' ) : esc_html__( 'Incorrect', 'forminator' ) );
 								} else {
 									$row[] = '';
@@ -784,9 +795,9 @@ class Forminator_Export {
 					);
 				}
 				// Convert to string first, then apply draft label conversion if needed.
-				$value                          = Forminator_Form_Entry_Model::meta_value_to_string( $mapper['type'], $meta_value, false, PHP_INT_MAX, $mapper['field'] );
-				$value                          = forminator_maybe_get_draft_field_labels( $entry, $mapper['meta_key'], $mapper['type'], $meta_value, $value );
-				$temp_data[ $mapper['type'] ][] = $value;
+				$meta_value                     = Forminator_Form_Entry_Model::meta_value_to_string( $mapper['type'], $meta_value, false, PHP_INT_MAX, $mapper['field'] );
+				$meta_value                     = forminator_resolve_draft_display_value( $entry, $slug, $mapper['type'], $meta_value, $model );
+				$temp_data[ $mapper['type'] ][] = $meta_value;
 			} else {
 
 				// sub_metas available.

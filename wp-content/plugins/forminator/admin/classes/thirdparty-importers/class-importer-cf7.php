@@ -911,7 +911,7 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 						$filtered = array();
 
 						foreach ( $types as $type ) {
-							$filtered[] = $this->filter_filetypes( $type );
+							$filtered = array_merge( $filtered, $this->filter_filetypes( $type ) );
 						}
 
 						$options['filetypes']    = $filtered;
@@ -950,51 +950,50 @@ class Forminator_Admin_Import_CF7 extends Forminator_Import_Mediator {
 	}
 
 	/**
-	 * Filter file types to WP mime types
+	 * Map a single CF7 file type token to Forminator extension key(s).
+	 *
+	 * Accepts category shorthands (image, audio, video, image/*),
+	 * specific MIME types (image/webp, audio/mpeg), bare extensions (jpg, mp3),
+	 * and MIME aliases (image/jpg). Unknown values are passed through as-is.
 	 *
 	 * @since 1.11
 	 *
-	 * @param string $file File type.
+	 * @param string $file File type token from CF7.
 	 *
-	 * @return string
+	 * @return array Forminator extension key(s).
 	 */
 	public function filter_filetypes( $file ) {
-		switch ( $file ) {
-			case 'jpg':
-				$file = 'jpg|jpeg|jpe';
-				break;
-			case 'jpeg':
-				$file = 'jpg|jpeg|jpe';
-				break;
-			case 'mp3':
-				$file = 'mp3|m4a|m4b';
-				break;
-			case '3gp':
-				$file = '3gp|3gpp';
-				break;
-			case 'mp4':
-				$file = 'mp4|m4v';
-				break;
-			case 'mpeg':
-				$file = 'mpeg|mpg|mpe';
-				break;
-			case 'mpg':
-				$file = 'mpeg|mpg|mpe';
-				break;
-			case 'mov':
-				$file = 'mov|qt';
-				break;
-			case 'tiff':
-				$file = 'tiff|tif';
-				break;
-			case 'tif':
-				$file = 'tiff|tif';
-				break;
-			default:
-				break;
+		// Category shorthands expand to the 'all-*' token plus every concrete extension key.
+		$category_map = array(
+			'image'   => 'all-image',
+			'image/*' => 'all-image',
+			'audio'   => 'all-audio',
+			'audio/*' => 'all-audio',
+			'video'   => 'all-video',
+			'video/*' => 'all-video',
+		);
+
+		if ( isset( $category_map[ $file ] ) ) {
+			$base_category = str_replace( '/*', '', $file );
+			$ext_types     = forminator_get_ext_types();
+			$extensions    = isset( $ext_types[ $base_category ] ) ? $ext_types[ $base_category ] : array();
+
+			return array_merge( array( $category_map[ $file ] ), $extensions );
 		}
 
-		return $file;
+		$mime_parts = explode( '/', $file );
+		$token      = isset( $mime_parts[1] ) ? $mime_parts[1] : $file;
+
+		// Match by exact MIME value or by token membership in a pipe-delimited extension key.
+		foreach ( forminator_get_ext_types_with_mime() as $exts ) {
+			foreach ( $exts as $ext_key => $mime ) {
+				if ( $mime === $file || in_array( $token, explode( '|', $ext_key ), true ) ) {
+					return array( $ext_key );
+				}
+			}
+		}
+
+		return array( $token );
 	}
 
 	/**

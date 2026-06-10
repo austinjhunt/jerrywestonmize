@@ -72,6 +72,24 @@ class SendingQueuesRepository extends Repository {
     return $queryBuilder->getQuery()->getOneOrNullResult();
   }
 
+  public function findLatestCompletedByNewsletter(NewsletterEntity $newsletter): ?SendingQueueEntity {
+    return $this->entityManager->createQueryBuilder()
+      ->select('s')
+      ->from(SendingQueueEntity::class, 's')
+      ->join('s.task', 't')
+      ->andWhere('s.newsletter = :newsletter')
+      ->andWhere('s.deletedAt IS NULL')
+      ->andWhere('t.status = :status')
+      ->setParameter('newsletter', $newsletter)
+      ->setParameter('status', ScheduledTaskEntity::STATUS_COMPLETED)
+      ->orderBy('t.processedAt', 'DESC')
+      ->addOrderBy('t.id', 'DESC')
+      ->addOrderBy('s.id', 'DESC')
+      ->setMaxResults(1)
+      ->getQuery()
+      ->getOneOrNullResult();
+  }
+
   public function countAllToProcessByNewsletter(NewsletterEntity $newsletter): int {
     return intval($this->entityManager->createQueryBuilder()
       ->select('sum(s.countToProcess)')
@@ -160,12 +178,14 @@ class SendingQueuesRepository extends Repository {
       ->leftJoin('n.newsletterSegments', 'ns')
       ->leftJoin('ns.segment', 's', 'WITH', 's.type = :dynamicType')
       ->andWhere('t.status = :taskStatus')
+      ->andWhere('q.meta IS NULL OR q.meta NOT LIKE :latestNewsletterReplayMeta')
       ->andWhere('t.processedAt >= :since')
       ->setParameter('sevenDaysAgo', $sevenDaysAgo)
       ->setParameter('thirtyDaysAgo', $thirtyDaysAgo)
       ->setParameter('threeMonthsAgo', $threeMonthsAgo)
       ->setParameter('dynamicType', SegmentEntity::TYPE_DYNAMIC)
       ->setParameter('taskStatus', ScheduledTaskEntity::STATUS_COMPLETED)
+      ->setParameter('latestNewsletterReplayMeta', NewsletterReplayMetadata::getMetaLikePattern())
       ->setParameter('since', $threeMonthsAgo)
       ->groupBy('q.id')
       ->getQuery();
@@ -184,6 +204,7 @@ class SendingQueuesRepository extends Repository {
   public function resume(SendingQueueEntity $queue): void {
     $task = $queue->getTask();
     if (!$task instanceof ScheduledTaskEntity) return;
+    $isLatestNewsletterReplay = NewsletterReplayMetadata::isLatestNewsletterReplayMeta($queue->getMeta());
 
     if ($queue->getCountProcessed() === $queue->getCountTotal()) {
       $processedAt = Carbon::now()->millisecond(0);
@@ -191,7 +212,7 @@ class SendingQueuesRepository extends Repository {
       $task->setStatus(ScheduledTaskEntity::STATUS_COMPLETED);
       // Update also status of newsletter if necessary
       $newsletter = $queue->getNewsletter();
-      if ($newsletter instanceof NewsletterEntity && $newsletter->canBeSetSent()) {
+      if (!$isLatestNewsletterReplay && $newsletter instanceof NewsletterEntity && $newsletter->canBeSetSent()) {
         $newsletter->setStatus(NewsletterEntity::STATUS_SENT);
       }
       $this->flush();
@@ -202,7 +223,9 @@ class SendingQueuesRepository extends Repository {
         $queue->setNewsletterRenderedBody(null);
         $this->persist($queue);
       }
-      $newsletter->setStatus($newsletter->canBeSetActive() ? NewsletterEntity::STATUS_ACTIVE : NewsletterEntity::STATUS_SENDING);
+      if (!$isLatestNewsletterReplay) {
+        $newsletter->setStatus($newsletter->canBeSetActive() ? NewsletterEntity::STATUS_ACTIVE : NewsletterEntity::STATUS_SENDING);
+      }
       $task->setStatus(null);
       $this->flush();
     }

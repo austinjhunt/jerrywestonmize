@@ -450,8 +450,7 @@ abstract class Forminator_Front_Action {
 	 */
 	public function validate_nonce() {
 		if ( self::$is_abandoned ) {
-			$form_uid = filter_input( INPUT_POST, 'form_uid' );
-			$valid    = $this->validate_ajax( 'forminator_abandonment_form' . $form_uid, 'POST', 'forminator_abandonment_nonce' );
+			$valid = $this->validate_ajax( 'forminator_abandonment_form' . self::$module_id, 'POST', 'forminator_abandonment_nonce' );
 		} else {
 			$valid = $this->validate_ajax( 'forminator_submit_form' . self::$module_id, 'POST', 'forminator_nonce' );
 		}
@@ -540,7 +539,7 @@ abstract class Forminator_Front_Action {
 	private static function show_draft_link( $form_id, $response ) {
 		$response['form_id']    = $form_id;
 		$response['type']       = 'save_draft';
-		$draft_link             = esc_url( add_query_arg( 'draft', $response['draft_id'], get_permalink( $response['page_id'] ) ) );
+		$draft_link             = Forminator_CForm_Front_Action::get_draft_link( $response['draft_id'], $response['page_id'] );
 		$send_draft_email_nonce = esc_attr( 'forminator_nonce_email_draft_link_' . $response['draft_id'] );
 		$message                = str_replace( '{retention_period}', $response['retention_period'], $response['message'] );
 		$message                = forminator_replace_form_data( $message, static::$module_object );

@@ -10,6 +10,7 @@ use MailPoet\Cron\CronWorkerScheduler;
 use MailPoet\Entities\NewsletterEntity;
 use MailPoet\Entities\NewsletterSegmentEntity;
 use MailPoet\Entities\ScheduledTaskEntity;
+use MailPoet\Entities\ScheduledTaskSubscriberEntity;
 use MailPoet\Entities\SegmentEntity;
 use MailPoet\Entities\SubscriberEntity;
 use MailPoet\Logging\LoggerFactory;
@@ -18,6 +19,7 @@ use MailPoet\Newsletter\Scheduler\PostNotificationScheduler;
 use MailPoet\Newsletter\Scheduler\Scheduler as NewsletterScheduler;
 use MailPoet\Newsletter\Scheduler\WelcomeScheduler;
 use MailPoet\Newsletter\Segment\NewsletterSegmentRepository;
+use MailPoet\Newsletter\Sending\NewsletterReplayMetadata;
 use MailPoet\Newsletter\Sending\ScheduledTasksRepository;
 use MailPoet\Newsletter\Sending\ScheduledTaskSubscribersRepository;
 use MailPoet\Newsletter\Sending\SendingQueuesRepository;
@@ -128,6 +130,7 @@ class Scheduler {
       }
 
       $newsletter = $queue->getNewsletter();
+      $isLatestNewsletterReplay = NewsletterReplayMetadata::isLatestNewsletterReplayMeta($queue->getMeta());
       try {
         if (!$newsletter instanceof NewsletterEntity || $newsletter->getDeletedAt() !== null) {
           $this->deleteByTask($task);
@@ -135,6 +138,7 @@ class Scheduler {
           $newsletter->getStatus() !== NewsletterEntity::STATUS_ACTIVE
           && $newsletter->getStatus() !== NewsletterEntity::STATUS_SCHEDULED
           && !($newsletter->getStatus() === NewsletterEntity::STATUS_SENDING && $this->timeZoneCampaignScheduler->isTimeZoneQueue($queue))
+          && !$this->canProcessLatestNewsletterReplay($newsletter, $isLatestNewsletterReplay)
         ) {
           $task->setStatus(ScheduledTaskEntity::STATUS_PAUSED);
           $this->scheduledTasksRepository->flush();
@@ -143,6 +147,8 @@ class Scheduler {
           $this->processWelcomeNewsletter($newsletter, $task);
         } elseif ($newsletter->getType() === NewsletterEntity::TYPE_NOTIFICATION) {
           $this->processPostNotificationNewsletter($newsletter, $task);
+        } elseif ($this->canProcessLatestNewsletterReplay($newsletter, $isLatestNewsletterReplay)) {
+          $this->processLatestNewsletterReplay($task);
         } elseif ($newsletter->getType() === NewsletterEntity::TYPE_STANDARD) {
           $this->processScheduledStandardNewsletter($newsletter, $task);
         } elseif ($newsletter->getType() === NewsletterEntity::TYPE_AUTOMATIC) {
@@ -321,6 +327,42 @@ class Scheduler {
       $this->sendingQueuesRepository->updateCounts($queue);
     }
     $newsletter->setStatus(NewsletterEntity::STATUS_SENDING);
+    $this->scheduledTasksRepository->flush();
+    return true;
+  }
+
+  private function canProcessLatestNewsletterReplay(NewsletterEntity $newsletter, bool $isLatestNewsletterReplay): bool {
+    return $isLatestNewsletterReplay
+      && $newsletter->getType() === NewsletterEntity::TYPE_STANDARD
+      && $newsletter->getStatus() === NewsletterEntity::STATUS_SENT;
+  }
+
+  private function processLatestNewsletterReplay(ScheduledTaskEntity $task): bool {
+    $subscribers = $task->getSubscribers();
+    if ($subscribers->isEmpty()) {
+      $this->deleteByTask($task);
+      return false;
+    }
+
+    $queue = $task->getSendingQueue();
+    $meta = $queue ? $queue->getMeta() : [];
+    $taskSubscriber = $subscribers->first();
+    $expectedSubscriberId = $meta[NewsletterReplayMetadata::REPLAY_SUBSCRIBER_ID] ?? null;
+    if (
+      $subscribers->count() !== 1
+      || !$taskSubscriber instanceof ScheduledTaskSubscriberEntity
+      || !is_numeric($expectedSubscriberId)
+      || (int)$taskSubscriber->getSubscriberId() !== (int)$expectedSubscriberId
+    ) {
+      $task->setStatus(ScheduledTaskEntity::STATUS_PAUSED);
+      $this->scheduledTasksRepository->flush();
+      return false;
+    }
+
+    $task->setStatus(null);
+    if ($queue) {
+      $this->sendingQueuesRepository->updateCounts($queue);
+    }
     $this->scheduledTasksRepository->flush();
     return true;
   }

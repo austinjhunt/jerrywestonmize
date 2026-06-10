@@ -20,7 +20,7 @@ class ActivationNewSiteMultisite
      */
     public static function init($siteId)
     {
-        if (is_plugin_active_for_network(AMELIA_PLUGIN_SLUG)) {
+        if (is_plugin_active_for_network(AMELIA_PLUGIN_BASENAME)) {
             switch_to_blog($siteId);
             //Create database table if not exists
             ActivationDatabaseHook::init();

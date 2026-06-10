@@ -5,7 +5,7 @@ namespace AmeliaBooking\Application\Controller\Activation;
 use AmeliaBooking\Application\Commands\Activation\ParseDomainCommand;
 use AmeliaBooking\Application\Controller\Controller;
 use RuntimeException;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class ParseDomainController

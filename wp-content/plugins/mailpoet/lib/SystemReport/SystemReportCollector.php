@@ -169,8 +169,8 @@ class SystemReportCollector {
         'Is reachable' => $this->cronHelper->validatePingResponse($cronPingResponse) ? 'Yes' : 'No',
         'Ping URL' => $cronPingUrl,
         'Ping response' => $cronPingResponse,
-        'Last run start' => isset($cronDaemonStatus['run_started_at']) ? date('Y-m-d H:i:s', $cronDaemonStatus['run_started_at']) : 'Unknown',
-        'Last run end' => isset($cronDaemonStatus['run_completed_at']) ? date('Y-m-d H:i:s', $cronDaemonStatus['run_completed_at']) : 'Unknown',
+        'Last run start' => isset($cronDaemonStatus['run_started_at']) ? $this->formatTimestamp((int)$cronDaemonStatus['run_started_at']) : 'Unknown',
+        'Last run end' => isset($cronDaemonStatus['run_completed_at']) ? $this->formatTimestamp((int)$cronDaemonStatus['run_completed_at']) : 'Unknown',
         'Last seen error' => $cronDaemonStatus['last_error'] ?? 'None',
       ]),
       'Total number of subscribers' => $this->subscribersFeature->getSubscribersCount(),
@@ -178,7 +178,7 @@ class SystemReportCollector {
       'Installed via WooCommerce onboarding wizard' => $this->wooCommerceHelper->wasMailPoetInstalledViaWooCommerceOnboardingWizard(),
       'Sending queue status' => $this->formatCompositeField([
         'Status' => $mailerLog['status'] ?? 'Unknown',
-        'Started at' => isset($mailerLog['started']) ? date('Y-m-d H:i:s', $mailerLog['started']) : 'Unknown',
+        'Started at' => isset($mailerLog['started']) ? $this->formatTimestamp((int)$mailerLog['started']) : 'Unknown',
         'Emails sent' => $mailerLog['sent'],
         'Retry attempts' => $mailerLog['retry_attempt'] ?? 0,
         'Last seen error' => isset($mailerLog['error'])
@@ -277,8 +277,31 @@ class SystemReportCollector {
     }
 
     return implode(' - ', array_map(function ($key, $value) {
-      return $key . ': ' . $value;
+      return $key . ': ' . $this->formatCompositeValue($value);
     }, array_keys($fields), array_values($fields)));
+  }
+
+  /**
+   * @param mixed $value
+   */
+  private function formatCompositeValue($value): string {
+    if ($value instanceof \WP_Error) {
+      return $value->get_error_message();
+    }
+    if (is_object($value) && method_exists($value, '__toString')) {
+      return (string)$value;
+    }
+    if (is_array($value) || is_object($value)) {
+      $encodedValue = $this->wp->wpJsonEncode($value);
+      return is_string($encodedValue) ? $encodedValue : '';
+    }
+    if (is_scalar($value)) {
+      return (string)$value;
+    }
+    if (is_resource($value)) {
+      return get_resource_type($value);
+    }
+    return '';
   }
 
   private function convertKeysToTitleCase(array $array): array {
@@ -289,6 +312,12 @@ class SystemReportCollector {
     }
 
     return $result;
+  }
+
+  private function formatTimestamp(int $timestamp): string {
+    return (new \DateTimeImmutable('@' . $timestamp))
+      ->setTimezone($this->wp->wpTimezone())
+      ->format('Y-m-d H:i:s');
   }
 
   protected function maskApiKey($key) {

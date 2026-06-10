@@ -5,7 +5,7 @@ namespace AmeliaBooking\Application\Controller\Entities;
 use AmeliaBooking\Application\Commands\Entities\GetEntitiesCommand;
 use AmeliaBooking\Application\Controller\Controller;
 use RuntimeException;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class GetEntitiesController

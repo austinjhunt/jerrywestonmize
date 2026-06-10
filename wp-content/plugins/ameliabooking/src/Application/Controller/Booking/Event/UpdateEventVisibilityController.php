@@ -10,7 +10,7 @@ namespace AmeliaBooking\Application\Controller\Booking\Event;
 use AmeliaBooking\Application\Commands\Bookable\Service\UpdateServiceStatusCommand;
 use AmeliaBooking\Application\Commands\Booking\Event\UpdateEventVisibilityCommand;
 use AmeliaBooking\Application\Controller\Controller;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class UpdateEventVisibilityController

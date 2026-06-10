@@ -81,7 +81,19 @@ class BookingFallbackService
                 'description' => BackendStrings::get('fallback_booking_rejected_desc'),
                 'color' => '#6c757d',
                 'icon' => 'info'
-            ]
+            ],
+            'payment_done' => [
+                'title' => BackendStrings::get('fallback_payment_done_title'),
+                'description' => BackendStrings::get('fallback_payment_desc'),
+                'color' => '#dc3545',
+                'icon' => 'error'
+            ],
+            'payment_failed' => [
+                'title' => BackendStrings::get('fallback_payment_failed_title'),
+                'description' => BackendStrings::get('fallback_payment_desc'),
+                'color' => '#dc3545',
+                'icon' => 'error'
+            ],
         ];
     }
 

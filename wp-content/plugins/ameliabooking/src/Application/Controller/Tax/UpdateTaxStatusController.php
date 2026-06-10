@@ -7,7 +7,7 @@ use AmeliaBooking\Application\Commands\Tax\UpdateTaxStatusCommand;
 use AmeliaBooking\Application\Controller\Controller;
 use AmeliaBooking\Domain\Events\DomainEventBus;
 use RuntimeException;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class UpdateTaxStatusController

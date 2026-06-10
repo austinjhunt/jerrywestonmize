@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Amelia\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-20 08:21+0000\n"
+"POT-Creation-Date: 2026-06-03 08:05+0000\n"
 "PO-Revision-Date: 2025-11-20 16:11+0100\n"
 "Last-Translator: \n"
 "Language-Team: Amelia\n"
@@ -241,6 +241,17 @@ msgid ""
 msgstr ""
 
 msgid "Return to Home"
+msgstr ""
+
+msgid ""
+"This payment link is no longer valid. Please contact admin if you need "
+"assistance."
+msgstr ""
+
+msgid "Already Paid"
+msgstr ""
+
+msgid "Invalid Payment Link"
 msgstr ""
 
 msgid "Copy your API key now, as it won't be visible again."
@@ -1145,7 +1156,8 @@ msgstr ""
 
 msgid ""
 "This is a unique security token. Copy it into the 'Verify token' field in "
-"WhatsApp when creating a webhook."
+"WhatsApp when creating a webhook. Since this token is used for logging, we "
+"recommend registering your webhook."
 msgstr ""
 
 msgid ""
@@ -1790,6 +1802,22 @@ msgid "Start date"
 msgstr ""
 
 msgid "Make sure you are using the correct Zoom credentials."
+msgstr ""
+
+msgid "Make sure you are using the correct Outlook credentials."
+msgstr ""
+
+msgid "Enter both the application (client) ID and client secret."
+msgstr ""
+
+msgid ""
+"Application (client) ID must be a valid GUID (UUID), as shown in the Azure "
+"portal."
+msgstr ""
+
+msgid ""
+"Client secret is too short or looks invalid. Copy the full value from the "
+"Azure portal."
 msgstr ""
 
 msgid "Zoom user"
@@ -2441,9 +2469,6 @@ msgid "Please select package:"
 msgstr ""
 
 msgid "Package:"
-msgstr ""
-
-msgid "Back"
 msgstr ""
 
 msgid "All services are booked separately"
@@ -6706,6 +6731,12 @@ msgstr ""
 msgid "Booking"
 msgstr ""
 
+msgid "Your booking has been canceled."
+msgstr ""
+
+msgid "By employees"
+msgstr ""
+
 msgid ""
 "HTML formatting may be overridden by plain text formatting upon switching "
 "between modes."
@@ -8214,6 +8245,9 @@ msgid ""
 "an existing appointment!"
 msgstr ""
 
+msgid "Outside of working hours"
+msgstr ""
+
 msgid "Please select a service."
 msgstr ""
 
@@ -8699,6 +8733,9 @@ msgstr ""
 msgid "Busy slots"
 msgstr ""
 
+msgid "Date busyness indicator"
+msgstr ""
+
 msgid "Estimated price"
 msgstr ""
 
@@ -9124,6 +9161,18 @@ msgid ""
 "order to make their bookings."
 msgstr ""
 
+msgid "Amelia - Booking Button"
+msgstr ""
+
+msgid "Amelia - Events List Button"
+msgstr ""
+
+msgid ""
+"Event Booking is shortcode that gives your customers the option to book one "
+"of the events that you've created on the back-end in a simple event list "
+"view."
+msgstr ""
+
 msgid "Amelia - Catalog Booking"
 msgstr ""
 
@@ -9141,12 +9190,6 @@ msgid ""
 msgstr ""
 
 msgid "Amelia - Events"
-msgstr ""
-
-msgid ""
-"Event Booking is shortcode that gives your customers the option to book one "
-"of the events that you've created on the back-end in a simple event list "
-"view."
 msgstr ""
 
 msgid "Amelia - Events List"
@@ -9362,6 +9405,9 @@ msgid "Daily occupancy"
 msgstr ""
 
 msgid "Enter a phone number, then press Enter to add"
+msgstr ""
+
+msgid "One of the phone numbers provided is invalid."
 msgstr ""
 
 msgid "Dark Theme"
@@ -11128,8 +11174,8 @@ msgid "Edit block time"
 msgstr ""
 
 msgid ""
-"Please delete this appointment. It cannot be edited due to a conflict with "
-"the associated account."
+"This email is linked to both a customer and an employee account. Please "
+"delete and rebook."
 msgstr ""
 
 msgid "Event tags"
@@ -11150,6 +11196,34 @@ msgid "Event tags setup"
 msgstr ""
 
 msgid "Event tags have been saved."
+msgstr ""
+
+msgid ""
+"Select Amelia Step-By-Step Booking Button block (or its inner button) to "
+"edit shortcode options."
+msgstr ""
+
+msgid ""
+"Select Events List Booking Button block (or its inner button) to edit "
+"shortcode options."
+msgstr ""
+
+msgid "Shortcode options"
+msgstr ""
+
+msgid "Amelia Step Booking Settings"
+msgstr ""
+
+msgid "Amelia Events List Booking Settings"
+msgstr ""
+
+msgid "Amelia Step Booking Shortcode"
+msgstr ""
+
+msgid "Amelia Events List Booking Shortcode"
+msgstr ""
+
+msgid "Back"
 msgstr ""
 
 msgid "Add to Calendar"

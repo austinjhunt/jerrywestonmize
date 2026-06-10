@@ -61,7 +61,7 @@ if (!function_exists('ExtendBuilder\admin_notice_colibriwp_theme_required')) {
 
 
 ?>
-        <div class="notice notice-warning is-dismissible colibri-wp-recommendation">
+        <div class="colibri-notice notice notice-warning is-dismissible colibri-wp-recommendation">
             <style>
                 .colibri-wp-notice {
                     display: flex;

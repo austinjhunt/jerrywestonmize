@@ -183,7 +183,7 @@ class Forminator_Custom_Forms extends Forminator_Module {
 	 * @return null
 	 */
 	public static function migrate_leads_forms( $new_version, $old_version ) {
-		if ( version_compare( $old_version, '1.14.7', '>' ) ) {
+		if ( version_compare( $old_version, '1.54.0', '>=' ) ) {
 			return;
 		}
 		Forminator_Migration::migrate_leads_forms();
@@ -327,19 +327,14 @@ class Forminator_Custom_Forms extends Forminator_Module {
 			'Donation Form'                          => __( 'Donation Form', 'forminator' ),
 			'Event Feedback Form'                    => __( 'Event Feedback Form', 'forminator' ),
 			'Event Registration'                     => __( 'Event Registration', 'forminator' ),
-			'Event Registration Template'            => __( 'Event Registration', 'forminator' ),
-			'Event Registration Form'                => __( 'Event Registration', 'forminator' ),
 			'Fitness Class Registration'             => __( 'Fitness Class Registration', 'forminator' ),
 			'Home Service Request Form'              => __( 'Home Service Request Form', 'forminator' ),
 			'Job Application Form'                   => __( 'Job Application Form', 'forminator' ),
 			'Medical History Form'                   => __( 'Medical History Form', 'forminator' ),
-			'Order Form for Small Businesses'        => __( 'Small Business Order Request', 'forminator' ),
-			'Order Form for Small Business'          => __( 'Small Business Order Request', 'forminator' ),
 			'Small Business Order Request'           => __( 'Small Business Order Request', 'forminator' ),
 			'Real Estate Inquiry Form'               => __( 'Real Estate Inquiry Form', 'forminator' ),
 			'Restaurant Reservation Form'            => __( 'Restaurant Reservation Form', 'forminator' ),
 			'Return Merchandise Authorization (RMA)' => __( 'Return Merchandise Authorization (RMA)', 'forminator' ),
-			'Return Merchandise Authorization Form'  => __( 'Return Merchandise Authorization (RMA)', 'forminator' ),
 			'RSVP Form'                              => __( 'RSVP Form', 'forminator' ),
 			'User Registration'                      => __( 'User Registration', 'forminator' ),
 			'Travel Booking Form'                    => __( 'Travel Booking Form', 'forminator' ),

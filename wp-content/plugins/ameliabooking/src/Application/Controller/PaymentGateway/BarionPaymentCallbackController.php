@@ -4,7 +4,7 @@ namespace AmeliaBooking\Application\Controller\PaymentGateway;
 
 use AmeliaBooking\Application\Commands\PaymentGateway\BarionPaymentCallbackCommand;
 use AmeliaBooking\Application\Controller\Controller;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 class BarionPaymentCallbackController extends Controller
 {

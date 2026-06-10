@@ -4,7 +4,7 @@ namespace AmeliaBooking\Application\Controller\PaymentGateway;
 
 use AmeliaBooking\Application\Commands\PaymentGateway\PayPalPaymentCallbackCommand;
 use AmeliaBooking\Application\Controller\Controller;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class PayPalPaymentCallbackController
@@ -36,9 +36,9 @@ class PayPalPaymentCallbackController extends Controller
     protected function instantiateCommand(Request $request, $args)
     {
         $command = new PayPalPaymentCallbackCommand($args);
-        $command->setField('token', (string)$request->getQueryParam('token', ''));
-        $command->setField('PayerID', (string)$request->getQueryParam('PayerID', ''));
-        $command->setField('status', (string)$request->getQueryParam('status', ''));
+        $command->setField('token', (string)self::getParam($request, 'token', ''));
+        $command->setField('PayerID', (string)self::getParam($request, 'PayerID', ''));
+        $command->setField('status', (string)self::getParam($request, 'status', ''));
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

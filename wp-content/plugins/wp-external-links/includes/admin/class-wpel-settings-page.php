@@ -103,7 +103,82 @@ final class WPEL_Settings_Page extends WPRun_Base_1x0x0
 
         add_filter('plugin_action_links_' . plugin_basename(TEST_WPEL_PLUGIN_FILE), array($this, 'plugin_action_links'));
         add_filter('admin_footer_text', array($this, 'admin_footer_text'));
+        add_action('admin_action_wpel_install_wpcaptcha', array($this, 'install_wpcaptcha'));
     }
+
+    // auto download / install / activate WP Captcha plugin
+    function install_wpcaptcha()
+    {
+        check_ajax_referer('install_wpcaptcha');
+
+        if (false === current_user_can('manage_options')) {
+            wp_die('Sorry, you have to be an admin to run this action.');
+        }
+
+        $plugin_slug = 'advanced-google-recaptcha/advanced-google-recaptcha.php';
+        $plugin_zip = 'https://downloads.wordpress.org/plugin/advanced-google-recaptcha.latest-stable.zip';
+
+        @include_once ABSPATH . 'wp-admin/includes/plugin.php';
+        @include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+        @include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+        @include_once ABSPATH . 'wp-admin/includes/file.php';
+        @include_once ABSPATH . 'wp-admin/includes/misc.php';
+        echo '<style>
+		body{
+			font-family: sans-serif;
+			font-size: 14px;
+			line-height: 1.5;
+			color: #444;
+		}
+		</style>';
+
+        echo '<div style="margin: 20px; color:#444;">';
+        echo 'If things are not done in a minute <a target="_parent" href="' . esc_url(admin_url('plugin-install.php?s=google%20recaptcha%20webfactory&tab=search&type=term')) . '">install the plugin manually via Plugins page</a><br><br>';
+        echo 'Starting ...<br><br>';
+
+        wp_cache_flush();
+        $upgrader = new Plugin_Upgrader();
+        echo 'Check if Advanced Google ReCaptcha is already installed ... <br />';
+        if (self::is_plugin_installed($plugin_slug)) {
+            echo 'Advanced Google ReCaptcha is already installed! <br /><br />Making sure it\'s the latest version.<br />';
+            $upgrader->upgrade($plugin_slug);
+            $installed = true;
+        } else {
+            echo 'Installing Advanced Google ReCaptcha.<br />';
+            $installed = $upgrader->install($plugin_zip);
+        }
+        wp_cache_flush();
+
+        if (!is_wp_error($installed) && $installed) {
+            echo 'Activating Advanced Google ReCaptcha.<br />';
+            $activate = activate_plugin($plugin_slug);
+
+            if (is_null($activate)) {
+                echo 'Advanced Google ReCaptcha Activated.<br />';
+
+                echo '<script>setTimeout(function() { top.location = "admin.php?page=wpel-settings-page"; }, 1000);</script>';
+                echo '<br>If you are not redirected in a few seconds - <a href="admin.php?page=wpel-settings-page" target="_parent">click here</a>.';
+            }
+        } else {
+            echo 'Could not install Advanced Google ReCaptcha. You\'ll have to <a target="_parent" href="' . esc_url(admin_url('plugin-install.php?s=google%20recaptcha%20webfactory&tab=search&type=term')) . '">download and install manually</a>.';
+        }
+
+        echo '</div>';
+    } // install_wpcaptcha
+
+    static function is_plugin_installed($slug)
+    {
+        if (!function_exists('get_plugins')) {
+            require_once ABSPATH . 'wp-admin/includes/plugin.php';
+        }
+        $all_plugins = get_plugins();
+
+        if (!empty($all_plugins[$slug])) {
+            return true;
+        } else {
+            return false;
+        }
+    } // is_plugin_installed
 
     /**
      * Add powered by text in admin footer

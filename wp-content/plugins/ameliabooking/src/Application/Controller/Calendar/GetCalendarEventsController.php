@@ -7,7 +7,7 @@
 
 namespace AmeliaBooking\Application\Controller\Calendar;
 
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 use AmeliaBooking\Application\Commands\Calendar\GetCalendarEventsCommand;
 use AmeliaBooking\Application\Commands\Command;
 use AmeliaBooking\Application\Controller\Controller;

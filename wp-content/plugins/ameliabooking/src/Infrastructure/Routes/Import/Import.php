@@ -25,6 +25,6 @@ class Import
      */
     public static function routes(App $app)
     {
-        $app->post('/import/customers', ImportCustomersController::class)->setOutputBuffering(false);
+        $app->post('/import/customers', ImportCustomersController::class);
     }
 }

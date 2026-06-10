@@ -1,43 +1,44 @@
 <?php
 /* THIS IS A GENERATED FILE. DO NOT EDIT DIRECTLY. */
 $forminator_admin_locale = array(
-"Inline Message" => array( null, __("Inline Message", "forminator"), ), // src/utils.js:140
-"Redirect user to a URL" => array( null, __("Redirect user to a URL", "forminator"), ), // src/utils.js:141
-"Hide form" => array( null, __("Hide form", "forminator"), ), // src/utils.js:142
-"None" => array( null, __("None", "forminator"), ), // src/utils.js:571
-"null" => array( null, __("null", "forminator"), ), // src/utils.js:625
-"Day" => array( null, __("Day", "forminator"), ), // src/utils.js:755
-"Month" => array( null, __("Month", "forminator"), ), // src/utils.js:762
-"Year" => array( null, __("Year", "forminator"), ), // src/utils.js:769
-"Hour" => array( null, __("Hour", "forminator"), ), // src/utils.js:1120
-"Minute" => array( null, __("Minute", "forminator"), ), // src/utils.js:1127
-"is" => array( null, __("is", "forminator"), ), // src/utils.js:1207
-"is not" => array( null, __("is not", "forminator"), ), // src/utils.js:1209
-"day is" => array( null, __("day is", "forminator"), ), // src/utils.js:1211
-"day is not" => array( null, __("day is not", "forminator"), ), // src/utils.js:1213
-"month is not" => array( null, __("month is not", "forminator"), ), // src/utils.js:1215
-"month is" => array( null, __("month is", "forminator"), ), // src/utils.js:1217
-"is before" => array( null, __("is before", "forminator"), ), // src/utils.js:1219
-"is after" => array( null, __("is after", "forminator"), ), // src/utils.js:1221
-"is before %s or more days from current date" => array( null, __("is before %s or more days from current date", "forminator"), ), // src/utils.js:1223
-"is before less than %s days from current date" => array( null, __("is before less than %s days from current date", "forminator"), ), // src/utils.js:1225
-"is after %s or more days from current date" => array( null, __("is after %s or more days from current date", "forminator"), ), // src/utils.js:1227
-"is after less than %s days from current date" => array( null, __("is after less than %s days from current date", "forminator"), ), // src/utils.js:1229
-"is greater than" => array( null, __("is greater than", "forminator"), ), // src/utils.js:1231
-"is less than" => array( null, __("is less than", "forminator"), ), // src/utils.js:1233
-"contains" => array( null, __("contains", "forminator"), ), // src/utils.js:1235
-"does not contain" => array( null, __("does not contain", "forminator"), ), // src/utils.js:1237
-"starts with" => array( null, __("starts with", "forminator"), ), // src/utils.js:1239
-"ends with" => array( null, __("ends with", "forminator"), ), // src/utils.js:1241
-"is correct" => array( null, __("is correct", "forminator"), ), // src/utils.js:1243
-"is incorrect" => array( null, __("is incorrect", "forminator"), ), // src/utils.js:1245
-"is final result" => array( null, __("is final result", "forminator"), ), // src/utils.js:1248
-"is not final result" => array( null, __("is not final result", "forminator"), ), // src/utils.js:1250
-"Please fix the error(s) in the SETTINGS tab." => array( null, __("Please fix the error(s) in the SETTINGS tab.", "forminator"), ), // src/utils.js:1554
-"Stripe Subscription Add-on is required." => array( null, __("Stripe Subscription Add-on is required.", "forminator"), ), // src/utils.js:1569
-"Billing frequency should be greater than or equal to 1" => array( null, __("Billing frequency should be greater than or equal to 1", "forminator"), ), // src/utils.js:1604
-"Use form settings (Above inputs)" => array( null, __("Use form settings (Above inputs)", "forminator"), ), // src/utils.js:1701
-"Use form settings (Below inputs)" => array( null, __("Use form settings (Below inputs)", "forminator"), ), // src/utils.js:1701
+"Inline Message" => array( null, __("Inline Message", "forminator"), ), // src/utils.js:141
+"Redirect user to a URL" => array( null, __("Redirect user to a URL", "forminator"), ), // src/utils.js:142
+"Hide form" => array( null, __("Hide form", "forminator"), ), // src/utils.js:143
+"None" => array( null, __("None", "forminator"), ), // src/utils.js:588
+"null" => array( null, __("null", "forminator"), ), // src/utils.js:773
+"Day" => array( null, __("Day", "forminator"), ), // src/utils.js:903
+"Month" => array( null, __("Month", "forminator"), ), // src/utils.js:910
+"Year" => array( null, __("Year", "forminator"), ), // src/utils.js:917
+"Hour" => array( null, __("Hour", "forminator"), ), // src/utils.js:1268
+"Minute" => array( null, __("Minute", "forminator"), ), // src/utils.js:1275
+"is" => array( null, __("is", "forminator"), ), // src/utils.js:1355
+"is not" => array( null, __("is not", "forminator"), ), // src/utils.js:1357
+"day is" => array( null, __("day is", "forminator"), ), // src/utils.js:1359
+"day is not" => array( null, __("day is not", "forminator"), ), // src/utils.js:1361
+"month is not" => array( null, __("month is not", "forminator"), ), // src/utils.js:1363
+"month is" => array( null, __("month is", "forminator"), ), // src/utils.js:1365
+"is before" => array( null, __("is before", "forminator"), ), // src/utils.js:1367
+"is after" => array( null, __("is after", "forminator"), ), // src/utils.js:1369
+"is before %s or more days from current date" => array( null, __("is before %s or more days from current date", "forminator"), ), // src/utils.js:1371
+"is before less than %s days from current date" => array( null, __("is before less than %s days from current date", "forminator"), ), // src/utils.js:1373
+"is after %s or more days from current date" => array( null, __("is after %s or more days from current date", "forminator"), ), // src/utils.js:1375
+"is after less than %s days from current date" => array( null, __("is after less than %s days from current date", "forminator"), ), // src/utils.js:1377
+"is greater than" => array( null, __("is greater than", "forminator"), ), // src/utils.js:1379
+"is less than" => array( null, __("is less than", "forminator"), ), // src/utils.js:1381
+"contains" => array( null, __("contains", "forminator"), ), // src/utils.js:1383
+"does not contain" => array( null, __("does not contain", "forminator"), ), // src/utils.js:1385
+"starts with" => array( null, __("starts with", "forminator"), ), // src/utils.js:1387
+"ends with" => array( null, __("ends with", "forminator"), ), // src/utils.js:1389
+"is correct" => array( null, __("is correct", "forminator"), ), // src/utils.js:1391
+"is incorrect" => array( null, __("is incorrect", "forminator"), ), // src/utils.js:1393
+"is final result" => array( null, __("is final result", "forminator"), ), // src/utils.js:1396
+"is not final result" => array( null, __("is not final result", "forminator"), ), // src/utils.js:1398
+"Please fix the error(s) in the PRODUCTS/PLANS tab." => array( null, __("Please fix the error(s) in the PRODUCTS/PLANS tab.", "forminator"), ), // src/utils.js:1701
+"Please fix the error(s) in the SETTINGS tab." => array( null, __("Please fix the error(s) in the SETTINGS tab.", "forminator"), ), // src/utils.js:1702
+"Stripe Subscription Add-on is required." => array( null, __("Stripe Subscription Add-on is required.", "forminator"), ), // src/utils.js:1721
+"Billing frequency should be greater than or equal to 1" => array( null, __("Billing frequency should be greater than or equal to 1", "forminator"), ), // src/utils.js:1756
+"Use form settings (Above inputs)" => array( null, __("Use form settings (Above inputs)", "forminator"), ), // src/utils.js:1853
+"Use form settings (Below inputs)" => array( null, __("Use form settings (Below inputs)", "forminator"), ), // src/utils.js:1853
 "Hosting by the Same People Behind Forminator!" => array( null, __("Hosting by the Same People Behind Forminator!", "forminator"), ), // src/shared/hosting-banner.js:32
 "Only admin users can see this message" => array( null, __("Only admin users can see this message", "forminator"), ), // src/shared/hosting-banner.js:35
 "Claim Your 50% Off Hosting Now!" => array( null, __("Claim Your 50% Off Hosting Now!", "forminator"), ), // src/shared/hosting-banner.js:36
@@ -271,504 +272,7 @@ Europe
 North America
 South America", "forminator"), ), // src/settings/inputs/sui-variables-bulk-editor.js:210
 "Continents" => array( null, __("Continents", "forminator"), ), // src/settings/inputs/sui-variables-bulk-editor.js:213
-"Afghanistan
-Åland Islands
-Albania
-Algeria
-American Samoa
-Andorra
-Angola
-Anguilla
-Antarctica
-Antigua and Barbuda
-Argentina
-Armenia
-Aruba
-Australia
-Austria
-Azerbaijan
-Bahamas
-Bahrain
-Bangladesh
-Barbados
-Belarus
-Belgium
-Belize
-Benin
-Bermuda
-Bhutan
-Bolivia
-Bonaire, Sint Eustatius and Saba
-Bosnia and Herzegovina
-Botswana
-Bouvet Island
-Brazil
-British Indian Ocean Territory
-Brunei Darussalam
-Bulgaria
-Burkina Faso
-Burundi
-Cabo Verde
-Cambodia
-Cameroon
-Canada
-Cayman Islands
-Central African Republic
-Chad
-Chile
-China
-Christmas Island
-Cocos Islands
-Colombia
-Comoros
-Congo, Democratic Republic of the
-Congo, Republic of the
-Cook Islands
-Costa Rica
-Côte d'Ivoire
-Croatia
-Cuba
-Curaçao
-Cyprus
-Czech Republic
-Denmark
-Djibouti
-Dominica
-Dominican Republic
-Ecuador
-Egypt
-El Salvador
-Equatorial Guinea
-Eritrea
-Estonia
-Eswatini
-Ethiopia
-Falkland Islands
-Faroe Islands
-Fiji
-Finland
-France
-French Guiana
-French Polynesia
-French Southern Territories
-Gabon
-Gambia
-Georgia
-Germany
-Ghana
-Gibraltar
-Greece
-Greenland
-Grenada
-Guadeloupe
-Guam
-Guatemala
-Guernsey
-Guinea
-Guinea-Bissau
-Guyana
-Haiti
-Heard and McDonald Islands
-Holy See
-Honduras
-Hong Kong
-Hungary
-Iceland
-India
-Indonesia
-Iran
-Iraq
-Ireland
-Isle of Man
-Israel
-Italy
-Jamaica
-Japan
-Jersey
-Jordan
-Kazakhstan
-Kenya
-Kiribati
-Kuwait
-Kyrgyzstan
-Lao People's Democratic Republic
-Latvia
-Lebanon
-Lesotho
-Liberia
-Libya
-Liechtenstein
-Lithuania
-Luxembourg
-Macau
-Madagascar
-Malawi
-Malaysia
-Maldives
-Mali
-Malta
-Marshall Islands
-Martinique
-Mauritania
-Mauritius
-Mayotte
-Mexico
-Micronesia
-Moldova
-Monaco
-Mongolia
-Montenegro
-Montserrat
-Morocco
-Mozambique
-Myanmar
-Namibia
-Nauru
-Nepal
-Netherlands
-New Caledonia
-New Zealand
-Nicaragua
-Niger
-Nigeria
-Niue
-Norfolk Island
-North Korea
-North Macedonia
-Northern Mariana Islands
-Norway
-Oman
-Pakistan
-Palau
-Palestine, State of
-Panama
-Papua New Guinea
-Paraguay
-Peru
-Philippines
-Pitcairn
-Poland
-Portugal
-Puerto Rico
-Qatar
-Réunion
-Romania
-Russia
-Rwanda
-Saint Barthélemy
-Saint Helena, Ascension and Tristan da Cunha
-Saint Kitts and Nevis
-Saint Lucia
-Saint Martin
-Saint Pierre and Miquelon
-Saint Vincent and the Grenadines
-Samoa
-San Marino
-Sao Tome and Principe
-Saudi Arabia
-Senegal
-Serbia
-Seychelles
-Sierra Leone
-Singapore
-Sint Maarten
-Slovakia
-Slovenia
-Solomon Islands
-Somalia
-South Africa
-South Georgia and the South Sandwich Islands
-South Korea
-South Sudan
-Spain
-Sri Lanka
-Sudan
-Suriname
-Svalbard and Jan Mayen Islands
-Sweden
-Switzerland
-Syria
-Taiwan
-Tajikistan
-Tanzania
-Thailand
-Timor-Leste
-Togo
-Tokelau
-Tonga
-Trinidad and Tobago
-Tunisia
-Turkey
-Turkmenistan
-Turks and Caicos Islands
-Tuvalu
-Uganda
-Ukraine
-United Arab Emirates
-United Kingdom
-United States
-Uruguay
-US Minor Outlying Islands
-Uzbekistan
-Vanuatu
-Venezuela
-Vietnam
-Virgin Islands, British
-Virgin Islands, U.S.
-Wallis and Futuna
-Western Sahara
-Yemen
-Zambia
-Zimbabwe" => array( null, __("Afghanistan
-Åland Islands
-Albania
-Algeria
-American Samoa
-Andorra
-Angola
-Anguilla
-Antarctica
-Antigua and Barbuda
-Argentina
-Armenia
-Aruba
-Australia
-Austria
-Azerbaijan
-Bahamas
-Bahrain
-Bangladesh
-Barbados
-Belarus
-Belgium
-Belize
-Benin
-Bermuda
-Bhutan
-Bolivia
-Bonaire, Sint Eustatius and Saba
-Bosnia and Herzegovina
-Botswana
-Bouvet Island
-Brazil
-British Indian Ocean Territory
-Brunei Darussalam
-Bulgaria
-Burkina Faso
-Burundi
-Cabo Verde
-Cambodia
-Cameroon
-Canada
-Cayman Islands
-Central African Republic
-Chad
-Chile
-China
-Christmas Island
-Cocos Islands
-Colombia
-Comoros
-Congo, Democratic Republic of the
-Congo, Republic of the
-Cook Islands
-Costa Rica
-Côte d'Ivoire
-Croatia
-Cuba
-Curaçao
-Cyprus
-Czech Republic
-Denmark
-Djibouti
-Dominica
-Dominican Republic
-Ecuador
-Egypt
-El Salvador
-Equatorial Guinea
-Eritrea
-Estonia
-Eswatini
-Ethiopia
-Falkland Islands
-Faroe Islands
-Fiji
-Finland
-France
-French Guiana
-French Polynesia
-French Southern Territories
-Gabon
-Gambia
-Georgia
-Germany
-Ghana
-Gibraltar
-Greece
-Greenland
-Grenada
-Guadeloupe
-Guam
-Guatemala
-Guernsey
-Guinea
-Guinea-Bissau
-Guyana
-Haiti
-Heard and McDonald Islands
-Holy See
-Honduras
-Hong Kong
-Hungary
-Iceland
-India
-Indonesia
-Iran
-Iraq
-Ireland
-Isle of Man
-Israel
-Italy
-Jamaica
-Japan
-Jersey
-Jordan
-Kazakhstan
-Kenya
-Kiribati
-Kuwait
-Kyrgyzstan
-Lao People's Democratic Republic
-Latvia
-Lebanon
-Lesotho
-Liberia
-Libya
-Liechtenstein
-Lithuania
-Luxembourg
-Macau
-Madagascar
-Malawi
-Malaysia
-Maldives
-Mali
-Malta
-Marshall Islands
-Martinique
-Mauritania
-Mauritius
-Mayotte
-Mexico
-Micronesia
-Moldova
-Monaco
-Mongolia
-Montenegro
-Montserrat
-Morocco
-Mozambique
-Myanmar
-Namibia
-Nauru
-Nepal
-Netherlands
-New Caledonia
-New Zealand
-Nicaragua
-Niger
-Nigeria
-Niue
-Norfolk Island
-North Korea
-North Macedonia
-Northern Mariana Islands
-Norway
-Oman
-Pakistan
-Palau
-Palestine, State of
-Panama
-Papua New Guinea
-Paraguay
-Peru
-Philippines
-Pitcairn
-Poland
-Portugal
-Puerto Rico
-Qatar
-Réunion
-Romania
-Russia
-Rwanda
-Saint Barthélemy
-Saint Helena, Ascension and Tristan da Cunha
-Saint Kitts and Nevis
-Saint Lucia
-Saint Martin
-Saint Pierre and Miquelon
-Saint Vincent and the Grenadines
-Samoa
-San Marino
-Sao Tome and Principe
-Saudi Arabia
-Senegal
-Serbia
-Seychelles
-Sierra Leone
-Singapore
-Sint Maarten
-Slovakia
-Slovenia
-Solomon Islands
-Somalia
-South Africa
-South Georgia and the South Sandwich Islands
-South Korea
-South Sudan
-Spain
-Sri Lanka
-Sudan
-Suriname
-Svalbard and Jan Mayen Islands
-Sweden
-Switzerland
-Syria
-Taiwan
-Tajikistan
-Tanzania
-Thailand
-Timor-Leste
-Togo
-Tokelau
-Tonga
-Trinidad and Tobago
-Tunisia
-Turkey
-Turkmenistan
-Turks and Caicos Islands
-Tuvalu
-Uganda
-Ukraine
-United Arab Emirates
-United Kingdom
-United States
-Uruguay
-US Minor Outlying Islands
-Uzbekistan
-Vanuatu
-Venezuela
-Vietnam
-Virgin Islands, British
-Virgin Islands, U.S.
-Wallis and Futuna
-Western Sahara
-Yemen
-Zambia
-Zimbabwe", "forminator"), ), // src/settings/inputs/sui-variables-bulk-editor.js:218
-"Countries" => array( null, __("Countries", "forminator"), ), // src/settings/inputs/sui-variables-bulk-editor.js:280
+"Countries" => array( null, __("Countries", "forminator"), ), // src/settings/inputs/sui-variables-bulk-editor.js:217
 "Alabama
 Alaska
 Arizona
@@ -869,8 +373,8 @@ Virginia
 Washington
 West Virginia
 Wisconsin
-Wyoming", "forminator"), ), // src/settings/inputs/sui-variables-bulk-editor.js:284
-"American States" => array( null, __("American States", "forminator"), ), // src/settings/inputs/sui-variables-bulk-editor.js:285
+Wyoming", "forminator"), ), // src/settings/inputs/sui-variables-bulk-editor.js:221
+"American States" => array( null, __("American States", "forminator"), ), // src/settings/inputs/sui-variables-bulk-editor.js:222
 "Alberta
 British Columbia
 Manitoba
@@ -895,8 +399,8 @@ Ontario
 Prince Edward Island
 Quebec
 Saskatchewan
-Yukon", "forminator"), ), // src/settings/inputs/sui-variables-bulk-editor.js:289
-"Canadian Provinces" => array( null, __("Canadian Provinces", "forminator"), ), // src/settings/inputs/sui-variables-bulk-editor.js:290
+Yukon", "forminator"), ), // src/settings/inputs/sui-variables-bulk-editor.js:226
+"Canadian Provinces" => array( null, __("Canadian Provinces", "forminator"), ), // src/settings/inputs/sui-variables-bulk-editor.js:227
 "Click here to add a date…" => array( null, __("Click here to add a date…", "forminator"), ), // src/settings/inputs/sui-tags-datepicker.js:25
 "Click here to add a date range..." => array( null, __("Click here to add a date range...", "forminator"), ), // src/settings/inputs/sui-tags-date-range.js:25
 "Please enter valid number." => array( null, __("Please enter valid number.", "forminator"), ), // src/settings/inputs/input.js:52
@@ -1081,16 +585,16 @@ Yukon", "forminator"), ), // src/settings/inputs/sui-variables-bulk-editor.js:28
 "month(s)" => array( null, __("month(s)", "forminator"), ), // src/quiz/global/components/settings/privacy.js:109
 "year(s)" => array( null, __("year(s)", "forminator"), ), // src/quiz/global/components/settings/privacy.js:110
 "Set the value to \"0\" or leave it blank to store submissions forever." => array( null, __("Set the value to \"0\" or leave it blank to store submissions forever.", "forminator"), ), // src/quiz/global/components/settings/privacy.js:116
-"Custom font family" => array( null, __("Custom font family", "forminator"), ), // src/quiz/global/components/settings/fonts.js:59
-"E.g., Arial, sans-serif" => array( null, __("E.g., Arial, sans-serif", "forminator"), ), // src/quiz/global/components/settings/fonts.js:60
-"Font Family" => array( null, __("Font Family", "forminator"), ), // src/quiz/global/components/settings/fonts.js:76
-"Roboto" => array( null, __("Roboto", "forminator"), ), // src/quiz/global/components/settings/fonts.js:77
-"inherit" => array( null, __("inherit", "forminator"), ), // src/quiz/global/components/settings/fonts.js:95
-"Custom user font" => array( null, __("Custom user font", "forminator"), ), // src/quiz/global/components/settings/fonts.js:101
-"Font Size" => array( null, __("Font Size", "forminator"), ), // src/quiz/global/components/settings/fonts.js:115
-"e.g., 0.75em" => array( null, __("e.g., 0.75em", "forminator"), ), // src/quiz/global/components/settings/fonts.js:116
-"Font Weight" => array( null, __("Font Weight", "forminator"), ), // src/quiz/global/components/settings/fonts.js:125
-"Select font weight" => array( null, __("Select font weight", "forminator"), ), // src/quiz/global/components/settings/fonts.js:126
+"Custom font family" => array( null, __("Custom font family", "forminator"), ), // src/quiz/global/components/settings/fonts.js:80
+"E.g., Arial, sans-serif" => array( null, __("E.g., Arial, sans-serif", "forminator"), ), // src/quiz/global/components/settings/fonts.js:81
+"Font Family" => array( null, __("Font Family", "forminator"), ), // src/quiz/global/components/settings/fonts.js:97
+"Roboto" => array( null, __("Roboto", "forminator"), ), // src/quiz/global/components/settings/fonts.js:98
+"inherit" => array( null, __("inherit", "forminator"), ), // src/quiz/global/components/settings/fonts.js:117
+"Custom user font" => array( null, __("Custom user font", "forminator"), ), // src/quiz/global/components/settings/fonts.js:123
+"Font Size" => array( null, __("Font Size", "forminator"), ), // src/quiz/global/components/settings/fonts.js:137
+"e.g., 0.75em" => array( null, __("e.g., 0.75em", "forminator"), ), // src/quiz/global/components/settings/fonts.js:138
+"Font Weight" => array( null, __("Font Weight", "forminator"), ), // src/quiz/global/components/settings/fonts.js:147
+"Select font weight" => array( null, __("Select font weight", "forminator"), ), // src/quiz/global/components/settings/fonts.js:148
 "Data Storage" => array( null, __("Data Storage", "forminator"), ), // src/quiz/global/components/settings/data-storage.js:15
 "By default we'll store all submissions in your database." => array( null, __("By default we'll store all submissions in your database.", "forminator"), ), // src/quiz/global/components/settings/data-storage.js:17
 "Store Submissions in Database" => array( null, __("Store Submissions in Database", "forminator"), ), // src/quiz/global/components/settings/data-storage.js:25
@@ -1179,21 +683,21 @@ Yukon", "forminator"), ), // src/settings/inputs/sui-variables-bulk-editor.js:28
 "Your quiz is now ready to be embedded into a page or template of your choice. Simply copy and paste the shortcode below to display it!" => array( null, __("Your quiz is now ready to be embedded into a page or template of your choice. Simply copy and paste the shortcode below to display it!", "forminator"), ), // src/quiz/global/components/modals/shortcode.js:49
 "Shortcode" => array( null, __("Shortcode", "forminator"), ), // src/quiz/global/components/modals/shortcode.js:63
 "Copy Shortcode" => array( null, __("Copy Shortcode", "forminator"), ), // src/quiz/global/components/modals/shortcode.js:78
-"Question cannot be empty. Please enter a valid question." => array( null, __("Question cannot be empty. Please enter a valid question.", "forminator"), ), // src/quiz/global/components/modals/question.js:67
-"Answer cannot be empty. Please enter a valid answer text or upload an image for the empty answer." => array( null, __("Answer cannot be empty. Please enter a valid answer text or upload an image for the empty answer.", "forminator"), ), // src/quiz/global/components/modals/question.js:92
-"You need to select at least one correct answer before you can add this question." => array( null, __("You need to select at least one correct answer before you can add this question.", "forminator"), ), // src/quiz/global/components/modals/question.js:107
-"You need to select an associated personality for every option." => array( null, __("You need to select an associated personality for every option.", "forminator"), ), // src/quiz/global/components/modals/question.js:124
-"Add Question" => array( null, __("Add Question", "forminator"), ), // src/quiz/global/components/modals/question.js:136
-"Edit Question" => array( null, __("Edit Question", "forminator"), ), // src/quiz/global/components/modals/question.js:137
-"E.g. Why did the chicken cross the road?" => array( null, __("E.g. Why did the chicken cross the road?", "forminator"), ), // src/quiz/global/components/modals/question.js:188
-"Image" => array( null, __("Image", "forminator"), ), // src/quiz/global/components/modals/question.js:200
-"Description (Optional)" => array( null, __("Description (Optional)", "forminator"), ), // src/quiz/global/components/modals/question.js:214
-"Answers" => array( null, __("Answers", "forminator"), ), // src/quiz/global/components/modals/question.js:220
-"Users can select one answer with the {{b}}Real Time{{/b}} display method. To allow multiple answers, you can switch to the {{b}}On Submission{{/b}} display method in {{a}}Behaviour → Display Method{{/a}}." => array( null, __("Users can select one answer with the {{b}}Real Time{{/b}} display method. To allow multiple answers, you can switch to the {{b}}On Submission{{/b}} display method in {{a}}Behaviour → Display Method{{/a}}.", "forminator"), ), // src/quiz/global/components/modals/question.js:227
-"Note that user's selection will be considered as correct when any of the correct answers is selected." => array( null, __("Note that user's selection will be considered as correct when any of the correct answers is selected.", "forminator"), ), // src/quiz/global/components/modals/question.js:253
-"Note: For questions with multiple correct answers, user's selection will be considered as correct only when all correct answers are selected." => array( null, __("Note: For questions with multiple correct answers, user's selection will be considered as correct only when all correct answers are selected.", "forminator"), ), // src/quiz/global/components/modals/question.js:269
-"Add answers to your question and choose an associated personality. Multiple answers can be associated with a single personality as well." => array( null, __("Add answers to your question and choose an associated personality. Multiple answers can be associated with a single personality as well.", "forminator"), ), // src/quiz/global/components/modals/question.js:281
-"Please, validate your fields!" => array( null, __("Please, validate your fields!", "forminator"), ), // src/quiz/global/components/modals/question.js:332
+"Question cannot be empty. Please enter a valid question." => array( null, __("Question cannot be empty. Please enter a valid question.", "forminator"), ), // src/quiz/global/components/modals/question.js:71
+"Answer cannot be empty. Please enter a valid answer text or upload an image for the empty answer." => array( null, __("Answer cannot be empty. Please enter a valid answer text or upload an image for the empty answer.", "forminator"), ), // src/quiz/global/components/modals/question.js:100
+"You need to select at least one correct answer before you can add this question." => array( null, __("You need to select at least one correct answer before you can add this question.", "forminator"), ), // src/quiz/global/components/modals/question.js:115
+"You need to select an associated personality for every option." => array( null, __("You need to select an associated personality for every option.", "forminator"), ), // src/quiz/global/components/modals/question.js:132
+"Add Question" => array( null, __("Add Question", "forminator"), ), // src/quiz/global/components/modals/question.js:144
+"Edit Question" => array( null, __("Edit Question", "forminator"), ), // src/quiz/global/components/modals/question.js:145
+"E.g. Why did the chicken cross the road?" => array( null, __("E.g. Why did the chicken cross the road?", "forminator"), ), // src/quiz/global/components/modals/question.js:196
+"Image" => array( null, __("Image", "forminator"), ), // src/quiz/global/components/modals/question.js:208
+"Description (Optional)" => array( null, __("Description (Optional)", "forminator"), ), // src/quiz/global/components/modals/question.js:222
+"Answers" => array( null, __("Answers", "forminator"), ), // src/quiz/global/components/modals/question.js:228
+"Users can select one answer with the {{b}}Real Time{{/b}} display method. To allow multiple answers, you can switch to the {{b}}On Submission{{/b}} display method in {{a}}Behaviour → Display Method{{/a}}." => array( null, __("Users can select one answer with the {{b}}Real Time{{/b}} display method. To allow multiple answers, you can switch to the {{b}}On Submission{{/b}} display method in {{a}}Behaviour → Display Method{{/a}}.", "forminator"), ), // src/quiz/global/components/modals/question.js:235
+"Note that user's selection will be considered as correct when any of the correct answers is selected." => array( null, __("Note that user's selection will be considered as correct when any of the correct answers is selected.", "forminator"), ), // src/quiz/global/components/modals/question.js:261
+"Note: For questions with multiple correct answers, user's selection will be considered as correct only when all correct answers are selected." => array( null, __("Note: For questions with multiple correct answers, user's selection will be considered as correct only when all correct answers are selected.", "forminator"), ), // src/quiz/global/components/modals/question.js:277
+"Add answers to your question and choose an associated personality. Multiple answers can be associated with a single personality as well." => array( null, __("Add answers to your question and choose an associated personality. Multiple answers can be associated with a single personality as well.", "forminator"), ), // src/quiz/global/components/modals/question.js:289
+"Please, validate your fields!" => array( null, __("Please, validate your fields!", "forminator"), ), // src/quiz/global/components/modals/question.js:340
 "Publishing quiz…" => array( null, __("Publishing quiz…", "forminator"), ), // src/quiz/global/components/modals/publish.js:30
 "Great work! Please hold tight a few moments while we publish your quiz to the world." => array( null, __("Great work! Please hold tight a few moments while we publish your quiz to the world.", "forminator"), ), // src/quiz/global/components/modals/publish.js:35
 "Preview" => array( null, __("Preview", "forminator"), ), // src/quiz/global/components/modals/preview.js:80
@@ -1246,9 +750,9 @@ Yukon", "forminator"), ), // src/settings/inputs/sui-variables-bulk-editor.js:28
 "Submit" => array( null, __("Submit", "forminator"), ), // src/quiz/global/components/builder/submit.js:36
 "A quiz without questions is not going to be very useful… Add your questions above!" => array( null, __("A quiz without questions is not going to be very useful… Add your questions above!", "forminator"), ), // src/quiz/global/components/builder/questions.js:109
 "Add Answer" => array( null, __("Add Answer", "forminator"), ), // src/quiz/global/components/builder/answers.js:164
-"Correct Answer" => array( null, __("Correct Answer", "forminator"), ), // src/quiz/global/components/builder/answer.js:106
-"Select Personality" => array( null, __("Select Personality", "forminator"), ), // src/quiz/global/components/builder/answer.js:117
-"Delete answer" => array( null, __("Delete answer", "forminator"), ), // src/quiz/global/components/builder/answer.js:139
+"Correct Answer" => array( null, __("Correct Answer", "forminator"), ), // src/quiz/global/components/builder/answer.js:110
+"Select Personality" => array( null, __("Select Personality", "forminator"), ), // src/quiz/global/components/builder/answer.js:121
+"Delete answer" => array( null, __("Delete answer", "forminator"), ), // src/quiz/global/components/builder/answer.js:143
 "Social Sharing" => array( null, __("Social Sharing", "forminator"), ), // src/quiz/global/components/behaviour/share.js:16
 "Choose whether you want to allow the quiz participants to share their results on social media." => array( null, __("Choose whether you want to allow the quiz participants to share their results on social media.", "forminator"), ), // src/quiz/global/components/behaviour/share.js:18
 "Results" => array( null, __("Results", "forminator"), ), // src/quiz/global/components/behaviour/results.js:20
@@ -1367,11 +871,11 @@ Yukon", "forminator"), ), // src/settings/inputs/sui-variables-bulk-editor.js:28
 "Option Unselected" => array( null, __("Option Unselected", "forminator"), ), // src/quiz/global/components/appearance/design-style/material.js:21
 "Disabled" => array( null, __("Disabled", "forminator"), ), // src/quiz/global/components/appearance/colors/navigation-button.js:85
 "Customize Poll" => array( null, __("Customize Poll", "forminator"), ), // src/poll/components/navigation.js:11
-"Something went wrong while reverting your poll. Please try again." => array( null, __("Something went wrong while reverting your poll. Please try again.", "forminator"), ), // src/poll/components/meta.js:154
-"Poll answers can not be empty." => array( null, __("Poll answers can not be empty.", "forminator"), ), // src/poll/components/meta.js:192
-"Please enter valid voting limit." => array( null, __("Please enter valid voting limit.", "forminator"), ), // src/poll/components/meta.js:205
-"Email recipients can't be empty" => array( null, __("Email recipients can't be empty", "forminator"), ), // src/poll/components/meta.js:229
-"Something went wrong while saving your form. Please try again." => array( null, __("Something went wrong while saving your form. Please try again.", "forminator"), ), // src/poll/components/meta.js:304
+"Something went wrong while reverting your poll. Please try again." => array( null, __("Something went wrong while reverting your poll. Please try again.", "forminator"), ), // src/poll/components/meta.js:158
+"Poll answers can not be empty." => array( null, __("Poll answers can not be empty.", "forminator"), ), // src/poll/components/meta.js:197
+"Please enter valid voting limit." => array( null, __("Please enter valid voting limit.", "forminator"), ), // src/poll/components/meta.js:210
+"Email recipients can't be empty" => array( null, __("Email recipients can't be empty", "forminator"), ), // src/poll/components/meta.js:234
+"Something went wrong while saving your form. Please try again." => array( null, __("Something went wrong while saving your form. Please try again.", "forminator"), ), // src/poll/components/meta.js:306
 "You need to save this poll before using integrations." => array( null, __("You need to save this poll before using integrations.", "forminator"), ), // src/poll/components/integrations.js:121
 "Try Again" => array( null, __("Try Again", "forminator"), ), // src/poll/components/integrations.js:123
 "Poll created successfully." => array( null, __("Poll created successfully.", "forminator"), ), // src/poll/components/builder.js:23
@@ -1407,11 +911,11 @@ Yukon", "forminator"), ), // src/settings/inputs/sui-variables-bulk-editor.js:28
 "Customize the button label used to submit the user's answer." => array( null, __("Customize the button label used to submit the user's answer.", "forminator"), ), // src/poll/components/builder/details.js:115
 "E.g. Vote" => array( null, __("E.g. Vote", "forminator"), ), // src/poll/components/builder/details.js:127
 "A poll without answers isn’t going to be very useful… Add your answers above!" => array( null, __("A poll without answers isn’t going to be very useful… Add your answers above!", "forminator"), ), // src/poll/components/builder/answers.js:82
-"Enter Answer" => array( null, __("Enter Answer", "forminator"), ), // src/poll/components/builder/answer-row.js:121
-"Enter placeholder" => array( null, __("Enter placeholder", "forminator"), ), // src/poll/components/builder/answer-row.js:148
-"Answer options" => array( null, __("Answer options", "forminator"), ), // src/poll/components/builder/answer-row.js:173
-"Enable custom input" => array( null, __("Enable custom input", "forminator"), ), // src/poll/components/builder/answer-row.js:180
-"Remove custom input" => array( null, __("Remove custom input", "forminator"), ), // src/poll/components/builder/answer-row.js:187
+"Enter Answer" => array( null, __("Enter Answer", "forminator"), ), // src/poll/components/builder/answer-row.js:124
+"Enter placeholder" => array( null, __("Enter placeholder", "forminator"), ), // src/poll/components/builder/answer-row.js:151
+"Answer options" => array( null, __("Answer options", "forminator"), ), // src/poll/components/builder/answer-row.js:176
+"Enable custom input" => array( null, __("Enable custom input", "forminator"), ), // src/poll/components/builder/answer-row.js:183
+"Remove custom input" => array( null, __("Remove custom input", "forminator"), ), // src/poll/components/builder/answer-row.js:190
 "Vote Count" => array( null, __("Vote Count", "forminator"), ), // src/poll/components/behaviour/vote-count.js:16
 "Display the number of votes on results" => array( null, __("Display the number of votes on results", "forminator"), ), // src/poll/components/behaviour/vote-count.js:18
 "Hide" => array( null, __("Hide", "forminator"), ), // src/poll/components/behaviour/vote-count.js:29
@@ -1671,7 +1175,7 @@ Yukon", "forminator"), ), // src/settings/inputs/sui-variables-bulk-editor.js:28
 "Add rules to control when it should appear based on user input." => array( null, __("Add rules to control when it should appear based on user input.", "forminator"), ), // src/form/components/settings/visibility.js:300
 "You need more than one field to configure visibility conditions. Add more fields!" => array( null, __("You need more than one field to configure visibility conditions. Add more fields!", "forminator"), ), // src/form/components/settings/visibility.js:322
 "Add conditions" => array( null, __("Add conditions", "forminator"), ), // src/form/components/settings/visibility.js:358
-"checked" => array( null, __("checked", "forminator"), ), // src/form/components/settings/visibility-rule.js:87
+"checked" => array( null, __("checked", "forminator"), ), // src/form/components/settings/visibility-rule.js:90
 "Is before" => array( null, __("Is before", "forminator"), ), // src/form/components/settings/visibility-rule.js:298
 "Is after" => array( null, __("Is after", "forminator"), ), // src/form/components/settings/visibility-rule.js:301
 "Is before n or more days" => array( null, __("Is before n or more days", "forminator"), ), // src/form/components/settings/visibility-rule.js:304
@@ -1836,7 +1340,7 @@ Yukon", "forminator"), ), // src/settings/inputs/sui-variables-bulk-editor.js:28
 "Enter coordinates" => array( null, __("Enter coordinates", "forminator"), ), // src/form/components/settings/geolocation.js:261
 "E.g., 1.234567, 9.876543" => array( null, __("E.g., 1.234567, 9.876543", "forminator"), ), // src/form/components/settings/geolocation.js:262
 "To get coordinates, visit {{link}}https://map.google.com{{/link}} navigate to your preferred location, and right-click on any point and click on the first option with digits." => array( null, __("To get coordinates, visit {{link}}https://map.google.com{{/link}} navigate to your preferred location, and right-click on any point and click on the first option with digits.", "forminator"), ), // src/form/components/settings/geolocation.js:264
-"E.g., 16" => array( null, __("E.g., 16", "forminator"), ), // src/form/components/settings/fonts.js:108
+"E.g., 16" => array( null, __("E.g., 16", "forminator"), ), // src/form/components/settings/fonts.js:130
 "Add a comma-separated list of additional file types along with their MIME types separated by “ | ”." => array( null, __("Add a comma-separated list of additional file types along with their MIME types separated by “ | ”.", "forminator"), ), // src/form/components/settings/filetypes.js:117
 "Allowed filetypes" => array( null, __("Allowed filetypes", "forminator"), ), // src/form/components/settings/filetypes.js:134
 "We use WordPress' {{a}}default allowed mime types{{/a}} to determine which file types can be uploaded. If you want to allow or restrict specific file types from being upload, you can do so by choosing the Specific filetypes option below." => array( null, __("We use WordPress' {{a}}default allowed mime types{{/a}} to determine which file types can be uploaded. If you want to allow or restrict specific file types from being upload, you can do so by choosing the Specific filetypes option below.", "forminator"), ), // src/form/components/settings/filetypes.js:137
@@ -1880,20 +1384,20 @@ Yukon", "forminator"), ), // src/settings/inputs/sui-variables-bulk-editor.js:28
 "Default Meta Keys" => array( null, __("Default Meta Keys", "forminator"), ), // src/form/components/registration/meta-mapping.js:101
 "Assign form fields to the default WordPress user meta keys (used in Profiles) below. You can assign a form field to multiple meta keys. If you assign a non-required form field to a required user meta, that form field will automatically become required in your form." => array( null, __("Assign form fields to the default WordPress user meta keys (used in Profiles) below. You can assign a form field to multiple meta keys. If you assign a non-required form field to a required user meta, that form field will automatically become required in your form.", "forminator"), ), // src/form/components/registration/meta-mapping.js:107
 "Username" => array( null, __("Username", "forminator"), ), // src/form/components/registration/meta-mapping.js:119
-"Select a field" => array( null, __("Select a field", "forminator"), ), // src/form/components/registration/meta-mapping.js:124
-"Website" => array( null, __("Website", "forminator"), ), // src/form/components/registration/meta-mapping.js:179
-"Password" => array( null, __("Password", "forminator"), ), // src/form/components/registration/meta-mapping.js:193
-"Auto Generated Password" => array( null, __("Auto Generated Password", "forminator"), ), // src/form/components/registration/meta-mapping.js:204
-"This form includes a {{strong}}Password field{{/strong}}. Since user passwords will be {{strong}}automatically generated{{/strong}}, the {{strong}}Password field{{/strong}} should be deleted." => array( null, __("This form includes a {{strong}}Password field{{/strong}}. Since user passwords will be {{strong}}automatically generated{{/strong}}, the {{strong}}Password field{{/strong}} should be deleted.", "forminator"), ), // src/form/components/registration/meta-mapping.js:223
-"This form is set to {{strong}}automatically generate{{/strong}} user passwords. To allow users to set their own passwords, insert a {{strong}}Password field{{/strong}} into {{link}}this form{{/link}}." => array( null, __("This form is set to {{strong}}automatically generate{{/strong}} user passwords. To allow users to set their own passwords, insert a {{strong}}Password field{{/strong}} into {{link}}this form{{/link}}.", "forminator"), ), // src/form/components/registration/meta-mapping.js:255
-"Choose which user role you want to assign to the visitors signing up. You can either assign a fixed user role to all of them or assign a user role conditionally, based on their response to the form fields." => array( null, __("Choose which user role you want to assign to the visitors signing up. You can either assign a fixed user role to all of them or assign a user role conditionally, based on their response to the form fields.", "forminator"), ), // src/form/components/registration/meta-mapping.js:294
-"Fixed Role to All" => array( null, __("Fixed Role to All", "forminator"), ), // src/form/components/registration/meta-mapping.js:302
-"Assign Role Conditionally" => array( null, __("Assign Role Conditionally", "forminator"), ), // src/form/components/registration/meta-mapping.js:305
-"Caution" => array( null, __("Caution", "forminator"), ), // src/form/components/registration/meta-mapping.js:324
-"Granting the Administrator role gives users complete access to your site. Please assign this role carefully to prevent unauthorized access." => array( null, __("Granting the Administrator role gives users complete access to your site. Please assign this role carefully to prevent unauthorized access.", "forminator"), ), // src/form/components/registration/meta-mapping.js:326
-"No custom user meta created yet. Click on \"+ Add Custom User Meta\" to create custom user meta and map form fields to it." => array( null, __("No custom user meta created yet. Click on \"+ Add Custom User Meta\" to create custom user meta and map form fields to it.", "forminator"), ), // src/form/components/registration/meta-mapping.js:365
-"Custom User Meta" => array( null, __("Custom User Meta", "forminator"), ), // src/form/components/registration/meta-mapping.js:376
-"Create custom user meta keys and assign your form fields to them to set additional user meta keys upon successful user registration." => array( null, __("Create custom user meta keys and assign your form fields to them to set additional user meta keys upon successful user registration.", "forminator"), ), // src/form/components/registration/meta-mapping.js:379
+"Select a field" => array( null, __("Select a field", "forminator"), ), // src/form/components/registration/meta-mapping.js:152
+"Website" => array( null, __("Website", "forminator"), ), // src/form/components/registration/meta-mapping.js:177
+"Password" => array( null, __("Password", "forminator"), ), // src/form/components/registration/meta-mapping.js:191
+"Auto Generated Password" => array( null, __("Auto Generated Password", "forminator"), ), // src/form/components/registration/meta-mapping.js:201
+"This form includes a {{strong}}Password field{{/strong}}. Since user passwords will be {{strong}}automatically generated{{/strong}}, the {{strong}}Password field{{/strong}} should be deleted." => array( null, __("This form includes a {{strong}}Password field{{/strong}}. Since user passwords will be {{strong}}automatically generated{{/strong}}, the {{strong}}Password field{{/strong}} should be deleted.", "forminator"), ), // src/form/components/registration/meta-mapping.js:220
+"This form is set to {{strong}}automatically generate{{/strong}} user passwords. To allow users to set their own passwords, insert a {{strong}}Password field{{/strong}} into {{link}}this form{{/link}}." => array( null, __("This form is set to {{strong}}automatically generate{{/strong}} user passwords. To allow users to set their own passwords, insert a {{strong}}Password field{{/strong}} into {{link}}this form{{/link}}.", "forminator"), ), // src/form/components/registration/meta-mapping.js:252
+"Choose which user role you want to assign to the visitors signing up. You can either assign a fixed user role to all of them or assign a user role conditionally, based on their response to the form fields." => array( null, __("Choose which user role you want to assign to the visitors signing up. You can either assign a fixed user role to all of them or assign a user role conditionally, based on their response to the form fields.", "forminator"), ), // src/form/components/registration/meta-mapping.js:291
+"Fixed Role to All" => array( null, __("Fixed Role to All", "forminator"), ), // src/form/components/registration/meta-mapping.js:299
+"Assign Role Conditionally" => array( null, __("Assign Role Conditionally", "forminator"), ), // src/form/components/registration/meta-mapping.js:302
+"Caution" => array( null, __("Caution", "forminator"), ), // src/form/components/registration/meta-mapping.js:321
+"Granting the Administrator role gives users complete access to your site. Please assign this role carefully to prevent unauthorized access." => array( null, __("Granting the Administrator role gives users complete access to your site. Please assign this role carefully to prevent unauthorized access.", "forminator"), ), // src/form/components/registration/meta-mapping.js:323
+"No custom user meta created yet. Click on \"+ Add Custom User Meta\" to create custom user meta and map form fields to it." => array( null, __("No custom user meta created yet. Click on \"+ Add Custom User Meta\" to create custom user meta and map form fields to it.", "forminator"), ), // src/form/components/registration/meta-mapping.js:362
+"Custom User Meta" => array( null, __("Custom User Meta", "forminator"), ), // src/form/components/registration/meta-mapping.js:373
+"Create custom user meta keys and assign your form fields to them to set additional user meta keys upon successful user registration." => array( null, __("Create custom user meta keys and assign your form fields to them to set additional user meta keys upon successful user registration.", "forminator"), ), // src/form/components/registration/meta-mapping.js:376
 "Additional Settings" => array( null, __("Additional Settings", "forminator"), ), // src/form/components/registration/additional-settings.js:21
 "These settings will add some extra control on your registration process." => array( null, __("These settings will add some extra control on your registration process.", "forminator"), ), // src/form/components/registration/additional-settings.js:25
 "Automatically log in newly activated users" => array( null, __("Automatically log in newly activated users", "forminator"), ), // src/form/components/registration/additional-settings.js:35
@@ -1989,25 +1493,25 @@ Yukon", "forminator"), ), // src/settings/inputs/sui-variables-bulk-editor.js:28
 "You need at least one payment plan!" => array( null, __("You need at least one payment plan!", "forminator"), ), // src/form/components/modals/settings.js:229
 "Please select an email address for payment receipt." => array( null, __("Please select an email address for payment receipt.", "forminator"), ), // src/form/components/modals/settings.js:235
 "Empty labels are not allowed for meta values!" => array( null, __("Empty labels are not allowed for meta values!", "forminator"), ), // src/form/components/modals/settings.js:246
-"Please connect your PayPal account first!" => array( null, __("Please connect your PayPal account first!", "forminator"), ), // src/form/components/modals/settings.js:258
-"Please enter PayPal payment amount!" => array( null, __("Please enter PayPal payment amount!", "forminator"), ), // src/form/components/modals/settings.js:263
-"Please select PayPal payment variable field!" => array( null, __("Please select PayPal payment variable field!", "forminator"), ), // src/form/components/modals/settings.js:269
-"Limit Min value should be less than Max value." => array( null, __("Limit Min value should be less than Max value.", "forminator"), ), // src/form/components/modals/settings.js:287
-"Please enter API keys." => array( null, __("Please enter API keys.", "forminator"), ), // src/form/components/modals/settings.js:309
-"Please select a valid end time limit." => array( null, __("Please select a valid end time limit.", "forminator"), ), // src/form/components/modals/settings.js:408
-"Please fix the Default time error." => array( null, __("Please fix the Default time error.", "forminator"), ), // src/form/components/modals/settings.js:414
-"Please fix the Start or End time." => array( null, __("Please fix the Start or End time.", "forminator"), ), // src/form/components/modals/settings.js:428
-"Please fix the limit Start or End date." => array( null, __("Please fix the limit Start or End date.", "forminator"), ), // src/form/components/modals/settings.js:566
-"Maximum Rating value should be less than 50." => array( null, __("Maximum Rating value should be less than 50.", "forminator"), ), // src/form/components/modals/settings.js:577
-"Customize %s" => array( null, __("Customize %s", "forminator"), ), // src/form/components/modals/settings.js:654
-"Customize %s Field" => array( null, __("Customize %s Field", "forminator"), ), // src/form/components/modals/settings.js:655
-"Customize Page Visibility" => array( null, __("Customize Page Visibility", "forminator"), ), // src/form/components/modals/settings.js:659
-"Geolocation" => array( null, __("Geolocation", "forminator"), ), // src/form/components/modals/settings.js:717
-"Geolocation {{span}}Pro{{/span}}" => array( null, __("Geolocation {{span}}Pro{{/span}}", "forminator"), ), // src/form/components/modals/settings.js:719
-"Products/Plans" => array( null, __("Products/Plans", "forminator"), ), // src/form/components/modals/settings.js:746
-"Repeater" => array( null, __("Repeater", "forminator"), ), // src/form/components/modals/settings.js:766
-"Limits" => array( null, __("Limits", "forminator"), ), // src/form/components/modals/settings.js:780
-"Customize" => array( null, __("Customize", "forminator"), ), // src/form/components/modals/settings.js:832
+"Please connect your PayPal account first!" => array( null, __("Please connect your PayPal account first!", "forminator"), ), // src/form/components/modals/settings.js:264
+"Please enter PayPal payment amount!" => array( null, __("Please enter PayPal payment amount!", "forminator"), ), // src/form/components/modals/settings.js:269
+"Please select PayPal payment variable field!" => array( null, __("Please select PayPal payment variable field!", "forminator"), ), // src/form/components/modals/settings.js:275
+"Limit Min value should be less than Max value." => array( null, __("Limit Min value should be less than Max value.", "forminator"), ), // src/form/components/modals/settings.js:293
+"Please enter API keys." => array( null, __("Please enter API keys.", "forminator"), ), // src/form/components/modals/settings.js:315
+"Please select a valid end time limit." => array( null, __("Please select a valid end time limit.", "forminator"), ), // src/form/components/modals/settings.js:414
+"Please fix the Default time error." => array( null, __("Please fix the Default time error.", "forminator"), ), // src/form/components/modals/settings.js:420
+"Please fix the Start or End time." => array( null, __("Please fix the Start or End time.", "forminator"), ), // src/form/components/modals/settings.js:434
+"Please fix the limit Start or End date." => array( null, __("Please fix the limit Start or End date.", "forminator"), ), // src/form/components/modals/settings.js:572
+"Maximum Rating value should be less than 50." => array( null, __("Maximum Rating value should be less than 50.", "forminator"), ), // src/form/components/modals/settings.js:583
+"Customize %s" => array( null, __("Customize %s", "forminator"), ), // src/form/components/modals/settings.js:660
+"Customize %s Field" => array( null, __("Customize %s Field", "forminator"), ), // src/form/components/modals/settings.js:661
+"Customize Page Visibility" => array( null, __("Customize Page Visibility", "forminator"), ), // src/form/components/modals/settings.js:665
+"Geolocation" => array( null, __("Geolocation", "forminator"), ), // src/form/components/modals/settings.js:723
+"Geolocation {{span}}Pro{{/span}}" => array( null, __("Geolocation {{span}}Pro{{/span}}", "forminator"), ), // src/form/components/modals/settings.js:725
+"Products/Plans" => array( null, __("Products/Plans", "forminator"), ), // src/form/components/modals/settings.js:752
+"Repeater" => array( null, __("Repeater", "forminator"), ), // src/form/components/modals/settings.js:772
+"Limits" => array( null, __("Limits", "forminator"), ), // src/form/components/modals/settings.js:786
+"Customize" => array( null, __("Customize", "forminator"), ), // src/form/components/modals/settings.js:838
 "Something went wrong while saving your template. Please try again." => array( null, __("Something went wrong while saving your template. Please try again.", "forminator"), ), // src/form/components/modals/save-template.js:147
 "Save Template" => array( null, __("Save Template", "forminator"), ), // src/form/components/modals/save-template.js:199
 "Enter a name to save this form as a template or select an existing template to overwrite." => array( null, __("Enter a name to save this form as a template or select an existing template to overwrite.", "forminator"), ), // src/form/components/modals/save-template.js:204
@@ -2440,6 +1944,8 @@ Yukon", "forminator"), ), // src/settings/inputs/sui-variables-bulk-editor.js:28
 "Password validation error message" => array( null, __("Password validation error message", "forminator"), ), // src/form/components/fields/password.js:171
 "Enter an error message to be displayed when the passwords do not match." => array( null, __("Enter an error message to be displayed when the passwords do not match.", "forminator"), ), // src/form/components/fields/password.js:174
 "Passwords do not match. Please try again." => array( null, __("Passwords do not match. Please try again.", "forminator"), ), // src/form/components/fields/password.js:182
+"Password Visibility Toggle" => array( null, __("Password Visibility Toggle", "forminator"), ), // src/form/components/fields/password.js:190
+"Add a password visibility toggle to password fields, letting users reveal their password while typing to reduce errors." => array( null, __("Add a password visibility toggle to password fields, letting users reveal their password while typing to reduce errors.", "forminator"), ), // src/form/components/fields/password.js:192
 "Step label" => array( null, __("Step label", "forminator"), ), // src/form/components/fields/pagination.js:25
 "Enter step label" => array( null, __("Enter step label", "forminator"), ), // src/form/components/fields/pagination.js:26
 "Set the minimum and maximum values the user can choose. Leave the fields blank to allow any number including negatives." => array( null, __("Set the minimum and maximum values the user can choose. Leave the fields blank to allow any number including negatives.", "forminator"), ), // src/form/components/fields/number.js:93
@@ -2488,15 +1994,15 @@ Yukon", "forminator"), ), // src/settings/inputs/sui-variables-bulk-editor.js:28
 "d.m.Y" => array( null, __("d.m.Y", "forminator"), ), // src/form/components/fields/date.js:91
 "Calendar Icon" => array( null, __("Calendar Icon", "forminator"), ), // src/form/components/fields/date.js:112
 "Text inputs" => array( null, __("Text inputs", "forminator"), ), // src/form/components/fields/date.js:231
-"Default Date" => array( null, __("Default Date", "forminator"), ), // src/form/components/fields/date.js:371
-"Use this feature to specify a default selected date." => array( null, __("Use this feature to specify a default selected date.", "forminator"), ), // src/form/components/fields/date.js:374
-"Future Date" => array( null, __("Future Date", "forminator"), ), // src/form/components/fields/date.js:393
-"Year Range" => array( null, __("Year Range", "forminator"), ), // src/form/components/fields/date.js:410
-"By default, we select 100 years in the past, and 100 years in the future for the year dropdown field. You can set a custom year range to display in the year dropdown below." => array( null, __("By default, we select 100 years in the past, and 100 years in the future for the year dropdown field. You can set a custom year range to display in the year dropdown below.", "forminator"), ), // src/form/components/fields/date.js:413
-"From" => array( null, __("From", "forminator"), ), // src/form/components/fields/date.js:425
-"1920" => array( null, __("1920", "forminator"), ), // src/form/components/fields/date.js:426
-"To" => array( null, __("To", "forminator"), ), // src/form/components/fields/date.js:436
-"2030" => array( null, __("2030", "forminator"), ), // src/form/components/fields/date.js:437
+"Default Date" => array( null, __("Default Date", "forminator"), ), // src/form/components/fields/date.js:370
+"Use this feature to specify a default selected date." => array( null, __("Use this feature to specify a default selected date.", "forminator"), ), // src/form/components/fields/date.js:373
+"Future Date" => array( null, __("Future Date", "forminator"), ), // src/form/components/fields/date.js:392
+"Year Range" => array( null, __("Year Range", "forminator"), ), // src/form/components/fields/date.js:408
+"By default, we select 100 years in the past, and 100 years in the future for the year dropdown field. You can set a custom year range to display in the year dropdown below." => array( null, __("By default, we select 100 years in the past, and 100 years in the future for the year dropdown field. You can set a custom year range to display in the year dropdown below.", "forminator"), ), // src/form/components/fields/date.js:411
+"From" => array( null, __("From", "forminator"), ), // src/form/components/fields/date.js:423
+"1920" => array( null, __("1920", "forminator"), ), // src/form/components/fields/date.js:424
+"To" => array( null, __("To", "forminator"), ), // src/form/components/fields/date.js:434
+"2030" => array( null, __("2030", "forminator"), ), // src/form/components/fields/date.js:435
 "Currency" => array( null, __("Currency", "forminator"), ), // src/form/components/fields/currency.js:98
 "Choose the currency to display on the field. If you are going to collect payments based on this field, it is recommended to keep this currency same as your charge currency to avoid any confusions." => array( null, __("Choose the currency to display on the field. If you are going to collect payments based on this field, it is recommended to keep this currency same as your charge currency to avoid any confusions.", "forminator"), ), // src/form/components/fields/currency.js:101
 "Limit" => array( null, __("Limit", "forminator"), ), // src/form/components/fields/currency.js:121

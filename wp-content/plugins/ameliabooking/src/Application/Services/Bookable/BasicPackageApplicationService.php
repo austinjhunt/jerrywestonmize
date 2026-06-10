@@ -34,16 +34,9 @@ class BasicPackageApplicationService extends AbstractPackageApplicationService
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
-     * @param Package         $package
-     * @param PackageCustomer $packageCustomer
-     * @param array           $packageRules
-     * @param bool            $save
-     *
-     * @return Collection
-     *
      * @throws ContainerValueNotFoundException
      */
-    public function addPackageCustomerServices($package, $packageCustomer, $packageRules, $save)
+    public function addPackageCustomerServices(Package $package, PackageCustomer $packageCustomer, ?array $packageRules, bool $save): Collection
     {
         return new Collection();
     }

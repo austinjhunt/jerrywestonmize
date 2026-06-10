@@ -962,11 +962,22 @@ class AppointmentPlaceholderService extends PlaceholderService
 
             if ($isForCustomer) {
                 foreach ($recurringData['appointment']['bookings'] as $key => $recurringBooking) {
+                    $customerId = $bookingKey !== null &&
+                    (
+                        !empty($appointment['bookings'][$bookingKey]['customer']['id']) ||
+                        !empty($appointment['bookings'][$bookingKey]['customerId'])
+                    ) ? (
+                            !empty($appointment['bookings'][$bookingKey]['customer']['id'])
+                                ? $appointment['bookings'][$bookingKey]['customer']['id']
+                                : $appointment['bookings'][$bookingKey]['customerId']
+                          )
+                        : null;
+
                     if (isset($recurringData['booking']['id'])) {
                         if ($recurringBooking['id'] === $recurringData['booking']['id']) {
                             $recurringBookingKey = $key;
                         }
-                    } elseif ($bookingKey !== null && $recurringBooking['customerId'] === $appointment['bookings'][$bookingKey]['customerId']) {
+                    } elseif ($bookingKey !== null && $recurringBooking['customerId'] === $customerId) {
                         $recurringBookingKey = $key;
                     }
                 }

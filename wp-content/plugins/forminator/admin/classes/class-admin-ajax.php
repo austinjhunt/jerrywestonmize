@@ -240,13 +240,17 @@ class Forminator_Admin_AJAX {
 
 		if ( isset( $template->questions ) ) {
 			foreach ( $template->questions as $question ) {
-				if ( empty( $question['title'] ) ) {
+				$question_title = isset( $question['title'] ) ? trim( (string) $question['title'] ) : '';
+
+				if ( '' === $question_title ) {
 					wp_send_json_error( esc_html__( 'Question cannot be empty. Please enter a valid question.', 'forminator' ) );
 				}
 
 				$answers = isset( $question['answers'] ) ? $question['answers'] : array();
 				foreach ( $answers as $answer ) {
-					if ( empty( $answer['title'] ) && empty( $answer['image'] ) ) {
+					$answer_title = isset( $answer['title'] ) ? trim( (string) $answer['title'] ) : '';
+
+					if ( '' === $answer_title && empty( $answer['image'] ) ) {
 						wp_send_json_error( esc_html__( 'Answer cannot be empty. Please enter a valid answer.', 'forminator' ) );
 					}
 				}
@@ -300,6 +304,14 @@ class Forminator_Admin_AJAX {
 
 		if ( isset( $poll_data['answers'] ) ) {
 			$template->answers = $poll_data['answers'];
+
+			foreach ( $template->answers as $answer ) {
+				$answer_title = isset( $answer['title'] ) ? trim( (string) $answer['title'] ) : '';
+
+				if ( '' === $answer_title ) {
+					wp_send_json_error( esc_html__( 'Poll answers cannot be empty! Please add answers to your poll.', 'forminator' ) );
+				}
+			}
 		}
 
 		$settings['version'] = $version;
@@ -2810,7 +2822,7 @@ class Forminator_Admin_AJAX {
 			$admin_report_instance = Forminator_Admin_Report_Page::get_instance();
 
 			$reports     = $admin_report_instance->forminator_report_data( $form_id, $form_type, $start_date, $end_date, $range_text );
-			$report_data = $admin_report_instance->forminator_report_array( $reports, $form_id );
+			$report_data = $admin_report_instance->forminator_report_array( $reports, $form_id, $form_type );
 			$chart_data  = $admin_report_instance->forminator_report_chart_data( $form_id, $start_date, $end_date );
 			if ( isset( $chart_data['submissions'] ) ) {
 				$chart_data['submissions'] = array_values( $chart_data['submissions'] );

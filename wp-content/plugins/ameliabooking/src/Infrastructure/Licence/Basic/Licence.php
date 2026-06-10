@@ -59,6 +59,8 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Starter\Licence
                 Commands\Outlook\FetchOutlookMiddlewareAccessTokenCommand::class   => new Commands\Outlook\FetchOutlookMiddlewareAccessTokenCommandHandler($c),
                 Commands\Outlook\DisconnectFromOutlookMiddlewareAccountCommand::class =>
                     new Commands\Outlook\DisconnectFromOutlookMiddlewareAccountCommandHandler($c),
+                Commands\Outlook\ValidateOutlookCredentialsCommand::class =>
+                    new Commands\Outlook\ValidateOutlookCredentialsCommandHandler($c),
                 // Mailchimp
                 Commands\Mailchimp\GetMailchimpAuthURLCommand::class               => new Commands\Mailchimp\GetMailchimpAuthURLCommandHandler($c),
                 Commands\Mailchimp\FetchAccessTokenMailchimpCommand::class         => new Commands\Mailchimp\FetchAccessTokenMailchimpCommandHandler($c),
@@ -68,6 +70,7 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Starter\Licence
                 Commands\Notification\DeleteNotificationCommand::class             => new Commands\Notification\DeleteNotificationCommandHandler($c),
                 Commands\Notification\SendScheduledNotificationsCommand::class     => new Commands\Notification\SendScheduledNotificationsCommandHandler($c),
                 // Payment
+                Commands\Payment\GetPaymentLinkCommand::class                      => new Commands\Payment\GetPaymentLinkCommandHandler($c),
                 Commands\PaymentGateway\PayPalPaymentCallbackCommand::class        => new Commands\PaymentGateway\PayPalPaymentCallbackCommandHandler($c),
                 Commands\PaymentGateway\PayPalPaymentCommand::class                => new Commands\PaymentGateway\PayPalPaymentCommandHandler($c),
                 Commands\PaymentGateway\WooCommercePaymentCommand::class           => new Commands\PaymentGateway\WooCommercePaymentCommandHandler($c),

@@ -771,6 +771,9 @@ msgstr ""
 msgid "Alpha sender ID can't be empty"
 msgstr "Alpha sender ID nemůže být prázdné"
 
+msgid "Already Paid"
+msgstr "Již zaplaceno"
+
 msgid "Already have an account?"
 msgstr "Máte už účet?"
 
@@ -785,6 +788,9 @@ msgstr "Smazat také budoucí akce"
 
 msgid "Also open future events"
 msgstr "Otevřít také budoucí akce"
+
+msgid "Amelia - Booking Button"
+msgstr "Amelia - tlačítko rezervace"
 
 msgid "Amelia - Booking view"
 msgstr "Amelia - Zobrazení rezervací"
@@ -810,6 +816,9 @@ msgstr "Amelia - Kalendář akcí"
 msgid "Amelia - Events List"
 msgstr "Amelia - Seznam akcí"
 
+msgid "Amelia - Events List Button"
+msgstr "Amelia - tlačítko seznamu akcí"
+
 msgid "Amelia - Search view"
 msgstr "Amelia - Zobrazení vyhledávání"
 
@@ -819,11 +828,23 @@ msgstr "Rezervační formulář krok za krokem"
 msgid "Amelia Add to calendar page"
 msgstr "Amelia Přidat do kalendáře"
 
+msgid "Amelia Events List Booking Settings"
+msgstr "Nastavení rezervace seznamu akcí Amelia"
+
+msgid "Amelia Events List Booking Shortcode"
+msgstr "Krátký kód pro seznam akcí Amelia"
+
 msgid "Amelia Profile Settings"
 msgstr "Amelia Nastavení profilu"
 
 msgid "Amelia SMS"
 msgstr ""
+
+msgid "Amelia Step Booking Settings"
+msgstr "Nastavení rezervace krok za krokem Amelia"
+
+msgid "Amelia Step Booking Shortcode"
+msgstr "Krátký kód pro rezervaci kroku Amelia"
 
 msgid "Amelia Users Settings"
 msgstr "Amelia Nastavení uživatelů"
@@ -863,6 +884,11 @@ msgstr "Nastavení kalendáře Apple"
 
 msgid "Application (client) ID"
 msgstr "ID aplikace (uživatelské)"
+
+msgid ""
+"Application (client) ID must be a valid GUID (UUID), as shown in the Azure "
+"portal."
+msgstr ""
 
 msgid "Application fee amount (%)"
 msgstr "Výše poplatku za podání žádosti (%)"
@@ -1821,6 +1847,9 @@ msgid ""
 msgstr ""
 "Pokračováním nastavíte rezervaci do časového úseku, který je již obsazený!"
 
+msgid "By employees"
+msgstr "Podle pracovníků"
+
 msgid ""
 "By entering your phone number you agree to receive messages via WhatsApp"
 msgstr ""
@@ -2206,6 +2235,11 @@ msgid "Client Time:"
 msgstr "Časové pásmo zákazníka:"
 
 msgid "Client secret"
+msgstr ""
+
+msgid ""
+"Client secret is too short or looks invalid. Copy the full value from the "
+"Azure portal."
 msgstr ""
 
 msgid "Close"
@@ -2988,6 +3022,9 @@ msgstr "Datum a čas"
 
 msgid "Date and time"
 msgstr "Datum a čas"
+
+msgid "Date busyness indicator"
+msgstr ""
 
 msgid "Date of Birth"
 msgstr "Datum narození"
@@ -4141,6 +4178,9 @@ msgstr "Zadejte telefonní číslo a stiskněte Enter pro přidání"
 
 msgid "Enter booking ID"
 msgstr "Zadejte ID rezervace"
+
+msgid "Enter both the application (client) ID and client secret."
+msgstr ""
 
 msgid "Enter date of birth"
 msgstr "Zadejte datum narození"
@@ -5641,6 +5681,9 @@ msgstr "Máte zájem o odemknutí této funkce?"
 msgid "Invalid Mollie API key."
 msgstr "Neplatný klíč Mollie API."
 
+msgid "Invalid Payment Link"
+msgstr "Neplatný platební odkaz"
+
 msgid "Invalid Stripe secret key."
 msgstr "Neplatný tajný klíč Stripe."
 
@@ -6109,6 +6152,9 @@ msgstr ""
 
 msgid "Make extra mandatory"
 msgstr "Udělat doplněk povinným"
+
+msgid "Make sure you are using the correct Outlook credentials."
+msgstr ""
 
 msgid "Make sure you are using the correct WhatsApp credentials."
 msgstr "Ujistěte se, že používáte správné přihlašovací údaje pro WhatsApp."
@@ -6951,6 +6997,9 @@ msgstr ""
 msgid "One booking can have multiple attendees/spots in it."
 msgstr "Jedna rezervace může mít více účastníků / míst."
 
+msgid "One of the phone numbers provided is invalid."
+msgstr "Jedno ze zadaných telefonních čísel je neplatné."
+
 msgid "One spot is equal to one attendee."
 msgstr "Jedno místo se rovná jednomu účastníkovi."
 
@@ -7059,6 +7108,9 @@ msgid ""
 msgstr ""
 "Outlook Mailer není plně nakonfigurován. Dokončete nastavení účtu v "
 "nastavení integrace s Outlookem."
+
+msgid "Outside of working hours"
+msgstr "Mimo pracovní dobu"
 
 msgid "Overridden by employee"
 msgstr "Přepsáno pracovníkem"
@@ -7598,12 +7650,6 @@ msgstr "Zvolte čas rezervace"
 
 msgid "Please confirm you are not a robot"
 msgstr "Potvrďte, že nejste robot"
-
-msgid ""
-"Please delete this appointment. It cannot be edited due to a conflict with "
-"the associated account."
-msgstr ""
-"Smažte tento termín. Nelze ho upravit kvůli konfliktu s přidruženým účtem."
 
 msgid ""
 "Please ensure that services and employees are created and that services are "
@@ -8773,6 +8819,13 @@ msgstr "Zvolte"
 msgid "Select Address"
 msgstr "Zvolte adresu"
 
+msgid ""
+"Select Amelia Step-By-Step Booking Button block (or its inner button) to "
+"edit shortcode options."
+msgstr ""
+"Vyberte blok tlačítka Amelia formulář krok za krokem (nebo jeho vnitřní "
+"tlačítko) a upravte možnosti shortcode."
+
 msgid "Select Apple Calendar"
 msgstr "Zvolit kalendář Apple"
 
@@ -8805,6 +8858,13 @@ msgstr "Zvolit akci"
 
 msgid "Select Events"
 msgstr "Zvolit akce"
+
+msgid ""
+"Select Events List Booking Button block (or its inner button) to edit "
+"shortcode options."
+msgstr ""
+"Vyberte blok tlačítka Amelia seznam akcí (nebo jeho vnitřní tlačítko) a "
+"upravte možnosti shortcode."
 
 msgid "Select Location"
 msgstr "Zvolte místo"
@@ -9429,6 +9489,9 @@ msgstr "Sdílená kapacita napříč službami"
 
 msgid "Shared category capacity"
 msgstr "Kapacita sdílené kategorie"
+
+msgid "Shortcode options"
+msgstr "Možnosti shortcode"
 
 msgid "Show"
 msgstr "Zobrazit"
@@ -10414,6 +10477,11 @@ msgid "This email is already in use. Please enter a different email address."
 msgstr ""
 "Tato e-mailová adresa se už používá. Zadejte prosím jinou e-mailovou adresu."
 
+msgid ""
+"This email is linked to both a customer and an employee account. Please "
+"delete and rebook."
+msgstr ""
+
 msgid "This employee is the only one assigned to {service}."
 msgstr "Tento pracovník je jediný přiřazený službě {service}."
 
@@ -10435,10 +10503,12 @@ msgstr ""
 
 msgid ""
 "This is a unique security token. Copy it into the 'Verify token' field in "
-"WhatsApp when creating a webhook."
+"WhatsApp when creating a webhook. Since this token is used for logging, we "
+"recommend registering your webhook."
 msgstr ""
-"Toto je jedinečný bezpečnostní token. Zkopírujte jej do pole „Ověřit token“ "
-"v aplikaci WhatsApp při vytváření webhooku."
+"Toto je unikátní bezpečnostní token. Při vytváření webhooku jej zkopírujte "
+"do pole „Ověřit token“ ve WhatsAppu. Protože se tento token používá k "
+"logování, doporučujeme webhook zaregistrovat."
 
 msgid "This is recurring event"
 msgstr "Toto je pravidelná akce"
@@ -10520,6 +10590,13 @@ msgid ""
 msgstr ""
 "Tento balíček má {count} rezervaci v minulosti. | Tento balíček má {count} "
 "rezervace/í v minulosti."
+
+msgid ""
+"This payment link is no longer valid. Please contact admin if you need "
+"assistance."
+msgstr ""
+"Tento platební odkaz již není platný. Pokud potřebujete pomoc, kontaktujte "
+"administrátora."
 
 msgid "This placeholder's content will be applied wherever it is used."
 msgstr "Obsah tohoto zástupného textu bude použit všude, kde je použitý."
@@ -11599,6 +11676,9 @@ msgstr "Jméno"
 
 msgid "Your balance has been recharged."
 msgstr "Zůstatek byl obnoven."
+
+msgid "Your booking has been canceled."
+msgstr "Vaše rezervace byla zrušena."
 
 msgid ""
 "Your booking has been successfully canceled. If you have any questions or "

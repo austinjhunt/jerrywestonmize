@@ -415,7 +415,7 @@ msgstr "添加額外的"
 
 msgid ""
 "Add Google Maps API Key to show Google static map on \"Locations\" page."
-msgstr ""
+msgstr "新增 Google Maps API 金鑰，以在「地點」頁面顯示 Google 靜態地圖。"
 
 msgid "Add Meta Pixel to track ad conversions and optimize marketing."
 msgstr "添加 Meta Pixel 以追蹤廣告轉換並優化行銷成效。"
@@ -446,7 +446,7 @@ msgid ""
 msgstr "當客戶嘗試預訂已被佔用的時段時，請新增一個重定向網址。"
 
 msgid "Add another account"
-msgstr ""
+msgstr "新增另一個帳戶"
 
 msgid "Add appointment"
 msgstr "添加預約"
@@ -455,7 +455,7 @@ msgid "Add booking"
 msgstr "新增預約"
 
 msgid "Add calendar"
-msgstr ""
+msgstr "新增行事曆"
 
 msgid "Add category"
 msgstr "新增分類"
@@ -727,7 +727,7 @@ msgid "Allow employees to manage their special days"
 msgstr "允許員工管理其特殊日子"
 
 msgid "Allow employees to view all customers"
-msgstr ""
+msgstr "允許員工檢視所有客戶"
 
 msgid "Allow multiple bookings per customer"
 msgstr "允許每位客戶進行多次預訂"
@@ -749,6 +749,9 @@ msgstr "Alpha 發信人 ID"
 msgid "Alpha sender ID can't be empty"
 msgstr "Alpha 發送者 ID 不能為空"
 
+msgid "Already Paid"
+msgstr "已付款"
+
 msgid "Already have an account?"
 msgstr "已經有賬戶了嗎?"
 
@@ -763,6 +766,9 @@ msgstr "同時刪除未來事件"
 
 msgid "Also open future events"
 msgstr "同時開啟未來活動"
+
+msgid "Amelia - Booking Button"
+msgstr "Amelia - 預約按鈕"
 
 msgid "Amelia - Booking view"
 msgstr "Amelia - 預約視圖"
@@ -788,6 +794,9 @@ msgstr "Amelia - 活動行事曆"
 msgid "Amelia - Events List"
 msgstr "Amelia - 活動名單"
 
+msgid "Amelia - Events List Button"
+msgstr "Amelia - 活動列表按鈕"
+
 msgid "Amelia - Search view"
 msgstr "Amelia - 搜索視圖"
 
@@ -797,11 +806,23 @@ msgstr "Amelia - 逐步預約"
 msgid "Amelia Add to calendar page"
 msgstr "添加到日曆頁"
 
+msgid "Amelia Events List Booking Settings"
+msgstr "Amelia 活動列表預約設定"
+
+msgid "Amelia Events List Booking Shortcode"
+msgstr "Amelia 活動列表預約短代碼"
+
 msgid "Amelia Profile Settings"
 msgstr "Amelia - 配置設定"
 
 msgid "Amelia SMS"
 msgstr "Amelia簡訊"
+
+msgid "Amelia Step Booking Settings"
+msgstr "Amelia 步驟式預約設定"
+
+msgid "Amelia Step Booking Shortcode"
+msgstr "Amelia 步驟式預約短代碼"
 
 msgid "Amelia Users Settings"
 msgstr "Amelia - 使用者設定"
@@ -841,6 +862,11 @@ msgstr "Apple 日曆設定"
 
 msgid "Application (client) ID"
 msgstr "應用程式(客戶端)識別"
+
+msgid ""
+"Application (client) ID must be a valid GUID (UUID), as shown in the Azure "
+"portal."
+msgstr ""
 
 msgid "Application fee amount (%)"
 msgstr "申請費金額（%）"
@@ -1059,7 +1085,7 @@ msgid "Are you sure you want to delete this appointment?"
 msgstr "您確定要刪除此預約嗎?"
 
 msgid "Are you sure you want to delete this block time?"
-msgstr ""
+msgstr "確定要刪除這個封鎖時段嗎？"
 
 msgid "Are you sure you want to delete this category?"
 msgstr "您確定要刪除此類別嗎"
@@ -1206,7 +1232,7 @@ msgid "Assigned Services"
 msgstr "指定的服務"
 
 msgid "Assigned employee full name"
-msgstr ""
+msgstr "指派的員工全名"
 
 msgid "Attachment"
 msgstr "附件"
@@ -1437,25 +1463,25 @@ msgstr "在員工的 Outlook 日曆中，與繁忙事件重疊的區塊預約時
 msgid ""
 "Block booking times that overlap with events in the employee’s Apple "
 "Calendar."
-msgstr ""
+msgstr "封鎖與員工的 Apple 行事曆中活動重疊的預約時段。"
 
 msgid "Block customer"
 msgstr "阻擋客戶"
 
 msgid "Block time"
-msgstr ""
+msgstr "封鎖時段"
 
 msgid "Block time from calendars"
-msgstr ""
+msgstr "依行事曆事件封鎖時段"
 
 msgid "Block time has been added."
-msgstr ""
+msgstr "封鎖時段已新增。"
 
 msgid "Block time has been deleted."
-msgstr ""
+msgstr "封鎖時段已刪除。"
 
 msgid "Block time has been updated."
-msgstr ""
+msgstr "封鎖時段已更新。"
 
 msgid "Blog"
 msgstr "部落格"
@@ -1769,6 +1795,9 @@ msgid ""
 "By continuing, you will set the appointment to a time slot that already has "
 "an existing appointment!"
 msgstr "通過預約這個時間段，將在現有的團體預約之上預約一個預約!"
+
+msgid "By employees"
+msgstr ""
 
 msgid ""
 "By entering your phone number you agree to receive messages via WhatsApp"
@@ -2131,6 +2160,11 @@ msgstr "客戶端時間:"
 
 msgid "Client secret"
 msgstr "客戶端密鑰"
+
+msgid ""
+"Client secret is too short or looks invalid. Copy the full value from the "
+"Azure portal."
+msgstr ""
 
 msgid "Close"
 msgstr "關閉"
@@ -2497,7 +2531,7 @@ msgid "Create New"
 msgstr "建立新的"
 
 msgid "Create New Tag"
-msgstr ""
+msgstr "新增標籤"
 
 msgid ""
 "Create a coupon code customers can enter during booking to get a discount."
@@ -2532,7 +2566,7 @@ msgid "Create new badge"
 msgstr "建立新徽章"
 
 msgid "Create new tag"
-msgstr ""
+msgstr "新增標籤"
 
 msgid ""
 "Create online classrooms automatically for each booked appointment or event."
@@ -2664,7 +2698,7 @@ msgid "Custom pricing spots will override Maximum allowed spots value."
 msgstr "自訂定價點會覆蓋允許的最大點值。"
 
 msgid "Custom range"
-msgstr ""
+msgstr "自訂範圍"
 
 msgid "Custom service duration"
 msgstr "自訂服務時長"
@@ -2854,7 +2888,7 @@ msgid "Date Desc"
 msgstr "日期 描述"
 
 msgid "Date Picker"
-msgstr ""
+msgstr "日期選擇器"
 
 msgid "Date Purchased Asc"
 msgstr "購買日期 升序"
@@ -2871,6 +2905,9 @@ msgstr "日期和時間"
 
 msgid "Date and time"
 msgstr "日期與時間"
+
+msgid "Date busyness indicator"
+msgstr ""
 
 msgid "Date of Birth"
 msgstr "出生日期"
@@ -3052,7 +3089,7 @@ msgid "Delete appointment"
 msgstr "刪除預約"
 
 msgid "Delete block time"
-msgstr ""
+msgstr "刪除封鎖時段"
 
 msgid "Delete booking"
 msgstr "刪除預約"
@@ -3434,7 +3471,7 @@ msgid "Edit appointment"
 msgstr "編輯預約"
 
 msgid "Edit block time"
-msgstr ""
+msgstr "編輯封鎖時段"
 
 msgid "Edit booking"
 msgstr "編輯預約"
@@ -3934,6 +3971,9 @@ msgstr "輸入電話號碼，然後按 Enter 鍵添加"
 msgid "Enter booking ID"
 msgstr "輸入企業用戶"
 
+msgid "Enter both the application (client) ID and client secret."
+msgstr ""
+
 msgid "Enter date of birth"
 msgstr "出生日期"
 
@@ -4251,18 +4291,20 @@ msgid "Event status"
 msgstr "活動狀態"
 
 msgid "Event tags"
-msgstr ""
+msgstr "活動標籤"
 
 msgid ""
 "Event tags allow you to label and organize events in Amelia based on "
 "criteria that matter most to your business."
 msgstr ""
+"活動標籤可讓您在 Amelia 中依據對業務最重要的條件，為活動加上標籤並進行整理與"
+"分類。"
 
 msgid "Event tags have been saved."
-msgstr ""
+msgstr "活動標籤已成功儲存"
 
 msgid "Event tags setup"
-msgstr ""
+msgstr "活動標籤設定"
 
 msgid "Event ticketing"
 msgstr "活動票務"
@@ -4271,7 +4313,7 @@ msgid "Event tickets"
 msgstr "活動門票"
 
 msgid "Event time scope"
-msgstr ""
+msgstr "活動時間範圍"
 
 msgid "Event title"
 msgstr "活動標題"
@@ -4283,7 +4325,7 @@ msgid "Event type"
 msgstr "事件類型"
 
 msgid "Event_bookings"
-msgstr ""
+msgstr "活動預約"
 
 msgid "Events"
 msgstr "活動"
@@ -4371,7 +4413,7 @@ msgid "Export bookings"
 msgstr "匯出預訂"
 
 msgid "Export event booking data with ease"
-msgstr ""
+msgstr "輕鬆匯出活動預訂資料"
 
 msgid "Express Account"
 msgstr "Express 帳戶"
@@ -4692,7 +4734,7 @@ msgid "Fully booked"
 msgstr "已滿額"
 
 msgid "Future events"
-msgstr ""
+msgstr "即將舉行的活動"
 
 msgid ""
 "GSM (standard Latin) segments contain 160 characters, while UCS-2 (non-GSM - "
@@ -4780,7 +4822,7 @@ msgid "Google Calendar setup"
 msgstr "Google 日曆設定"
 
 msgid "Google Maps API key"
-msgstr ""
+msgstr "Google Maps API 金鑰"
 
 msgid "Google Maps failed to load. Check your API key and restrictions."
 msgstr "Google 地圖載入失敗。請檢查您的 API 金鑰及限制設定。"
@@ -5214,7 +5256,7 @@ msgstr "透過即時存取完整的預約資料，提升報告準確性"
 
 msgid ""
 "Improve reporting accuracy by accessing complete event booking data instantly"
-msgstr ""
+msgstr "即時存取完整的活動預訂資料，提升報表準確度"
 
 msgid ""
 "Improved customer retention as clients return to use the remaining sessions "
@@ -5348,7 +5390,10 @@ msgid "Interested in unlocking this feature?"
 msgstr "有興趣解鎖此功能嗎？"
 
 msgid "Invalid Mollie API key."
-msgstr ""
+msgstr "無效的 Mollie API 金鑰。"
+
+msgid "Invalid Payment Link"
+msgstr "無效的付款連結"
 
 msgid "Invalid Stripe secret key."
 msgstr "無效的 Stripe 密鑰。"
@@ -5803,17 +5848,20 @@ msgstr "透過可自訂的頻率與模式，維持一致的排程安排"
 msgid "Make extra mandatory"
 msgstr "強制執行額外要求"
 
+msgid "Make sure you are using the correct Outlook credentials."
+msgstr ""
+
 msgid "Make sure you are using the correct WhatsApp credentials."
 msgstr "請確保您使用的是正確的 WhatsApp 憑證。"
 
 msgid "Make sure you are using the correct Zoom credentials."
-msgstr ""
+msgstr "請確認您使用的是正確的 Zoom 認證資訊。"
 
 msgid "Male"
 msgstr "男"
 
 msgid "Manage Event Tags"
-msgstr ""
+msgstr "管理活動標籤"
 
 msgid "Manage badges"
 msgstr "管理徽章"
@@ -5830,7 +5878,7 @@ msgid ""
 msgstr "透過允許客戶加入候補名單並手動填補空缺名額，有效管理活動取消事宜。"
 
 msgid "Manage event tags"
-msgstr ""
+msgstr "管理活動標籤"
 
 msgid "Manage languages"
 msgstr "管理語言"
@@ -6131,7 +6179,7 @@ msgid "New appointment"
 msgstr "新預約"
 
 msgid "New block time"
-msgstr ""
+msgstr "新增封鎖時段"
 
 msgid "New category"
 msgstr "新類別"
@@ -6347,7 +6395,7 @@ msgid "Notice: Please select at least one panel."
 msgstr "注意: 請選擇至少一個面板。"
 
 msgid "Notice: Please select start and end date."
-msgstr ""
+msgstr "注意：請選擇開始日期與結束日期。"
 
 msgid "Notification"
 msgstr "通知"
@@ -6619,6 +6667,9 @@ msgstr ""
 msgid "One booking can have multiple attendees/spots in it."
 msgstr "一次預約可以包含多個參與者/地址。"
 
+msgid "One of the phone numbers provided is invalid."
+msgstr "所輸入的電話號碼中有一個格式不正確。"
+
 msgid "One spot is equal to one attendee."
 msgstr "一個地址等於一個參加者。"
 
@@ -6649,7 +6700,7 @@ msgid "Open following"
 msgstr "開放追蹤"
 
 msgid "Open side menu"
-msgstr ""
+msgstr "開啟側選單"
 
 msgid "Opened"
 msgstr "已打開"
@@ -6724,6 +6775,9 @@ msgid ""
 "Outlook Mailer is not fully configured. Please complete the account setup in "
 "the Outlook Integration settings."
 msgstr "Outlook Mailer 尚未完成設定。請至 Outlook 整合設定中完成帳戶設定。"
+
+msgid "Outside of working hours"
+msgstr "非營業時間"
 
 msgid "Overridden by employee"
 msgstr "被員工覆寫"
@@ -6981,7 +7035,7 @@ msgid "Passwords don't match."
 msgstr "密碼不符。"
 
 msgid "Past events"
-msgstr ""
+msgstr "過往活動"
 
 msgid ""
 "Paste the secret key you received after creating your API key pair in Google "
@@ -7175,7 +7229,7 @@ msgid "Phone Number"
 msgstr "電話號碼"
 
 msgid "Phone already exists with different name. Please check your name."
-msgstr "已經存在不同名稱的電子郵件。請核對一下您的姓名。"
+msgstr "已經存在不同名稱的電話號碼。請核對一下您的姓名。"
 
 msgid "Phone number"
 msgstr "電話號碼"
@@ -7238,7 +7292,7 @@ msgid "Please Wait"
 msgstr "請稍等"
 
 msgid "Please add period"
-msgstr ""
+msgstr "請加上句號。"
 
 msgid "Please cancel the event first before deleting it."
 msgstr "刪除活動前請先取消該活動。"
@@ -7254,11 +7308,6 @@ msgstr "請選擇預約時間"
 
 msgid "Please confirm you are not a robot"
 msgstr "請確認您不是機器人"
-
-msgid ""
-"Please delete this appointment. It cannot be edited due to a conflict with "
-"the associated account."
-msgstr ""
 
 msgid ""
 "Please ensure that services and employees are created and that services are "
@@ -7601,7 +7650,7 @@ msgid "Please upload the file"
 msgstr "請上傳文件"
 
 msgid "Please use a different email or phone number to complete the booking."
-msgstr ""
+msgstr "請改用其他電子郵件地址或電話號碼完成預約。"
 
 msgid ""
 "Please use the built-in Elementor shortcode widget instead of Amelia widget "
@@ -7845,6 +7894,8 @@ msgid ""
 "Quickly download all event booking details from the Event Bookings page, "
 "making reporting, analysis, and record-keeping simple and efficient."
 msgstr ""
+"可從「活動預訂」頁面快速下載所有活動預訂的詳細資料，讓報表製作、資料分析與紀"
+"錄保存更簡單且有效率。"
 
 msgid "Radio button"
 msgstr "單選按鈕"
@@ -8009,7 +8060,7 @@ msgid "Remind me when my SMS balance is low"
 msgstr "提醒我當我的簡訊余額低"
 
 msgid "Remove Apple Calendar event slots"
-msgstr ""
+msgstr "移除 Apple 行事曆事件的時段"
 
 msgid "Remove Attendee"
 msgstr "刪除與會者"
@@ -8250,7 +8301,7 @@ msgid "Save time with fast, one-click appointment exports"
 msgstr "節省時間，一鍵快速匯出預約資料"
 
 msgid "Save time with fast, one-click event booking exports"
-msgstr ""
+msgstr "一鍵快速匯出活動預訂資料，節省時間"
 
 msgid "Save time with quick, hassle-free customer data exports"
 msgstr "節省時間，輕鬆無憂地匯出客戶資料"
@@ -8405,6 +8456,12 @@ msgstr "選擇"
 msgid "Select Address"
 msgstr "選擇地址"
 
+msgid ""
+"Select Amelia Step-By-Step Booking Button block (or its inner button) to "
+"edit shortcode options."
+msgstr ""
+"選取 Amelia Step-By-Step 預約按鈕區塊（或區塊內的按鈕），以編輯短代碼選項。"
+
 msgid "Select Apple Calendar"
 msgstr "選擇日曆"
 
@@ -8437,6 +8494,11 @@ msgstr "選擇活動"
 
 msgid "Select Events"
 msgstr "選擇活動"
+
+msgid ""
+"Select Events List Booking Button block (or its inner button) to edit "
+"shortcode options."
+msgstr "選取「活動清單預約按鈕」區塊（或其內部的按鈕）以編輯短代碼設定選項。"
 
 msgid "Select Location"
 msgstr "選擇地點"
@@ -8487,7 +8549,7 @@ msgid "Select box"
 msgstr "下拉式選單"
 
 msgid "Select calendar"
-msgstr ""
+msgstr "選擇行事曆"
 
 msgid "Select category"
 msgstr "選擇類別"
@@ -9038,6 +9100,9 @@ msgstr "跨服務共享容量"
 
 msgid "Shared category capacity"
 msgstr "共享類別容量"
+
+msgid "Shortcode options"
+msgstr "短代碼設定"
 
 msgid "Show"
 msgstr "顯示"
@@ -9633,10 +9698,10 @@ msgid "Tag"
 msgstr "卡片"
 
 msgid "Tag label"
-msgstr ""
+msgstr "標籤名稱"
 
 msgid "Tag label cannot be empty"
-msgstr ""
+msgstr "標籤名稱不可為空白"
 
 msgid "Tags"
 msgstr "卡片"
@@ -9961,6 +10026,11 @@ msgstr "這張優惠券已經失效了"
 msgid "This email is already in use. Please enter a different email address."
 msgstr "此電子郵件地址已被使用。請輸入其他電子郵件地址。"
 
+msgid ""
+"This email is linked to both a customer and an employee account. Please "
+"delete and rebook."
+msgstr ""
+
 msgid "This employee is the only one assigned to {service}."
 msgstr "此員工是唯一被指派至{service} 的員工。"
 
@@ -9981,10 +10051,12 @@ msgstr ""
 
 msgid ""
 "This is a unique security token. Copy it into the 'Verify token' field in "
-"WhatsApp when creating a webhook."
+"WhatsApp when creating a webhook. Since this token is used for logging, we "
+"recommend registering your webhook."
 msgstr ""
-"此為唯一的安全驗證碼。請於建立網路掛鉤時，將此驗證碼複製至 WhatsApp 的「驗證"
-"碼」欄位中。"
+"這是一組唯一的安全性 token。在 WhatsApp 建立 Webhook 時，請將其複製到 "
+"'Verify token' 欄位。由於此 token 會用於日誌記錄，我們建議您完成 Webhook 註"
+"冊。"
 
 msgid "This is recurring event"
 msgstr "這是一個反複發生的活動"
@@ -10053,6 +10125,11 @@ msgid ""
 "This package has {count} appointment in the past. | This package has {count} "
 "appointments in the past."
 msgstr "此套件過去曾有{count} 次預約。 | 此套件過去曾有{count} 次預約。"
+
+msgid ""
+"This payment link is no longer valid. Please contact admin if you need "
+"assistance."
+msgstr "此付款連結已失效。如需協助，請聯絡管理員。"
 
 msgid "This placeholder's content will be applied wherever it is used."
 msgstr "此佔位符的內容將應用於所有使用處。"
@@ -10426,7 +10503,7 @@ msgstr ""
 "若因「取消前所需最短時間」設定值導致無法取消預約，使用者將被重定向至此網址"
 
 msgid "Unable to complete plugin activation. Please try again."
-msgstr ""
+msgstr "無法完成外掛啟用。請再試一次。"
 
 msgid "Unable to deactivate plugin. Please try again later."
 msgstr "無法停用插件。請稍後再試。"
@@ -11079,6 +11156,9 @@ msgstr "您的名字"
 
 msgid "Your balance has been recharged."
 msgstr "您的餘額已成功充值。"
+
+msgid "Your booking has been canceled."
+msgstr "預約已取消。"
 
 msgid ""
 "Your booking has been successfully canceled. If you have any questions or "

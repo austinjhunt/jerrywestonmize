@@ -197,10 +197,12 @@ class AppointmentApplicationService
         $bookIfPending = $isFrontEndBooking && $settingsDS->getSetting('appointments', 'allowBookingIfPending');
 
         // prevent booking in existing canceled/rejected appointment on frontend based on capacity and settings
+        // Waiting-list requests must still resolve the occupied appointment at this slot (see bookSingle / isDoubleBooking).
         if (
+            ($appointmentData['bookings'][0]['status'] ?? null) !== BookingStatus::WAITING &&
             $service->getMaxCapacity()->getValue() === 1 &&
             (
-                $appointmentData['bookings'][0]['status'] === BookingStatus::APPROVED ||
+                ($appointmentData['bookings'][0]['status'] ?? null) === BookingStatus::APPROVED ||
                 !$settingsDS->getSetting('appointments', 'allowBookingIfPending')
             )
         ) {
@@ -257,7 +259,7 @@ class AppointmentApplicationService
                     ($status === BookingStatus::APPROVED && $hasCapacity && $hasLocation) ||
                     ($status === BookingStatus::PENDING && ($bookIfPending || $hasCapacity) && $hasLocation) ||
                     ($status === BookingStatus::CANCELED || $status === BookingStatus::REJECTED || $status === BookingStatus::NO_SHOW) ||
-                    ($appointmentData['bookings'][0]['status'] === BookingStatus::WAITING && !$hasCapacity)
+                    (($appointmentData['bookings'][0]['status'] ?? null) === BookingStatus::WAITING && !$hasCapacity)
                 ) {
                     return $existingAppointment;
                 }

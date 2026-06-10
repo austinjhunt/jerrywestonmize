@@ -7940,6 +7940,8 @@ img {
 
 .h-hamburger-button {
   display: inline-block; }
+  .h-hamburger-button .h-icon-svg svg {
+    display: inline; }
 
 ul.colibri-menu.bordered-active-item > li {
   position: relative; }
@@ -27301,6 +27303,9 @@ img {
 .h-hamburger-button {
   display: inline-block;
 }
+.h-hamburger-button .h-icon-svg svg {
+    display: inline;
+}
 ul.colibri-menu.bordered-active-item > li {
   position: relative;
 }
@@ -32993,6 +32998,7 @@ body > #colibri-drag-image-backup {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   line-height: 32px;
   height: 32px;
+  min-height: 32px;
   color: #606266;
   border: 1px solid #dcdfe6;
 }

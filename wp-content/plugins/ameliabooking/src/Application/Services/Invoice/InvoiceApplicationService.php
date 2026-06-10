@@ -86,13 +86,6 @@ class InvoiceApplicationService extends AbstractInvoiceApplicationService
         $format = $format ?: $settingsService->getSetting('notifications', 'invoiceFormat');
 
         if ($format === 'pdf') {
-            $invoiceData['placeholders']['customer_custom_fields'] =   array_map(
-                function ($el) {
-                    return $el['label'] . ': ' . $el['value'];
-                },
-                $invoiceData['placeholders']['customer_custom_fields']
-            );
-
             ob_start();
             include AMELIA_PATH . '/templates/invoice/invoice.inc';
             $html = ob_get_clean();

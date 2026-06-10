@@ -4,7 +4,7 @@ namespace AmeliaBooking\Application\Controller\Stripe;
 
 use AmeliaBooking\Application\Controller\Controller;
 use AmeliaBooking\Application\Commands\Stripe\StripeOnboardRedirectCommand;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 class StripeOnboardRedirectController extends Controller
 {

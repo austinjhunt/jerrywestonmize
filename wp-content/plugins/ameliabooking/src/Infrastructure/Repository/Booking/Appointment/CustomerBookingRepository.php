@@ -19,6 +19,7 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Bookable\PackagesCustomers
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Coupon\CouponsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Payment\PaymentsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\User\UsersTable;
+use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use Exception;
 
 /**
@@ -714,7 +715,7 @@ class CustomerBookingRepository extends AbstractRepository
 
             if ($column === 'attendee') {
                 $joins[] = "INNER JOIN {$customersTable} cu ON cu.id = cb.customerId ";
-                $orderBy  = "ORDER BY MIN(DATE(ep.periodStart)), CONCAT(cu.firstName, \" \", cu.lastName) {$orderDir}, cb.id";
+                $orderBy  = "ORDER BY MIN(DATE(ep.periodStart)), CONCAT(cu.firstName, ' ', cu.lastName) {$orderDir}, cb.id";
             } elseif ($column === 'event') {
                 $orderBy  = "ORDER BY MIN(DATE(ep.periodStart)), e.name {$orderDir}, cb.id";
             } elseif ($column === 'created') {
@@ -919,7 +920,7 @@ class CustomerBookingRepository extends AbstractRepository
             $orderColumn = '';
 
             if ($column === 'attendee' && !empty($criteria['fetchCustomers'])) {
-                $orderColumn = 'CONCAT(cu.firstName, " ", cu.lastName)';
+                $orderColumn = 'CONCAT(cu.firstName, \' \', cu.lastName)';
             } elseif ($column === 'status') {
                 $orderColumn = 'cb.status';
             }
@@ -1003,5 +1004,106 @@ class CustomerBookingRepository extends AbstractRepository
         } catch (\Exception $e) {
             throw new QueryExecutionException('Unable to get bookings by package customer id in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
+    }
+
+    /**
+     * @return int
+     * @throws QueryExecutionException
+     */
+    public function getAppointmentBookingsCount(): int
+    {
+        return $this->countAppointmentBookings();
+    }
+
+    /**
+     * @return int
+     * @throws QueryExecutionException
+     */
+    public function getApprovedAppointmentBookingsCount(): int
+    {
+        return $this->countAppointmentBookings(BookingStatus::APPROVED);
+    }
+
+    /**
+     * @param string|null $status
+     *
+     * @return int
+     * @throws QueryExecutionException
+     */
+    private function countAppointmentBookings(?string $status = null): int
+    {
+        $sql = "SELECT COUNT(*) AS count FROM {$this->table} WHERE appointmentId IS NOT NULL";
+
+        $params = [];
+
+        if ($status !== null) {
+            $sql .= ' AND status = :status';
+            $params[':status'] = $status;
+        }
+
+        try {
+            $statement = $this->connection->prepare($sql);
+            $statement->execute($params);
+
+            return (int) $statement->fetch()['count'];
+        } catch (Exception $e) {
+            throw new QueryExecutionException(
+                'Unable to count appointment bookings in ' . __CLASS__ . '. ' . $e->getMessage(),
+                $e->getCode(),
+                $e
+            );
+        }
+    }
+
+    /**
+     * @return int
+     * @throws QueryExecutionException
+     */
+    public function getEventBookingsCount(): int
+    {
+        $customerBookingsEventsPeriods = CustomerBookingsToEventsPeriodsTable::getTableName();
+
+        try {
+            $statement = $this->connection->prepare(
+                "SELECT COUNT(DISTINCT cb.id) AS count
+                FROM {$this->table} cb
+                INNER JOIN {$customerBookingsEventsPeriods} cbe ON cbe.customerBookingId = cb.id"
+            );
+
+            $statement->execute();
+
+            return (int) $statement->fetch()['count'];
+        } catch (Exception $e) {
+            throw new QueryExecutionException('Unable to get event bookings count in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+    /**
+     * Earliest non-null booking created timestamp across all customer bookings.
+     *
+     * @return string|null DATETIME as stored in the database (UTC)
+     * @throws QueryExecutionException
+     */
+    public function getEarliestCreatedAt(): ?string
+    {
+        try {
+            $statement = $this->connection->prepare(
+                "SELECT MIN(`created`) AS earliest_created FROM {$this->table} WHERE `created` IS NOT NULL"
+            );
+            $statement->execute();
+            $row = $statement->fetch();
+        } catch (\Exception $e) {
+            throw new QueryExecutionException(
+                'Unable to get earliest booking created at in ' . __CLASS__ . '. ' . $e->getMessage(),
+                $e->getCode(),
+                $e
+            );
+        }
+
+        if (!$row || empty($row['earliest_created'])) {
+            return null;
+        }
+
+        return $row['earliest_created'];
     }
 }

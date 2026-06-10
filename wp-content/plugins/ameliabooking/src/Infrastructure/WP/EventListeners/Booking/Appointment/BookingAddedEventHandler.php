@@ -492,7 +492,10 @@ class BookingAddedEventHandler
         }
 
         foreach ($recurringData as $key => $recurringReservationData) {
-            if ($recurringReservationData['appointmentStatusChanged'] === true) {
+            if (
+                $recurringReservationData['appointmentStatusChanged'] === true &&
+                !$commandResult->getData()['isCart']
+            ) {
                 foreach ($recurringReservationData[$type]['bookings'] as $bookingKey => $recurringReservationBooking) {
                     if ($recurringReservationBooking['customerId'] === $booking['customerId']) {
                         $recurringData[$key][$type]['bookings'][$bookingKey]['skipNotification'] = true;

@@ -223,9 +223,9 @@ class AmeliaStepBookingElementorWidget extends Widget_Base
 
         $shortcode = '[ameliastepbooking' . $trigger . $trigger_type . $in_dialog . $layout;
         if ($settings['preselect']) {
-            echo $shortcode . $show . $category_service . $employee . $location . $package . ']';
+            echo esc_html($shortcode . $show . $category_service . $employee . $location . $package . ']');
         } else {
-            echo $shortcode . ']';
+            echo esc_html($shortcode . ']');
         }
     }
 

@@ -161,6 +161,7 @@ class Forminator_Password extends Forminator_Field {
 		$limit       = self::get_property( 'limit', $field, 0, 'num' );
 		$limit_type  = self::get_property( 'limit_type', $field, '', 'str' );
 		$is_confirm  = self::get_property( 'confirm-password', $field, '', 'bool' );
+		$has_toggle  = self::get_property( 'password-visibility-toggle', $field, false, 'bool' );
 
 		$autofill_markup = $this->get_element_autofill_markup_attr( self::get_property( 'element_id', $field ) );
 
@@ -190,11 +191,20 @@ class Forminator_Password extends Forminator_Field {
 
 		$html .= '<div class="forminator-field">';
 
+			$wrapper_input = $has_toggle
+				? array(
+					'<div class="forminator-input-with-toggle">',
+					$this->get_password_toggle_markup( $id, $field ) . '</div>',
+				)
+				: array();
+
 			$html .= self::create_input(
 				$input_text,
 				$label,
 				'',
 				$required,
+				'above',
+				$wrapper_input,
 			);
 
 		$html .= '</div>';
@@ -259,11 +269,20 @@ class Forminator_Password extends Forminator_Field {
 			$html .= apply_filters( 'forminator_before_conf_password_field_markup', $html_before_conf_password_field );
 			$html .= '<div class="forminator-field">';
 
+			$confirm_wrapper_input = $has_toggle
+				? array(
+					'<div class="forminator-input-with-toggle">',
+					$this->get_password_toggle_markup( $id, $field ) . '</div>',
+				)
+				: array();
+
 			$html .= self::create_input(
 				$confirm_input_text,
 				$confirm_password_label,
 				'',
 				$required,
+				'above',
+				$confirm_wrapper_input,
 			);
 
 			$html .= '</div>';
@@ -283,6 +302,50 @@ class Forminator_Password extends Forminator_Field {
 		}
 
 		return apply_filters( 'forminator_field_password_markup', $html, $field );
+	}
+
+	/**
+	 * Get password visibility toggle button markup.
+	 *
+	 * @param string $input_id The ID of the password input.
+	 * @param array  $field    Field settings.
+	 *
+	 * @return string
+	 */
+	private function get_password_toggle_markup( $input_id, $field = array() ) {
+		$show_label = esc_attr__( 'Show password', 'forminator' );
+		$hide_label = esc_attr__( 'Hide password', 'forminator' );
+
+		$eye_show = 'forminator-icon-eye';
+
+		$eye_hide = 'forminator-icon-eye-hide';
+
+		$markup = sprintf(
+			'<button type="button" class="forminator-password-toggle" data-toggle-for="%s" data-label-show="%s" data-label-hide="%s" aria-label="%s" title="%s" tabindex="0">'
+			. '<i class="%s" aria-hidden="true"></i>'
+			. '<i class="%s" aria-hidden="true" style="display:none;"></i>'
+			. '<span class="forminator-screen-reader-only">%s</span>'
+			. '</button>',
+			esc_attr( $input_id ),
+			$show_label,
+			$hide_label,
+			$show_label,
+			$show_label,
+			$eye_show,
+			$eye_hide,
+			$show_label
+		);
+
+		/**
+		 * Filter the password toggle button markup.
+		 *
+		 * @since 1.54.0
+		 *
+		 * @param string $markup   The toggle button HTML markup.
+		 * @param string $input_id The ID of the password input.
+		 * @param array  $field    The field settings array.
+		 */
+		return apply_filters( 'forminator_password_toggle_markup', $markup, $input_id, $field );
 	}
 
 	/**

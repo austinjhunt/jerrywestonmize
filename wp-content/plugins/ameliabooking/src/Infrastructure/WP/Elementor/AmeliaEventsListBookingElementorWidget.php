@@ -244,7 +244,7 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
                 $selected_tag .= '"';
             }
 
-            echo '[ameliaeventslistbooking' .
+            echo esc_html('[ameliaeventslistbooking' .
                 $trigger .
                 $trigger_type .
                 $in_dialog .
@@ -252,7 +252,7 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
                 $event_to_show .
                 $selected_location .
                 $selected_tag .
-                $show_recurring . ']';
+                $show_recurring . ']');
         } else {
             echo '[ameliaeventslistbooking]';
         }

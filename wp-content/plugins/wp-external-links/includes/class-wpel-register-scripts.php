@@ -79,6 +79,7 @@ final class WPEL_Register_Scripts extends WPRun_Base_1x0x0
 
         $wpel_js = array(
             'nonce_ajax' => wp_create_nonce('wpel_run_tool'),
+            'wpcaptcha_install_url' => add_query_arg(array('action' => 'wpel_install_wpcaptcha', '_wpnonce' => wp_create_nonce('install_wpcaptcha'), 'rnd' => wp_rand()), admin_url('admin.php')),
             'loader' => admin_url('/images/spinner.gif')
         );
 

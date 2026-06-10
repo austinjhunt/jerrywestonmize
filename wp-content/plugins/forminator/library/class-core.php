@@ -586,13 +586,14 @@ class Forminator_Core {
 	 * @return array|string
 	 */
 	public static function sanitize_array( $data, $current_key = '' ) {
-		$data         = wp_unslash( $data );
-		$skipped_keys = array( 'preview_data' );
+		$data = wp_unslash( $data );
+
 		// TODO: Should skip fields that has its own sanitize function.
 		if (
-			in_array( $current_key, $skipped_keys, true ) ||
+			( 'preview_data' === $current_key && ! is_array( $data ) ) || // Skip sanitization for preview_data if it is not an array, as it might be a JSON string.
 			0 === strpos( $current_key, 'url-' ) ||
 			0 === strpos( $current_key, 'select-' ) ||
+			0 === strpos( $current_key, 'radio-' ) ||
 			0 === strpos( $current_key, 'checkbox-' ) ||
 			0 === strpos( $current_key, 'password-' ) ||
 			0 === strpos( $current_key, 'confirm_password-' )
@@ -637,7 +638,6 @@ class Forminator_Core {
 			in_array( $current_key, $allow_html, true ) ||
 			0 === strpos( $current_key, 'html-' ) ||
 			0 === strpos( $current_key, 'textarea-' ) ||
-			0 === strpos( $current_key, 'radio-' ) ||
 			false !== strpos( $current_key, '-post-title' ) ||
 			false !== strpos( $current_key, '-post-content' ) ||
 			false !== strpos( $current_key, '-post-excerpt' )

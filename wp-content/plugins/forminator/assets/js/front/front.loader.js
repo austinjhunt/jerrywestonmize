@@ -398,7 +398,16 @@
 					if ( 0 !== $form.length ) {
 						self.frontInitCalled = false;
 						self.init_front();
-						forminator_render_hcaptcha();
+						var captchaRenderers = [
+							forminator_render_captcha,
+							forminator_render_hcaptcha,
+							forminator_render_turnstile
+						];
+						for ( var i = 0; i < captchaRenderers.length; i++ ) {
+							if ( 'function' === typeof captchaRenderers[ i ] ) {
+								captchaRenderers[ i ]();
+							}
+						}
 					}
 				});
 			}

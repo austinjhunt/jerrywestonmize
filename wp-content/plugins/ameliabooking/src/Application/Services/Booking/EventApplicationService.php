@@ -1925,8 +1925,11 @@ class EventApplicationService
             : null;
 
         $waitingCapacity = 0;
+        $isWaitingList = false;
 
         if ($eventSettings && !empty($eventSettings['waitingList']['enabled'])) {
+            $isWaitingList = true;
+
             if ($event->getCustomPricing()->getValue()) {
                 /** @var EventTicket $ticket */
                 foreach ($event->getCustomTickets()->getItems() as $ticket) {
@@ -1953,6 +1956,7 @@ class EventApplicationService
                 'approvedStatus' => $approvedStatus,
                 'maxCapacity' => $event->getMaxCapacity()->getValue(),
                 'waitingCapacity' => $waitingCapacity,
+                'isWaitingList' => $isWaitingList,
             ]
         );
     }

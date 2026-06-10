@@ -35,7 +35,13 @@ class GetBlockTimeCommandHandler extends CommandHandler
      */
     public function handle(GetBlockTimeCommand $command): CommandResult
     {
-        if (!$command->getPermissionService()->currentUserCanRead(Entities::APPOINTMENTS)) {
+        $currentUser = $this->container->get('logged.in.user');
+
+        if ($currentUser === null) {
+            throw new AccessDeniedException('You are not allowed to read block time');
+        }
+
+        if ($currentUser->getType() === Entities::CUSTOMER) {
             throw new AccessDeniedException('You are not allowed to read block time');
         }
 
@@ -51,10 +57,22 @@ class GetBlockTimeCommandHandler extends CommandHandler
 
         $blockTimeArray = $blockTime->toArray();
 
+        $canManage = true;
+
+        if ($currentUser->getType() === Entities::PROVIDER) {
+            $providerId = $currentUser->getId()->getValue();
+            $blockTimeUserId = $blockTime->getUserId() ? $blockTime->getUserId()->getValue() : null;
+
+            if ($blockTimeUserId === null || (int)$blockTimeUserId !== (int)$providerId) {
+                $canManage = false;
+            }
+        }
+
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved block time.');
         $result->setData([
-            'blockTime' => $blockTimeArray
+            'blockTime' => $blockTimeArray,
+            'canManage' => $canManage
         ]);
 
         return $result;

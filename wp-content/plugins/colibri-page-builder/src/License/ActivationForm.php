@@ -319,7 +319,7 @@ class ActivationForm {
 
 	public function makeActivateNotice() {
 		?>
-        <div class="notice notice-error is-dismissible">
+        <div class="colibri-notice notice notice-error is-dismissible">
             <div class="colibri-page-builder-license-notice colibri-page-builder-activate-license">
                 <h1>Activate Colibri Page Builder PRO License</h1>
                 <h3>If this is a testing site you can ignore this message. If this is your live site then please insert

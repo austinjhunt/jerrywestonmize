@@ -423,6 +423,8 @@ msgstr "Afegir Extra"
 msgid ""
 "Add Google Maps API Key to show Google static map on \"Locations\" page."
 msgstr ""
+"Afegeix la Google Maps API Key per mostrar la imatge del mapa estàtic de "
+"Google a la pàgina \"Locations\"."
 
 msgid "Add Meta Pixel to track ad conversions and optimize marketing."
 msgstr ""
@@ -459,7 +461,7 @@ msgstr ""
 "reservar una franja horària que ja s'ha pres."
 
 msgid "Add another account"
-msgstr ""
+msgstr "Afegir un altre compte"
 
 msgid "Add appointment"
 msgstr "Afegir cita"
@@ -468,7 +470,7 @@ msgid "Add booking"
 msgstr "Afegeix una reserva"
 
 msgid "Add calendar"
-msgstr ""
+msgstr "Afegir calendari"
 
 msgid "Add category"
 msgstr "Afegir categoria"
@@ -755,7 +757,7 @@ msgid "Allow employees to manage their special days"
 msgstr "Permetre que els empleats gestionin els seus dies especials"
 
 msgid "Allow employees to view all customers"
-msgstr ""
+msgstr "Permet als empleats veure tots els clients"
 
 msgid "Allow multiple bookings per customer"
 msgstr "Permetre diverses reserves per client"
@@ -779,6 +781,9 @@ msgstr "Identificació del transmissor alfa"
 msgid "Alpha sender ID can't be empty"
 msgstr "L&#39;ID del remitent alfabètic no pot estar buit"
 
+msgid "Already Paid"
+msgstr "Pagat"
+
 msgid "Already have an account?"
 msgstr "Ja tens un compte?"
 
@@ -793,6 +798,9 @@ msgstr "Suprimeix també esdeveniments futurs"
 
 msgid "Also open future events"
 msgstr "També obrir esdeveniments futurs"
+
+msgid "Amelia - Booking Button"
+msgstr "Amelia - Botó de reserva"
 
 msgid "Amelia - Booking view"
 msgstr "Amelia - Vista de la reserva"
@@ -818,6 +826,9 @@ msgstr "Amelia - Agenda d'Esdeveniments"
 msgid "Amelia - Events List"
 msgstr "Amelia - Esdeveniments"
 
+msgid "Amelia - Events List Button"
+msgstr "Amelia - Botó de la llista d'esdeveniments"
+
 msgid "Amelia - Search view"
 msgstr "Amelia - Vista de cerca"
 
@@ -827,11 +838,23 @@ msgstr "Amelia: Reserva pas a pas"
 msgid "Amelia Add to calendar page"
 msgstr "Amelia Afegeix a la pàgina del calendari"
 
+msgid "Amelia Events List Booking Settings"
+msgstr "Amelia Configuració de reserves de la llista d'esdeveniments"
+
+msgid "Amelia Events List Booking Shortcode"
+msgstr "Amelia Codi curt de reserves de la llista d'esdeveniments"
+
 msgid "Amelia Profile Settings"
 msgstr "Configuració del perfil d'Amelia"
 
 msgid "Amelia SMS"
 msgstr "SMS d'Amèlia"
+
+msgid "Amelia Step Booking Settings"
+msgstr "Paràmetres del Step Booking d’Amelia"
+
+msgid "Amelia Step Booking Shortcode"
+msgstr "Codi curt del Step Booking d’Amelia"
 
 msgid "Amelia Users Settings"
 msgstr "Configuració dels usuaris d'Amelia"
@@ -872,6 +895,11 @@ msgstr "Configuració del calendari d&#39;Apple"
 
 msgid "Application (client) ID"
 msgstr "Aplicació (client) ID"
+
+msgid ""
+"Application (client) ID must be a valid GUID (UUID), as shown in the Azure "
+"portal."
+msgstr ""
 
 msgid "Application fee amount (%)"
 msgstr "Import de la quota de sol·licitud (%)"
@@ -1094,7 +1122,7 @@ msgid "Are you sure you want to delete this appointment?"
 msgstr "Estàs segur que vols eliminar aquesta cita?"
 
 msgid "Are you sure you want to delete this block time?"
-msgstr ""
+msgstr "Esteu segur que voleu eliminar aquest bloqueig horari?"
 
 msgid "Are you sure you want to delete this category?"
 msgstr "Estàs segur que vols suprimir aquesta categoria?"
@@ -1244,7 +1272,7 @@ msgid "Assigned Services"
 msgstr "Serveis assignats"
 
 msgid "Assigned employee full name"
-msgstr ""
+msgstr "Nom complet de l'empleat assignat"
 
 msgid "Attachment"
 msgstr "Arxiu adjunt"
@@ -1491,24 +1519,26 @@ msgid ""
 "Block booking times that overlap with events in the employee’s Apple "
 "Calendar."
 msgstr ""
+"Bloqueja les franges horàries de reserva que se solapen amb esdeveniments a "
+"l'Apple Calendar de l'empleat."
 
 msgid "Block customer"
 msgstr "Bloquejar el client"
 
 msgid "Block time"
-msgstr ""
+msgstr "Bloquejar temps"
 
 msgid "Block time from calendars"
-msgstr ""
+msgstr "Bloqueja temps a partir dels calendaris"
 
 msgid "Block time has been added."
-msgstr ""
+msgstr "S'ha afegit un bloqueig de temps."
 
 msgid "Block time has been deleted."
-msgstr ""
+msgstr "S'ha suprimit el període bloquejat."
 
 msgid "Block time has been updated."
-msgstr ""
+msgstr "S'ha actualitzat el període bloquejat."
 
 msgid "Blog"
 msgstr "Bloc"
@@ -1836,6 +1866,9 @@ msgid ""
 msgstr ""
 "En continuar, establireu la cita a una franja horària que ja té una cita "
 "existent!"
+
+msgid "By employees"
+msgstr ""
 
 msgid ""
 "By entering your phone number you agree to receive messages via WhatsApp"
@@ -2227,6 +2260,11 @@ msgstr "Hora del client:"
 
 msgid "Client secret"
 msgstr "Secret del client"
+
+msgid ""
+"Client secret is too short or looks invalid. Copy the full value from the "
+"Azure portal."
+msgstr ""
 
 msgid "Close"
 msgstr "Tancar"
@@ -2625,7 +2663,7 @@ msgid "Create New"
 msgstr "Crear nou"
 
 msgid "Create New Tag"
-msgstr ""
+msgstr "Crea una etiqueta nova"
 
 msgid ""
 "Create a coupon code customers can enter during booking to get a discount."
@@ -2665,7 +2703,7 @@ msgid "Create new badge"
 msgstr "Crear una nova insígnia"
 
 msgid "Create new tag"
-msgstr ""
+msgstr "Crea una etiqueta nova"
 
 msgid ""
 "Create online classrooms automatically for each booked appointment or event."
@@ -2809,7 +2847,7 @@ msgstr ""
 "permesos."
 
 msgid "Custom range"
-msgstr ""
+msgstr "Interval personalitzat"
 
 msgid "Custom service duration"
 msgstr "Durada del servei personalitzat"
@@ -3012,7 +3050,7 @@ msgid "Date Desc"
 msgstr "Data Desc"
 
 msgid "Date Picker"
-msgstr ""
+msgstr "Selector de data"
 
 msgid "Date Purchased Asc"
 msgstr "Data de compra Asc"
@@ -3031,6 +3069,9 @@ msgstr "Selecciona data i hora"
 
 msgid "Date and time"
 msgstr "Data i hora"
+
+msgid "Date busyness indicator"
+msgstr ""
 
 msgid "Date of Birth"
 msgstr "Data de naixement"
@@ -3232,7 +3273,7 @@ msgid "Delete appointment"
 msgstr "Eliminar cita"
 
 msgid "Delete block time"
-msgstr ""
+msgstr "Elimina el bloqueig horari"
 
 msgid "Delete booking"
 msgstr "Eliminar la reserva"
@@ -3632,7 +3673,7 @@ msgid "Edit appointment"
 msgstr "Edita la cita"
 
 msgid "Edit block time"
-msgstr ""
+msgstr "Edita la franja horària bloquejada"
 
 msgid "Edit booking"
 msgstr "Edita la reserva"
@@ -4200,6 +4241,9 @@ msgstr "Introduïu un número de telèfon i premeu Enter per afegir"
 msgid "Enter booking ID"
 msgstr "Si us plau, introdueix el tipus de reserva"
 
+msgid "Enter both the application (client) ID and client secret."
+msgstr ""
+
 msgid "Enter date of birth"
 msgstr "Data de naixement"
 
@@ -4533,18 +4577,21 @@ msgid "Event status"
 msgstr "Estat de l&#39;esdeveniment"
 
 msgid "Event tags"
-msgstr ""
+msgstr "Etiquetes d’esdeveniment"
 
 msgid ""
 "Event tags allow you to label and organize events in Amelia based on "
 "criteria that matter most to your business."
 msgstr ""
+"Les etiquetes d’esdeveniment us permeten etiquetar i organitzar els "
+"esdeveniments a Amelia segons els criteris més rellevants per al vostre "
+"negoci."
 
 msgid "Event tags have been saved."
-msgstr ""
+msgstr "S’han desat les etiquetes d’esdeveniment."
 
 msgid "Event tags setup"
-msgstr ""
+msgstr "Configuració de les etiquetes d’esdeveniment"
 
 msgid "Event ticketing"
 msgstr "Venda d&#39;entrades per a esdeveniments"
@@ -4553,7 +4600,7 @@ msgid "Event tickets"
 msgstr "Entrades per a l'esdeveniment"
 
 msgid "Event time scope"
-msgstr ""
+msgstr "Interval temporal de l'esdeveniment"
 
 msgid "Event title"
 msgstr "Títol de l'esdeveniment"
@@ -4565,7 +4612,7 @@ msgid "Event type"
 msgstr "Tipus d&#39;esdeveniment"
 
 msgid "Event_bookings"
-msgstr ""
+msgstr "Reserves de l'esdeveniment"
 
 msgid "Events"
 msgstr "Esdeveniments"
@@ -4656,7 +4703,7 @@ msgid "Export bookings"
 msgstr "Reserves d'exportació"
 
 msgid "Export event booking data with ease"
-msgstr ""
+msgstr "Exporta fàcilment les dades de reserves d’esdeveniments"
 
 msgid "Express Account"
 msgstr "Compte exprés"
@@ -4996,7 +5043,7 @@ msgid "Fully booked"
 msgstr "Completament reservat"
 
 msgid "Future events"
-msgstr ""
+msgstr "Esdeveniments futurs"
 
 msgid ""
 "GSM (standard Latin) segments contain 160 characters, while UCS-2 (non-GSM - "
@@ -5087,7 +5134,7 @@ msgid "Google Calendar setup"
 msgstr "Configuració del calendari de Google"
 
 msgid "Google Maps API key"
-msgstr ""
+msgstr "Clau de l'API de Google Maps"
 
 msgid "Google Maps failed to load. Check your API key and restrictions."
 msgstr ""
@@ -5583,6 +5630,8 @@ msgstr ""
 msgid ""
 "Improve reporting accuracy by accessing complete event booking data instantly"
 msgstr ""
+"Millora la precisió dels informes accedint a l’instant a totes les dades de "
+"reserva d’esdeveniments"
 
 msgid ""
 "Improved customer retention as clients return to use the remaining sessions "
@@ -5735,7 +5784,10 @@ msgid "Interested in unlocking this feature?"
 msgstr "T'interessa desbloquejar aquesta funció?"
 
 msgid "Invalid Mollie API key."
-msgstr ""
+msgstr "Clau de l’API de Mollie no vàlida."
+
+msgid "Invalid Payment Link"
+msgstr "Enllaç de pagament no vàlid"
 
 msgid "Invalid Stripe secret key."
 msgstr "Clau secreta de Stripe no vàlida."
@@ -6210,18 +6262,21 @@ msgstr ""
 msgid "Make extra mandatory"
 msgstr "Fer un extra obligatori"
 
+msgid "Make sure you are using the correct Outlook credentials."
+msgstr ""
+
 msgid "Make sure you are using the correct WhatsApp credentials."
 msgstr ""
 "Assegureu-vos que esteu utilitzant les credencials de WhatsApp correctes."
 
 msgid "Make sure you are using the correct Zoom credentials."
-msgstr ""
+msgstr "Assegureu-vos que utilitzeu les credencials correctes de Zoom."
 
 msgid "Male"
 msgstr "Home"
 
 msgid "Manage Event Tags"
-msgstr ""
+msgstr "Gestiona les etiquetes d’esdeveniment"
 
 msgid "Manage badges"
 msgstr "Gestiona les insígnies"
@@ -6240,7 +6295,7 @@ msgstr ""
 "clients unir-se a les llistes d'espera i omplint els llocs oberts manualment."
 
 msgid "Manage event tags"
-msgstr ""
+msgstr "Gestionar les etiquetes d’esdeveniments"
 
 msgid "Manage languages"
 msgstr "Gestionar idiomes"
@@ -6545,7 +6600,7 @@ msgid "New appointment"
 msgstr "Nova cita"
 
 msgid "New block time"
-msgstr ""
+msgstr "Nou bloqueig horari"
 
 msgid "New category"
 msgstr "Nova categoria"
@@ -6763,7 +6818,7 @@ msgid "Notice: Please select at least one panel."
 msgstr "Avís: selecciona el menys un panell."
 
 msgid "Notice: Please select start and end date."
-msgstr ""
+msgstr "Avís: Si us plau, seleccioneu la data d'inici i la data de fi."
 
 msgid "Notification"
 msgstr "Notificació"
@@ -7060,6 +7115,9 @@ msgstr ""
 msgid "One booking can have multiple attendees/spots in it."
 msgstr "Una reserva pot tenir diversos assistents/places en ella."
 
+msgid "One of the phone numbers provided is invalid."
+msgstr "Un dels números de telèfon introduïts no és vàlid."
+
 msgid "One spot is equal to one attendee."
 msgstr "Una plaça és igual a un assistent."
 
@@ -7091,7 +7149,7 @@ msgid "Open following"
 msgstr "Obrir el següent"
 
 msgid "Open side menu"
-msgstr ""
+msgstr "Obre el menú lateral"
 
 msgid "Opened"
 msgstr "Obert"
@@ -7168,6 +7226,9 @@ msgid ""
 msgstr ""
 "L'Outlook Mailer no està completament configurat. Si us plau, completeu la "
 "configuració del compte a la configuració d'integració d'Outlook."
+
+msgid "Outside of working hours"
+msgstr "Fora d'horari laboral"
 
 msgid "Overridden by employee"
 msgstr "Anul·lat per l'empleat"
@@ -7427,7 +7488,7 @@ msgid "Passwords don't match."
 msgstr "Les contrasenyes no coincideixen."
 
 msgid "Past events"
-msgstr ""
+msgstr "Esdeveniments passats"
 
 msgid ""
 "Paste the secret key you received after creating your API key pair in Google "
@@ -7628,8 +7689,8 @@ msgstr "Establir un número de telèfon com a camp obligatori"
 
 msgid "Phone already exists with different name. Please check your name."
 msgstr ""
-"La direcció de correu electrònic ja existeix amb un nom diferent. Verifica "
-"el teu nom, si us plau."
+"El número de telèfon ja existeix amb un nom diferent. Si us plau, verifica "
+"el teu nom."
 
 msgid "Phone number"
 msgstr "Número de telèfon"
@@ -7693,7 +7754,7 @@ msgid "Please Wait"
 msgstr "Un moment, si us plau"
 
 msgid "Please add period"
-msgstr ""
+msgstr "Si us plau, afegeix un punt."
 
 msgid "Please cancel the event first before deleting it."
 msgstr "Primer cancel·la l'esdeveniment abans d'eliminar-lo."
@@ -7709,11 +7770,6 @@ msgstr "Si us plau, trieu hora de cita"
 
 msgid "Please confirm you are not a robot"
 msgstr "Si us plau, confirmi que no és un robot"
-
-msgid ""
-"Please delete this appointment. It cannot be edited due to a conflict with "
-"the associated account."
-msgstr ""
 
 msgid ""
 "Please ensure that services and employees are created and that services are "
@@ -8063,6 +8119,8 @@ msgstr "Si us plau, carregueu el fitxer"
 
 msgid "Please use a different email or phone number to complete the booking."
 msgstr ""
+"Si us plau, feu servir un correu electrònic o un número de telèfon diferent "
+"per completar la reserva."
 
 msgid ""
 "Please use the built-in Elementor shortcode widget instead of Amelia widget "
@@ -8317,6 +8375,9 @@ msgid ""
 "Quickly download all event booking details from the Event Bookings page, "
 "making reporting, analysis, and record-keeping simple and efficient."
 msgstr ""
+"Descarrega ràpidament totes les dades de reserves d'esdeveniments des de la "
+"pàgina Reserves d'Esdeveniments, i simplifica i fa més eficients "
+"l'elaboració d'informes, l'anàlisi i la gestió de registres."
 
 msgid "Radio button"
 msgstr "Botó de ràdio"
@@ -8481,7 +8542,7 @@ msgid "Remind me when my SMS balance is low"
 msgstr "Recorda'm quan el meu saldo SMS és baix"
 
 msgid "Remove Apple Calendar event slots"
-msgstr ""
+msgstr "Elimina les franges horàries d’esdeveniments de l’Apple Calendar"
 
 msgid "Remove Attendee"
 msgstr "Eliminar l'assistent"
@@ -8730,6 +8791,8 @@ msgstr "Estalvieu temps amb exportacions ràpides de cites amb un sol clic"
 
 msgid "Save time with fast, one-click event booking exports"
 msgstr ""
+"Estalvia temps amb exportacions ràpides, d’un sol clic, de reserves "
+"d’esdeveniments"
 
 msgid "Save time with quick, hassle-free customer data exports"
 msgstr ""
@@ -8886,6 +8949,13 @@ msgstr "Seleccionar"
 msgid "Select Address"
 msgstr "Seleccionar direcció"
 
+msgid ""
+"Select Amelia Step-By-Step Booking Button block (or its inner button) to "
+"edit shortcode options."
+msgstr ""
+"Selecciona el bloc Amelia Step-By-Step Booking Button (o el botó intern) per "
+"configurar les opcions del shortcode."
+
 msgid "Select Apple Calendar"
 msgstr "Selecciona calendari"
 
@@ -8918,6 +8988,13 @@ msgstr "Seleccionar esdeveniment"
 
 msgid "Select Events"
 msgstr "Seleccionar esdeveniment"
+
+msgid ""
+"Select Events List Booking Button block (or its inner button) to edit "
+"shortcode options."
+msgstr ""
+"Seleccioneu el bloc «Events List Booking Button» (o el botó intern) per "
+"editar les opcions del shortcode."
 
 msgid "Select Location"
 msgstr "Selecciona la ubicació"
@@ -8969,7 +9046,7 @@ msgid "Select box"
 msgstr "Selecciona la casella"
 
 msgid "Select calendar"
-msgstr ""
+msgstr "Selecciona el calendari"
 
 msgid "Select category"
 msgstr "Selecciona categoria"
@@ -9565,6 +9642,9 @@ msgstr "Capacitat compartida entre serveis"
 
 msgid "Shared category capacity"
 msgstr "Capacitat de categoria compartida"
+
+msgid "Shortcode options"
+msgstr "Opcions del codi curt"
 
 msgid "Show"
 msgstr "Mostrar"
@@ -10207,10 +10287,10 @@ msgid "Tag"
 msgstr "Seleccionar o crear una etiqueta"
 
 msgid "Tag label"
-msgstr ""
+msgstr "Nom de l’etiqueta"
 
 msgid "Tag label cannot be empty"
-msgstr ""
+msgstr "El nom de l’etiqueta no pot estar buit"
 
 msgid "Tags"
 msgstr "Etiquetes"
@@ -10573,6 +10653,11 @@ msgstr ""
 "Aquest correu electrònic ja està en ús. Si us plau, introduïu una adreça de "
 "correu electrònic diferent."
 
+msgid ""
+"This email is linked to both a customer and an employee account. Please "
+"delete and rebook."
+msgstr ""
+
 msgid "This employee is the only one assigned to {service}."
 msgstr "Aquest empleat és l'únic assignat{service}."
 
@@ -10594,10 +10679,12 @@ msgstr ""
 
 msgid ""
 "This is a unique security token. Copy it into the 'Verify token' field in "
-"WhatsApp when creating a webhook."
+"WhatsApp when creating a webhook. Since this token is used for logging, we "
+"recommend registering your webhook."
 msgstr ""
-"Aquest és un token de seguretat únic. Copieu-lo al camp 'Verificar el token' "
-"de WhatsApp quan creeu un webhook."
+"Aquest és un token de seguretat únic. Copia'l al camp 'Verify token' de "
+"WhatsApp quan creïs un webhook. Com que aquest token s'utilitza per al "
+"registre de logs, recomanem registrar el webhook."
 
 msgid "This is recurring event"
 msgstr "Aquest és un esdeveniment recurrent"
@@ -10679,6 +10766,13 @@ msgid ""
 msgstr ""
 "Aquest paquet té {count} cita en el passat. | Aquest paquet té {count} cites "
 "en el passat."
+
+msgid ""
+"This payment link is no longer valid. Please contact admin if you need "
+"assistance."
+msgstr ""
+"Aquest enllaç de pagament ha caducat. Contacteu amb l'administrador del lloc "
+"web si necessiteu ajuda."
 
 msgid "This placeholder's content will be applied wherever it is used."
 msgstr ""
@@ -11084,7 +11178,7 @@ msgstr ""
 "causa del valor &quot;Temps mínim necessari abans de cancel·lar&quot;"
 
 msgid "Unable to complete plugin activation. Please try again."
-msgstr ""
+msgstr "No s'ha pogut completar l'activació de l'extensió. Torneu-ho a provar."
 
 msgid "Unable to deactivate plugin. Please try again later."
 msgstr "No s'ha pogut desactivar el plugin. Intenta-ho més tard."
@@ -11775,6 +11869,9 @@ msgstr "El teu nom"
 
 msgid "Your balance has been recharged."
 msgstr "El seu saldo s'ha recarregat."
+
+msgid "Your booking has been canceled."
+msgstr "La vostra reserva s'ha cancel·lat."
 
 msgid ""
 "Your booking has been successfully canceled. If you have any questions or "

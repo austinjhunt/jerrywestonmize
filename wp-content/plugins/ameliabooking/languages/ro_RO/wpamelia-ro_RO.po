@@ -459,7 +459,7 @@ msgstr ""
 "să rezerve un interval de timp care a fost deja ocupat."
 
 msgid "Add another account"
-msgstr ""
+msgstr "Adăugați un alt cont"
 
 msgid "Add appointment"
 msgstr "Adăugați o întâlnire"
@@ -468,7 +468,7 @@ msgid "Add booking"
 msgstr "Adăugați rezervare"
 
 msgid "Add calendar"
-msgstr ""
+msgstr "Adăugați calendar"
 
 msgid "Add category"
 msgstr "Adaugă categorie"
@@ -779,6 +779,9 @@ msgstr "ID expeditor Alpha"
 msgid "Alpha sender ID can't be empty"
 msgstr "ID-ul expeditorului Alpha nu poate fi gol"
 
+msgid "Already Paid"
+msgstr "Deja achitat"
+
 msgid "Already have an account?"
 msgstr "Ai deja un cont?"
 
@@ -793,6 +796,9 @@ msgstr "Șterge și evenimentele viitoare"
 
 msgid "Also open future events"
 msgstr "Deschide și evenimentele viitoare"
+
+msgid "Amelia - Booking Button"
+msgstr "Amelia - Buton de rezervare"
 
 msgid "Amelia - Booking view"
 msgstr "Amelia - Vizualizare rezervare"
@@ -818,6 +824,9 @@ msgstr "Amelia - Calendar de evenimente"
 msgid "Amelia - Events List"
 msgstr "Amelia - Lista evenimentelor"
 
+msgid "Amelia - Events List Button"
+msgstr "Amelia - Buton Lista de Evenimente"
+
 msgid "Amelia - Search view"
 msgstr "Amelia - Vizualizare căutare"
 
@@ -827,11 +836,23 @@ msgstr "Amelia - Rezervare pas cu pas"
 msgid "Amelia Add to calendar page"
 msgstr "Amelia Adaugă la pagina calendarului"
 
+msgid "Amelia Events List Booking Settings"
+msgstr "Amelia Lista de Evenimente Setări de Rezervare"
+
+msgid "Amelia Events List Booking Shortcode"
+msgstr "Amelia Lista de Evenimente Shortcode de Rezervare"
+
 msgid "Amelia Profile Settings"
 msgstr "Setări profil Amelia"
 
 msgid "Amelia SMS"
 msgstr "SMS Amelia"
+
+msgid "Amelia Step Booking Settings"
+msgstr "Setări rezervare pas cu pas Amelia"
+
+msgid "Amelia Step Booking Shortcode"
+msgstr "Shortcode rezervare pas cu pas Amelia"
 
 msgid "Amelia Users Settings"
 msgstr "Setările utilizatorilor Amelia"
@@ -872,6 +893,11 @@ msgstr "Configurarea Calendarului Apple"
 
 msgid "Application (client) ID"
 msgstr "ID aplicație (client)."
+
+msgid ""
+"Application (client) ID must be a valid GUID (UUID), as shown in the Azure "
+"portal."
+msgstr ""
 
 msgid "Application fee amount (%)"
 msgstr "Sumă taxă de aplicație (%)"
@@ -1499,7 +1525,7 @@ msgid "Block time"
 msgstr "Timpul blocului"
 
 msgid "Block time from calendars"
-msgstr ""
+msgstr "Blocați timpul din calendare"
 
 msgid "Block time has been added."
 msgstr "A fost adăugat timpul de blocare."
@@ -1839,6 +1865,9 @@ msgid ""
 msgstr ""
 "Continuând, veți seta programarea la un interval orar care are deja o "
 "programare existentă!"
+
+msgid "By employees"
+msgstr "După angajați"
 
 msgid ""
 "By entering your phone number you agree to receive messages via WhatsApp"
@@ -2230,6 +2259,11 @@ msgstr "Ora clientului:"
 
 msgid "Client secret"
 msgstr "Secretul clientului"
+
+msgid ""
+"Client secret is too short or looks invalid. Copy the full value from the "
+"Azure portal."
+msgstr ""
 
 msgid "Close"
 msgstr "Închide"
@@ -3033,6 +3067,9 @@ msgstr "Data si ora"
 
 msgid "Date and time"
 msgstr "Data și ora"
+
+msgid "Date busyness indicator"
+msgstr ""
 
 msgid "Date of Birth"
 msgstr "Data nașterii"
@@ -4200,6 +4237,9 @@ msgstr "Introduceți un număr de telefon, apoi apăsați Enter pentru a-l adău
 
 msgid "Enter booking ID"
 msgstr "Introduceți ID-ul programării"
+
+msgid "Enter both the application (client) ID and client secret."
+msgstr ""
 
 msgid "Enter date of birth"
 msgstr "Introduceți data nașterii"
@@ -5733,6 +5773,9 @@ msgstr "Vă interesează să deblocați această funcție?"
 msgid "Invalid Mollie API key."
 msgstr "Cheie API Mollie nevalidă."
 
+msgid "Invalid Payment Link"
+msgstr "Link de plată invalid"
+
 msgid "Invalid Stripe secret key."
 msgstr "Cheie secretă Stripe invalidă."
 
@@ -6205,6 +6248,9 @@ msgstr ""
 
 msgid "Make extra mandatory"
 msgstr "Fă opțiunea suplimentară obligatorie"
+
+msgid "Make sure you are using the correct Outlook credentials."
+msgstr ""
 
 msgid "Make sure you are using the correct WhatsApp credentials."
 msgstr "Asigură-te că folosești datele de autentificare WhatsApp corecte."
@@ -7055,6 +7101,9 @@ msgstr ""
 msgid "One booking can have multiple attendees/spots in it."
 msgstr "O rezervare poate avea mai mulți participanți/locuri în ea."
 
+msgid "One of the phone numbers provided is invalid."
+msgstr "Unul dintre numerele de telefon introduse nu este valid."
+
 msgid "One spot is equal to one attendee."
 msgstr "Un loc este egal cu un participant."
 
@@ -7163,6 +7212,9 @@ msgid ""
 msgstr ""
 "Outlook Mailer nu este complet configurat. Vă rugăm să finalizați "
 "configurarea contului în setările de integrare Outlook."
+
+msgid "Outside of working hours"
+msgstr "În afara orelor de lucru"
 
 msgid "Overridden by employee"
 msgstr "Suprafilat de angajat"
@@ -7700,13 +7752,6 @@ msgstr "Vă rugăm să alegeți ora programării"
 
 msgid "Please confirm you are not a robot"
 msgstr "Vă rugăm să confirmați că nu sunteți un robot"
-
-msgid ""
-"Please delete this appointment. It cannot be edited due to a conflict with "
-"the associated account."
-msgstr ""
-"Vă rugăm să ștergeți această programare. Aceasta nu poate fi editată din "
-"cauza unui conflict cu contul asociat."
 
 msgid ""
 "Please ensure that services and employees are created and that services are "
@@ -8886,6 +8931,13 @@ msgstr "Selectați"
 msgid "Select Address"
 msgstr "Selectare adresă"
 
+msgid ""
+"Select Amelia Step-By-Step Booking Button block (or its inner button) to "
+"edit shortcode options."
+msgstr ""
+"Selectați blocul „Amelia Step-By-Step Booking Button” (sau butonul său "
+"intern) pentru a edita setările shortcode-ului."
+
 msgid "Select Apple Calendar"
 msgstr "Selectați Calendarul Apple"
 
@@ -8918,6 +8970,13 @@ msgstr "Selectați Eveniment"
 
 msgid "Select Events"
 msgstr "Selectați Evenimente"
+
+msgid ""
+"Select Events List Booking Button block (or its inner button) to edit "
+"shortcode options."
+msgstr ""
+"Selectați blocul Events List Booking Button (sau butonul său interior) "
+"pentru a edita setările shortcode-ului."
 
 msgid "Select Location"
 msgstr "Selectează locația"
@@ -8969,7 +9028,7 @@ msgid "Select box"
 msgstr "Casetă de selecție"
 
 msgid "Select calendar"
-msgstr ""
+msgstr "Alegeți calendarul"
 
 msgid "Select category"
 msgstr "Selectați categoria"
@@ -9558,6 +9617,9 @@ msgstr "Capacitate comună între servicii"
 
 msgid "Shared category capacity"
 msgstr "Capacitate comună a categoriei"
+
+msgid "Shortcode options"
+msgstr "Opțiuni pentru shortcode"
 
 msgid "Show"
 msgstr "Arată"
@@ -10561,6 +10623,11 @@ msgstr ""
 "Acest email este deja folosit. Vă rugăm să introduceți o altă adresă de "
 "email."
 
+msgid ""
+"This email is linked to both a customer and an employee account. Please "
+"delete and rebook."
+msgstr ""
+
 msgid "This employee is the only one assigned to {service}."
 msgstr "Acest angajat este singurul atribuit la {service}."
 
@@ -10582,10 +10649,12 @@ msgstr ""
 
 msgid ""
 "This is a unique security token. Copy it into the 'Verify token' field in "
-"WhatsApp when creating a webhook."
+"WhatsApp when creating a webhook. Since this token is used for logging, we "
+"recommend registering your webhook."
 msgstr ""
-"Acesta este un token de securitate unic. Copiază-l în câmpul 'Verificare "
-"token' din WhatsApp atunci când creezi un webhook."
+"Acesta este un token unic de securitate. Copiați-l și lipiți-l în câmpul "
+"'Verify token' din WhatsApp atunci când creați un webhook. Deoarece acest "
+"token este folosit pentru logare, recomandăm să înregistrați webhook-ul."
 
 msgid "This is recurring event"
 msgstr "Acesta este un eveniment recurent"
@@ -10667,6 +10736,13 @@ msgid ""
 msgstr ""
 "Acest pachet are {count} programare în trecut. | Acest pachet are {count} "
 "programări în trecut."
+
+msgid ""
+"This payment link is no longer valid. Please contact admin if you need "
+"assistance."
+msgstr ""
+"Acest link de plată nu mai este valid. Vă rugăm să contactați "
+"administratorul site-ului dacă aveți nevoie de suport."
 
 msgid "This placeholder's content will be applied wherever it is used."
 msgstr "Conținutul acestui substituent va fi aplicat oriunde este utilizat."
@@ -11763,6 +11839,9 @@ msgstr "Numele dumneavoastră"
 
 msgid "Your balance has been recharged."
 msgstr "Soldul tău a fost reîncărcat."
+
+msgid "Your booking has been canceled."
+msgstr "Rezervarea dvs. a fost anulată."
 
 msgid ""
 "Your booking has been successfully canceled. If you have any questions or "

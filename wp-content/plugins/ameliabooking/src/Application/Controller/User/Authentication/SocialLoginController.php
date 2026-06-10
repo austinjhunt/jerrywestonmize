@@ -4,7 +4,7 @@ namespace AmeliaBooking\Application\Controller\User\Authentication;
 
 use AmeliaBooking\Application\Commands\User\SocialLoginCommand;
 use AmeliaBooking\Application\Controller\Controller;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 class SocialLoginController extends Controller
 {

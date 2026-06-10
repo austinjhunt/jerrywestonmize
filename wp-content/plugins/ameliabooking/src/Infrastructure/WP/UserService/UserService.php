@@ -10,7 +10,7 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 use AmeliaBooking\Infrastructure\WP\UserRoles\UserRoles;
-use Slim\Container;
+use AmeliaBooking\Infrastructure\Common\Container;
 use WP_Error;
 
 /**
@@ -52,7 +52,9 @@ class UserService
             return null;
         }
 
-        $userType = UserRoles::getUserAmeliaRole($wpUser = wp_get_current_user()) ?: 'customer';
+        $wpUserType = UserRoles::getUserAmeliaRole($wpUser = wp_get_current_user());
+
+        $userType = $wpUserType ?: 'customer';
 
         try {
             // First try to get from repository
@@ -60,6 +62,7 @@ class UserService
 
             if (
                 !($currentUserEntity instanceof AbstractUser) ||
+                $userType !== $currentUserEntity->getType() ||
                 (
                     $userType === 'manager' &&
                     ($currentUserEntity->getType() === 'provider' || $currentUserEntity->getType() === 'customer')
@@ -81,7 +84,7 @@ class UserService
                         ? $wpUser->get('last_name')
                         : $wpUser->get('user_nicename'),
                     'email'      => $wpUser->get('user_email') ?: 'guest@example.com',
-                    'externalId' => $wpUser->ID
+                    'externalId' => $userType === AbstractUser::USER_ROLE_CUSTOMER ? $wpUser->ID : null,
                 ]
             ) : null;
         }

@@ -24,6 +24,9 @@ class SubscriberChangesNotifier {
   private $statusChangedSubscriberIds = [];
 
   /** @var array<int, int> */
+  private $countChangedSubscriberIds = [];
+
+  /** @var array<int, int> */
   private $createdSubscriberBatches = [];
 
   /** @var array<int, int> */
@@ -42,6 +45,7 @@ class SubscriberChangesNotifier {
     $this->notifyCreations();
     $this->notifyUpdates();
     $this->notifyDeletes();
+    $this->notifyCountChanges();
   }
 
   private function notifyCreations(): void {
@@ -107,9 +111,19 @@ class SubscriberChangesNotifier {
     }
   }
 
+  private function notifyCountChanges(): void {
+    if (empty($this->countChangedSubscriberIds)) {
+      return;
+    }
+
+    $this->wp->doAction(SubscriberEntity::HOOK_SUBSCRIBERS_COUNT_CHANGED, array_keys($this->countChangedSubscriberIds));
+  }
+
   public function subscriberCreated(int $subscriberId): void {
     // store id as a key and timestamp change as the value
-    $this->createdSubscriberIds[$subscriberId] = $this->getTimestamp();
+    $timestamp = $this->getTimestamp();
+    $this->createdSubscriberIds[$subscriberId] = $timestamp;
+    $this->countChangedSubscriberIds[$subscriberId] = $timestamp;
   }
 
   public function subscriberUpdated(int $subscriberId): void {
@@ -119,12 +133,16 @@ class SubscriberChangesNotifier {
 
   public function subscriberStatusChanged(int $subscriberId): void {
     // store id as a key and timestamp change as the value
-    $this->statusChangedSubscriberIds[$subscriberId] = $this->getTimestamp();
+    $timestamp = $this->getTimestamp();
+    $this->statusChangedSubscriberIds[$subscriberId] = $timestamp;
+    $this->countChangedSubscriberIds[$subscriberId] = $timestamp;
   }
 
   public function subscriberDeleted(int $subscriberId): void {
     // store id as a key and timestamp change as the value
-    $this->deletedSubscriberIds[$subscriberId] = $this->getTimestamp();
+    $timestamp = $this->getTimestamp();
+    $this->deletedSubscriberIds[$subscriberId] = $timestamp;
+    $this->countChangedSubscriberIds[$subscriberId] = $timestamp;
   }
 
   public function subscribersCreated(array $subscriberIds): void {
@@ -142,6 +160,16 @@ class SubscriberChangesNotifier {
   public function subscribersDeleted(array $subscriberIds): void {
     foreach ($subscriberIds as $subscriberId) {
       $this->subscriberDeleted((int)$subscriberId);
+    }
+  }
+
+  public function subscriberCountChanged(int $subscriberId): void {
+    $this->countChangedSubscriberIds[$subscriberId] = $this->getTimestamp();
+  }
+
+  public function subscribersCountChanged(array $subscriberIds): void {
+    foreach ($subscriberIds as $subscriberId) {
+      $this->subscriberCountChanged((int)$subscriberId);
     }
   }
 

@@ -397,7 +397,7 @@ class OneClickDemoImport {
                 $response['message'] .= sprintf(
                 //phpcs:ignore 	WordPress.WP.I18n.MissingTranslatorsComment
                     __( '%1$s%6$sWasn\'t this a great One Click Demo Import experience?%7$s Created and maintained by %3$sProteusThemes%4$s. %2$s%5$sClick to Tweet!%4$s%8$s', 'colibri-page-builder' ),
-                    '<div class="notice  notice-info"><p>',
+                    '<div class="notice colibri-notice  notice-info"><p>',
                     '<br>',
                     '<strong><a href="https://www.proteusthemes.com/" target="_blank">',
                     '</a></strong>',
@@ -411,7 +411,7 @@ class OneClickDemoImport {
             $response['message'] .= sprintf(
             //phpcs:ignore 	WordPress.WP.I18n.MissingTranslatorsComment
                 __( '%1$s%3$sThat\'s it, all done!%4$s%2$sThe demo import has finished. Please check your page and make sure that everything has imported correctly. If it did, you can deactivate the %3$sOne Click Demo Import%4$s plugin, because it has done its job.%5$s', 'colibri-page-builder' ),
-                '<div class="notice  notice-success"><p>',
+                '<div class="notice colibri-notice notice-success"><p>',
                 '<br>',
                 '<strong>',
                 '</strong>',
@@ -423,7 +423,7 @@ class OneClickDemoImport {
             $response['message'] .= sprintf(
             //phpcs:ignore 	WordPress.WP.I18n.MissingTranslatorsComment
                 __( '%1$sThe demo import has finished, but there were some import errors.%2$sMore details about the errors can be found in this %3$s%5$slog file%6$s%4$s%7$s', 'colibri-page-builder' ),
-                '<div class="notice  notice-warning"><p>',
+                '<div class="notice colibri-notice  notice-warning"><p>',
                 '<br>',
                 '<strong>',
                 '</strong>',

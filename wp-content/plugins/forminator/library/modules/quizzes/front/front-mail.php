@@ -128,7 +128,7 @@ class Forminator_Quiz_Front_Mail extends Forminator_Mail {
 						continue;
 					}
 
-					$recipients = $this->get_admin_email_recipients( $notification, $quiz, $entry, $lead_model );
+					$recipients = $this->get_admin_email_recipients( $notification, $quiz, $entry, $lead_model, $result_slug );
 
 					if ( ! empty( $recipients ) ) {
 						$subject = $this->replace_placeholders( $notification, 'email-subject', $quiz, $entry, $lead_model );
@@ -416,10 +416,11 @@ class Forminator_Quiz_Front_Mail extends Forminator_Mail {
 	 *
 	 * @param array  $routing Routing.
 	 * @param object $quiz_model Quiz model.
+	 * @param string $result_slug Result slug.
 	 *
 	 * @return bool
 	 */
-	public function is_routing( $routing, $quiz_model ) {
+	public function is_routing( $routing, $quiz_model, $result_slug = '' ) {
 		// empty conditions.
 		if ( empty( $routing ) ) {
 			return false;
@@ -449,6 +450,8 @@ class Forminator_Quiz_Front_Mail extends Forminator_Mail {
 		} elseif ( stripos( $element_id, 'question-' ) !== false ) {
 			$is_correct = self::is_correct_answer( $element_id, $form_data['answers'][ $element_id ], $quiz_model );
 			return self::is_condition_fulfilled( $is_correct, $routing );
+		} elseif ( stripos( $element_id, 'result-' ) !== false ) {
+			return self::is_condition_fulfilled( $result_slug, $routing );
 		} elseif ( 'final_result' === $element_id ) {
 			return self::is_condition_fulfilled( $form_data[ $element_id ], $routing );
 		} elseif ( ! isset( $form_data[ $element_id ] ) ) {

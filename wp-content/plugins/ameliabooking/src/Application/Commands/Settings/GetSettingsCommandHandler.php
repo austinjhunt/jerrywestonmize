@@ -8,6 +8,8 @@ use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Services\Mailchimp\AbstractMailchimpService;
+use Melograno\UsageTracker\Collectors\Plugin\AmeliaCollector;
+use Melograno\UsageTracker\Core\UsageTracker;
 use Interop\Container\Exception\ContainerException;
 
 /**
@@ -58,6 +60,10 @@ class GetSettingsCommandHandler extends CommandHandler
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved settings.');
+
+        if (isset($settings['general'])) {
+            $settings['general'] = array_merge($settings['general'], UsageTracker::getSettings(new AmeliaCollector()));
+        }
 
         $settings = apply_filters('amelia_get_settings_filter', $settings);
 

@@ -420,6 +420,8 @@ msgstr "Bæta við auka"
 msgid ""
 "Add Google Maps API Key to show Google static map on \"Locations\" page."
 msgstr ""
+"Bættu við Google Maps API Key (API-lykli) til að birta Google Static Map á "
+"\"Locations\"-síðunni."
 
 msgid "Add Meta Pixel to track ad conversions and optimize marketing."
 msgstr ""
@@ -456,7 +458,7 @@ msgstr ""
 "sem þegar hefur verið tekinn."
 
 msgid "Add another account"
-msgstr ""
+msgstr "Bæta við öðrum aðgangi"
 
 msgid "Add appointment"
 msgstr "Bæta við bókun"
@@ -465,7 +467,7 @@ msgid "Add booking"
 msgstr "Bæta við bókun"
 
 msgid "Add calendar"
-msgstr ""
+msgstr "Bæta við dagatali"
 
 msgid "Add category"
 msgstr "Bæta við flokki"
@@ -750,7 +752,7 @@ msgid "Allow employees to manage their special days"
 msgstr "Leyfa starfsmönnum að stjórna sínum sérstökum dögum"
 
 msgid "Allow employees to view all customers"
-msgstr ""
+msgstr "Heimila starfsmönnum að sjá alla viðskiptavini"
 
 msgid "Allow multiple bookings per customer"
 msgstr "Leyfa margar bókanir á hvern viðskiptavin"
@@ -774,6 +776,9 @@ msgstr "Alfa-sendandaauðkenni"
 msgid "Alpha sender ID can't be empty"
 msgstr "Sendandaauðkenni í alfa-formi má ekki vera tómt"
 
+msgid "Already Paid"
+msgstr "Þegar greitt"
+
 msgid "Already have an account?"
 msgstr "Ertu nú þegar með aðgang?"
 
@@ -788,6 +793,9 @@ msgstr "Eyða einnig framtíðarviðburðum"
 
 msgid "Also open future events"
 msgstr "Einnig opið fyrir komandi viðburði"
+
+msgid "Amelia - Booking Button"
+msgstr "Amelia - Bókunarhnappur"
 
 msgid "Amelia - Booking view"
 msgstr "Amelia - Bókunarsýn"
@@ -813,6 +821,9 @@ msgstr "Amelia - Viðburðadagatal"
 msgid "Amelia - Events List"
 msgstr "Amelia - Viðburðalisti"
 
+msgid "Amelia - Events List Button"
+msgstr "Amelia – hnappur fyrir viðburðalista"
+
 msgid "Amelia - Search view"
 msgstr "Amelia - Leitarsýn"
 
@@ -822,11 +833,23 @@ msgstr "Amelia - Skref fyrir skref bókun"
 msgid "Amelia Add to calendar page"
 msgstr "Amelia Bæta við dagatalssíðu"
 
+msgid "Amelia Events List Booking Settings"
+msgstr "Amelia viðburðalisti – bókunarstillingar"
+
+msgid "Amelia Events List Booking Shortcode"
+msgstr "Amelia viðburðalisti – bókunarstuttkóði"
+
 msgid "Amelia Profile Settings"
 msgstr "Stillingar Ameliu prófíls"
 
 msgid "Amelia SMS"
 msgstr ""
+
+msgid "Amelia Step Booking Settings"
+msgstr "Amelia stillingar fyrir skrefabókun"
+
+msgid "Amelia Step Booking Shortcode"
+msgstr "Amelia stuttkóði fyrir skrefabókun"
 
 msgid "Amelia Users Settings"
 msgstr "Stillingar notenda Amelia"
@@ -866,6 +889,11 @@ msgstr "Uppsetning Apple dagatals"
 
 msgid "Application (client) ID"
 msgstr "Auðkenni forrits (viðskiptavinar)"
+
+msgid ""
+"Application (client) ID must be a valid GUID (UUID), as shown in the Azure "
+"portal."
+msgstr ""
 
 msgid "Application fee amount (%)"
 msgstr "Umsóknargjald (%)"
@@ -1084,7 +1112,7 @@ msgid "Are you sure you want to delete this appointment?"
 msgstr "Ertu viss um að þú viljir eyða þessari bókun?"
 
 msgid "Are you sure you want to delete this block time?"
-msgstr ""
+msgstr "Ertu viss um að þú viljir eyða þessari tímablokkun?"
 
 msgid "Are you sure you want to delete this category?"
 msgstr "Ertu viss um að þú viljir eyða þessum flokki?"
@@ -1234,7 +1262,7 @@ msgid "Assigned Services"
 msgstr "Úthlutaðar þjónustur"
 
 msgid "Assigned employee full name"
-msgstr ""
+msgstr "Fullt nafn úthlutaðs starfsmanns"
 
 msgid "Attachment"
 msgstr "Viðhengi"
@@ -1480,24 +1508,26 @@ msgid ""
 "Block booking times that overlap with events in the employee’s Apple "
 "Calendar."
 msgstr ""
+"Loka bókunartímum sem skarast við viðburði í Apple Calendar hjá "
+"starfsmanninum."
 
 msgid "Block customer"
 msgstr "Loka viðskiptavin"
 
 msgid "Block time"
-msgstr ""
+msgstr "Loka fyrir tíma"
 
 msgid "Block time from calendars"
-msgstr ""
+msgstr "Loka fyrir tíma samkvæmt dagatölum"
 
 msgid "Block time has been added."
-msgstr ""
+msgstr "Lokaður tími hefur verið bætt við."
 
 msgid "Block time has been deleted."
-msgstr ""
+msgstr "Lokaðum tíma hefur verið eytt."
 
 msgid "Block time has been updated."
-msgstr ""
+msgstr "Lokaður tími hefur verið uppfærður."
 
 msgid "Blog"
 msgstr "Blogg"
@@ -1822,6 +1852,9 @@ msgid ""
 msgstr ""
 "Með því að halda áfram, munt þú stilla tímann á tíma sem er þegar "
 "fyrirliggjandi!"
+
+msgid "By employees"
+msgstr ""
 
 msgid ""
 "By entering your phone number you agree to receive messages via WhatsApp"
@@ -2210,6 +2243,11 @@ msgstr "Tími viðskiptavinar:"
 
 msgid "Client secret"
 msgstr "Leyndarmál viðskiptavinar"
+
+msgid ""
+"Client secret is too short or looks invalid. Copy the full value from the "
+"Azure portal."
+msgstr ""
 
 msgid "Close"
 msgstr "Loka"
@@ -2602,7 +2640,7 @@ msgid "Create New"
 msgstr "Búa til nýtt"
 
 msgid "Create New Tag"
-msgstr ""
+msgstr "Stofna nýtt merki"
 
 msgid ""
 "Create a coupon code customers can enter during booking to get a discount."
@@ -2642,7 +2680,7 @@ msgid "Create new badge"
 msgstr "Búa til nýtt merki"
 
 msgid "Create new tag"
-msgstr ""
+msgstr "Búa til nýtt efnisorð"
 
 msgid ""
 "Create online classrooms automatically for each booked appointment or event."
@@ -2783,7 +2821,7 @@ msgstr ""
 "Sérsniðin verðlagning á stöðum mun yfirskrifa hámarksfjölda leyfðra staða."
 
 msgid "Custom range"
-msgstr ""
+msgstr "Sérsniðið tímabil"
 
 msgid "Custom service duration"
 msgstr "Tímabil sérsniðinnar þjónustu"
@@ -2987,7 +3025,7 @@ msgid "Date Desc"
 msgstr "Dagsetning Lýsing"
 
 msgid "Date Picker"
-msgstr ""
+msgstr "Dagsetningarveljari"
 
 msgid "Date Purchased Asc"
 msgstr "Kaupdagur Uppstig"
@@ -3006,6 +3044,9 @@ msgstr "Dagsetning og tími"
 
 msgid "Date and time"
 msgstr "Dagsetning og tími"
+
+msgid "Date busyness indicator"
+msgstr ""
 
 msgid "Date of Birth"
 msgstr "Fæðingardagur"
@@ -3206,7 +3247,7 @@ msgid "Delete appointment"
 msgstr "Eyða tíma"
 
 msgid "Delete block time"
-msgstr ""
+msgstr "Eyða útilokuðum tíma"
 
 msgid "Delete booking"
 msgstr "Eyða bókun"
@@ -3599,7 +3640,7 @@ msgid "Edit appointment"
 msgstr "Breyta tímapöntun"
 
 msgid "Edit block time"
-msgstr ""
+msgstr "Breyta lokuðu tímabili"
 
 msgid "Edit booking"
 msgstr "Breyta bókun"
@@ -4161,6 +4202,9 @@ msgstr "Sláðu inn símanúmer og ýttu síðan á Enter til að bæta við"
 msgid "Enter booking ID"
 msgstr "Sláðu inn bókunarauðkenni"
 
+msgid "Enter both the application (client) ID and client secret."
+msgstr ""
+
 msgid "Enter date of birth"
 msgstr "Sláðu inn fæðingardag"
 
@@ -4486,18 +4530,20 @@ msgid "Event status"
 msgstr "Staða viðburðar"
 
 msgid "Event tags"
-msgstr ""
+msgstr "Viðburðatög"
 
 msgid ""
 "Event tags allow you to label and organize events in Amelia based on "
 "criteria that matter most to your business."
 msgstr ""
+"Viðburðatög gera kleift að merkja og skipuleggja viðburði í Amelia eftir "
+"þeim viðmiðum sem skipta fyrirtæki þínu mestu máli."
 
 msgid "Event tags have been saved."
-msgstr ""
+msgstr "Viðburðatög hafa verið vistuð."
 
 msgid "Event tags setup"
-msgstr ""
+msgstr "Stillingar viðburðataga"
 
 msgid "Event ticketing"
 msgstr "Miðasala viðburða"
@@ -4506,7 +4552,7 @@ msgid "Event tickets"
 msgstr "Miðar á viðburði"
 
 msgid "Event time scope"
-msgstr ""
+msgstr "Tímarammi viðburðar"
 
 msgid "Event title"
 msgstr "Titill viðburðar"
@@ -4518,7 +4564,7 @@ msgid "Event type"
 msgstr "Tegund viðburðar"
 
 msgid "Event_bookings"
-msgstr ""
+msgstr "Viðburðabókanir"
 
 msgid "Events"
 msgstr "Viðburðir"
@@ -4608,7 +4654,7 @@ msgid "Export bookings"
 msgstr "Flytja út bókanir"
 
 msgid "Export event booking data with ease"
-msgstr ""
+msgstr "Flytja út bókunargögn fyrir viðburði á einfaldan hátt"
 
 msgid "Express Account"
 msgstr "Express reikningur"
@@ -4942,7 +4988,7 @@ msgid "Fully booked"
 msgstr "Fullbókað"
 
 msgid "Future events"
-msgstr ""
+msgstr "Komandi viðburðir"
 
 msgid ""
 "GSM (standard Latin) segments contain 160 characters, while UCS-2 (non-GSM - "
@@ -5033,7 +5079,7 @@ msgid "Google Calendar setup"
 msgstr "Uppsetning Google dagatals"
 
 msgid "Google Maps API key"
-msgstr ""
+msgstr "Google Maps API-lykill"
 
 msgid "Google Maps failed to load. Check your API key and restrictions."
 msgstr ""
@@ -5519,6 +5565,8 @@ msgstr ""
 msgid ""
 "Improve reporting accuracy by accessing complete event booking data instantly"
 msgstr ""
+"Bættu nákvæmni skýrslna með tafarlausum aðgangi að heildstæðum bókunargögnum "
+"viðburða"
 
 msgid ""
 "Improved customer retention as clients return to use the remaining sessions "
@@ -5665,7 +5713,10 @@ msgid "Interested in unlocking this feature?"
 msgstr "Hefurðu áhuga á að opna þennan eiginleika?"
 
 msgid "Invalid Mollie API key."
-msgstr ""
+msgstr "Ógildur Mollie API-lykill."
+
+msgid "Invalid Payment Link"
+msgstr "Ógild greiðsluslóð"
 
 msgid "Invalid Stripe secret key."
 msgstr "Ógildur leynilykill Stripe."
@@ -6137,18 +6188,22 @@ msgstr "Haltu stöðugri tímaáætlun með sérsniðnum tíðnum og mynstrum"
 msgid "Make extra mandatory"
 msgstr "Gera aukalega skyldubundna"
 
+msgid "Make sure you are using the correct Outlook credentials."
+msgstr ""
+
 msgid "Make sure you are using the correct WhatsApp credentials."
 msgstr ""
 "Gakktu úr skugga um að þú notir réttar WhatsApp innskráningarupplýsingar."
 
 msgid "Make sure you are using the correct Zoom credentials."
 msgstr ""
+"Gakktu úr skugga um að þú sért að nota réttar Zoom-innskráningarupplýsingar."
 
 msgid "Male"
 msgstr "Karl"
 
 msgid "Manage Event Tags"
-msgstr ""
+msgstr "Stjórna viðburðamerkjum"
 
 msgid "Manage badges"
 msgstr "Stjórna merkjum"
@@ -6167,7 +6222,7 @@ msgstr ""
 "viðskiptavinum að skrá sig á biðlista og fylla laus pláss handvirkt."
 
 msgid "Manage event tags"
-msgstr ""
+msgstr "Stjórna merkjum viðburða"
 
 msgid "Manage languages"
 msgstr "Stjórna tungumálum"
@@ -6472,7 +6527,7 @@ msgid "New appointment"
 msgstr "Nýr tímasetning"
 
 msgid "New block time"
-msgstr ""
+msgstr "Ný lokuð tímarauf"
 
 msgid "New category"
 msgstr "Nýr flokkur"
@@ -6689,7 +6744,7 @@ msgid "Notice: Please select at least one panel."
 msgstr "Athugið: Veldu að minnsta kosti einn spjald."
 
 msgid "Notice: Please select start and end date."
-msgstr ""
+msgstr "Notice: Vinsamlegast veldu upphafs- og lokadagsetningu."
 
 msgid "Notification"
 msgstr "Tilkynning"
@@ -6986,6 +7041,9 @@ msgstr ""
 msgid "One booking can have multiple attendees/spots in it."
 msgstr "Ein bókun getur haft marga þátttakendur/pláss í sér."
 
+msgid "One of the phone numbers provided is invalid."
+msgstr "Eitt af innslögðum símanúmerum er ógilt."
+
 msgid "One spot is equal to one attendee."
 msgstr "Eitt pláss er jafnt og einn þátttakandi."
 
@@ -7017,7 +7075,7 @@ msgid "Open following"
 msgstr "Opna eftirfarandi"
 
 msgid "Open side menu"
-msgstr ""
+msgstr "Opna hliðavalmynd"
 
 msgid "Opened"
 msgstr "Opnað"
@@ -7094,6 +7152,9 @@ msgid ""
 msgstr ""
 "Outlook Mailer er ekki að fullu stillt. Vinsamlegast ljúktu við uppsetningu "
 "reikningsins í samþættingarstillingum Outlook."
+
+msgid "Outside of working hours"
+msgstr "Utan vinnutíma"
 
 msgid "Overridden by employee"
 msgstr "Yfirskrifað af starfsmanni"
@@ -7352,7 +7413,7 @@ msgid "Passwords don't match."
 msgstr "Lykilorðin stemma ekki."
 
 msgid "Past events"
-msgstr ""
+msgstr "Liðnir viðburðir"
 
 msgid ""
 "Paste the secret key you received after creating your API key pair in Google "
@@ -7617,7 +7678,7 @@ msgid "Please Wait"
 msgstr "Vinsamlegast bíðið"
 
 msgid "Please add period"
-msgstr ""
+msgstr "Bættu við punkti."
 
 msgid "Please cancel the event first before deleting it."
 msgstr "Vinsamlegast aflýstu viðburðinum áður en þú eyðir honum."
@@ -7633,11 +7694,6 @@ msgstr "Vinsamlegast veldu tíma á bókun"
 
 msgid "Please confirm you are not a robot"
 msgstr "Vinsamlegast staðfestu að þú sért ekki vélmenni"
-
-msgid ""
-"Please delete this appointment. It cannot be edited due to a conflict with "
-"the associated account."
-msgstr ""
 
 msgid ""
 "Please ensure that services and employees are created and that services are "
@@ -7987,6 +8043,7 @@ msgstr "Vinsamlegast hlaðið upp skránni"
 
 msgid "Please use a different email or phone number to complete the booking."
 msgstr ""
+"Vinsamlegast notið annað tölvupóstfang eða símanúmer til að ljúka bókuninni."
 
 msgid ""
 "Please use the built-in Elementor shortcode widget instead of Amelia widget "
@@ -8240,6 +8297,9 @@ msgid ""
 "Quickly download all event booking details from the Event Bookings page, "
 "making reporting, analysis, and record-keeping simple and efficient."
 msgstr ""
+"Sæktu fljótt allar upplýsingar um bókanir á viðburði af síðunni „Event "
+"Bookings“, sem gerir skýrslugerð, greiningu og skráavörslu einfalda og "
+"skilvirka."
 
 msgid "Radio button"
 msgstr "Útvarpshnappur"
@@ -8405,7 +8465,7 @@ msgid "Remind me when my SMS balance is low"
 msgstr "Minntu mig á þegar SMS-innistæðan mín er lág"
 
 msgid "Remove Apple Calendar event slots"
-msgstr ""
+msgstr "Fjarlægja tímaraufar fyrir Apple Calendar-viðburði"
 
 msgid "Remove Attendee"
 msgstr "Fjarlægja þátttakanda"
@@ -8653,6 +8713,7 @@ msgstr "Sparaðu tíma með hraðri útflutningi á tímapöntunum með einum sm
 
 msgid "Save time with fast, one-click event booking exports"
 msgstr ""
+"Sparaðu tíma með skjótum, eins-smells útflutningi á bókunargögnum viðburða"
 
 msgid "Save time with quick, hassle-free customer data exports"
 msgstr ""
@@ -8808,6 +8869,13 @@ msgstr "Veldu"
 msgid "Select Address"
 msgstr "Veldu heimilisfang"
 
+msgid ""
+"Select Amelia Step-By-Step Booking Button block (or its inner button) to "
+"edit shortcode options."
+msgstr ""
+"Veldu blokkina „Amelia Skref-fyrir-skref bókunarhnappur“ (eða innri hnappinn "
+"í henni) til að breyta shortcode-stillingum."
+
 msgid "Select Apple Calendar"
 msgstr "Veldu Apple dagatal"
 
@@ -8840,6 +8908,13 @@ msgstr "Veldu viðburð"
 
 msgid "Select Events"
 msgstr "Veldu viðburði"
+
+msgid ""
+"Select Events List Booking Button block (or its inner button) to edit "
+"shortcode options."
+msgstr ""
+"Veldu blokkina „Viðburðalisti: Bókunarhnappur“ (eða innri hnappinn hennar) "
+"til að breyta valkostum skammkóða."
 
 msgid "Select Location"
 msgstr "Veldu staðsetningu"
@@ -8891,7 +8966,7 @@ msgid "Select box"
 msgstr "Veldu reit"
 
 msgid "Select calendar"
-msgstr ""
+msgstr "Veldu dagatal"
 
 msgid "Select category"
 msgstr "Veldu flokk"
@@ -9474,6 +9549,9 @@ msgstr "Sameiginleg afkastageta á milli þjónustu"
 
 msgid "Shared category capacity"
 msgstr "Sameiginleg flokkunargeta"
+
+msgid "Shortcode options"
+msgstr "Stillingar stuttkóða"
 
 msgid "Show"
 msgstr "Sýna"
@@ -10113,10 +10191,10 @@ msgid "Tag"
 msgstr "Merki"
 
 msgid "Tag label"
-msgstr ""
+msgstr "Merkiheiti"
 
 msgid "Tag label cannot be empty"
-msgstr ""
+msgstr "Merkiheiti má ekki vera tómt"
 
 msgid "Tags"
 msgstr "Merki"
@@ -10466,6 +10544,11 @@ msgstr "Þessi afsláttarmiði er ekki lengur gildur"
 msgid "This email is already in use. Please enter a different email address."
 msgstr "Þetta netfang er þegar í notkun. Vinsamlegast sláðu inn annað netfang."
 
+msgid ""
+"This email is linked to both a customer and an employee account. Please "
+"delete and rebook."
+msgstr ""
+
 msgid "This employee is the only one assigned to {service}."
 msgstr "Þessi starfsmaður er sá eini sem er úthlutaður til{service} ."
 
@@ -10488,10 +10571,12 @@ msgstr ""
 
 msgid ""
 "This is a unique security token. Copy it into the 'Verify token' field in "
-"WhatsApp when creating a webhook."
+"WhatsApp when creating a webhook. Since this token is used for logging, we "
+"recommend registering your webhook."
 msgstr ""
-"Þetta er einstakt öryggistákn. Afritaðu það í reitinn „Staðfesta tákn“ í "
-"WhatsApp þegar þú býrð til veftengingu."
+"Þetta er einstakt öryggistóken. Afritaðu það og límdu inn í reitinn 'Verify "
+"token' í WhatsApp þegar þú býrð til webhook. Þar sem þetta tóken er notað "
+"við kerfisskráningu mælum við með að þú skráir webhook-ið þitt."
 
 msgid "This is recurring event"
 msgstr "Þetta er endurtekið viðburður"
@@ -10575,6 +10660,13 @@ msgid ""
 msgstr ""
 "Þessi pakki hefur{count} tímapöntun í fortíðinni. | Þessi pakki hefur{count} "
 "skipanir í fortíðinni."
+
+msgid ""
+"This payment link is no longer valid. Please contact admin if you need "
+"assistance."
+msgstr ""
+"Þessi greiðsluhlekkur er ekki lengur gildur. Vinsamlegast hafðu samband við "
+"umsjónaraðila ef þú þarft aðstoð."
 
 msgid "This placeholder's content will be applied wherever it is used."
 msgstr "Efni þessa staðgengils verður notað hvar sem það er notað."
@@ -10978,7 +11070,7 @@ msgstr ""
 "gildisins „Lágmarkstími sem þarf fyrir aflýsingu“"
 
 msgid "Unable to complete plugin activation. Please try again."
-msgstr ""
+msgstr "Ekki tókst að ljúka virkjun pluginsins. Reyndu aftur."
 
 msgid "Unable to deactivate plugin. Please try again later."
 msgstr "Ekki tókst að slökkva á viðbótinni. Reyndu aftur síðar."
@@ -11664,6 +11756,9 @@ msgstr "Þitt nafn"
 
 msgid "Your balance has been recharged."
 msgstr "Inneignin þín hefur verið endurhlaðin."
+
+msgid "Your booking has been canceled."
+msgstr "Bókun þinni hefur verið aflýst."
 
 msgid ""
 "Your booking has been successfully canceled. If you have any questions or "

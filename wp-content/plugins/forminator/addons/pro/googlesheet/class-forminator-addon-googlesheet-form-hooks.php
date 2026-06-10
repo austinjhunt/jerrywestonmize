@@ -126,8 +126,14 @@ class Forminator_Googlesheet_Form_Hooks extends Forminator_Integration_Form_Hook
 			}
 			$form_entry_fields = $keyed_form_entry_fields;
 
-			$print_value = ! empty( $module->settings['print_value'] )
-				? filter_var( $module->settings['print_value'], FILTER_VALIDATE_BOOLEAN ) : false;
+			if ( true === FORMINATOR_ADDON_GOOGLESHEET_SEND_SELECT_VALUES ) {
+				// Send the selected values for choice fields, regardless of the print_value setting.
+				$print_value = true;
+			} else {
+				// Otherwise, it will be based on the print_value setting in the module settings.
+				$print_value = ! empty( $module->settings['print_value'] )
+					? filter_var( $module->settings['print_value'], FILTER_VALIDATE_BOOLEAN ) : false;
+			}
 
 			$raw_data = Forminator_CForm_Front_Action::$prepared_data;
 

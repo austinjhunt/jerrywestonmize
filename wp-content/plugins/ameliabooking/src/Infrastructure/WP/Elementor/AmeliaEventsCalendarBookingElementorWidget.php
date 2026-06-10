@@ -183,14 +183,14 @@ class AmeliaEventsCalendarBookingElementorWidget extends Widget_Base
                 $selected_tag .= '"';
             }
 
-            echo '[ameliaeventscalendarbooking' .
+            echo esc_html('[ameliaeventscalendarbooking' .
                 $trigger .
                 $trigger_type .
                 $in_dialog .
                 $selected_event .
                 $selected_location .
                 $selected_tag .
-                $show_recurring . ']';
+                $show_recurring . ']');
         } else {
             echo '[ameliaeventscalendarbooking]';
         }

@@ -5,7 +5,7 @@ namespace AmeliaBooking\Application\Controller\Payment;
 use AmeliaBooking\Application\Commands\Payment\CalculatePaymentAmountCommand;
 use AmeliaBooking\Application\Controller\Controller;
 use RuntimeException;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class CalculatePaymentAmountController

@@ -875,55 +875,57 @@ function forminator_get_value_from_form_entry( $element_id, ?Forminator_Form_Mod
 }
 
 /**
- * Convert draft entry values to labels for radio/select/checkbox fields using forminator_replace_field_data.
+ * Resolve draft entry display value for select, radio and checkbox fields.
  *
- * @since 1.48.1
+ * @since 1.54.0
  *
- * @param Forminator_Form_Entry_Model $entry       Entry model.
- * @param string                      $element_id  Element ID.
- * @param string                      $field_type  Field type.
- * @param mixed                       $meta_value  Raw meta value from entry.
- * @param string                      $value       Current string value.
+ * @param Forminator_Form_Entry_Model $entry      Entry model.
+ * @param string                      $element_id Element ID (meta key).
+ * @param string                      $field_type Field type.
+ * @param string                      $value      Current display value.
+ * @param Forminator_Form_Model|null  $form       Form model.
  *
- * @return string Converted value or original value.
+ * @return string Label or original value.
  */
-function forminator_maybe_get_draft_field_labels( $entry, $element_id, $field_type, $meta_value, $value ) {
-	// Only process draft entries.
+function forminator_resolve_draft_display_value( $entry, $element_id, $field_type, $value, $form = null ) {
 	if ( 'draft' !== $entry->status ) {
 		return $value;
 	}
 
-	// Supported field types.
-	$supported_fields = array( 'radio', 'select', 'checkbox' );
-	if ( ! in_array( $field_type, $supported_fields, true ) ) {
+	if ( ! in_array( $field_type, array( 'radio', 'select', 'checkbox' ), true ) ) {
 		return $value;
 	}
 
-	// Empty value, nothing to convert.
-	if ( empty( $meta_value ) ) {
+	if ( ! $form ) {
+		$form = Forminator_Form_Model::model()->load( $entry->form_id );
+	}
+	if ( ! $form ) {
 		return $value;
 	}
 
-	// Load the form model.
-	$custom_form = Forminator_Form_Model::model()->load( $entry->form_id );
-	if ( ! $custom_form ) {
+	$print_value = ! empty( $form->settings['print_value'] ) && wp_validate_boolean( $form->settings['print_value'] );
+
+	$raw = $entry->get_meta( $element_id, '' );
+	if ( empty( $raw ) ) {
 		return $value;
 	}
 
-	// Determine whether values (not labels) should be printed.
-	$print_value = ! empty( $custom_form->settings['print_value'] )
-		&& wp_validate_boolean( $custom_form->settings['print_value'] );
+	$data = array( $element_id => $raw );
 
-	if ( $print_value ) {
+	// Include "Other" custom option value if present.
+	$custom_val = $entry->get_meta( 'custom-' . $element_id, '' );
+	if ( '' !== $custom_val ) {
+		$data[ 'custom-' . $element_id ] = $custom_val;
+	}
+
+	// When storing values (not labels), only process if there's a custom option to resolve.
+	if ( $print_value && ! isset( $data[ 'custom-' . $element_id ] ) ) {
 		return $value;
 	}
 
-	// Convert stored values to labels.
-	$data = array(
-		$element_id => $meta_value,
-	);
+	$label = forminator_replace_field_data( $form, $element_id, $data, false, $print_value );
 
-	return forminator_replace_field_data( $custom_form, $element_id, $data, false, false );
+	return '' !== $label ? $label : $value;
 }
 
 /**
@@ -2049,11 +2051,12 @@ function forminator_get_countries_list() {
 		'AO' => esc_html__( 'Angola', 'forminator' ),
 		'AI' => esc_html__( 'Anguilla', 'forminator' ),
 		'AQ' => esc_html__( 'Antarctica', 'forminator' ),
-		'AG' => esc_html__( 'Antigua and Barbuda', 'forminator' ),
+		'AG' => html_entity_decode( esc_html__( 'Antigua & Barbuda', 'forminator' ), ENT_QUOTES ),
 		'AR' => esc_html__( 'Argentina', 'forminator' ),
 		'AM' => esc_html__( 'Armenia', 'forminator' ),
 		'AU' => esc_html__( 'Australia', 'forminator' ),
 		'AW' => esc_html__( 'Aruba', 'forminator' ),
+		'AC' => esc_html__( 'Ascension Island', 'forminator' ),
 		'AT' => esc_html__( 'Austria', 'forminator' ),
 		'AZ' => esc_html__( 'Azerbaijan', 'forminator' ),
 		'BS' => esc_html__( 'Bahamas', 'forminator' ),
@@ -2072,6 +2075,7 @@ function forminator_get_countries_list() {
 		'BV' => esc_html__( 'Bouvet Island', 'forminator' ),
 		'BR' => esc_html__( 'Brazil', 'forminator' ),
 		'IO' => esc_html__( 'British Indian Ocean Territory', 'forminator' ),
+		'VG' => esc_html__( 'British Virgin Islands', 'forminator' ),
 		'BN' => esc_html__( 'Brunei', 'forminator' ),
 		'BG' => esc_html__( 'Bulgaria', 'forminator' ),
 		'BF' => esc_html__( 'Burkina Faso', 'forminator' ),
@@ -2080,11 +2084,12 @@ function forminator_get_countries_list() {
 		'CM' => esc_html__( 'Cameroon', 'forminator' ),
 		'CA' => esc_html__( 'Canada', 'forminator' ),
 		'CV' => esc_html__( 'Cabo Verde', 'forminator' ),
+		'BQ' => esc_html__( 'Caribbean Netherlands', 'forminator' ),
 		'KY' => esc_html__( 'Cayman Islands', 'forminator' ),
 		'CF' => esc_html__( 'Central African Republic', 'forminator' ),
 		'TD' => esc_html__( 'Chad', 'forminator' ),
 		'CL' => esc_html__( 'Chile', 'forminator' ),
-		'CN' => html_entity_decode( esc_html__( 'China, People\'s Republic of', 'forminator' ), ENT_QUOTES ),
+		'CN' => esc_html__( 'China', 'forminator' ),
 		'CX' => esc_html__( 'Christmas Island', 'forminator' ),
 		'CC' => esc_html__( 'Cocos Islands', 'forminator' ),
 		'CO' => esc_html__( 'Colombia', 'forminator' ),
@@ -2098,25 +2103,24 @@ function forminator_get_countries_list() {
 		'CU' => esc_html__( 'Cuba', 'forminator' ),
 		'CW' => esc_html__( 'Curaçao', 'forminator' ),
 		'CY' => esc_html__( 'Cyprus', 'forminator' ),
-		'CZ' => esc_html__( 'Czech Republic', 'forminator' ),
+		'CZ' => esc_html__( 'Czechia', 'forminator' ),
 		'DK' => esc_html__( 'Denmark', 'forminator' ),
 		'DJ' => esc_html__( 'Djibouti', 'forminator' ),
 		'DM' => esc_html__( 'Dominica', 'forminator' ),
 		'DO' => esc_html__( 'Dominican Republic', 'forminator' ),
-		'TL' => esc_html__( 'East Timor', 'forminator' ),
 		'EC' => esc_html__( 'Ecuador', 'forminator' ),
 		'EG' => esc_html__( 'Egypt', 'forminator' ),
 		'SV' => esc_html__( 'El Salvador', 'forminator' ),
 		'GQ' => esc_html__( 'Equatorial Guinea', 'forminator' ),
 		'ER' => esc_html__( 'Eritrea', 'forminator' ),
 		'EE' => esc_html__( 'Estonia', 'forminator' ),
+		'SZ' => esc_html__( 'Eswatini', 'forminator' ),
 		'ET' => esc_html__( 'Ethiopia', 'forminator' ),
 		'FK' => esc_html__( 'Falkland Islands', 'forminator' ),
 		'FO' => esc_html__( 'Faroe Islands', 'forminator' ),
 		'FJ' => esc_html__( 'Fiji', 'forminator' ),
 		'FI' => esc_html__( 'Finland', 'forminator' ),
 		'FR' => esc_html__( 'France', 'forminator' ),
-		'FX' => esc_html__( 'France, Metropolitan', 'forminator' ),
 		'GF' => esc_html__( 'French Guiana', 'forminator' ),
 		'PF' => esc_html__( 'French Polynesia', 'forminator' ),
 		'TF' => esc_html__( 'French South Territories', 'forminator' ),
@@ -2139,7 +2143,7 @@ function forminator_get_countries_list() {
 		'HT' => esc_html__( 'Haiti', 'forminator' ),
 		'HM' => esc_html__( 'Heard Island And Mcdonald Island', 'forminator' ),
 		'HN' => esc_html__( 'Honduras', 'forminator' ),
-		'HK' => esc_html__( 'Hong Kong', 'forminator' ),
+		'HK' => esc_html__( 'Hong Kong SAR China', 'forminator' ),
 		'HU' => esc_html__( 'Hungary', 'forminator' ),
 		'IS' => esc_html__( 'Iceland', 'forminator' ),
 		'IN' => esc_html__( 'India', 'forminator' ),
@@ -2147,18 +2151,16 @@ function forminator_get_countries_list() {
 		'IR' => esc_html__( 'Iran', 'forminator' ),
 		'IQ' => esc_html__( 'Iraq', 'forminator' ),
 		'IE' => esc_html__( 'Ireland', 'forminator' ),
+		'IM' => esc_html__( 'Isle of Man', 'forminator' ),
 		'IL' => esc_html__( 'Israel', 'forminator' ),
 		'IT' => esc_html__( 'Italy', 'forminator' ),
 		'JM' => esc_html__( 'Jamaica', 'forminator' ),
 		'JP' => esc_html__( 'Japan', 'forminator' ),
 		'JE' => esc_html__( 'Jersey', 'forminator' ),
-		'JT' => esc_html__( 'Johnston Island', 'forminator' ),
 		'JO' => esc_html__( 'Jordan', 'forminator' ),
 		'KZ' => esc_html__( 'Kazakhstan', 'forminator' ),
 		'KE' => esc_html__( 'Kenya', 'forminator' ),
 		'KI' => esc_html__( 'Kiribati', 'forminator' ),
-		'KP' => html_entity_decode( esc_html__( 'Korea, Democratic People\'s Republic of', 'forminator' ), ENT_QUOTES ),
-		'KR' => esc_html__( 'Korea, Republic of', 'forminator' ),
 		'XK' => esc_html__( 'Kosovo', 'forminator' ),
 		'KW' => esc_html__( 'Kuwait', 'forminator' ),
 		'KG' => esc_html__( 'Kyrgyzstan', 'forminator' ),
@@ -2171,7 +2173,7 @@ function forminator_get_countries_list() {
 		'LI' => esc_html__( 'Liechtenstein', 'forminator' ),
 		'LT' => esc_html__( 'Lithuania', 'forminator' ),
 		'LU' => esc_html__( 'Luxembourg', 'forminator' ),
-		'MO' => esc_html__( 'Macau', 'forminator' ),
+		'MO' => esc_html__( 'Macao SAR China', 'forminator' ),
 		'MK' => esc_html__( 'North Macedonia', 'forminator' ),
 		'MG' => esc_html__( 'Madagascar', 'forminator' ),
 		'MW' => esc_html__( 'Malawi', 'forminator' ),
@@ -2198,7 +2200,6 @@ function forminator_get_countries_list() {
 		'NR' => esc_html__( 'Nauru', 'forminator' ),
 		'NP' => esc_html__( 'Nepal', 'forminator' ),
 		'NL' => esc_html__( 'Netherlands', 'forminator' ),
-		'AN' => esc_html__( 'Netherlands Antilles', 'forminator' ),
 		'NC' => esc_html__( 'New Caledonia', 'forminator' ),
 		'NZ' => esc_html__( 'New Zealand', 'forminator' ),
 		'NI' => esc_html__( 'Nicaragua', 'forminator' ),
@@ -2206,12 +2207,13 @@ function forminator_get_countries_list() {
 		'NG' => esc_html__( 'Nigeria', 'forminator' ),
 		'NU' => esc_html__( 'Niue', 'forminator' ),
 		'NF' => esc_html__( 'Norfolk Island', 'forminator' ),
+		'KP' => esc_html__( 'North Korea', 'forminator' ),
 		'MP' => esc_html__( 'Northern Mariana Islands', 'forminator' ),
 		'NO' => esc_html__( 'Norway', 'forminator' ),
 		'OM' => esc_html__( 'Oman', 'forminator' ),
 		'PK' => esc_html__( 'Pakistan', 'forminator' ),
 		'PW' => esc_html__( 'Palau', 'forminator' ),
-		'PS' => esc_html__( 'Palestine, State of', 'forminator' ),
+		'PS' => esc_html__( 'Palestinian Territories', 'forminator' ),
 		'PA' => esc_html__( 'Panama', 'forminator' ),
 		'PG' => esc_html__( 'Papua New Guinea', 'forminator' ),
 		'PY' => esc_html__( 'Paraguay', 'forminator' ),
@@ -2222,54 +2224,56 @@ function forminator_get_countries_list() {
 		'PT' => esc_html__( 'Portugal', 'forminator' ),
 		'PR' => esc_html__( 'Puerto Rico', 'forminator' ),
 		'QA' => esc_html__( 'Qatar', 'forminator' ),
-		'RE' => esc_html__( 'Reunion Island', 'forminator' ),
+		'RE' => esc_html__( 'Réunion', 'forminator' ),
 		'RO' => esc_html__( 'Romania', 'forminator' ),
 		'RU' => esc_html__( 'Russia', 'forminator' ),
 		'RW' => esc_html__( 'Rwanda', 'forminator' ),
+		'BL' => esc_html__( 'St. Barthélemy', 'forminator' ),
+		'SH' => esc_html__( 'Saint Helena', 'forminator' ),
 		'KN' => esc_html__( 'Saint Kitts and Nevis', 'forminator' ),
 		'LC' => esc_html__( 'Saint Lucia', 'forminator' ),
+		'MF' => esc_html__( 'St. Martin', 'forminator' ),
+		'PM' => html_entity_decode( esc_html__( 'St. Pierre & Miquelon', 'forminator' ), ENT_QUOTES ),
 		'VC' => esc_html__( 'Saint Vincent and the Grenadines', 'forminator' ),
 		'WS' => esc_html__( 'Samoa', 'forminator' ),
-		'SH' => esc_html__( 'Saint Helena', 'forminator' ),
-		'PM' => html_entity_decode( esc_html__( 'Saint Pierre & Miquelon', 'forminator' ), ENT_QUOTES ),
 		'SM' => esc_html__( 'San Marino', 'forminator' ),
-		'ST' => esc_html__( 'Sao Tome and Principe', 'forminator' ),
+		'ST' => html_entity_decode( esc_html__( 'São Tomé & Príncipe', 'forminator' ), ENT_QUOTES ),
 		'SA' => esc_html__( 'Saudi Arabia', 'forminator' ),
 		'SN' => esc_html__( 'Senegal', 'forminator' ),
 		'RS' => esc_html__( 'Serbia', 'forminator' ),
 		'SC' => esc_html__( 'Seychelles', 'forminator' ),
 		'SL' => esc_html__( 'Sierra Leone', 'forminator' ),
 		'SG' => esc_html__( 'Singapore', 'forminator' ),
-		'MF' => esc_html__( 'Sint Maarten', 'forminator' ),
+		'SX' => esc_html__( 'Sint Maarten', 'forminator' ),
 		'SK' => esc_html__( 'Slovakia', 'forminator' ),
 		'SI' => esc_html__( 'Slovenia', 'forminator' ),
 		'SB' => esc_html__( 'Solomon Islands', 'forminator' ),
 		'SO' => esc_html__( 'Somalia', 'forminator' ),
 		'ZA' => esc_html__( 'South Africa', 'forminator' ),
 		'GS' => esc_html__( 'South Georgia and South Sandwich', 'forminator' ),
+		'KR' => esc_html__( 'South Korea', 'forminator' ),
+		'SS' => esc_html__( 'South Sudan', 'forminator' ),
 		'ES' => esc_html__( 'Spain', 'forminator' ),
 		'LK' => esc_html__( 'Sri Lanka', 'forminator' ),
-		'XX' => esc_html__( 'Stateless Persons', 'forminator' ),
 		'SD' => esc_html__( 'Sudan', 'forminator' ),
-		'SS' => esc_html__( 'Sudan, South', 'forminator' ),
 		'SR' => esc_html__( 'Suriname', 'forminator' ),
 		'SJ' => esc_html__( 'Svalbard and Jan Mayen', 'forminator' ),
-		'SZ' => esc_html__( 'Swaziland', 'forminator' ),
 		'SE' => esc_html__( 'Sweden', 'forminator' ),
 		'CH' => esc_html__( 'Switzerland', 'forminator' ),
 		'SY' => esc_html__( 'Syria', 'forminator' ),
-		'TW' => esc_html__( 'Taiwan, Republic of China', 'forminator' ),
+		'TW' => esc_html__( 'Taiwan', 'forminator' ),
 		'TJ' => esc_html__( 'Tajikistan', 'forminator' ),
 		'TZ' => esc_html__( 'Tanzania', 'forminator' ),
 		'TH' => esc_html__( 'Thailand', 'forminator' ),
+		'TL' => esc_html__( 'Timor-Leste', 'forminator' ),
 		'TG' => esc_html__( 'Togo', 'forminator' ),
 		'TK' => esc_html__( 'Tokelau', 'forminator' ),
 		'TO' => esc_html__( 'Tonga', 'forminator' ),
-		'TT' => esc_html__( 'Trinidad and Tobago', 'forminator' ),
+		'TT' => html_entity_decode( esc_html__( 'Trinidad & Tobago', 'forminator' ), ENT_QUOTES ),
 		'TN' => esc_html__( 'Tunisia', 'forminator' ),
 		'TR' => esc_html__( 'Turkey', 'forminator' ),
 		'TM' => esc_html__( 'Turkmenistan', 'forminator' ),
-		'TC' => esc_html__( 'Turks And Caicos Islands', 'forminator' ),
+		'TC' => html_entity_decode( esc_html__( 'Turks & Caicos Islands', 'forminator' ), ENT_QUOTES ),
 		'TV' => esc_html__( 'Tuvalu', 'forminator' ),
 		'UG' => esc_html__( 'Uganda', 'forminator' ),
 		'UA' => esc_html__( 'Ukraine', 'forminator' ),
@@ -2277,14 +2281,13 @@ function forminator_get_countries_list() {
 		'GB' => esc_html__( 'United Kingdom', 'forminator' ),
 		'UM' => esc_html__( 'US Minor Outlying Islands', 'forminator' ),
 		'US' => esc_html__( 'United States of America (USA)', 'forminator' ),
+		'VI' => esc_html__( 'U.S. Virgin Islands', 'forminator' ),
 		'UY' => esc_html__( 'Uruguay', 'forminator' ),
 		'UZ' => esc_html__( 'Uzbekistan', 'forminator' ),
 		'VU' => esc_html__( 'Vanuatu', 'forminator' ),
 		'VA' => esc_html__( 'Vatican City', 'forminator' ),
 		'VE' => esc_html__( 'Venezuela', 'forminator' ),
 		'VN' => esc_html__( 'Vietnam', 'forminator' ),
-		'VG' => esc_html__( 'Virgin Islands, British', 'forminator' ),
-		'VI' => esc_html__( 'Virgin Islands, U.S.', 'forminator' ),
 		'WF' => esc_html__( 'Wallis And Futuna Islands', 'forminator' ),
 		'EH' => esc_html__( 'Western Sahara', 'forminator' ),
 		'YE' => esc_html__( 'Yemen', 'forminator' ),
@@ -2349,6 +2352,35 @@ function forminator_get_fields_sorted( $sort_attr, $sort_flag = SORT_ASC ) {
  * @since 1.6
  */
 function forminator_get_ext_types() {
+	$forminator_types = forminator_get_ext_types_with_mime();
+
+	foreach ( $forminator_types as $type => $forminator_type ) {
+		$forminator_types[ $type ] = array_keys( $forminator_type );
+	}
+
+	/**
+	 * Filter extensions types of files
+	 *
+	 * @since 1.6
+	 *
+	 * @param array $forminator_types
+	 */
+	$forminator_types = apply_filters( 'forminator_get_ext_types', $forminator_types );
+
+	return $forminator_types;
+}
+
+/**
+ * Get Forminator extension types with MIME type values.
+ *
+ * Returns the raw mapping of extension keys to MIME types, grouped by category,
+ * before array_keys() strips the MIME values.
+ *
+ * @since 1.53
+ *
+ * @return array Category => array( 'ext_key' => 'mime/type', ... ).
+ */
+function forminator_get_ext_types_with_mime() {
 	/**
 	 * - image
 	 * - audio
@@ -2359,7 +2391,7 @@ function forminator_get_ext_types() {
 	 * - Interactive
 	 */
 
-	$forminator_types = array(
+	return array(
 		'image'       => array(
 			// Image formats.
 			'jpg|jpeg|jpe' => 'image/jpeg',
@@ -2371,7 +2403,11 @@ function forminator_get_ext_types() {
 			'psd'          => 'application/octet-stream',
 			'xcf'          => 'application/octet-stream',
 			'heic'         => 'image/heic',
+			'heif'         => 'image/heif',
+			'heics'        => 'image/heic-sequence',
+			'heifs'        => 'image/heif-sequence',
 			'webp'         => 'image/webp',
+			'avif'         => 'image/avif',
 		),
 		'audio'       => array(
 			// Audio formats.
@@ -2476,21 +2512,6 @@ function forminator_get_ext_types() {
 			'sldm'  => 'application/vnd.ms-powerpoint.slide.macroEnabled.12',
 		),
 	);
-
-	foreach ( $forminator_types as $type => $forminator_type ) {
-		$forminator_types[ $type ] = array_keys( $forminator_type );
-	}
-
-	/**
-	 * Filter extensions types of files
-	 *
-	 * @since 1.6
-	 *
-	 * @param array $forminator_types
-	 */
-	$forminator_types = apply_filters( 'forminator_get_ext_types', $forminator_types );
-
-	return $forminator_types;
 }
 
 /**
@@ -2930,7 +2951,7 @@ function forminator_get_entry_field_value( $entry, $mapper, $sub_meta_key = '', 
 		$value = Forminator_Form_Entry_Model::meta_value_to_string( $field_type, $meta_value, $allow_html, $truncate, $field );
 
 		// Handle draft entries for radio/select/checkbox fields in groups.
-		$value = forminator_maybe_get_draft_field_labels( $entry, $sub_meta_key, $field_type, $meta_value, $value );
+		$value = forminator_resolve_draft_display_value( $entry, $sub_meta_key, $field_type, $value );
 	} else {
 		$meta_value = $entry->get_meta( $mapper['meta_key'], '' );
 		$field_keys = array_keys( $entry->meta_data );
@@ -2945,8 +2966,9 @@ function forminator_get_entry_field_value( $entry, $mapper, $sub_meta_key = '', 
 		// meta_key based.
 		if ( ! isset( $mapper['sub_metas'] ) ) {
 			$value = Forminator_Form_Entry_Model::meta_value_to_string( $mapper['type'], $meta_value, $allow_html, $truncate, $mapper['field'] ?? null );
+
 			// Handle draft entries for radio/select/checkbox fields.
-			$value = forminator_maybe_get_draft_field_labels( $entry, $mapper['meta_key'], $mapper['type'], $meta_value, $value );
+			$value = forminator_resolve_draft_display_value( $entry, $mapper['meta_key'], $mapper['type'], $value );
 		} elseif ( empty( $sub_meta_key ) ) {
 				$value = '';
 		} elseif ( isset( $meta_value[ $sub_meta_key ] ) && ! empty( $meta_value[ $sub_meta_key ] ) ) {

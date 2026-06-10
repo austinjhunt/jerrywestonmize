@@ -9,7 +9,7 @@ namespace AmeliaBooking\Application\Controller\Coupon;
 
 use AmeliaBooking\Application\Commands\Coupon\GetValidCouponCommand;
 use AmeliaBooking\Application\Controller\Controller;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class GetValidCouponController

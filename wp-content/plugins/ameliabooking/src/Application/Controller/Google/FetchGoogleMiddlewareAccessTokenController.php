@@ -4,7 +4,7 @@ namespace AmeliaBooking\Application\Controller\Google;
 
 use AmeliaBooking\Application\Commands\Google\FetchGoogleMiddlewareAccessTokenCommand;
 use AmeliaBooking\Application\Controller\Controller;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 class FetchGoogleMiddlewareAccessTokenController extends Controller
 {

@@ -598,7 +598,7 @@ abstract class Forminator_Field {
 		$wp_editor_class = isset( $attr['class'] ) ? $attr['class'] : '';
 
 		if ( $required ) {
-			apply_filters( 'the_editor', array( __CLASS__, 'add_required_wp_editor' ) );
+			add_filter( 'the_editor', array( __CLASS__, 'add_required_wp_editor' ) );
 			$wp_editor_class .= ' do-validate forminator-wp-editor-required';
 		} elseif ( ! empty( $limit ) ) {
 			$wp_editor_class .= ' do-validate';
@@ -1014,9 +1014,6 @@ abstract class Forminator_Field {
 	public function is_valid_entry() {
 		$this->is_valid = empty( $this->validation_message );
 		if ( ! $this->is_valid ) {
-			foreach ( $this->validation_message as $field_name => $error ) {
-				Forminator_CForm_Front_Action::$submit_errors[][ $field_name ] = $error;
-			}
 			return $this->validation_message;
 		}
 
@@ -1243,6 +1240,13 @@ abstract class Forminator_Field {
 				$field_value            = self::forminator_replace_number( $form_field, $field_value );
 				$is_condition_fulfilled = self::is_condition_fulfilled( $field_value, $condition );
 			}
+		} elseif ( stripos( $element_id, 'consent-' ) !== false ) {
+			// Consent fields always submit the canonical value 'checked'. Conditions saved
+			// under a non-English admin locale may store a translated string instead, so
+			// normalize the condition value before comparison.
+			$normalized_condition          = $condition;
+			$normalized_condition['value'] = 'checked';
+			$is_condition_fulfilled        = self::is_condition_fulfilled( $field_value, $normalized_condition );
 		} else {
 			$is_condition_fulfilled = self::is_condition_fulfilled( $field_value, $condition, $form_id );
 		}
@@ -1766,25 +1770,40 @@ abstract class Forminator_Field {
 		}
 
 		$element_id = self::get_property( 'element_id', $field_array );
-		if ( is_array( $field_data ) ) {
-			foreach ( $field_data as $element_id_suffix => $field_datum ) {
-				$element_id                = $element_id . '-' . $element_id_suffix;
-				$element_autofill_settings = self::get_element_autofill_settings( $element_id, $autofill_settings );
-				if ( ! self::element_autofill_is_editable( $element_autofill_settings ) ) {
-					// refill with autofill provider.
-					$field_data[ $element_id_suffix ] = $this->maybe_replace_to_autofill_value( $field_datum, $element_autofill_settings );
+		$is_array   = is_array( $field_data );
+
+		$parts           = explode( '-', $element_id );
+		$base_element_id = implode( '-', array_slice( $parts, 0, 2 ) );
+
+		$targets = array();
+		if ( $is_array ) {
+			$sub_prefix = $base_element_id . '-';
+			foreach ( $autofill_settings as $autofill_element_id => $element_autofill_settings ) {
+				if ( 0 !== strpos( $autofill_element_id, $sub_prefix ) ) {
+					continue;
 				}
+				$targets[ substr( $autofill_element_id, strlen( $sub_prefix ) ) ] = $element_autofill_settings;
 			}
 		} else {
-			$element_autofill_settings = self::get_element_autofill_settings( $element_id, $autofill_settings );
+			$targets[''] = self::get_element_autofill_settings( $base_element_id, $autofill_settings );
+		}
 
-			if ( ! self::element_autofill_is_editable( $element_autofill_settings ) ) {
-				$current_data = $field_data;
-				// refill with autofill provider.
-				$field_data = $this->maybe_replace_to_autofill_value( $field_data, $element_autofill_settings );
-				if ( ! strlen( $field_data ) ) {
-					$field_data = $current_data;
-				}
+		foreach ( $targets as $suffix => $element_autofill_settings ) {
+			if ( self::element_autofill_is_editable( $element_autofill_settings ) ) {
+				continue;
+			}
+
+			$current  = $is_array ? ( isset( $field_data[ $suffix ] ) ? $field_data[ $suffix ] : '' ) : $field_data;
+			$replaced = $this->maybe_replace_to_autofill_value( $current, $element_autofill_settings );
+
+			if ( null === $replaced || ( is_scalar( $replaced ) && '' === (string) $replaced ) ) {
+				continue;
+			}
+
+			if ( $is_array ) {
+				$field_data[ $suffix ] = $replaced;
+			} else {
+				$field_data = $replaced;
 			}
 		}
 
@@ -1818,13 +1837,24 @@ abstract class Forminator_Field {
 			return array();
 		}
 
-		$element_autofill_settings = self::get_element_autofill_settings( $element_id, $autofill_settings );
+		// Strip the trailing group-row suffix (e.g. `address-1-city-2`) to match base autofill keys.
+		$lookup_id = $element_id;
+		if ( ! isset( $autofill_settings[ $lookup_id ] ) ) {
+			$stripped = preg_replace( '/-\d+$/', '', $element_id, 1 );
+			if ( null !== $stripped && isset( $autofill_settings[ $stripped ] ) ) {
+				$lookup_id = $stripped;
+			}
+		}
+
+		$element_autofill_settings = self::get_element_autofill_settings( $lookup_id, $autofill_settings );
 		$value                     = $this->maybe_replace_to_autofill_value( '', $element_autofill_settings );
 
 		// only return value when its autofilled.
 		if ( ! empty( $value ) ) {
 			$markup_attr = array(
-				'value' => $value,
+				'value'        => $value,
+				// Preserved through repeater JS clone so newly added group rows keep the autofill value.
+				'data-default' => $value,
 			);
 			// only disable if value is not empty.
 			if ( ! self::element_autofill_is_editable( $element_autofill_settings ) ) {
@@ -1992,8 +2022,13 @@ abstract class Forminator_Field {
 	 * @return string
 	 */
 	public static function get_calculable_number_format( $field_settings, $value ) {
-		$precision = self::get_calculable_precision( $field_settings );
-		$value     = number_format( floatval( $value ), $precision, '.', '' );
+		// Apply configured decimal precision for fields that define it.
+		$precision_field_types = array( 'number', 'currency', 'calculation' );
+		$field_type            = isset( $field_settings['type'] ) ? $field_settings['type'] : '';
+		if ( in_array( $field_type, $precision_field_types, true ) ) {
+			$precision = self::get_calculable_precision( $field_settings );
+			return number_format( floatval( $value ), $precision, '.', '' );
+		}
 
 		return $value;
 	}
@@ -2243,14 +2278,21 @@ abstract class Forminator_Field {
 	 * Check index and htaccess files inside root directory. And create them if need it.
 	 */
 	public static function check_upload_root_index_file() {
+		global $wp_locale_switcher;
+
+		// Return if $wp_locale_switcher is not ready.
+		if ( ! $wp_locale_switcher ) {
+			return false;
+		}
+
 		$upload_root = forminator_upload_root();
-		if ( is_wp_error( $upload_root ) ) {
+		if ( is_wp_error( $upload_root ) || ! is_dir( $upload_root ) || ! wp_is_writable( $upload_root ) ) {
 			return;
 		}
 		// Make sure it was not called before WP init.
-		if ( ! file_exists( $upload_root . 'index.php' ) && function_exists( 'insert_with_markers' ) ) {
+		if ( function_exists( 'insert_with_markers' ) ) {
 			self::add_index_file( $upload_root );
-			self::add_htaccess_file();
+			self::add_htaccess_file( $upload_root );
 		}
 	}
 
@@ -2262,8 +2304,9 @@ abstract class Forminator_Field {
 	 * @return void
 	 */
 	public static function add_index_file( $dir ) {
-		$dir = untrailingslashit( $dir );
-		if ( ! is_dir( $dir ) || ! wp_is_writable( $dir ) || is_link( $dir ) ) {
+		$dir             = untrailingslashit( $dir );
+		$index_file_path = $dir . '/index.php';
+		if ( is_file( $index_file_path ) || ! is_dir( $dir ) || ! wp_is_writable( $dir ) || is_link( $dir ) ) {
 			return;
 		}
 		$dp = opendir( $dir );
@@ -2277,7 +2320,6 @@ abstract class Forminator_Field {
 
 		global $wp_filesystem;
 		if ( WP_Filesystem() ) {
-			$index_file_path = $dir . '/index.php';
 			// creates an empty index.php file.
 			$wp_filesystem->put_contents( $index_file_path, '', FS_CHMOD_FILE );
 		}
@@ -2310,38 +2352,20 @@ abstract class Forminator_Field {
 		}
 
 		self::check_upload_root_index_file();
-		if ( ! file_exists( forminator_get_upload_path( $form_id ) . 'index.php' ) ) {
-			self::add_index_file( forminator_get_upload_path( $form_id ) );
-		}
-		if ( ! file_exists( $path . 'index.php' ) ) {
-			self::add_index_file( $path );
-		}
+		self::add_index_file( forminator_get_upload_path( $form_id ) );
+		self::add_index_file( $path );
 	}
 
 	/**
 	 * Add htaccess file
+	 *
+	 * @param string $upload_root Upload root.
+	 * @return void
 	 */
-	public static function add_htaccess_file() {
-		global $wp_locale_switcher;
-
-		// Return if $wp_locale_switcher is not ready.
-		if ( ! $wp_locale_switcher ) {
-			return false;
-		}
-
-		$upload_root = forminator_upload_root();
-
-		if ( is_wp_error( $upload_root ) || ! is_dir( $upload_root ) ) {
-			return;
-		}
-
-		if ( ! wp_is_writable( $upload_root ) ) {
-			return;
-		}
-
+	public static function add_htaccess_file( $upload_root ) {
 		$htaccess_file = $upload_root . '.htaccess';
 		if ( file_exists( $htaccess_file ) ) {
-			wp_delete_file( $htaccess_file );
+			return;
 		}
 		$rules = '# Disable parsing of PHP for some server configurations.
 <Files *>
@@ -2506,7 +2530,10 @@ abstract class Forminator_Field {
 				if ( typeof wp !== "undefined" && wp.editor && typeof wp.editor.initialize === "function" ) {
 					wp.editor.initialize("' . esc_attr( $id ) . '", ' . $args . ');
 				} else {
-					 document.getElementById("' . esc_attr( $id ) . '").outerHTML = \'' . $message . '\';
+				 	let textElement = document.getElementById("' . esc_attr( $id ) . '");
+					if( textElement ) {
+						textElement.outerHTML = \'' . $message . '\';
+					}
 				}</script>';
 		} else {
 			$script = '<script>wp.editor.initialize("' . esc_attr( $id ) . '", ' . $args . ');</script>';

@@ -156,6 +156,18 @@
 				self.on_focus_input(e, input);
 			});
 
+			this.$el.on( 'validation:invalid', function() {
+				var validator = self.$el.data( 'validator' );
+				if ( ! validator || ! validator.errorList.length ) {
+					return;
+				}
+				var errorPage = self.get_page_of_input( validator.errorList[0].element );
+				if ( errorPage !== self.step ) {
+					self.go_to( errorPage, true );
+					self.update_buttons();
+				}
+			} );
+
 		},
 
 		/**

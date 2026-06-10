@@ -4,7 +4,7 @@ namespace AmeliaBooking\Application\Controller\User;
 
 use AmeliaBooking\Application\Commands\User\GetWPUsersCommand;
 use AmeliaBooking\Application\Controller\Controller;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class GetWPUsersController
@@ -25,8 +25,8 @@ class GetWPUsersController extends Controller
     protected function instantiateCommand(Request $request, $args)
     {
         $command = new GetWPUsersCommand($args);
-        $command->setField('id', (int)$request->getQueryParam('id'));
-        $command->setField('role', $request->getQueryParam('role'));
+        $command->setField('id', (int)self::getParam($request, 'id'));
+        $command->setField('role', self::getParam($request, 'role'));
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);
 

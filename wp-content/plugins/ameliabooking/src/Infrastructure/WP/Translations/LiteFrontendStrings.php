@@ -64,6 +64,7 @@ class LiteFrontendStrings
         return [
             'add_to_calendar'              => __('Add to Calendar', 'wpamelia'),
             'amount'                       => __('Amount', 'wpamelia'),
+            'and'                          => __('and', 'wpamelia'),
             'all_services'                 => __('All Services', 'wpamelia'),
             'all_locations'                => __('All Locations', 'wpamelia'),
             'no_services_employees'        => __('It seems like there are no employees or services created, or no  employees are assigned to the service, at this moment.'),
@@ -72,6 +73,7 @@ class LiteFrontendStrings
             'add_employees_url'            => __('employees.'),
             'back'                         => __('Back', 'wpamelia'),
             'base_price_colon'             => __('Base Price:', 'wpamelia'),
+            'booking_canceled'             => __('Your booking has been canceled.', 'wpamelia'),
             'booking_completed_approved'   => __('Thank you! Your booking is completed.', 'wpamelia'),
             'bookings_limit_reached'       => __('Maximum bookings reached', 'wpamelia'),
             'cancel'                       => __('Cancel', 'wpamelia'),
@@ -79,6 +81,7 @@ class LiteFrontendStrings
             'capacity_colon'               => __('Capacity:', 'wpamelia'),
             'closed'                       => __('Closed', 'wpamelia'),
             'content_mode_tooltip'         => __('Don\'t use Text mode option if you already have HTML code in the description, since once this option is enabled the existing HTML tags could be lost.', 'wpamelia'),
+            'created_on'                   => __('Created on', 'wpamelia'),
             'enable_google_meet'           => __('Enable Google Meet', 'wpamelia'),
             'enable_microsoft_teams'       => __('Enable Microsoft Teams', 'wpamelia'),
             'full'                         => __('Full', 'wpamelia'),

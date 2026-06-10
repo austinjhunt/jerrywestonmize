@@ -17,6 +17,7 @@ use MailPoet\Entities\SendingQueueEntity;
 use MailPoet\Logging\LoggerFactory;
 use MailPoet\Newsletter\NewslettersRepository;
 use MailPoet\Newsletter\Renderer\EscapeHelper as EHelper;
+use MailPoet\Newsletter\Sending\NewsletterReplayMetadata;
 use MailPoet\Newsletter\Sending\SendingQueuesRepository;
 use MailPoet\NewsletterProcessingException;
 use MailPoet\Util\License\Features\CapabilitiesManager;
@@ -153,7 +154,9 @@ class Renderer {
           $e->getMessage(),
           ['newsletter_id' => $newsletter->getId()]
         );
-        $this->newslettersRepository->setAsCorrupt($newsletter);
+        if (!$sendingQueue || !NewsletterReplayMetadata::isLatestNewsletterReplayMeta($sendingQueue->getMeta())) {
+          $this->newslettersRepository->setAsCorrupt($newsletter);
+        }
         if ($sendingQueue) {
           $this->sendingQueuesRepository->pause($sendingQueue);
         }

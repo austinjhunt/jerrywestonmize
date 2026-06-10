@@ -8,9 +8,37 @@ return array(
  'version' => '2.13.0.0',
  'path' => $vendorDir . '/woocommerce/email-editor/vendor-prefixed/packages/Symfony/Polyfill/Php80/Resources/stubs/Attribute.php'
  ),
+ 'Autoloader' => array(
+ 'version' => '5.0.8',
+ 'path' => $vendorDir . '/automattic/jetpack-autoloader/src/class-autoloader.php'
+ ),
+ 'Autoloader_Handler' => array(
+ 'version' => '5.0.8',
+ 'path' => $vendorDir . '/automattic/jetpack-autoloader/src/class-autoloader-handler.php'
+ ),
+ 'Autoloader_Locator' => array(
+ 'version' => '5.0.8',
+ 'path' => $vendorDir . '/automattic/jetpack-autoloader/src/class-autoloader-locator.php'
+ ),
+ 'Automattic\\Jetpack\\Autoloader\\AutoloadFileWriter' => array(
+ 'version' => '5.0.8',
+ 'path' => $vendorDir . '/automattic/jetpack-autoloader/src/AutoloadFileWriter.php'
+ ),
  'Automattic\\Jetpack\\Autoloader\\AutoloadGenerator' => array(
  'version' => '5.0.8',
  'path' => $vendorDir . '/automattic/jetpack-autoloader/src/AutoloadGenerator.php'
+ ),
+ 'Automattic\\Jetpack\\Autoloader\\AutoloadProcessor' => array(
+ 'version' => '5.0.8',
+ 'path' => $vendorDir . '/automattic/jetpack-autoloader/src/AutoloadProcessor.php'
+ ),
+ 'Automattic\\Jetpack\\Autoloader\\CustomAutoloaderPlugin' => array(
+ 'version' => '5.0.8',
+ 'path' => $vendorDir . '/automattic/jetpack-autoloader/src/CustomAutoloaderPlugin.php'
+ ),
+ 'Automattic\\Jetpack\\Autoloader\\ManifestGenerator' => array(
+ 'version' => '5.0.8',
+ 'path' => $vendorDir . '/automattic/jetpack-autoloader/src/ManifestGenerator.php'
  ),
  'Automattic\\WooCommerce\\EmailEditorVendor\\Pelago\\Emogrifier\\Caching\\SimpleStringCache' => array(
  'version' => '2.13.0.0',
@@ -868,6 +896,50 @@ return array(
  'version' => '2.13.0.0',
  'path' => $vendorDir . '/woocommerce/email-editor/src/Validator/class-validator.php'
  ),
+ 'Container' => array(
+ 'version' => '5.0.8',
+ 'path' => $vendorDir . '/automattic/jetpack-autoloader/src/class-container.php'
+ ),
+ 'Cron\\AbstractField' => array(
+ 'version' => '3.3.3.0',
+ 'path' => $vendorDir . '/dragonmantank/cron-expression/src/Cron/AbstractField.php'
+ ),
+ 'Cron\\CronExpression' => array(
+ 'version' => '3.3.3.0',
+ 'path' => $vendorDir . '/dragonmantank/cron-expression/src/Cron/CronExpression.php'
+ ),
+ 'Cron\\DayOfMonthField' => array(
+ 'version' => '3.3.3.0',
+ 'path' => $vendorDir . '/dragonmantank/cron-expression/src/Cron/DayOfMonthField.php'
+ ),
+ 'Cron\\DayOfWeekField' => array(
+ 'version' => '3.3.3.0',
+ 'path' => $vendorDir . '/dragonmantank/cron-expression/src/Cron/DayOfWeekField.php'
+ ),
+ 'Cron\\FieldFactory' => array(
+ 'version' => '3.3.3.0',
+ 'path' => $vendorDir . '/dragonmantank/cron-expression/src/Cron/FieldFactory.php'
+ ),
+ 'Cron\\FieldFactoryInterface' => array(
+ 'version' => '3.3.3.0',
+ 'path' => $vendorDir . '/dragonmantank/cron-expression/src/Cron/FieldFactoryInterface.php'
+ ),
+ 'Cron\\FieldInterface' => array(
+ 'version' => '3.3.3.0',
+ 'path' => $vendorDir . '/dragonmantank/cron-expression/src/Cron/FieldInterface.php'
+ ),
+ 'Cron\\HoursField' => array(
+ 'version' => '3.3.3.0',
+ 'path' => $vendorDir . '/dragonmantank/cron-expression/src/Cron/HoursField.php'
+ ),
+ 'Cron\\MinutesField' => array(
+ 'version' => '3.3.3.0',
+ 'path' => $vendorDir . '/dragonmantank/cron-expression/src/Cron/MinutesField.php'
+ ),
+ 'Cron\\MonthField' => array(
+ 'version' => '3.3.3.0',
+ 'path' => $vendorDir . '/dragonmantank/cron-expression/src/Cron/MonthField.php'
+ ),
  'EmailEditorVendor_Attribute' => array(
  'version' => '2.13.0.0',
  'path' => $vendorDir . '/woocommerce/email-editor/vendor-prefixed/classes/symfony/polyfill-php80/Resources/stubs/Attribute.php'
@@ -887,6 +959,14 @@ return array(
  'EmailEditorVendor_ValueError' => array(
  'version' => '2.13.0.0',
  'path' => $vendorDir . '/woocommerce/email-editor/vendor-prefixed/classes/symfony/polyfill-php80/Resources/stubs/ValueError.php'
+ ),
+ 'Hook_Manager' => array(
+ 'version' => '5.0.8',
+ 'path' => $vendorDir . '/automattic/jetpack-autoloader/src/class-hook-manager.php'
+ ),
+ 'Latest_Autoloader_Guard' => array(
+ 'version' => '5.0.8',
+ 'path' => $vendorDir . '/automattic/jetpack-autoloader/src/class-latest-autoloader-guard.php'
  ),
  'MailPoetDoctrineProxies\\__CG__\\MailPoet\\Entities\\CustomFieldEntity' => array(
  'version' => 'dev-trunk',
@@ -1027,6 +1107,38 @@ return array(
  'MailPoetGenerated\\FreeCachedContainer' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/generated/FreeCachedContainer.php'
+ ),
+ 'MailPoetTasks\\Release\\ChangelogController' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tasks/release/ChangelogController.php'
+ ),
+ 'MailPoetTasks\\Release\\Changelogger' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tasks/release/Changelogger.php'
+ ),
+ 'MailPoetTasks\\Release\\CircleCiController' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tasks/release/CircleCiController.php'
+ ),
+ 'MailPoetTasks\\Release\\GitHubController' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tasks/release/GitHubController.php'
+ ),
+ 'MailPoetTasks\\Release\\ReleaseVersionController' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tasks/release/ReleaseVersionController.php'
+ ),
+ 'MailPoetTasks\\Release\\SlackNotifier' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tasks/release/SlackNotifier.php'
+ ),
+ 'MailPoetTasks\\Release\\TranslationsController' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tasks/release/TranslationsController.php'
+ ),
+ 'MailPoetTasks\\Release\\VersionHelper' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tasks/release/VersionHelper.php'
  ),
  'MailPoetVendor\\Attribute' => array(
  'version' => 'dev-trunk',
@@ -7316,10 +7428,6 @@ return array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/API/JSON/v1/SendingQueue.php'
  ),
- 'MailPoet\\API\\JSON\\v1\\SendingTaskSubscribers' => array(
- 'version' => 'dev-trunk',
- 'path' => $baseDir . '/lib/API/JSON/v1/SendingTaskSubscribers.php'
- ),
  'MailPoet\\API\\JSON\\v1\\Services' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/API/JSON/v1/Services.php'
@@ -7351,6 +7459,10 @@ return array(
  'MailPoet\\API\\JSON\\v1\\UserFlags' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/API/JSON/v1/UserFlags.php'
+ ),
+ 'MailPoet\\API\\JSON\\v1\\WoocommerceProductVariations' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/API/JSON/v1/WoocommerceProductVariations.php'
  ),
  'MailPoet\\API\\JSON\\v1\\WoocommerceSettings' => array(
  'version' => 'dev-trunk',
@@ -7415,6 +7527,18 @@ return array(
  'MailPoet\\API\\REST\\Response' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/API/REST/Response.php'
+ ),
+ 'MailPoet\\Abilities\\Abilities' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Abilities/Abilities.php'
+ ),
+ 'MailPoet\\Abilities\\WooCommerceAutomationTemplates' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Abilities/WooCommerceAutomationTemplates.php'
+ ),
+ 'MailPoet\\Abilities\\WooCommerceMarketingStatus' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Abilities/WooCommerceMarketingStatus.php'
  ),
  'MailPoet\\AccessDeniedException' => array(
  'version' => 'dev-trunk',
@@ -7736,6 +7860,10 @@ return array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Automation/Engine/Endpoints/Automations/AutomationTemplatesGetEndpoint.php'
  ),
+ 'MailPoet\\Automation\\Engine\\Endpoints\\Automations\\AutomationVersionsGetEndpoint' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Automation/Engine/Endpoints/Automations/AutomationVersionsGetEndpoint.php'
+ ),
  'MailPoet\\Automation\\Engine\\Endpoints\\Automations\\AutomationsCreateFromTemplateEndpoint' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Automation/Engine/Endpoints/Automations/AutomationsCreateFromTemplateEndpoint.php'
@@ -7984,9 +8112,17 @@ return array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Automation/Integrations/Core/Filters/StringFilter.php'
  ),
+ 'MailPoet\\Automation\\Integrations\\MailPoet\\Actions\\AutomationSendEmailSubjectResolver' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Automation/Integrations/MailPoet/Actions/AutomationSendEmailSubjectResolver.php'
+ ),
  'MailPoet\\Automation\\Integrations\\MailPoet\\Actions\\SendEmailAction' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Automation/Integrations/MailPoet/Actions/SendEmailAction.php'
+ ),
+ 'MailPoet\\Automation\\Integrations\\MailPoet\\Actions\\SendLatestNewsletterAction' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Automation/Integrations/MailPoet/Actions/SendLatestNewsletterAction.php'
  ),
  'MailPoet\\Automation\\Integrations\\MailPoet\\Analytics\\Analytics' => array(
  'version' => 'dev-trunk',
@@ -8116,6 +8252,10 @@ return array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Automation/Integrations/MailPoet/Triggers/SomeoneSubscribesTrigger.php'
  ),
+ 'MailPoet\\Automation\\Integrations\\MailPoet\\Triggers\\SomeoneUnsubscribesTrigger' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Automation/Integrations/MailPoet/Triggers/SomeoneUnsubscribesTrigger.php'
+ ),
  'MailPoet\\Automation\\Integrations\\MailPoet\\Triggers\\UserRegistrationTrigger' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Automation/Integrations/MailPoet/Triggers/UserRegistrationTrigger.php'
@@ -8167,6 +8307,14 @@ return array(
  'MailPoet\\Automation\\Integrations\\WooCommerce\\Payloads\\OrderStatusChangePayload' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Automation/Integrations/WooCommerce/Payloads/OrderStatusChangePayload.php'
+ ),
+ 'MailPoet\\Automation\\Integrations\\WooCommerce\\SubjectTransformers\\CustomerSubjectToWordPressUserSubjectTransformer' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Automation/Integrations/WooCommerce/SubjectTransformers/CustomerSubjectToWordPressUserSubjectTransformer.php'
+ ),
+ 'MailPoet\\Automation\\Integrations\\WooCommerce\\SubjectTransformers\\OrderSubjectToWordPressUserSubjectTransformer' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Automation/Integrations/WooCommerce/SubjectTransformers/OrderSubjectToWordPressUserSubjectTransformer.php'
  ),
  'MailPoet\\Automation\\Integrations\\WooCommerce\\SubjectTransformers\\WordPressUserSubjectToWooCommerceCustomerSubjectTransformer' => array(
  'version' => 'dev-trunk',
@@ -8284,6 +8432,10 @@ return array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Cache/TransientCache.php'
  ),
+ 'MailPoet\\Captcha\\BehavioralSignals' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Captcha/BehavioralSignals.php'
+ ),
  'MailPoet\\Captcha\\CaptchaConstants' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Captcha/CaptchaConstants.php'
@@ -8328,6 +8480,18 @@ return array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Captcha/ReCaptchaValidator.php'
  ),
+ 'MailPoet\\Captcha\\TurnstileHooks' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Captcha/TurnstileHooks.php'
+ ),
+ 'MailPoet\\Captcha\\TurnstileRenderer' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Captcha/TurnstileRenderer.php'
+ ),
+ 'MailPoet\\Captcha\\TurnstileValidator' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Captcha/TurnstileValidator.php'
+ ),
  'MailPoet\\Captcha\\Validator\\CaptchaValidator' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Captcha/Validator/CaptchaValidator.php'
@@ -8335,6 +8499,10 @@ return array(
  'MailPoet\\Captcha\\Validator\\RecaptchaValidator' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Captcha/Validator/RecaptchaValidator.php'
+ ),
+ 'MailPoet\\Captcha\\Validator\\TurnstileValidator' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Captcha/Validator/TurnstileValidator.php'
  ),
  'MailPoet\\Captcha\\Validator\\ValidationError' => array(
  'version' => 'dev-trunk',
@@ -8960,6 +9128,10 @@ return array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Cron/Workers/StatsNotifications/Worker.php'
  ),
+ 'MailPoet\\Cron\\Workers\\SubscriberLimitNotificationWorker' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Cron/Workers/SubscriberLimitNotificationWorker.php'
+ ),
  'MailPoet\\Cron\\Workers\\SubscriberLinkTokens' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Cron/Workers/SubscriberLinkTokens.php'
@@ -9240,6 +9412,18 @@ return array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Doctrine/WPDB/Statement.php'
  ),
+ 'MailPoet\\EmailEditor\\Integrations\\MailPoet\\AutomationEmailContextProvider' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/EmailEditor/Integrations/MailPoet/AutomationEmailContextProvider.php'
+ ),
+ 'MailPoet\\EmailEditor\\Integrations\\MailPoet\\AutomationEmailPreviewOrderProvider' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/EmailEditor/Integrations/MailPoet/AutomationEmailPreviewOrderProvider.php'
+ ),
+ 'MailPoet\\EmailEditor\\Integrations\\MailPoet\\BlockEmailContentDetector' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/EmailEditor/Integrations/MailPoet/BlockEmailContentDetector.php'
+ ),
  'MailPoet\\EmailEditor\\Integrations\\MailPoet\\Blocks\\BlockTypesController' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/EmailEditor/Integrations/MailPoet/Blocks/BlockTypesController.php'
@@ -9340,6 +9524,10 @@ return array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/EmailEditor/Integrations/MailPoet/Patterns/Library/AbstractAbandonedCartPattern.php'
  ),
+ 'MailPoet\\EmailEditor\\Integrations\\MailPoet\\Patterns\\Library\\AskForReviewPostPurchasePattern' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/EmailEditor/Integrations/MailPoet/Patterns/Library/AskForReviewPostPurchasePattern.php'
+ ),
  'MailPoet\\EmailEditor\\Integrations\\MailPoet\\Patterns\\Library\\EducationalCampaignPattern' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/EmailEditor/Integrations/MailPoet/Patterns/Library/EducationalCampaignPattern.php'
@@ -9411,6 +9599,10 @@ return array(
  'MailPoet\\EmailEditor\\Integrations\\MailPoet\\PersonalizationTags\\LinksToShortcodesConvertor' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/EmailEditor/Integrations/MailPoet/PersonalizationTags/LinksToShortcodesConvertor.php'
+ ),
+ 'MailPoet\\EmailEditor\\Integrations\\MailPoet\\PersonalizationTags\\OrderReviewUrl' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/EmailEditor/Integrations/MailPoet/PersonalizationTags/OrderReviewUrl.php'
  ),
  'MailPoet\\EmailEditor\\Integrations\\MailPoet\\PersonalizationTags\\Site' => array(
  'version' => 'dev-trunk',
@@ -10024,6 +10216,10 @@ return array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Logging/LogHandler.php'
  ),
+ 'MailPoet\\Logging\\LogListingRepository' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Logging/LogListingRepository.php'
+ ),
  'MailPoet\\Logging\\LogRepository' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Logging/LogRepository.php'
@@ -10035,6 +10231,14 @@ return array(
  'MailPoet\\Logging\\PluginVersionProcessor' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Logging/PluginVersionProcessor.php'
+ ),
+ 'MailPoet\\Logging\\RestApi\\Api' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Logging/RestApi/Api.php'
+ ),
+ 'MailPoet\\Logging\\RestApi\\Endpoints\\LogsListingEndpoint' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Logging/RestApi/Endpoints/LogsListingEndpoint.php'
  ),
  'MailPoet\\Mailer\\Mailer' => array(
  'version' => 'dev-trunk',
@@ -10212,6 +10416,10 @@ return array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Migrations/App/Migration_20260421_155908_App.php'
  ),
+ 'MailPoet\\Migrations\\App\\Migration_20260515_120000_App' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Migrations/App/Migration_20260515_120000_App.php'
+ ),
  'MailPoet\\Migrations\\Db\\DbMigrationTemplate' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Migrator/DbMigrationTemplate.php'
@@ -10320,6 +10528,14 @@ return array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Migrations/Db/Migration_20260430_120000.php'
  ),
+ 'MailPoet\\Migrations\\Db\\Migration_20260504_120000_Db' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Migrations/Db/Migration_20260504_120000_Db.php'
+ ),
+ 'MailPoet\\Migrations\\Db\\Migration_20260514_120000_Db' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Migrations/Db/Migration_20260514_120000_Db.php'
+ ),
  'MailPoet\\Migrator\\AppMigration' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Migrator/AppMigration.php'
@@ -10392,6 +10608,14 @@ return array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Newsletter/BlockPostQuery.php'
  ),
+ 'MailPoet\\Newsletter\\BulkActionController' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Newsletter/BulkActionController.php'
+ ),
+ 'MailPoet\\Newsletter\\BulkActionException' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Newsletter/BulkActionException.php'
+ ),
  'MailPoet\\Newsletter\\DynamicProducts' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Newsletter/DynamicProducts.php'
@@ -10431,6 +10655,18 @@ return array(
  'MailPoet\\Newsletter\\Editor\\Transformer' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Newsletter/Editor/Transformer.php'
+ ),
+ 'MailPoet\\Newsletter\\Embed\\NewsletterEmbedService' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Newsletter/Embed/NewsletterEmbedService.php'
+ ),
+ 'MailPoet\\Newsletter\\Embed\\RestApi\\Endpoints\\NewsletterEmbedEndpoint' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Newsletter/Embed/RestApi/Endpoints/NewsletterEmbedEndpoint.php'
+ ),
+ 'MailPoet\\Newsletter\\Embed\\RestApi\\Endpoints\\NewsletterEmbedSelectorEndpoint' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Newsletter/Embed/RestApi/Endpoints/NewsletterEmbedSelectorEndpoint.php'
  ),
  'MailPoet\\Newsletter\\Links\\Links' => array(
  'version' => 'dev-trunk',
@@ -10580,6 +10816,34 @@ return array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Newsletter/Renderer/StylesHelper.php'
  ),
+ 'MailPoet\\Newsletter\\RestApi\\Api' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Newsletter/RestApi/Api.php'
+ ),
+ 'MailPoet\\Newsletter\\RestApi\\Endpoints\\NewsletterDuplicateEndpoint' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Newsletter/RestApi/Endpoints/NewsletterDuplicateEndpoint.php'
+ ),
+ 'MailPoet\\Newsletter\\RestApi\\Endpoints\\NewsletterStatusEndpoint' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Newsletter/RestApi/Endpoints/NewsletterStatusEndpoint.php'
+ ),
+ 'MailPoet\\Newsletter\\RestApi\\Endpoints\\NewslettersBulkActionEndpoint' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Newsletter/RestApi/Endpoints/NewslettersBulkActionEndpoint.php'
+ ),
+ 'MailPoet\\Newsletter\\RestApi\\Endpoints\\NewslettersListingEndpoint' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Newsletter/RestApi/Endpoints/NewslettersListingEndpoint.php'
+ ),
+ 'MailPoet\\Newsletter\\RestApi\\Endpoints\\SendingStatusListingEndpoint' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Newsletter/RestApi/Endpoints/SendingStatusListingEndpoint.php'
+ ),
+ 'MailPoet\\Newsletter\\RestApi\\Endpoints\\SendingStatusResendEndpoint' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Newsletter/RestApi/Endpoints/SendingStatusResendEndpoint.php'
+ ),
  'MailPoet\\Newsletter\\Scheduler\\AutomaticEmailScheduler' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Newsletter/Scheduler/AutomaticEmailScheduler.php'
@@ -10587,6 +10851,10 @@ return array(
  'MailPoet\\Newsletter\\Scheduler\\AutomationEmailScheduler' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Newsletter/Scheduler/AutomationEmailScheduler.php'
+ ),
+ 'MailPoet\\Newsletter\\Scheduler\\LatestNewsletterScheduler' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Newsletter/Scheduler/LatestNewsletterScheduler.php'
  ),
  'MailPoet\\Newsletter\\Scheduler\\PostNotificationScheduler' => array(
  'version' => 'dev-trunk',
@@ -10608,6 +10876,10 @@ return array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Newsletter/Segment/NewsletterSegmentRepository.php'
  ),
+ 'MailPoet\\Newsletter\\Sending\\NewsletterReplayMetadata' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Newsletter/Sending/NewsletterReplayMetadata.php'
+ ),
  'MailPoet\\Newsletter\\Sending\\ScheduledTaskSubscribersListingRepository' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Newsletter/Sending/ScheduledTaskSubscribersListingRepository.php'
@@ -10627,6 +10899,22 @@ return array(
  'MailPoet\\Newsletter\\Sending\\TimeZoneCampaignScheduler' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Newsletter/Sending/TimeZoneCampaignScheduler.php'
+ ),
+ 'MailPoet\\Newsletter\\Sharing\\PublicEmailController' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Newsletter/Sharing/PublicEmailController.php'
+ ),
+ 'MailPoet\\Newsletter\\Sharing\\PublicEmailRoute' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Newsletter/Sharing/PublicEmailRoute.php'
+ ),
+ 'MailPoet\\Newsletter\\Sharing\\ShareMetadataBuilder' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Newsletter/Sharing/ShareMetadataBuilder.php'
+ ),
+ 'MailPoet\\Newsletter\\Sharing\\ShareVisibility' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Newsletter/Sharing/ShareVisibility.php'
  ),
  'MailPoet\\Newsletter\\Shortcodes\\Categories\\CategoryInterface' => array(
  'version' => 'dev-trunk',
@@ -10676,6 +10964,10 @@ return array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Newsletter/Statistics/WooCommerceRevenue.php'
  ),
+ 'MailPoet\\Newsletter\\StatusController' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Newsletter/StatusController.php'
+ ),
  'MailPoet\\Newsletter\\Url' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Newsletter/Url.php'
@@ -10695,6 +10987,10 @@ return array(
  'MailPoet\\PostEditorBlocks\\MarketingOptinBlock' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/PostEditorBlocks/MarketingOptinBlock.php'
+ ),
+ 'MailPoet\\PostEditorBlocks\\NewsletterBlock' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/PostEditorBlocks/NewsletterBlock.php'
  ),
  'MailPoet\\PostEditorBlocks\\PostEditorBlock' => array(
  'version' => 'dev-trunk',
@@ -10723,6 +11019,10 @@ return array(
  'MailPoet\\Router\\Endpoints\\CronDaemon' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Router/Endpoints/CronDaemon.php'
+ ),
+ 'MailPoet\\Router\\Endpoints\\ExportDownload' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Router/Endpoints/ExportDownload.php'
  ),
  'MailPoet\\Router\\Endpoints\\FormPreview' => array(
  'version' => 'dev-trunk',
@@ -10791,6 +11091,10 @@ return array(
  'MailPoet\\Segments\\DynamicSegments\\Filters\\EmailActionClickAny' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Segments/DynamicSegments/Filters/EmailActionClickAny.php'
+ ),
+ 'MailPoet\\Segments\\DynamicSegments\\Filters\\EmailLinkFilter' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Segments/DynamicSegments/Filters/EmailLinkFilter.php'
  ),
  'MailPoet\\Segments\\DynamicSegments\\Filters\\EmailOpensAbsoluteCountAction' => array(
  'version' => 'dev-trunk',
@@ -10879,6 +11183,10 @@ return array(
  'MailPoet\\Segments\\DynamicSegments\\Filters\\WooCommerceProduct' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Segments/DynamicSegments/Filters/WooCommerceProduct.php'
+ ),
+ 'MailPoet\\Segments\\DynamicSegments\\Filters\\WooCommerceProductVariation' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Segments/DynamicSegments/Filters/WooCommerceProductVariation.php'
  ),
  'MailPoet\\Segments\\DynamicSegments\\Filters\\WooCommercePurchaseDate' => array(
  'version' => 'dev-trunk',
@@ -11136,6 +11444,14 @@ return array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Statistics/UserAgentsRepository.php'
  ),
+ 'MailPoet\\Subscribers\\BulkActionController' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Subscribers/BulkActionController.php'
+ ),
+ 'MailPoet\\Subscribers\\BulkActionException' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Subscribers/BulkActionException.php'
+ ),
  'MailPoet\\Subscribers\\BulkConfirmationEmailResender' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Subscribers/BulkConfirmationEmailResender.php'
@@ -11220,6 +11536,22 @@ return array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Subscribers/RequiredCustomFieldValidator.php'
  ),
+ 'MailPoet\\Subscribers\\RestApi\\Api' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Subscribers/RestApi/Api.php'
+ ),
+ 'MailPoet\\Subscribers\\RestApi\\Endpoints\\SubscriberConfirmationEmailEndpoint' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Subscribers/RestApi/Endpoints/SubscriberConfirmationEmailEndpoint.php'
+ ),
+ 'MailPoet\\Subscribers\\RestApi\\Endpoints\\SubscribersBulkActionEndpoint' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Subscribers/RestApi/Endpoints/SubscribersBulkActionEndpoint.php'
+ ),
+ 'MailPoet\\Subscribers\\RestApi\\Endpoints\\SubscribersListingEndpoint' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Subscribers/RestApi/Endpoints/SubscribersListingEndpoint.php'
+ ),
  'MailPoet\\Subscribers\\Source' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Subscribers/Source.php'
@@ -11243,6 +11575,18 @@ return array(
  'MailPoet\\Subscribers\\SubscriberIPsRepository' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Subscribers/SubscriberIPsRepository.php'
+ ),
+ 'MailPoet\\Subscribers\\SubscriberLimitNotificationEvaluator' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Subscribers/SubscriberLimitNotificationEvaluator.php'
+ ),
+ 'MailPoet\\Subscribers\\SubscriberLimitNotificationMailer' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Subscribers/SubscriberLimitNotificationMailer.php'
+ ),
+ 'MailPoet\\Subscribers\\SubscriberLimitNotificationScheduler' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/lib/Subscribers/SubscriberLimitNotificationScheduler.php'
  ),
  'MailPoet\\Subscribers\\SubscriberListingRepository' => array(
  'version' => 'dev-trunk',
@@ -11363,6 +11707,162 @@ return array(
  'MailPoet\\Tasks\\Subscribers\\BatchIterator' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/Tasks/Subscribers/BatchIterator.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\Automation' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/Automation.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\AutomationRun' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/AutomationRun.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\AutomationRunLog' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/AutomationRunLog.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\CustomField' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/CustomField.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\DynamicSegment' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/DynamicSegment.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\Features' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/Features.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\Form' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/Form.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\Log' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/Log.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\Newsletter' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/Newsletter.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\NewsletterLink' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/NewsletterLink.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\NewsletterOption' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/NewsletterOption.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\NewsletterOptionField' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/NewsletterOptionField.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\NewsletterPost' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/NewsletterPost.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\ScheduledTask' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/ScheduledTask.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\ScheduledTaskSubscriber' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/ScheduledTaskSubscriber.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\Segment' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/Segment.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\SendingQueue' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/SendingQueue.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\Settings' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/Settings.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\StatisticsBounces' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/StatisticsBounces.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\StatisticsClicks' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/StatisticsClicks.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\StatisticsForms' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/StatisticsForms.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\StatisticsNewsletters' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/StatisticsNewsletters.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\StatisticsOpens' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/StatisticsOpens.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\StatisticsUnsubscribes' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/StatisticsUnsubscribes.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\StatisticsWooCommercePurchases' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/StatisticsWooCommercePurchases.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\Subscriber' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/Subscriber.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\SubscriberSegment' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/SubscriberSegment.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\Tag' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/Tag.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\User' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/User.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\UserFlags' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/UserFlags.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\WooCommerceCustomer' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/WooCommerceCustomer.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\WooCommerceMembership' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/WooCommerceMembership.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\WooCommerceOrder' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/WooCommerceOrder.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\WooCommerceProduct' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/WooCommerceProduct.php'
+ ),
+ 'MailPoet\\Test\\DataFactories\\WooCommerceSubscription' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataFactories/WooCommerceSubscription.php'
+ ),
+ 'MailPoet\\Test\\DataGenerator\\DataGenerator' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataGenerator/DataGenerator.php'
+ ),
+ 'MailPoet\\Test\\DataGenerator\\Generators\\Generator' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataGenerator/Generators/Generator.php'
+ ),
+ 'MailPoet\\Test\\DataGenerator\\Generators\\SampleData' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataGenerator/Generators/SampleData.php'
+ ),
+ 'MailPoet\\Test\\DataGenerator\\Generators\\SampleDataConfig' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/tests/DataGenerator/Generators/SampleDataConfig.php'
  ),
  'MailPoet\\Tracy\\ApiPanel\\ApiPanel' => array(
  'version' => 'dev-trunk',
@@ -11772,9 +12272,33 @@ return array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/lib/WooCommerce/WooSystemInfoController.php'
  ),
+ 'Manifest_Reader' => array(
+ 'version' => '5.0.8',
+ 'path' => $vendorDir . '/automattic/jetpack-autoloader/src/class-manifest-reader.php'
+ ),
+ 'PHP_Autoloader' => array(
+ 'version' => '5.0.8',
+ 'path' => $vendorDir . '/automattic/jetpack-autoloader/src/class-php-autoloader.php'
+ ),
+ 'Path_Processor' => array(
+ 'version' => '5.0.8',
+ 'path' => $vendorDir . '/automattic/jetpack-autoloader/src/class-path-processor.php'
+ ),
  'PhpToken' => array(
  'version' => '2.13.0.0',
  'path' => $vendorDir . '/woocommerce/email-editor/vendor-prefixed/packages/Symfony/Polyfill/Php80/Resources/stubs/PhpToken.php'
+ ),
+ 'Plugin_Locator' => array(
+ 'version' => '5.0.8',
+ 'path' => $vendorDir . '/automattic/jetpack-autoloader/src/class-plugin-locator.php'
+ ),
+ 'Plugins_Handler' => array(
+ 'version' => '5.0.8',
+ 'path' => $vendorDir . '/automattic/jetpack-autoloader/src/class-plugins-handler.php'
+ ),
+ 'Shutdown_Handler' => array(
+ 'version' => '5.0.8',
+ 'path' => $vendorDir . '/automattic/jetpack-autoloader/src/class-shutdown-handler.php'
  ),
  'Stringable' => array(
  'version' => '2.13.0.0',
@@ -11787,6 +12311,26 @@ return array(
  'ValueError' => array(
  'version' => '2.13.0.0',
  'path' => $vendorDir . '/woocommerce/email-editor/vendor-prefixed/packages/Symfony/Polyfill/Php80/Resources/stubs/ValueError.php'
+ ),
+ 'Version_Loader' => array(
+ 'version' => '5.0.8',
+ 'path' => $vendorDir . '/automattic/jetpack-autoloader/src/class-version-loader.php'
+ ),
+ 'Version_Selector' => array(
+ 'version' => '5.0.8',
+ 'path' => $vendorDir . '/automattic/jetpack-autoloader/src/class-version-selector.php'
+ ),
+ 'Webmozart\\Assert\\Assert' => array(
+ 'version' => '1.11.0.0',
+ 'path' => $vendorDir . '/webmozart/assert/src/Assert.php'
+ ),
+ 'Webmozart\\Assert\\InvalidArgumentException' => array(
+ 'version' => '1.11.0.0',
+ 'path' => $vendorDir . '/webmozart/assert/src/InvalidArgumentException.php'
+ ),
+ 'Webmozart\\Assert\\Mixin' => array(
+ 'version' => '1.11.0.0',
+ 'path' => $vendorDir . '/webmozart/assert/src/Mixin.php'
  ),
  '__TwigTemplate_02deb84769839d0a6212d921e633c1fa1d1daa6b34177426293099b2197e4112' => array(
  'version' => 'dev-trunk',
@@ -11811,6 +12355,10 @@ return array(
  '__TwigTemplate_09c5e4020e8979b31e252e5ac1bc9836a0273b471026683178b9a266d7ab5372' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/generated/twig/a1/a1eb89b1f26b23fd541827afddae561a0fa6270b2d10b9917b15faab61c18aba.php'
+ ),
+ '__TwigTemplate_0a0464bc24c6a5361dc783179cf979fb047f07bd9a3c1073790aa4402d2ffd3b' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/generated/twig/e9/e96ac2137a462ae8edb3500e63583138990c44a7f86c94a4bdee6f17155b081a.php'
  ),
  '__TwigTemplate_0caa1806b4e6bad50c4bb59fbbdec799771fc97376dbc0dd12d0fe0df7e756ad' => array(
  'version' => 'dev-trunk',
@@ -12291,6 +12839,10 @@ return array(
  '__TwigTemplate_bf1afcdd39b977c640e7d80e1226553f8b3fa42753dc0980108bb10dea17eb4d' => array(
  'version' => 'dev-trunk',
  'path' => $baseDir . '/generated/twig/07/0719eabee9dc6fc55797b0040da567be8003547f5a6db8c10ea35cd2fc6b4326.php'
+ ),
+ '__TwigTemplate_c033fba0b7cbf706f8bf8b2c6a274eeaad1e8f18e136694adafd658b11ce3260' => array(
+ 'version' => 'dev-trunk',
+ 'path' => $baseDir . '/generated/twig/2f/2f40f16b744697b581e55847d2eb87d0a0c4e61e8b7b7016cd585ece1a0c25cd.php'
  ),
  '__TwigTemplate_c260ca698e3584b2cbf2795424a7e23a50fca4519ec42363a4acb3eb996211e7' => array(
  'version' => 'dev-trunk',

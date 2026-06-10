@@ -13,6 +13,7 @@ use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Schedule\BlockTime;
+use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Schedule\DayOffRepository;
@@ -44,11 +45,23 @@ class DeleteBlockTimeCommandHandler extends CommandHandler
 
         $this->checkMandatoryFields($command);
 
+        /** @var AbstractUser $currentUser */
+        $currentUser = $this->container->get('logged.in.user');
+
         /** @var DayOffRepository $dayOffRepository */
         $dayOffRepository = $this->container->get('domain.schedule.dayOff.repository');
 
         /** @var BlockTime $blockTime */
         $blockTime = $dayOffRepository->getBlockTimeById($command->getArg('id'));
+
+        if ($currentUser && $currentUser->getType() === Entities::PROVIDER) {
+            $providerId = $currentUser->getId()->getValue();
+            $blockTimeUserId = $blockTime->getUserId() ? $blockTime->getUserId()->getValue() : null;
+
+            if ($blockTimeUserId === null || (int)$blockTimeUserId !== (int)$providerId) {
+                throw new AccessDeniedException('You are not allowed to delete this block time.');
+            }
+        }
 
         $dayOffRepository->beginTransaction();
 

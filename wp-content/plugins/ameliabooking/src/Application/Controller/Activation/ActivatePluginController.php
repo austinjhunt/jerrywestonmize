@@ -4,7 +4,7 @@ namespace AmeliaBooking\Application\Controller\Activation;
 
 use AmeliaBooking\Application\Commands\Activation\ActivatePluginCommand;
 use AmeliaBooking\Application\Controller\Controller;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class ActivatePluginController

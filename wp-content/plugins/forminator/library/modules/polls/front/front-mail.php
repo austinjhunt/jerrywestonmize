@@ -321,10 +321,11 @@ class Forminator_Poll_Front_Mail extends Forminator_Mail {
 	 * @param Forminator_Poll_Model       $poll Poll Model.
 	 * @param Forminator_Form_Entry_Model $entry Form entry model.
 	 * @param array                       $lead_model Lead model.
+	 * @param string                      $result_slug Result slug.
 	 *
 	 * @return array
 	 */
-	public function get_admin_email_recipients( $setting, $poll = null, $entry = null, $lead_model = array() ) {
+	public function get_admin_email_recipients( $setting, $poll = null, $entry = null, $lead_model = array(), $result_slug = '' ) {
 
 		// use settings from model if applicable.
 		if ( $poll instanceof Forminator_Poll_Model ) {

@@ -210,17 +210,18 @@ abstract class Forminator_Mail {
 	 * @param Forminator_Base_Form_Model  $module Base Form Model.
 	 * @param Forminator_Form_Entry_Model $entry Entry Form Model.
 	 * @param array                       $lead_model Lead Model.
+	 * @param string                      $result_slug Result slug.
 	 *
 	 * @return array
 	 */
-	public function get_admin_email_recipients( $notification, $module = null, $entry = null, $lead_model = array() ) {
+	public function get_admin_email_recipients( $notification, $module = null, $entry = null, $lead_model = array(), $result_slug = '' ) {
 
 		$email      = array();
 		$recipients = array();
 		if ( isset( $notification['email-recipients'] ) && 'routing' === $notification['email-recipients'] ) {
 			if ( ! empty( $notification['routing'] ) ) {
 				foreach ( $notification['routing'] as $routing ) {
-					if ( $this->is_routing( $routing, $module ) ) {
+					if ( $this->is_routing( $routing, $module, $result_slug ) ) {
 						if ( false !== strpos( $routing['email'], ',' ) ) {
 							$recipients = array_merge( array_map( 'trim', explode( ',', $routing['email'] ) ), $recipients );
 						} else {

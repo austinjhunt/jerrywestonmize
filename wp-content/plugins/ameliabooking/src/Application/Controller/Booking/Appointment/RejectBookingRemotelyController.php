@@ -7,7 +7,7 @@ use AmeliaBooking\Application\Commands\Booking\Appointment\UpdateBookingStatusCo
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Controller\Controller;
 use AmeliaBooking\Domain\Events\DomainEventBus;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class RejectBookingRemotelyController
@@ -39,8 +39,8 @@ class RejectBookingRemotelyController extends Controller
     {
         $command     = new RejectBookingRemotelyCommand($args);
         $requestBody = $request->getParsedBody();
-        $command->setField('token', (string)$request->getQueryParam('token', ''));
-        $command->setField('type', (string)$request->getQueryParam('type', ''));
+        $command->setField('token', (string)self::getParam($request, 'token', ''));
+        $command->setField('type', (string)self::getParam($request, 'type', ''));
         $this->setCommandFields($command, $requestBody);
 
         return $command;

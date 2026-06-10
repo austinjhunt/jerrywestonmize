@@ -1,14 +1,14 @@
 <?php
 /**
  * Plugin Name: Forminator
- * Version: 1.53.1
+ * Version: 1.54.0
  * Plugin URI:  https://wpmudev.com/project/forminator/
  * Description: Build powerful, customizable forms with ease using Forminator’s drag-and-drop builder, conditional logic, payment support, real-time analytics, and seamless integrations—no coding needed.
  * Author: WPMU DEV
  * Author URI: https://wpmudev.com
  * Update URI: wordpress.org/plugins/forminator/
  * Requires at least: 6.4
- * Tested up to: 6.9
+ * Tested up to: 7.0
  * Requires PHP: 7.4
  * Text Domain: forminator
  * Domain Path: /languages/
@@ -134,6 +134,7 @@ if ( ! class_exists( 'Forminator' ) ) {
 		public function __construct() {
 			add_action( 'admin_init', array( $this, 'initialize_admin' ) );
 			add_action( 'admin_init', array( $this, 'add_custom_cap' ) );
+			add_action( 'template_redirect', array( $this, 'maybe_remove_cache_bust_query_arg' ) );
 
 			$this->includes();
 			$this->include_vendors();
@@ -197,6 +198,32 @@ if ( ! class_exists( 'Forminator' ) ) {
 			if ( $admin ) {
 				$admin->add_cap( 'manage_forminator', true );
 			}
+		}
+
+		/**
+		 * Remove forminator_cache_bust query arg from frontend URLs.
+		 *
+		 * @since 1.54.0
+		 *
+		 * @return void
+		 */
+		public function maybe_remove_cache_bust_query_arg() {
+			if ( is_admin() || wp_doing_ajax() || wp_is_json_request() ) {
+				return;
+			}
+
+			$cache_bust = Forminator_Core::sanitize_text_field( 'forminator_cache_bust' );
+			if ( empty( $cache_bust ) ) {
+				return;
+			}
+
+			$redirect_url = remove_query_arg( 'forminator_cache_bust' );
+			if ( empty( $redirect_url ) ) {
+				return;
+			}
+
+			wp_safe_redirect( $redirect_url );
+			exit;
 		}
 
 		/**

@@ -2,9 +2,9 @@
 Contributors: WebFactory
 Tags: new window, new tab, external links, nofollow, noopener
 Requires at least: 4.2
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 7.2
-Stable tag: 2.64
+Stable tag: 2.65
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,6 +18,8 @@ Internal links & external links manager: open in new window or tab, control nofo
 
 = Link Scanner - PRO feature =
 Check every single link on your site! See if it's broken or not, if it's redirected, what's the target and rel attribute and what page exactly it's linking to. This feature is a part of the <a href="https://getwplinks.com/">WP Links PRO</a> plugin.
+
+**Having problems with spam, bots, or AI scrapers? Have a look at our <a href="https://wordpress.org/plugins/advanced-google-recaptcha/">free Captcha plugin</a> used on over 200,000 sites.**
 
 = Features =
 * Manage external and internal links
@@ -243,6 +245,10 @@ When filter returns false the plugin settings will not be applied. Can be used w
 See [FAQ](https://wordpress.org/plugins/wp-external-links/faq/) for more info.
 
 == Changelog ==
+= 2.65 =
+ * 2026-05-21
+ * minor fixes
+
 = 2.64 =
  * 2026-03-21
  * PHP 8.5 compatibility
@@ -271,11 +277,11 @@ See [FAQ](https://wordpress.org/plugins/wp-external-links/faq/) for more info.
 = 2.58 =
  * 2023-03-08
  * security fix
- 
+
 = 2.57 =
  * 2022-12-27
  * added double-check on all template include paths
- 
+
 = 2.56 =
  * 2022-11-20
  * security fixes

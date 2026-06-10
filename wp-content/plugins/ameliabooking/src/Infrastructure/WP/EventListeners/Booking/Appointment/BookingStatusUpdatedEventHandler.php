@@ -9,6 +9,7 @@ namespace AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment;
 
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
+use AmeliaBooking\Application\Services\Booking\IcsApplicationService;
 use AmeliaBooking\Application\Services\Integration\ApplicationIntegrationService;
 use AmeliaBooking\Application\Services\Notification\ApplicationNotificationService;
 use AmeliaBooking\Application\Services\WaitingList\WaitingListService;
@@ -69,6 +70,34 @@ class BookingStatusUpdatedEventHandler
 
         /** @var Appointment $appointment */
         $appointment = AppointmentFactory::create($appointmentArray);
+
+        if (
+            $appointment->getStatus()->getValue() === BookingStatus::APPROVED ||
+            $appointment->getStatus()->getValue() === BookingStatus::PENDING
+        ) {
+            /** @var IcsApplicationService $icsService */
+            $icsService = $container->get('application.ics.service');
+
+            foreach ($appointment->getBookings()->getItems() as $customerBooking) {
+                if (
+                    $customerBooking->isChangedStatus() &&
+                    $customerBooking->isChangedStatus()->getValue() &&
+                    (
+                        $customerBooking->getStatus()->getValue() === BookingStatus::APPROVED ||
+                        $customerBooking->getStatus()->getValue() === BookingStatus::PENDING
+                    )
+                ) {
+                    $customerBooking->setIcsFiles(
+                        $icsService->getIcsData(
+                            Entities::APPOINTMENT,
+                            $customerBooking->getId()->getValue(),
+                            [],
+                            true
+                        )
+                    );
+                }
+            }
+        }
 
         $bookingApplicationService->setReservationEntities($appointment);
 

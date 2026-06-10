@@ -4,7 +4,7 @@ namespace AmeliaBooking\Application\Controller\Notification;
 
 use AmeliaBooking\Application\Commands\Notification\GetSMSNotificationsHistoryCommand;
 use AmeliaBooking\Application\Controller\Controller;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class GetSMSNotificationsHistoryController

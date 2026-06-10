@@ -92,7 +92,7 @@ class PaymentCallbackCommandHandler extends CommandHandler
             $redirectLink         = !empty($command->getField('fromPanel')) ? $customerPanelUrl : $redirectLink;
 
             $changeBookingStatus =
-                $paymentLinksSettings && !empty($paymentLinksSettings['changeBookingStatus']) ? $paymentLinksSettings['changeBookingStatus'] :
+                $paymentLinksSettings && isset($paymentLinksSettings['changeBookingStatus']) ? $paymentLinksSettings['changeBookingStatus'] :
                 $settingsDS->getSetting('payments', 'paymentLinks')['changeBookingStatus'];
 
 
@@ -278,12 +278,6 @@ class PaymentCallbackCommandHandler extends CommandHandler
                     }
                 }
             } catch (QueryExecutionException $e) {
-                $paymentRepository->rollback();
-                $result->setResult(CommandResult::RESULT_ERROR);
-                $result->setMessage($e->getMessage());
-
-                return $result;
-            } catch (ContainerException $e) {
                 $paymentRepository->rollback();
                 $result->setResult(CommandResult::RESULT_ERROR);
                 $result->setMessage($e->getMessage());

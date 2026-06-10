@@ -447,10 +447,14 @@ class Forminator_Postdata extends Forminator_Field {
 					0,
 					$media_enabled
 				);
-			} elseif ( ( 'textarea' === $type || 'wp_editor' === $type ) && ( $ajax || $is_preview ) ) {
+			} elseif ( 'textarea' === $type || ( 'wp_editor' === $type && ( $ajax || $is_preview ) ) ) {
 
 				if ( ! empty( $draft_value ) ) {
 					$field_markup['content'] = $draft_value;
+				}
+
+				if ( 'wp_editor' === $type && $required ) {
+					$field_markup['class'] .= ' do-validate';
 				}
 
 				$html .= self::create_textarea(

@@ -2,8 +2,8 @@
 Contributors: WPMUDEV
 Tags: contact form, custom form, forms, payment form, WordPress form plugin
 Requires at least: 6.4
-Tested up to: 6.9
-Stable tag: 1.53.0	
+Tested up to: 7.0
+Stable tag: 1.54
 Requires PHP: 7.4
 License: GPL v3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -231,6 +231,60 @@ We take plugin security incredibly seriously; if you have a bug or vulnerability
 
 == Changelog ==
 
+
+= 1.54.0 ( 2026-05-20 ) =
+
+- Enhancement: Improve compatibility with WP 7.0
+- Enhancement: Support multiple Webhook integrations in a form
+- Enhancement: Improve Autofill based on current user data
+- Enhancement: Improve monthly average calculation in Reports
+- Enhancement: Add show/hide password toggle
+- Enhancement: Improve compatibility with Oxygen builder
+- Enhancement: Update Bunny fonts list
+- Enhancement: Add ability to copy and email draft entry links on Submissions page
+- Enhancement: Support .avif, .heif, .heics, .heifs file types in Upload fields
+- Enhancement: Simplified some country labels for better UX in Address fields
+- Enhancement: Remove default maximum value from Number and Currency fields
+- Enhancement: Support default date settings for all Date picker types
+- Enhancement: Reduce disk access load on server
+- Fix: Contact Form 7 File upload fields import
+- Fix: Login form reload issue with browser cache
+- Fix: Google Pay is incorrectly showing 0 for subscriptions
+- Fix: Conflict with Geolocation add-on and Turnstile
+- Fix: Sending option labels instead of values to Google Sheets integration
+- Fix: Payment Intent ID is not valid issue
+- Fix: reCAPTCHA js errors
+- Fix: Legacy Javascript usage
+- Fix: Border radius for dropdown options
+- Fix: Issue with special characters in the Radio field options
+- Fix: Upload field inline validation for draft entries
+- Fix: Issue with user meta mapping on Registration form
+- Fix: Incorrect repeated items calculations in draft entries
+- Fix: Select dropdown not working on 3rd-party popups
+- Fix: Empty Quiz answers in CSV
+- Fix: Inline validation not working for Post Field > Content subfield
+- Fix: Failed submissions due to forbidden MIME types are stored
+- Fix: Pagination steps labels overlapping
+- Fix: Signature field placeholder disappears
+- Fix: Signature field on Preview
+- Fix: Quiz cannot be saved when answer is '0'
+- Fix: Personality Quiz conditions inside Email Routing
+- Fix: Form submission requires double-click due to reCAPTCHA on Divi theme
+- Fix: Incorrect active forms count
+- Fix: File upload field view in Basic style
+- Fix: Quiz description alignment
+- Fix: PayPal payment option briefly shows up on form submission
+- Fix: Webhook fails to trigger due to Consent field condition value localization
+- Fix: Rounding in Calculation fields
+- Fix: Query parameter not working for Prefix options in Name fields
+- Fix: Polls can be published without answers
+
+
+= 1.53.2 ( 2026-05-11 ) =
+
+- Fix: Security improvements
+
+
 = 1.53.1 ( 2026-04-21 ) =
 
 - Enhancement: Improve Contact Form 7 import
@@ -418,47 +472,6 @@ We take plugin security incredibly seriously; if you have a bug or vulnerability
 - Fix: Some Email notification conditions aren't displayed for Personality Quizzes
 - Fix: Name prefix is not translated on Submissions page
 - Fix: Calculation field causes Google PSI issue
-
-
-= 1.49.2 ( 2025-12-18 ) =
-
-- Fix: Security improvements
-
-
-= 1.49.1 ( 2025-12-12 ) =
-
-- Miscellaneous improvements
-
-
-= 1.49.0 ( 2025-01-12 ) =
-
-- Enhancement: Add Instant Preview
-- Enhancement: Add the ability to insert new fields at any location in the Form Editor
-- Enhancement: Update the Status Bar in the Editor
-- Enhancement: Update the Editor sidebar
-- Enhancement: Update Appearance settings
-- Enhancement: Remove other admin notices in the Editor
-- Enhancement: Show a success notification after creating an Appearance Preset
-- Enhancement: Show free templates without errors when the Hub has issues
-- Enhancement: Include information about using Cloud Templates in the Import and Export modals
-- Enhancement: Remove the file name format from the PDF title
-- Enhancement: Add a survey to collect user feedback
-- Fix: Stripe notice appears in logs when a subscription payment requiring additional steps is submitted
-- Fix: PayPal field throws an error when the amount is greater than 1000 in Japanese Yen
-- Fix: Visibility Conditions missing on the Email Notification tab for Quizzes
-- Fix: Some hidden fields trigger accessibility issues
-- Fix: Export adds a <br> tag when multiple checkbox values are selected
-- Fix: Active submissions count in form stats shows all submission types when clicked
-- Fix: Incomplete submissions appear in the stats graph on the forms listing page
-- Fix: Removing an image in the Upload field doesn't toggle visibility conditions
-- Fix: Notices appear when using Number and Calculation fields in a form
-- Fix: Issue with required Radio fields that have no options
-- Fix: Fatal error when using the {signature-1} placeholder in PDFs
-- Fix: Calculations not showing the slider value when it's not a whole number
-- Fix: Sending multiple options from Checkbox and Select fields to HubSpot
-- Fix: Fatal error on the Add-ons page when the Add-ons list from the Dashboard plugin is not synced due to a network issue
-- Fix: Retention description for the '0' case
-- Fix: Highlighting the parent block when selecting the child element in Appearance settings
 
 
 **Full changelog can be found here – [Forminator changelog](https://wpmudev.com/project/forminator-pro/#changelog_all?utm_source=wordpress.org&utm_medium=readme&utm_campaign=forminator-readme&utm_content=wpmu_dev_changelog_link).**

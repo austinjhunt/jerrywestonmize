@@ -6,7 +6,6 @@ use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Location\AbstractCurrentLocation;
-use AmeliaBooking\Application\Services\Notification\AbstractWhatsAppNotificationService;
 use AmeliaBooking\Application\Services\Stash\StashApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\ForbiddenFileUploadException;
@@ -16,7 +15,10 @@ use AmeliaBooking\Domain\Services\Api\BasicApiService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Services\Apple\AbstractAppleCalendarService;
 use AmeliaBooking\Infrastructure\Services\LessonSpace\AbstractLessonSpaceService;
+use AmeliaBooking\Infrastructure\Services\Outlook\OutlookCredentialsValidatorService;
 use AmeliaBooking\Infrastructure\WP\Integrations\WooCommerce\WooCommerceService;
+use Melograno\UsageTracker\Collectors\Plugin\AmeliaCollector;
+use Melograno\UsageTracker\Core\UsageTracker;
 use Exception;
 use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
@@ -115,10 +117,17 @@ class UpdateSettingsCommandHandler extends CommandHandler
 
             unset($outlookSettings['token']);
 
-            $settingsFields['outlookCalendar'] = array_merge(
-                $settingsService->getCategorySettings('outlookCalendar'),
-                $outlookSettings
+            $savedOutlookSettings = $settingsService->getCategorySettings('outlookCalendar');
+            $validateResult          = OutlookCredentialsValidatorService::validateCredentials(
+                $outlookSettings,
+                $savedOutlookSettings
             );
+
+            if ($validateResult instanceof CommandResult) {
+                return $validateResult;
+            }
+
+            $settingsFields['outlookCalendar'] = $validateResult;
         }
 
         if ($command->getField('providerBadges') !== null) {
@@ -280,6 +289,10 @@ class UpdateSettingsCommandHandler extends CommandHandler
             $settingsFields['customizedData'] = $customizedData;
         }
 
+        if (isset($settingsFields['general'])) {
+            UsageTracker::updateSettings(new AmeliaCollector(), $settingsFields['general']);
+        }
+
         $settingsFields = apply_filters('amelia_before_settings_updated_filter', $settingsFields);
 
         do_action('amelia_before_settings_updated', $settingsFields);
@@ -289,6 +302,8 @@ class UpdateSettingsCommandHandler extends CommandHandler
         $settings = $settingsService->getAllSettingsCategorized();
         $settings['general']['phoneDefaultCountryCode'] = $settings['general']['phoneDefaultCountryCode'] === 'auto' ?
             $locationService->getCurrentLocationCountryIso($settings['general']['ipLocateApiKey']) : $settings['general']['phoneDefaultCountryCode'];
+
+        $settings['general'] = array_merge($settings['general'], UsageTracker::getSettings(new AmeliaCollector()));
 
         do_action('amelia_after_settings_updated', $settingsFields);
 

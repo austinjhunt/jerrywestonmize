@@ -7940,6 +7940,8 @@ img {
 
 .h-hamburger-button {
   display: inline-block; }
+  .h-hamburger-button .h-icon-svg svg {
+    display: inline; }
 
 ul.colibri-menu.bordered-active-item > li {
   position: relative; }

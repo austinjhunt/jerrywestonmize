@@ -99,7 +99,6 @@ class Forminator_Currency extends Forminator_Field {
 			array(
 				'calculations' => 'true',
 				'limit_min'    => 1,
-				'limit_max'    => 150,
 				'currency'     => 'USD',
 				'field_label'  => esc_html__( 'Currency', 'forminator' ),
 			)

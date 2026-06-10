@@ -9,7 +9,9 @@ use MailPoet\Entities\NewsletterEntity;
 use MailPoet\Entities\SendingQueueEntity;
 use MailPoet\Entities\SubscriberEntity;
 use MailPoet\Form\Widget;
+use MailPoet\Newsletter\Embed\NewsletterEmbedService;
 use MailPoet\Newsletter\NewslettersRepository;
+use MailPoet\Newsletter\Sharing\ShareVisibility;
 use MailPoet\Newsletter\Shortcodes\Categories\Date;
 use MailPoet\Newsletter\Shortcodes\Categories\Link;
 use MailPoet\Newsletter\Shortcodes\Categories\Newsletter;
@@ -24,6 +26,8 @@ use MailPoet\WP\Functions as WPFunctions;
 use MailPoetVendor\Carbon\CarbonImmutable;
 
 class Shortcodes {
+  const DEFAULT_ARCHIVE_LIMIT = 100;
+
   /** @var Pages */
   private $subscriptionPages;
 
@@ -42,6 +46,9 @@ class Shortcodes {
   /** @var NewslettersRepository */
   private $newslettersRepository;
 
+  /** @var ShareVisibility */
+  private $shareVisibility;
+
   /** @var Date */
   private $dateCategory;
 
@@ -57,6 +64,9 @@ class Shortcodes {
   /** @var Site */
   private $siteCategory;
 
+  /** @var NewsletterEmbedService */
+  private $newsletterEmbedService;
+
   public function __construct(
     Pages $subscriptionPages,
     WPFunctions $wp,
@@ -64,11 +74,13 @@ class Shortcodes {
     SubscribersRepository $subscribersRepository,
     NewsletterUrl $newsletterUrl,
     NewslettersRepository $newslettersRepository,
+    ShareVisibility $shareVisibility,
     Date $dateCategory,
     Link $linkCategory,
     Newsletter $newsletterCategory,
     SubscriberCategory $subscriberCategory,
-    Site $siteCategory
+    Site $siteCategory,
+    NewsletterEmbedService $newsletterEmbedService
   ) {
     $this->subscriptionPages = $subscriptionPages;
     $this->wp = $wp;
@@ -76,11 +88,13 @@ class Shortcodes {
     $this->subscribersRepository = $subscribersRepository;
     $this->newsletterUrl = $newsletterUrl;
     $this->newslettersRepository = $newslettersRepository;
+    $this->shareVisibility = $shareVisibility;
     $this->dateCategory = $dateCategory;
     $this->linkCategory = $linkCategory;
     $this->newsletterCategory = $newsletterCategory;
     $this->subscriberCategory = $subscriberCategory;
     $this->siteCategory = $siteCategory;
+    $this->newsletterEmbedService = $newsletterEmbedService;
   }
 
   public function init() {
@@ -99,6 +113,9 @@ class Shortcodes {
     $this->wp->addShortcode('mailpoet_archive', [
       $this, 'getArchive',
     ]);
+    $this->wp->addShortcode('mailpoet_newsletter', [
+      $this, 'getNewsletterEmbed',
+    ]);
 
     $this->wp->addFilter('mailpoet_archive_email_processed_date', [
       $this, 'renderArchiveDate',
@@ -111,6 +128,22 @@ class Shortcodes {
     $this->subscriptionPages->init();
     // initialize subscription management shortcodes
     $this->subscriptionPages->initShortcodes();
+  }
+
+  public function getNewsletterEmbed($params = []): string {
+    if (!is_array($params)) {
+      $params = [];
+    }
+
+    return $this->newsletterEmbedService->render([
+      'newsletterId' => $params['id'] ?? null,
+      'height' => $params['height'] ?? null,
+      'width' => $params['width'] ?? null,
+      'showFallbackLink' => $params['show_fallback_link'] ?? true,
+      'fallbackLinkAlignment' => $params['fallback_link_alignment'] ?? 'center',
+      'iframeAlignment' => $params['iframe_alignment'] ?? 'center',
+      'showEmailBackground' => $params['show_email_background'] ?? true,
+    ]);
   }
 
   public function formWidget($params = []) {
@@ -188,7 +221,7 @@ class Shortcodes {
       'endDate' => null,
       'segmentIds' => [],
       'subjectContains' => '',
-      'limit' => null,
+      'limit' => self::DEFAULT_ARCHIVE_LIMIT,
     ];
 
     if (!is_array($params)) {
@@ -254,7 +287,6 @@ class Shortcodes {
       $subscriber = new SubscriberEntity();
     }
 
-    $previewUrl = $this->newsletterUrl->getViewInBrowserUrl($newsletter, $subscriber, $queue);
     /**
      * An ugly workaround to make sure state is not shared via NewsletterShortcodes service
      * This should be replaced with injected service when state is removed from this service
@@ -273,9 +305,18 @@ class Shortcodes {
 
     $shortcodeProcessor->setSubscriber($subscriber);
     $shortcodeProcessor->setQueue($queue);
-    return '<a href="' . esc_attr($previewUrl) . '" target="_blank" title="'
-      . esc_attr(__('Preview in a new tab', 'mailpoet')) . '">'
-      . esc_attr((string)$shortcodeProcessor->replace($queue ? $queue->getNewsletterRenderedSubject() : '')) .
+    $subject = (string)$shortcodeProcessor->replace($queue ? $queue->getNewsletterRenderedSubject() : '');
+    if ($newsletter->getType() === NewsletterEntity::TYPE_STANDARD && $this->shareVisibility->canShare($newsletter)) {
+      $previewUrl = $this->newsletterUrl->getPublicShareUrl($newsletter);
+      $linkTitle = __('Read in a new tab', 'mailpoet');
+    } else {
+      $previewUrl = $this->newsletterUrl->getViewInBrowserUrl($newsletter, $subscriber, $queue);
+      $linkTitle = __('Preview in a new tab', 'mailpoet');
+    }
+
+    return '<a href="' . $this->wp->escUrl($previewUrl) . '" target="_blank" rel="noopener noreferrer" title="'
+      . $this->wp->escAttr($linkTitle) . '">'
+      . $this->wp->escHtml($subject) .
       '</a>';
   }
 }

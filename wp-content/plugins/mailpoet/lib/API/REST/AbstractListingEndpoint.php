@@ -56,7 +56,7 @@ abstract class AbstractListingEndpoint extends Endpoint {
     $pages = $count === 0 ? 0 : (int)ceil($count / max(1, $perPage));
 
     return new Response([
-      'items' => $this->buildItems($rows),
+      'items' => $this->buildItems($rows, $definition),
       'meta' => [
         'count' => $count,
         'pages' => $pages,
@@ -84,9 +84,12 @@ abstract class AbstractListingEndpoint extends Endpoint {
 
   /**
    * @param mixed[] $rows Rows returned by {@see ListingRepository::getData()}.
+   * @param ListingDefinition $definition Parsed request — exposed so subclasses
+   *   can branch on filter/group when shaping items without stashing per-request
+   *   state on the (shared) endpoint instance.
    * @return array<int, array<string, mixed>> Items ready to be serialized.
    */
-  abstract protected function buildItems(array $rows): array;
+  abstract protected function buildItems(array $rows, ListingDefinition $definition): array;
 
   protected function getDefaultSortBy(): string {
     return 'id';
@@ -113,6 +116,19 @@ abstract class AbstractListingEndpoint extends Endpoint {
     return [];
   }
 
+  /**
+   * Subclasses may override to derive the listing definition's free-form
+   * `params` array from the request (e.g. a `?type=standard` query arg that
+   * routes to the same underlying repository). The default reuses
+   * {@see getDefaultParameters()} so callers without per-request params keep
+   * the existing behavior.
+   *
+   * @return array<string, mixed>
+   */
+  protected function getRequestParameters(Request $request): array {
+    return $this->getDefaultParameters();
+  }
+
   private function buildDefinition(Request $request): ListingDefinition {
     $perPageParam = $request->getParam('per_page') ?? $request->getParam('limit');
     $perPage = is_numeric($perPageParam)
@@ -129,7 +145,7 @@ abstract class AbstractListingEndpoint extends Endpoint {
     $sortBy = is_string($orderByParam) && $orderByParam !== '' ? $orderByParam : $this->getDefaultSortBy();
 
     $orderParam = $request->getParam('order') ?? $request->getParam('sort_order');
-    $sortOrder = is_string($orderParam) ? strtolower($orderParam) : $this->getDefaultSortOrder();
+    $sortOrder = is_string($orderParam) && $orderParam !== '' ? strtolower($orderParam) : $this->getDefaultSortOrder();
 
     $searchParam = $request->getParam('search');
     $search = is_string($searchParam) ? $searchParam : null;
@@ -148,7 +164,7 @@ abstract class AbstractListingEndpoint extends Endpoint {
       'search' => $search,
       'group' => $group,
       'filter' => $filters,
-      'params' => $this->getDefaultParameters(),
+      'params' => $this->getRequestParameters($request),
     ]);
   }
 }

@@ -31,7 +31,7 @@ class Regenerate
 		$theme_name = wp_get_theme()->get('Name');
 		if (Regenerate::getGeneratorCallback() === "site_imported_notice") {
 ?>
-			<div id="colibri_site_imported_notice" class="notice notice-success">
+			<div id="colibri_site_imported_notice" class="colibri-notice notice notice-success">
 				<style>
 					#colibri_site_imported_notice {
 						border-left-color: #2787c1;

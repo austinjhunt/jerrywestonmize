@@ -7,6 +7,7 @@ if (!defined('ABSPATH')) exit;
 
 use Automattic\WooCommerce\EmailEditor\Email_Editor_Container;
 use Automattic\WooCommerce\EmailEditor\Engine\Dependency_Check;
+use MailPoet\AdminPages\AssetsController;
 use MailPoet\AdminPages\PageRenderer;
 use MailPoet\AutomaticEmails\AutomaticEmails;
 use MailPoet\Config\Env;
@@ -31,6 +32,8 @@ use MailPoet\WP\DateTime;
 use MailPoet\WP\Functions as WPFunctions;
 
 class Newsletters {
+  private AssetsController $assetsController;
+
   private PageRenderer $pageRenderer;
 
   private PageLimit $listingPageLimit;
@@ -66,6 +69,7 @@ class Newsletters {
   private CapabilitiesManager $capabilitiesManager;
 
   public function __construct(
+    AssetsController $assetsController,
     PageRenderer $pageRenderer,
     PageLimit $listingPageLimit,
     WPFunctions $wp,
@@ -83,6 +87,7 @@ class Newsletters {
     DependencyNotice $dependencyNotice,
     CapabilitiesManager $capabilitiesManager
   ) {
+    $this->assetsController = $assetsController;
     $this->pageRenderer = $pageRenderer;
     $this->listingPageLimit = $listingPageLimit;
     $this->wp = $wp;
@@ -104,6 +109,8 @@ class Newsletters {
 
   public function render() {
     global $wp_roles; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+
+    $this->assetsController->setupDataViewsDependencies();
 
     $data = [];
 
@@ -141,6 +148,10 @@ class Newsletters {
     $data['woocommerce_transactional_email_id'] = $this->settings->get(TransactionalEmails::SETTING_EMAIL_ID);
     $detailedAnalyticsCapability = $this->capabilitiesManager->getCapability('detailedAnalytics');
     $data['display_detailed_stats'] = isset($detailedAnalyticsCapability) && !$detailedAnalyticsCapability->isRestricted;
+    $data['api'] = [
+      'root' => rtrim($this->wp->escUrlRaw($this->wp->restUrl()), '/'),
+      'nonce' => $this->wp->wpCreateNonce('wp_rest'),
+    ];
     $data['newsletters_templates_recently_sent_count'] = $this->newsletterTemplatesRepository->getRecentlySentCount();
 
     $data['product_categories'] = $this->wpPostListLoader->getWooCommerceCategories();

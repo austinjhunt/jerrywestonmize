@@ -164,7 +164,9 @@ class EmailNotificationService extends AbstractNotificationService
         $sendIcs        = $settingsService->getSetting('ics', 'sendIcsAttachment');
         $sendIcsPending = $settingsService->getSetting('ics', 'sendIcsAttachmentPending');
 
-        $bookingStatus = $bookingKey ? $appointmentArray['bookings'][$bookingKey]['status'] : $appointmentArray['status'];
+        $bookingStatus = $bookingKey !== null && isset($appointmentArray['bookings'][$bookingKey]['status'])
+            ? $appointmentArray['bookings'][$bookingKey]['status']
+            : $appointmentArray['status'];
 
         if (!empty($data['icsFiles'])) {
             $icsFiles = ($sendIcs && $bookingStatus === BookingStatus::APPROVED || $sendIcsPending && $bookingStatus === BookingStatus::PENDING)

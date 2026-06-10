@@ -120,17 +120,26 @@ class BookingEditedEventHandler
             }
 
 
-            $emailNotificationService->sendCustomerBookingNotification($appointment, $booking, $sendInvoice);
-            $emailNotificationService->sendProviderBookingNotification($appointment, $booking);
+            $bookingForNotification = $booking;
+            if (
+                $appointment['type'] === Entities::EVENT &&
+                $booking['status'] === BookingStatus::CANCELED &&
+                $appointment['status'] === BookingStatus::APPROVED
+            ) {
+                $bookingForNotification['status'] = BookingStatus::REJECTED;
+            }
+
+            $emailNotificationService->sendCustomerBookingNotification($appointment, $bookingForNotification, $sendInvoice);
+            $emailNotificationService->sendProviderBookingNotification($appointment, $bookingForNotification);
 
             if ($settingsService->getSetting('notifications', 'smsSignedIn') === true) {
-                $smsNotificationService->sendCustomerBookingNotification($appointment, $booking);
-                $smsNotificationService->sendProviderBookingNotification($appointment, $booking);
+                $smsNotificationService->sendCustomerBookingNotification($appointment, $bookingForNotification);
+                $smsNotificationService->sendProviderBookingNotification($appointment, $bookingForNotification);
             }
 
             if ($whatsAppNotificationService->checkRequiredFields()) {
-                $whatsAppNotificationService->sendCustomerBookingNotification($appointment, $booking);
-                $whatsAppNotificationService->sendProviderBookingNotification($appointment, $booking);
+                $whatsAppNotificationService->sendCustomerBookingNotification($appointment, $bookingForNotification);
+                $whatsAppNotificationService->sendProviderBookingNotification($appointment, $bookingForNotification);
             }
 
             if ($booking['status'] === BookingStatus::CANCELED) {

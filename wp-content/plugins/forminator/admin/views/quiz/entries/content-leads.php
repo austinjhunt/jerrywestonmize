@@ -33,13 +33,17 @@ foreach ( $this->entries_iterator() as $entries ) {
 
 				echo '<td>';
 
-					echo esc_html( $summary_item['value'] );
+					echo '<div class="forminator-submissions-column-content">';
+
+					echo '<div class="forminator-submissions-column-ellipsis">' . esc_html( wp_strip_all_tags( $summary_item['value'] ) ) . '</div>';
 
 					echo '<span class="sui-accordion-open-indicator">';
 
 					echo '<span class="sui-icon-chevron-down"></span>';
 
 					echo '</span>';
+
+					echo '</div>';
 
 				echo '</td>';
 
@@ -69,7 +73,7 @@ foreach ( $this->entries_iterator() as $entries ) {
 
 				echo '<td>';
 
-					echo esc_html( $summary_item['value'] );
+					echo '<div class="forminator-submissions-column-ellipsis">' . esc_html( $summary_item['value'] ) . '</div>';
 
 					echo '<span class="sui-accordion-open-indicator fui-mobile-only" aria-hidden="true">';
 						echo '<span class="sui-icon-chevron-down"></span>';

@@ -203,7 +203,7 @@ class UserFactory
                 $user = new Manager(
                     new Name(trim($data['firstName'])),
                     new Name(trim($data['lastName'])),
-                    new Email($data['email'])
+                    new Email(filter_var($data['email'], FILTER_VALIDATE_EMAIL, FILTER_FLAG_EMAIL_UNICODE) ? $data['email'] : null)
                 );
                 break;
             case 'customer':
@@ -335,7 +335,7 @@ class UserFactory
         foreach ($data as $blockTime) {
             $blockTimes[] = BlockTimeFactory::create([
                 'id'        => $blockTime['id'],
-                'userId'    => $blockTime['userId'],
+                'userId'    => $blockTime['userId'] ?? null,
                 'name'      => $blockTime['name'],
                 'startDate' => $blockTime['startDate'],
                 'endDate'   => $blockTime['endDate'],

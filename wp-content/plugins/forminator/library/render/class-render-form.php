@@ -83,6 +83,20 @@ abstract class Forminator_Render_Form {
 	protected $is_preview = false;
 
 	/**
+	 * Whether the current render is running in Breakdance SSR preview.
+	 *
+	 * @var bool
+	 */
+	protected $is_breakdance_ssr_preview = false;
+
+	/**
+	 * Breakdance preview-only style handles collected during enqueue.
+	 *
+	 * @var array
+	 */
+	protected $breakdance_preview_style_handles = array();
+
+	/**
 	 * Last submitted data
 	 * useful when rendering via ajax and need older data for markup
 	 *
@@ -1284,6 +1298,10 @@ abstract class Forminator_Render_Form {
 	 */
 	public function is_ajax_load( $force = false, $quiz_id = null ) {
 
+		if ( $this->is_breakdance_ssr_preview ) {
+			return false;
+		}
+
 		if ( ! empty( $quiz_id ) ) {
 			$this->lead_model = Forminator_Base_Form_Model::get_model( $quiz_id );
 			if ( ! $force ) {
@@ -1298,6 +1316,69 @@ abstract class Forminator_Render_Form {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Set Breakdance SSR preview flag for the current render.
+	 *
+	 * @param bool $is_preview Is preview.
+	 *
+	 * @return void
+	 */
+	protected function set_breakdance_ssr_preview( $is_preview ) {
+		$this->is_breakdance_ssr_preview = $is_preview && forminator_is_breakdance_builder_preview();
+	}
+
+	/**
+	 * Render stylesheet link tags for Breakdance SSR preview.
+	 *
+	 * @return string
+	 */
+	protected function get_breakdance_preview_styles_html() {
+		if ( empty( $this->breakdance_preview_style_handles ) ) {
+			return '';
+		}
+
+		ob_start();
+		wp_print_styles( $this->breakdance_preview_style_handles );
+		return ob_get_clean();
+	}
+
+	/**
+	 * Render Breakdance SSR preview markup in the required order.
+	 *
+	 * Order matters here: print the captured styles and inline styles first,
+	 * then output the HTML and front scripts for the preview response.
+	 *
+	 * @param string $html HTML markup to output.
+	 * @param bool   $is_preview Is preview.
+	 *
+	 * @return void
+	 */
+	protected function render_breakdance_ssr_preview_markup( $html, $is_preview ) {
+		echo $this->get_breakdance_preview_styles_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+
+		if ( is_admin() || $is_preview ) {
+			$this->print_styles();
+		}
+
+		echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		$this->forminator_render_front_scripts();
+	}
+
+	/**
+	 * Capture the style handles added during Breakdance SSR preview asset enqueue.
+	 *
+	 * @param array $before_style_handles Style handles queued before enqueue.
+	 *
+	 * @return void
+	 */
+	protected function set_breakdance_preview_style_handles( $before_style_handles ) {
+		$this->breakdance_preview_style_handles = array_values(
+			array_unique(
+				array_diff( wp_styles()->queue, $before_style_handles )
+			)
+		);
 	}
 
 	/**
@@ -1439,15 +1520,19 @@ abstract class Forminator_Render_Form {
 			wp_send_json_error( new WP_Error( 'invalid_code' ) );
 		}
 
-		$id                = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
-		$type              = Forminator_Core::sanitize_text_field( 'type' );
-		$preview_data      = isset( $_POST['preview_data'] ) ? Forminator_Core::sanitize_array( $_POST['preview_data'], 'preview_data' ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
-		$last_submit_data  = isset( $_POST['last_submit_data'] ) ? Forminator_Core::sanitize_array( $_POST['last_submit_data'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
-		$extra             = isset( $_POST['extra'] ) ? Forminator_Core::sanitize_array( $_POST['extra'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
-		$has_lead          = Forminator_Core::sanitize_text_field( 'has_lead' );
-		$leads_id          = filter_input( INPUT_POST, 'leads_id', FILTER_VALIDATE_INT );
-		$lead_preview_data = isset( $_POST['lead_preview_data'] ) ? Forminator_Core::sanitize_array( $_POST['lead_preview_data'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
-		$render_id         = filter_input( INPUT_POST, 'render_id', FILTER_VALIDATE_INT );
+		$preview_data      = array();
+		$lead_preview_data = array();
+		if ( $is_preview ) {
+			$preview_data      = isset( $_POST['preview_data'] ) ? Forminator_Core::sanitize_array( $_POST['preview_data'], 'preview_data' ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+			$lead_preview_data = isset( $_POST['lead_preview_data'] ) ? Forminator_Core::sanitize_array( $_POST['lead_preview_data'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+		}
+		$id               = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
+		$type             = Forminator_Core::sanitize_text_field( 'type' );
+		$last_submit_data = isset( $_POST['last_submit_data'] ) ? Forminator_Core::sanitize_array( $_POST['last_submit_data'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+		$extra            = isset( $_POST['extra'] ) ? Forminator_Core::sanitize_array( $_POST['extra'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+		$has_lead         = Forminator_Core::sanitize_text_field( 'has_lead' );
+		$leads_id         = filter_input( INPUT_POST, 'leads_id', FILTER_VALIDATE_INT );
+		$render_id        = filter_input( INPUT_POST, 'render_id', FILTER_VALIDATE_INT );
 
 		if ( empty( $id ) && ! $is_preview ) {
 			wp_send_json_error( new WP_Error( 'invalid_id' ) );

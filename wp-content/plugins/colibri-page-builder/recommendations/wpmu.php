@@ -619,7 +619,7 @@ add_action( 'admin_notices', function () {
 	if ( $status !== PluginsManager::ACTIVE_PLUGIN ) {
 
 		?>
-        <div class="notice notice-warning is-dismissible wpmu-forminator-recommendation">
+        <div class="colibri-notice notice notice-warning is-dismissible wpmu-forminator-recommendation">
             <style>
                 .colibri-wpmu-notice {
                     display: flex;

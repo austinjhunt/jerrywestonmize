@@ -283,6 +283,8 @@ class Populator {
         'type' => $captchaType,
         'recaptcha_site_token' => !empty($reCaptcha['site_token']) ? $reCaptcha['site_token'] : '',
         'recaptcha_secret_token' => !empty($reCaptcha['secret_token']) ? $reCaptcha['secret_token'] : '',
+        'turnstile_site_token' => '',
+        'turnstile_secret_token' => '',
       ]);
     }
 
@@ -509,12 +511,20 @@ class Populator {
         'newsletter_type' => NewsletterEntity::TYPE_STANDARD,
       ],
       [
+        'name' => NewsletterOptionFieldEntity::NAME_EXCLUDE_FROM_ARCHIVE,
+        'newsletter_type' => NewsletterEntity::TYPE_STANDARD,
+      ],
+      [
         'name' => NewsletterOptionFieldEntity::NAME_FILTER_SEGMENT_ID,
         'newsletter_type' => NewsletterEntity::TYPE_RE_ENGAGEMENT,
       ],
       [
         'name' => NewsletterOptionFieldEntity::NAME_FILTER_SEGMENT_ID,
         'newsletter_type' => NewsletterEntity::TYPE_NOTIFICATION,
+      ],
+      [
+        'name' => NewsletterOptionFieldEntity::NAME_SHARE_VISIBILITY,
+        'newsletter_type' => NewsletterEntity::TYPE_STANDARD,
       ],
     ];
 

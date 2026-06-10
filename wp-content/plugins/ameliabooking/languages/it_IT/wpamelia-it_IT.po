@@ -422,6 +422,8 @@ msgstr "Aggiungi Extra"
 msgid ""
 "Add Google Maps API Key to show Google static map on \"Locations\" page."
 msgstr ""
+"Aggiungi l'API Key di Google Maps per mostrare la Google static map nella "
+"pagina \"Locations\"."
 
 msgid "Add Meta Pixel to track ad conversions and optimize marketing."
 msgstr ""
@@ -459,7 +461,7 @@ msgstr ""
 "prenotare una fascia oraria già occupata."
 
 msgid "Add another account"
-msgstr ""
+msgstr "Aggiungi un altro account"
 
 msgid "Add appointment"
 msgstr "Aggiungi appuntamento"
@@ -468,7 +470,7 @@ msgid "Add booking"
 msgstr "Aggiungi prenotazione"
 
 msgid "Add calendar"
-msgstr ""
+msgstr "Aggiungi calendario"
 
 msgid "Add category"
 msgstr "Aggiungi categoria"
@@ -758,7 +760,7 @@ msgid "Allow employees to manage their special days"
 msgstr "Consenti ai dipendenti di gestire i loro giorni speciali"
 
 msgid "Allow employees to view all customers"
-msgstr ""
+msgstr "Consenti ai dipendenti di visualizzare tutti i clienti"
 
 msgid "Allow multiple bookings per customer"
 msgstr "Consenti più prenotazioni per cliente"
@@ -782,6 +784,9 @@ msgstr "ID mittente Alpha"
 msgid "Alpha sender ID can't be empty"
 msgstr "L'ID mittente Alpha non può essere vuoto"
 
+msgid "Already Paid"
+msgstr "Già pagato"
+
 msgid "Already have an account?"
 msgstr "Hai già un account?"
 
@@ -796,6 +801,9 @@ msgstr "Elimina anche gli eventi futuri"
 
 msgid "Also open future events"
 msgstr "Apri anche gli eventi futuri"
+
+msgid "Amelia - Booking Button"
+msgstr "Amelia - Pulsante di Prenotazione"
 
 msgid "Amelia - Booking view"
 msgstr "Amelia - Vista Prenotazione"
@@ -821,6 +829,9 @@ msgstr "Amelia - Calendario degli eventi"
 msgid "Amelia - Events List"
 msgstr "Amelia - Eventi"
 
+msgid "Amelia - Events List Button"
+msgstr "Amelia - Pulsante elenco eventi"
+
 msgid "Amelia - Search view"
 msgstr "Amelia - Vista Ricerca"
 
@@ -830,11 +841,23 @@ msgstr "Amelia - Prenotazione Passo-Passo"
 msgid "Amelia Add to calendar page"
 msgstr "Amelia Aggiungi alla Pagina del Calendario"
 
+msgid "Amelia Events List Booking Settings"
+msgstr "Amelia Elenco eventi Impostazioni prenotazioni"
+
+msgid "Amelia Events List Booking Shortcode"
+msgstr "Amelia Elenco eventi Shortcode per prenotazioni"
+
 msgid "Amelia Profile Settings"
 msgstr "Impostazioni Profilo Amelia"
 
 msgid "Amelia SMS"
 msgstr ""
+
+msgid "Amelia Step Booking Settings"
+msgstr "Impostazioni Step Booking di Amelia"
+
+msgid "Amelia Step Booking Shortcode"
+msgstr "Shortcode Step Booking di Amelia"
 
 msgid "Amelia Users Settings"
 msgstr "Impostazioni Utenti Amelia"
@@ -874,6 +897,11 @@ msgstr "Configurazione del calendario Apple"
 
 msgid "Application (client) ID"
 msgstr "ID Applicazione (client)"
+
+msgid ""
+"Application (client) ID must be a valid GUID (UUID), as shown in the Azure "
+"portal."
+msgstr ""
 
 msgid "Application fee amount (%)"
 msgstr "Importo della quota di iscrizione (%)"
@@ -1095,7 +1123,7 @@ msgid "Are you sure you want to delete this appointment?"
 msgstr "Sei sicuro di voler eliminare questo appuntamento?"
 
 msgid "Are you sure you want to delete this block time?"
-msgstr ""
+msgstr "Vuoi rimuovere questa fascia oraria bloccata?"
 
 msgid "Are you sure you want to delete this category?"
 msgstr "Sei sicuro di voler eliminare questa categoria"
@@ -1245,7 +1273,7 @@ msgid "Assigned Services"
 msgstr "Servizi Assegnati"
 
 msgid "Assigned employee full name"
-msgstr ""
+msgstr "Nome completo del dipendente assegnato"
 
 msgid "Attachment"
 msgstr "Allegato"
@@ -1493,24 +1521,26 @@ msgid ""
 "Block booking times that overlap with events in the employee’s Apple "
 "Calendar."
 msgstr ""
+"Blocca le fasce orarie di prenotazione in conflitto con gli eventi nel "
+"Calendario Apple del dipendente."
 
 msgid "Block customer"
 msgstr "Blocca cliente"
 
 msgid "Block time"
-msgstr ""
+msgstr "Blocca fascia oraria"
 
 msgid "Block time from calendars"
-msgstr ""
+msgstr "Blocca fasce orarie dai calendari sincronizzati"
 
 msgid "Block time has been added."
-msgstr ""
+msgstr "Il blocco orario è stato aggiunto."
 
 msgid "Block time has been deleted."
-msgstr ""
+msgstr "Il blocco orario è stato eliminato."
 
 msgid "Block time has been updated."
-msgstr ""
+msgstr "Il blocco orario è stato aggiornato."
 
 msgid "Blog"
 msgstr ""
@@ -1839,6 +1869,9 @@ msgid ""
 msgstr ""
 "Continuando, fisserai l'appuntamento in una fascia oraria in cui è già "
 "presente un altro appuntamento!"
+
+msgid "By employees"
+msgstr ""
 
 msgid ""
 "By entering your phone number you agree to receive messages via WhatsApp"
@@ -2236,6 +2269,11 @@ msgstr "Orari del Cliente:"
 msgid "Client secret"
 msgstr "Segreto cliente"
 
+msgid ""
+"Client secret is too short or looks invalid. Copy the full value from the "
+"Azure portal."
+msgstr ""
+
 msgid "Close"
 msgstr "Chiudi"
 
@@ -2629,7 +2667,7 @@ msgid "Create New"
 msgstr "Crea Nuovo"
 
 msgid "Create New Tag"
-msgstr ""
+msgstr "Crea nuovo tag"
 
 msgid ""
 "Create a coupon code customers can enter during booking to get a discount."
@@ -2669,7 +2707,7 @@ msgid "Create new badge"
 msgstr "Crea nuovo badge"
 
 msgid "Create new tag"
-msgstr ""
+msgstr "Aggiungi nuovo tag"
 
 msgid ""
 "Create online classrooms automatically for each booked appointment or event."
@@ -2810,7 +2848,7 @@ msgstr ""
 "consentito dei posti."
 
 msgid "Custom range"
-msgstr ""
+msgstr "Intervallo personalizzato"
 
 msgid "Custom service duration"
 msgstr "Durata del servizio personalizzato"
@@ -3013,7 +3051,7 @@ msgid "Date Desc"
 msgstr "Data Desc"
 
 msgid "Date Picker"
-msgstr ""
+msgstr "Selettore di data"
 
 msgid "Date Purchased Asc"
 msgstr "Data di acquisto Asc"
@@ -3032,6 +3070,9 @@ msgstr "Data e Ora"
 
 msgid "Date and time"
 msgstr "Data e ora"
+
+msgid "Date busyness indicator"
+msgstr ""
 
 msgid "Date of Birth"
 msgstr "Data di Nascita"
@@ -3236,7 +3277,7 @@ msgid "Delete appointment"
 msgstr "Elimina appuntamento"
 
 msgid "Delete block time"
-msgstr ""
+msgstr "Elimina blocco orario"
 
 msgid "Delete booking"
 msgstr "Elimina prenotazione"
@@ -3633,7 +3674,7 @@ msgid "Edit appointment"
 msgstr "Modifica appuntamento"
 
 msgid "Edit block time"
-msgstr ""
+msgstr "Modifica fascia bloccata"
 
 msgid "Edit booking"
 msgstr "Modifica prenotazione"
@@ -4202,6 +4243,9 @@ msgstr "Inserisci un numero di telefono, quindi premi Invio per aggiungere"
 msgid "Enter booking ID"
 msgstr "Inserisci Business ID"
 
+msgid "Enter both the application (client) ID and client secret."
+msgstr ""
+
 msgid "Enter date of birth"
 msgstr "Data di Nascita"
 
@@ -4527,18 +4571,20 @@ msgid "Event status"
 msgstr "Stato dell'evento"
 
 msgid "Event tags"
-msgstr ""
+msgstr "Tag eventi"
 
 msgid ""
 "Event tags allow you to label and organize events in Amelia based on "
 "criteria that matter most to your business."
 msgstr ""
+"I tag degli eventi consentono di etichettare e organizzare gli eventi in "
+"Amelia in base ai criteri più rilevanti per la tua attività."
 
 msgid "Event tags have been saved."
-msgstr ""
+msgstr "I tag degli eventi sono stati salvati."
 
 msgid "Event tags setup"
-msgstr ""
+msgstr "Configurazione tag eventi"
 
 msgid "Event ticketing"
 msgstr "Biglietteria eventi"
@@ -4547,7 +4593,7 @@ msgid "Event tickets"
 msgstr "Tickets per l'Evento"
 
 msgid "Event time scope"
-msgstr ""
+msgstr "Finestra temporale dell’evento"
 
 msgid "Event title"
 msgstr "Titolo dell'evento"
@@ -4559,7 +4605,7 @@ msgid "Event type"
 msgstr "Tipo di evento"
 
 msgid "Event_bookings"
-msgstr ""
+msgstr "Prenotazioni per eventi"
 
 msgid "Events"
 msgstr "Eventi"
@@ -4650,7 +4696,7 @@ msgid "Export bookings"
 msgstr "Esporta prenotazioni"
 
 msgid "Export event booking data with ease"
-msgstr ""
+msgstr "Esporta facilmente i dati di prenotazione degli eventi"
 
 msgid "Express Account"
 msgstr "Account Express"
@@ -4989,7 +5035,7 @@ msgid "Fully booked"
 msgstr "Al completo"
 
 msgid "Future events"
-msgstr ""
+msgstr "Prossimi eventi"
 
 msgid ""
 "GSM (standard Latin) segments contain 160 characters, while UCS-2 (non-GSM - "
@@ -5080,7 +5126,7 @@ msgid "Google Calendar setup"
 msgstr "Configurazione di Google Calendar"
 
 msgid "Google Maps API key"
-msgstr ""
+msgstr "Chiave API Google Maps"
 
 msgid "Google Maps failed to load. Check your API key and restrictions."
 msgstr ""
@@ -5575,6 +5621,8 @@ msgstr ""
 msgid ""
 "Improve reporting accuracy by accessing complete event booking data instantly"
 msgstr ""
+"Migliora la precisione della reportistica accedendo immediatamente ai dati "
+"completi delle prenotazioni degli eventi"
 
 msgid ""
 "Improved customer retention as clients return to use the remaining sessions "
@@ -5726,7 +5774,10 @@ msgid "Interested in unlocking this feature?"
 msgstr "Ti interessa sbloccare questa funzione?"
 
 msgid "Invalid Mollie API key."
-msgstr ""
+msgstr "API key di Mollie non valida."
+
+msgid "Invalid Payment Link"
+msgstr "Link di pagamento non valido"
 
 msgid "Invalid Stripe secret key."
 msgstr "Chiave segreta Stripe non valida."
@@ -6201,17 +6252,20 @@ msgstr ""
 msgid "Make extra mandatory"
 msgstr "Rendere obbligatorio l'extra"
 
+msgid "Make sure you are using the correct Outlook credentials."
+msgstr ""
+
 msgid "Make sure you are using the correct WhatsApp credentials."
 msgstr "Assicurati di utilizzare le credenziali WhatsApp corrette."
 
 msgid "Make sure you are using the correct Zoom credentials."
-msgstr ""
+msgstr "Verifica di utilizzare le credenziali Zoom corrette."
 
 msgid "Male"
 msgstr "Uomo"
 
 msgid "Manage Event Tags"
-msgstr ""
+msgstr "Gestisci tag evento"
 
 msgid "Manage badges"
 msgstr "Gestisci badge"
@@ -6231,7 +6285,7 @@ msgstr ""
 "disponibili."
 
 msgid "Manage event tags"
-msgstr ""
+msgstr "Gestisci tag degli eventi"
 
 msgid "Manage languages"
 msgstr "Gestione delle Lingue"
@@ -6540,7 +6594,7 @@ msgid "New appointment"
 msgstr "Nuovo appuntamento"
 
 msgid "New block time"
-msgstr ""
+msgstr "Nuova fascia oraria non disponibile"
 
 msgid "New category"
 msgstr "Nuova categoria"
@@ -6756,7 +6810,7 @@ msgid "Notice: Please select at least one panel."
 msgstr "Avviso: selezionare almeno un pannello."
 
 msgid "Notice: Please select start and end date."
-msgstr ""
+msgstr "Avviso: seleziona la data di inizio e la data di fine."
 
 msgid "Notification"
 msgstr "Notifica"
@@ -7061,6 +7115,9 @@ msgstr ""
 msgid "One booking can have multiple attendees/spots in it."
 msgstr "Una prenotazione può contenere più partecipanti/posti."
 
+msgid "One of the phone numbers provided is invalid."
+msgstr "Uno dei numeri di telefono forniti non è valido."
+
 msgid "One spot is equal to one attendee."
 msgstr "Un posto è uguale ad un partecipante."
 
@@ -7092,7 +7149,7 @@ msgid "Open following"
 msgstr "Apri seguente"
 
 msgid "Open side menu"
-msgstr ""
+msgstr "Apri il menu laterale"
 
 msgid "Opened"
 msgstr "Aperto"
@@ -7169,6 +7226,9 @@ msgid ""
 msgstr ""
 "Outlook Mailer non è completamente configurato. Completa la configurazione "
 "dell'account nelle impostazioni di integrazione di Outlook."
+
+msgid "Outside of working hours"
+msgstr "Fuori orario di lavoro"
 
 msgid "Overridden by employee"
 msgstr "Sovrascritto dal dipendente"
@@ -7428,7 +7488,7 @@ msgid "Passwords don't match."
 msgstr "Le password non corrispondono."
 
 msgid "Past events"
-msgstr ""
+msgstr "Eventi passati"
 
 msgid ""
 "Paste the secret key you received after creating your API key pair in Google "
@@ -7628,7 +7688,8 @@ msgid "Phone Number"
 msgstr "Numero di Telefono"
 
 msgid "Phone already exists with different name. Please check your name."
-msgstr "L'email esiste già con un nome diverso. Controlla il tuo nome."
+msgstr ""
+"Il numero di telefono esiste già con un nome diverso. Controlla il tuo nome."
 
 msgid "Phone number"
 msgstr "Numero di telefono"
@@ -7692,7 +7753,7 @@ msgid "Please Wait"
 msgstr "Attendere prego"
 
 msgid "Please add period"
-msgstr ""
+msgstr "Aggiungi un punto."
 
 msgid "Please cancel the event first before deleting it."
 msgstr "Annulla l'evento prima di eliminarlo."
@@ -7708,11 +7769,6 @@ msgstr "Si prega di scegliere l'orario dell'appuntamento"
 
 msgid "Please confirm you are not a robot"
 msgstr "Conferma che non sei un robot"
-
-msgid ""
-"Please delete this appointment. It cannot be edited due to a conflict with "
-"the associated account."
-msgstr ""
 
 msgid ""
 "Please ensure that services and employees are created and that services are "
@@ -8060,6 +8116,8 @@ msgstr "Si prega di caricare il file"
 
 msgid "Please use a different email or phone number to complete the booking."
 msgstr ""
+"Per favore, inserisci un'email o un numero di telefono diverso per "
+"completare la prenotazione."
 
 msgid ""
 "Please use the built-in Elementor shortcode widget instead of Amelia widget "
@@ -8314,6 +8372,9 @@ msgid ""
 "Quickly download all event booking details from the Event Bookings page, "
 "making reporting, analysis, and record-keeping simple and efficient."
 msgstr ""
+"Scarica rapidamente tutti i dettagli delle prenotazioni degli eventi dalla "
+"pagina Prenotazioni eventi, rendendo la reportistica, l’analisi e "
+"l’archiviazione dei registri semplici ed efficienti."
 
 msgid "Radio button"
 msgstr "Pulsante di opzione"
@@ -8478,7 +8539,7 @@ msgid "Remind me when my SMS balance is low"
 msgstr "Ricordami quando il mio credito SMS è basso"
 
 msgid "Remove Apple Calendar event slots"
-msgstr ""
+msgstr "Rimuovi gli slot degli eventi di Apple Calendar"
 
 msgid "Remove Attendee"
 msgstr "Rimuovi Partecipante"
@@ -8730,6 +8791,8 @@ msgstr ""
 
 msgid "Save time with fast, one-click event booking exports"
 msgstr ""
+"Riduci i tempi con esportazioni rapide one-click delle prenotazioni per "
+"eventi"
 
 msgid "Save time with quick, hassle-free customer data exports"
 msgstr ""
@@ -8885,6 +8948,13 @@ msgstr "Seleziona"
 msgid "Select Address"
 msgstr "Seleziona Indirizzo"
 
+msgid ""
+"Select Amelia Step-By-Step Booking Button block (or its inner button) to "
+"edit shortcode options."
+msgstr ""
+"Seleziona il blocco Amelia Step-By-Step Booking Button (o il pulsante al suo "
+"interno) per modificare le opzioni dello shortcode."
+
 msgid "Select Apple Calendar"
 msgstr "Seleziona Calendario"
 
@@ -8917,6 +8987,13 @@ msgstr "Seleziona Evento"
 
 msgid "Select Events"
 msgstr "Seleziona Evento"
+
+msgid ""
+"Select Events List Booking Button block (or its inner button) to edit "
+"shortcode options."
+msgstr ""
+"Seleziona il blocco \"Events List Booking Button\" (o il pulsante interno) "
+"per modificare le opzioni dello shortcode."
 
 msgid "Select Location"
 msgstr "Seleziona Sede"
@@ -8968,7 +9045,7 @@ msgid "Select box"
 msgstr "Casella di selezione"
 
 msgid "Select calendar"
-msgstr ""
+msgstr "Seleziona calendario"
 
 msgid "Select category"
 msgstr "Seleziona categoria"
@@ -9561,6 +9638,9 @@ msgstr "Capacità condivisa tra i servizi"
 
 msgid "Shared category capacity"
 msgstr "Capacità categoria condivisa"
+
+msgid "Shortcode options"
+msgstr "Opzioni shortcode"
 
 msgid "Show"
 msgstr "Mostra"
@@ -10204,10 +10284,10 @@ msgid "Tag"
 msgstr "Seleziona o Crea Tag"
 
 msgid "Tag label"
-msgstr ""
+msgstr "Etichetta del tag"
 
 msgid "Tag label cannot be empty"
-msgstr ""
+msgstr "L’etichetta del tag non può essere vuota"
 
 msgid "Tags"
 msgstr "Tag"
@@ -10569,6 +10649,11 @@ msgid "This email is already in use. Please enter a different email address."
 msgstr ""
 "Questo indirizzo email è già in uso. Inserisci un indirizzo email diverso."
 
+msgid ""
+"This email is linked to both a customer and an employee account. Please "
+"delete and rebook."
+msgstr ""
+
 msgid "This employee is the only one assigned to {service}."
 msgstr "Questo dipendente è l'unico assegnato a {service}."
 
@@ -10590,10 +10675,13 @@ msgstr ""
 
 msgid ""
 "This is a unique security token. Copy it into the 'Verify token' field in "
-"WhatsApp when creating a webhook."
+"WhatsApp when creating a webhook. Since this token is used for logging, we "
+"recommend registering your webhook."
 msgstr ""
-"Questo è un token di sicurezza unico. Copialo nel campo \"Verifica token\" "
-"in WhatsApp quando crei un webhook."
+"Questo è un token di sicurezza univoco. Copialo e incollalo nel campo "
+"'Verify token' in WhatsApp durante la creazione di un webhook. Poiché questo "
+"token viene utilizzato per la registrazione nei log, ti consigliamo di "
+"registrare il webhook."
 
 msgid "This is recurring event"
 msgstr "Questo è un evento ricorrente"
@@ -10676,6 +10764,13 @@ msgid ""
 msgstr ""
 "Questo pacchetto ha un appuntamento {count} e nel passato. | Questo "
 "pacchetto ha un appuntamento {count} i nel passato."
+
+msgid ""
+"This payment link is no longer valid. Please contact admin if you need "
+"assistance."
+msgstr ""
+"Questo link di pagamento è scaduto. Contatta l’amministratore del sito se "
+"hai bisogno di assistenza."
 
 msgid "This placeholder's content will be applied wherever it is used."
 msgstr ""
@@ -11083,7 +11178,7 @@ msgstr ""
 "cancellazione\""
 
 msgid "Unable to complete plugin activation. Please try again."
-msgstr ""
+msgstr "Impossibile completare l’attivazione del plugin. Riprova."
 
 msgid "Unable to deactivate plugin. Please try again later."
 msgstr "Impossibile disattivare il plugin. Riprova più tardi."
@@ -11780,6 +11875,9 @@ msgstr "Il Tuo Nome"
 
 msgid "Your balance has been recharged."
 msgstr "Il tuo saldo è stato ricaricato."
+
+msgid "Your booking has been canceled."
+msgstr "La tua prenotazione è stata annullata."
 
 msgid ""
 "Your booking has been successfully canceled. If you have any questions or "

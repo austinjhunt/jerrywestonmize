@@ -5,7 +5,7 @@ namespace AmeliaBooking\Application\Controller\Booking\Event;
 use AmeliaBooking\Application\Commands\Booking\Event\GetCalendarEventsCommand;
 use AmeliaBooking\Application\Controller\Controller;
 use RuntimeException;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class GetCalendarEventsController

@@ -285,9 +285,9 @@
           if ((!attributes.event || !attributes.event.length || attributes.event[0] === '') &&
               attributes.event_to_show && attributes.event_to_show !== 'all') {
             if (attributes.event_to_show === 'custom') {
-              // Get today's date in Y-m-d format
-              const today = new Date()
-              const todayFormatted = today.toISOString().split('T')[0]
+              // Get _d's date in Y-m-d format
+              const _d = new Date()
+              const todayFormatted = _d.getFullYear() + '-' + String(_d.getMonth() + 1).padStart(2, '0') + '-' + String(_d.getDate()).padStart(2, '0')
 
               const startDate = attributes.start_date || todayFormatted
               const endDate = attributes.end_date || todayFormatted

@@ -82,6 +82,7 @@ class SubscriberActions {
 
     $subscriber = $this->subscribersRepository->findOneBy(['email' => $subscriberData['email']]);
     $previousStatus = $subscriber instanceof SubscriberEntity ? $subscriber->getStatus() : null;
+    $wasAlreadySubscribed = $previousStatus === SubscriberEntity::STATUS_SUBSCRIBED;
     $isUnconfirmedResubscription = (
       $subscriber instanceof SubscriberEntity
       && $subscriber->getStatus() === SubscriberEntity::STATUS_UNCONFIRMED
@@ -95,6 +96,8 @@ class SubscriberActions {
       $subscriber = $this->subscriberSaveController->createOrUpdate($subscriberData, $subscriber);
       // custom fields should use the same approach as the subscriber main data that means to wait on confirmation
       $this->subscriberSaveController->updateCustomFields($subscriberData, $subscriber);
+    } else if ($wasAlreadySubscribed) {
+      $subscriber->setUnconfirmedData(null);
     } else {
       // store subscriber data to be updated after confirmation
       $unconfirmedData = $this->subscriberSaveController->filterOutReservedColumns($subscriberData);
@@ -138,7 +141,7 @@ class SubscriberActions {
         && $subscriber->getConfirmationsCount() >= ConfirmationEmailMailer::MAX_CONFIRMATION_EMAILS
       ) {
         $metaData['error'] = $this->getMaxConfirmationEmailsReachedError();
-      } else {
+      } else if (!$wasAlreadySubscribed) {
         $metaData['confirmationEmailResult'] = $this->confirmationEmailMailer->sendConfirmationEmailOnce($subscriber, $confirmationEmailId, $confirmationPageId, true);
       }
     } catch (\Exception $e) {

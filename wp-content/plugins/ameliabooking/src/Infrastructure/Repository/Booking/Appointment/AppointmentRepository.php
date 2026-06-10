@@ -14,6 +14,7 @@ use AmeliaBooking\Infrastructure\Connection;
 use AmeliaBooking\Infrastructure\DB\WPDB\Statement;
 use AmeliaBooking\Infrastructure\Repository\AbstractRepository;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Location\LocationsTable;
+use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 
 /**
  * Class AppointmentRepository
@@ -1287,7 +1288,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                         $orderColumn = 'a.id';
                         break;
                     case 'customer':
-                        $orderColumn = 'CONCAT(cu.firstName, " ", cu.lastName), a.bookingStart';
+                        $orderColumn = 'CONCAT(cu.firstName, \' \', cu.lastName), a.bookingStart';
                         break;
                     case 'service':
                         $orderColumn = 's.name, a.bookingStart';
@@ -1606,7 +1607,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                     $orderColumn = 'a.id';
                     break;
                 case 'customer':
-                    $orderColumn = 'CONCAT(u.firstName, " ", u.lastName), a.bookingStart';
+                    $orderColumn = 'CONCAT(u.firstName, \' \', u.lastName), a.bookingStart';
                     $bookingsJoin = "INNER JOIN {$this->bookingsTable} cb ON cb.appointmentId = a.id";
                     $orderJoins = "INNER JOIN {$this->usersTable} u ON u.id = cb.customerId";
                     break;
@@ -1839,6 +1840,55 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
         }
 
         return $rows;
+    }
+
+    /**
+     * @return int
+     * @throws QueryExecutionException
+     */
+    public function getAppointmentsCount(): int
+    {
+        return $this->countAppointments();
+    }
+
+    /**
+     * @return int
+     * @throws QueryExecutionException
+     */
+    public function getApprovedAppointmentsCount(): int
+    {
+        return $this->countAppointments(BookingStatus::APPROVED);
+    }
+
+    /**
+     * @param string|null $status
+     *
+     * @return int
+     * @throws QueryExecutionException
+     */
+    private function countAppointments(?string $status = null): int
+    {
+        $sql = "SELECT COUNT(*) AS count FROM {$this->table}";
+
+        $params = [];
+
+        if ($status !== null) {
+            $sql .= ' WHERE status = :status';
+            $params[':status'] = $status;
+        }
+
+        try {
+            $statement = $this->connection->prepare($sql);
+            $statement->execute($params);
+
+            return (int) $statement->fetch()['count'];
+        } catch (\Exception $e) {
+            throw new QueryExecutionException(
+                'Unable to count appointments in ' . __CLASS__ . '. ' . $e->getMessage(),
+                $e->getCode(),
+                $e
+            );
+        }
     }
 
     /**

@@ -9,21 +9,17 @@ use Automattic\WooCommerce\EmailEditor\Engine\Templates\Template;
 use Automattic\WooCommerce\EmailEditor\Engine\Templates\Templates_Registry;
 use MailPoet\EmailEditor\Integrations\MailPoet\EmailEditor;
 use MailPoet\EmailEditor\Integrations\MailPoet\Templates\Library\Newsletter;
-use MailPoet\Util\CdnAssetUrl;
 use MailPoet\WP\Functions as WPFunctions;
 
 class TemplatesController {
   private string $templatePrefix = 'mailpoet';
   private ?string $defaultTemplateSlug = null;
   private WPFunctions $wp;
-  private CdnAssetUrl $cdnAssetUrl;
 
   public function __construct(
-    WPFunctions $wp,
-    CdnAssetUrl $cdnAssetUrl
+    WPFunctions $wp
   ) {
     $this->wp = $wp;
-    $this->cdnAssetUrl = $cdnAssetUrl;
   }
 
   public function initialize() {
@@ -31,7 +27,7 @@ class TemplatesController {
   }
 
   public function registerTemplates(Templates_Registry $templatesRegistry): Templates_Registry {
-    $newsletter = new Newsletter($this->cdnAssetUrl);
+    $newsletter = new Newsletter($this->wp);
 
     $template = new Template(
       $this->templatePrefix,
@@ -59,7 +55,7 @@ class TemplatesController {
   public function getDefaultTemplateSlug(): string {
     // If templates haven't been registered yet, create the Newsletter to get its slug
     if ($this->defaultTemplateSlug === null) {
-      $newsletter = new Newsletter($this->cdnAssetUrl);
+      $newsletter = new Newsletter($this->wp);
       $this->defaultTemplateSlug = $newsletter->getSlug();
     }
     return $this->defaultTemplateSlug;

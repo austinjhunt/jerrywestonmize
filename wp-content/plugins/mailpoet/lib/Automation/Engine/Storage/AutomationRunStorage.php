@@ -141,11 +141,38 @@ class AutomationRunStorage {
           JOIN %i AS subjects ON runs.id = subjects.automation_run_id
           WHERE runs.automation_id = %d
           AND subjects.hash = %s
+          AND subjects.key = %s
         ',
         $this->table,
         $this->subjectTable,
         $automation->getId(),
-        $subject->getHash()
+        $subject->getHash(),
+        $subject->getKey()
+      )
+    );
+
+    return $result ? (int)current($result) : 0;
+  }
+
+  public function getCountByAutomationTriggerAndSubject(Automation $automation, string $triggerKey, Subject $subject): int {
+    global $wpdb;
+
+    $result = $wpdb->get_col(
+      $wpdb->prepare(
+        '
+          SELECT count(DISTINCT runs.id) AS count FROM %i AS runs
+          JOIN %i AS subjects ON runs.id = subjects.automation_run_id
+          WHERE runs.automation_id = %d
+          AND runs.trigger_key = %s
+          AND subjects.hash = %s
+          AND subjects.key = %s
+        ',
+        $this->table,
+        $this->subjectTable,
+        $automation->getId(),
+        $triggerKey,
+        $subject->getHash(),
+        $subject->getKey()
       )
     );
 

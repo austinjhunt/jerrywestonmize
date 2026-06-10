@@ -392,7 +392,7 @@ class FrontendStrings
             'cart_step'                    => __('Cart', 'wpamelia'),
             'cart_add_button'              => __('Book another', 'wpamelia'),
             'cart_view_button'             => __('View Cart', 'wpamelia'),
-            'cart_title'                   => __('You can find below the appointments you selected for booking. If you want to book more, click on the button below.'),
+            'cart_title'                   => __('You can find below the appointments you selected for booking. If you want to book more, click on the button below.', 'wpamelia'),
 
             'recurring_step'               => __('Recurring Appointment', 'wpamelia'),
             'recurrence'                   => __('Recurrence', 'wpamelia'),

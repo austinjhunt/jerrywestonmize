@@ -69,60 +69,56 @@ class __TwigTemplate_8a6f0398fffc82506ba46e70538b728a453c02bea83ac685560c22b44c4
   </div>
 
   <script type=\"text/javascript\">
-    var mailpoet_listing_per_page = ";
-        // line 17
-        yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(($context["items_per_page"] ?? null), "html", null, true);
-        yield ";
     var mailpoet_segments = ";
-        // line 18
+        // line 17
         yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["segments"] ?? null));
         yield ";
     var mailpoet_forms_api = ";
-        // line 19
+        // line 18
         yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["api"] ?? null));
         yield ";
     var mailpoet_form_template_selection_url =
       \"";
-        // line 21
+        // line 20
         yield admin_url("admin.php?page=mailpoet-form-editor-template-selection");
         yield "\";
     var mailpoet_form_edit_url =
       \"";
-        // line 23
+        // line 22
         yield admin_url("admin.php?page=mailpoet-form-editor&id=");
         yield "\";
 
     var mailpoet_display_nps_poll = ";
-        // line 25
+        // line 24
         yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["display_nps_survey"] ?? null));
         yield ";
 
     ";
-        // line 27
+        // line 26
         if (($context["display_nps_survey"] ?? null)) {
-            // line 28
+            // line 27
             yield "      var mailpoet_display_nps_form = true;
       var mailpoet_current_wp_user = ";
-            // line 29
+            // line 28
             yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["current_wp_user"] ?? null));
             yield ";
       var mailpoet_current_wp_user_firstname = '";
-            // line 30
+            // line 29
             yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(($context["current_wp_user_firstname"] ?? null), "html", null, true);
             yield "';
       var mailpoet_review_request_illustration_url = '";
-            // line 31
+            // line 30
             yield $this->extensions['MailPoet\Twig\Assets']->generateCdnUrl("review-request/review-request-illustration.20190815-1427.svg");
             yield "';
     ";
         }
-        // line 33
+        // line 32
         yield "  </script>
 ";
         return; yield '';
     }
 
-    // line 36
+    // line 35
     public function block_after_javascript($context, array $blocks = [])
     {
         $macros = $this->macros;
@@ -156,7 +152,7 @@ class __TwigTemplate_8a6f0398fffc82506ba46e70538b728a453c02bea83ac685560c22b44c4
      */
     public function getDebugInfo()
     {
-        return array (  123 => 36,  117 => 33,  112 => 31,  108 => 30,  104 => 29,  101 => 28,  99 => 27,  94 => 25,  89 => 23,  84 => 21,  79 => 19,  75 => 18,  71 => 17,  64 => 12,  62 => 11,  60 => 9,  58 => 8,  52 => 4,  48 => 3,  37 => 1,);
+        return array (  119 => 35,  113 => 32,  108 => 30,  104 => 29,  100 => 28,  97 => 27,  95 => 26,  90 => 24,  85 => 22,  80 => 20,  75 => 18,  71 => 17,  64 => 12,  62 => 11,  60 => 9,  58 => 8,  52 => 4,  48 => 3,  37 => 1,);
     }
 
     public function getSourceContext()

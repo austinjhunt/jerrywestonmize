@@ -174,8 +174,9 @@ class Forminator_Phone extends Forminator_Field {
 	 * @return mixed
 	 */
 	public function markup( $field, $views_obj, $draft_value = null ) {
-		$settings    = $views_obj->model->settings;
-		$this->field = $field;
+		$settings            = $views_obj->model->settings;
+		$this->field         = $field;
+		$this->form_settings = $settings;
 
 		$descr_position = self::get_description_position( $field, $settings );
 
@@ -222,7 +223,15 @@ class Forminator_Phone extends Forminator_Field {
 			$format_check = false === $phone_check ? 'none' : '';
 		}
 
-		if ( isset( $draft_value['value'] ) ) {
+		$autofill_markup = $this->get_element_autofill_markup_attr( self::get_property( 'element_id', $field ) );
+		$is_locked       = ! empty( $autofill_markup['readonly'] );
+
+		if ( $is_locked ) {
+
+			// Non-editable autofill: server enforces this value, draft is ignored.
+			$value = isset( $autofill_markup['value'] ) ? $autofill_markup['value'] : '';
+
+		} elseif ( isset( $draft_value['value'] ) ) {
 
 			$value = esc_attr( $draft_value['value'] );
 
@@ -235,6 +244,9 @@ class Forminator_Phone extends Forminator_Field {
 			if ( 'international' !== $format_check ) {
 				$value = 0 === strpos( $value, ' ' ) ? '+' . trim( $value ) : trim( $value );
 			}
+		} elseif ( ! empty( $autofill_markup['value'] ) ) {
+
+			$value = $autofill_markup['value'];
 		}
 		$browser_autofill = self::get_property( 'browser_autofill', $field, 'disabled' );
 		$phone_attr       = array(
@@ -280,6 +292,9 @@ class Forminator_Phone extends Forminator_Field {
 		if ( ! empty( $description ) ) {
 			$phone_attr['aria-describedby'] = esc_attr( $id . '-description' );
 		}
+
+		unset( $autofill_markup['value'] );
+		$phone_attr = array_merge( $phone_attr, $autofill_markup );
 
 		$html .= '<div class="forminator-field">';
 		$html .= self::get_field_label( $label, $id, $required );

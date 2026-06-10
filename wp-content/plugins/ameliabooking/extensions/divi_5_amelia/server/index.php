@@ -123,11 +123,16 @@ if (is_divi_5_active()) {
 
     require_once $divi_dependency_interface;
 
+    // Shared helpers used by booking button modules.
+    require_once __DIR__ . '/AmeliaBookingButtonRendererTrait.php';
+
     require_once __DIR__ . '/AmeliaStepBookingModule.php';
+    require_once __DIR__ . '/AmeliaStepBookingButtonModule.php';
     require_once __DIR__ . '/AmeliaBookingModule.php';
     require_once __DIR__ . '/AmeliaCatalogBookingModule.php';
     require_once __DIR__ . '/AmeliaCatalogModule.php';
     require_once __DIR__ . '/AmeliaEventsListModule.php';
+    require_once __DIR__ . '/AmeliaEventsListBookingButtonModule.php';
     require_once __DIR__ . '/AmeliaEventsModule.php';
     require_once __DIR__ . '/AmeliaSearchModule.php';
 
@@ -141,6 +146,13 @@ if (is_divi_5_active()) {
         'divi_module_library_modules_dependency_tree',
         function ($dependency_tree) {
             $dependency_tree->add_dependency(new AmeliaStepBookingModule());
+        }
+    );
+
+    add_action(
+        'divi_module_library_modules_dependency_tree',
+        function ($dependency_tree) {
+            $dependency_tree->add_dependency(new AmeliaStepBookingButtonModule());
         }
     );
 
@@ -169,6 +181,13 @@ if (is_divi_5_active()) {
         'divi_module_library_modules_dependency_tree',
         function ($dependency_tree) {
             $dependency_tree->add_dependency(new AmeliaEventsListModule());
+        }
+    );
+
+    add_action(
+        'divi_module_library_modules_dependency_tree',
+        function ($dependency_tree) {
+            $dependency_tree->add_dependency(new AmeliaEventsListBookingButtonModule());
         }
     );
 

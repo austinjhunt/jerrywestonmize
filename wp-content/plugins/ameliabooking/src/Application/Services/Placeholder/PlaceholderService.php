@@ -844,7 +844,7 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
                     json_decode($appointment['bookings'][$bookingKey]['customer']['customFields'], true) :
                     $appointment['bookings'][$bookingKey]['customer']['customFields'];
 
-                $bookingCustomFields += $customerCustomFields;
+                $bookingCustomFields += $customerCustomFields ?? [];
             }
 
             if ($bookingCustomFields) {

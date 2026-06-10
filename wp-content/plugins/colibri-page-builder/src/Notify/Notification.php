@@ -65,7 +65,7 @@ class Notification
         $self = $this;
         add_action('admin_notices', function () use ($self) {
             ?>
-            <div data-cp-notification-name="<?php echo esc_attr($self->name); ?>" class="cp-notification notice notice-<?php echo esc_attr($self->type); ?> <?php echo($self->dismissible ? 'is-dismissible' : '') ?>">
+            <div data-cp-notification-name="<?php echo esc_attr($self->name); ?>" class=" colibri-notice cp-notification notice notice-<?php echo esc_attr($self->type); ?> <?php echo($self->dismissible ? 'is-dismissible' : '') ?>">
                 
                 
                 <?php

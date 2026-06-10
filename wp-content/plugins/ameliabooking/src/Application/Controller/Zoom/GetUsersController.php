@@ -4,7 +4,7 @@ namespace AmeliaBooking\Application\Controller\Zoom;
 
 use AmeliaBooking\Application\Commands\Zoom\GetUsersCommand;
 use AmeliaBooking\Application\Controller\Controller;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class GetUsersController

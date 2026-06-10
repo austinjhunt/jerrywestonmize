@@ -77,7 +77,7 @@ do_action( 'pt-ocdi/plugin_page_header' );
 
         ?>
 
-        <div class="ocdi__intro-notice  notice  notice-warning  is-dismissible">
+        <div class="colibri-notice ocdi__intro-notice  notice  notice-warning  is-dismissible">
             <p><?php esc_html_e( 'Before you begin, make sure all the required plugins are activated.', 'colibri-page-builder' ); ?></p>
         </div>
 

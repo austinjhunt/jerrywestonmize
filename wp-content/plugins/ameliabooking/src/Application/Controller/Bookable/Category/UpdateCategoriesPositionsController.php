@@ -4,7 +4,7 @@ namespace AmeliaBooking\Application\Controller\Bookable\Category;
 
 use AmeliaBooking\Application\Commands\Bookable\Category\UpdateCategoriesPositionsCommand;
 use AmeliaBooking\Application\Controller\Controller;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class UpdateCategoriesPositionsController

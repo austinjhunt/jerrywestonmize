@@ -8,7 +8,7 @@ use AmeliaBooking\Application\Commands\Notification\AddNotificationCommand;
 use AmeliaBooking\Application\Commands\Notification\UpdateNotificationCommand;
 use AmeliaBooking\Application\Controller\Controller;
 use AmeliaBooking\Domain\Events\DomainEventBus;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class AddNotificationController

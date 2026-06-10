@@ -16,24 +16,19 @@ var _frontCalculatorSymbol3 = _interopRequireDefault(require("./symbol/front.cal
 var _frontCalculatorParserNode2 = _interopRequireDefault(require("./parser/node/front.calculator.parser.node.function"));
 var _frontCalculatorParserNode3 = _interopRequireDefault(require("./parser/node/front.calculator.parser.node.container"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); } /**********
+/**********
  * Attempt to rewrite Forminator_Calculator backend
  *
  * @see Forminator_Calculator
  *
  ***********/
-var FrontCalculator = exports.default = /*#__PURE__*/function () {
+
+class FrontCalculator {
   /**
    *
    * @param {string} term
    */
-  function FrontCalculator(term) {
-    _classCallCheck(this, FrontCalculator);
+  constructor(term) {
     /**
      *
      * @type {string}
@@ -63,300 +58,286 @@ var FrontCalculator = exports.default = /*#__PURE__*/function () {
    *
    * @returns {FrontCalculatorParserNodeContainer}
    */
-  return _createClass(FrontCalculator, [{
-    key: "parse",
-    value: function parse() {
-      // reset
-      this.tokenizer.input = this.term;
-      this.tokenizer.reset();
-      var tokens = this.tokenizer.tokenize();
-      if (tokens.length === 0) {
-        throw 'Error: Empty token of calculator term.';
-      }
-      var rootNode = this.parser.parse(tokens);
-      if (rootNode.isEmpty()) {
-        throw 'Error: Empty nodes of calculator tokens.';
-      }
-      return rootNode;
+  parse() {
+    // reset
+    this.tokenizer.input = this.term;
+    this.tokenizer.reset();
+    var tokens = this.tokenizer.tokenize();
+    if (tokens.length === 0) {
+      throw 'Error: Empty token of calculator term.';
     }
-
-    /**
-     *
-     * @returns {number}
-     */
-  }, {
-    key: "calculate",
-    value: function calculate() {
-      var result = 0;
-      var rootNode = this.parse();
-      if (false === rootNode) {
-        return result;
-      }
-      return this.calculateNode(rootNode);
+    var rootNode = this.parser.parse(tokens);
+    if (rootNode.isEmpty()) {
+      throw 'Error: Empty nodes of calculator tokens.';
     }
+    return rootNode;
+  }
 
-    /**
-     *Calculates the numeric value / result of a node of
-     * any known and calculable type. (For example symbol
-     * nodes with a symbol of type separator are not
-     * calculable.)
-     *
-     * @param {FrontCalculatorParserNodeAbstract} node
-     *
-     * @returns {number}
-     */
-  }, {
-    key: "calculateNode",
-    value: function calculateNode(node) {
-      if (node instanceof _frontCalculatorParserNode.default) {
-        return this.calculateSymbolNode(node);
-      } else if (node instanceof _frontCalculatorParserNode2.default) {
-        return this.calculateFunctionNode(node);
-      } else if (node instanceof _frontCalculatorParserNode3.default) {
-        return this.calculateContainerNode(node);
-      } else {
-        throw 'Error: Cannot calculate node of unknown type "' + node.constructor.name + '"';
-      }
-    }
-
-    /**
-     * This method actually calculates the results of every sub-terms
-     * in the syntax tree (which consists of nodes).
-     * It can call itself recursively.
-     * Attention: $node must not be of type FunctionNode!
-     *
-     * @param {FrontCalculatorParserNodeContainer} containerNode
-     *
-     * @returns {number}
-     */
-  }, {
-    key: "calculateContainerNode",
-    value: function calculateContainerNode(containerNode) {
-      if (containerNode instanceof _frontCalculatorParserNode2.default) {
-        throw 'Error: Expected container node but got a function node';
-      }
-      var result = 0;
-      var nodes = containerNode.childNodes;
-      var orderedOperatorNodes = this.detectCalculationOrder(nodes);
-
-      // Actually calculate the term. Iterates over the ordered operators and
-      // calculates them, then replaces the parts of the operation by the result.
-      for (var i = 0; i < orderedOperatorNodes.length; i++) {
-        var operatorNode = orderedOperatorNodes[i].node;
-        var index = orderedOperatorNodes[i].index;
-        var leftOperand = null;
-        var leftOperandIndex = null;
-        var nodeIndex = 0;
-        while (nodeIndex !== index) {
-          if (nodes[nodeIndex] === undefined) {
-            nodeIndex++;
-            continue;
-          }
-          leftOperand = nodes[nodeIndex];
-          leftOperandIndex = nodeIndex;
-          nodeIndex++;
-        }
-        nodeIndex++;
-        while (nodeIndex < nodes.length && nodes[nodeIndex] === undefined) {
-          nodeIndex++;
-        }
-        if (nodeIndex >= nodes.length) {
-          throw 'Error: Found operator that does not stand before an operand.';
-        }
-        var rightOperand = nodes[nodeIndex];
-        var rightOperandIndex = nodeIndex;
-        var rightNumber = !isNaN(rightOperand) ? rightOperand : this.calculateNode(rightOperand);
-
-        /**
-         * @type {FrontCalculatorSymbolOperatorAbstract}
-         */
-        var symbol = operatorNode.symbol;
-        if (operatorNode.isUnaryOperator) {
-          result = symbol.operate(null, rightNumber);
-
-          // Replace the participating symbols of the operation by the result
-          delete nodes[rightOperandIndex]; // `delete` operation only set the value to empty, not `actually` remove it
-          nodes[index] = result;
-        } else {
-          if (leftOperandIndex !== null && leftOperand !== null) {
-            var leftNumber = !isNaN(leftOperand) ? leftOperand : this.calculateNode(leftOperand);
-            result = symbol.operate(leftNumber, rightNumber);
-
-            // Replace the participating symbols of the operation by the result
-            delete nodes[leftOperandIndex];
-            delete nodes[rightOperandIndex];
-            nodes[index] = result;
-          }
-        }
-      }
-
-      //cleanup empty nodes
-      nodes = nodes.filter(function (node) {
-        return node !== undefined;
-      });
-      if (nodes.length === 0) {
-        throw 'Error: Missing calculable subterm. Are there empty brackets?';
-      }
-      if (nodes.length > 1) {
-        throw 'Error: Missing operators between parts of the term.';
-      }
-
-      // The only remaining element of the $nodes array contains the overall result
-      result = nodes.pop();
-
-      // If the $nodes array did not contain any operator (but only one node) than
-      // the result of this node has to be calculated now
-      if (isNaN(result)) {
-        return this.calculateNode(result);
-      }
+  /**
+   *
+   * @returns {number}
+   */
+  calculate() {
+    var result = 0;
+    var rootNode = this.parse();
+    if (false === rootNode) {
       return result;
     }
+    return this.calculateNode(rootNode);
+  }
 
-    /**
-     * Returns the numeric value of a function node.
-     * @param {FrontCalculatorParserNodeFunction} functionNode
-     *
-     * @returns {number}
-     */
-  }, {
-    key: "calculateFunctionNode",
-    value: function calculateFunctionNode(functionNode) {
-      var nodes = functionNode.childNodes;
-      var functionArguments = []; // ex : func(1+2,3,4) : 1+2 need to be calculated first
-      var argumentChildNodes = [];
-      var containerNode = null;
-      for (var i = 0; i < nodes.length; i++) {
-        var node = nodes[i];
-        if (node instanceof _frontCalculatorParserNode.default) {
-          if (node.symbol instanceof _frontCalculatorSymbol3.default) {
-            containerNode = new _frontCalculatorParserNode3.default(argumentChildNodes);
-            functionArguments.push(this.calculateNode(containerNode));
-            argumentChildNodes = [];
-          } else {
-            argumentChildNodes.push(node);
-          }
+  /**
+   *Calculates the numeric value / result of a node of
+   * any known and calculable type. (For example symbol
+   * nodes with a symbol of type separator are not
+   * calculable.)
+   *
+   * @param {FrontCalculatorParserNodeAbstract} node
+   *
+   * @returns {number}
+   */
+  calculateNode(node) {
+    if (node instanceof _frontCalculatorParserNode.default) {
+      return this.calculateSymbolNode(node);
+    } else if (node instanceof _frontCalculatorParserNode2.default) {
+      return this.calculateFunctionNode(node);
+    } else if (node instanceof _frontCalculatorParserNode3.default) {
+      return this.calculateContainerNode(node);
+    } else {
+      throw 'Error: Cannot calculate node of unknown type "' + node.constructor.name + '"';
+    }
+  }
+
+  /**
+   * This method actually calculates the results of every sub-terms
+   * in the syntax tree (which consists of nodes).
+   * It can call itself recursively.
+   * Attention: $node must not be of type FunctionNode!
+   *
+   * @param {FrontCalculatorParserNodeContainer} containerNode
+   *
+   * @returns {number}
+   */
+  calculateContainerNode(containerNode) {
+    if (containerNode instanceof _frontCalculatorParserNode2.default) {
+      throw 'Error: Expected container node but got a function node';
+    }
+    var result = 0;
+    var nodes = containerNode.childNodes;
+    var orderedOperatorNodes = this.detectCalculationOrder(nodes);
+
+    // Actually calculate the term. Iterates over the ordered operators and
+    // calculates them, then replaces the parts of the operation by the result.
+    for (var i = 0; i < orderedOperatorNodes.length; i++) {
+      var operatorNode = orderedOperatorNodes[i].node;
+      var index = orderedOperatorNodes[i].index;
+      var leftOperand = null;
+      var leftOperandIndex = null;
+      var nodeIndex = 0;
+      while (nodeIndex !== index) {
+        if (nodes[nodeIndex] === undefined) {
+          nodeIndex++;
+          continue;
+        }
+        leftOperand = nodes[nodeIndex];
+        leftOperandIndex = nodeIndex;
+        nodeIndex++;
+      }
+      nodeIndex++;
+      while (nodeIndex < nodes.length && nodes[nodeIndex] === undefined) {
+        nodeIndex++;
+      }
+      if (nodeIndex >= nodes.length) {
+        throw 'Error: Found operator that does not stand before an operand.';
+      }
+      var rightOperand = nodes[nodeIndex];
+      var rightOperandIndex = nodeIndex;
+      var rightNumber = !isNaN(rightOperand) ? rightOperand : this.calculateNode(rightOperand);
+
+      /**
+       * @type {FrontCalculatorSymbolOperatorAbstract}
+       */
+      var symbol = operatorNode.symbol;
+      if (operatorNode.isUnaryOperator) {
+        result = symbol.operate(null, rightNumber);
+
+        // Replace the participating symbols of the operation by the result
+        delete nodes[rightOperandIndex]; // `delete` operation only set the value to empty, not `actually` remove it
+        nodes[index] = result;
+      } else {
+        if (leftOperandIndex !== null && leftOperand !== null) {
+          var leftNumber = !isNaN(leftOperand) ? leftOperand : this.calculateNode(leftOperand);
+          result = symbol.operate(leftNumber, rightNumber);
+
+          // Replace the participating symbols of the operation by the result
+          delete nodes[leftOperandIndex];
+          delete nodes[rightOperandIndex];
+          nodes[index] = result;
+        }
+      }
+    }
+
+    //cleanup empty nodes
+    nodes = nodes.filter(function (node) {
+      return node !== undefined;
+    });
+    if (nodes.length === 0) {
+      throw 'Error: Missing calculable subterm. Are there empty brackets?';
+    }
+    if (nodes.length > 1) {
+      throw 'Error: Missing operators between parts of the term.';
+    }
+
+    // The only remaining element of the $nodes array contains the overall result
+    result = nodes.pop();
+
+    // If the $nodes array did not contain any operator (but only one node) than
+    // the result of this node has to be calculated now
+    if (isNaN(result)) {
+      return this.calculateNode(result);
+    }
+    return result;
+  }
+
+  /**
+   * Returns the numeric value of a function node.
+   * @param {FrontCalculatorParserNodeFunction} functionNode
+   *
+   * @returns {number}
+   */
+  calculateFunctionNode(functionNode) {
+    var nodes = functionNode.childNodes;
+    var functionArguments = []; // ex : func(1+2,3,4) : 1+2 need to be calculated first
+    var argumentChildNodes = [];
+    var containerNode = null;
+    for (var i = 0; i < nodes.length; i++) {
+      var node = nodes[i];
+      if (node instanceof _frontCalculatorParserNode.default) {
+        if (node.symbol instanceof _frontCalculatorSymbol3.default) {
+          containerNode = new _frontCalculatorParserNode3.default(argumentChildNodes);
+          functionArguments.push(this.calculateNode(containerNode));
+          argumentChildNodes = [];
         } else {
           argumentChildNodes.push(node);
         }
+      } else {
+        argumentChildNodes.push(node);
       }
-      if (argumentChildNodes.length > 0) {
-        containerNode = new _frontCalculatorParserNode3.default(argumentChildNodes);
-        functionArguments.push(this.calculateNode(containerNode));
-      }
+    }
+    if (argumentChildNodes.length > 0) {
+      containerNode = new _frontCalculatorParserNode3.default(argumentChildNodes);
+      functionArguments.push(this.calculateNode(containerNode));
+    }
 
+    /**
+     *
+     * @type {FrontCalculatorSymbolFunctionAbstract}
+     */
+    var symbol = functionNode.symbolNode.symbol;
+    return symbol.execute(functionArguments);
+  }
+
+  /**
+   * Returns the numeric value of a symbol node.
+   * Attention: node.symbol must not be of type AbstractOperator!
+   *
+   * @param {FrontCalculatorParserNodeSymbol} symbolNode
+   *
+   * @returns {Number}
+   */
+  calculateSymbolNode(symbolNode) {
+    var symbol = symbolNode.symbol;
+    var number = 0;
+    if (symbol instanceof _frontCalculatorSymbol2.default) {
+      number = symbolNode.token.value;
+
+      // Convert string to int or float (depending on the type of the number)
+      // If the number has a longer fractional part, it will be cut.
+      number = Number(number);
+    } else if (symbol instanceof _frontCalculatorSymbolConstant.default) {
+      number = symbol.value;
+    } else {
+      throw 'Error: Found symbol of unexpected type "' + symbol.constructor.name + '", expected number or constant';
+    }
+    return number;
+  }
+
+  /**
+   * Detect the calculation order of a given array of nodes.
+   * Does only care for the precedence of operators.
+   * Does not care for child nodes of container nodes.
+   * Returns a new array with ordered symbol nodes
+   *
+   * @param {FrontCalculatorParserNodeAbstract[]} nodes
+   *
+   * @return {Array}
+   */
+  detectCalculationOrder(nodes) {
+    var operatorNodes = [];
+
+    // Store all symbol nodes that have a symbol of type abstract operator in an array
+    for (var i = 0; i < nodes.length; i++) {
+      var node = nodes[i];
+      if (node instanceof _frontCalculatorParserNode.default) {
+        if (node.symbol instanceof _frontCalculatorSymbolOperator.default) {
+          var operatorNode = {
+            index: i,
+            node: node
+          };
+          operatorNodes.push(operatorNode);
+        }
+      }
+    }
+    operatorNodes.sort(
+    /**
+     * Returning 1 means $nodeTwo before $nodeOne, returning -1 means $nodeOne before $nodeTwo.
+     * @param {Object} operatorNodeOne
+     * @param {Object} operatorNodeTwo
+     */
+    function (operatorNodeOne, operatorNodeTwo) {
+      var nodeOne = operatorNodeOne.node;
+      var nodeTwo = operatorNodeTwo.node;
+
+      // First-level precedence of node one
       /**
        *
-       * @type {FrontCalculatorSymbolFunctionAbstract}
+       * @type {FrontCalculatorSymbolOperatorAbstract}
        */
-      var symbol = functionNode.symbolNode.symbol;
-      return symbol.execute(functionArguments);
-    }
-
-    /**
-     * Returns the numeric value of a symbol node.
-     * Attention: node.symbol must not be of type AbstractOperator!
-     *
-     * @param {FrontCalculatorParserNodeSymbol} symbolNode
-     *
-     * @returns {Number}
-     */
-  }, {
-    key: "calculateSymbolNode",
-    value: function calculateSymbolNode(symbolNode) {
-      var symbol = symbolNode.symbol;
-      var number = 0;
-      if (symbol instanceof _frontCalculatorSymbol2.default) {
-        number = symbolNode.token.value;
-
-        // Convert string to int or float (depending on the type of the number)
-        // If the number has a longer fractional part, it will be cut.
-        number = Number(number);
-      } else if (symbol instanceof _frontCalculatorSymbolConstant.default) {
-        number = symbol.value;
-      } else {
-        throw 'Error: Found symbol of unexpected type "' + symbol.constructor.name + '", expected number or constant';
+      var symbolOne = nodeOne.symbol;
+      var precedenceOne = 2;
+      if (nodeOne.isUnaryOperator) {
+        precedenceOne = 3;
       }
-      return number;
-    }
 
-    /**
-     * Detect the calculation order of a given array of nodes.
-     * Does only care for the precedence of operators.
-     * Does not care for child nodes of container nodes.
-     * Returns a new array with ordered symbol nodes
-     *
-     * @param {FrontCalculatorParserNodeAbstract[]} nodes
-     *
-     * @return {Array}
-     */
-  }, {
-    key: "detectCalculationOrder",
-    value: function detectCalculationOrder(nodes) {
-      var operatorNodes = [];
-
-      // Store all symbol nodes that have a symbol of type abstract operator in an array
-      for (var i = 0; i < nodes.length; i++) {
-        var node = nodes[i];
-        if (node instanceof _frontCalculatorParserNode.default) {
-          if (node.symbol instanceof _frontCalculatorSymbolOperator.default) {
-            var operatorNode = {
-              index: i,
-              node: node
-            };
-            operatorNodes.push(operatorNode);
-          }
-        }
-      }
-      operatorNodes.sort(
+      // First-level precedence of node two
       /**
-       * Returning 1 means $nodeTwo before $nodeOne, returning -1 means $nodeOne before $nodeTwo.
-       * @param {Object} operatorNodeOne
-       * @param {Object} operatorNodeTwo
+       *
+       * @type {FrontCalculatorSymbolOperatorAbstract}
        */
-      function (operatorNodeOne, operatorNodeTwo) {
-        var nodeOne = operatorNodeOne.node;
-        var nodeTwo = operatorNodeTwo.node;
+      var symbolTwo = nodeTwo.symbol;
+      var precedenceTwo = 2;
+      if (nodeTwo.isUnaryOperator) {
+        precedenceTwo = 3;
+      }
 
-        // First-level precedence of node one
-        /**
-         *
-         * @type {FrontCalculatorSymbolOperatorAbstract}
-         */
-        var symbolOne = nodeOne.symbol;
-        var precedenceOne = 2;
-        if (nodeOne.isUnaryOperator) {
-          precedenceOne = 3;
-        }
+      // If the first-level precedence is the same, compare the second-level precedence
+      if (precedenceOne === precedenceTwo) {
+        precedenceOne = symbolOne.precedence;
+        precedenceTwo = symbolTwo.precedence;
+      }
 
-        // First-level precedence of node two
-        /**
-         *
-         * @type {FrontCalculatorSymbolOperatorAbstract}
-         */
-        var symbolTwo = nodeTwo.symbol;
-        var precedenceTwo = 2;
-        if (nodeTwo.isUnaryOperator) {
-          precedenceTwo = 3;
-        }
-
-        // If the first-level precedence is the same, compare the second-level precedence
-        if (precedenceOne === precedenceTwo) {
-          precedenceOne = symbolOne.precedence;
-          precedenceTwo = symbolTwo.precedence;
-        }
-
-        // If the second-level precedence is the same, we have to ensure that the sorting algorithm does
-        // insert the node / token that is left in the term before the node / token that is right.
-        // Therefore we cannot return 0 but compare the positions and return 1 / -1.
-        if (precedenceOne === precedenceTwo) {
-          return nodeOne.token.position < nodeTwo.token.position ? -1 : 1;
-        }
-        return precedenceOne < precedenceTwo ? 1 : -1;
-      });
-      return operatorNodes;
-    }
-  }]);
-}();
+      // If the second-level precedence is the same, we have to ensure that the sorting algorithm does
+      // insert the node / token that is left in the term before the node / token that is right.
+      // Therefore we cannot return 0 but compare the positions and return 1 / -1.
+      if (precedenceOne === precedenceTwo) {
+        return nodeOne.token.position < nodeTwo.token.position ? -1 : 1;
+      }
+      return precedenceOne < precedenceTwo ? 1 : -1;
+    });
+    return operatorNodes;
+  }
+}
+exports.default = FrontCalculator;
 if (window['forminatorCalculator'] === undefined) {
   window.forminatorCalculator = function (term) {
     return new FrontCalculator(term);
@@ -381,12 +362,6 @@ var _frontCalculatorParserNode = _interopRequireDefault(require("./node/front.ca
 var _frontCalculatorParserNode2 = _interopRequireDefault(require("./node/front.calculator.parser.node.container"));
 var _frontCalculatorParserNode3 = _interopRequireDefault(require("./node/front.calculator.parser.node.function"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 /**
  * The parsers has one important method: parse()
  * It takes an array of tokens as input and
@@ -394,13 +369,12 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
  * These nodes are the syntax tree of the term.
  *
  */
-var FrontCalculatorParser = exports.default = /*#__PURE__*/function () {
+class FrontCalculatorParser {
   /**
    *
    * @param {FrontCalculatorSymbolLoader} symbolLoader
    */
-  function FrontCalculatorParser(symbolLoader) {
-    _classCallCheck(this, FrontCalculatorParser);
+  constructor(symbolLoader) {
     /**
      *
      * @type {FrontCalculatorSymbolLoader}
@@ -416,245 +390,235 @@ var FrontCalculatorParser = exports.default = /*#__PURE__*/function () {
    *
    * @returns FrontCalculatorParserNodeContainer
    */
-  return _createClass(FrontCalculatorParser, [{
-    key: "parse",
-    value: function parse(tokens) {
-      var symbolNodes = this.detectSymbols(tokens);
-      var nodes = this.createTreeByBrackets(symbolNodes);
-      nodes = this.transformTreeByFunctions(nodes);
-      this.checkGrammar(nodes);
+  parse(tokens) {
+    var symbolNodes = this.detectSymbols(tokens);
+    var nodes = this.createTreeByBrackets(symbolNodes);
+    nodes = this.transformTreeByFunctions(nodes);
+    this.checkGrammar(nodes);
 
-      // Wrap the nodes in an array node.
-      return new _frontCalculatorParserNode2.default(nodes);
-    }
+    // Wrap the nodes in an array node.
+    return new _frontCalculatorParserNode2.default(nodes);
+  }
 
-    /**
-     * Creates a flat array of symbol nodes from tokens.
-     *
-     * @param {FrontCalculatorParserToken[]} tokens
-     * @returns {FrontCalculatorParserNodeSymbol[]}
-     */
-  }, {
-    key: "detectSymbols",
-    value: function detectSymbols(tokens) {
-      var symbolNodes = [];
-      var symbol = null;
-      var identifier = null;
-      var expectingOpeningBracket = false; // True if we expect an opening bracket (after a function name)
-      var openBracketCounter = 0;
-      for (var i = 0; i < tokens.length; i++) {
-        var token = tokens[i];
-        var type = token.type;
-        if (_frontCalculatorParser.default.TYPE_WORD === type) {
-          identifier = token.value;
-          symbol = this.symbolLoader.find(identifier);
-          if (null === symbol) {
-            throw 'Error: Detected unknown or invalid string identifier: ' + identifier + '.';
-          }
-        } else if (type === _frontCalculatorParser.default.TYPE_NUMBER) {
-          // Notice: Numbers do not have an identifier
-          var symbolNumbers = this.symbolLoader.findSubTypes(_frontCalculatorSymbol.default);
-          if (symbolNumbers.length < 1 || !(symbolNumbers instanceof Array)) {
-            throw 'Error: Unavailable number symbol processor.';
-          }
-          symbol = symbolNumbers[0];
-        } else {
-          // Type Token::TYPE_CHARACTER:
-          identifier = token.value;
-          symbol = this.symbolLoader.find(identifier);
-          if (null === symbol) {
-            throw 'Error: Detected unknown or invalid string identifier: ' + identifier + '.';
-          }
-          if (symbol instanceof _frontCalculatorSymbolOpening.default) {
-            openBracketCounter++;
-          }
-          if (symbol instanceof _frontCalculatorSymbolClosing.default) {
-            openBracketCounter--;
-
-            // Make sure there are not too many closing brackets
-            if (openBracketCounter < 0) {
-              throw 'Error: Found closing bracket that does not have an opening bracket.';
-            }
-          }
+  /**
+   * Creates a flat array of symbol nodes from tokens.
+   *
+   * @param {FrontCalculatorParserToken[]} tokens
+   * @returns {FrontCalculatorParserNodeSymbol[]}
+   */
+  detectSymbols(tokens) {
+    var symbolNodes = [];
+    var symbol = null;
+    var identifier = null;
+    var expectingOpeningBracket = false; // True if we expect an opening bracket (after a function name)
+    var openBracketCounter = 0;
+    for (var i = 0; i < tokens.length; i++) {
+      var token = tokens[i];
+      var type = token.type;
+      if (_frontCalculatorParser.default.TYPE_WORD === type) {
+        identifier = token.value;
+        symbol = this.symbolLoader.find(identifier);
+        if (null === symbol) {
+          throw 'Error: Detected unknown or invalid string identifier: ' + identifier + '.';
         }
-        if (expectingOpeningBracket) {
-          if (!(symbol instanceof _frontCalculatorSymbolOpening.default)) {
-            throw 'Error: Expected opening bracket (after a function) but got something else.';
-          }
-          expectingOpeningBracket = false;
-        } else {
-          if (symbol instanceof _frontCalculatorSymbolFunction.default) {
-            expectingOpeningBracket = true;
-          }
+      } else if (type === _frontCalculatorParser.default.TYPE_NUMBER) {
+        // Notice: Numbers do not have an identifier
+        var symbolNumbers = this.symbolLoader.findSubTypes(_frontCalculatorSymbol.default);
+        if (symbolNumbers.length < 1 || !(symbolNumbers instanceof Array)) {
+          throw 'Error: Unavailable number symbol processor.';
         }
-        var symbolNode = new _frontCalculatorParserNode.default(token, symbol);
-        symbolNodes.push(symbolNode);
-      }
-
-      // Make sure the term does not end with the name of a function but without an opening bracket
-      if (expectingOpeningBracket) {
-        throw 'Error: Expected opening bracket (after a function) but reached the end of the term';
-      }
-
-      // Make sure there are not too many opening brackets
-      if (openBracketCounter > 0) {
-        throw 'Error: There is at least one opening bracket that does not have a closing bracket';
-      }
-      return symbolNodes;
-    }
-
-    /**
-     * Expects a flat array of symbol nodes and (if possible) transforms
-     * it to a tree of nodes. Cares for brackets.
-     * Attention: Expects valid brackets!
-     * Check the brackets before you call this method.
-     *
-     * @param {FrontCalculatorParserNodeSymbol[]} symbolNodes
-     * @returns {FrontCalculatorParserNodeAbstract[]}
-     */
-  }, {
-    key: "createTreeByBrackets",
-    value: function createTreeByBrackets(symbolNodes) {
-      var tree = [];
-      var nodesInBracket = []; // AbstractSymbol nodes inside level-0-brackets
-      var openBracketCounter = 0;
-      for (var i = 0; i < symbolNodes.length; i++) {
-        var symbolNode = symbolNodes[i];
-        if (!(symbolNode instanceof _frontCalculatorParserNode.default)) {
-          throw 'Error: Expected symbol node, but got "' + symbolNode.constructor.name + '"';
+        symbol = symbolNumbers[0];
+      } else {
+        // Type Token::TYPE_CHARACTER:
+        identifier = token.value;
+        symbol = this.symbolLoader.find(identifier);
+        if (null === symbol) {
+          throw 'Error: Detected unknown or invalid string identifier: ' + identifier + '.';
         }
-        if (symbolNode.symbol instanceof _frontCalculatorSymbolOpening.default) {
+        if (symbol instanceof _frontCalculatorSymbolOpening.default) {
           openBracketCounter++;
-          if (openBracketCounter > 1) {
-            nodesInBracket.push(symbolNode);
-          }
-        } else if (symbolNode.symbol instanceof _frontCalculatorSymbolClosing.default) {
+        }
+        if (symbol instanceof _frontCalculatorSymbolClosing.default) {
           openBracketCounter--;
 
-          // Found a closing bracket on level 0
-          if (0 === openBracketCounter) {
-            var subTree = this.createTreeByBrackets(nodesInBracket);
-
-            // Subtree can be empty for example if the term looks like this: "()" or "functioname()"
-            // But this is okay, we need to allow this so we can call functions without a parameter
-            tree.push(new _frontCalculatorParserNode2.default(subTree));
-            nodesInBracket = [];
-          } else {
-            nodesInBracket.push(symbolNode);
-          }
-        } else {
-          if (0 === openBracketCounter) {
-            tree.push(symbolNode);
-          } else {
-            nodesInBracket.push(symbolNode);
+          // Make sure there are not too many closing brackets
+          if (openBracketCounter < 0) {
+            throw 'Error: Found closing bracket that does not have an opening bracket.';
           }
         }
       }
-      return tree;
-    }
-
-    /**
-     * Replaces [a SymbolNode that has a symbol of type AbstractFunction,
-     * followed by a node of type ContainerNode] by a FunctionNode.
-     * Expects the $nodes not including any function nodes (yet).
-     *
-     * @param {FrontCalculatorParserNodeAbstract[]} nodes
-     *
-     * @returns {FrontCalculatorParserNodeAbstract[]}
-     */
-  }, {
-    key: "transformTreeByFunctions",
-    value: function transformTreeByFunctions(nodes) {
-      var transformedNodes = [];
-      var functionSymbolNode = null;
-      for (var i = 0; i < nodes.length; i++) {
-        var node = nodes[i];
-        if (node instanceof _frontCalculatorParserNode2.default) {
-          var transformedChildNodes = this.transformTreeByFunctions(node.childNodes);
-          if (null !== functionSymbolNode) {
-            var functionNode = new _frontCalculatorParserNode3.default(transformedChildNodes, functionSymbolNode);
-            transformedNodes.push(functionNode);
-            functionSymbolNode = null;
-          } else {
-            // not a function
-            node.childNodes = transformedChildNodes;
-            transformedNodes.push(node);
-          }
-        } else if (node instanceof _frontCalculatorParserNode.default) {
-          var symbol = node.symbol;
-          if (symbol instanceof _frontCalculatorSymbolFunction.default) {
-            functionSymbolNode = node;
-          } else {
-            transformedNodes.push(node);
-          }
-        } else {
-          throw 'Error: Expected array node or symbol node, got "' + node.constructor.name + '"';
+      if (expectingOpeningBracket) {
+        if (!(symbol instanceof _frontCalculatorSymbolOpening.default)) {
+          throw 'Error: Expected opening bracket (after a function) but got something else.';
+        }
+        expectingOpeningBracket = false;
+      } else {
+        if (symbol instanceof _frontCalculatorSymbolFunction.default) {
+          expectingOpeningBracket = true;
         }
       }
-      return transformedNodes;
+      var symbolNode = new _frontCalculatorParserNode.default(token, symbol);
+      symbolNodes.push(symbolNode);
     }
 
-    /**
-     * Ensures the tree follows the grammar rules for terms
-     *
-     * @param {FrontCalculatorParserNodeAbstract[]} nodes
-     */
-  }, {
-    key: "checkGrammar",
-    value: function checkGrammar(nodes) {
-      // TODO Make sure that separators are only in the child nodes of the array node of a function node
-      // (If this happens the calculator will throw an exception)
+    // Make sure the term does not end with the name of a function but without an opening bracket
+    if (expectingOpeningBracket) {
+      throw 'Error: Expected opening bracket (after a function) but reached the end of the term';
+    }
 
-      for (var i = 0; i < nodes.length; i++) {
-        var node = nodes[i];
-        if (node instanceof _frontCalculatorParserNode.default) {
-          var symbol = node.symbol;
-          if (symbol instanceof _frontCalculatorSymbolOperator.default) {
-            var posOfRightOperand = i + 1;
+    // Make sure there are not too many opening brackets
+    if (openBracketCounter > 0) {
+      throw 'Error: There is at least one opening bracket that does not have a closing bracket';
+    }
+    return symbolNodes;
+  }
 
-            // Make sure the operator is positioned left of a (potential) operand (=prefix notation).
-            // Example term: "-1"
-            if (posOfRightOperand >= nodes.length) {
-              throw 'Error: Found operator that does not stand before an operand.';
-            }
-            var posOfLeftOperand = i - 1;
-            var leftOperand = null;
+  /**
+   * Expects a flat array of symbol nodes and (if possible) transforms
+   * it to a tree of nodes. Cares for brackets.
+   * Attention: Expects valid brackets!
+   * Check the brackets before you call this method.
+   *
+   * @param {FrontCalculatorParserNodeSymbol[]} symbolNodes
+   * @returns {FrontCalculatorParserNodeAbstract[]}
+   */
+  createTreeByBrackets(symbolNodes) {
+    var tree = [];
+    var nodesInBracket = []; // AbstractSymbol nodes inside level-0-brackets
+    var openBracketCounter = 0;
+    for (var i = 0; i < symbolNodes.length; i++) {
+      var symbolNode = symbolNodes[i];
+      if (!(symbolNode instanceof _frontCalculatorParserNode.default)) {
+        throw 'Error: Expected symbol node, but got "' + symbolNode.constructor.name + '"';
+      }
+      if (symbolNode.symbol instanceof _frontCalculatorSymbolOpening.default) {
+        openBracketCounter++;
+        if (openBracketCounter > 1) {
+          nodesInBracket.push(symbolNode);
+        }
+      } else if (symbolNode.symbol instanceof _frontCalculatorSymbolClosing.default) {
+        openBracketCounter--;
 
-            // Operator is unary if positioned at the beginning of a term
-            if (posOfLeftOperand >= 0) {
-              leftOperand = nodes[posOfLeftOperand];
-              if (leftOperand instanceof _frontCalculatorParserNode.default) {
-                if (leftOperand.symbol instanceof _frontCalculatorSymbolOperator.default // example 1`+-`5 : + = operator, - = unary
-                || leftOperand.symbol instanceof _frontCalculatorSymbol2.default // example func(1`,-`5) ,= separator, - = unary
-                ) {
-                  // Operator is unary if positioned right to another operator
-                  leftOperand = null;
-                }
-              }
-            }
+        // Found a closing bracket on level 0
+        if (0 === openBracketCounter) {
+          var subTree = this.createTreeByBrackets(nodesInBracket);
 
-            // If null, the operator is unary
-            if (null === leftOperand) {
-              if (!symbol.operatesUnary) {
-                throw 'Error: Found operator in unary notation that is not unary.';
-              }
-
-              // Remember that this node represents a unary operator
-              node.setIsUnaryOperator(true);
-            } else {
-              if (!symbol.operatesBinary) {
-                console.log(symbol);
-                throw 'Error: Found operator in binary notation that is not binary.';
-              }
-            }
-          }
+          // Subtree can be empty for example if the term looks like this: "()" or "functioname()"
+          // But this is okay, we need to allow this so we can call functions without a parameter
+          tree.push(new _frontCalculatorParserNode2.default(subTree));
+          nodesInBracket = [];
         } else {
-          this.checkGrammar(node.childNodes);
+          nodesInBracket.push(symbolNode);
+        }
+      } else {
+        if (0 === openBracketCounter) {
+          tree.push(symbolNode);
+        } else {
+          nodesInBracket.push(symbolNode);
         }
       }
     }
-  }]);
-}();
+    return tree;
+  }
+
+  /**
+   * Replaces [a SymbolNode that has a symbol of type AbstractFunction,
+   * followed by a node of type ContainerNode] by a FunctionNode.
+   * Expects the $nodes not including any function nodes (yet).
+   *
+   * @param {FrontCalculatorParserNodeAbstract[]} nodes
+   *
+   * @returns {FrontCalculatorParserNodeAbstract[]}
+   */
+  transformTreeByFunctions(nodes) {
+    var transformedNodes = [];
+    var functionSymbolNode = null;
+    for (var i = 0; i < nodes.length; i++) {
+      var node = nodes[i];
+      if (node instanceof _frontCalculatorParserNode2.default) {
+        var transformedChildNodes = this.transformTreeByFunctions(node.childNodes);
+        if (null !== functionSymbolNode) {
+          var functionNode = new _frontCalculatorParserNode3.default(transformedChildNodes, functionSymbolNode);
+          transformedNodes.push(functionNode);
+          functionSymbolNode = null;
+        } else {
+          // not a function
+          node.childNodes = transformedChildNodes;
+          transformedNodes.push(node);
+        }
+      } else if (node instanceof _frontCalculatorParserNode.default) {
+        var symbol = node.symbol;
+        if (symbol instanceof _frontCalculatorSymbolFunction.default) {
+          functionSymbolNode = node;
+        } else {
+          transformedNodes.push(node);
+        }
+      } else {
+        throw 'Error: Expected array node or symbol node, got "' + node.constructor.name + '"';
+      }
+    }
+    return transformedNodes;
+  }
+
+  /**
+   * Ensures the tree follows the grammar rules for terms
+   *
+   * @param {FrontCalculatorParserNodeAbstract[]} nodes
+   */
+  checkGrammar(nodes) {
+    // TODO Make sure that separators are only in the child nodes of the array node of a function node
+    // (If this happens the calculator will throw an exception)
+
+    for (var i = 0; i < nodes.length; i++) {
+      var node = nodes[i];
+      if (node instanceof _frontCalculatorParserNode.default) {
+        var symbol = node.symbol;
+        if (symbol instanceof _frontCalculatorSymbolOperator.default) {
+          var posOfRightOperand = i + 1;
+
+          // Make sure the operator is positioned left of a (potential) operand (=prefix notation).
+          // Example term: "-1"
+          if (posOfRightOperand >= nodes.length) {
+            throw 'Error: Found operator that does not stand before an operand.';
+          }
+          var posOfLeftOperand = i - 1;
+          var leftOperand = null;
+
+          // Operator is unary if positioned at the beginning of a term
+          if (posOfLeftOperand >= 0) {
+            leftOperand = nodes[posOfLeftOperand];
+            if (leftOperand instanceof _frontCalculatorParserNode.default) {
+              if (leftOperand.symbol instanceof _frontCalculatorSymbolOperator.default // example 1`+-`5 : + = operator, - = unary
+              || leftOperand.symbol instanceof _frontCalculatorSymbol2.default // example func(1`,-`5) ,= separator, - = unary
+              ) {
+                // Operator is unary if positioned right to another operator
+                leftOperand = null;
+              }
+            }
+          }
+
+          // If null, the operator is unary
+          if (null === leftOperand) {
+            if (!symbol.operatesUnary) {
+              throw 'Error: Found operator in unary notation that is not unary.';
+            }
+
+            // Remember that this node represents a unary operator
+            node.setIsUnaryOperator(true);
+          } else {
+            if (!symbol.operatesBinary) {
+              console.log(symbol);
+              throw 'Error: Found operator in binary notation that is not binary.';
+            }
+          }
+        }
+      } else {
+        this.checkGrammar(node.childNodes);
+      }
+    }
+  }
+}
+exports.default = FrontCalculatorParser;
 
 },{"../symbol/abstract/front.calculator.symbol.function.abstract":11,"../symbol/abstract/front.calculator.symbol.operator.abstract":12,"../symbol/brackets/front.calculator.symbol.closing.bracket":13,"../symbol/brackets/front.calculator.symbol.opening.bracket":14,"../symbol/front.calculator.symbol.number":17,"../symbol/front.calculator.symbol.separator":18,"./front.calculator.parser.token":3,"./node/front.calculator.parser.node.container":6,"./node/front.calculator.parser.node.function":7,"./node/front.calculator.parser.node.symbol":8}],3:[function(require,module,exports){
 "use strict";
@@ -663,15 +627,17 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-var FrontCalculatorParserToken = exports.default = /*#__PURE__*/function () {
-  function FrontCalculatorParserToken(type, value, position) {
-    _classCallCheck(this, FrontCalculatorParserToken);
+class FrontCalculatorParserToken {
+  static get TYPE_WORD() {
+    return 1;
+  }
+  static get TYPE_CHAR() {
+    return 2;
+  }
+  static get TYPE_NUMBER() {
+    return 3;
+  }
+  constructor(type, value, position) {
     /**
      *
      * @type {Number}
@@ -690,23 +656,8 @@ var FrontCalculatorParserToken = exports.default = /*#__PURE__*/function () {
      */
     this.position = position;
   }
-  return _createClass(FrontCalculatorParserToken, null, [{
-    key: "TYPE_WORD",
-    get: function get() {
-      return 1;
-    }
-  }, {
-    key: "TYPE_CHAR",
-    get: function get() {
-      return 2;
-    }
-  }, {
-    key: "TYPE_NUMBER",
-    get: function get() {
-      return 3;
-    }
-  }]);
-}();
+}
+exports.default = FrontCalculatorParserToken;
 
 },{}],4:[function(require,module,exports){
 "use strict";
@@ -717,15 +668,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _frontCalculatorParser = _interopRequireDefault(require("./front.calculator.parser.token"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-var FrontCalculatorParserTokenizer = exports.default = /*#__PURE__*/function () {
-  function FrontCalculatorParserTokenizer(input) {
-    _classCallCheck(this, FrontCalculatorParserTokenizer);
+class FrontCalculatorParserTokenizer {
+  constructor(input) {
     /**
      *
      * @type {String}
@@ -742,295 +686,246 @@ var FrontCalculatorParserTokenizer = exports.default = /*#__PURE__*/function () 
    *
    * @returns {FrontCalculatorParserToken[]}
    */
-  return _createClass(FrontCalculatorParserTokenizer, [{
-    key: "tokenize",
-    value: function tokenize() {
-      this.reset();
-      var tokens = [];
-      var token = this.readToken();
-      while (token) {
-        tokens.push(token);
-        token = this.readToken();
-      }
-      return tokens;
+  tokenize() {
+    this.reset();
+    var tokens = [];
+    var token = this.readToken();
+    while (token) {
+      tokens.push(token);
+      token = this.readToken();
     }
+    return tokens;
+  }
+
+  /**
+   *
+   * @returns {FrontCalculatorParserToken}
+   */
+  readToken() {
+    this.stepOverWhitespace();
+    var char = this.readCurrent();
+    if (null === char) {
+      return null;
+    }
+    var value = null;
+    var type = null;
+    if (this.isLetter(char)) {
+      value = this.readWord();
+      type = _frontCalculatorParser.default.TYPE_WORD;
+    } else if (this.isDigit(char) || this.isPeriod(char)) {
+      value = this.readNumber();
+      type = _frontCalculatorParser.default.TYPE_NUMBER;
+    } else {
+      value = this.readChar();
+      type = _frontCalculatorParser.default.TYPE_CHAR;
+    }
+    return new _frontCalculatorParser.default(type, value, this.currentPosition);
+  }
+
+  /**
+   * Returns true, if a given character is a letter (a-z and A-Z).
+   *
+   * @param char
+   * @returns {boolean}
+   */
+  isLetter(char) {
+    if (null === char) {
+      return false;
+    }
+    var ascii = char.charCodeAt(0);
 
     /**
-     *
-     * @returns {FrontCalculatorParserToken}
-     */
-  }, {
-    key: "readToken",
-    value: function readToken() {
-      this.stepOverWhitespace();
-      var char = this.readCurrent();
-      if (null === char) {
-        return null;
-      }
-      var value = null;
-      var type = null;
-      if (this.isLetter(char)) {
-        value = this.readWord();
-        type = _frontCalculatorParser.default.TYPE_WORD;
-      } else if (this.isDigit(char) || this.isPeriod(char)) {
-        value = this.readNumber();
-        type = _frontCalculatorParser.default.TYPE_NUMBER;
-      } else {
-        value = this.readChar();
-        type = _frontCalculatorParser.default.TYPE_CHAR;
-      }
-      return new _frontCalculatorParser.default(type, value, this.currentPosition);
+     * ASCII codes: 65 = 'A', 90 = 'Z', 97 = 'a', 122 = 'z'--
+     **/
+    return ascii >= 65 && ascii <= 90 || ascii >= 97 && ascii <= 122;
+  }
+
+  /**
+   * Returns true, if a given character is a digit (0-9).
+   *
+   * @param char
+   * @returns {boolean}
+   */
+  isDigit(char) {
+    if (null === char) {
+      return false;
     }
+    var ascii = char.charCodeAt(0);
 
     /**
-     * Returns true, if a given character is a letter (a-z and A-Z).
-     *
-     * @param char
-     * @returns {boolean}
+     * ASCII codes: 48 = '0', 57 = '9'
      */
-  }, {
-    key: "isLetter",
-    value: function isLetter(char) {
-      if (null === char) {
-        return false;
-      }
-      var ascii = char.charCodeAt(0);
+    return ascii >= 48 && ascii <= 57;
+  }
 
-      /**
-       * ASCII codes: 65 = 'A', 90 = 'Z', 97 = 'a', 122 = 'z'--
-       **/
-      return ascii >= 65 && ascii <= 90 || ascii >= 97 && ascii <= 122;
-    }
+  /**
+   * Returns true, if a given character is a period ('.').
+   *
+   * @param char
+   * @returns {boolean}
+   */
+  isPeriod(char) {
+    return '.' === char;
+  }
 
-    /**
-     * Returns true, if a given character is a digit (0-9).
-     *
-     * @param char
-     * @returns {boolean}
-     */
-  }, {
-    key: "isDigit",
-    value: function isDigit(char) {
-      if (null === char) {
-        return false;
-      }
-      var ascii = char.charCodeAt(0);
-
-      /**
-       * ASCII codes: 48 = '0', 57 = '9'
-       */
-      return ascii >= 48 && ascii <= 57;
-    }
-
-    /**
-     * Returns true, if a given character is a period ('.').
-     *
-     * @param char
-     * @returns {boolean}
-     */
-  }, {
-    key: "isPeriod",
-    value: function isPeriod(char) {
-      return '.' === char;
-    }
-
-    /**
-     * Returns true, if a given character is whitespace.
-     * Notice: A null char is not seen as whitespace.
-     *
-     * @param char
-     * @returns {boolean}
-     */
-  }, {
-    key: "isWhitespace",
-    value: function isWhitespace(char) {
-      return [" ", "\t", "\n"].indexOf(char) >= 0;
-    }
-  }, {
-    key: "stepOverWhitespace",
-    value: function stepOverWhitespace() {
-      while (this.isWhitespace(this.readCurrent())) {
-        this.readNext();
-      }
-    }
-
-    /**
-     * Reads a word. Assumes that the cursor of the input stream
-     * currently is positioned at the beginning of a word.
-     *
-     * @returns {string}
-     */
-  }, {
-    key: "readWord",
-    value: function readWord() {
-      var word = '';
-      var char = this.readCurrent();
-      // Try to read the word
-      while (null !== char) {
-        if (this.isLetter(char)) {
-          word += char;
-        } else {
-          break;
-        }
-
-        // Just move the cursor to the next position
-        char = this.readNext();
-      }
-      return word;
-    }
-
-    /**
-     * Reads a number (as a string). Assumes that the cursor
-     * of the input stream currently is positioned at the
-     * beginning of a number.
-     *
-     * @returns {string}
-     */
-  }, {
-    key: "readNumber",
-    value: function readNumber() {
-      var number = '';
-      var foundPeriod = false;
-
-      // Try to read the number.
-      // Notice: It does not matter if the number only consists of a single period
-      // or if it ends with a period.
-      var char = this.readCurrent();
-      while (null !== char) {
-        if (this.isPeriod(char) || this.isDigit(char)) {
-          if (this.isPeriod(char)) {
-            if (foundPeriod) {
-              throw 'Error: A number cannot have more than one period';
-            }
-            foundPeriod = true;
-          }
-          number += char;
-        } else {
-          break;
-        }
-
-        // read next
-        char = this.readNext();
-      }
-      return number;
-    }
-
-    /**
-     * Reads a single char. Assumes that the cursor of the input stream
-     * currently is positioned at a char (not on null).
-     *
-     * @returns {String}
-     */
-  }, {
-    key: "readChar",
-    value: function readChar() {
-      var char = this.readCurrent();
-      // Just move the cursor to the next position
+  /**
+   * Returns true, if a given character is whitespace.
+   * Notice: A null char is not seen as whitespace.
+   *
+   * @param char
+   * @returns {boolean}
+   */
+  isWhitespace(char) {
+    return [" ", "\t", "\n"].indexOf(char) >= 0;
+  }
+  stepOverWhitespace() {
+    while (this.isWhitespace(this.readCurrent())) {
       this.readNext();
-      return char;
     }
+  }
 
-    /**
-     *
-     * @returns {String|null}
-     */
-  }, {
-    key: "readCurrent",
-    value: function readCurrent() {
-      var char = null;
-      if (this.hasCurrent()) {
-        char = this.input[this.currentPosition];
+  /**
+   * Reads a word. Assumes that the cursor of the input stream
+   * currently is positioned at the beginning of a word.
+   *
+   * @returns {string}
+   */
+  readWord() {
+    var word = '';
+    var char = this.readCurrent();
+    // Try to read the word
+    while (null !== char) {
+      if (this.isLetter(char)) {
+        word += char;
+      } else {
+        break;
       }
-      return char;
-    }
 
-    /**
-     * Move the the cursor to the next position.
-     * Will always move the cursor, even if the end of the string has been passed.
-     *
-     * @returns {String}
-     */
-  }, {
-    key: "readNext",
-    value: function readNext() {
-      this.currentPosition++;
-      return this.readCurrent();
+      // Just move the cursor to the next position
+      char = this.readNext();
     }
+    return word;
+  }
 
-    /**
-     * Returns true if there is a character at the current position
-     *
-     * @returns {boolean}
-     */
-  }, {
-    key: "hasCurrent",
-    value: function hasCurrent() {
-      return this.currentPosition < this.input.length;
+  /**
+   * Reads a number (as a string). Assumes that the cursor
+   * of the input stream currently is positioned at the
+   * beginning of a number.
+   *
+   * @returns {string}
+   */
+  readNumber() {
+    var number = '';
+    var foundPeriod = false;
+
+    // Try to read the number.
+    // Notice: It does not matter if the number only consists of a single period
+    // or if it ends with a period.
+    var char = this.readCurrent();
+    while (null !== char) {
+      if (this.isPeriod(char) || this.isDigit(char)) {
+        if (this.isPeriod(char)) {
+          if (foundPeriod) {
+            throw 'Error: A number cannot have more than one period';
+          }
+          foundPeriod = true;
+        }
+        number += char;
+      } else {
+        break;
+      }
+
+      // read next
+      char = this.readNext();
     }
-  }, {
-    key: "reset",
-    value: function reset() {
-      this.currentPosition = 0;
+    return number;
+  }
+
+  /**
+   * Reads a single char. Assumes that the cursor of the input stream
+   * currently is positioned at a char (not on null).
+   *
+   * @returns {String}
+   */
+  readChar() {
+    var char = this.readCurrent();
+    // Just move the cursor to the next position
+    this.readNext();
+    return char;
+  }
+
+  /**
+   *
+   * @returns {String|null}
+   */
+  readCurrent() {
+    var char = null;
+    if (this.hasCurrent()) {
+      char = this.input[this.currentPosition];
     }
-  }]);
-}();
+    return char;
+  }
+
+  /**
+   * Move the the cursor to the next position.
+   * Will always move the cursor, even if the end of the string has been passed.
+   *
+   * @returns {String}
+   */
+  readNext() {
+    this.currentPosition++;
+    return this.readCurrent();
+  }
+
+  /**
+   * Returns true if there is a character at the current position
+   *
+   * @returns {boolean}
+   */
+  hasCurrent() {
+    return this.currentPosition < this.input.length;
+  }
+  reset() {
+    this.currentPosition = 0;
+  }
+}
+exports.default = FrontCalculatorParserTokenizer;
 
 },{"./front.calculator.parser.token":3}],5:[function(require,module,exports){
 "use strict";
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-var FrontCalculatorParserNodeAbstract = exports.default = /*#__PURE__*/_createClass(function FrontCalculatorParserNodeAbstract() {
-  _classCallCheck(this, FrontCalculatorParserNodeAbstract);
-});
+class FrontCalculatorParserNodeAbstract {
+  constructor() {}
+}
+exports.default = FrontCalculatorParserNodeAbstract;
 
 },{}],6:[function(require,module,exports){
 "use strict";
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
 var _frontCalculatorParserNode = _interopRequireDefault(require("./front.calculator.parser.node.abstract"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
-function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
-function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
-function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
-function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
-function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
-function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
 /**
  * A parent node is a container for a (sorted) array of nodes.
  *
  */
-var FrontCalculatorParserNodeContainer = exports.default = /*#__PURE__*/function (_FrontCalculatorParse) {
-  function FrontCalculatorParserNodeContainer(childNodes) {
-    var _this;
-    _classCallCheck(this, FrontCalculatorParserNodeContainer);
-    _this = _callSuper(this, FrontCalculatorParserNodeContainer);
+class FrontCalculatorParserNodeContainer extends _frontCalculatorParserNode.default {
+  constructor(childNodes) {
+    super();
 
     /**
      *
      * @type {FrontCalculatorParserNodeAbstract[]}
      */
-    _this.childNodes = null;
-    _this.setChildNodes(childNodes);
-    return _this;
+    this.childNodes = null;
+    this.setChildNodes(childNodes);
   }
 
   /**
@@ -1038,70 +933,50 @@ var FrontCalculatorParserNodeContainer = exports.default = /*#__PURE__*/function
    * Notice: The number of child nodes can be 0.
    * @param childNodes
    */
-  _inherits(FrontCalculatorParserNodeContainer, _FrontCalculatorParse);
-  return _createClass(FrontCalculatorParserNodeContainer, [{
-    key: "setChildNodes",
-    value: function setChildNodes(childNodes) {
-      childNodes.forEach(function (childNode) {
-        if (!(childNode instanceof _frontCalculatorParserNode.default)) {
-          throw 'Expected AbstractNode, but got ' + childNode.constructor.name;
-        }
-      });
-      this.childNodes = childNodes;
-    }
-
-    /**
-     * Returns the number of child nodes in this array node.
-     * Does not count the child nodes of the child nodes.
-     *
-     * @returns {number}
-     */
-  }, {
-    key: "size",
-    value: function size() {
-      try {
-        return this.childNodes.length;
-      } catch (e) {
-        return 0;
+  setChildNodes(childNodes) {
+    childNodes.forEach(function (childNode) {
+      if (!(childNode instanceof _frontCalculatorParserNode.default)) {
+        throw 'Expected AbstractNode, but got ' + childNode.constructor.name;
       }
-    }
+    });
+    this.childNodes = childNodes;
+  }
 
-    /**
-     * Returns true if the array node does not have any
-     * child nodes. This might sound strange but is possible.
-     *
-     * @returns {boolean}
-     */
-  }, {
-    key: "isEmpty",
-    value: function isEmpty() {
-      return !this.size();
+  /**
+   * Returns the number of child nodes in this array node.
+   * Does not count the child nodes of the child nodes.
+   *
+   * @returns {number}
+   */
+  size() {
+    try {
+      return this.childNodes.length;
+    } catch (e) {
+      return 0;
     }
-  }]);
-}(_frontCalculatorParserNode.default);
+  }
+
+  /**
+   * Returns true if the array node does not have any
+   * child nodes. This might sound strange but is possible.
+   *
+   * @returns {boolean}
+   */
+  isEmpty() {
+    return !this.size();
+  }
+}
+exports.default = FrontCalculatorParserNodeContainer;
 
 },{"./front.calculator.parser.node.abstract":5}],7:[function(require,module,exports){
 "use strict";
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
 var _frontCalculatorParserNode = _interopRequireDefault(require("./front.calculator.parser.node.container"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
-function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
-function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
-function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
-function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
-function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
-function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
 /**
  * A function in a term consists of the name of the function
  * (the symbol of the function) and the brackets that follow
@@ -1112,7 +987,7 @@ function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf 
  * from the ContainerNode class.
  *
  */
-var FrontCalculatorParserNodeFunction = exports.default = /*#__PURE__*/function (_FrontCalculatorParse) {
+class FrontCalculatorParserNodeFunction extends _frontCalculatorParserNode.default {
   /**
    * ContainerNode constructor.
    * Attention: The constructor is differs from the constructor
@@ -1121,26 +996,21 @@ var FrontCalculatorParserNodeFunction = exports.default = /*#__PURE__*/function 
    * @param childNodes
    * @param symbolNode
    */
-  function FrontCalculatorParserNodeFunction(childNodes, symbolNode) {
-    var _this;
-    _classCallCheck(this, FrontCalculatorParserNodeFunction);
-    _this = _callSuper(this, FrontCalculatorParserNodeFunction, [childNodes]);
+  constructor(childNodes, symbolNode) {
+    super(childNodes);
 
     /**
      *
      * @type {FrontCalculatorParserNodeSymbol}
      */
-    _this.symbolNode = symbolNode;
-    return _this;
+    this.symbolNode = symbolNode;
   }
-  _inherits(FrontCalculatorParserNodeFunction, _FrontCalculatorParse);
-  return _createClass(FrontCalculatorParserNodeFunction);
-}(_frontCalculatorParserNode.default);
+}
+exports.default = FrontCalculatorParserNodeFunction;
 
 },{"./front.calculator.parser.node.container":6}],8:[function(require,module,exports){
 "use strict";
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -1148,18 +1018,6 @@ exports.default = void 0;
 var _frontCalculatorSymbolOperator = _interopRequireDefault(require("../../symbol/abstract/front.calculator.symbol.operator.abstract"));
 var _frontCalculatorParserNode = _interopRequireDefault(require("./front.calculator.parser.node.abstract"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
-function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
-function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
-function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
-function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
-function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
-function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
 /**
  * A symbol node is a node in the syntax tree.
  * Leaf nodes do not have any child nodes
@@ -1168,25 +1026,23 @@ function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf 
  * Nodes are created by the parser.
  *
  */
-var FrontCalculatorParserNodeSymbol = exports.default = /*#__PURE__*/function (_FrontCalculatorParse) {
-  function FrontCalculatorParserNodeSymbol(token, symbol) {
-    var _this;
-    _classCallCheck(this, FrontCalculatorParserNodeSymbol);
-    _this = _callSuper(this, FrontCalculatorParserNodeSymbol);
+class FrontCalculatorParserNodeSymbol extends _frontCalculatorParserNode.default {
+  constructor(token, symbol) {
+    super();
 
     /**
      * The token of the node. It contains the value.
      *
      * @type {FrontCalculatorParserToken}
      */
-    _this.token = token;
+    this.token = token;
 
     /**
      * The symbol of the node. It defines the type of the node.
      *
      * @type {FrontCalculatorSymbolAbstract}
      */
-    _this.symbol = symbol;
+    this.symbol = symbol;
 
     /**
      * Unary operators need to be treated specially.
@@ -1197,20 +1053,16 @@ var FrontCalculatorParserNodeSymbol = exports.default = /*#__PURE__*/function (_
      *
      * @type {boolean}
      */
-    _this.isUnaryOperator = false;
-    return _this;
+    this.isUnaryOperator = false;
   }
-  _inherits(FrontCalculatorParserNodeSymbol, _FrontCalculatorParse);
-  return _createClass(FrontCalculatorParserNodeSymbol, [{
-    key: "setIsUnaryOperator",
-    value: function setIsUnaryOperator(isUnaryOperator) {
-      if (!(this.symbol instanceof _frontCalculatorSymbolOperator.default)) {
-        throw 'Error: Cannot mark node as unary operator, because symbol is not an operator but of type ' + this.symbol.constructor.name;
-      }
-      this.isUnaryOperator = isUnaryOperator;
+  setIsUnaryOperator(isUnaryOperator) {
+    if (!(this.symbol instanceof _frontCalculatorSymbolOperator.default)) {
+      throw 'Error: Cannot mark node as unary operator, because symbol is not an operator but of type ' + this.symbol.constructor.name;
     }
-  }]);
-}(_frontCalculatorParserNode.default);
+    this.isUnaryOperator = isUnaryOperator;
+  }
+}
+exports.default = FrontCalculatorParserNodeSymbol;
 
 },{"../../symbol/abstract/front.calculator.symbol.operator.abstract":12,"./front.calculator.parser.node.abstract":5}],9:[function(require,module,exports){
 "use strict";
@@ -1219,15 +1071,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-var FrontCalculatorSymbolAbstract = exports.default = /*#__PURE__*/function () {
-  function FrontCalculatorSymbolAbstract() {
-    _classCallCheck(this, FrontCalculatorSymbolAbstract);
+class FrontCalculatorSymbolAbstract {
+  constructor() {
     /**
      * Array with the 1-n (exception: the Numbers class may have 0)
      * unique identifiers (the textual representation of a symbol)
@@ -1246,40 +1091,25 @@ var FrontCalculatorSymbolAbstract = exports.default = /*#__PURE__*/function () {
    * Attention: The identifiers will be lower-cased!
    * @returns {String[]}
    */
-  return _createClass(FrontCalculatorSymbolAbstract, [{
-    key: "getIdentifiers",
-    value: function getIdentifiers() {
-      var lowerIdentifiers = [];
-      this.identifiers.forEach(function (identifier) {
-        lowerIdentifiers.push(identifier.toLowerCase());
-      });
-      return lowerIdentifiers;
-    }
-  }]);
-}();
+  getIdentifiers() {
+    var lowerIdentifiers = [];
+    this.identifiers.forEach(function (identifier) {
+      lowerIdentifiers.push(identifier.toLowerCase());
+    });
+    return lowerIdentifiers;
+  }
+}
+exports.default = FrontCalculatorSymbolAbstract;
 
 },{}],10:[function(require,module,exports){
 "use strict";
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
 var _frontCalculatorSymbol = _interopRequireDefault(require("./front.calculator.symbol.abstract"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
-function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
-function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
-function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
-function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
-function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
-function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
 /**
  * This class is the base class for all symbols that are of the type "constant".
  * We recommend to use names as textual representations for this type of symbol.
@@ -1287,11 +1117,9 @@ function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf 
  * (for example M_PI) is based on the "precision" directive in php.ini,
  * which defaults to 14.
  */
-var FrontCalculatorSymbolConstantAbstract = exports.default = /*#__PURE__*/function (_FrontCalculatorSymbo) {
-  function FrontCalculatorSymbolConstantAbstract() {
-    var _this;
-    _classCallCheck(this, FrontCalculatorSymbolConstantAbstract);
-    _this = _callSuper(this, FrontCalculatorSymbolConstantAbstract);
+class FrontCalculatorSymbolConstantAbstract extends _frontCalculatorSymbol.default {
+  constructor() {
+    super();
 
     /**
      * This is the value of the constant. We use 0 as an example here,
@@ -1301,43 +1129,27 @@ var FrontCalculatorSymbolConstantAbstract = exports.default = /*#__PURE__*/funct
      *
      * @type {number}
      */
-    _this.value = 0;
-    return _this;
+    this.value = 0;
   }
-  _inherits(FrontCalculatorSymbolConstantAbstract, _FrontCalculatorSymbo);
-  return _createClass(FrontCalculatorSymbolConstantAbstract);
-}(_frontCalculatorSymbol.default);
+}
+exports.default = FrontCalculatorSymbolConstantAbstract;
 
 },{"./front.calculator.symbol.abstract":9}],11:[function(require,module,exports){
 "use strict";
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
 var _frontCalculatorSymbol = _interopRequireDefault(require("./front.calculator.symbol.abstract"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
-function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
-function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
-function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
-function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
-function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
-function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
 /**
  * This class is the base class for all symbols that are of the type "function".
  * Typically the textual representation of a function consists of two or more letters.
  */
-var FrontCalculatorSymbolFunctionAbstract = exports.default = /*#__PURE__*/function (_FrontCalculatorSymbo) {
-  function FrontCalculatorSymbolFunctionAbstract() {
-    _classCallCheck(this, FrontCalculatorSymbolFunctionAbstract);
-    return _callSuper(this, FrontCalculatorSymbolFunctionAbstract);
+class FrontCalculatorSymbolFunctionAbstract extends _frontCalculatorSymbol.default {
+  constructor() {
+    super();
   }
 
   /**
@@ -1355,37 +1167,21 @@ var FrontCalculatorSymbolFunctionAbstract = exports.default = /*#__PURE__*/funct
    * @param {int[]|float[]} params
    * @returns {number}
    */
-  _inherits(FrontCalculatorSymbolFunctionAbstract, _FrontCalculatorSymbo);
-  return _createClass(FrontCalculatorSymbolFunctionAbstract, [{
-    key: "execute",
-    value: function execute(params) {
-      return 0.0;
-    }
-  }]);
-}(_frontCalculatorSymbol.default);
+  execute(params) {
+    return 0.0;
+  }
+}
+exports.default = FrontCalculatorSymbolFunctionAbstract;
 
 },{"./front.calculator.symbol.abstract":9}],12:[function(require,module,exports){
 "use strict";
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
 var _frontCalculatorSymbol = _interopRequireDefault(require("./front.calculator.symbol.abstract"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
-function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
-function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
-function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
-function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
-function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
-function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
 /**
  * This class is the base class for all symbols that are of the type "(binary) operator".
  * The textual representation of an operator consists of a single char that is not a letter.
@@ -1393,11 +1189,9 @@ function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf 
  * Operators are always binary. To mimic a unary operator you might want to create a function
  * that accepts one parameter.
  */
-var FrontCalculatorSymbolOperatorAbstract = exports.default = /*#__PURE__*/function (_FrontCalculatorSymbo) {
-  function FrontCalculatorSymbolOperatorAbstract() {
-    var _this;
-    _classCallCheck(this, FrontCalculatorSymbolOperatorAbstract);
-    _this = _callSuper(this, FrontCalculatorSymbolOperatorAbstract);
+class FrontCalculatorSymbolOperatorAbstract extends _frontCalculatorSymbol.default {
+  constructor() {
+    super();
 
     /**
      * The operator precedence determines which operators to perform first
@@ -1408,7 +1202,7 @@ var FrontCalculatorSymbolOperatorAbstract = exports.default = /*#__PURE__*/funct
      *
      * @type {number}
      */
-    _this.precedence = 0;
+    this.precedence = 0;
 
     /**
      * Usually operators are binary, they operate on two operands (numbers).
@@ -1422,7 +1216,7 @@ var FrontCalculatorSymbolOperatorAbstract = exports.default = /*#__PURE__*/funct
      *
      * @type {boolean}
      */
-    _this.operatesUnary = false;
+    this.operatesUnary = false;
 
     /**
      * Usually operators are binary, they operate on two operands (numbers).
@@ -1430,125 +1224,70 @@ var FrontCalculatorSymbolOperatorAbstract = exports.default = /*#__PURE__*/funct
      *
      * @type {boolean}
      */
-    _this.operatesBinary = true;
-    return _this;
+    this.operatesBinary = true;
   }
-  _inherits(FrontCalculatorSymbolOperatorAbstract, _FrontCalculatorSymbo);
-  return _createClass(FrontCalculatorSymbolOperatorAbstract, [{
-    key: "operate",
-    value: function operate(leftNumber, rightNumber) {
-      return 0.0;
-    }
-  }]);
-}(_frontCalculatorSymbol.default);
+  operate(leftNumber, rightNumber) {
+    return 0.0;
+  }
+}
+exports.default = FrontCalculatorSymbolOperatorAbstract;
 
 },{"./front.calculator.symbol.abstract":9}],13:[function(require,module,exports){
 "use strict";
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
 var _frontCalculatorSymbol = _interopRequireDefault(require("../abstract/front.calculator.symbol.abstract"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
-function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
-function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
-function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
-function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
-function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
-function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
-var FrontCalculatorSymbolClosingBracket = exports.default = /*#__PURE__*/function (_FrontCalculatorSymbo) {
-  function FrontCalculatorSymbolClosingBracket() {
-    var _this;
-    _classCallCheck(this, FrontCalculatorSymbolClosingBracket);
-    _this = _callSuper(this, FrontCalculatorSymbolClosingBracket);
-    _this.identifiers = [')'];
-    return _this;
+class FrontCalculatorSymbolClosingBracket extends _frontCalculatorSymbol.default {
+  constructor() {
+    super();
+    this.identifiers = [')'];
   }
-  _inherits(FrontCalculatorSymbolClosingBracket, _FrontCalculatorSymbo);
-  return _createClass(FrontCalculatorSymbolClosingBracket);
-}(_frontCalculatorSymbol.default);
+}
+exports.default = FrontCalculatorSymbolClosingBracket;
 
 },{"../abstract/front.calculator.symbol.abstract":9}],14:[function(require,module,exports){
 "use strict";
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
 var _frontCalculatorSymbol = _interopRequireDefault(require("../abstract/front.calculator.symbol.abstract"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
-function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
-function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
-function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
-function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
-function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
-function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
-var FrontCalculatorSymbolOpeningBracket = exports.default = /*#__PURE__*/function (_FrontCalculatorSymbo) {
-  function FrontCalculatorSymbolOpeningBracket() {
-    var _this;
-    _classCallCheck(this, FrontCalculatorSymbolOpeningBracket);
-    _this = _callSuper(this, FrontCalculatorSymbolOpeningBracket);
-    _this.identifiers = ['('];
-    return _this;
+class FrontCalculatorSymbolOpeningBracket extends _frontCalculatorSymbol.default {
+  constructor() {
+    super();
+    this.identifiers = ['('];
   }
-  _inherits(FrontCalculatorSymbolOpeningBracket, _FrontCalculatorSymbo);
-  return _createClass(FrontCalculatorSymbolOpeningBracket);
-}(_frontCalculatorSymbol.default);
+}
+exports.default = FrontCalculatorSymbolOpeningBracket;
 
 },{"../abstract/front.calculator.symbol.abstract":9}],15:[function(require,module,exports){
 "use strict";
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
 var _frontCalculatorSymbolConstant = _interopRequireDefault(require("../abstract/front.calculator.symbol.constant.abstract"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
-function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
-function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
-function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
-function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
-function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
-function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
 /**
  * Math.PI
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/PI
  */
-var FrontCalculatorSymbolConstantPi = exports.default = /*#__PURE__*/function (_FrontCalculatorSymbo) {
-  function FrontCalculatorSymbolConstantPi() {
-    var _this;
-    _classCallCheck(this, FrontCalculatorSymbolConstantPi);
-    _this = _callSuper(this, FrontCalculatorSymbolConstantPi);
-    _this.identifiers = ['pi'];
-    _this.value = Math.PI;
-    return _this;
+class FrontCalculatorSymbolConstantPi extends _frontCalculatorSymbolConstant.default {
+  constructor() {
+    super();
+    this.identifiers = ['pi'];
+    this.value = Math.PI;
   }
-  _inherits(FrontCalculatorSymbolConstantPi, _FrontCalculatorSymbo);
-  return _createClass(FrontCalculatorSymbolConstantPi);
-}(_frontCalculatorSymbolConstant.default);
+}
+exports.default = FrontCalculatorSymbolConstantPi;
 
 },{"../abstract/front.calculator.symbol.constant.abstract":10}],16:[function(require,module,exports){
 "use strict";
@@ -1576,15 +1315,8 @@ var _frontCalculatorSymbolFunction5 = _interopRequireDefault(require("./function
 var _frontCalculatorSymbolFunction6 = _interopRequireDefault(require("./functions/front.calculator.symbol.function.min"));
 var _frontCalculatorSymbolFunction7 = _interopRequireDefault(require("./functions/front.calculator.symbol.function.round"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-var FrontCalculatorSymbolLoader = exports.default = /*#__PURE__*/function () {
-  function FrontCalculatorSymbolLoader() {
-    _classCallCheck(this, FrontCalculatorSymbolLoader);
+class FrontCalculatorSymbolLoader {
+  constructor() {
     /**
      *
      * @type {{FrontCalculatorSymbolOperatorModulo: FrontCalculatorSymbolOperatorModulo, FrontCalculatorSymbolOperatorSubtraction: FrontCalculatorSymbolOperatorSubtraction, FrontCalculatorSymbolOperatorExponentiation: FrontCalculatorSymbolOperatorExponentiation, FrontCalculatorSymbolOperatorAddition: FrontCalculatorSymbolOperatorAddition, FrontCalculatorSymbolClosingBracket: FrontCalculatorSymbolClosingBracket, FrontCalculatorSymbolFunctionMax: FrontCalculatorSymbolFunctionMax, FrontCalculatorSymbolFunctionCeil: FrontCalculatorSymbolFunctionCeil, FrontCalculatorSymbolSeparator: FrontCalculatorSymbolSeparator, FrontCalculatorSymbolOperatorMultiplication: FrontCalculatorSymbolOperatorMultiplication, FrontCalculatorSymbolFunctionAbs: FrontCalculatorSymbolFunctionAbs, FrontCalculatorSymbolFunctionAvg: FrontCalculatorSymbolFunctionAvg, FrontCalculatorSymbolFunctionFloor: FrontCalculatorSymbolFunctionFloor, FrontCalculatorSymbolFunctionMin: FrontCalculatorSymbolFunctionMin, FrontCalculatorSymbolOperatorDivision: FrontCalculatorSymbolOperatorDivision, FrontCalculatorSymbolNumber: FrontCalculatorSymbolNumber, FrontCalculatorSymbolOpeningBracket: FrontCalculatorSymbolOpeningBracket, FrontCalculatorSymbolConstantPi: FrontCalculatorSymbolConstantPi, FrontCalculatorSymbolFunctionRound: FrontCalculatorSymbolFunctionRound}}
@@ -1618,69 +1350,52 @@ var FrontCalculatorSymbolLoader = exports.default = /*#__PURE__*/function () {
    * @param identifier
    * @returns {FrontCalculatorSymbolAbstract|null}
    */
-  return _createClass(FrontCalculatorSymbolLoader, [{
-    key: "find",
-    value: function find(identifier) {
-      identifier = identifier.toLowerCase();
-      for (var key in this.symbols) {
-        if (this.symbols.hasOwnProperty(key)) {
-          var symbol = this.symbols[key];
-          if (symbol.getIdentifiers().indexOf(identifier) >= 0) {
-            return symbol;
-          }
+  find(identifier) {
+    identifier = identifier.toLowerCase();
+    for (var key in this.symbols) {
+      if (this.symbols.hasOwnProperty(key)) {
+        var symbol = this.symbols[key];
+        if (symbol.getIdentifiers().indexOf(identifier) >= 0) {
+          return symbol;
         }
       }
-      return null;
     }
+    return null;
+  }
 
-    /**
-     * Returns all symbols that inherit from a given abstract
-     * parent type (class): The parent type has to be an
-     * AbstractSymbol.
-     * Notice: The parent type name will not be validated!
-     *
-     * @param parentTypeName
-     * @returns {FrontCalculatorSymbolAbstract[]}
-     */
-  }, {
-    key: "findSubTypes",
-    value: function findSubTypes(parentTypeName) {
-      var symbols = [];
-      for (var key in this.symbols) {
-        if (this.symbols.hasOwnProperty(key)) {
-          var symbol = this.symbols[key];
-          if (symbol instanceof parentTypeName) {
-            symbols.push(symbol);
-          }
+  /**
+   * Returns all symbols that inherit from a given abstract
+   * parent type (class): The parent type has to be an
+   * AbstractSymbol.
+   * Notice: The parent type name will not be validated!
+   *
+   * @param parentTypeName
+   * @returns {FrontCalculatorSymbolAbstract[]}
+   */
+  findSubTypes(parentTypeName) {
+    var symbols = [];
+    for (var key in this.symbols) {
+      if (this.symbols.hasOwnProperty(key)) {
+        var symbol = this.symbols[key];
+        if (symbol instanceof parentTypeName) {
+          symbols.push(symbol);
         }
       }
-      return symbols;
     }
-  }]);
-}();
+    return symbols;
+  }
+}
+exports.default = FrontCalculatorSymbolLoader;
 
 },{"./brackets/front.calculator.symbol.closing.bracket":13,"./brackets/front.calculator.symbol.opening.bracket":14,"./constants/front.calculator.symbol.constant.pi":15,"./front.calculator.symbol.number":17,"./front.calculator.symbol.separator":18,"./functions/front.calculator.symbol.function.abs":19,"./functions/front.calculator.symbol.function.avg":20,"./functions/front.calculator.symbol.function.ceil":21,"./functions/front.calculator.symbol.function.floor":22,"./functions/front.calculator.symbol.function.max":23,"./functions/front.calculator.symbol.function.min":24,"./functions/front.calculator.symbol.function.round":25,"./operators/front.calculator.symbol.operator.addition":26,"./operators/front.calculator.symbol.operator.division":27,"./operators/front.calculator.symbol.operator.exponentiation":28,"./operators/front.calculator.symbol.operator.modulo":29,"./operators/front.calculator.symbol.operator.multiplication":30,"./operators/front.calculator.symbol.operator.subtraction":31}],17:[function(require,module,exports){
 "use strict";
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
 var _frontCalculatorSymbol = _interopRequireDefault(require("./abstract/front.calculator.symbol.abstract"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
-function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
-function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
-function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
-function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
-function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
-function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
 /**
  * This class is the class that represents symbols of type "number".
  * Numbers are completely handled by the tokenizer/parser so there is no need to
@@ -1688,429 +1403,252 @@ function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf 
  * a textual representation of numbers (numbers always consist of digits
  * and may include a single dot).
  */
-var FrontCalculatorSymbolNumber = exports.default = /*#__PURE__*/function (_FrontCalculatorSymbo) {
-  function FrontCalculatorSymbolNumber() {
-    _classCallCheck(this, FrontCalculatorSymbolNumber);
-    return _callSuper(this, FrontCalculatorSymbolNumber);
+class FrontCalculatorSymbolNumber extends _frontCalculatorSymbol.default {
+  constructor() {
+    super();
   }
-  _inherits(FrontCalculatorSymbolNumber, _FrontCalculatorSymbo);
-  return _createClass(FrontCalculatorSymbolNumber);
-}(_frontCalculatorSymbol.default);
+}
+exports.default = FrontCalculatorSymbolNumber;
 
 },{"./abstract/front.calculator.symbol.abstract":9}],18:[function(require,module,exports){
 "use strict";
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
 var _frontCalculatorSymbol = _interopRequireDefault(require("./abstract/front.calculator.symbol.abstract"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
-function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
-function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
-function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
-function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
-function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
-function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
 /**
  * This class is a class that represents symbols of type "separator".
  * A separator separates the arguments of a (mathematical) function.
  * Most likely we will only need one concrete "separator" class.
  */
-var FrontCalculatorSymbolSeparator = exports.default = /*#__PURE__*/function (_FrontCalculatorSymbo) {
-  function FrontCalculatorSymbolSeparator() {
-    var _this;
-    _classCallCheck(this, FrontCalculatorSymbolSeparator);
-    _this = _callSuper(this, FrontCalculatorSymbolSeparator);
-    _this.identifiers = [','];
-    return _this;
+class FrontCalculatorSymbolSeparator extends _frontCalculatorSymbol.default {
+  constructor() {
+    super();
+    this.identifiers = [','];
   }
-  _inherits(FrontCalculatorSymbolSeparator, _FrontCalculatorSymbo);
-  return _createClass(FrontCalculatorSymbolSeparator);
-}(_frontCalculatorSymbol.default);
+}
+exports.default = FrontCalculatorSymbolSeparator;
 
 },{"./abstract/front.calculator.symbol.abstract":9}],19:[function(require,module,exports){
 "use strict";
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
 var _frontCalculatorSymbolFunction = _interopRequireDefault(require("../abstract/front.calculator.symbol.function.abstract"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
-function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
-function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
-function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
-function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
-function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
-function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
 /**
  * Math.abs() function. Expects one parameter.
  * Example: "abs(2)" => 2, "abs(-2)" => 2, "abs(0)" => 0
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/abs
  */
-var FrontCalculatorSymbolFunctionAbs = exports.default = /*#__PURE__*/function (_FrontCalculatorSymbo) {
-  function FrontCalculatorSymbolFunctionAbs() {
-    var _this;
-    _classCallCheck(this, FrontCalculatorSymbolFunctionAbs);
-    _this = _callSuper(this, FrontCalculatorSymbolFunctionAbs);
-    _this.identifiers = ['abs'];
-    return _this;
+class FrontCalculatorSymbolFunctionAbs extends _frontCalculatorSymbolFunction.default {
+  constructor() {
+    super();
+    this.identifiers = ['abs'];
   }
-  _inherits(FrontCalculatorSymbolFunctionAbs, _FrontCalculatorSymbo);
-  return _createClass(FrontCalculatorSymbolFunctionAbs, [{
-    key: "execute",
-    value: function execute(params) {
-      if (params.length !== 1) {
-        throw 'Error: Expected one argument, got ' + params.length;
-      }
-      var number = params[0];
-      return Math.abs(number);
+  execute(params) {
+    if (params.length !== 1) {
+      throw 'Error: Expected one argument, got ' + params.length;
     }
-  }]);
-}(_frontCalculatorSymbolFunction.default);
+    var number = params[0];
+    return Math.abs(number);
+  }
+}
+exports.default = FrontCalculatorSymbolFunctionAbs;
 
 },{"../abstract/front.calculator.symbol.function.abstract":11}],20:[function(require,module,exports){
 "use strict";
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
 var _frontCalculatorSymbolFunction = _interopRequireDefault(require("../abstract/front.calculator.symbol.function.abstract"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
-function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
-function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
-function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
-function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
-function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
-function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
 /**
  * Math.abs() function. Expects one parameter.
  * Example: "abs(2)" => 2, "abs(-2)" => 2, "abs(0)" => 0
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/abs
  */
-var FrontCalculatorSymbolFunctionAvg = exports.default = /*#__PURE__*/function (_FrontCalculatorSymbo) {
-  function FrontCalculatorSymbolFunctionAvg() {
-    var _this;
-    _classCallCheck(this, FrontCalculatorSymbolFunctionAvg);
-    _this = _callSuper(this, FrontCalculatorSymbolFunctionAvg);
-    _this.identifiers = ['avg'];
-    return _this;
+class FrontCalculatorSymbolFunctionAvg extends _frontCalculatorSymbolFunction.default {
+  constructor() {
+    super();
+    this.identifiers = ['avg'];
   }
-  _inherits(FrontCalculatorSymbolFunctionAvg, _FrontCalculatorSymbo);
-  return _createClass(FrontCalculatorSymbolFunctionAvg, [{
-    key: "execute",
-    value: function execute(params) {
-      if (params.length < 1) {
-        throw 'Error: Expected at least one argument, got ' + params.length;
-      }
-      var sum = 0.0;
-      for (var i = 0; i < params.length; i++) {
-        sum += params[i];
-      }
-      return sum / params.length;
+  execute(params) {
+    if (params.length < 1) {
+      throw 'Error: Expected at least one argument, got ' + params.length;
     }
-  }]);
-}(_frontCalculatorSymbolFunction.default);
+    var sum = 0.0;
+    for (var i = 0; i < params.length; i++) {
+      sum += params[i];
+    }
+    return sum / params.length;
+  }
+}
+exports.default = FrontCalculatorSymbolFunctionAvg;
 
 },{"../abstract/front.calculator.symbol.function.abstract":11}],21:[function(require,module,exports){
 "use strict";
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
 var _frontCalculatorSymbolFunction = _interopRequireDefault(require("../abstract/front.calculator.symbol.function.abstract"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
-function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
-function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
-function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
-function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
-function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
-function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
 /**
  * Math.ceil() function aka round fractions up.
  * Expects one parameter.
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/ceil
  */
-var FrontCalculatorSymbolFunctionCeil = exports.default = /*#__PURE__*/function (_FrontCalculatorSymbo) {
-  function FrontCalculatorSymbolFunctionCeil() {
-    var _this;
-    _classCallCheck(this, FrontCalculatorSymbolFunctionCeil);
-    _this = _callSuper(this, FrontCalculatorSymbolFunctionCeil);
-    _this.identifiers = ['ceil'];
-    return _this;
+class FrontCalculatorSymbolFunctionCeil extends _frontCalculatorSymbolFunction.default {
+  constructor() {
+    super();
+    this.identifiers = ['ceil'];
   }
-  _inherits(FrontCalculatorSymbolFunctionCeil, _FrontCalculatorSymbo);
-  return _createClass(FrontCalculatorSymbolFunctionCeil, [{
-    key: "execute",
-    value: function execute(params) {
-      if (params.length !== 1) {
-        throw 'Error: Expected one argument, got ' + params.length;
-      }
-      return Math.ceil(params[0]);
+  execute(params) {
+    if (params.length !== 1) {
+      throw 'Error: Expected one argument, got ' + params.length;
     }
-  }]);
-}(_frontCalculatorSymbolFunction.default);
+    return Math.ceil(params[0]);
+  }
+}
+exports.default = FrontCalculatorSymbolFunctionCeil;
 
 },{"../abstract/front.calculator.symbol.function.abstract":11}],22:[function(require,module,exports){
 "use strict";
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
 var _frontCalculatorSymbolFunction = _interopRequireDefault(require("../abstract/front.calculator.symbol.function.abstract"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
-function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
-function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
-function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
-function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
-function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
-function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
 /**
  * Math.floor() function aka round fractions down.
  * Expects one parameter.
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/floor
  */
-var FrontCalculatorSymbolFunctionFloor = exports.default = /*#__PURE__*/function (_FrontCalculatorSymbo) {
-  function FrontCalculatorSymbolFunctionFloor() {
-    var _this;
-    _classCallCheck(this, FrontCalculatorSymbolFunctionFloor);
-    _this = _callSuper(this, FrontCalculatorSymbolFunctionFloor);
-    _this.identifiers = ['floor'];
-    return _this;
+class FrontCalculatorSymbolFunctionFloor extends _frontCalculatorSymbolFunction.default {
+  constructor() {
+    super();
+    this.identifiers = ['floor'];
   }
-  _inherits(FrontCalculatorSymbolFunctionFloor, _FrontCalculatorSymbo);
-  return _createClass(FrontCalculatorSymbolFunctionFloor, [{
-    key: "execute",
-    value: function execute(params) {
-      if (params.length !== 1) {
-        throw 'Error: Expected one argument, got ' + params.length;
-      }
-      return Math.floor(params[0]);
+  execute(params) {
+    if (params.length !== 1) {
+      throw 'Error: Expected one argument, got ' + params.length;
     }
-  }]);
-}(_frontCalculatorSymbolFunction.default);
+    return Math.floor(params[0]);
+  }
+}
+exports.default = FrontCalculatorSymbolFunctionFloor;
 
 },{"../abstract/front.calculator.symbol.function.abstract":11}],23:[function(require,module,exports){
 "use strict";
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
 var _frontCalculatorSymbolFunction = _interopRequireDefault(require("../abstract/front.calculator.symbol.function.abstract"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
-function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
-function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
-function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
-function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
-function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
-function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
-function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
-function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
-function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
 /**
  * Math.max() function. Expects at least one parameter.
  * Example: "max(1,2,3)" => 3, "max(1,-1)" => 1, "max(0,0)" => 0, "max(2)" => 2
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/max
  */
-var FrontCalculatorSymbolFunctionMax = exports.default = /*#__PURE__*/function (_FrontCalculatorSymbo) {
-  function FrontCalculatorSymbolFunctionMax() {
-    var _this;
-    _classCallCheck(this, FrontCalculatorSymbolFunctionMax);
-    _this = _callSuper(this, FrontCalculatorSymbolFunctionMax);
-    _this.identifiers = ['max'];
-    return _this;
+class FrontCalculatorSymbolFunctionMax extends _frontCalculatorSymbolFunction.default {
+  constructor() {
+    super();
+    this.identifiers = ['max'];
   }
-  _inherits(FrontCalculatorSymbolFunctionMax, _FrontCalculatorSymbo);
-  return _createClass(FrontCalculatorSymbolFunctionMax, [{
-    key: "execute",
-    value: function execute(params) {
-      if (params.length < 1) {
-        throw 'Error: Expected at least one argument, got ' + params.length;
-      }
-      return Math.max.apply(Math, _toConsumableArray(params));
+  execute(params) {
+    if (params.length < 1) {
+      throw 'Error: Expected at least one argument, got ' + params.length;
     }
-  }]);
-}(_frontCalculatorSymbolFunction.default);
+    return Math.max(...params);
+  }
+}
+exports.default = FrontCalculatorSymbolFunctionMax;
 
 },{"../abstract/front.calculator.symbol.function.abstract":11}],24:[function(require,module,exports){
 "use strict";
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
 var _frontCalculatorSymbolFunction = _interopRequireDefault(require("../abstract/front.calculator.symbol.function.abstract"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
-function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
-function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
-function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
-function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
-function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
-function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
-function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
-function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
-function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
 /**
  * Math.min() function. Expects at least one parameter.
  * Example: "min(1,2,3)" => 1, "min(1,-1)" => -1, "min(0,0)" => 0, "min(2)" => 2
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/min
  */
-var FrontCalculatorSymbolFunctionMin = exports.default = /*#__PURE__*/function (_FrontCalculatorSymbo) {
-  function FrontCalculatorSymbolFunctionMin() {
-    var _this;
-    _classCallCheck(this, FrontCalculatorSymbolFunctionMin);
-    _this = _callSuper(this, FrontCalculatorSymbolFunctionMin);
-    _this.identifiers = ['min'];
-    return _this;
+class FrontCalculatorSymbolFunctionMin extends _frontCalculatorSymbolFunction.default {
+  constructor() {
+    super();
+    this.identifiers = ['min'];
   }
-  _inherits(FrontCalculatorSymbolFunctionMin, _FrontCalculatorSymbo);
-  return _createClass(FrontCalculatorSymbolFunctionMin, [{
-    key: "execute",
-    value: function execute(params) {
-      if (params.length < 1) {
-        throw 'Error: Expected at least one argument, got ' + params.length;
-      }
-      return Math.min.apply(Math, _toConsumableArray(params));
+  execute(params) {
+    if (params.length < 1) {
+      throw 'Error: Expected at least one argument, got ' + params.length;
     }
-  }]);
-}(_frontCalculatorSymbolFunction.default);
+    return Math.min(...params);
+  }
+}
+exports.default = FrontCalculatorSymbolFunctionMin;
 
 },{"../abstract/front.calculator.symbol.function.abstract":11}],25:[function(require,module,exports){
 "use strict";
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
 var _frontCalculatorSymbolFunction = _interopRequireDefault(require("../abstract/front.calculator.symbol.function.abstract"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
-function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
-function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
-function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
-function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
-function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
-function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
 /**
  * Math.round() function aka rounds a float.
  * Expects one parameter.
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/round
  */
-var FrontCalculatorSymbolFunctionRound = exports.default = /*#__PURE__*/function (_FrontCalculatorSymbo) {
-  function FrontCalculatorSymbolFunctionRound() {
-    var _this;
-    _classCallCheck(this, FrontCalculatorSymbolFunctionRound);
-    _this = _callSuper(this, FrontCalculatorSymbolFunctionRound);
-    _this.identifiers = ['round'];
-    return _this;
+class FrontCalculatorSymbolFunctionRound extends _frontCalculatorSymbolFunction.default {
+  constructor() {
+    super();
+    this.identifiers = ['round'];
   }
-  _inherits(FrontCalculatorSymbolFunctionRound, _FrontCalculatorSymbo);
-  return _createClass(FrontCalculatorSymbolFunctionRound, [{
-    key: "execute",
-    value: function execute(params) {
-      if (params.length !== 1) {
-        throw 'Error: Expected one argument, got ' + params.length;
-      }
-      return Math.round(params[0]);
+  execute(params) {
+    if (params.length !== 1) {
+      throw 'Error: Expected one argument, got ' + params.length;
     }
-  }]);
-}(_frontCalculatorSymbolFunction.default);
+    return Math.round(params[0]);
+  }
+}
+exports.default = FrontCalculatorSymbolFunctionRound;
 
 },{"../abstract/front.calculator.symbol.function.abstract":11}],26:[function(require,module,exports){
 "use strict";
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
 var _frontCalculatorSymbolOperator = _interopRequireDefault(require("../abstract/front.calculator.symbol.operator.abstract"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
-function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
-function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
-function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
-function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
-function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
-function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
 /**
  * Operator for mathematical addition.
  * Example: "1+2" => 3
@@ -2118,46 +1656,27 @@ function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf 
  * @see     https://en.wikipedia.org/wiki/Addition
  *
  */
-var FrontCalculatorSymbolOperatorAddition = exports.default = /*#__PURE__*/function (_FrontCalculatorSymbo) {
-  function FrontCalculatorSymbolOperatorAddition() {
-    var _this;
-    _classCallCheck(this, FrontCalculatorSymbolOperatorAddition);
-    _this = _callSuper(this, FrontCalculatorSymbolOperatorAddition);
-    _this.identifiers = ['+'];
-    _this.precedence = 100;
-    return _this;
+class FrontCalculatorSymbolOperatorAddition extends _frontCalculatorSymbolOperator.default {
+  constructor() {
+    super();
+    this.identifiers = ['+'];
+    this.precedence = 100;
   }
-  _inherits(FrontCalculatorSymbolOperatorAddition, _FrontCalculatorSymbo);
-  return _createClass(FrontCalculatorSymbolOperatorAddition, [{
-    key: "operate",
-    value: function operate(leftNumber, rightNumber) {
-      return leftNumber + rightNumber;
-    }
-  }]);
-}(_frontCalculatorSymbolOperator.default);
+  operate(leftNumber, rightNumber) {
+    return leftNumber + rightNumber;
+  }
+}
+exports.default = FrontCalculatorSymbolOperatorAddition;
 
 },{"../abstract/front.calculator.symbol.operator.abstract":12}],27:[function(require,module,exports){
 "use strict";
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
 var _frontCalculatorSymbolOperator = _interopRequireDefault(require("../abstract/front.calculator.symbol.operator.abstract"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
-function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
-function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
-function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
-function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
-function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
-function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
 /**
  * Operator for mathematical division.
  * Example: "6/2" => 3, "6/0" => PHP warning
@@ -2165,52 +1684,33 @@ function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf 
  * @see     https://en.wikipedia.org/wiki/Division_(mathematics)
  *
  */
-var FrontCalculatorSymbolOperatorDivision = exports.default = /*#__PURE__*/function (_FrontCalculatorSymbo) {
-  function FrontCalculatorSymbolOperatorDivision() {
-    var _this;
-    _classCallCheck(this, FrontCalculatorSymbolOperatorDivision);
-    _this = _callSuper(this, FrontCalculatorSymbolOperatorDivision);
-    _this.identifiers = ['/'];
-    _this.precedence = 200;
-    return _this;
+class FrontCalculatorSymbolOperatorDivision extends _frontCalculatorSymbolOperator.default {
+  constructor() {
+    super();
+    this.identifiers = ['/'];
+    this.precedence = 200;
   }
-  _inherits(FrontCalculatorSymbolOperatorDivision, _FrontCalculatorSymbo);
-  return _createClass(FrontCalculatorSymbolOperatorDivision, [{
-    key: "operate",
-    value: function operate(leftNumber, rightNumber) {
-      var result = leftNumber / rightNumber;
+  operate(leftNumber, rightNumber) {
+    var result = leftNumber / rightNumber;
 
-      // // force to 0
-      // if (!isFinite(result)) {
-      // 	return 0;
-      // }
-      return result;
-    }
-  }]);
-}(_frontCalculatorSymbolOperator.default);
+    // // force to 0
+    // if (!isFinite(result)) {
+    // 	return 0;
+    // }
+    return result;
+  }
+}
+exports.default = FrontCalculatorSymbolOperatorDivision;
 
 },{"../abstract/front.calculator.symbol.operator.abstract":12}],28:[function(require,module,exports){
 "use strict";
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
 var _frontCalculatorSymbolOperator = _interopRequireDefault(require("../abstract/front.calculator.symbol.operator.abstract"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
-function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
-function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
-function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
-function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
-function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
-function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
 /**
  * Operator for mathematical exponentiation.
  * Example: "3^2" => 9, "-3^2" => -9, "3^-2" equals "3^(-2)"
@@ -2219,46 +1719,27 @@ function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf 
  * @see     https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/pow
  *
  */
-var FrontCalculatorSymbolOperatorExponentiation = exports.default = /*#__PURE__*/function (_FrontCalculatorSymbo) {
-  function FrontCalculatorSymbolOperatorExponentiation() {
-    var _this;
-    _classCallCheck(this, FrontCalculatorSymbolOperatorExponentiation);
-    _this = _callSuper(this, FrontCalculatorSymbolOperatorExponentiation);
-    _this.identifiers = ['^'];
-    _this.precedence = 300;
-    return _this;
+class FrontCalculatorSymbolOperatorExponentiation extends _frontCalculatorSymbolOperator.default {
+  constructor() {
+    super();
+    this.identifiers = ['^'];
+    this.precedence = 300;
   }
-  _inherits(FrontCalculatorSymbolOperatorExponentiation, _FrontCalculatorSymbo);
-  return _createClass(FrontCalculatorSymbolOperatorExponentiation, [{
-    key: "operate",
-    value: function operate(leftNumber, rightNumber) {
-      return Math.pow(leftNumber, rightNumber);
-    }
-  }]);
-}(_frontCalculatorSymbolOperator.default);
+  operate(leftNumber, rightNumber) {
+    return Math.pow(leftNumber, rightNumber);
+  }
+}
+exports.default = FrontCalculatorSymbolOperatorExponentiation;
 
 },{"../abstract/front.calculator.symbol.operator.abstract":12}],29:[function(require,module,exports){
 "use strict";
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
 var _frontCalculatorSymbolOperator = _interopRequireDefault(require("../abstract/front.calculator.symbol.operator.abstract"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
-function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
-function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
-function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
-function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
-function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
-function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
 /**
  * Operator for mathematical modulo operation.
  * Example: "5%3" => 2
@@ -2266,46 +1747,27 @@ function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf 
  * @see https://en.wikipedia.org/wiki/Modulo_operation
  *
  */
-var FrontCalculatorSymbolOperatorModulo = exports.default = /*#__PURE__*/function (_FrontCalculatorSymbo) {
-  function FrontCalculatorSymbolOperatorModulo() {
-    var _this;
-    _classCallCheck(this, FrontCalculatorSymbolOperatorModulo);
-    _this = _callSuper(this, FrontCalculatorSymbolOperatorModulo);
-    _this.identifiers = ['%'];
-    _this.precedence = 200;
-    return _this;
+class FrontCalculatorSymbolOperatorModulo extends _frontCalculatorSymbolOperator.default {
+  constructor() {
+    super();
+    this.identifiers = ['%'];
+    this.precedence = 200;
   }
-  _inherits(FrontCalculatorSymbolOperatorModulo, _FrontCalculatorSymbo);
-  return _createClass(FrontCalculatorSymbolOperatorModulo, [{
-    key: "operate",
-    value: function operate(leftNumber, rightNumber) {
-      return leftNumber % rightNumber;
-    }
-  }]);
-}(_frontCalculatorSymbolOperator.default);
+  operate(leftNumber, rightNumber) {
+    return leftNumber % rightNumber;
+  }
+}
+exports.default = FrontCalculatorSymbolOperatorModulo;
 
 },{"../abstract/front.calculator.symbol.operator.abstract":12}],30:[function(require,module,exports){
 "use strict";
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
 var _frontCalculatorSymbolOperator = _interopRequireDefault(require("../abstract/front.calculator.symbol.operator.abstract"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
-function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
-function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
-function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
-function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
-function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
-function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
 /**
  * Operator for mathematical multiplication.
  * Example: "2*3" => 6
@@ -2313,46 +1775,27 @@ function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf 
  * @see     https://en.wikipedia.org/wiki/Multiplication
  *
  */
-var FrontCalculatorSymbolOperatorMultiplication = exports.default = /*#__PURE__*/function (_FrontCalculatorSymbo) {
-  function FrontCalculatorSymbolOperatorMultiplication() {
-    var _this;
-    _classCallCheck(this, FrontCalculatorSymbolOperatorMultiplication);
-    _this = _callSuper(this, FrontCalculatorSymbolOperatorMultiplication);
-    _this.identifiers = ['*'];
-    _this.precedence = 200;
-    return _this;
+class FrontCalculatorSymbolOperatorMultiplication extends _frontCalculatorSymbolOperator.default {
+  constructor() {
+    super();
+    this.identifiers = ['*'];
+    this.precedence = 200;
   }
-  _inherits(FrontCalculatorSymbolOperatorMultiplication, _FrontCalculatorSymbo);
-  return _createClass(FrontCalculatorSymbolOperatorMultiplication, [{
-    key: "operate",
-    value: function operate(leftNumber, rightNumber) {
-      return leftNumber * rightNumber;
-    }
-  }]);
-}(_frontCalculatorSymbolOperator.default);
+  operate(leftNumber, rightNumber) {
+    return leftNumber * rightNumber;
+  }
+}
+exports.default = FrontCalculatorSymbolOperatorMultiplication;
 
 },{"../abstract/front.calculator.symbol.operator.abstract":12}],31:[function(require,module,exports){
 "use strict";
 
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
 var _frontCalculatorSymbolOperator = _interopRequireDefault(require("../abstract/front.calculator.symbol.operator.abstract"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
-function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
-function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
-function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
-function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
-function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
-function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
 /**
  * Operator for mathematical subtraction.
  * Example: "2-1" => 1
@@ -2360,29 +1803,23 @@ function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf 
  * @see     https://en.wikipedia.org/wiki/Subtraction
  *
  */
-var FrontCalculatorSymbolOperatorSubtraction = exports.default = /*#__PURE__*/function (_FrontCalculatorSymbo) {
-  function FrontCalculatorSymbolOperatorSubtraction() {
-    var _this;
-    _classCallCheck(this, FrontCalculatorSymbolOperatorSubtraction);
-    _this = _callSuper(this, FrontCalculatorSymbolOperatorSubtraction);
-    _this.identifiers = ['-'];
-    _this.precedence = 100;
+class FrontCalculatorSymbolOperatorSubtraction extends _frontCalculatorSymbolOperator.default {
+  constructor() {
+    super();
+    this.identifiers = ['-'];
+    this.precedence = 100;
 
     /**
      * Notice: The subtraction operator is unary AND binary!
      *
      * @type {boolean}
      */
-    _this.operatesUnary = true;
-    return _this;
+    this.operatesUnary = true;
   }
-  _inherits(FrontCalculatorSymbolOperatorSubtraction, _FrontCalculatorSymbo);
-  return _createClass(FrontCalculatorSymbolOperatorSubtraction, [{
-    key: "operate",
-    value: function operate(leftNumber, rightNumber) {
-      return leftNumber - rightNumber;
-    }
-  }]);
-}(_frontCalculatorSymbolOperator.default);
+  operate(leftNumber, rightNumber) {
+    return leftNumber - rightNumber;
+  }
+}
+exports.default = FrontCalculatorSymbolOperatorSubtraction;
 
 },{"../abstract/front.calculator.symbol.operator.abstract":12}]},{},[1]);

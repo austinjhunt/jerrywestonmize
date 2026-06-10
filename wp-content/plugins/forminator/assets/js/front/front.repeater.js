@@ -196,18 +196,34 @@
 		let newBlock = baseBlock.clone();
 
 		if (form.find('input[name="previous_draft_id"]').length > 0) {
-            newBlock.find('.forminator-input').attr('value', '');
-            newBlock.find('.forminator-textarea').empty();
-            newBlock.find('input[type="radio"], input[type="checkbox"]').each(function () {
+            newBlock.find('.forminator-input').not('[readonly]').attr('value', '');
+            newBlock.find('.forminator-textarea').not('[readonly]').empty();
+            newBlock.find('input[type="radio"], input[type="checkbox"]').not('[readonly], [disabled]').each(function () {
                 $(this).attr('checked', false);
             });
 
             if (newBlock.find('.forminator-select2').length > 0) {
-                newBlock.find('.forminator-select2').each(function (index, value) {
+                newBlock.find('.forminator-select2').not('[disabled]').each(function (index, value) {
                     $(value).find('option:selected').attr('selected', false);
                     $(value).find('option:first').attr('selected', 'selected');
                 });
             }
+
+            // Restore autofill defaults blanked above so editable autofill rows render with the default value.
+            newBlock.find('[data-default]').each(function () {
+                const $autofillField = $(this),
+                    defaultValue = $autofillField.attr('data-default');
+                if ($autofillField.is('select')) {
+                    $autofillField.find('option:selected').attr('selected', false);
+                    $autofillField.find('option').filter(function () {
+                        return $(this).attr('value') === defaultValue || $(this).text() === defaultValue;
+                    }).attr('selected', 'selected');
+                } else if ($autofillField.is('textarea')) {
+                    $autofillField.text(defaultValue);
+                } else {
+                    $autofillField.attr('value', defaultValue);
+                }
+            });
 
             if (newBlock.find('.forminator-rating').length > 0) {
                 newBlock.find('.forminator-rating').each(function (index, value) {

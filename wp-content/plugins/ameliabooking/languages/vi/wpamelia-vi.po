@@ -418,6 +418,8 @@ msgstr "Thêm Bổ Sung"
 msgid ""
 "Add Google Maps API Key to show Google static map on \"Locations\" page."
 msgstr ""
+"Thêm Google Maps API Key (khóa API) để hiển thị static map của Google trên "
+"trang \"Locations\"."
 
 msgid "Add Meta Pixel to track ad conversions and optimize marketing."
 msgstr ""
@@ -454,7 +456,7 @@ msgstr ""
 "giờ đã được đặt trước."
 
 msgid "Add another account"
-msgstr ""
+msgstr "Thêm tài khoản khác"
 
 msgid "Add appointment"
 msgstr "Thêm cuộc hẹn"
@@ -463,7 +465,7 @@ msgid "Add booking"
 msgstr "Thêm đặt chỗ"
 
 msgid "Add calendar"
-msgstr ""
+msgstr "Kết nối lịch"
 
 msgid "Add category"
 msgstr "Thêm danh mục"
@@ -745,7 +747,7 @@ msgid "Allow employees to manage their special days"
 msgstr "Cho phép nhân viên quản lý các ngày đặc biệt của họ"
 
 msgid "Allow employees to view all customers"
-msgstr ""
+msgstr "Cho phép nhân viên xem tất cả khách hàng"
 
 msgid "Allow multiple bookings per customer"
 msgstr "Cho phép khách hàng đặt nhiều lần"
@@ -769,6 +771,9 @@ msgstr "ID người gửi Alpha"
 msgid "Alpha sender ID can't be empty"
 msgstr "ID người gửi Alpha không được để trống"
 
+msgid "Already Paid"
+msgstr "Đã thanh toán"
+
 msgid "Already have an account?"
 msgstr "Đã có tài khoản?"
 
@@ -783,6 +788,9 @@ msgstr "Cũng xóa các sự kiện sắp tới"
 
 msgid "Also open future events"
 msgstr "Cũng mở các sự kiện sắp tới"
+
+msgid "Amelia - Booking Button"
+msgstr "Amelia - Nút Đặt lịch"
 
 msgid "Amelia - Booking view"
 msgstr "AM - Giao diện đặt lịch hẹn "
@@ -808,6 +816,9 @@ msgstr "Amelia - Lịch sự kiện"
 msgid "Amelia - Events List"
 msgstr "AM - Danh sách sự kiện"
 
+msgid "Amelia - Events List Button"
+msgstr "Amelia - Nút danh sách sự kiện"
+
 msgid "Amelia - Search view"
 msgstr "AM - Giao diện tìm kiếm"
 
@@ -817,11 +828,23 @@ msgstr "AM - Bước đặt lịch hẹn "
 msgid "Amelia Add to calendar page"
 msgstr "Trang Thêm vào lịch Amelia"
 
+msgid "Amelia Events List Booking Settings"
+msgstr "Amelia Danh sách sự kiện - Cài đặt đặt lịch"
+
+msgid "Amelia Events List Booking Shortcode"
+msgstr "Amelia Danh sách sự kiện - Shortcode đặt lịch"
+
 msgid "Amelia Profile Settings"
 msgstr "Cài đặt hồ sơ Amelia"
 
 msgid "Amelia SMS"
 msgstr ""
+
+msgid "Amelia Step Booking Settings"
+msgstr "Cài đặt Đặt lịch theo bước của Amelia"
+
+msgid "Amelia Step Booking Shortcode"
+msgstr "Mã ngắn Đặt lịch theo bước của Amelia"
 
 msgid "Amelia Users Settings"
 msgstr "Cài đặt người dùng Amelia"
@@ -861,6 +884,11 @@ msgstr "Cài đặt Lịch Apple"
 
 msgid "Application (client) ID"
 msgstr "ID Ứng dụng (khách hàng)"
+
+msgid ""
+"Application (client) ID must be a valid GUID (UUID), as shown in the Azure "
+"portal."
+msgstr ""
 
 msgid "Application fee amount (%)"
 msgstr "Số tiền phí ứng dụng (%)"
@@ -1079,7 +1107,7 @@ msgid "Are you sure you want to delete this appointment?"
 msgstr "Bạn có chắc chắn muốn xóa cuộc hẹn này không?"
 
 msgid "Are you sure you want to delete this block time?"
-msgstr ""
+msgstr "Bạn có chắc chắn muốn xóa khung thời gian bị chặn này không?"
 
 msgid "Are you sure you want to delete this category?"
 msgstr "Bạn có chắc chắn muốn xóa danh mục này không"
@@ -1230,7 +1258,7 @@ msgid "Assigned Services"
 msgstr "Dịch vụ Đã Phân Công"
 
 msgid "Assigned employee full name"
-msgstr ""
+msgstr "Họ tên nhân viên được phân công"
 
 msgid "Attachment"
 msgstr "Đính kèm"
@@ -1477,24 +1505,26 @@ msgid ""
 "Block booking times that overlap with events in the employee’s Apple "
 "Calendar."
 msgstr ""
+"Chặn các khoảng thời gian đặt chỗ trùng với sự kiện trong Apple Calendar của "
+"nhân viên."
 
 msgid "Block customer"
 msgstr "Chặn khách hàng"
 
 msgid "Block time"
-msgstr ""
+msgstr "Chặn khung giờ"
 
 msgid "Block time from calendars"
-msgstr ""
+msgstr "Chặn khung giờ từ các lịch"
 
 msgid "Block time has been added."
-msgstr ""
+msgstr "Đã thêm khung giờ chặn."
 
 msgid "Block time has been deleted."
-msgstr ""
+msgstr "Khung giờ chặn đã được xóa."
 
 msgid "Block time has been updated."
-msgstr ""
+msgstr "Khung giờ chặn đã được cập nhật."
 
 msgid "Blog"
 msgstr ""
@@ -1822,6 +1852,9 @@ msgid ""
 msgstr ""
 "Bằng cách đặt lịch vào đoạn thời gian này, bạn sẽ đặt cuộc hẹn trong một gói "
 "ngoài ra nếu có!"
+
+msgid "By employees"
+msgstr ""
 
 msgid ""
 "By entering your phone number you agree to receive messages via WhatsApp"
@@ -2207,6 +2240,11 @@ msgstr "Thời gian của khách hàng:"
 
 msgid "Client secret"
 msgstr "Mã bí mật khách hàng"
+
+msgid ""
+"Client secret is too short or looks invalid. Copy the full value from the "
+"Azure portal."
+msgstr ""
 
 msgid "Close"
 msgstr "Đóng"
@@ -2598,7 +2636,7 @@ msgid "Create New"
 msgstr "Tạo Mới"
 
 msgid "Create New Tag"
-msgstr ""
+msgstr "Tạo thẻ mới"
 
 msgid ""
 "Create a coupon code customers can enter during booking to get a discount."
@@ -2637,7 +2675,7 @@ msgid "Create new badge"
 msgstr "Tạo huy hiệu mới"
 
 msgid "Create new tag"
-msgstr ""
+msgstr "Tạo thẻ mới"
 
 msgid ""
 "Create online classrooms automatically for each booked appointment or event."
@@ -2775,7 +2813,7 @@ msgid "Custom pricing spots will override Maximum allowed spots value."
 msgstr "Chỗ ngồi có giá tùy chỉnh sẽ ghi đè giá trị Chỗ tối đa cho phép."
 
 msgid "Custom range"
-msgstr ""
+msgstr "Phạm vi tùy chỉnh"
 
 msgid "Custom service duration"
 msgstr "Thời gian dịch vụ tùy chỉnh"
@@ -2977,7 +3015,7 @@ msgid "Date Desc"
 msgstr "Ngày giảm dần"
 
 msgid "Date Picker"
-msgstr ""
+msgstr "Chọn ngày"
 
 msgid "Date Purchased Asc"
 msgstr "Ngày mua tăng dần"
@@ -2995,6 +3033,9 @@ msgstr "Ngày và Giờ"
 
 msgid "Date and time"
 msgstr "Ngày và giờ"
+
+msgid "Date busyness indicator"
+msgstr ""
 
 msgid "Date of Birth"
 msgstr "Ngày Sinh"
@@ -3189,7 +3230,7 @@ msgid "Delete appointment"
 msgstr "Xóa cuộc hẹn"
 
 msgid "Delete block time"
-msgstr ""
+msgstr "Xóa khung giờ bị chặn"
 
 msgid "Delete booking"
 msgstr "Xóa đặt chỗ"
@@ -3582,7 +3623,7 @@ msgid "Edit appointment"
 msgstr "Chỉnh sửa cuộc hẹn"
 
 msgid "Edit block time"
-msgstr ""
+msgstr "Sửa khung giờ bị chặn"
 
 msgid "Edit booking"
 msgstr "Chỉnh sửa đặt chỗ"
@@ -4140,6 +4181,9 @@ msgstr "Nhập số điện thoại, sau đó nhấn Enter để thêm"
 msgid "Enter booking ID"
 msgstr "Nhập ID Doanh nghiệp"
 
+msgid "Enter both the application (client) ID and client secret."
+msgstr ""
+
 msgid "Enter date of birth"
 msgstr "Ngày Sinh"
 
@@ -4465,18 +4509,20 @@ msgid "Event status"
 msgstr "Trạng thái sự kiện"
 
 msgid "Event tags"
-msgstr ""
+msgstr "Thẻ Sự kiện"
 
 msgid ""
 "Event tags allow you to label and organize events in Amelia based on "
 "criteria that matter most to your business."
 msgstr ""
+"Thẻ sự kiện cho phép bạn gắn thẻ và sắp xếp các sự kiện trong Amelia dựa "
+"trên những tiêu chí quan trọng nhất với doanh nghiệp của bạn."
 
 msgid "Event tags have been saved."
-msgstr ""
+msgstr "Thẻ sự kiện đã được lưu."
 
 msgid "Event tags setup"
-msgstr ""
+msgstr "Cài đặt thẻ Sự kiện"
 
 msgid "Event ticketing"
 msgstr "Vé sự kiện"
@@ -4485,7 +4531,7 @@ msgid "Event tickets"
 msgstr "Vé sự kiện"
 
 msgid "Event time scope"
-msgstr ""
+msgstr "Khung thời gian sự kiện"
 
 msgid "Event title"
 msgstr "Tiêu đề sự kiện"
@@ -4497,7 +4543,7 @@ msgid "Event type"
 msgstr "Loại sự kiện"
 
 msgid "Event_bookings"
-msgstr ""
+msgstr "Đặt_chỗ_sự_kiện"
 
 msgid "Events"
 msgstr "Sự kiện"
@@ -4587,7 +4633,7 @@ msgid "Export bookings"
 msgstr "Xuất đặt chỗ"
 
 msgid "Export event booking data with ease"
-msgstr ""
+msgstr "Xuất dữ liệu đặt chỗ sự kiện dễ dàng"
 
 msgid "Express Account"
 msgstr "Tài khoản Express"
@@ -4920,7 +4966,7 @@ msgid "Fully booked"
 msgstr "Đã đặt hết"
 
 msgid "Future events"
-msgstr ""
+msgstr "Sự kiện sắp tới"
 
 msgid ""
 "GSM (standard Latin) segments contain 160 characters, while UCS-2 (non-GSM - "
@@ -5011,7 +5057,7 @@ msgid "Google Calendar setup"
 msgstr "Cài đặt Google Calendar"
 
 msgid "Google Maps API key"
-msgstr ""
+msgstr "Khóa API Google Maps"
 
 msgid "Google Maps failed to load. Check your API key and restrictions."
 msgstr "Google Maps không tải được. Kiểm tra khóa API và các hạn chế của bạn."
@@ -5496,6 +5542,8 @@ msgstr ""
 msgid ""
 "Improve reporting accuracy by accessing complete event booking data instantly"
 msgstr ""
+"Nâng cao độ chính xác báo cáo bằng cách truy cập tức thì vào đầy đủ dữ liệu "
+"đặt chỗ sự kiện"
 
 msgid ""
 "Improved customer retention as clients return to use the remaining sessions "
@@ -5648,7 +5696,10 @@ msgid "Interested in unlocking this feature?"
 msgstr "Quan tâm đến việc mở khóa tính năng này?"
 
 msgid "Invalid Mollie API key."
-msgstr ""
+msgstr "Khóa API của Mollie không hợp lệ."
+
+msgid "Invalid Payment Link"
+msgstr "Liên kết thanh toán không hợp lệ"
 
 msgid "Invalid Stripe secret key."
 msgstr "Khóa bí mật Stripe không hợp lệ."
@@ -6120,18 +6171,21 @@ msgstr "Giữ lịch trình nhất quán với tần suất và mẫu tùy chỉ
 msgid "Make extra mandatory"
 msgstr "Bắt buộc thêm tùy chọn"
 
+msgid "Make sure you are using the correct Outlook credentials."
+msgstr ""
+
 msgid "Make sure you are using the correct WhatsApp credentials."
 msgstr ""
 "Hãy đảm bảo rằng bạn đang sử dụng thông tin đăng nhập WhatsApp chính xác."
 
 msgid "Make sure you are using the correct Zoom credentials."
-msgstr ""
+msgstr "Đảm bảo bạn đang sử dụng thông tin xác thực Zoom phù hợp."
 
 msgid "Male"
 msgstr "Nam"
 
 msgid "Manage Event Tags"
-msgstr ""
+msgstr "Quản lý thẻ sự kiện"
 
 msgid "Manage badges"
 msgstr "Quản lý huy hiệu"
@@ -6150,7 +6204,7 @@ msgstr ""
 "sách chờ và điền chỗ trống thủ công."
 
 msgid "Manage event tags"
-msgstr ""
+msgstr "Quản lý thẻ sự kiện"
 
 msgid "Manage languages"
 msgstr "Quản lý Ngôn ngữ"
@@ -6455,7 +6509,7 @@ msgid "New appointment"
 msgstr "Lịch hẹn mới"
 
 msgid "New block time"
-msgstr ""
+msgstr "Thêm thời gian chặn"
 
 msgid "New category"
 msgstr "Danh mục mới"
@@ -6672,7 +6726,7 @@ msgid "Notice: Please select at least one panel."
 msgstr "Lưu ý: Vui lòng chọn ít nhất một bảng điều khiển."
 
 msgid "Notice: Please select start and end date."
-msgstr ""
+msgstr "Thông báo: Vui lòng chọn ngày bắt đầu và ngày kết thúc."
 
 msgid "Notification"
 msgstr "Thông báo"
@@ -6966,6 +7020,9 @@ msgstr ""
 msgid "One booking can have multiple attendees/spots in it."
 msgstr "Một lịch hẹn có thể có nhiều người tham dự/chỗ trong đó."
 
+msgid "One of the phone numbers provided is invalid."
+msgstr "Một trong các số điện thoại được nhập không hợp lệ."
+
 msgid "One spot is equal to one attendee."
 msgstr "Một chỗ tương đương với một người tham dự."
 
@@ -6997,7 +7054,7 @@ msgid "Open following"
 msgstr "Mở theo sau"
 
 msgid "Open side menu"
-msgstr ""
+msgstr "Mở menu bên"
 
 msgid "Opened"
 msgstr "Đã mở"
@@ -7074,6 +7131,9 @@ msgid ""
 msgstr ""
 "Outlook Mailer chưa được cấu hình đầy đủ. Vui lòng hoàn tất thiết lập tài "
 "khoản trong cài đặt Tích hợp Outlook."
+
+msgid "Outside of working hours"
+msgstr "Ngoài giờ làm việc"
 
 msgid "Overridden by employee"
 msgstr "Được ghi đè bởi nhân viên"
@@ -7331,7 +7391,7 @@ msgid "Passwords don't match."
 msgstr "Mật khẩu không khớp."
 
 msgid "Past events"
-msgstr ""
+msgstr "Sự kiện đã qua"
 
 msgid ""
 "Paste the secret key you received after creating your API key pair in Google "
@@ -7531,7 +7591,7 @@ msgid "Phone Number"
 msgstr "Số điện thoại"
 
 msgid "Phone already exists with different name. Please check your name."
-msgstr "Email đã tồn tại với tên khác nhau. Vui lòng kiểm tra tên của bạn."
+msgstr "Số điện thoại đã tồn tại với tên khác. Vui lòng kiểm tra tên của bạn."
 
 msgid "Phone number"
 msgstr "Số điện thoại"
@@ -7595,7 +7655,7 @@ msgid "Please Wait"
 msgstr "Vui lòng đợi"
 
 msgid "Please add period"
-msgstr ""
+msgstr "Vui lòng thêm dấu chấm."
 
 msgid "Please cancel the event first before deleting it."
 msgstr "Vui lòng hủy sự kiện trước khi xóa nó."
@@ -7611,11 +7671,6 @@ msgstr "Vui lòng chọn giờ đặt lịch"
 
 msgid "Please confirm you are not a robot"
 msgstr "Vui lòng xác nhận rằng bạn không phải là robot"
-
-msgid ""
-"Please delete this appointment. It cannot be edited due to a conflict with "
-"the associated account."
-msgstr ""
 
 msgid ""
 "Please ensure that services and employees are created and that services are "
@@ -7962,7 +8017,7 @@ msgid "Please upload the file"
 msgstr "Vui lòng tải lên tệp tin"
 
 msgid "Please use a different email or phone number to complete the booking."
-msgstr ""
+msgstr "Vui lòng sử dụng email hoặc số điện thoại khác để hoàn tất đặt lịch."
 
 msgid ""
 "Please use the built-in Elementor shortcode widget instead of Amelia widget "
@@ -8216,6 +8271,9 @@ msgid ""
 "Quickly download all event booking details from the Event Bookings page, "
 "making reporting, analysis, and record-keeping simple and efficient."
 msgstr ""
+"Nhanh chóng tải xuống toàn bộ chi tiết đặt chỗ sự kiện từ trang “Event "
+"Bookings”, giúp việc lập báo cáo, phân tích và lưu giữ hồ sơ trở nên đơn "
+"giản và hiệu quả."
 
 msgid "Radio button"
 msgstr "Nút radio"
@@ -8381,7 +8439,7 @@ msgid "Remind me when my SMS balance is low"
 msgstr "Nhắc nhở tôi khi số dư SMS của tôi thấp"
 
 msgid "Remove Apple Calendar event slots"
-msgstr ""
+msgstr "Xóa khung giờ từ sự kiện trong Apple Calendar"
 
 msgid "Remove Attendee"
 msgstr "Xóa Người tham dự"
@@ -8633,6 +8691,8 @@ msgstr ""
 
 msgid "Save time with fast, one-click event booking exports"
 msgstr ""
+"Tiết kiệm thời gian với xuất nhanh dữ liệu đặt chỗ sự kiện, chỉ với một cú "
+"nhấp"
 
 msgid "Save time with quick, hassle-free customer data exports"
 msgstr ""
@@ -8789,6 +8849,13 @@ msgstr "Chọn"
 msgid "Select Address"
 msgstr "Chọn Địa chỉ"
 
+msgid ""
+"Select Amelia Step-By-Step Booking Button block (or its inner button) to "
+"edit shortcode options."
+msgstr ""
+"Chọn khối Amelia Step-By-Step Booking Button (hoặc nút bên trong của khối) "
+"để chỉnh sửa các tùy chọn của shortcode."
+
 msgid "Select Apple Calendar"
 msgstr "Chọn Lịch"
 
@@ -8821,6 +8888,13 @@ msgstr "Chọn Sự kiện"
 
 msgid "Select Events"
 msgstr "Chọn Sự kiện"
+
+msgid ""
+"Select Events List Booking Button block (or its inner button) to edit "
+"shortcode options."
+msgstr ""
+"Chọn khối Events List Booking Button (hoặc nút bên trong khối) để chỉnh sửa "
+"các tùy chọn của shortcode."
 
 msgid "Select Location"
 msgstr "Chọn Địa điểm"
@@ -8871,7 +8945,7 @@ msgid "Select box"
 msgstr "Hộp chọn"
 
 msgid "Select calendar"
-msgstr ""
+msgstr "Chọn lịch"
 
 msgid "Select category"
 msgstr "Chọn danh mục"
@@ -9444,6 +9518,9 @@ msgstr "Sức chứa chung cho các dịch vụ"
 
 msgid "Shared category capacity"
 msgstr "Dung lượng danh mục chung"
+
+msgid "Shortcode options"
+msgstr "Tùy chọn shortcode"
 
 msgid "Show"
 msgstr "Hiển thị"
@@ -10076,10 +10153,10 @@ msgid "Tag"
 msgstr "Thẻ"
 
 msgid "Tag label"
-msgstr ""
+msgstr "Tên thẻ"
 
 msgid "Tag label cannot be empty"
-msgstr ""
+msgstr "Tên thẻ không được để trống"
 
 msgid "Tags"
 msgstr "Thẻ"
@@ -10430,6 +10507,11 @@ msgstr "Mã giảm giá này không còn hợp lệ"
 msgid "This email is already in use. Please enter a different email address."
 msgstr "Email này đã được sử dụng. Vui lòng nhập địa chỉ email khác."
 
+msgid ""
+"This email is linked to both a customer and an employee account. Please "
+"delete and rebook."
+msgstr ""
+
 msgid "This employee is the only one assigned to {service}."
 msgstr "Nhân viên này là người duy nhất được chỉ định cho {service}."
 
@@ -10451,10 +10533,12 @@ msgstr ""
 
 msgid ""
 "This is a unique security token. Copy it into the 'Verify token' field in "
-"WhatsApp when creating a webhook."
+"WhatsApp when creating a webhook. Since this token is used for logging, we "
+"recommend registering your webhook."
 msgstr ""
-"Đây là mã bảo mật duy nhất. Sao chép nó vào trường 'Xác minh mã' trong "
-"WhatsApp khi tạo webhook."
+"Đây là một security token duy nhất. Sao chép token này vào trường 'Verify "
+"token' trong WhatsApp khi tạo webhook. Vì token này được dùng để ghi nhật "
+"ký, chúng tôi khuyến nghị bạn đăng ký webhook của mình."
 
 msgid "This is recurring event"
 msgstr "Đây là sự kiện định kỳ"
@@ -10536,6 +10620,13 @@ msgid ""
 msgstr ""
 "Gói này có {count} cuộc hẹn trong quá khứ. | Gói này có {count} cuộc hẹn "
 "trong quá khứ."
+
+msgid ""
+"This payment link is no longer valid. Please contact admin if you need "
+"assistance."
+msgstr ""
+"Liên kết thanh toán này không còn hiệu lực. Vui lòng liên hệ quản trị viên "
+"nếu bạn cần hỗ trợ."
 
 msgid "This placeholder's content will be applied wherever it is used."
 msgstr ""
@@ -10941,7 +11032,7 @@ msgstr ""
 "trị 'Thời gian tối thiểu cần thiết trước khi hủy'"
 
 msgid "Unable to complete plugin activation. Please try again."
-msgstr ""
+msgstr "Không thể hoàn tất kích hoạt plugin. Vui lòng thử lại."
 
 msgid "Unable to deactivate plugin. Please try again later."
 msgstr "Không thể vô hiệu hóa plugin. Vui lòng thử lại sau."
@@ -11629,6 +11720,9 @@ msgstr "Tên của bạn"
 
 msgid "Your balance has been recharged."
 msgstr "Số dư của bạn đã được nạp lại."
+
+msgid "Your booking has been canceled."
+msgstr "Đặt chỗ của bạn đã bị hủy."
 
 msgid ""
 "Your booking has been successfully canceled. If you have any questions or "

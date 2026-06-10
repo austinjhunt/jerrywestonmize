@@ -4,7 +4,7 @@ namespace AmeliaBooking\Application\Controller\Settings\FeaturesIntegrations;
 
 use AmeliaBooking\Application\Commands\Settings\FeaturesIntegrations\ToggleFeatureIntegrationCommand;
 use AmeliaBooking\Application\Controller\Controller;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 class ToggleFeatureIntegrationController extends Controller
 {

@@ -4,7 +4,7 @@ namespace AmeliaBooking\Application\Controller\Mailchimp;
 
 use AmeliaBooking\Application\Commands\Mailchimp\GetMailchimpAuthURLCommand;
 use AmeliaBooking\Application\Controller\Controller;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class GetMailchimpAuthURLController

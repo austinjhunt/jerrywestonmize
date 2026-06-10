@@ -9,7 +9,7 @@ namespace AmeliaBooking\Application\Controller\Invoice;
 
 use AmeliaBooking\Application\Commands\Invoice\GenerateInvoiceCommand;
 use AmeliaBooking\Application\Controller\Controller;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class GenerateInvoiceController

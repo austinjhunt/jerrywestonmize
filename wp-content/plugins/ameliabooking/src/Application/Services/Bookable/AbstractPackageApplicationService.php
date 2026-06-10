@@ -48,16 +48,9 @@ abstract class AbstractPackageApplicationService
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
-     * @param Package         $package
-     * @param PackageCustomer $packageCustomer
-     * @param array           $packageRules
-     * @param bool            $save
-     *
-     * @return Collection
-     *
      * @throws ContainerValueNotFoundException
      */
-    abstract public function addPackageCustomerServices($package, $packageCustomer, $packageRules, $save);
+    abstract public function addPackageCustomerServices(Package $package, PackageCustomer $packageCustomer, ?array $packageRules, bool $save): Collection;
 
 
 

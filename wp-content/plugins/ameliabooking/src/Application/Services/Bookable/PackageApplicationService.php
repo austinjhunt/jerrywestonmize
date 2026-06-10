@@ -117,18 +117,11 @@ class PackageApplicationService extends AbstractPackageApplicationService
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
-     * @param Package         $package
-     * @param PackageCustomer $packageCustomer
-     * @param array           $packageRules
-     * @param bool            $save
-     *
-     * @return Collection
-     *
      * @throws ContainerValueNotFoundException
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      */
-    public function addPackageCustomerServices($package, $packageCustomer, $packageRules, $save)
+    public function addPackageCustomerServices(Package $package, PackageCustomer $packageCustomer, ?array $packageRules, bool $save): Collection
     {
         $packageCustomerServices = new Collection();
 
@@ -136,7 +129,7 @@ class PackageApplicationService extends AbstractPackageApplicationService
         foreach ($package->getBookable()->getItems() as $packageService) {
             $serviceIndex = array_search(
                 $packageService->getService()->getId()->getValue(),
-                array_column($packageRules, 'serviceId'),
+                array_column($packageRules ?? [], 'serviceId'),
                 false
             );
 

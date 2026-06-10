@@ -434,6 +434,7 @@ class Forminator_Admin_L10n {
 				'approve_user_unsuccessfull'     => esc_html__( 'Error! User was not approved.', 'forminator' ),
 				/* translators: %s - error code(s) */
 				'turnstile_error'                => esc_html__( 'Turnstile error code(s): %s', 'forminator' ),
+				'draft_link_copied'              => esc_html__( 'Draft link copied to clipboard.', 'forminator' ),
 			),
 			'social'        => array(
 				'facebook'    => esc_html__( 'Facebook', 'forminator' ),

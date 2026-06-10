@@ -14,6 +14,7 @@ use MailPoet\Logging\LogRepository;
 use MailPoet\Newsletter\NewslettersRepository;
 use MailPoet\Newsletter\Sending\SendingQueuesRepository;
 use MailPoet\Newsletter\Sending\TimeZoneCampaignScheduler;
+use MailPoet\Newsletter\Sharing\ShareVisibility;
 use MailPoet\Newsletter\Statistics\NewsletterStatistics;
 use MailPoet\Newsletter\Statistics\NewsletterStatisticsRepository;
 use MailPoet\Newsletter\Url as NewsletterUrl;
@@ -49,6 +50,9 @@ class NewslettersResponseBuilder {
   /*** @var LogRepository */
   private $logRepository;
 
+  /** @var ShareVisibility */
+  private $shareVisibility;
+
   /*** @var StatisticsUnsubscribesRepository */
   private $statisticsUnsubscribesRepository;
 
@@ -62,6 +66,7 @@ class NewslettersResponseBuilder {
     NewsletterUrl $newsletterUrl,
     SendingQueuesRepository $sendingQueuesRepository,
     LogRepository $logRepository,
+    ShareVisibility $shareVisibility,
     StatisticsUnsubscribesRepository $statisticsUnsubscribesRepository,
     ?TimeZoneCampaignScheduler $timeZoneCampaignScheduler = null
   ) {
@@ -71,6 +76,7 @@ class NewslettersResponseBuilder {
     $this->newsletterUrl = $newsletterUrl;
     $this->sendingQueuesRepository = $sendingQueuesRepository;
     $this->logRepository = $logRepository;
+    $this->shareVisibility = $shareVisibility;
     $this->statisticsUnsubscribesRepository = $statisticsUnsubscribesRepository;
     $this->timeZoneCampaignScheduler = $timeZoneCampaignScheduler;
   }
@@ -98,6 +104,7 @@ class NewslettersResponseBuilder {
       'wp_post_id' => $newsletter->getWpPostId(),
       'campaign_name' => $newsletter->getCampaignName(),
     ];
+    $data += $this->buildSharingData($newsletter);
 
     foreach ($relations as $relation) {
       if ($relation === self::RELATION_QUEUE) {
@@ -203,6 +210,7 @@ class NewslettersResponseBuilder {
       'logs' => $couponBlockLogs,
       'campaign_name' => $newsletter->getCampaignName(),
     ];
+    $data += $this->buildSharingData($newsletter);
 
     if ($newsletter->getType() === NewsletterEntity::TYPE_STANDARD) {
       $data['segments'] = $this->buildSegments($newsletter);
@@ -228,6 +236,21 @@ class NewslettersResponseBuilder {
       $data['total_sent'] = $statistics ? $statistics->getTotalSentCount() : 0;
     }
     return $data;
+  }
+
+  /**
+   * @return array<string, mixed>
+   */
+  private function buildSharingData(NewsletterEntity $newsletter): array {
+    $isSupported = $this->shareVisibility->isSupported($newsletter);
+    return [
+      'share_url' => $isSupported ? $this->newsletterUrl->getPublicShareUrl($newsletter) : '',
+      'share_visibility' => $this->shareVisibility->getConfiguredVisibility($newsletter),
+      'effective_share_visibility' => $this->shareVisibility->getEffectiveVisibility($newsletter),
+      'can_share' => $this->shareVisibility->canShare($newsletter),
+      'is_share_supported' => $isSupported,
+      'share_unavailable_reason' => $this->shareVisibility->getUnavailableReason($newsletter),
+    ];
   }
 
   private function buildSegments(NewsletterEntity $newsletter) {

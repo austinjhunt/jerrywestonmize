@@ -83,6 +83,64 @@ class Helper {
     return wc_get_order($order);
   }
 
+  public function wcGetReviewOrderUrl(\WC_Order $order): string {
+    $callback = $this->getCallableFunction('wc_get_review_order_url');
+    if (!$callback) {
+      return '';
+    }
+
+    $url = $callback($order);
+    return is_string($url) ? $url : '';
+  }
+
+  public function wcSupportsOrderReviewUrl(): bool {
+    if ($this->getCallableFunction('wc_get_review_order_url') === null) {
+      return false;
+    }
+
+    if ($this->getOrderReviewItemEligibilityCallback() === null) {
+      return false;
+    }
+
+    if (!$this->isCustomerReviewRequestFeatureEnabled()) {
+      return false;
+    }
+
+    $pageId = $this->wcGetPageId('review_order');
+    if (!$pageId || $pageId < 1) {
+      return false;
+    }
+
+    $permalink = $this->wp->getPermalink($pageId);
+    return is_string($permalink) && $permalink !== '';
+  }
+
+  public function wcOrderHasActionableReviewItems(\WC_Order $order): bool {
+    $callback = $this->getOrderReviewItemEligibilityCallback();
+    if ($callback === null) {
+      return false;
+    }
+
+    return (bool)call_user_func($callback, $order);
+  }
+
+  private function getOrderReviewItemEligibilityCallback(): ?callable {
+    $callback = ['\Automattic\WooCommerce\Internal\OrderReviews\ItemEligibility', 'has_actionable_items'];
+    return is_callable($callback) ? $callback : null;
+  }
+
+  private function getCallableFunction(string $functionName): ?callable {
+    return is_callable($functionName) ? $functionName : null;
+  }
+
+  private function isCustomerReviewRequestFeatureEnabled(): bool {
+    if (!$this->canUseWooCommerceFeatureUtilities()) {
+      return false;
+    }
+
+    return \Automattic\WooCommerce\Utilities\FeaturesUtil::feature_is_enabled('customer_review_request');
+  }
+
   public function wcGetOrders(array $args) {
     return wc_get_orders($args);
   }
@@ -101,6 +159,10 @@ class Helper {
 
   public function wcGetProducts(array $args) {
     return wc_get_products($args);
+  }
+
+  public function wcGetFormattedVariation(\WC_Product_Variation $variation, bool $flat = false, bool $includeNames = true, bool $skipAttributesInName = false): string {
+    return wc_get_formatted_variation($variation, $flat, $includeNames, $skipAttributesInName);
   }
 
   public function wcGetPageId(string $page): ?int {
@@ -379,10 +441,22 @@ class Helper {
   }
 
   public function isWooCommerceEmailImprovementsEnabled(): bool {
-    if (!class_exists('\Automattic\WooCommerce\Utilities\FeaturesUtil')) {
+    if (!$this->canUseWooCommerceFeatureUtilities()) {
       return false;
     }
     return \Automattic\WooCommerce\Utilities\FeaturesUtil::feature_is_enabled('email_improvements');
+  }
+
+  private function canUseWooCommerceFeatureUtilities(): bool {
+    if (!$this->isWooCommerceActive()) {
+      return false;
+    }
+
+    if (!class_exists('\Automattic\WooCommerce\Utilities\FeaturesUtil')) {
+      return false;
+    }
+
+    return function_exists('wc_get_container');
   }
 
   public function wcPlaceholderImgSrc(string $size = 'woocommerce_thumbnail'): string {

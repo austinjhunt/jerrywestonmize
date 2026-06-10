@@ -10,6 +10,8 @@ namespace AmeliaBooking\Application\Commands\Activation;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
+use AmeliaBooking\Infrastructure\Licence\Licence;
+use AmeliaBooking\Infrastructure\Licence\LicenceConstants;
 use AmeliaBooking\Infrastructure\WP\InstallActions\AutoUpdateHook;
 
 /**
@@ -22,6 +24,14 @@ class ValidateActivationCommandHandler extends CommandHandler
     public function handle(): CommandResult
     {
         $result = new CommandResult();
+
+        if (Licence::getLicence() === LicenceConstants::LITE) {
+            $result->setResult(CommandResult::RESULT_SUCCESS);
+            $result->setMessage('Successfully validated activation.');
+            $result->setData(['valid' => true]);
+
+            return $result;
+        }
 
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');

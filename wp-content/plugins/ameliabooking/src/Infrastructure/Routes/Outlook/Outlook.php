@@ -13,6 +13,7 @@ use AmeliaBooking\Application\Controller\Outlook\FetchAccessTokenWithAuthCodeOut
 use AmeliaBooking\Application\Controller\Outlook\FetchOutlookMiddlewareAccessTokenController;
 use AmeliaBooking\Application\Controller\Outlook\GetOutlookAuthURLController;
 use AmeliaBooking\Application\Controller\Outlook\GetOutlookMiddlewareAuthURLController;
+use AmeliaBooking\Application\Controller\Outlook\ValidateOutlookCredentialsController;
 use Slim\App;
 
 /**
@@ -45,5 +46,7 @@ class Outlook
         $app->post('/outlook-calendar/authorization/token', FetchOutlookMiddlewareAccessTokenController::class);
 
         $app->post('/outlook-calendar/disconnect', DisconnectFromOutlookMiddlewareAccountController::class);
+
+        $app->post('/outlook-calendar/validate', ValidateOutlookCredentialsController::class);
     }
 }

@@ -5,7 +5,7 @@ namespace AmeliaBooking\Application\Controller\Report;
 use AmeliaBooking\Application\Commands\Report\GetCustomersCommand;
 use AmeliaBooking\Application\Controller\Controller;
 use RuntimeException;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class GetCustomersController

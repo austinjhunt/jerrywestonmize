@@ -925,29 +925,31 @@
 					if ($hidden_signature.length > 0) {
 						$hidden_signature.addClass('do-validate');
 					}
+					if ( 0 === element_id.indexOf( 'paypal' ) ) {
+						$pagination_field = self.$el.find( submit_selector );
+						self.$el.find( '.forminator-button-submit' ).addClass( 'forminator-hidden' );
+						$pagination_field.removeClass( 'forminator-hidden' );
+					}
 					setTimeout(
 						function() {
 							$pagination_field = self.$el.find( submit_selector );
 							if ( 'submit' === element_id ) {
 								$pagination_field.removeClass('forminator-hidden');
 							}
-							if ( 0 === element_id.indexOf( 'paypal' ) ) {
-								self.$el.find( '.forminator-button-submit' ).addClass( 'forminator-hidden' );
-								$pagination_field.removeClass( 'forminator-hidden' );
-							}
 						},
 						100
 					);
 				} else {
 					$column_field.addClass('forminator-hidden');
+					if ( 0 === element_id.indexOf( 'paypal' ) ) {
+						$pagination_field = self.$el.find( submit_selector );
+						self.$el.find( '.forminator-button-submit' ).removeClass( 'forminator-hidden' );
+						$pagination_field.addClass( 'forminator-hidden' );
+					}
 					setTimeout(
 						function() {
 							$pagination_field = self.$el.find( submit_selector );
 							if ( 'submit' === element_id ) {
-								$pagination_field.addClass('forminator-hidden');
-							}
-							if ( 0 === element_id.indexOf( 'paypal' ) ) {
-								self.$el.find( '.forminator-button-submit' ).removeClass( 'forminator-hidden' );
 								$pagination_field.addClass('forminator-hidden');
 							}
 						},
@@ -991,15 +993,16 @@
 					if ($sub_row_field.find('> .forminator-col:not(.forminator-hidden)').length === 0) {
 						$sub_row_fields.addClass('forminator-hidden');
 					}
+					if ( 0 === element_id.indexOf( 'paypal' ) ) {
+						$pagination_field = self.$el.find( submit_selector );
+						self.$el.find( '.forminator-button-submit' ).removeClass( 'forminator-hidden' );
+						$pagination_field.addClass( 'forminator-hidden' );
+					}
 					setTimeout(
 						function() {
 							$pagination_field = self.$el.find( submit_selector );
 							if ( 'submit' === element_id ) {
 								$pagination_field.addClass('forminator-hidden');
-							}
-							if ( 0 === element_id.indexOf( 'paypal' ) ) {
-								self.$el.find( '.forminator-button-submit' ).removeClass( 'forminator-hidden' );
-								$pagination_field.addClass( 'forminator-hidden' );
 							}
 						},
 						100
@@ -1018,15 +1021,16 @@
 					if ($hidden_signature.length > 0) {
 						$hidden_signature.addClass('do-validate');
 					}
+					if ( 0 === element_id.indexOf( 'paypal' ) ) {
+						$pagination_field = self.$el.find( submit_selector );
+						self.$el.find( '.forminator-button-submit' ).addClass( 'forminator-hidden' );
+						$pagination_field.removeClass( 'forminator-hidden' );
+					}
 					setTimeout(
 						function() {
 							$pagination_field = self.$el.find( submit_selector );
 							if ( 'submit' === element_id ) {
 								$pagination_field.removeClass('forminator-hidden');
-							}
-							if ( 0 === element_id.indexOf( 'paypal' ) ) {
-								self.$el.find( '.forminator-button-submit' ).addClass( 'forminator-hidden' );
-								$pagination_field.removeClass( 'forminator-hidden' );
 							}
 						},
 						100

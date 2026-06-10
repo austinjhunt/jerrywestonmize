@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Limit Login Attempts Reloaded plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Limit Login Attempts Reloaded 3.2.1\n"
+"Project-Id-Version: Limit Login Attempts Reloaded 3.2.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/limit-login-attempts-reloaded\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-07T13:50:07+00:00\n"
+"POT-Creation-Date: 2026-05-19T12:57:45+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: limit-login-attempts-reloaded\n"
@@ -17,7 +17,7 @@ msgstr ""
 #. Plugin Name of the plugin
 #. Author of the plugin
 #: limit-login-attempts-reloaded.php
-#: core/LimitLoginAttempts.php:335
+#: core/LimitLoginAttempts.php:388
 #: views/emails/mfa-verification.php:218
 #: views/emails/mfa-verification.php:301
 msgid "Limit Login Attempts Reloaded"
@@ -157,244 +157,244 @@ msgstr ""
 msgid "Click here to refresh the page"
 msgstr ""
 
-#: core/Config.php:108
+#: core/Config.php:112
 msgid "By proceeding you understand and give your consent that your IP address and browser information might be processed by the security plugins installed on this site."
 msgstr ""
 
 #: core/integrations/WooCommerceIntegration.php:234
-#: core/LimitLoginAttempts.php:3908
+#: core/LimitLoginAttempts.php:4108
 msgid "Registration is currently disabled."
 msgstr ""
 
-#: core/LimitLoginAttempts.php:378
+#: core/LimitLoginAttempts.php:431
 msgid "Hooray! Zero failed login attempts (past 24 hrs)"
 msgstr ""
 
-#: core/LimitLoginAttempts.php:380
+#: core/LimitLoginAttempts.php:433
 msgid "Your site is currently at a low risk for brute force activity."
 msgstr ""
 
-#: core/LimitLoginAttempts.php:382
+#: core/LimitLoginAttempts.php:435
 msgid "Your site is currently at a medium risk for brute force activity."
 msgstr ""
 
-#: core/LimitLoginAttempts.php:384
+#: core/LimitLoginAttempts.php:437
 msgid "Failed Login Attempts Today"
 msgstr ""
 
-#: core/LimitLoginAttempts.php:397
+#: core/LimitLoginAttempts.php:450
 #, php-format
 msgid "Based on your level of brute force activity, we recommend <a class=\"llar_orange %s\">free Micro Cloud upgrade</a> to access features to reduce failed logins and improve site performance."
 msgstr ""
 
-#: core/LimitLoginAttempts.php:417
+#: core/LimitLoginAttempts.php:470
 #, php-format
 msgid "Based on your level of brute force activity, we recommend <a href=\"%s\" class=\"llar_orange\" target=\"_blank\" rel=\"noopener noreferrer\">upgrading to premium</a> to access features to reduce failed logins and improve site performance."
 msgstr ""
 
-#: core/LimitLoginAttempts.php:426
+#: core/LimitLoginAttempts.php:479
 #, php-format
 msgid "Based on your level of brute force activity, we recommend <a href=\"%s\" class=\"llar_orange\">upgrading to premium</a> to access features to reduce failed logins and improve site performance."
 msgstr ""
 
-#: core/LimitLoginAttempts.php:488
+#: core/LimitLoginAttempts.php:541
 #, php-format
 msgid "%d failed login attempt "
 msgid_plural "%d failed login attempts "
 msgstr[0] ""
 msgstr[1] ""
 
-#: core/LimitLoginAttempts.php:495
+#: core/LimitLoginAttempts.php:548
 msgid "(past 24 hrs)"
 msgstr ""
 
-#: core/LimitLoginAttempts.php:593
+#: core/LimitLoginAttempts.php:646
 #, php-format
 msgid "Your site has experienced %d+ failed login attempts in the past 24 hours."
 msgstr ""
 
-#: core/LimitLoginAttempts.php:883
-#: core/LimitLoginAttempts.php:2702
-#: core/LimitLoginAttempts.php:2751
-#: core/LimitLoginAttempts.php:2756
+#: core/LimitLoginAttempts.php:942
+#: core/LimitLoginAttempts.php:2943
+#: core/LimitLoginAttempts.php:2992
+#: core/LimitLoginAttempts.php:2997
 msgid "<strong>ERROR</strong>: Incorrect username or password."
 msgstr ""
 
-#: core/LimitLoginAttempts.php:979
-#: core/LimitLoginAttempts.php:1613
+#: core/LimitLoginAttempts.php:1038
+#: core/LimitLoginAttempts.php:1751
 #: views/options-page.php:161
 msgid "Dashboard"
 msgstr ""
 
-#: core/LimitLoginAttempts.php:980
-#: core/LimitLoginAttempts.php:1618
+#: core/LimitLoginAttempts.php:1039
+#: core/LimitLoginAttempts.php:1756
 #: views/options-page.php:165
 msgid "Settings"
 msgstr ""
 
-#: core/LimitLoginAttempts.php:990
-#: core/LimitLoginAttempts.php:1652
+#: core/LimitLoginAttempts.php:1049
+#: core/LimitLoginAttempts.php:1790
 msgid "Free Upgrade"
 msgstr ""
 
-#: core/LimitLoginAttempts.php:997
+#: core/LimitLoginAttempts.php:1056
 #: views/tab-dashboard.php:105
 #: views/tab-dashboard.php:261
 msgid "Upgrade to Premium"
 msgstr ""
 
-#: core/LimitLoginAttempts.php:1153
-#: core/LimitLoginAttempts.php:1289
-#: core/LimitLoginAttempts.php:2125
-#: core/LimitLoginAttempts.php:2598
-#: core/LimitLoginAttempts.php:2657
+#: core/LimitLoginAttempts.php:1217
+#: core/LimitLoginAttempts.php:1353
+#: core/LimitLoginAttempts.php:2332
+#: core/LimitLoginAttempts.php:2811
+#: core/LimitLoginAttempts.php:2898
 msgid "<strong>ERROR</strong>: Too many failed login attempts."
 msgstr ""
 
-#: core/LimitLoginAttempts.php:1294
-#: core/LimitLoginAttempts.php:2132
-#: core/LimitLoginAttempts.php:2677
+#: core/LimitLoginAttempts.php:1358
+#: core/LimitLoginAttempts.php:2339
+#: core/LimitLoginAttempts.php:2918
 #, php-format
 msgid "Please try again in %d hour."
 msgid_plural "Please try again in %d hours."
 msgstr[0] ""
 msgstr[1] ""
 
-#: core/LimitLoginAttempts.php:1296
-#: core/LimitLoginAttempts.php:2134
-#: core/LimitLoginAttempts.php:2680
+#: core/LimitLoginAttempts.php:1360
+#: core/LimitLoginAttempts.php:2341
+#: core/LimitLoginAttempts.php:2921
 #, php-format
 msgid "Please try again in %d minute."
 msgid_plural "Please try again in %d minutes."
 msgstr[0] ""
 msgstr[1] ""
 
-#: core/LimitLoginAttempts.php:1623
+#: core/LimitLoginAttempts.php:1761
 #: views/options-page.php:169
 msgid "2FA"
 msgstr ""
 
-#: core/LimitLoginAttempts.php:1629
+#: core/LimitLoginAttempts.php:1767
 #: resources/compare-plans-data.php:72
 #: views/options-page.php:175
 msgid "Login Firewall"
 msgstr ""
 
-#: core/LimitLoginAttempts.php:1634
+#: core/LimitLoginAttempts.php:1772
 #: views/options-page.php:181
 msgid "Logs"
 msgstr ""
 
-#: core/LimitLoginAttempts.php:1639
+#: core/LimitLoginAttempts.php:1777
 #: views/options-page.php:187
 msgid "Debug"
 msgstr ""
 
-#: core/LimitLoginAttempts.php:1644
+#: core/LimitLoginAttempts.php:1782
 #: views/options-page.php:191
 #: views/tab-dashboard.php:136
 msgid "Help"
 msgstr ""
 
-#: core/LimitLoginAttempts.php:1652
+#: core/LimitLoginAttempts.php:1790
 msgid "Premium"
 msgstr ""
 
-#: core/LimitLoginAttempts.php:1737
+#: core/LimitLoginAttempts.php:1875
 msgid "LLAR"
 msgstr ""
 
-#: core/LimitLoginAttempts.php:2329
+#: core/LimitLoginAttempts.php:2542
 #, php-format
 msgid "%d hour"
 msgid_plural "%d hours"
 msgstr[0] ""
 msgstr[1] ""
 
-#: core/LimitLoginAttempts.php:2336
+#: core/LimitLoginAttempts.php:2549
 #, php-format
 msgid "%d minute"
 msgid_plural "%d minutes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: core/LimitLoginAttempts.php:2373
+#: core/LimitLoginAttempts.php:2586
 #, php-format
 msgid "Failed login by IP %1$s %2$s"
 msgstr ""
 
-#: core/LimitLoginAttempts.php:2665
+#: core/LimitLoginAttempts.php:2906
 msgid "Please try again later."
 msgstr ""
 
-#: core/LimitLoginAttempts.php:2748
+#: core/LimitLoginAttempts.php:2989
 msgid "<strong>ERROR</strong>: Incorrect email address or password."
 msgstr ""
 
-#: core/LimitLoginAttempts.php:2775
+#: core/LimitLoginAttempts.php:3016
 msgid "WC Error"
 msgstr ""
 
-#: core/LimitLoginAttempts.php:2961
+#: core/LimitLoginAttempts.php:3202
 msgid "Cleared IP log"
 msgstr ""
 
-#: core/LimitLoginAttempts.php:2968
+#: core/LimitLoginAttempts.php:3209
 msgid "Reset lockout count"
 msgstr ""
 
-#: core/LimitLoginAttempts.php:2975
+#: core/LimitLoginAttempts.php:3216
 msgid "Cleared current lockouts"
 msgstr ""
 
-#: core/LimitLoginAttempts.php:3020
+#: core/LimitLoginAttempts.php:3261
 #, php-format
 msgid "The %s IP range is invalid"
 msgstr ""
 
-#: core/LimitLoginAttempts.php:3047
-#: core/LimitLoginAttempts.php:3121
-#: core/LimitLoginAttempts.php:3128
+#: core/LimitLoginAttempts.php:3288
+#: core/LimitLoginAttempts.php:3362
+#: core/LimitLoginAttempts.php:3369
 msgid "Settings saved."
 msgstr ""
 
-#: core/LimitLoginAttempts.php:3628
+#: core/LimitLoginAttempts.php:3828
 msgid "Hey <strong>Limit Login Attempts Reloaded</strong> user!"
 msgstr ""
 
-#: core/LimitLoginAttempts.php:3629
+#: core/LimitLoginAttempts.php:3829
 msgid "A <strong>crazy idea</strong> we wanted to share! What if we put an image from YOU on the <a href=\"https://wordpress.org/plugins/limit-login-attempts-reloaded/\" target=\"_blank\">LLAR page</a>?! (<a href=\"https://wordpress.org/plugins/hello-dolly/\" target=\"_blank\">example</a>) A drawing made by you or your child would cheer people up! Send us your drawing by <a href=\"mailto:wpchef.me@gmail.com\" target=\"_blank\">email</a> and we like it, we'll add it in the next release. Let's have some fun!"
 msgstr ""
 
-#: core/LimitLoginAttempts.php:3630
+#: core/LimitLoginAttempts.php:3830
 msgid "We would really like to hear your feedback about the plugin! Please take a couple minutes to write a few words <a href=\"https://wordpress.org/support/plugin/limit-login-attempts-reloaded/reviews/#new-post\" target=\"_blank\">here</a>. Thank you!"
 msgstr ""
 
-#: core/LimitLoginAttempts.php:3633
+#: core/LimitLoginAttempts.php:3833
 msgid "Don't show again"
 msgstr ""
 
-#: core/LimitLoginAttempts.php:3634
+#: core/LimitLoginAttempts.php:3834
 msgid "Maybe later"
 msgstr ""
 
-#: core/LimitLoginAttempts.php:3635
+#: core/LimitLoginAttempts.php:3835
 msgid "Leave a review"
 msgstr ""
 
-#: core/LimitLoginAttempts.php:3721
+#: core/LimitLoginAttempts.php:3921
 msgid "You have been upgraded to the latest version of <strong>Limit Login Attempts Reloaded</strong>.<br> Due to increased security threats around the holidays, we recommend turning on email notifications when you receive a failed login attempt."
 msgstr ""
 
-#: core/LimitLoginAttempts.php:3726
+#: core/LimitLoginAttempts.php:3926
 msgid "Yes, turn on email notifications"
 msgstr ""
 
-#: core/LimitLoginAttempts.php:3727
+#: core/LimitLoginAttempts.php:3927
 msgid "Remind me a month from now"
 msgstr ""
 
-#: core/LimitLoginAttempts.php:3728
+#: core/LimitLoginAttempts.php:3928
 msgid "Don't show this message again"
 msgstr ""
 
@@ -408,61 +408,61 @@ msgstr ""
 msgid "Verify your login"
 msgstr ""
 
-#: core/mfa/MfaBackupCodes.php:232
-#: core/mfa/MfaManager.php:415
+#: core/mfa/MfaBackupCodes.php:249
+#: core/mfa/MfaManager.php:436
 msgid "Encryption unavailable. OpenSSL is required for rescue links."
 msgstr ""
 
-#: core/mfa/MfaBackupCodes.php:254
+#: core/mfa/MfaBackupCodes.php:270
 msgid "Invalid file path for PDF template."
 msgstr ""
 
-#: core/mfa/MfaEndpoint.php:238
+#: core/mfa/MfaEndpoint.php:243
 msgid "This will disable 2FA on your website for one hour."
 msgstr ""
 
-#: core/mfa/MfaEndpoint.php:242
+#: core/mfa/MfaEndpoint.php:247
 msgid "Click to continue"
 msgstr ""
 
-#: core/mfa/MfaManager.php:278
+#: core/mfa/MfaManager.php:299
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
-#: core/mfa/MfaManager.php:284
+#: core/mfa/MfaManager.php:305
 msgid "2FA Unavailable"
 msgstr ""
 
-#: core/mfa/MfaManager.php:358
+#: core/mfa/MfaManager.php:379
 msgid "Insufficient permissions"
 msgstr ""
 
-#: core/mfa/MfaManager.php:361
+#: core/mfa/MfaManager.php:382
 msgid "Security check failed. Please refresh the page and try again."
 msgstr ""
 
-#: core/mfa/MfaManager.php:370
+#: core/mfa/MfaManager.php:391
 msgid "Too many generations. Please try again in a minute."
 msgstr ""
 
-#: core/mfa/MfaManager.php:390
+#: core/mfa/MfaManager.php:411
 msgid "Failed to generate codes: "
 msgstr ""
 
-#: core/mfa/MfaManager.php:394
+#: core/mfa/MfaManager.php:415
 #: views/tab-mfa.php:341
 msgid "Failed to generate rescue codes. Please try again."
 msgstr ""
 
-#: core/mfa/MfaManager.php:401
+#: core/mfa/MfaManager.php:422
 msgid "Failed to hash rescue codes. Please try again."
 msgstr ""
 
-#: core/mfa/MfaManager.php:444
+#: core/mfa/MfaManager.php:464
 msgid "Failed to generate PDF content: "
 msgstr ""
 
-#: core/mfa/MfaManager.php:480
+#: core/mfa/MfaManager.php:500
 msgid "Multi-factor authentication has been temporarily disabled."
 msgstr ""
 

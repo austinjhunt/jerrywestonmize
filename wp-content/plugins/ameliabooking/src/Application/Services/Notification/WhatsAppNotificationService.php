@@ -412,20 +412,35 @@ class WhatsAppNotificationService extends AbstractWhatsAppNotificationService
         if (!empty($apiResponse['messages'])) {
             if ($logNotificationId) {
                 $notificationsLogRepository->updateFieldById((int)$logNotificationId, 1, 'sent');
+                $notificationsLogRepository->updateFieldById((int)$logNotificationId, $apiResponse['messages'][0]['id'], 'messageId');
             }
         } elseif ($apiResponse['error']) {
             // requested language doesn't exist for this template, try with default language
             if ($apiResponse['error']['code'] === 132001 && !empty($language)) {
+                $defaultTemplateLanguage = $this->getSimilarTemplateLanguages($template, $defaultLanguage);
+
                 $apiResponse = $whatsAppService->send(
                     $sendTo,
                     $template,
                     $placeholders,
-                    $defaultLanguage
+                    $defaultTemplateLanguage ?: $defaultLanguage
                 );
                 if (!empty($apiResponse['messages'])) {
                     if ($logNotificationId) {
                         $notificationsLogRepository->updateFieldById((int)$logNotificationId, 1, 'sent');
+                        $notificationsLogRepository->updateFieldById((int)$logNotificationId, $apiResponse['messages'][0]['id'], 'messageId');
                     }
+                    return $apiResponse;
+                }
+            }
+            if ($logNotificationId) {
+                try {
+                    $notificationLog = $notificationsLogRepository->getById($logNotificationId);
+                    $logData = $notificationLog->getData() ? $notificationLog->getData()->getValue() : null;
+                    $logData = $logData ? json_decode($logData, true) : [];
+                    $logData['response_data'] = $apiResponse;
+                    $notificationsLogRepository->updateFieldById($notificationLog->getId()->getValue(), json_encode($logData), 'data');
+                } catch (Exception $e) {
                 }
             }
         }

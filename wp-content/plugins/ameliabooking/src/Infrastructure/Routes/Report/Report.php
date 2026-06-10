@@ -29,16 +29,16 @@ class Report
      */
     public static function routes(App $app)
     {
-        $app->post('/report/customers', GetCustomersController::class)->setOutputBuffering(false);
+        $app->post('/report/customers', GetCustomersController::class);
 
-        $app->post('/report/appointments', GetAppointmentsController::class)->setOutputBuffering(false);
+        $app->post('/report/appointments', GetAppointmentsController::class);
 
-        $app->post('/report/payments', GetPaymentsController::class)->setOutputBuffering(false);
+        $app->post('/report/payments', GetPaymentsController::class);
 
-        $app->post('/report/coupons', GetCouponsController::class)->setOutputBuffering(false);
+        $app->post('/report/coupons', GetCouponsController::class);
 
-        $app->post('/report/event/attendees', GetEventAttendeesController::class)->setOutputBuffering(false);
+        $app->post('/report/event/attendees', GetEventAttendeesController::class);
 
-        $app->post('/report/event/bookings', GetEventBookingsController::class)->setOutputBuffering(false);
+        $app->post('/report/event/bookings', GetEventBookingsController::class);
     }
 }

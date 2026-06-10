@@ -98,7 +98,6 @@ class Forminator_Number extends Forminator_Field {
 			array(
 				'calculations' => 'true',
 				'limit_min'    => 1,
-				'limit_max'    => 150,
 				'field_label'  => esc_html__( 'Number', 'forminator' ),
 			)
 		);

@@ -11,6 +11,7 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Booking\SlotsEntities;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
+use AmeliaBooking\Domain\Services\Schedule\ScheduleService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\PositiveDuration;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
@@ -97,6 +98,29 @@ class GetTimeSlotsCommandHandler extends CommandHandler
         );
 
         $settings = $applicationTimeSlotService->getSlotsSettings($isFrontEndBooking, $slotsEntities, $props);
+
+        if (!empty($settings['allowAdminBookAtAnyTime']) && !empty($props['structured'])) {
+            /** @var ScheduleService $scheduleService */
+            $scheduleService = $this->container->get('domain.schedule.service');
+            $normalProvidersIntervals = [];
+            foreach ($slotsEntities->getProviders()->getItems() as $provider) {
+                $normalProvidersIntervals[$provider->getId()->getValue()] = [
+                    'weekDays'   => $scheduleService->getProviderWeekDaysIntervals(
+                        $provider,
+                        $slotsEntities->getLocations(),
+                        $props['locationId'],
+                        $props['serviceId']
+                    ),
+                    'specialDays' => $scheduleService->getProviderSpecialDayIntervals(
+                        $provider,
+                        $slotsEntities->getLocations(),
+                        $props['locationId'],
+                        $props['serviceId']
+                    ),
+                ];
+            }
+            $settings['normalProvidersIntervals'] = $normalProvidersIntervals;
+        }
 
         $lastBookedProviderId = null;
 

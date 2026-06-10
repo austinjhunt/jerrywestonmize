@@ -4,7 +4,7 @@ namespace AmeliaBooking\Application\Controller\Booking\Appointment;
 
 use AmeliaBooking\Application\Commands\Booking\Appointment\GetTimeSlotsCommand;
 use AmeliaBooking\Application\Controller\Controller;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class GetTimeSlotsController
@@ -74,30 +74,30 @@ class GetTimeSlotsController extends Controller
 
         $this->setArrayParams($params);
 
-        $command->setField('serviceId', (int)$request->getQueryParam('serviceId', 0));
-        $command->setField('locationId', (int)$request->getQueryParam('locationId', 0));
+        $command->setField('serviceId', (int)self::getParam($request, 'serviceId', 0));
+        $command->setField('locationId', (int)self::getParam($request, 'locationId', 0));
         $command->setField('locationIds', !empty($params['locationIds']) ? $params['locationIds'] : []);
-        $command->setField('serviceDuration', (int)$request->getQueryParam('serviceDuration', 0));
-        $command->setField('weekDays', (array)$request->getQueryParam('weekDays', [1, 2, 3, 4, 5, 6, 7]));
-        $command->setField('startDateTime', (string)$request->getQueryParam('startDateTime', ''));
-        $command->setField('endDateTime', (string)$request->getQueryParam('endDateTime', ''));
+        $command->setField('serviceDuration', (int)self::getParam($request, 'serviceDuration', 0));
+        $command->setField('weekDays', (array)self::getParam($request, 'weekDays', [1, 2, 3, 4, 5, 6, 7]));
+        $command->setField('startDateTime', (string)self::getParam($request, 'startDateTime', ''));
+        $command->setField('endDateTime', (string)self::getParam($request, 'endDateTime', ''));
         $command->setField('providerIds', !empty($params['providerIds']) ? $params['providerIds'] : []);
         $command->setField('extras', !empty($params['extras']) ? $params['extras'] : []);
-        $command->setField('excludeAppointmentId', (int)$request->getQueryParam('excludeAppointmentId', []));
-        $command->setField('persons', (int)$request->getQueryParam('persons', 1));
-        $command->setField('group', (int)$request->getQueryParam('group', 0));
-        $command->setField('page', (string)$request->getQueryParam('page', ''));
-        $command->setField('monthsLoad', (int)$request->getQueryParam('monthsLoad', 0));
-        $command->setField('queryTimeZone', (string)$request->getQueryParam('queryTimeZone', ''));
-        $command->setField('timeZone', (string)$request->getQueryParam('timeZone', ''));
+        $command->setField('excludeAppointmentId', (int)self::getParam($request, 'excludeAppointmentId', []));
+        $command->setField('persons', (int)self::getParam($request, 'persons', 1));
+        $command->setField('group', (int)self::getParam($request, 'group', 0));
+        $command->setField('page', (string)self::getParam($request, 'page', ''));
+        $command->setField('monthsLoad', (int)self::getParam($request, 'monthsLoad', 0));
+        $command->setField('queryTimeZone', (string)self::getParam($request, 'queryTimeZone', ''));
+        $command->setField('timeZone', (string)self::getParam($request, 'timeZone', ''));
 
-        $command->setField('allowAdminBookAtAnyTime', $request->getQueryParam('allowAdminBookAtAnyTime'));
-        $command->setField('allowBookingIfPending', $request->getQueryParam('allowBookingIfPending'));
-        $command->setField('allowBookingIfNotMin', $request->getQueryParam('allowBookingIfNotMin'));
-        $command->setField('timeSlotLength', $request->getQueryParam('timeSlotLength'));
-        $command->setField('serviceDurationAsSlot', $request->getQueryParam('serviceDurationAsSlot'));
-        $command->setField('bufferTimeInSlot', $request->getQueryParam('bufferTimeInSlot'));
-        $command->setField('structured', $request->getQueryParam('structured'));
+        $command->setField('allowAdminBookAtAnyTime', self::getParam($request, 'allowAdminBookAtAnyTime'));
+        $command->setField('allowBookingIfPending', self::getParam($request, 'allowBookingIfPending'));
+        $command->setField('allowBookingIfNotMin', self::getParam($request, 'allowBookingIfNotMin'));
+        $command->setField('timeSlotLength', self::getParam($request, 'timeSlotLength'));
+        $command->setField('serviceDurationAsSlot', self::getParam($request, 'serviceDurationAsSlot'));
+        $command->setField('bufferTimeInSlot', self::getParam($request, 'bufferTimeInSlot'));
+        $command->setField('structured', self::getParam($request, 'structured'));
 
         $requestBody = $request->getParsedBody();
         $this->setCommandFields($command, $requestBody);

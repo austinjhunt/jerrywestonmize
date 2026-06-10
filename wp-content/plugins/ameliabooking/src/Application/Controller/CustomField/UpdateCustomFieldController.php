@@ -9,7 +9,7 @@ namespace AmeliaBooking\Application\Controller\CustomField;
 
 use AmeliaBooking\Application\Commands\CustomField\UpdateCustomFieldCommand;
 use AmeliaBooking\Application\Controller\Controller;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class UpdateCustomFieldController

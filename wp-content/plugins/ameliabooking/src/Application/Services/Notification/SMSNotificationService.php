@@ -157,7 +157,6 @@ class SMSNotificationService extends AbstractNotificationService
                         );
                     }
                 } catch (QueryExecutionException $e) {
-                } catch (ContainerException $e) {
                 }
             }
         }

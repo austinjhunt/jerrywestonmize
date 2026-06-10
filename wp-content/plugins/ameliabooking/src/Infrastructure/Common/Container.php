@@ -5,14 +5,26 @@ namespace AmeliaBooking\Infrastructure\Common;
 use AmeliaBooking\Domain\Repository\User\UserRepositoryInterface;
 use AmeliaBooking\Domain\Services\Logger\LoggerInterface;
 use AmeliaBooking\Infrastructure\Connection;
+use AmeliaVendor\Psr\Container\ContainerInterface;
+use Pimple\Container as PimpleContainer;
 
 /**
  * Class Container
  *
  * @package AmeliaBooking\Infrastructure\Common
  */
-final class Container extends \Slim\Container
+final class Container extends PimpleContainer implements ContainerInterface
 {
+    public function get(string $id)
+    {
+        return $this->offsetGet($id);
+    }
+
+    public function has(string $id): bool
+    {
+        return $this->offsetExists($id);
+    }
+
     /**
      * @return Connection
      */

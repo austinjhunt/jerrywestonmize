@@ -570,7 +570,7 @@ class AppointmentReservationService extends AbstractReservationService
                     $minimumAppointmentDateTime,
                     $maximumAppointmentDateTime,
                     $appointment->getProviderId()->getValue(),
-                    $appointment->getLocationId() ? $appointment->getLocationId()->getValue() : null,
+                    null,
                     $selectedExtras,
                     null,
                     $booking->getPersons()->getValue(),

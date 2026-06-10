@@ -173,6 +173,18 @@ class Pages {
     $this->wp->addFilter('the_content', [$this, 'setPageContent'], 10, 1);
     $this->wp->removeAction('wp_head', 'noindex', 1);
     $this->wp->addAction('wp_head', [$this, 'setMetaRobots'], 1);
+    $this->setSubscriptionPageHeaders();
+  }
+
+  private function setSubscriptionPageHeaders(): void {
+    if ($this->wp->headersSent()) {
+      return;
+    }
+    // Prevent the rendered subscriber email and other personal data on
+    // subscription pages from leaking via outbound link referrers, and stop
+    // archivers that honor HTTP headers but not <meta name="robots">.
+    header('X-Robots-Tag: noindex, nofollow');
+    header('Referrer-Policy: no-referrer');
   }
 
   public function initShortcodes() {
@@ -452,11 +464,16 @@ class Pages {
       return __('Subscription management form is only available to mailing lists subscribers.', 'mailpoet');
     }
 
-    // Read+absint sanitizes the value; phpcs can't see that across the conditional.
+    // Read+absint sanitizes the values; phpcs can't see that across the conditional.
+    $errorParam = isset($_GET['error']) && is_scalar($_GET['error']) ? wp_unslash($_GET['error']) : null; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
     $successParam = isset($_GET['success']) && is_scalar($_GET['success']) ? wp_unslash($_GET['success']) : null; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-    $formStatus = is_scalar($successParam) && absint($successParam)
-      ? ManageSubscriptionFormRenderer::FORM_STATE_SUCCESS
-      : ManageSubscriptionFormRenderer::FORM_STATE_NOT_SUBMITTED;
+    if (is_scalar($errorParam) && absint($errorParam)) {
+      $formStatus = ManageSubscriptionFormRenderer::FORM_STATE_ERROR;
+    } elseif (is_scalar($successParam) && absint($successParam)) {
+      $formStatus = ManageSubscriptionFormRenderer::FORM_STATE_SUCCESS;
+    } else {
+      $formStatus = ManageSubscriptionFormRenderer::FORM_STATE_NOT_SUBMITTED;
+    }
 
     return $this->wp->applyFilters(
       'mailpoet_manage_subscription_page',
@@ -565,6 +582,7 @@ class Pages {
     $unsubscribeUrl = $unsubscribeUrl . (parse_url($unsubscribeUrl, PHP_URL_QUERY) ? '&' : '?') . 'request_method=POST';
     $templateData = [
       'unsubscribeUrl' => $unsubscribeUrl,
+      'subscriberEmail' => $this->subscriber instanceof SubscriberEntity ? $this->subscriber->getEmail() : null,
     ];
     return $this->wp->applyFilters(
       'mailpoet_unsubscribe_confirmation_page',

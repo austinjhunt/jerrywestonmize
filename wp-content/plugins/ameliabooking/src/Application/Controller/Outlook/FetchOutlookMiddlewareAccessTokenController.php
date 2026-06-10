@@ -4,7 +4,7 @@ namespace AmeliaBooking\Application\Controller\Outlook;
 
 use AmeliaBooking\Application\Commands\Outlook\FetchOutlookMiddlewareAccessTokenCommand;
 use AmeliaBooking\Application\Controller\Controller;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 class FetchOutlookMiddlewareAccessTokenController extends Controller
 {

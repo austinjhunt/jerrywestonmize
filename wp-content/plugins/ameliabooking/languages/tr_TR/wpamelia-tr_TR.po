@@ -783,6 +783,9 @@ msgstr "Alfa gönderen kimliği"
 msgid "Alpha sender ID can't be empty"
 msgstr "Alfa gönderen kimliği boş bırakılamaz"
 
+msgid "Already Paid"
+msgstr "Zaten Ödenmiş"
+
 msgid "Already have an account?"
 msgstr "Zaten bir hesabınız var mı?"
 
@@ -797,6 +800,9 @@ msgstr "Gelecekteki etkinlikleri de silin"
 
 msgid "Also open future events"
 msgstr "Ayrıca gelecekteki etkinlikleri de aç"
+
+msgid "Amelia - Booking Button"
+msgstr "Amelia - Rezervasyon Düğmesi"
 
 msgid "Amelia - Booking view"
 msgstr "Amelia - Rezervasyon manzarası"
@@ -822,6 +828,9 @@ msgstr "Amelia - Etkinlik Takvimi"
 msgid "Amelia - Events List"
 msgstr "Amelia - Etkinlik Listesi"
 
+msgid "Amelia - Events List Button"
+msgstr "Amelia - Etkinlik Listesi Düğmesi"
+
 msgid "Amelia - Search view"
 msgstr "Amelia - Arama görünümü"
 
@@ -831,11 +840,23 @@ msgstr "Amelia - Adım Adım Rezervasyon"
 msgid "Amelia Add to calendar page"
 msgstr "Amelia Takvim sayfasına ekle"
 
+msgid "Amelia Events List Booking Settings"
+msgstr "Amelia Etkinlik Listesi Rezervasyon Ayarları"
+
+msgid "Amelia Events List Booking Shortcode"
+msgstr "Amelia Etkinlik Listesi Rezervasyon Kısa Kodu"
+
 msgid "Amelia Profile Settings"
 msgstr "Amelia Profil Ayarları"
 
 msgid "Amelia SMS"
 msgstr ""
+
+msgid "Amelia Step Booking Settings"
+msgstr "Amelia Adım Adım Rezervasyon Seçenekleri"
+
+msgid "Amelia Step Booking Shortcode"
+msgstr "Amelia Adım Adım Rezervasyon Kısa Kodu"
 
 msgid "Amelia Users Settings"
 msgstr "Amelia Kullanıcı Ayarları"
@@ -875,6 +896,11 @@ msgstr "Apple Takvim kurulumu"
 
 msgid "Application (client) ID"
 msgstr "Uygulama (istemci) Kimliği"
+
+msgid ""
+"Application (client) ID must be a valid GUID (UUID), as shown in the Azure "
+"portal."
+msgstr ""
 
 msgid "Application fee amount (%)"
 msgstr "Başvuru ücreti tutarı (%)"
@@ -1836,6 +1862,9 @@ msgstr ""
 "Devam ederseniz, randevuyu zaten başka bir randevunun bulunduğu bir zaman "
 "dilimine ayarlamış olacaksınız!"
 
+msgid "By employees"
+msgstr "Çalışanlara göre"
+
 msgid ""
 "By entering your phone number you agree to receive messages via WhatsApp"
 msgstr ""
@@ -2225,6 +2254,11 @@ msgstr "İstemci Saati:"
 
 msgid "Client secret"
 msgstr "İstemci gizli anahtarı"
+
+msgid ""
+"Client secret is too short or looks invalid. Copy the full value from the "
+"Azure portal."
+msgstr ""
 
 msgid "Close"
 msgstr "Kapat"
@@ -3018,6 +3052,9 @@ msgstr "Tarih ve Saat"
 
 msgid "Date and time"
 msgstr "Tarih ve saat"
+
+msgid "Date busyness indicator"
+msgstr ""
 
 msgid "Date of Birth"
 msgstr "Doğum tarihi"
@@ -4176,6 +4213,9 @@ msgstr "Bir telefon numarası girin, ardından Enter tuşuna basın."
 
 msgid "Enter booking ID"
 msgstr "Rezervasyon kimliğini girin"
+
+msgid "Enter both the application (client) ID and client secret."
+msgstr ""
 
 msgid "Enter date of birth"
 msgstr "Doğum tarihinizi giriniz"
@@ -5686,6 +5726,9 @@ msgstr "Bu özelliğin kilidini açmak ister misiniz?"
 msgid "Invalid Mollie API key."
 msgstr "Geçersiz Mollie API anahtarı."
 
+msgid "Invalid Payment Link"
+msgstr "Geçersiz Ödeme Bağlantısı"
+
 msgid "Invalid Stripe secret key."
 msgstr "Geçersiz Stripe gizli anahtarı."
 
@@ -6155,6 +6198,9 @@ msgstr ""
 
 msgid "Make extra mandatory"
 msgstr "Ekstra zorunlu hale getir"
+
+msgid "Make sure you are using the correct Outlook credentials."
+msgstr ""
 
 msgid "Make sure you are using the correct WhatsApp credentials."
 msgstr "Doğru WhatsApp kimlik bilgilerini kullandığınızdan emin olun."
@@ -7003,6 +7049,9 @@ msgstr ""
 msgid "One booking can have multiple attendees/spots in it."
 msgstr "Bir rezervasyonda birden fazla katılımcı/yer olabilir."
 
+msgid "One of the phone numbers provided is invalid."
+msgstr "Verilen telefon numaralarından biri geçersiz."
+
 msgid "One spot is equal to one attendee."
 msgstr "Bir yer bir katılımcıya eşittir."
 
@@ -7110,6 +7159,9 @@ msgid ""
 msgstr ""
 "Outlook Mailer tam olarak yapılandırılmamış. Lütfen Outlook Entegrasyon "
 "ayarlarından hesap kurulumunu tamamlayın."
+
+msgid "Outside of working hours"
+msgstr "Çalışma saatleri dışında"
 
 msgid "Overridden by employee"
 msgstr "Çalışan tarafından üzerine yazıldı"
@@ -7647,12 +7699,6 @@ msgstr "Lütfen randevu saatini seçin"
 
 msgid "Please confirm you are not a robot"
 msgstr "Lütfen robot olmadığınızı onaylayın"
-
-msgid ""
-"Please delete this appointment. It cannot be edited due to a conflict with "
-"the associated account."
-msgstr ""
-"Lütfen bu randevuyu silin. İlgili hesapla çakışma olduğu için düzenlenemez."
 
 msgid ""
 "Please ensure that services and employees are created and that services are "
@@ -8360,7 +8406,7 @@ msgid "Redirect URL After Booking"
 msgstr "Rezervasyondan Sonra Yönlendirilecek Bağlantı"
 
 msgid "Redirect URL (denied)"
-msgstr "Yönlendirme baplantısı (reddedildi)"
+msgstr "Yönlendirme bağlantısı (reddedildi)"
 
 msgid "Redirect URL after Payment"
 msgstr "Randevudan Sonra Bağlantıya Yönlendir"
@@ -8835,6 +8881,13 @@ msgstr "Seç"
 msgid "Select Address"
 msgstr "Adres Seçin"
 
+msgid ""
+"Select Amelia Step-By-Step Booking Button block (or its inner button) to "
+"edit shortcode options."
+msgstr ""
+"Kısa kod seçeneklerini düzenlemek için Amelia Adım Adım Rezervasyon Düğmesi "
+"bloğunu (veya içindeki düğmeyi) seçin."
+
 msgid "Select Apple Calendar"
 msgstr "Apple Takvim seç"
 
@@ -8867,6 +8920,13 @@ msgstr "Etkinlik Seç"
 
 msgid "Select Events"
 msgstr "Etkinlikleri Seç"
+
+msgid ""
+"Select Events List Booking Button block (or its inner button) to edit "
+"shortcode options."
+msgstr ""
+"Kısa kod seçeneklerini düzenlemek için Etkinlik Listesi Rezervasyon Düğmesi "
+"bloğunu (veya içindeki düğmeyi) seçin."
 
 msgid "Select Location"
 msgstr "Konum Seçin"
@@ -9499,6 +9559,9 @@ msgstr "Hizmetler arasında paylaşılan kapasite"
 
 msgid "Shared category capacity"
 msgstr "Paylaşılan kategori kapasitesi"
+
+msgid "Shortcode options"
+msgstr "Kısa kod seçenekleri"
 
 msgid "Show"
 msgstr "Göster"
@@ -10488,6 +10551,11 @@ msgid "This email is already in use. Please enter a different email address."
 msgstr ""
 "Bu e-posta adresi zaten kullanılıyor. Lütfen farklı bir e-posta adresi girin."
 
+msgid ""
+"This email is linked to both a customer and an employee account. Please "
+"delete and rebook."
+msgstr ""
+
 msgid "This employee is the only one assigned to {service}."
 msgstr "Bu çalışan, {service} adresine atanan tek kişidir."
 
@@ -10509,10 +10577,12 @@ msgstr ""
 
 msgid ""
 "This is a unique security token. Copy it into the 'Verify token' field in "
-"WhatsApp when creating a webhook."
+"WhatsApp when creating a webhook. Since this token is used for logging, we "
+"recommend registering your webhook."
 msgstr ""
-"Bu, benzersiz bir güvenlik jetonudur. Web Kancası oluştururken WhatsApp'taki "
-"\"Jetonu doğrula\" alanına kopyalayın."
+"Bu, benzersiz bir güvenlik jetonudur. Bir Webhook oluştururken bunu "
+"WhatsApp'taki 'Jetonu doğrula' alanına kopyalayın. Bu jeton oturum açma için "
+"kullanıldığından, Webhook'unuzu kaydetmenizi öneririz."
 
 msgid "This is recurring event"
 msgstr "Bu tekrarlayan bir etkinlik"
@@ -10593,6 +10663,13 @@ msgid ""
 msgstr ""
 "Bu paket geçmişte {count} randevusu almıştır. | Bu paket geçmişte {count} "
 "randevusu almıştır."
+
+msgid ""
+"This payment link is no longer valid. Please contact admin if you need "
+"assistance."
+msgstr ""
+"Bu ödeme bağlantısı artık geçerli değildir. Yardıma ihtiyacınız varsa lütfen "
+"yöneticiyle iletişime geçin."
 
 msgid "This placeholder's content will be applied wherever it is used."
 msgstr "Bu yer tutucunun içeriği, kullanıldığı her yerde uygulanacaktır."
@@ -11683,6 +11760,9 @@ msgstr "Adınız"
 
 msgid "Your balance has been recharged."
 msgstr "Bakiyeniz yeniden yüklendi."
+
+msgid "Your booking has been canceled."
+msgstr "Randevunuz iptal edildi."
 
 msgid ""
 "Your booking has been successfully canceled. If you have any questions or "

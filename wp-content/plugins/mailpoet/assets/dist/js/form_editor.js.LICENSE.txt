@@ -6,7 +6,7 @@
 
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 
-/*! js-cookie v3.0.5 | MIT */
+/*! js-cookie v3.0.7 | MIT */
 
 /*! showdown v 1.9.1 - 02-11-2019 */
 

@@ -5,7 +5,7 @@ namespace AmeliaBooking\Application\Controller\PaymentGateway;
 use AmeliaBooking\Application\Commands\PaymentGateway\WooCommerceProductsCommand;
 use AmeliaBooking\Application\Controller\Controller;
 use RuntimeException;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class WooCommerceProductsController

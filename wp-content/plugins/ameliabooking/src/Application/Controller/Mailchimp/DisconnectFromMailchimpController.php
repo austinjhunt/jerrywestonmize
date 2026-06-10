@@ -5,7 +5,7 @@ namespace AmeliaBooking\Application\Controller\Mailchimp;
 use AmeliaBooking\Application\Commands\Mailchimp\DisconnectFromMailchimpCommand;
 use AmeliaBooking\Application\Controller\Controller;
 use RuntimeException;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class DisconnectFromMailchimpController

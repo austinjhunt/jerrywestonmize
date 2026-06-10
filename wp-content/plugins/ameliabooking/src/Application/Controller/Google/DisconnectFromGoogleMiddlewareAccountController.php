@@ -4,7 +4,7 @@ namespace AmeliaBooking\Application\Controller\Google;
 
 use AmeliaBooking\Application\Controller\Controller;
 use AmeliaBooking\Application\Commands\Google\DisconnectFromGoogleMiddlewareAccountCommand;
-use Slim\Http\Request;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
 class DisconnectFromGoogleMiddlewareAccountController extends Controller
 {

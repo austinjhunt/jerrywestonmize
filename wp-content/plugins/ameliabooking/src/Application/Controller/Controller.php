@@ -13,8 +13,8 @@ use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Infrastructure\WP\SettingsService\SettingsStorage;
 use AmeliaBooking\Domain\Common\Exceptions\CustomException;
 use League\Tactician\CommandBus;
-use Slim\Http\Request;
-use Slim\Http\Response;
+use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
+use AmeliaVendor\Psr\Http\Message\ResponseInterface as Response;
 
 /**
  * Class Controller
@@ -134,7 +134,7 @@ abstract class Controller
             $response = $response->withHeader('Content-Type', 'application/json;charset=utf-8');
             $response = $response->withStatus(self::STATUS_INTERNAL_SERVER_ERROR);
 
-            $response =  $response->write(
+            $response->getBody()->write(
                 json_encode(
                     [
                         'data' => [
@@ -188,7 +188,8 @@ abstract class Controller
 
             /** @var Response $response */
             $response = $response->withHeader('Content-Type', 'application/json;charset=utf-8');
-            $response = $response->write(
+
+            $response->getBody()->write(
                 $this->sendJustData ? $commandResult->getData() :
                     json_encode(
                         $commandResult->hasDataInResponse() ?
@@ -218,7 +219,8 @@ abstract class Controller
 
             $response = $response->withHeader('Content-Type', 'text/html; charset=utf-8');
             $response = $response->withHeader('Cache-Control', 'max-age=0');
-            $response = $response->write($html);
+
+            $response->getBody()->write($html);
         }
 
         if (($file = $commandResult->getFile()) !== null) {
@@ -231,7 +233,7 @@ abstract class Controller
                 $response = $response->withHeader('Content-Length', $file['size']);
             }
 
-            $response = $response->write($file['content']);
+            $response->getBody()->write($file['content']);
         }
 
         return $response;
@@ -364,5 +366,17 @@ abstract class Controller
             'size'    => strlen($html),
             'content' => $html,
         ]);
+    }
+
+    /**
+     * @param mixed $default
+     *
+     * @return mixed
+     */
+    public static function getParam(Request $request, string $key, $default = null)
+    {
+        $params = $request->getQueryParams();
+
+        return array_key_exists($key, $params) ? $params[$key] : $default;
     }
 }

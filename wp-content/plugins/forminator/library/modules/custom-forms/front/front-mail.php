@@ -247,6 +247,35 @@ class Forminator_CForm_Front_Mail extends Forminator_Mail {
 			}
 
 			/**
+			 * Exclude fields from the email based on their slugs or field types.
+			 *
+			 * @since 1.54.0
+			 *
+			 * @param array $exclude_fields An array of field slugs or types to be excluded from the email.
+			 * @param Forminator_Form_Model $custom_form Form model.
+			 * @param array                        $data Post data.
+			 * @param Forminator_Form_Entry_Model  $entry Saved entry.
+			 *
+			 * @return array $exclude_fields
+			 */
+			$exclude_fields = apply_filters( 'forminator_custom_form_mail_exclude_fields', array(), $custom_form, $data, $entry );
+			$fields         = $custom_form->fields;
+			if ( ! empty( $fields ) && ! empty( $exclude_fields ) && is_array( $exclude_fields ) ) {
+				$custom_form->fields = array_filter(
+					$fields,
+					function ( $field ) use ( $exclude_fields ) {
+						foreach ( $exclude_fields as $exclude_field ) {
+							// Exclude the field if its slug matches the excluded field or starts with the excluded field followed by a hyphen (to account for copies and field types).
+							if ( $field->slug === $exclude_field || 0 === strpos( $field->slug, $exclude_field . '-' ) ) {
+								return false;
+							}
+						}
+						return true;
+					}
+				);
+			}
+
+			/**
 			 * Action called before mail is sent
 			 *
 			 * @param Forminator_CForm_Front_Mail - the current form
@@ -723,12 +752,13 @@ class Forminator_CForm_Front_Mail extends Forminator_Mail {
 	 *
 	 * @since 1.0
 	 *
-	 * @param array $condition Condition.
-	 * @param mixed $module Module.
+	 * @param array  $condition Condition.
+	 * @param mixed  $module Module.
+	 * @param string $result_slug Result slug.
 	 *
 	 * @return bool
 	 */
-	public function is_routing( $condition, $module ) {
+	public function is_routing( $condition, $module, $result_slug = '' ) {
 		return Forminator_Field::is_condition_matched( $condition );
 	}
 

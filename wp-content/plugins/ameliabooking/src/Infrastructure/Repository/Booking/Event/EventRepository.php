@@ -402,7 +402,6 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
         $customerBookingsTable = CustomerBookingsTable::getTableName();
         $customerBookingsEventsPeriods = CustomerBookingsToEventsPeriodsTable::getTableName();
         $eventsProvidersTable          = EventsProvidersTable::getTableName();
-        $usersTable = UsersTable::getTableName();
 
         $params = [];
 
@@ -658,7 +657,6 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
         if (!empty($criteria['providers'])) {
             $joins .= "
                 LEFT JOIN {$eventsProvidersTable} epr ON epr.eventId = e.id
-                INNER JOIN {$usersTable} pu ON pu.id = epr.userId OR pu.id = e.organizerId
             ";
 
             $queryProviders = [];

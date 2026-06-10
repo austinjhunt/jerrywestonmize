@@ -5,7 +5,9 @@ namespace AmeliaBooking\Application\Commands\Notification;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Notification\AbstractWhatsAppNotificationService;
+use AmeliaBooking\Domain\Entity\Notification\NotificationLog;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
+use AmeliaBooking\Infrastructure\Repository\Notification\NotificationLogRepository;
 use Exception;
 use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
@@ -32,19 +34,12 @@ class WhatsAppWebhookCommandHandler extends CommandHandler
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
 
+        /** @var NotificationLogRepository $notificationLogRepo */
+        $notificationLogRepo = $this->container->get('domain.notificationLog.repository');
+
         if (!$settingsService->isFeatureEnabled('whatsapp')) {
             $result->setResult(CommandResult::RESULT_SUCCESS);
             $result->setMessage('WhatsApp feature not enabled');
-            $result->setData([]);
-
-            return $result;
-        }
-
-        $enabled = $settingsService->getSetting('notifications', 'whatsAppReplyEnabled');
-
-        if (empty($enabled)) {
-            $result->setResult(CommandResult::RESULT_SUCCESS);
-            $result->setMessage('Auto-reply not enabled');
             $result->setData([]);
 
             return $result;
@@ -56,6 +51,7 @@ class WhatsAppWebhookCommandHandler extends CommandHandler
         $data = $command->getFields();
 
         $phones = [];
+        $waIds  = [];
 
         $data = apply_filters('amelia_before_whatsapp_webhook_filter', $data);
 
@@ -64,9 +60,31 @@ class WhatsAppWebhookCommandHandler extends CommandHandler
         foreach ($data['entry'] as $entry) {
             foreach ($entry['changes'] as $change) {
                 if ($change['field'] === 'messages') {
-                    foreach ($change['value']['messages'] as $message) {
-                        $phones[] = $message['from'];
-                        $whatsAppNotificationService->sendMessage($message['from']);
+                    if (!empty($change['value']['messages'])) {
+                        foreach ($change['value']['messages'] as $message) {
+                            $phones[] = $message['from'];
+                            $enabled = $settingsService->getSetting('notifications', 'whatsAppReplyEnabled');
+
+                            if (!empty($enabled)) {
+                                $whatsAppNotificationService->sendMessage($message['from']);
+                            }
+                        }
+                    }
+                    if (!empty($change['value']['statuses'])) {
+                        foreach ($change['value']['statuses'] as $message) {
+                            $waIds[] = $message['id'];
+                            try {
+                                $notificationLog = $notificationLogRepo->getByEntityId($message['id'], 'messageId');
+                                /** @var NotificationLog $log */
+                                foreach ($notificationLog->getItems() as $log) {
+                                    $logData = $log->getData() ? $log->getData()->getValue() : null;
+                                    $logData = $logData ? json_decode($logData, true) : [];
+                                    $logData['webhook_data'] = $message;
+                                    $notificationLogRepo->updateFieldById($log->getId()->getValue(), json_encode($logData), 'data');
+                                }
+                            } catch (Exception $e) {
+                            }
+                        }
                     }
                 }
             }
@@ -75,8 +93,11 @@ class WhatsAppWebhookCommandHandler extends CommandHandler
         do_action('amelia_after_whatsapp_webhook', $data, $phones);
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
-        $result->setMessage('Auto-reply successfully sent');
-        $result->setData($phones);
+        $result->setMessage('Webhook successfully processed');
+        $result->setData([
+            'status_ids' => $waIds,
+            'auto_reply_phones' => $phones
+        ]);
 
         return $result;
     }
