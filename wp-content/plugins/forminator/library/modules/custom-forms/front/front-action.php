@@ -438,9 +438,16 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 		$forminator_user_login = new Forminator_CForm_Front_User_Login();
 		$login_user            = $forminator_user_login->process_login( self::$module_object, $entry, self::$info['field_data_array'] );
 		if ( is_wp_error( $login_user['user'] ) ) {
-			$message = $login_user['user']->get_error_message();
-
-			throw new Exception( wp_kses( $message, 'strong' ) );
+			$messages = $login_user['user']->get_error_messages();
+			throw new Exception(
+				wp_kses(
+					implode( '<br>', $messages ),
+					array(
+						'strong' => array(),
+						'br'     => array(),
+					)
+				)
+			);
 		}
 
 		if ( ! empty( $login_user['authentication'] ) && 'invalid' === $login_user['authentication'] ) {
@@ -744,6 +751,12 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 		 * @param array|string $data - the data to be sanitized.
 		 */
 		$field_data = $form_field_obj->sanitize( $field_array, $field_data );
+
+		// Legitimate file_path is added in process_uploads(); clearing request values here is intentional.
+		if ( 'upload' === $field_type && ! empty( $field_data['file']['file_path'] ) ) {
+			$field_data = array();
+			unset( self::$prepared_data[ $field_id ] );
+		}
 
 		if ( ! self::$is_draft && ! self::$is_abandoned ) {
 			$field_data = $form_field_obj->validate_entry( $field_array, $field_data );
@@ -1797,14 +1810,20 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 	 * @return array
 	 */
 	private static function get_limited_select_values() {
-		$result = array();
+		$result  = array();
+		$form_id = self::$module_id;
 		if ( self::$is_draft || empty( self::$info['select_field_value'] ) ) {
 			return $result;
 		}
+
+		if ( isset( self::$prepared_data['lead_quiz'] ) ) {
+			$form_id = self::$prepared_data['lead_quiz'];
+		}
+
 		foreach ( self::$info['select_field_value'] as $select_name => $options ) {
 			$select_value = array();
 			foreach ( $options as $option ) {
-				if ( Forminator_Form_Entry_Model::is_option_limit_reached( self::$module_id, $select_name, $option['type'], $option ) ) {
+				if ( Forminator_Form_Entry_Model::is_option_limit_reached( $form_id, $select_name, $option['type'], $option ) ) {
 					$select_value[] = $option;
 				}
 			}
@@ -1871,22 +1890,37 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 			wp_send_json_error( new WP_Error( 'invalid_code' ) );
 		}
 
-		$fields = self::$module_object->get_fields();
-		foreach ( $fields as $field ) {
-			$field_array = $field->to_formatted_array();
-			$element_id  = esc_html( $field_array['element_id'] );
-			$field_type  = isset( $field_array['type'] ) ? esc_html( $field_array['type'] ) : '';
-			if ( isset( self::$prepared_data['element_id'] ) && 'upload' === $field_type && self::$prepared_data['element_id'] === $element_id ) {
-				$upload_field_obj = Forminator_Core::get_field_object( $field_type );
-				$response         = $upload_field_obj->handle_file_upload( self::$module_id, $field_array, self::$prepared_data, 'upload' );
-
-				if ( ! $response['success'] || isset( $response['errors'] ) ) {
-					wp_send_json_error( $response );
-				} else {
-					wp_send_json_success( $response );
-				}
-			}
+		if ( empty( self::$prepared_data['element_id'] ) ) {
+			wp_send_json_error(
+				array(
+					'success' => false,
+					'message' => esc_html__( 'Upload field ID is missing.', 'forminator' ),
+				)
+			);
 		}
+
+		$element_id  = sanitize_text_field( self::$prepared_data['element_id'] );
+		$field_array = self::$module_object->get_field( $element_id, true );
+
+		if ( empty( $field_array ) || empty( $field_array['type'] ) || 'upload' !== $field_array['type'] ) {
+			wp_send_json_error(
+				array(
+					'success' => false,
+					'message' => esc_html__( 'Upload field doesn\'t exist in your form!', 'forminator' ),
+				)
+			);
+		}
+
+		$upload_field_obj = Forminator_Core::get_field_object( 'upload' );
+		$response         = $upload_field_obj->handle_file_upload( self::$module_id, $field_array, self::$prepared_data, 'upload' );
+
+		if ( ! $response['success'] || isset( $response['errors'] ) ) {
+			wp_send_json_error( $response );
+		}
+
+		unset( $response['file_path'] );
+
+		wp_send_json_success( $response );
 	}
 
 	/**
@@ -2777,6 +2811,9 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 					$upload_data = $form_field_obj->transfer_upload( self::$module_id, $form_upload_data, $field_settings );
 				} elseif ( ! self::$has_payment && ! empty( $form_upload_data['file'] ) ) {
 					$upload_data = $form_upload_data['file'];
+					if ( isset( $upload_data['file_path'] ) && ! forminator_attachment_path_is_allowed( $upload_data['file_path'] ) ) {
+						$upload_data = array( 'success' => false );
+					}
 				}
 			}
 

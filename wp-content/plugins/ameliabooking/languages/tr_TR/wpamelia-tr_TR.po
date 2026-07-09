@@ -901,6 +901,8 @@ msgid ""
 "Application (client) ID must be a valid GUID (UUID), as shown in the Azure "
 "portal."
 msgstr ""
+"Uygulama (istemci) kimliği, Azure portalında gösterildiği gibi geçerli bir "
+"GUID (UUID) olmalıdır."
 
 msgid "Application fee amount (%)"
 msgstr "Başvuru ücreti tutarı (%)"
@@ -2259,6 +2261,8 @@ msgid ""
 "Client secret is too short or looks invalid. Copy the full value from the "
 "Azure portal."
 msgstr ""
+"İstemci gizli anahtarı çok kısa veya geçersiz görünüyor. Azure portalından "
+"tam değeri kopyalayın."
 
 msgid "Close"
 msgstr "Kapat"
@@ -2295,6 +2299,12 @@ msgstr "Tümünü daralt"
 
 msgid "Collapse menu"
 msgstr "Menüyü daralt"
+
+msgid ""
+"Collect additional information from your customers before they complete a "
+"booking."
+msgstr ""
+"Müşterilerinizin rezervasyonu tamamlamadan önce ek bilgilerini toplayın."
 
 msgid "Collect the information your business truly needs"
 msgstr "İşletmenizin gerçekten ihtiyaç duyduğu bilgileri toplayın"
@@ -2496,6 +2506,9 @@ msgstr ""
 msgid "Consulting"
 msgstr "Danışmanlık"
 
+msgid "Contact Form"
+msgstr "İletişim Formu"
+
 msgid "Contact message"
 msgstr "İletişim mesajı"
 
@@ -2675,6 +2688,9 @@ msgstr "Çalışan oluştur"
 
 msgid "Create event"
 msgstr "Etkinlik oluştur"
+
+msgid "Create form"
+msgstr "Form oluştur"
 
 msgid "Create meetings for pending appointments"
 msgstr "Bekleyen randevular için toplantılar oluşturun"
@@ -3054,7 +3070,7 @@ msgid "Date and time"
 msgstr "Tarih ve saat"
 
 msgid "Date busyness indicator"
-msgstr ""
+msgstr "Tarih yoğunluğu göstergesi"
 
 msgid "Date of Birth"
 msgstr "Doğum tarihi"
@@ -3920,6 +3936,9 @@ msgstr ""
 "yönetmelerini sağlayın. Renkleri ve etiketleri kişiselleştirerek sorunsuz ve "
 "markalı bir deneyim yaratın."
 
+msgid "Enable data usage"
+msgstr "Veri kullanımını etkinleştir"
+
 msgid "Enable guest booking"
 msgstr "Misafir rezervasyonunu etkinleştir"
 
@@ -4216,6 +4235,10 @@ msgstr "Rezervasyon kimliğini girin"
 
 msgid "Enter both the application (client) ID and client secret."
 msgstr ""
+"Hem uygulama (istemci) kimliğini hem de istemci gizli anahtarını girin."
+
+msgid "Enter code"
+msgstr "Kodu girin"
 
 msgid "Enter date of birth"
 msgstr "Doğum tarihinizi giriniz"
@@ -4380,6 +4403,9 @@ msgstr "Etkinlik Türü"
 msgid "Event available"
 msgstr "Etkinlik mevcut"
 
+msgid "Event booking"
+msgstr "Etkinlik rezervasyonu"
+
 msgid "Event booking has been created."
 msgstr "Etkinlik rezervasyonu oluşturuldu."
 
@@ -4495,6 +4521,9 @@ msgstr "Etkinlik kaydedildi"
 msgid "Event has been updated."
 msgstr "Etkinlik güncellendi."
 
+msgid "Event image gallery"
+msgstr "Etkinlik resim galerisi"
+
 msgid "Event info"
 msgstr "Etkinlik bilgileri"
 
@@ -4606,6 +4635,9 @@ msgstr "Etkinlik listesi"
 
 msgid "Events list view"
 msgstr "Etkinlikler listesi görünümü"
+
+msgid "Events pagination"
+msgstr "Etkinlik sayfalaması"
 
 msgid "Events pricing"
 msgstr "Etkinlik fiyatlandırması"
@@ -5185,6 +5217,13 @@ msgid "Healthcare"
 msgstr "Sağlık hizmeti"
 
 msgid ""
+"Help us improve Amelia by sharing anonymous data about your plugin usage. No "
+"personal data is collected."
+msgstr ""
+"Eklenti kullanımınızla ilgili anonim verileri paylaşarak Amelia'yı "
+"geliştirmemize yardımcı olun. Hiçbir kişisel veri toplanmaz."
+
+msgid ""
 "Here, you can connect your personal Apple Calendar,<br/>so once the booking "
 "is scheduled,<br/>it will be automatically added to your calendar of choice."
 msgstr ""
@@ -5516,6 +5555,9 @@ msgstr "Resim"
 msgid "Image Color"
 msgstr "Görüntü Rengi"
 
+msgid "Image navigation"
+msgstr "Görsel gezinme"
+
 msgid "Image thumbs"
 msgstr "Resim önizlemeleri"
 
@@ -5536,6 +5578,9 @@ msgstr "İçe aktarma başarılı"
 
 msgid "Importing customers"
 msgstr "Müşterileri içe aktarma"
+
+msgid "Improve Amelia"
+msgstr "Amelia'yı geliştirin"
 
 msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
@@ -5712,6 +5757,9 @@ msgstr "Amelia Rezervasyon Kısa Kodunu Ekle"
 msgid "Insert pending appointments"
 msgstr "Bekleyen randevuları ekle"
 
+msgid "Install & Activate"
+msgstr "Yükle ve Etkinleştir"
+
 msgid "Integrate with WooCommerce to enable advanced e-commerce capabilities."
 msgstr ""
 "Gelişmiş e-ticaret özelliklerini etkinleştirmek için WooCommerce ile entegre "
@@ -5810,6 +5858,24 @@ msgstr "Öğe"
 
 msgid "Item status"
 msgstr "Öğe durumu"
+
+msgid "IvyForms"
+msgstr ""
+
+msgid "IvyForms Entries"
+msgstr "IvyForms Girdileri"
+
+msgid "IvyForms Field"
+msgstr "IvyForms Alanı"
+
+msgid "IvyForms Form"
+msgstr "IvyForms Formu"
+
+msgid "IvyForms validation failed."
+msgstr "IvyForms doğrulaması başarısız oldu."
+
+msgid "Ivy setup"
+msgstr "Ivy kurulumu"
 
 msgid "Jane Doe"
 msgstr "Ayşe Fatma"
@@ -6053,8 +6119,17 @@ msgstr "Rezervasyon formunu manuel yükle"
 msgid "Load page"
 msgstr "Sayfayı yükle"
 
+msgid "Loading"
+msgstr "Yükleniyor"
+
 msgid "Loading..."
 msgstr "Yükleniyor..."
+
+msgid "Loading event information"
+msgstr "Etkinlik bilgileri yükleniyor"
+
+msgid "Loading header"
+msgstr "Başlık yükleniyor"
 
 msgid "Local Time"
 msgstr "Yerel Zaman"
@@ -6200,7 +6275,7 @@ msgid "Make extra mandatory"
 msgstr "Ekstra zorunlu hale getir"
 
 msgid "Make sure you are using the correct Outlook credentials."
-msgstr ""
+msgstr "Doğru Outlook kimlik bilgilerini kullandığınızdan emin olun."
 
 msgid "Make sure you are using the correct WhatsApp credentials."
 msgstr "Doğru WhatsApp kimlik bilgilerini kullandığınızdan emin olun."
@@ -6269,6 +6344,9 @@ msgstr "Maksimum Kapasite Artan"
 
 msgid "Max Capacity Desc"
 msgstr "Maksimum Kapasite Azalan"
+
+msgid "Maximum"
+msgstr "Maksimum"
 
 msgid "Maximum Quantity:"
 msgstr "Maksimum Miktar:"
@@ -6363,6 +6441,9 @@ msgstr "Microsoft Teams kurulumu"
 
 msgid "Min. Capacity"
 msgstr "Min. Kapasite"
+
+msgid "Minimum"
+msgstr ""
 
 msgid "Minimum bookings required"
 msgstr "Gereken minimum rezervasyon"
@@ -6585,6 +6666,9 @@ msgstr "Sonraki Hizmet"
 
 msgid "Next day reminder"
 msgstr "Ertesi gün hatırlatma"
+
+msgid "Next image"
+msgstr "Sonraki resim"
 
 msgid "No"
 msgstr "Hayır"
@@ -7181,6 +7265,9 @@ msgstr ""
 msgid "PHP Mail"
 msgstr ""
 
+msgid "PRE-BOOKING INTAKE FORM (IVYFORMS)"
+msgstr "ÖN REZERVASYON FORMU (IVYFORMS)"
+
 msgid "Package"
 msgstr "Paket"
 
@@ -7599,6 +7686,9 @@ msgstr "Dönemler"
 
 msgid "Permanent access token"
 msgstr "Kalıcı erişim token'ı"
+
+msgid "Permanently linked"
+msgstr "Kalıcı bağlantı"
 
 msgid "Person"
 msgstr "Kişi"
@@ -8082,6 +8172,9 @@ msgstr "Açılır pencere düğmeleri"
 msgid "Popup title"
 msgstr "Açılır pencere başlığı"
 
+msgid "Pre-booking form details"
+msgstr "Ön rezervasyon formu ayrıntıları"
+
 msgid "Preload entities when page loads"
 msgstr "Sayfa yüklendiğinde varlıkları önceden yükle"
 
@@ -8123,8 +8216,14 @@ msgstr "Makbuzu Önizle"
 msgid "Preview invoice"
 msgstr "Makbuz önizlemesi"
 
+msgid "Previous image"
+msgstr "Önceki resim"
+
 msgid "Previous range"
 msgstr "Önceki aralık"
+
+msgid "Previous step"
+msgstr "Önceki adım"
 
 msgid "Price"
 msgstr "Fiyat"
@@ -8773,23 +8872,14 @@ msgstr "Ara"
 msgid "Search..."
 msgstr "Ara..."
 
-msgid "Search Coupons"
-msgstr "Kuponları Ara"
-
 msgid "Search Filters"
 msgstr "Arama Filtreleri"
 
 msgid "Search Input Field"
 msgstr "Arama Girdi Alanı"
 
-msgid "Search Resources"
-msgstr "Kaynaklarda Ara"
-
 msgid "Search Results"
 msgstr "Arama Sonuçları"
-
-msgid "Search Taxes"
-msgstr "Vergilerde Ara"
 
 msgid "Search attendees"
 msgstr "Katılımcılarda ara"
@@ -8799,6 +8889,9 @@ msgstr "Randevularda ara"
 
 msgid "Search bookings"
 msgstr "Rezervasyonlarda ara"
+
+msgid "Search coupons"
+msgstr "Kuponlarda ara"
 
 msgid "Search customers"
 msgstr "Müşterilerde ara"
@@ -8836,8 +8929,14 @@ msgstr "Bildirimlerde ara"
 msgid "Search packages"
 msgstr "Paketlerde ara"
 
+msgid "Search resources"
+msgstr "Kaynaklarda ara"
+
 msgid "Search services"
 msgstr "Hizmetlerde ara"
+
+msgid "Search taxes"
+msgstr "Vergilerde ara"
 
 msgid "Second"
 msgstr "İkinci"
@@ -8967,6 +9066,9 @@ msgstr "WooCommerce ürününü seçin"
 msgid "Select Zoom User"
 msgstr "Zoom Kullanıcısı Seç"
 
+msgid "Select a form..."
+msgstr "Bir form seçin..."
+
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr "İmlecinizin bulunduğu yere eklemek için bir yer tutucu seçin."
 
@@ -9014,9 +9116,6 @@ msgstr ""
 
 msgid "Select or Create New"
 msgstr "Seç veya Yeni Oluştur"
-
-msgid "Select or Create Tag"
-msgstr "Etiket Seç veya Oluştur"
 
 msgid "Select package"
 msgstr "Paketi seç"
@@ -9077,6 +9176,9 @@ msgstr "Bu çalışanı seç"
 
 msgid "Select tickets"
 msgstr "Biletleri seçin"
+
+msgid "Select which IvyForms form to show before booking"
+msgstr "Rezervasyon öncesinde hangi IvyForms formunun gösterileceğini seçin"
 
 msgid "Select your Square Location"
 msgstr "Square konumunuzu seçin"
@@ -10555,6 +10657,8 @@ msgid ""
 "This email is linked to both a customer and an employee account. Please "
 "delete and rebook."
 msgstr ""
+"Bu e-posta hem bir Müşteri hem de bir Çalışan hesabına bağlıdır. Lütfen "
+"silip yeniden rezervasyon yapın."
 
 msgid "This employee is the only one assigned to {service}."
 msgstr "Bu çalışan, {service} adresine atanan tek kişidir."
@@ -11972,8 +12076,14 @@ msgstr "ile"
 msgid "on"
 msgstr "tarihinde"
 
+msgid "opens in new tab"
+msgstr "yeni sekmede açılır"
+
 msgid "out of"
 msgstr "-den/dan"
+
+msgid "payment button"
+msgstr "ödeme düğmesi"
 
 msgid "people"
 msgstr "insanlar"

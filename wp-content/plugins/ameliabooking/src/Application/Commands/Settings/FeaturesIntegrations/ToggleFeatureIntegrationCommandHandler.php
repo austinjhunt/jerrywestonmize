@@ -7,6 +7,7 @@ use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
+use AmeliaBooking\Infrastructure\WP\Integrations\PluginInstaller;
 
 class ToggleFeatureIntegrationCommandHandler extends CommandHandler
 {
@@ -38,6 +39,26 @@ class ToggleFeatureIntegrationCommandHandler extends CommandHandler
             $result->setMessage('Feature or integration does not exist.');
 
             return $result;
+        }
+
+        if ($code === 'ivy' && (!PluginInstaller::isPluginInstalled('ivyforms') || !PluginInstaller::isPluginActive('ivyforms'))) {
+            $ivyResult = [];
+
+            // if IvyForms is not installed or not active, install and activate it
+            if (!PluginInstaller::isPluginInstalled('ivyforms')) {
+                $ivyResult = PluginInstaller::installAndActivatePlugin('ivyforms');
+            } elseif (!PluginInstaller::isPluginActive('ivyforms')) {
+                $ivyResult = PluginInstaller::activatePlugin('ivyforms');
+            }
+
+            if (empty($ivyResult['success'])) {
+                $result->setResult(CommandResult::RESULT_ERROR);
+                $result->setMessage($ivyResult['message']);
+
+                return $result;
+            }
+
+            $result->setMessage($ivyResult['message']);
         }
 
         $featuresIntegrations[$code]['enabled'] = !$featuresIntegrations[$code]['enabled'];

@@ -582,21 +582,21 @@ class Forminator_Core {
 	 *
 	 * @param array  $data Data.
 	 * @param string $current_key Current key.
+	 * @param bool   $force Force sanitization.
 	 *
 	 * @return array|string
 	 */
-	public static function sanitize_array( $data, $current_key = '' ) {
+	public static function sanitize_array( $data, $current_key = '', $force = false ) {
 		$data = wp_unslash( $data );
 
 		// TODO: Should skip fields that has its own sanitize function.
 		if (
-			( 'preview_data' === $current_key && ! is_array( $data ) ) || // Skip sanitization for preview_data if it is not an array, as it might be a JSON string.
-			0 === strpos( $current_key, 'url-' ) ||
+			false === $force && ( 0 === strpos( $current_key, 'url-' ) ||
 			0 === strpos( $current_key, 'select-' ) ||
 			0 === strpos( $current_key, 'radio-' ) ||
 			0 === strpos( $current_key, 'checkbox-' ) ||
 			0 === strpos( $current_key, 'password-' ) ||
-			0 === strpos( $current_key, 'confirm_password-' )
+			0 === strpos( $current_key, 'confirm_password-' ) )
 		) {
 			return $data;
 		}
@@ -671,7 +671,7 @@ class Forminator_Core {
 			return sanitize_text_field( $data );
 		} else {
 			foreach ( $data as $key => $value ) {
-				$data[ $key ] = self::sanitize_array( $value, $key );
+				$data[ $key ] = self::sanitize_array( $value, $key, $force );
 			}
 
 			return $data;

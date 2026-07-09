@@ -73,13 +73,13 @@ class Forminator_GFBlock_Forms extends Forminator_GFBlock_Abstract {
 	 * @return string
 	 */
 	public function preview_block( $properties = array() ) {
-		if ( isset( $properties['module_id'] ) ) {
-			$html = forminator_form( $properties['module_id'], true, true );
-
-			return $html;
+		if ( ! isset( $properties['module_id'] ) ) {
+			return false;
 		}
 
-		return false;
+		$render_id = isset( $properties['render_id'] ) ? intval( $properties['render_id'] ) : 0;
+
+		return forminator_form( $properties['module_id'], true, true, $render_id );
 	}
 
 	/**

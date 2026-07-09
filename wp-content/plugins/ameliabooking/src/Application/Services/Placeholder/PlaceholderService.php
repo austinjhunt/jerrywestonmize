@@ -705,7 +705,8 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
         if ($bookingKey === null) {
             $sendAllCustomFields =
                 $settingsService->getSetting('notifications', 'sendAllCF') ||
-                (array_key_exists('sendCF', $appointment) && $appointment['sendCF']);
+                (array_key_exists('sendCF', $appointment) && $appointment['sendCF']) ||
+                (array_key_exists('sendForAllBookings', $appointment) && $appointment['sendForAllBookings']);
             foreach ($appointment['bookings'] as $booking) {
                 if (
                     (!$booking['isChangedStatus'] || (array_key_exists('isLastBooking', $booking) && !$booking['isLastBooking']))

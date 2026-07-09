@@ -52,22 +52,10 @@
       customClassName: false,
       html: false
     },
-    attributes: {
+    attributes: Object.assign({
       short_code: {
         type: 'string',
         default: '[ameliastepbooking]'
-      },
-      trigger: {
-        type: 'string',
-        default: ''
-      },
-      trigger_type: {
-        type: 'string',
-        default: 'id'
-      },
-      in_dialog: {
-        type: 'boolean',
-        default: false
       },
       show: {
         type: 'string',
@@ -101,7 +89,7 @@
         type: 'string',
         default: '1'
       }
-    },
+    }, window.ameliaGutenbergShared.getSharedShortcodeAttributes()),
     edit: function (props) {
       var inspectorElements = []
       var attributes = props.attributes
@@ -199,22 +187,12 @@
             shortCode = '[ameliastepbooking'
           }
 
-          if (attributes.trigger) {
-            shortCode += ' trigger=' + attributes.trigger + ''
-          }
-
-          if (attributes.trigger && attributes.trigger_type) {
-            shortCode += ' trigger_type=' + attributes.trigger_type + ''
-          }
-
-          if (attributes.trigger && attributes.in_dialog) {
-            shortCode += ' in_dialog=1'
-          }
-
           // Add layout parameter to the shortcode
           if (attributes.layout) {
             shortCode += ' layout=' + attributes.layout + ''
           }
+
+          shortCode += window.ameliaGutenbergShared.getSharedShortcodeString(attributes)
 
           shortCode += ']'
         } else {
@@ -354,38 +332,7 @@
           }
         }))
 
-        inspectorElements.push(el(components.TextControl, {
-          id: 'amelia-js-trigger',
-          label: wpAmeliaLabels.manually_loading,
-          value: attributes.trigger,
-          help: wpAmeliaLabels.manually_loading_description,
-          onChange: function (TextControl) {
-            return props.setAttributes({trigger: TextControl})
-          }
-        }))
-
-        inspectorElements.push(el(components.SelectControl, {
-          id: 'amelia-js-trigger_type',
-          label: wpAmeliaLabels.trigger_type,
-          value: attributes.trigger_type,
-          options: options.trigger_type,
-          help: wpAmeliaLabels.trigger_type_tooltip,
-          onChange: function (selectControl) {
-            return props.setAttributes({trigger_type: selectControl})
-          }
-        }))
-
-        inspectorElements.push(el(components.PanelRow,
-          {},
-          el('label', {htmlFor: 'amelia-js-in-dialog'}, wpAmeliaLabels.in_dialog),
-          el(components.FormToggle, {
-            id: 'amelia-js-in-dialog',
-            checked: attributes.in_dialog,
-            onChange: function () {
-              return props.setAttributes({in_dialog: !props.attributes.in_dialog})
-            }
-          })
-        ))
+        window.ameliaGutenbergShared.setSharedShortcodeElements(inspectorElements, components, attributes, props, options, data)
 
         return el('div', blockProps,
           el(blockControls, {key: 'controls'}),
@@ -433,11 +380,8 @@
     },
     deprecated: [
       {
-        attributes: {
+        attributes: Object.assign({
           short_code: {type: 'string', default: '[ameliastepbooking]'},
-          trigger: {type: 'string', default: ''},
-          trigger_type: {type: 'string', default: 'id'},
-          in_dialog: {type: 'boolean', default: false},
           show: {type: 'string', default: ''},
           location: {type: 'array', default: []},
           package: {type: 'array', default: []},
@@ -446,7 +390,7 @@
           employee: {type: 'array', default: []},
           parametars: {type: 'boolean', default: false},
           layout: {type: 'string', default: '1'}
-        },
+        }, window.ameliaGutenbergShared.getSharedShortcodeDepricatedAttributes()),
         save: function (props) {
           return el('div', {}, props.attributes.short_code)
         }

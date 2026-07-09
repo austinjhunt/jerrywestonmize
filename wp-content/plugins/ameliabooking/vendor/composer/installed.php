@@ -100,15 +100,6 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
-        'eluceo/ical' => array(
-            'pretty_version' => '0.11.6',
-            'version' => '0.11.6.0',
-            'reference' => 'e22ef0fad1a19ad1bbffd819f21fa6a83f96531c',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../eluceo/ical',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
         'fig/http-message-util' => array(
             'pretty_version' => '1.1.5',
             'version' => '1.1.5.0',
@@ -227,9 +218,9 @@
             'dev_requirement' => false,
         ),
         'melograno/usage-tracker' => array(
-            'pretty_version' => '1.0.0',
-            'version' => '1.0.0.0',
-            'reference' => 'e3b06561f50aabbd980dd34df8592bde95922dd1',
+            'pretty_version' => '1.1.0',
+            'version' => '1.1.0.0',
+            'reference' => '5c848326d3bb63c5d54d97d424020d3543d124dd',
             'type' => 'library',
             'install_path' => __DIR__ . '/../melograno/usage-tracker',
             'aliases' => array(),

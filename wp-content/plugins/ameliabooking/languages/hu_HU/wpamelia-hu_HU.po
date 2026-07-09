@@ -912,6 +912,8 @@ msgid ""
 "Application (client) ID must be a valid GUID (UUID), as shown in the Azure "
 "portal."
 msgstr ""
+"Az Application (client) ID-nek érvényes GUID (UUID) értéknek kell lennie, "
+"ahogy az Azure portalban látható."
 
 msgid "Application fee amount (%)"
 msgstr "Jelentkezési díj összege (%)"
@@ -1878,7 +1880,7 @@ msgstr ""
 "amelyre már van egy meglévő megbeszélés!"
 
 msgid "By employees"
-msgstr ""
+msgstr "Alkalmazottak szerint"
 
 msgid ""
 "By entering your phone number you agree to receive messages via WhatsApp"
@@ -2281,6 +2283,8 @@ msgid ""
 "Client secret is too short or looks invalid. Copy the full value from the "
 "Azure portal."
 msgstr ""
+"A kliens titok túl rövid vagy érvénytelennek tűnik. Másolja ki a teljes "
+"értéket az Azure Portalból."
 
 msgid "Close"
 msgstr "Lezár"
@@ -2317,6 +2321,11 @@ msgstr "Összecsukás"
 
 msgid "Collapse menu"
 msgstr "Összecsukható menü"
+
+msgid ""
+"Collect additional information from your customers before they complete a "
+"booking."
+msgstr ""
 
 msgid "Collect the information your business truly needs"
 msgstr ""
@@ -2526,6 +2535,9 @@ msgstr ""
 msgid "Consulting"
 msgstr "Tanácsadás"
 
+msgid "Contact Form"
+msgstr ""
+
 msgid "Contact message"
 msgstr "Kapcsolatfelvételi üzenet"
 
@@ -2710,6 +2722,9 @@ msgstr "Alkalmazott létrehozása"
 
 msgid "Create event"
 msgstr "Esemény létrehozása"
+
+msgid "Create form"
+msgstr ""
 
 msgid "Create meetings for pending appointments"
 msgstr "Találkozók létrehozása függőben lévő időpontokhoz"
@@ -3089,7 +3104,7 @@ msgid "Date and time"
 msgstr "Dátum és idő"
 
 msgid "Date busyness indicator"
-msgstr ""
+msgstr "Dátum foglaltsági jelző"
 
 msgid "Date of Birth"
 msgstr "Születési dátum"
@@ -3964,6 +3979,9 @@ msgstr ""
 "és eseményeiket. Személyre szabhatja a színeket és a címkéket, hogy "
 "zökkenőmentes és márkás élményt teremtsen."
 
+msgid "Enable data usage"
+msgstr ""
+
 msgid "Enable guest booking"
 msgstr "Vendégfoglalás engedélyezése"
 
@@ -4262,6 +4280,9 @@ msgid "Enter booking ID"
 msgstr "Kérem adjon meg foglalási típust"
 
 msgid "Enter both the application (client) ID and client secret."
+msgstr "Adja meg mind az alkalmazás (kliens) ID-ját, mind a kliens titkát."
+
+msgid "Enter code"
 msgstr ""
 
 msgid "Enter date of birth"
@@ -4428,6 +4449,9 @@ msgstr "Eseménytípus"
 msgid "Event available"
 msgstr "Esemény elérhető"
 
+msgid "Event booking"
+msgstr ""
+
 msgid "Event booking has been created."
 msgstr "Az eseményfoglalás létrehozásra került."
 
@@ -4542,6 +4566,9 @@ msgstr "A eseményt elmentettük"
 msgid "Event has been updated."
 msgstr "Az esemény frissült."
 
+msgid "Event image gallery"
+msgstr ""
+
 msgid "Event info"
 msgstr "Eseményinformációk"
 
@@ -4654,6 +4681,9 @@ msgstr "Események listája"
 
 msgid "Events list view"
 msgstr "Események listája nézet"
+
+msgid "Events pagination"
+msgstr ""
 
 msgid "Events pricing"
 msgstr "Események árazása"
@@ -5239,6 +5269,11 @@ msgid "Healthcare"
 msgstr "Egészségügy"
 
 msgid ""
+"Help us improve Amelia by sharing anonymous data about your plugin usage. No "
+"personal data is collected."
+msgstr ""
+
+msgid ""
 "Here, you can connect your personal Apple Calendar,<br/>so once the booking "
 "is scheduled,<br/>it will be automatically added to your calendar of choice."
 msgstr ""
@@ -5571,6 +5606,9 @@ msgstr "Kép"
 msgid "Image Color"
 msgstr "Kép színe"
 
+msgid "Image navigation"
+msgstr ""
+
 msgid "Image thumbs"
 msgstr "Képek miniatűrjei"
 
@@ -5591,6 +5629,9 @@ msgstr "Importálás sikeres"
 
 msgid "Importing customers"
 msgstr "Ügyfelek importálása"
+
+msgid "Improve Amelia"
+msgstr ""
 
 msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
@@ -5772,6 +5813,9 @@ msgstr "Írja be az Amelia Booking Shortcode-ot"
 msgid "Insert pending appointments"
 msgstr "Függőben lévő találkozók beszúrása"
 
+msgid "Install & Activate"
+msgstr ""
+
 msgid "Integrate with WooCommerce to enable advanced e-commerce capabilities."
 msgstr ""
 "Integrálja a WooCommerce-szel a fejlett e-kereskedelmi funkciók "
@@ -5870,6 +5914,24 @@ msgstr "Tétel"
 
 msgid "Item status"
 msgstr "Tétel állapota"
+
+msgid "IvyForms"
+msgstr ""
+
+msgid "IvyForms Entries"
+msgstr ""
+
+msgid "IvyForms Field"
+msgstr ""
+
+msgid "IvyForms Form"
+msgstr ""
+
+msgid "IvyForms validation failed."
+msgstr ""
+
+msgid "Ivy setup"
+msgstr ""
 
 msgid "Jane Doe"
 msgstr ""
@@ -6114,8 +6176,17 @@ msgstr "Foglalási űrlap manuális betöltése"
 msgid "Load page"
 msgstr "Oldal betöltése"
 
+msgid "Loading"
+msgstr ""
+
 msgid "Loading..."
 msgstr "Betöltés folyamatban..."
+
+msgid "Loading event information"
+msgstr ""
+
+msgid "Loading header"
+msgstr ""
 
 msgid "Local Time"
 msgstr "Helyi idő:"
@@ -6264,6 +6335,7 @@ msgstr "Tegye kötelezővé az extra"
 
 msgid "Make sure you are using the correct Outlook credentials."
 msgstr ""
+"Ellenőrizze, hogy a megfelelő Outlook bejelentkezési adatait használja."
 
 msgid "Make sure you are using the correct WhatsApp credentials."
 msgstr ""
@@ -6334,6 +6406,9 @@ msgstr "Maximális kapacitás Asc"
 
 msgid "Max Capacity Desc"
 msgstr "Maximális kapacitás leírása"
+
+msgid "Maximum"
+msgstr ""
 
 msgid "Maximum Quantity:"
 msgstr "Maximális mennyiség:"
@@ -6428,6 +6503,9 @@ msgstr "Microsoft Teams beállítás"
 
 msgid "Min. Capacity"
 msgstr "Minimális kapacitás"
+
+msgid "Minimum"
+msgstr ""
 
 msgid "Minimum bookings required"
 msgstr "Minimális foglalások szükségesek"
@@ -6654,6 +6732,9 @@ msgstr "Következő szolgáltatás"
 
 msgid "Next day reminder"
 msgstr "Következő napi emlékeztető"
+
+msgid "Next image"
+msgstr ""
 
 msgid "No"
 msgstr "Nem"
@@ -7253,6 +7334,9 @@ msgstr ""
 msgid "PHP Mail"
 msgstr ""
 
+msgid "PRE-BOOKING INTAKE FORM (IVYFORMS)"
+msgstr ""
+
 msgid "Package"
 msgstr "Átlagos foglalásszám"
 
@@ -7671,6 +7755,9 @@ msgstr "Az esemény dátum- és időperiódusai Zoom belépési linkekkel"
 
 msgid "Permanent access token"
 msgstr "Állandó hozzáférési token"
+
+msgid "Permanently linked"
+msgstr ""
 
 msgid "Person"
 msgstr "Személy"
@@ -8158,6 +8245,9 @@ msgstr "Felugró gombok"
 msgid "Popup title"
 msgstr "Felugró ablak címe"
 
+msgid "Pre-booking form details"
+msgstr ""
+
 msgid "Preload entities when page loads"
 msgstr "Entitások előzetes betöltése az oldal betöltésekor"
 
@@ -8199,8 +8289,14 @@ msgstr "Számla előnézete"
 msgid "Preview invoice"
 msgstr "Számla előnézete"
 
+msgid "Previous image"
+msgstr ""
+
 msgid "Previous range"
 msgstr "Előző tartomány"
+
+msgid "Previous step"
+msgstr ""
 
 msgid "Price"
 msgstr "Ár"
@@ -8843,23 +8939,14 @@ msgstr "Keresés"
 msgid "Search..."
 msgstr "Keresés..."
 
-msgid "Search Coupons"
-msgstr "Kuponok keresése"
-
 msgid "Search Filters"
 msgstr "Keresési szűrők"
 
 msgid "Search Input Field"
 msgstr "Munkatárs megjegyzés"
 
-msgid "Search Resources"
-msgstr "Erőforrások keresése"
-
 msgid "Search Results"
 msgstr "Keresési eredmények"
-
-msgid "Search Taxes"
-msgstr "Keresési szűrők"
 
 msgid "Search attendees"
 msgstr "Résztvevők keresése"
@@ -8869,6 +8956,9 @@ msgstr "Foglalt időpontok keresése"
 
 msgid "Search bookings"
 msgstr "Foglalások keresése"
+
+msgid "Search coupons"
+msgstr ""
 
 msgid "Search customers"
 msgstr "Ügyfelek keresése"
@@ -8906,8 +8996,14 @@ msgstr "Keresési értesítések"
 msgid "Search packages"
 msgstr "Csomagok keresése"
 
+msgid "Search resources"
+msgstr ""
+
 msgid "Search services"
 msgstr "Keresési szolgáltatások"
+
+msgid "Search taxes"
+msgstr ""
 
 msgid "Second"
 msgstr "Második"
@@ -9037,6 +9133,9 @@ msgstr "WooCommerce termék kiválasztása"
 msgid "Select Zoom User"
 msgstr "Zoom felhasználó kiválasztása"
 
+msgid "Select a form..."
+msgstr ""
+
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr ""
 "Válasszon ki egy helyőrzőt, amelyet a kurzor helyére szeretne beilleszteni."
@@ -9085,9 +9184,6 @@ msgstr ""
 
 msgid "Select or Create New"
 msgstr "Kiválasztás vagy új létrehozása"
-
-msgid "Select or Create Tag"
-msgstr "Címke kiválasztása vagy létrehozása"
 
 msgid "Select package"
 msgstr "Csomag kiválasztása"
@@ -9150,6 +9246,9 @@ msgstr "Válassza ki ezt az alkalmazottat"
 
 msgid "Select tickets"
 msgstr "Jegyek kiválasztása"
+
+msgid "Select which IvyForms form to show before booking"
+msgstr ""
 
 msgid "Select your Square Location"
 msgstr "Válassza ki a Square helyét"
@@ -10645,6 +10744,8 @@ msgid ""
 "This email is linked to both a customer and an employee account. Please "
 "delete and rebook."
 msgstr ""
+"Ez az e-mail-cím mind az ügyfél-, mind az alkalmazotti fiókhoz társítva van. "
+"Kérjük, törölje a foglalást, majd foglaljon újra."
 
 msgid "This employee is the only one assigned to {service}."
 msgstr ""
@@ -12067,8 +12168,14 @@ msgstr "/"
 msgid "on"
 msgstr "Betűtípus"
 
+msgid "opens in new tab"
+msgstr ""
+
 msgid "out of"
 msgstr "ki"
+
+msgid "payment button"
+msgstr ""
 
 msgid "people"
 msgstr "Az ár a résztvevők számával beszorzásra kerül"

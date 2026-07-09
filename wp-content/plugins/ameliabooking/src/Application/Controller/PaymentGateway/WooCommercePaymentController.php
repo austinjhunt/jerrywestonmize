@@ -41,6 +41,7 @@ class WooCommercePaymentController extends Controller
         'deposit',
         'componentProps',
         'returnUrl',
+        'ivy',
     ];
 
     /**

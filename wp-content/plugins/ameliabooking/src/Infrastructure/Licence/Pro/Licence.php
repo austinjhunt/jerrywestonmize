@@ -63,6 +63,7 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Basic\Licence
                 Commands\Stripe\StripeAccountDisconnectCommand::class              => new Commands\Stripe\StripeAccountDisconnectCommandHandler($c),
                 // QR Code
                 Commands\QrCode\ScanQrCodeCommand::class                           => new Commands\QrCode\ScanQrCodeCommandHandler($c),
+                Commands\Mobile\Events\ScanEventTicketCommand::class              => new Commands\Mobile\Events\ScanEventTicketCommandHandler($c),
                 Commands\QrCode\GetQrCodeCommand::class                            => new Commands\QrCode\GetQrCodeCommandHandler($c),
             ]
         );

@@ -8,6 +8,9 @@
 namespace AmeliaBooking\Infrastructure\WP\ShortcodeService;
 
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
+use AmeliaBooking\Domain\Services\Settings\SettingsService;
+use AmeliaBooking\Infrastructure\Common\Container;
+use AmeliaBooking\Infrastructure\WP\Integrations\PluginInstaller;
 
 /**
  * Class EventsCalendarBookingShortcodeService
@@ -23,8 +26,18 @@ class EventsCalendarBookingShortcodeService extends AmeliaBookingShortcodeServic
      */
     public static function shortcodeHandler($params)
     {
+        self::$container = self::$container ?: require AMELIA_PATH . '/src/Infrastructure/ContainerConfig/container.php';
+
+        /** @var SettingsService $settingsService */
+        $settingsService = self::$container->get('domain.settings.service');
+
+        if (!empty($params['ivy']) && (!$settingsService->isFeatureEnabled('ivy') || !PluginInstaller::isPluginActive('ivyforms'))) {
+            $params['ivy'] = '';
+        }
+
         $params = shortcode_atts(
             [
+                'ivy'           => '',
                 'trigger'       => '',
                 'trigger_type'  => '',
                 'in_dialog'     => '',
@@ -43,13 +56,6 @@ class EventsCalendarBookingShortcodeService extends AmeliaBookingShortcodeServic
             $params['tag'] = htmlspecialchars_decode($params['tag']);
         }
 
-        self::prepareScriptsAndStyles();
-
-        ob_start();
-        include AMELIA_PATH . '/view/frontend/events-calendar-booking.inc.php';
-        $html = ob_get_contents();
-        ob_end_clean();
-
-        return $html;
+        return self::renderView('events-calendar-booking.inc.php', $params);
     }
 }

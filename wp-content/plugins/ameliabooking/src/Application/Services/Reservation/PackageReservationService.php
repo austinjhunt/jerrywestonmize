@@ -472,7 +472,8 @@ class PackageReservationService extends AppointmentReservationService
                     'locale'     => $reservation->getLocale()->getValue(),
                 ],
                 $reservation->getCustomer()->toArray()
-            )
+            ),
+            'ivy'                => !empty($requestData['ivy']) ? $requestData['ivy'] : null,
         ];
     }
 

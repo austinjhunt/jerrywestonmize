@@ -56,7 +56,13 @@ class CustomerRepository extends UserRepository implements CustomerRepositoryInt
             $order = '';
             if (!empty($criteria['sort'])) {
                 $column      = $criteria['sort'][0] === '-' ? substr($criteria['sort'], 1) : $criteria['sort'];
-                $orderColumn = $column === 'customer' ? 'CONCAT(u.firstName, \' \', u.lastName)' : 'lastBooking';
+
+                $orderColumns = [
+                    'customer'        => 'CONCAT(u.firstName, \' \', u.lastName)',
+                    'total-bookings'  => 'totalBookings',
+                ];
+                $orderColumn = $orderColumns[$column] ?? 'lastBooking';
+
                 $orderDirection = $criteria['sort'][0] === '-' ? 'DESC' : 'ASC';
                 $order          = "ORDER BY {$orderColumn} {$orderDirection}";
 

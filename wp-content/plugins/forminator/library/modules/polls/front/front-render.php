@@ -1197,7 +1197,8 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 
 					var chartCanvas  = $( '#<?php echo esc_attr( $container_id ); ?>' ),
 						chartBody    = chartCanvas.closest( '.forminator-poll-body' ),
-						chartWrapper = chartBody.find( '.forminator-chart-wrapper' )
+						chartWrapper = chartBody.find( '.forminator-chart-wrapper' ),
+						focusElement = chartCanvas
 						;
 
 					if ( chartWrapper.length ) {
@@ -1207,13 +1208,16 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 						chartWrapper.addClass( 'forminator-show' );
 						chartWrapper.removeAttr( 'aria-hidden' );
 
+						focusElement = chartWrapper;
+					}
+
+					if( focusElement.length ) {
 						// If poll is added to sidebar widget, let's not add auto-scroll.
-						if ( ! chartWrapper.parents( 'form' ).parent().hasClass( 'widget_forminator_widget' ) ) {
-							chartWrapper.attr( 'tabindex', '-1' );
+						if ( ! focusElement.parents( 'form' ).parent().hasClass( 'widget_forminator_widget' ) ) {
+							focusElement.attr( 'tabindex', '-1' );
 						}
-
-						chartWrapper.focus();
-
+	
+						focusElement.focus();
 					}
 
 				});
@@ -1262,19 +1266,22 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 	 *
 	 * @param bool $hide Hide.
 	 * @param bool $is_preview Is preview.
+	 * @param int  $render_id Render ID.
 	 *
 	 * @return false|string
 	 */
-	public function get_html( $hide = true, $is_preview = false ) {
+	public function get_html( $hide = true, $is_preview = false, $render_id = null ) {
 		ob_start();
 
 		$is_same_form   = false;
 		$is_same_render = false;
 		$rendered       = false;
 		$form_id        = Forminator_Core::sanitize_text_field( 'form_id' );
-		$render_id      = Forminator_Core::sanitize_text_field( 'render_id' );
-		$saved          = Forminator_Core::sanitize_text_field( 'saved' );
-		$results        = Forminator_Core::sanitize_text_field( 'results' );
+		if ( null === $render_id ) {
+			$render_id = Forminator_Core::sanitize_text_field( 'render_id' );
+		}
+		$saved   = Forminator_Core::sanitize_text_field( 'saved' );
+		$results = Forminator_Core::sanitize_text_field( 'results' );
 		if ( (int) $form_id === (int) $this->model->id ) {
 			$is_same_form = true;
 		}
@@ -1287,7 +1294,7 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 
 		if ( 'open' !== $status_info['status'] ) {
 			$this->track_views = false;
-			$this->render( $this->model->id, $hide, $is_preview );
+			$this->render( $this->model->id, $hide, $is_preview, $render_id );
 			$rendered = true;
 		} elseif ( $saved && $is_same_form && $is_same_render && $this->show_results() ) {
 				$this->track_views = false;
@@ -1299,7 +1306,7 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 			$this->track_views = false;
 			$this->render_success();
 		} else {
-			$this->render( $this->model->id, $hide, $is_preview );
+			$this->render( $this->model->id, $hide, $is_preview, $render_id );
 
 			$rendered = true;
 		}

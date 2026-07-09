@@ -946,6 +946,7 @@ class CustomerBookingRepository extends AbstractRepository
             cb.aggregatedPrice AS booking_aggregatedPrice,
             cb.qrCodes AS booking_qrCodes,
             cb.created AS booking_created,
+            cb.ivyEntryId AS booking_ivyEntryId,
             
             cbt.id AS booking_ticket_id,
             cbt.eventTicketId AS booking_ticket_eventTicketId,

@@ -75,7 +75,8 @@ function forminator_get_post_data( $property, $post_id = null, $default_value = 
 
 	if ( ! $current_post_object ) {
 		// fallback on wp_ajax, `global $post` not available.
-		$wp_referer = wp_get_referer();
+		$page_url   = filter_input( INPUT_POST, 'current_url', FILTER_VALIDATE_URL );
+		$wp_referer = ! empty( $page_url ) ? $page_url : wp_get_referer();
 		if ( $wp_referer ) {
 			$post_id = url_to_postid( $wp_referer );
 			if ( $post_id ) {
@@ -1122,4 +1123,36 @@ function forminator_get_schedule_time( $schedule ) {
  */
 function forminator_replace_linebreaks( $value ) {
 	return wpautop( $value );
+}
+
+/**
+ * Balance table tag
+ *
+ * @since 1.55
+ *
+ * @param string $content Content.
+ * @return string
+ */
+function forminator_balance_table_tag( $content ) {
+	// Add table tag if content has table element to avoid mess up table structure.
+	if ( ! empty( $content ) && preg_match( '/<(tbody|thead|tfoot|tr|td|th)[\s>]/i', $content ) ) {
+		$content = '<table>' . $content . '</table>';
+		$content = force_balance_tags( $content );
+	}
+
+	return $content;
+}
+
+/**
+ * Format HTML for display
+ *
+ * @since 1.55
+ *
+ * @param string $content Content.
+ * @return string
+ */
+function forminator_format_html( $content ) {
+	$content = forminator_replace_linebreaks( $content );
+	$content = forminator_balance_table_tag( $content );
+	return $content;
 }

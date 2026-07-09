@@ -484,7 +484,7 @@
 						'facebook': 'https://www.facebook.com/sharer/sharer.php?u=' + url + '&quote=' + message,
 						'twitter': 'https://twitter.com/intent/tweet?&url=' + url + '&text=' + message,
 						'google': 'https://plus.google.com/share?url=' + url,
-						'linkedin': 'https://www.linkedin.com/shareArticle?mini=true&url=' + url + '&title=' + message
+						'linkedin': 'https://www.linkedin.com/feed/?shareActive=true&text=' + message
 					};
 
 				if (social_shares[social] !== undefined) {
@@ -612,6 +612,32 @@
 					}
 
 					var iti = window.intlTelInput(self, args);
+
+					// Prevent auto-switching to a country with the same dial code.
+					var dropdownSelected   = false,
+						configuredCountry  = iti.getSelectedCountryData().iso2,
+						configuredDialCode = iti.getSelectedCountryData().dialCode;
+
+					// Remove previous handlers to avoid duplicates
+					$( self ).off('close:countrydropdown countrychange');
+
+					$( self ).on( 'close:countrydropdown', function () {
+						dropdownSelected = true;
+						setTimeout( function () { dropdownSelected = false; }, 0 ); // Clear flag after countrychange fires.
+					} );
+
+					$( self ).on( 'countrychange', function () {
+						if ( dropdownSelected ) {
+							dropdownSelected   = false;
+							configuredCountry  = iti.getSelectedCountryData().iso2;
+							configuredDialCode = iti.getSelectedCountryData().dialCode;
+							return;
+						}
+						var newCountry = iti.getSelectedCountryData();
+						if ( newCountry.dialCode === configuredDialCode && newCountry.iso2 !== configuredCountry ) {
+							iti.setCountry( configuredCountry );
+						}
+					} );
 
 					if ( 'undefined' !== typeof ( validation ) && 'standard' === validation ) {
 						// Reset country to default if changed and invalid previously.
@@ -2127,4 +2153,55 @@ var forminatorDateUtil = {
 
 	    return d2.getFullYear()-d1.getFullYear();
 	},
+};
+
+const forminator_init_wp_editor = function ( id, args, force = false ) {
+	const editor = typeof tinymce !== "undefined" ? tinymce.get( id ) : null;
+	const links = jQuery( '#wp-' + id + '-wrap link' );
+	let clonedLinks;
+	if ( links.length ) {
+		// Clone the link elements to add them after re-initialization.
+		clonedLinks = jQuery( '#wp-' + id + '-wrap link' ).clone();
+	}
+
+	if ( editor || force ) {
+		// Remove the existing editor instance before reinitializing to avoid conflicts.
+		wp.editor.remove( id );
+		const textarea = document.getElementById( id );
+		if( textarea ) {
+			// Ensure the textarea is visible before reinitialization to prevent TinyMCE from hiding it.
+			document.getElementById( id ).style.visibility = 'visible';
+		}
+	}
+	// Ensure the editor is not initialized to prevent duplicate initialization.
+	if ( jQuery( '#wp-' + id + '-wrap' ).length === 0 ) {
+		wp.editor.initialize( id, args );
+		if ( links.length ) {
+			// Append the cloned link elements back to the editor wrapper after initialization to ensure the necessary styles are applied.
+			jQuery( '#wp-' + id + '-wrap' ).append( clonedLinks );
+		}
+	}
+};
+
+const forminator_init_wp_editor_on_visible = function ( id, args, force = false ) {
+	const textarea = document.getElementById( id );
+	if ( ! textarea ) {
+		return;
+	}
+	const observer = new IntersectionObserver(
+		( entries, observerInstance ) => {
+			entries.forEach( ( entry ) => {
+				// Check if the element is visible on the DOM.
+				if ( entry.isIntersecting ) {
+					// Initialize WP Editor when the textarea becomes visible.
+					forminator_init_wp_editor( id, args, force );
+					// Stop observing after initialization to prevent unnecessary calls.
+					observerInstance.unobserve( entry.target );
+				}
+			} );
+		}
+	);
+
+	// Start watching the textarea.
+	observer.observe( textarea );
 };

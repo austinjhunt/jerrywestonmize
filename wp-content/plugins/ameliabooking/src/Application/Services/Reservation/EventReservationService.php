@@ -605,6 +605,7 @@ class EventReservationService extends AbstractReservationService
             'timeZone'           => $reservation->getTimeZone()->getValue(),
             'recurring'          => [],
             'package'            => [],
+            'ivy'                => !empty($requestData['ivy']) ? $requestData['ivy'] : null,
         ];
 
         foreach ($booking->getExtras()->keys() as $extraKey) {

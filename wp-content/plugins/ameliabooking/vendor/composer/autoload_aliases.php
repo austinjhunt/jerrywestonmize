@@ -3255,6 +3255,140 @@ namespace AmeliaVendor {
     array (
     ),
   ),
+  'Melograno\\UsageTracker\\Collectors\\BaseCollector' => 
+  array (
+    'type' => 'class',
+    'classname' => 'BaseCollector',
+    'isabstract' => true,
+    'namespace' => 'Melograno\\UsageTracker\\Collectors',
+    'extends' => 'AmeliaVendor\\Melograno\\UsageTracker\\Collectors\\BaseCollector',
+    'implements' => 
+    array (
+      0 => 'Melograno\\UsageTracker\\Collectors\\PluginCollectorInterface',
+    ),
+  ),
+  'Melograno\\UsageTracker\\Collectors\\Common\\ActivationCollector' => 
+  array (
+    'type' => 'class',
+    'classname' => 'ActivationCollector',
+    'isabstract' => false,
+    'namespace' => 'Melograno\\UsageTracker\\Collectors\\Common',
+    'extends' => 'AmeliaVendor\\Melograno\\UsageTracker\\Collectors\\Common\\ActivationCollector',
+    'implements' => 
+    array (
+    ),
+  ),
+  'Melograno\\UsageTracker\\Collectors\\Common\\WpEnvironmentCollector' => 
+  array (
+    'type' => 'class',
+    'classname' => 'WpEnvironmentCollector',
+    'isabstract' => false,
+    'namespace' => 'Melograno\\UsageTracker\\Collectors\\Common',
+    'extends' => 'AmeliaVendor\\Melograno\\UsageTracker\\Collectors\\Common\\WpEnvironmentCollector',
+    'implements' => 
+    array (
+    ),
+  ),
+  'Melograno\\UsageTracker\\Collectors\\Plugin\\AmeliaCollector' => 
+  array (
+    'type' => 'class',
+    'classname' => 'AmeliaCollector',
+    'isabstract' => false,
+    'namespace' => 'Melograno\\UsageTracker\\Collectors\\Plugin',
+    'extends' => 'AmeliaVendor\\Melograno\\UsageTracker\\Collectors\\Plugin\\AmeliaCollector',
+    'implements' => 
+    array (
+      0 => 'Melograno\\UsageTracker\\Collectors\\ConsentNoticeCollectorInterface',
+    ),
+  ),
+  'Melograno\\UsageTracker\\Collectors\\Plugin\\IvyFormsCollector' => 
+  array (
+    'type' => 'class',
+    'classname' => 'IvyFormsCollector',
+    'isabstract' => false,
+    'namespace' => 'Melograno\\UsageTracker\\Collectors\\Plugin',
+    'extends' => 'AmeliaVendor\\Melograno\\UsageTracker\\Collectors\\Plugin\\IvyFormsCollector',
+    'implements' => 
+    array (
+    ),
+  ),
+  'Melograno\\UsageTracker\\Collectors\\Plugin\\WpDataTablesCollector' => 
+  array (
+    'type' => 'class',
+    'classname' => 'WpDataTablesCollector',
+    'isabstract' => false,
+    'namespace' => 'Melograno\\UsageTracker\\Collectors\\Plugin',
+    'extends' => 'AmeliaVendor\\Melograno\\UsageTracker\\Collectors\\Plugin\\WpDataTablesCollector',
+    'implements' => 
+    array (
+    ),
+  ),
+  'Melograno\\UsageTracker\\Core\\Anonymizer' => 
+  array (
+    'type' => 'class',
+    'classname' => 'Anonymizer',
+    'isabstract' => false,
+    'namespace' => 'Melograno\\UsageTracker\\Core',
+    'extends' => 'AmeliaVendor\\Melograno\\UsageTracker\\Core\\Anonymizer',
+    'implements' => 
+    array (
+    ),
+  ),
+  'Melograno\\UsageTracker\\Core\\ConsentManager' => 
+  array (
+    'type' => 'class',
+    'classname' => 'ConsentManager',
+    'isabstract' => false,
+    'namespace' => 'Melograno\\UsageTracker\\Core',
+    'extends' => 'AmeliaVendor\\Melograno\\UsageTracker\\Core\\ConsentManager',
+    'implements' => 
+    array (
+    ),
+  ),
+  'Melograno\\UsageTracker\\Core\\ConsentNoticeService' => 
+  array (
+    'type' => 'class',
+    'classname' => 'ConsentNoticeService',
+    'isabstract' => false,
+    'namespace' => 'Melograno\\UsageTracker\\Core',
+    'extends' => 'AmeliaVendor\\Melograno\\UsageTracker\\Core\\ConsentNoticeService',
+    'implements' => 
+    array (
+    ),
+  ),
+  'Melograno\\UsageTracker\\Core\\HttpClient' => 
+  array (
+    'type' => 'class',
+    'classname' => 'HttpClient',
+    'isabstract' => false,
+    'namespace' => 'Melograno\\UsageTracker\\Core',
+    'extends' => 'AmeliaVendor\\Melograno\\UsageTracker\\Core\\HttpClient',
+    'implements' => 
+    array (
+    ),
+  ),
+  'Melograno\\UsageTracker\\Core\\NoticeManager' => 
+  array (
+    'type' => 'class',
+    'classname' => 'NoticeManager',
+    'isabstract' => false,
+    'namespace' => 'Melograno\\UsageTracker\\Core',
+    'extends' => 'AmeliaVendor\\Melograno\\UsageTracker\\Core\\NoticeManager',
+    'implements' => 
+    array (
+    ),
+  ),
+  'Melograno\\UsageTracker\\Core\\UsageTracker' => 
+  array (
+    'type' => 'class',
+    'classname' => 'UsageTracker',
+    'isabstract' => false,
+    'namespace' => 'Melograno\\UsageTracker\\Core',
+    'extends' => 'AmeliaVendor\\Melograno\\UsageTracker\\Core\\UsageTracker',
+    'implements' => 
+    array (
+    ),
+  ),
   'Monolog\\Attribute\\AsMonologProcessor' => 
   array (
     'type' => 'class',
@@ -14573,6 +14707,26 @@ namespace AmeliaVendor {
     'extends' => 
     array (
       0 => 'AmeliaVendor\\Masterminds\\HTML5\\Serializer\\RulesInterface',
+    ),
+  ),
+  'Melograno\\UsageTracker\\Collectors\\ConsentNoticeCollectorInterface' => 
+  array (
+    'type' => 'interface',
+    'interfacename' => 'ConsentNoticeCollectorInterface',
+    'namespace' => 'Melograno\\UsageTracker\\Collectors',
+    'extends' => 
+    array (
+      0 => 'AmeliaVendor\\Melograno\\UsageTracker\\Collectors\\ConsentNoticeCollectorInterface',
+    ),
+  ),
+  'Melograno\\UsageTracker\\Collectors\\PluginCollectorInterface' => 
+  array (
+    'type' => 'interface',
+    'interfacename' => 'PluginCollectorInterface',
+    'namespace' => 'Melograno\\UsageTracker\\Collectors',
+    'extends' => 
+    array (
+      0 => 'AmeliaVendor\\Melograno\\UsageTracker\\Collectors\\PluginCollectorInterface',
     ),
   ),
   'Monolog\\Formatter\\FormatterInterface' => 

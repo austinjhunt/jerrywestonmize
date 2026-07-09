@@ -46,6 +46,7 @@
     "tags": "tags.innerContent.*",
     "recurring": "recurring.innerContent.*",
     "locations": "locations.innerContent.*",
+    "ivy": "ivy.innerContent.*",
     "trigger": "trigger.innerContent.*",
     "trigger_type": "trigger_type.innerContent.*",
     "in_dialog": "in_dialog.innerContent.*"

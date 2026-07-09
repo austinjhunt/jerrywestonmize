@@ -44,5 +44,22 @@ class LogoutCabinetController extends Controller
      */
     protected function emitSuccessEvent(DomainEventBus $eventBus, CommandResult $result)
     {
+        if ($result->getResult() !== CommandResult::RESULT_SUCCESS || headers_sent()) {
+            return;
+        }
+
+        foreach (['ameliaToken', 'ameliaUserEmail'] as $cookieName) {
+            setcookie(
+                $cookieName,
+                '',
+                [
+                    'expires'  => time() - 3600,
+                    'path'     => '/',
+                    'secure'   => is_ssl(),
+                    'httponly' => false,
+                    'samesite' => 'Lax',
+                ]
+            );
+        }
     }
 }

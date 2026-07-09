@@ -172,7 +172,9 @@ class GetAppointmentsCommandHandler extends CommandHandler
                     $entitiesIds,
                     ['skipBookings' => !$isCabinetPage && empty($params['customers']) && empty($entitiesIds['customers'])]
                 ),
-                $settingsDS->getSetting('general', 'itemsPerPage')
+                !empty($params['limit'])
+                    ? max(1, min((int) $params['limit'], 500))
+                    : $settingsDS->getSetting('general', 'itemsPerPage')
             );
 
             /** @var Appointment $appointment */

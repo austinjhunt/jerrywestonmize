@@ -87,6 +87,12 @@ class AddEventCommandHandler extends CommandHandler
             throw new AccessDeniedException('You are not allowed to add an event');
         }
 
+        if ($userAS->isProvider($user) && $userAS->isAmeliaUser($user) && empty($eventData['providers'])) {
+            $eventData['providers'] = [
+                ['id' => $user->getId()->getValue()],
+            ];
+        }
+
         $entityService->removeMissingEntitiesForEvent($eventData);
 
         $eventRepository->beginTransaction();

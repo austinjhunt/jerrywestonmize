@@ -47,7 +47,8 @@ class UpdateSettingsController extends Controller
         'providerBadges',
         'pageColumnSettings',
         'socialLogin',
-        'mailchimp'
+        'mailchimp',
+        'armUsageTrackingNoticeOnDisable',
     ];
 
     /**

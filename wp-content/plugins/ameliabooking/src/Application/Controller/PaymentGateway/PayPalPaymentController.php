@@ -40,6 +40,7 @@ class PayPalPaymentController extends Controller
         'locale',
         'timeZone',
         'deposit',
+        'ivy',
     ];
 
     /**

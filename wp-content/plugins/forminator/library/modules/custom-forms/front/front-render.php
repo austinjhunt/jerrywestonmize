@@ -603,6 +603,13 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 					&& current_user_can( 'upload_files' ) ) {
 				wp_enqueue_media();
 			}
+
+			// Ensure TinyMCE toolbar and WP link dialog appear above
+			// modal/popup overlays by setting a high z-index.
+			wp_add_inline_style(
+				'buttons',
+				'div.mce-inline-toolbar-grp, #wp-link-wrap { z-index: 999991 !important; }'
+			);
 		}
 
 		// Load selected google font.

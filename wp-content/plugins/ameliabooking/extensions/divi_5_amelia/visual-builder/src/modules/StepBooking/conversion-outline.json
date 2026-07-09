@@ -46,6 +46,7 @@
     "locations": "locations.innerContent.*",
     "packages": "packages.innerContent.*",
     "services": "services.innerContent.*",
+    "ivy": "ivy.innerContent.*",
     "trigger": "trigger.innerContent.*",
     "trigger_type": "trigger_type.innerContent.*",
     "type": "type.innerContent.*"

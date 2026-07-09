@@ -15,6 +15,7 @@ use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Entity\User\Customer;
 use AmeliaBooking\Domain\Entity\User\Provider;
+use AmeliaBooking\Domain\Factory\User\UserFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\Json;
@@ -33,8 +34,10 @@ use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
 use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarMiddlewareService;
 use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarMiddlewareService;
 use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
+use AmeliaBooking\Infrastructure\WP\HelperService\HelperService as WPHelperService;
 use AmeliaBooking\Infrastructure\WP\UserService\CreateWPUser;
 use AmeliaBooking\Infrastructure\WP\UserService\UserService;
+use AmeliaBooking\Infrastructure\WP\UserRoles\UserRoles;
 use AmeliaVendor\Firebase\JWT\Key;
 use Exception;
 use AmeliaVendor\Firebase\JWT\JWT;
@@ -165,7 +168,7 @@ class UserApplicationService
             return false;
         }
 
-        do_action('amelia_set_wp_user_for_new_customer', $user->toArray());
+        do_action('amelia_set_wp_user_for_new_' . $type, $user->toArray());
 
         /** @var CreateWPUser $createWPUserService */
         $createWPUserService = $this->container->get('user.create.wp.user');
@@ -268,6 +271,22 @@ class UserApplicationService
     }
 
     /**
+     * Check if the external ID is allowed for the given type
+     *
+     * @param int    $externalId
+     * @param string $type
+     *
+     * @return boolean
+     *
+     */
+    public function isRoleForExternalIdAllowed($externalId, $type)
+    {
+        $user = get_user_by('ID', $externalId);
+
+        return $user && array_intersect(["wpamelia-$type"], (array)$user->roles);
+    }
+
+    /**
      * @param AbstractUser $user
      *
      * @return boolean
@@ -306,7 +325,13 @@ class UserApplicationService
 
         do_action('amelia_login', $user ? $user->toArray() : null, $sendToken, $loginType, $cabinetType, $changePass);
 
-        if ($user->getType() !== $cabinetType && $user->getType() !== AbstractUser::USER_ROLE_ADMIN) {
+        if (
+            $user->getType() !== $cabinetType &&
+            !(
+                $cabinetType === AbstractUser::USER_ROLE_PROVIDER &&
+                in_array($user->getType(), [AbstractUser::USER_ROLE_ADMIN, AbstractUser::USER_ROLE_MANAGER], true)
+            )
+        ) {
             $result->setResult(CommandResult::RESULT_ERROR);
             $result->setMessage('Could not retrieve user');
             $result->setData(['invalid_credentials' => true]);
@@ -340,7 +365,10 @@ class UserApplicationService
 
         $provider = null;
         // If cabinet is for provider, return provider with services and schedule
-        if ($cabinetType === AbstractUser::USER_ROLE_PROVIDER) {
+        if (
+            $cabinetType === AbstractUser::USER_ROLE_PROVIDER &&
+            $user->getType() === AbstractUser::USER_ROLE_PROVIDER
+        ) {
             $password = $user->getPassword();
 
             /** @var Provider $user */
@@ -372,7 +400,10 @@ class UserApplicationService
         }
 
         // Set activity if it is employee cabinet
-        if ($cabinetType === AbstractUser::USER_ROLE_PROVIDER) {
+        if (
+            $cabinetType === AbstractUser::USER_ROLE_PROVIDER &&
+            $user->getType() === AbstractUser::USER_ROLE_PROVIDER
+        ) {
             $companyDaysOff = $settingsService->getCategorySettings('daysOff');
 
             $companyDayOff = $providerService->checkIfTodayIsCompanyDayOff($companyDaysOff);
@@ -549,12 +580,27 @@ class UserApplicationService
         }
 
         if ($sendToken) {
-            $responseData['token'] = $helperService->getGeneratedJWT(
+            $secureCookie = WPHelperService::isSSL();
+
+            $token = $helperService->getGeneratedJWT(
                 $user->getEmail()->getValue(),
                 $cabinetSettings['headerJwtSecret'],
                 DateTimeService::getNowDateTimeObject()->getTimestamp() + $cabinetSettings['tokenValidTime'],
                 $loginType
             );
+
+            setcookie('ameliaToken', $token, [
+                'path' => '/',
+                'secure' => $secureCookie,
+                'httponly' => true,
+                'expires' => DateTimeService::getNowDateTimeObject()->getTimestamp() + $cabinetSettings['tokenValidTime']
+            ]);
+            setcookie('ameliaUserEmail', $userArray['email'], [
+                'path' => '/',
+                'secure' => $secureCookie,
+                'httponly' => true,
+                'expires' => DateTimeService::getNowDateTimeObject()->getTimestamp() + $cabinetSettings['tokenValidTime']
+            ]);
         }
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
@@ -596,11 +642,35 @@ class UserApplicationService
         /** @var UserRepository $userRepository */
         $userRepository = $this->container->get('domain.users.repository');
 
-        /** @var Customer $user */
-        $user = $userRepository->getByEmail($jwtObject->email, true, true);
+        $wpUser = get_user_by('email', $jwtObject->email);
+        $wpUserAmeliaRole = $wpUser ? UserRoles::getUserAmeliaRole($wpUser) : null;
 
-        if (!($user instanceof AbstractUser)) {
-            return null;
+        if (
+            !$isUrlToken &&
+            in_array((int)$jwtObject->wp, [LoginType::WP_CREDENTIALS, LoginType::WP_USER], true) &&
+            $wpUser &&
+            in_array($wpUserAmeliaRole, [AbstractUser::USER_ROLE_ADMIN, AbstractUser::USER_ROLE_MANAGER], true)
+        ) {
+            $user = UserFactory::create(
+                [
+                    'type'       => $wpUserAmeliaRole,
+                    'firstName'  => $wpUser->get('first_name') !== ''
+                        ? $wpUser->get('first_name')
+                        : $wpUser->get('user_nicename'),
+                    'lastName'   => $wpUser->get('last_name') !== ''
+                        ? $wpUser->get('last_name')
+                        : $wpUser->get('user_nicename'),
+                    'email'      => $wpUser->get('user_email') ?: 'guest@example.com',
+                    'externalId' => $wpUser->ID,
+                ]
+            );
+        } else {
+            /** @var Customer $user */
+            $user = $userRepository->getByEmail($jwtObject->email, true, true);
+
+            if (!($user instanceof AbstractUser)) {
+                return null;
+            }
         }
 
         $user->setLoginType($jwtObject->wp);
@@ -660,7 +730,7 @@ class UserApplicationService
         /** @var AbstractUser $user */
         $user = $this->container->get('logged.in.user');
 
-        $isAmeliaWPUser = $user && $user->getId() !== null;
+        $isAmeliaWPUser = $this->isAmeliaUser($user);
 
         // check if token exist and user is not logged in as Word Press User and token is valid
         if ($token && !$isAmeliaWPUser && ($user = $this->getAuthenticatedUser($token, false, $cabinetType)) === null) {

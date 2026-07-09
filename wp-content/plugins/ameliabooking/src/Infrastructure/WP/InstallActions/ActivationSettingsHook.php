@@ -73,6 +73,8 @@ class ActivationSettingsHook
 
         self::initMailchimpSettings();
 
+        self::initIvySettings();
+
         self::initAppleCalendarSettings();
 
         self::initPageColumnSettings();
@@ -586,6 +588,16 @@ This message does not have an option for responding. If you need additional info
     }
 
     /**
+     * Init Ivy Settings
+     */
+    private static function initIvySettings()
+    {
+        $settings = [];
+
+        self::initSettings('ivy', $settings);
+    }
+
+    /**
      * Init Page Column Settings
      */
     private static function initPageColumnSettings()
@@ -648,14 +660,14 @@ This message does not have an option for responding. If you need additional info
                     "visible" => true,
                     "width" => 240,
                     "label" => "last_booking",
-                    "sortable" => false
+                    "sortable" => true
                 ],
                 [
                     "prop" => "totalBookings",
                     "visible" => true,
                     "width" => 160,
                     "label" => "total_bookings",
-                    "sortable" => false
+                    "sortable" => true
                 ],
                 [
                     "prop" => "wordPressUser",
@@ -2655,6 +2667,9 @@ This message does not have an option for responding. If you need additional info
             ],
             'eventTags'             => [
                 'enabled' => $starterAndUp && (!$old || EventsTagsTable::hasTags()),
+            ],
+            'ivy'                   => [
+                'enabled' => false,
             ],
         ];
 

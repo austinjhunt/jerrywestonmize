@@ -8,9 +8,10 @@ use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Services\Mailchimp\AbstractMailchimpService;
-use Melograno\UsageTracker\Collectors\Plugin\AmeliaCollector;
-use Melograno\UsageTracker\Core\UsageTracker;
+use AmeliaBooking\Infrastructure\WP\Integrations\IvyForms\IvyFormsService;
+use AmeliaVendor\Melograno\UsageTracker\Core\UsageTracker;
 use Interop\Container\Exception\ContainerException;
+use AmeliaVendor\Melograno\UsageTracker\Collectors\Plugin\AmeliaCollector;
 
 /**
  * Class GetSettingsCommandHandler
@@ -72,7 +73,10 @@ class GetSettingsCommandHandler extends CommandHandler
         $result->setData(
             [
                 'settings' => $settings,
-                'additionalData' => ['mailchimpLists' => $mailchimpLists]
+                'additionalData' => [
+                    'mailchimpLists' => $mailchimpLists,
+                    'ivyForms'       => IvyFormsService::getForms(),
+                ]
             ]
         );
 

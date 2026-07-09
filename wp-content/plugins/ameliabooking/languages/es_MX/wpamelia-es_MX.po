@@ -894,6 +894,8 @@ msgid ""
 "Application (client) ID must be a valid GUID (UUID), as shown in the Azure "
 "portal."
 msgstr ""
+"El campo \"Application (client) ID\" debe ser un GUID (UUID) válido, como se "
+"muestra en el Azure portal."
 
 msgid "Application fee amount (%)"
 msgstr "Importe de la tasa de solicitud (%)"
@@ -1863,7 +1865,7 @@ msgstr ""
 "programada."
 
 msgid "By employees"
-msgstr ""
+msgstr "Por empleado"
 
 msgid ""
 "By entering your phone number you agree to receive messages via WhatsApp"
@@ -2262,6 +2264,8 @@ msgid ""
 "Client secret is too short or looks invalid. Copy the full value from the "
 "Azure portal."
 msgstr ""
+"El Client secret es demasiado corto o parece inválido. Copia el valor "
+"completo desde el Azure portal."
 
 msgid "Close"
 msgstr "Cerrar"
@@ -2298,6 +2302,11 @@ msgstr "Contraer todo"
 
 msgid "Collapse menu"
 msgstr "Menú desplegable"
+
+msgid ""
+"Collect additional information from your customers before they complete a "
+"booking."
+msgstr ""
 
 msgid "Collect the information your business truly needs"
 msgstr "Recopile la información que su empresa realmente necesita."
@@ -2508,6 +2517,9 @@ msgstr ""
 msgid "Consulting"
 msgstr "Consultoría"
 
+msgid "Contact Form"
+msgstr ""
+
 msgid "Contact message"
 msgstr "Mensaje de contacto"
 
@@ -2694,6 +2706,9 @@ msgstr "Crear empleado"
 
 msgid "Create event"
 msgstr "Crear evento"
+
+msgid "Create form"
+msgstr ""
 
 msgid "Create meetings for pending appointments"
 msgstr "Crear reuniones para citas pendientes"
@@ -3065,7 +3080,7 @@ msgid "Date and time"
 msgstr "Fecha y hora"
 
 msgid "Date busyness indicator"
-msgstr ""
+msgstr "Indicador de ocupación por día"
 
 msgid "Date of Birth"
 msgstr "Fecha de nacimiento"
@@ -3939,6 +3954,9 @@ msgstr ""
 "Personaliza los colores y las etiquetas para crear una experiencia fluida y "
 "acorde con la marca."
 
+msgid "Enable data usage"
+msgstr ""
+
 msgid "Enable guest booking"
 msgstr "Habilitar reservas de invitados"
 
@@ -4235,6 +4253,10 @@ msgstr "Por favor, introduce el tipo de reserva"
 
 msgid "Enter both the application (client) ID and client secret."
 msgstr ""
+"Ingresa tanto el ID de la aplicación (client) como el secreto del cliente."
+
+msgid "Enter code"
+msgstr ""
 
 msgid "Enter date of birth"
 msgstr "Fecha de nacimiento"
@@ -4403,6 +4425,9 @@ msgstr "Tipo de evento"
 msgid "Event available"
 msgstr "Evento disponible"
 
+msgid "Event booking"
+msgstr ""
+
 msgid "Event booking has been created."
 msgstr "Se ha creado la reserva del evento."
 
@@ -4519,6 +4544,9 @@ msgstr "El evento ha sido salvado"
 msgid "Event has been updated."
 msgstr "El evento ha sido actualizado."
 
+msgid "Event image gallery"
+msgstr ""
+
 msgid "Event info"
 msgstr "Información sobre el evento"
 
@@ -4630,6 +4658,9 @@ msgstr "Lista de eventos"
 
 msgid "Events list view"
 msgstr "Vista de lista de eventos"
+
+msgid "Events pagination"
+msgstr ""
 
 msgid "Events pricing"
 msgstr "Precios de los eventos"
@@ -5219,6 +5250,11 @@ msgid "Healthcare"
 msgstr "Atención sanitaria"
 
 msgid ""
+"Help us improve Amelia by sharing anonymous data about your plugin usage. No "
+"personal data is collected."
+msgstr ""
+
+msgid ""
 "Here, you can connect your personal Apple Calendar,<br/>so once the booking "
 "is scheduled,<br/>it will be automatically added to your calendar of choice."
 msgstr ""
@@ -5559,6 +5595,9 @@ msgstr "Imagen"
 msgid "Image Color"
 msgstr "Color de la imagen"
 
+msgid "Image navigation"
+msgstr ""
+
 msgid "Image thumbs"
 msgstr "Miniaturas de imágenes"
 
@@ -5579,6 +5618,9 @@ msgstr "Importación correcta"
 
 msgid "Importing customers"
 msgstr "Importación de clientes"
+
+msgid "Improve Amelia"
+msgstr ""
 
 msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
@@ -5760,6 +5802,9 @@ msgstr "Insertar código corto de Amelia Booking"
 msgid "Insert pending appointments"
 msgstr "Insertar citas pendientes"
 
+msgid "Install & Activate"
+msgstr ""
+
 msgid "Integrate with WooCommerce to enable advanced e-commerce capabilities."
 msgstr ""
 "Integra con WooCommerce para habilitar funciones avanzadas de comercio "
@@ -5858,6 +5903,24 @@ msgstr "Elemento"
 
 msgid "Item status"
 msgstr "Estado del artículo"
+
+msgid "IvyForms"
+msgstr ""
+
+msgid "IvyForms Entries"
+msgstr ""
+
+msgid "IvyForms Field"
+msgstr ""
+
+msgid "IvyForms Form"
+msgstr ""
+
+msgid "IvyForms validation failed."
+msgstr ""
+
+msgid "Ivy setup"
+msgstr ""
 
 msgid "Jane Doe"
 msgstr "Juana Pérez"
@@ -6102,8 +6165,17 @@ msgstr "Cargar formulario de reserva manualmente"
 msgid "Load page"
 msgstr "Cargar página"
 
+msgid "Loading"
+msgstr ""
+
 msgid "Loading..."
 msgstr "Cargando..."
+
+msgid "Loading event information"
+msgstr ""
+
+msgid "Loading header"
+msgstr ""
 
 msgid "Local Time"
 msgstr "Hora Local:"
@@ -6253,6 +6325,7 @@ msgstr "Hacer obligatorio lo adicional"
 
 msgid "Make sure you are using the correct Outlook credentials."
 msgstr ""
+"Verifica que estés usando los datos de inicio de sesión correctos de Outlook."
 
 msgid "Make sure you are using the correct WhatsApp credentials."
 msgstr ""
@@ -6323,6 +6396,9 @@ msgstr "Capacidad máxima Asc"
 
 msgid "Max Capacity Desc"
 msgstr "Descripción de la capacidad máxima"
+
+msgid "Maximum"
+msgstr ""
 
 msgid "Maximum Quantity:"
 msgstr "Cantidad máxima:"
@@ -6417,6 +6493,9 @@ msgstr "Configuración de Microsoft Teams"
 
 msgid "Min. Capacity"
 msgstr "Capacidad mínima"
+
+msgid "Minimum"
+msgstr ""
 
 msgid "Minimum bookings required"
 msgstr "Mínimas reservas requeridas"
@@ -6641,6 +6720,9 @@ msgstr "Próximo servicio"
 
 msgid "Next day reminder"
 msgstr "Recordatorio del día siguiente"
+
+msgid "Next image"
+msgstr ""
 
 msgid "No"
 msgstr ""
@@ -7246,6 +7328,9 @@ msgstr ""
 msgid "PHP Mail"
 msgstr "Correo PHP"
 
+msgid "PRE-BOOKING INTAKE FORM (IVYFORMS)"
+msgstr ""
+
 msgid "Package"
 msgstr "Paquete"
 
@@ -7666,6 +7751,9 @@ msgstr "Períodos"
 
 msgid "Permanent access token"
 msgstr "Token de acceso permanente"
+
+msgid "Permanently linked"
+msgstr ""
 
 msgid "Person"
 msgstr "Persona"
@@ -8152,6 +8240,9 @@ msgstr "Botones emergentes"
 msgid "Popup title"
 msgstr "Título emergente"
 
+msgid "Pre-booking form details"
+msgstr ""
+
 msgid "Preload entities when page loads"
 msgstr "Cargar entidades previamente cuando se carga la página."
 
@@ -8193,8 +8284,14 @@ msgstr "Vista previa"
 msgid "Preview invoice"
 msgstr "Vista previa de la factura"
 
+msgid "Previous image"
+msgstr ""
+
 msgid "Previous range"
 msgstr "Rango anterior"
+
+msgid "Previous step"
+msgstr ""
 
 msgid "Price"
 msgstr "Precio"
@@ -8836,23 +8933,14 @@ msgstr "Buscar"
 msgid "Search..."
 msgstr "Buscar..."
 
-msgid "Search Coupons"
-msgstr "Búsqueda de cupones"
-
 msgid "Search Filters"
 msgstr "Filtros de búsqueda"
 
 msgid "Search Input Field"
 msgstr "Nota del empleado"
 
-msgid "Search Resources"
-msgstr "Buscar recursos"
-
 msgid "Search Results"
 msgstr "Resultados de la búsqueda"
-
-msgid "Search Taxes"
-msgstr "Buscar impuestos"
 
 msgid "Search attendees"
 msgstr "Buscar asistentes"
@@ -8862,6 +8950,9 @@ msgstr "Buscar citas reservadas"
 
 msgid "Search bookings"
 msgstr "Buscar reservas"
+
+msgid "Search coupons"
+msgstr ""
 
 msgid "Search customers"
 msgstr "Buscar clientes"
@@ -8899,8 +8990,14 @@ msgstr "Notificaciones de búsqueda"
 msgid "Search packages"
 msgstr "Buscar paquetes"
 
+msgid "Search resources"
+msgstr ""
+
 msgid "Search services"
 msgstr "Servicios de búsqueda"
+
+msgid "Search taxes"
+msgstr ""
 
 msgid "Second"
 msgstr "Segundo"
@@ -9030,6 +9127,9 @@ msgstr "Selecciona el producto WooCommerce"
 msgid "Select Zoom User"
 msgstr "Seleccione el usuario del zoom"
 
+msgid "Select a form..."
+msgstr ""
+
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr ""
 "Seleccione un marcador de posición para insertarlo donde se encuentra el "
@@ -9079,9 +9179,6 @@ msgstr ""
 
 msgid "Select or Create New"
 msgstr "Selecciona o crea uno nuevo"
-
-msgid "Select or Create Tag"
-msgstr "Seleccionar o crear una etiqueta"
 
 msgid "Select package"
 msgstr "Seleccionar paquete"
@@ -9143,6 +9240,9 @@ msgstr "Seleccionar este empleado"
 
 msgid "Select tickets"
 msgstr "Seleccionar entradas"
+
+msgid "Select which IvyForms form to show before booking"
+msgstr ""
 
 msgid "Select your Square Location"
 msgstr "Selecciona tu ubicación Square"
@@ -10657,6 +10757,8 @@ msgid ""
 "This email is linked to both a customer and an employee account. Please "
 "delete and rebook."
 msgstr ""
+"Este correo electrónico está vinculado tanto a una cuenta de cliente como a "
+"una cuenta de empleado. Por favor, elimine la reserva y vuelva a reservar."
 
 msgid "This employee is the only one assigned to {service}."
 msgstr "Este empleado es el único asignado a {service}."
@@ -12082,8 +12184,14 @@ msgstr "de"
 msgid "on"
 msgstr "activo"
 
+msgid "opens in new tab"
+msgstr ""
+
 msgid "out of"
 msgstr "fuera de"
+
+msgid "payment button"
+msgstr ""
 
 msgid "people"
 msgstr "El precio se multiplicará por la cantidad de personas"

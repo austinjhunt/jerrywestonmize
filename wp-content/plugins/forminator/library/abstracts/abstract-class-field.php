@@ -604,18 +604,43 @@ abstract class Forminator_Field {
 			$wp_editor_class .= ' do-validate';
 		}
 
+		$settings = array(
+			'textarea_name' => isset( $attr['name'] ) ? $attr['name'] : '',
+			'media_buttons' => $media_buttons,
+			'editor_class'  => $wp_editor_class,
+			'editor_height' => $default_height,
+		);
+
+		if ( did_action( 'elementor/loaded' ) ) {
+			// Disable TinyMCE and Quicktags in Elementor to prevent console errors when wp.editor.initialize is triggered.
+			$settings['tinymce']       = false;
+			$settings['quicktags']     = false;
+			$settings['media_buttons'] = false;
+		}
+
 		ob_start();
 		wp_editor(
 			$content,
 			$editor_id,
-			array(
-				'textarea_name' => isset( $attr['name'] ) ? $attr['name'] : '',
-				'media_buttons' => $media_buttons,
-				'editor_class'  => $wp_editor_class,
-				'editor_height' => $default_height,
-			)
+			$settings
 		);
-
+		if ( did_action( 'elementor/loaded' ) ) {
+			// Ensure the editor script is loaded; otherwise, wp.editor.initialize will not function in the Elementor popup.
+			Forminator_CForm_Front::$load_wp_enqueue_editor = true;
+			$args = self::get_tinymce_args( $editor_id, $media_buttons );
+			?>
+			<script>
+				jQuery(function() {
+					setTimeout(() => {
+						<?php
+						// Initialize the editor when the textarea is visible in the DOM, as we created the editor without TinyMCE and Quicktags, so we need to initialize it manually.
+						?>
+						forminator_init_wp_editor_on_visible( "<?php echo esc_attr( $editor_id ); ?>", <?php echo wp_kses_post( $args ); ?>, true );
+					}, 10); /* Small delay to ensure the textarea is rendered in the DOM. */
+				});
+			</script>
+			<?php
+		}
 		$html .= ob_get_clean();
 
 		if ( 'above' !== self::$description_position ) {
@@ -1285,7 +1310,8 @@ abstract class Forminator_Field {
 		// }.
 
 		$element_id = $condition['element_id'];
-		if ( stripos( $element_id, 'upload-' ) !== false ) {
+		if ( stripos( $element_id, 'upload-' ) !== false && is_array( $form_field_value ) ) {
+			// Treat unfilled uploads as empty strings so blank "is not" conditions stay unmatched.
 			// Single file upload type.
 			if ( ! empty( $form_field_value['file']['name'] ) ) {
 				$form_field_value = $form_field_value['file']['name'];
@@ -1297,7 +1323,9 @@ abstract class Forminator_Field {
 						$file_names[] = $file['file_name'];
 					}
 				}
-				$form_field_value = $file_names;
+				$form_field_value = empty( $file_names ) ? '' : $file_names;
+			} else {
+				$form_field_value = '';
 			}
 		}
 
@@ -2535,6 +2563,19 @@ abstract class Forminator_Field {
 						textElement.outerHTML = \'' . $message . '\';
 					}
 				}</script>';
+		} elseif ( did_action( 'elementor/loaded' ) ) {
+				$script = '<script>
+				(function ($, document) {
+					setTimeout(() => {
+						const editor = typeof tinymce !== "undefined" && tinymce.get( "' . esc_attr( $id ) . '" );
+						let textarea = document.getElementById("' . esc_attr( $id ) . '");
+						if ( textarea && ( textarea.offsetParent !== null || editor ) ) {
+							wp.editor.initialize("' . esc_attr( $id ) . '", ' . wp_kses_post( $args ) . ');
+						} else {
+							forminator_init_wp_editor_on_visible("' . esc_attr( $id ) . '", ' . wp_kses_post( $args ) . ');
+						}
+					}, 50);
+				})(jQuery, document);</script>';
 		} else {
 			$script = '<script>wp.editor.initialize("' . esc_attr( $id ) . '", ' . $args . ');</script>';
 		}

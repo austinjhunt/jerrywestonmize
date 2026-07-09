@@ -91,7 +91,9 @@ class Forminator_CForm_Front_Mail extends Forminator_Mail {
 		$form_fields = $custom_form->get_fields();
 		foreach ( $form_fields as $form_field ) {
 			$files = self::add_field_files( $files, $form_field, $entry );
-			if ( ! empty( $form_field->parent_group ) && ! empty( Forminator_CForm_Front_Action::$prepared_data[ $form_field->parent_group . '-copies' ] ) ) {
+			if ( ! empty( $form_field->parent_group ) && ! empty( Forminator_CForm_Front_Action::$prepared_data[ $form_field->parent_group . '-copies' ] )
+				&& is_array( Forminator_CForm_Front_Action::$prepared_data[ $form_field->parent_group . '-copies' ] )
+			) {
 				foreach ( Forminator_CForm_Front_Action::$prepared_data[ $form_field->parent_group . '-copies' ] as $prefix ) {
 					$clonned_form_field       = clone $form_field;
 					$clonned_form_field->slug = $form_field->slug . '-' . $prefix;
@@ -203,10 +205,16 @@ class Forminator_CForm_Front_Mail extends Forminator_Mail {
 				$data['current_url'] = forminator_get_current_url();
 			}
 
-			$files       = $this->get_files( $custom_form, $entry );
-			$exceeded    = $this->is_attachment_size_limit_exceeded( $files );
-			$attachments = $exceeded ? array() : $files;
-			$entry       = $this->maybe_remove_stripe_quantity( $entry );
+			// If it's to send an email draft link, we don't have files, so skip retrieving files and size checks.
+			if ( ! empty( $submitted_data['action'] ) && 'forminator_email_draft_link' === $submitted_data['action'] ) {
+				$attachments = array();
+				$exceeded    = false;
+			} else {
+				$files       = $this->get_files( $custom_form, $entry );
+				$exceeded    = $this->is_attachment_size_limit_exceeded( $files );
+				$attachments = $exceeded ? array() : $files;
+			}
+			$entry = $this->maybe_remove_stripe_quantity( $entry );
 
 			/**
 			 * Message data filter

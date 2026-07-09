@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Melograno\UsageTracker\Collectors\Plugin;
+namespace AmeliaVendor\Melograno\UsageTracker\Collectors\Plugin;
 
-use Melograno\UsageTracker\Collectors\BaseCollector;
+use AmeliaVendor\Melograno\UsageTracker\Collectors\BaseCollector;
 
 class IvyFormsCollector extends BaseCollector
 {

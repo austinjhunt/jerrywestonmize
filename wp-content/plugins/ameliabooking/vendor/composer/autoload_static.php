@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit40dda78db029eaa08a58a37e559cd62d
+class ComposerStaticInit440ff333ea3747127d7dfe94d91a2a1a
 {
     public static $files = array (
         '7b11c4dc42b3b3023073cb14e519683c_am' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
@@ -63,7 +63,6 @@ class ComposerStaticInit40dda78db029eaa08a58a37e559cd62d
         array (
             'Money\\' => 6,
             'Microsoft\\Graph\\' => 16,
-            'Melograno\\UsageTracker\\' => 23,
         ),
         'L' => 
         array (
@@ -112,6 +111,7 @@ class ComposerStaticInit40dda78db029eaa08a58a37e559cd62d
             'AmeliaVendor\\ParagonIE\\ConstantTime\\' => 36,
             'AmeliaVendor\\PHPMailer\\PHPMailer\\' => 33,
             'AmeliaVendor\\Monolog\\' => 21,
+            'AmeliaVendor\\Melograno\\UsageTracker\\' => 36,
             'AmeliaVendor\\Masterminds\\' => 25,
             'AmeliaVendor\\GuzzleHttp\\Psr7\\' => 29,
             'AmeliaVendor\\GuzzleHttp\\Promise\\' => 32,
@@ -188,10 +188,6 @@ class ComposerStaticInit40dda78db029eaa08a58a37e559cd62d
         'Microsoft\\Graph\\' => 
         array (
             0 => __DIR__ . '/..' . '/microsoft/microsoft-graph/src',
-        ),
-        'Melograno\\UsageTracker\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/melograno/usage-tracker/src',
         ),
         'League\\Tactician\\' => 
         array (
@@ -301,6 +297,10 @@ class ComposerStaticInit40dda78db029eaa08a58a37e559cd62d
         'AmeliaVendor\\Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
+        ),
+        'AmeliaVendor\\Melograno\\UsageTracker\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/melograno/usage-tracker/src',
         ),
         'AmeliaVendor\\Masterminds\\' => 
         array (
@@ -640,6 +640,8 @@ class ComposerStaticInit40dda78db029eaa08a58a37e559cd62d
         'AmeliaBooking\\Application\\Commands\\Mailchimp\\FetchAccessTokenMailchimpCommandHandler' => __DIR__ . '/../..' . '/src/Application/Commands/Mailchimp/FetchAccessTokenMailchimpCommandHandler.php',
         'AmeliaBooking\\Application\\Commands\\Mailchimp\\GetMailchimpAuthURLCommand' => __DIR__ . '/../..' . '/src/Application/Commands/Mailchimp/GetMailchimpAuthURLCommand.php',
         'AmeliaBooking\\Application\\Commands\\Mailchimp\\GetMailchimpAuthURLCommandHandler' => __DIR__ . '/../..' . '/src/Application/Commands/Mailchimp/GetMailchimpAuthURLCommandHandler.php',
+        'AmeliaBooking\\Application\\Commands\\Mobile\\Events\\ScanEventTicketCommand' => __DIR__ . '/../..' . '/src/Application/Commands/Mobile/Events/ScanEventTicketCommand.php',
+        'AmeliaBooking\\Application\\Commands\\Mobile\\Events\\ScanEventTicketCommandHandler' => __DIR__ . '/../..' . '/src/Application/Commands/Mobile/Events/ScanEventTicketCommandHandler.php',
         'AmeliaBooking\\Application\\Commands\\Notification\\AddNotificationCommand' => __DIR__ . '/../..' . '/src/Application/Commands/Notification/AddNotificationCommand.php',
         'AmeliaBooking\\Application\\Commands\\Notification\\AddNotificationCommandHandler' => __DIR__ . '/../..' . '/src/Application/Commands/Notification/AddNotificationCommandHandler.php',
         'AmeliaBooking\\Application\\Commands\\Notification\\DeleteNotificationCommand' => __DIR__ . '/../..' . '/src/Application/Commands/Notification/DeleteNotificationCommand.php',
@@ -970,6 +972,14 @@ class ComposerStaticInit40dda78db029eaa08a58a37e559cd62d
         'AmeliaBooking\\Application\\Controller\\Mailchimp\\DisconnectFromMailchimpController' => __DIR__ . '/../..' . '/src/Application/Controller/Mailchimp/DisconnectFromMailchimpController.php',
         'AmeliaBooking\\Application\\Controller\\Mailchimp\\FetchAccessTokenMailchimpController' => __DIR__ . '/../..' . '/src/Application/Controller/Mailchimp/FetchAccessTokenMailchimpController.php',
         'AmeliaBooking\\Application\\Controller\\Mailchimp\\GetMailchimpAuthURLController' => __DIR__ . '/../..' . '/src/Application/Controller/Mailchimp/GetMailchimpAuthURLController.php',
+        'AmeliaBooking\\Application\\Controller\\Mobile\\Appointments\\GetAppointmentMobileController' => __DIR__ . '/../..' . '/src/Application/Controller/Mobile/Appointments/GetAppointmentMobileController.php',
+        'AmeliaBooking\\Application\\Controller\\Mobile\\Appointments\\GetAppointmentsMobileController' => __DIR__ . '/../..' . '/src/Application/Controller/Mobile/Appointments/GetAppointmentsMobileController.php',
+        'AmeliaBooking\\Application\\Controller\\Mobile\\Appointments\\UpdateAppointmentStatusMobileController' => __DIR__ . '/../..' . '/src/Application/Controller/Mobile/Appointments/UpdateAppointmentStatusMobileController.php',
+        'AmeliaBooking\\Application\\Controller\\Mobile\\Events\\GetEventMobileController' => __DIR__ . '/../..' . '/src/Application/Controller/Mobile/Events/GetEventMobileController.php',
+        'AmeliaBooking\\Application\\Controller\\Mobile\\Events\\GetEventsMobileController' => __DIR__ . '/../..' . '/src/Application/Controller/Mobile/Events/GetEventsMobileController.php',
+        'AmeliaBooking\\Application\\Controller\\Mobile\\Events\\ScanEventTicketMobileController' => __DIR__ . '/../..' . '/src/Application/Controller/Mobile/Events/ScanEventTicketMobileController.php',
+        'AmeliaBooking\\Application\\Controller\\Mobile\\GetMobileInfoController' => __DIR__ . '/../..' . '/src/Application/Controller/Mobile/GetMobileInfoController.php',
+        'AmeliaBooking\\Application\\Controller\\Mobile\\MobileV1Controller' => __DIR__ . '/../..' . '/src/Application/Controller/Mobile/MobileV1Controller.php',
         'AmeliaBooking\\Application\\Controller\\Notification\\AddNotificationController' => __DIR__ . '/../..' . '/src/Application/Controller/Notification/AddNotificationController.php',
         'AmeliaBooking\\Application\\Controller\\Notification\\DeleteNotificationController' => __DIR__ . '/../..' . '/src/Application/Controller/Notification/DeleteNotificationController.php',
         'AmeliaBooking\\Application\\Controller\\Notification\\GetNotificationsController' => __DIR__ . '/../..' . '/src/Application/Controller/Notification/GetNotificationsController.php',
@@ -1538,6 +1548,7 @@ class ComposerStaticInit40dda78db029eaa08a58a37e559cd62d
         'AmeliaBooking\\Infrastructure\\Routes\\Invoice\\Invoice' => __DIR__ . '/../..' . '/src/Infrastructure/Routes/Invoice/Invoice.php',
         'AmeliaBooking\\Infrastructure\\Routes\\Location\\Location' => __DIR__ . '/../..' . '/src/Infrastructure/Routes/Location/Location.php',
         'AmeliaBooking\\Infrastructure\\Routes\\Mailchimp\\Mailchimp' => __DIR__ . '/../..' . '/src/Infrastructure/Routes/Mailchimp/Mailchimp.php',
+        'AmeliaBooking\\Infrastructure\\Routes\\Mobile\\MobileV1' => __DIR__ . '/../..' . '/src/Infrastructure/Routes/Mobile/MobileV1.php',
         'AmeliaBooking\\Infrastructure\\Routes\\Notification\\Notification' => __DIR__ . '/../..' . '/src/Infrastructure/Routes/Notification/Notification.php',
         'AmeliaBooking\\Infrastructure\\Routes\\Notification\\WhatsApp' => __DIR__ . '/../..' . '/src/Infrastructure/Routes/Notification/WhatsApp.php',
         'AmeliaBooking\\Infrastructure\\Routes\\Outlook\\Outlook' => __DIR__ . '/../..' . '/src/Infrastructure/Routes/Outlook/Outlook.php',
@@ -1733,6 +1744,8 @@ class ComposerStaticInit40dda78db029eaa08a58a37e559cd62d
         'AmeliaBooking\\Infrastructure\\WP\\InstallActions\\DB\\User\\WPUsersTable' => __DIR__ . '/../..' . '/src/Infrastructure/WP/InstallActions/DB/User/WPUsersTable.php',
         'AmeliaBooking\\Infrastructure\\WP\\InstallActions\\DeleteDatabaseHook' => __DIR__ . '/../..' . '/src/Infrastructure/WP/InstallActions/DeleteDatabaseHook.php',
         'AmeliaBooking\\Infrastructure\\WP\\InstallActions\\DeletionMultisite' => __DIR__ . '/../..' . '/src/Infrastructure/WP/InstallActions/DeletionMultisite.php',
+        'AmeliaBooking\\Infrastructure\\WP\\Integrations\\IvyForms\\IvyFormsService' => __DIR__ . '/../..' . '/src/Infrastructure/WP/Integrations/IvyForms/IvyFormsService.php',
+        'AmeliaBooking\\Infrastructure\\WP\\Integrations\\PluginInstaller' => __DIR__ . '/../..' . '/src/Infrastructure/WP/Integrations/PluginInstaller.php',
         'AmeliaBooking\\Infrastructure\\WP\\Integrations\\ThriveAutomator\\Apps\\AmeliaBooking' => __DIR__ . '/../..' . '/src/Infrastructure/WP/Integrations/ThriveAutomator/Apps/AmeliaBooking.php',
         'AmeliaBooking\\Infrastructure\\WP\\Integrations\\ThriveAutomator\\DataFields\\Appointment\\End' => __DIR__ . '/../..' . '/src/Infrastructure/WP/Integrations/ThriveAutomator/DataFields/Appointment/End.php',
         'AmeliaBooking\\Infrastructure\\WP\\Integrations\\ThriveAutomator\\DataFields\\Appointment\\Id' => __DIR__ . '/../..' . '/src/Infrastructure/WP/Integrations/ThriveAutomator/DataFields/Appointment/Id.php',
@@ -2320,6 +2333,20 @@ class ComposerStaticInit40dda78db029eaa08a58a37e559cd62d
         'AmeliaVendor\\Masterminds\\HTML5\\Serializer\\OutputRules' => __DIR__ . '/..' . '/masterminds/html5/src/HTML5/Serializer/OutputRules.php',
         'AmeliaVendor\\Masterminds\\HTML5\\Serializer\\RulesInterface' => __DIR__ . '/..' . '/masterminds/html5/src/HTML5/Serializer/RulesInterface.php',
         'AmeliaVendor\\Masterminds\\HTML5\\Serializer\\Traverser' => __DIR__ . '/..' . '/masterminds/html5/src/HTML5/Serializer/Traverser.php',
+        'AmeliaVendor\\Melograno\\UsageTracker\\Collectors\\BaseCollector' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Collectors/BaseCollector.php',
+        'AmeliaVendor\\Melograno\\UsageTracker\\Collectors\\Common\\ActivationCollector' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Collectors/Common/ActivationCollector.php',
+        'AmeliaVendor\\Melograno\\UsageTracker\\Collectors\\Common\\WpEnvironmentCollector' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Collectors/Common/WpEnvironmentCollector.php',
+        'AmeliaVendor\\Melograno\\UsageTracker\\Collectors\\ConsentNoticeCollectorInterface' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Collectors/ConsentNoticeCollectorInterface.php',
+        'AmeliaVendor\\Melograno\\UsageTracker\\Collectors\\PluginCollectorInterface' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Collectors/PluginCollectorInterface.php',
+        'AmeliaVendor\\Melograno\\UsageTracker\\Collectors\\Plugin\\AmeliaCollector' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Collectors/Plugin/AmeliaCollector.php',
+        'AmeliaVendor\\Melograno\\UsageTracker\\Collectors\\Plugin\\IvyFormsCollector' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Collectors/Plugin/IvyFormsCollector.php',
+        'AmeliaVendor\\Melograno\\UsageTracker\\Collectors\\Plugin\\WpDataTablesCollector' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Collectors/Plugin/WpDataTablesCollector.php',
+        'AmeliaVendor\\Melograno\\UsageTracker\\Core\\Anonymizer' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Core/Anonymizer.php',
+        'AmeliaVendor\\Melograno\\UsageTracker\\Core\\ConsentManager' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Core/ConsentManager.php',
+        'AmeliaVendor\\Melograno\\UsageTracker\\Core\\ConsentNoticeService' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Core/ConsentNoticeService.php',
+        'AmeliaVendor\\Melograno\\UsageTracker\\Core\\HttpClient' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Core/HttpClient.php',
+        'AmeliaVendor\\Melograno\\UsageTracker\\Core\\NoticeManager' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Core/NoticeManager.php',
+        'AmeliaVendor\\Melograno\\UsageTracker\\Core\\UsageTracker' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Core/UsageTracker.php',
         'AmeliaVendor\\Monolog\\Attribute\\AsMonologProcessor' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/Attribute/AsMonologProcessor.php',
         'AmeliaVendor\\Monolog\\DateTimeImmutable' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/DateTimeImmutable.php',
         'AmeliaVendor\\Monolog\\ErrorHandler' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/ErrorHandler.php',
@@ -7489,17 +7516,6 @@ class ComposerStaticInit40dda78db029eaa08a58a37e559cd62d
         'League\\Tactician\\Plugins\\NamedCommand\\NamedCommand' => __DIR__ . '/..' . '/league/tactician/src/Plugins/NamedCommand/NamedCommand.php',
         'League\\Tactician\\Plugins\\NamedCommand\\NamedCommandExtractor' => __DIR__ . '/..' . '/league/tactician/src/Plugins/NamedCommand/NamedCommandExtractor.php',
         'League\\Tactician\\Setup\\QuickStart' => __DIR__ . '/..' . '/league/tactician/src/Setup/QuickStart.php',
-        'Melograno\\UsageTracker\\Collectors\\BaseCollector' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Collectors/BaseCollector.php',
-        'Melograno\\UsageTracker\\Collectors\\Common\\ActivationCollector' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Collectors/Common/ActivationCollector.php',
-        'Melograno\\UsageTracker\\Collectors\\Common\\WpEnvironmentCollector' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Collectors/Common/WpEnvironmentCollector.php',
-        'Melograno\\UsageTracker\\Collectors\\PluginCollectorInterface' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Collectors/PluginCollectorInterface.php',
-        'Melograno\\UsageTracker\\Collectors\\Plugin\\AmeliaCollector' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Collectors/Plugin/AmeliaCollector.php',
-        'Melograno\\UsageTracker\\Collectors\\Plugin\\IvyFormsCollector' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Collectors/Plugin/IvyFormsCollector.php',
-        'Melograno\\UsageTracker\\Collectors\\Plugin\\WpDataTablesCollector' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Collectors/Plugin/WpDataTablesCollector.php',
-        'Melograno\\UsageTracker\\Core\\Anonymizer' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Core/Anonymizer.php',
-        'Melograno\\UsageTracker\\Core\\ConsentManager' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Core/ConsentManager.php',
-        'Melograno\\UsageTracker\\Core\\HttpClient' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Core/HttpClient.php',
-        'Melograno\\UsageTracker\\Core\\UsageTracker' => __DIR__ . '/..' . '/melograno/usage-tracker/src/Core/UsageTracker.php',
         'Microsoft\\Graph\\CallRecords\\Model\\CallRecord' => __DIR__ . '/..' . '/microsoft/microsoft-graph/src/CallRecords/Model/CallRecord.php',
         'Microsoft\\Graph\\CallRecords\\Model\\CallType' => __DIR__ . '/..' . '/microsoft/microsoft-graph/src/CallRecords/Model/CallType.php',
         'Microsoft\\Graph\\CallRecords\\Model\\ClientPlatform' => __DIR__ . '/..' . '/microsoft/microsoft-graph/src/CallRecords/Model/ClientPlatform.php',
@@ -11868,10 +11884,10 @@ class ComposerStaticInit40dda78db029eaa08a58a37e559cd62d
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit40dda78db029eaa08a58a37e559cd62d::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit40dda78db029eaa08a58a37e559cd62d::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit40dda78db029eaa08a58a37e559cd62d::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit40dda78db029eaa08a58a37e559cd62d::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit440ff333ea3747127d7dfe94d91a2a1a::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit440ff333ea3747127d7dfe94d91a2a1a::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit440ff333ea3747127d7dfe94d91a2a1a::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit440ff333ea3747127d7dfe94d91a2a1a::$classMap;
 
         }, null, ClassLoader::class);
     }

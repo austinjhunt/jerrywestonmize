@@ -80,7 +80,7 @@ class Forminator_Template_Registration extends Forminator_Template {
 						'description'                 => '',
 						'confirm-password-label'      => __( 'Confirm Password', 'forminator' ),
 						'strength'                    => 'none',
-						'strength_validation_message' => __( 'Your password doesn\'t meet the minimum strength requirement. We recommend using 8 or more characters with a mix of letters, numbers & symbols.', 'forminator' ),
+						'strength_validation_message' => '',
 						'validation'                  => 'true',
 						'validation_message'          => __( 'Your passwords don\'t match.', 'forminator' ),
 						'required_confirm_message'    => __( 'You must confirm your chosen password.', 'forminator' ),

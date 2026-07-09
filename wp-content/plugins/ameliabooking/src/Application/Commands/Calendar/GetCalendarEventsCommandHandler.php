@@ -114,7 +114,7 @@ class GetCalendarEventsCommandHandler extends CommandHandler
             }
 
             if ($isAppointment) {
-                $filledDays[$itemStartDate]['events'][] = $this->appointmentFormatter($item, $currentUser);
+                $filledDays[$itemStartDate]['events'][] = $this->appointmentFormatter($item, $currentUser, $queryParams);
             } elseif ($isBlockTime) {
                 $filledDays[$itemStartDate]['events'][] = $this->blockTimeFormatter(
                     $item,
@@ -274,13 +274,13 @@ class GetCalendarEventsCommandHandler extends CommandHandler
         return $blockTimes->getItems();
     }
 
-    private function appointmentFormatter(Appointment $appointment, AbstractUser $currentUser): array
+    private function appointmentFormatter(Appointment $appointment, AbstractUser $currentUser, array $queryParams): array
     {
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
         $timeSlotStep    = $settingsService->getSetting('general', 'timeSlotLength');
         $appointmentDurationInSeconds = $appointment->getBookingEnd()->getValue()->getTimestamp() -
-            $appointment->getBookingEnd()->getValue()->getTimestamp();
+            $appointment->getBookingStart()->getValue()->getTimestamp();
         $bufferTimeBefore = $appointment->getService() && $appointment->getService()->getTimeBefore()
             ? $appointment->getService()->getTimeBefore()->getValue()
             : 0;
@@ -294,7 +294,7 @@ class GetCalendarEventsCommandHandler extends CommandHandler
         $endWithoutBuffer = $appointment->getBookingEnd()->getValue();
         $end = (clone($endWithoutBuffer))->modify($bufferTimeAfter . 'seconds');
 
-        return [
+        $event = [
             'uuid'                    => $appointment->getId()->getValue(),
             'id'                      => $appointment->getId()->getValue(),
             'bookings'                => $appointment->getBookings()->toArray(),
@@ -317,7 +317,6 @@ class GetCalendarEventsCommandHandler extends CommandHandler
                 $appointment->getInternalNotes()->getValue()
                 : '',
             'integrationCalendarType' => false,
-            'resourceId'              => $appointment->getProvider()->getId()->getValue(),
             'type'                    => $appointment->getBookings()->length() === 1
                 ? 'singleAppointment'
                 : 'groupAppointment',
@@ -329,6 +328,12 @@ class GetCalendarEventsCommandHandler extends CommandHandler
                         : true
                 ),
         ];
+
+        if (($queryParams['view'] ?? '') === 'resourceTimeGridDay') {
+            $event['resourceId'] = $appointment->getProvider()->getId()->getValue();
+        }
+
+        return $event;
     }
 
     private function eventFormatter(Event $eventEntity, EventPeriod $eventPeriod, array $queryParams): array
@@ -353,8 +358,14 @@ class GetCalendarEventsCommandHandler extends CommandHandler
             'notes'              => '',
             'locationName'       => $eventEntity->getLocation() ? $eventEntity->getLocation()->getName()->getValue() : '',
             'employeeName'       => $eventEntity->getOrganizer() ? $eventEntity->getOrganizer()->getFullName() : '',
-            'resourceId'         => $eventEntity->getOrganizer() ? $eventEntity->getOrganizer()->getId()->getValue() : null,
         ];
+
+        if (
+            ($queryParams['view'] ?? '') === 'resourceTimeGridDay' &&
+            $eventEntity->getOrganizer()
+        ) {
+            $event['resourceId'] = $eventEntity->getOrganizer()->getId()->getValue();
+        }
 
         if (in_array($queryParams['view'], ['dayGridMonthSevenDays', 'dayGridMonth', 'dayGridMonthMobile'])) {
             $event['start'] = $periodStartDate->format('Y-m-d');
@@ -399,8 +410,11 @@ class GetCalendarEventsCommandHandler extends CommandHandler
             'endWithoutBuffer'   => $endDate->format('Y-m-d H:i:s'),
             'timeZone'           => $startDate->getTimezone()->getName(),
             'employeeName'       => $employeeName,
-            'resourceId'         => $blockTime->getUser() ? $blockTime->getUser()->getId()->getValue() : null,
         ];
+
+        if (($queryParams['view'] ?? '') === 'resourceTimeGridDay' && $blockTime->getUser()) {
+            $event['resourceId'] = $blockTime->getUser()->getId()->getValue();
+        }
 
         if (
             ($queryParams['view'] ?? '') === 'resourceTimeGridDay' &&

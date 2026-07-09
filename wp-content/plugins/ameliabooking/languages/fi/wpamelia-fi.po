@@ -896,6 +896,8 @@ msgid ""
 "Application (client) ID must be a valid GUID (UUID), as shown in the Azure "
 "portal."
 msgstr ""
+"Application (client) ID:n on oltava kelvollinen GUID (UUID), kuten Azure "
+"portalissa näkyy."
 
 msgid "Application fee amount (%)"
 msgstr "Hakemusmaksun määrä (%)"
@@ -1860,7 +1862,7 @@ msgstr ""
 "ajanvaraus!"
 
 msgid "By employees"
-msgstr ""
+msgstr "Työntekijöiden mukaan"
 
 msgid ""
 "By entering your phone number you agree to receive messages via WhatsApp"
@@ -2248,6 +2250,8 @@ msgid ""
 "Client secret is too short or looks invalid. Copy the full value from the "
 "Azure portal."
 msgstr ""
+"Asiakassalaisuus on liian lyhyt tai näyttää virheelliseltä. Kopioi koko arvo "
+"Azure-portaalista."
 
 msgid "Close"
 msgstr "Sulje"
@@ -2284,6 +2288,11 @@ msgstr "Piilota kaikki"
 
 msgid "Collapse menu"
 msgstr "Tiivistä valikko"
+
+msgid ""
+"Collect additional information from your customers before they complete a "
+"booking."
+msgstr ""
 
 msgid "Collect the information your business truly needs"
 msgstr "Kerää yrityksesi todella tarvitsemat tiedot"
@@ -2490,6 +2499,9 @@ msgstr ""
 msgid "Consulting"
 msgstr "Konsultointi"
 
+msgid "Contact Form"
+msgstr ""
+
 msgid "Contact message"
 msgstr "Yhteydenottoviesti"
 
@@ -2672,6 +2684,9 @@ msgstr "Luo työntekijä"
 
 msgid "Create event"
 msgstr "Luo tapahtuma"
+
+msgid "Create form"
+msgstr ""
 
 msgid "Create meetings for pending appointments"
 msgstr "Luo kokouksia odottaville tapaamisille"
@@ -3046,7 +3061,7 @@ msgid "Date and time"
 msgstr "Päiväys ja kellonaika"
 
 msgid "Date busyness indicator"
-msgstr ""
+msgstr "Päivän varausasteen indikaattori"
 
 msgid "Date of Birth"
 msgstr "Syntymäpäivä"
@@ -3911,6 +3926,9 @@ msgstr ""
 "Anna asiakkaiden hallita tapaamisiaan ja tapahtumiaan tehokkaasti. Mukauta "
 "värejä ja nimikkeitä luodaksesi saumattoman ja brändättyjä kokemuksen."
 
+msgid "Enable data usage"
+msgstr ""
+
 msgid "Enable guest booking"
 msgstr "Ota vierasvaraus käyttöön"
 
@@ -4207,6 +4225,9 @@ msgid "Enter booking ID"
 msgstr "Lisää Yritystunnus"
 
 msgid "Enter both the application (client) ID and client secret."
+msgstr "Syötä sekä sovelluksen (client) ID että client secret -avain."
+
+msgid "Enter code"
 msgstr ""
 
 msgid "Enter date of birth"
@@ -4371,6 +4392,9 @@ msgstr "Tapahtumatyyppi"
 msgid "Event available"
 msgstr "Tapahtuma saatavilla"
 
+msgid "Event booking"
+msgstr ""
+
 msgid "Event booking has been created."
 msgstr "Tapahtuman varaus on luotu."
 
@@ -4486,6 +4510,9 @@ msgstr "Tapahtuma on tallennettu"
 msgid "Event has been updated."
 msgstr "Tapahtuma on päivitetty."
 
+msgid "Event image gallery"
+msgstr ""
+
 msgid "Event info"
 msgstr "Tapahtuman tiedot"
 
@@ -4597,6 +4624,9 @@ msgstr "Tapahtumaluettelo"
 
 msgid "Events list view"
 msgstr "Tapahtumaluettelo"
+
+msgid "Events pagination"
+msgstr ""
 
 msgid "Events pricing"
 msgstr "Tapahtumien hinnoittelu"
@@ -5177,6 +5207,11 @@ msgid "Healthcare"
 msgstr "Terveydenhuolto"
 
 msgid ""
+"Help us improve Amelia by sharing anonymous data about your plugin usage. No "
+"personal data is collected."
+msgstr ""
+
+msgid ""
 "Here, you can connect your personal Apple Calendar,<br/>so once the booking "
 "is scheduled,<br/>it will be automatically added to your calendar of choice."
 msgstr ""
@@ -5507,6 +5542,9 @@ msgstr "Kuva"
 msgid "Image Color"
 msgstr "Kuvan Väri"
 
+msgid "Image navigation"
+msgstr ""
+
 msgid "Image thumbs"
 msgstr "Kuvien pikkukuvat"
 
@@ -5527,6 +5565,9 @@ msgstr "Tuonti onnistui"
 
 msgid "Importing customers"
 msgstr "Asiakkaiden tuominen"
+
+msgid "Improve Amelia"
+msgstr ""
 
 msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
@@ -5706,6 +5747,9 @@ msgstr "Lisää Amelia Booking -lyhytkoodi"
 msgid "Insert pending appointments"
 msgstr "Lisää odottavat tapaamiset"
 
+msgid "Install & Activate"
+msgstr ""
+
 msgid "Integrate with WooCommerce to enable advanced e-commerce capabilities."
 msgstr ""
 "Integroi WooCommerceen, jotta voit käyttää edistyneitä verkkokaupan "
@@ -5804,6 +5848,24 @@ msgstr "Kohde"
 
 msgid "Item status"
 msgstr "Kohteen tila"
+
+msgid "IvyForms"
+msgstr ""
+
+msgid "IvyForms Entries"
+msgstr ""
+
+msgid "IvyForms Field"
+msgstr ""
+
+msgid "IvyForms Form"
+msgstr ""
+
+msgid "IvyForms validation failed."
+msgstr ""
+
+msgid "Ivy setup"
+msgstr ""
 
 msgid "Jane Doe"
 msgstr ""
@@ -6047,8 +6109,17 @@ msgstr "Lataa varauslomake manuaalisesti"
 msgid "Load page"
 msgstr "Lataa sivu"
 
+msgid "Loading"
+msgstr ""
+
 msgid "Loading..."
 msgstr "Ladataan…"
+
+msgid "Loading event information"
+msgstr ""
+
+msgid "Loading header"
+msgstr ""
 
 msgid "Local Time"
 msgstr "Paikallinen Aika"
@@ -6196,7 +6267,7 @@ msgid "Make extra mandatory"
 msgstr "Lisää pakollinen"
 
 msgid "Make sure you are using the correct Outlook credentials."
-msgstr ""
+msgstr "Varmista, että käytät oikeita Outlook-kirjautumistietoja."
 
 msgid "Make sure you are using the correct WhatsApp credentials."
 msgstr "Varmista, että käytät oikeita WhatsApp-tunnistetietoja."
@@ -6265,6 +6336,9 @@ msgstr "Enimmäiskapasiteetti Asc"
 
 msgid "Max Capacity Desc"
 msgstr "Enimmäiskapasiteetti Desc"
+
+msgid "Maximum"
+msgstr ""
 
 msgid "Maximum Quantity:"
 msgstr "Enimmäismäärä:"
@@ -6359,6 +6433,9 @@ msgstr "Microsoft Teamsin asetukset"
 
 msgid "Min. Capacity"
 msgstr "Vähimmäiskapasiteetti"
+
+msgid "Minimum"
+msgstr ""
 
 msgid "Minimum bookings required"
 msgstr "Vaaditut minimivaraukset"
@@ -6581,6 +6658,9 @@ msgstr "Seuraava palvelu"
 
 msgid "Next day reminder"
 msgstr "Seuraavan päivän muistutus"
+
+msgid "Next image"
+msgstr ""
 
 msgid "No"
 msgstr "Ei"
@@ -7174,6 +7254,9 @@ msgstr ""
 msgid "PHP Mail"
 msgstr "PHP-sähköposti"
 
+msgid "PRE-BOOKING INTAKE FORM (IVYFORMS)"
+msgstr ""
+
 msgid "Package"
 msgstr "Paketti"
 
@@ -7589,6 +7672,9 @@ msgstr "Jaksot"
 
 msgid "Permanent access token"
 msgstr "Lopullinen access token"
+
+msgid "Permanently linked"
+msgstr ""
 
 msgid "Person"
 msgstr "Henkilö"
@@ -8073,6 +8159,9 @@ msgstr "Ponnahdusvalikot"
 msgid "Popup title"
 msgstr "Ponnahdusikkunan otsikko"
 
+msgid "Pre-booking form details"
+msgstr ""
+
 msgid "Preload entities when page loads"
 msgstr "Esilataa entiteetit sivun latautuessa"
 
@@ -8113,8 +8202,14 @@ msgstr "Preview"
 msgid "Preview invoice"
 msgstr "Esikatsele lasku"
 
+msgid "Previous image"
+msgstr ""
+
 msgid "Previous range"
 msgstr "Edellinen alue"
+
+msgid "Previous step"
+msgstr ""
 
 msgid "Price"
 msgstr "Hinta"
@@ -8756,23 +8851,14 @@ msgstr "Etsi"
 msgid "Search..."
 msgstr "Etsi..."
 
-msgid "Search Coupons"
-msgstr "Etsi kuponkeja"
-
 msgid "Search Filters"
 msgstr "Aseta hakuehdot"
 
 msgid "Search Input Field"
 msgstr "Syöttökenttä"
 
-msgid "Search Resources"
-msgstr "Hae resursseja"
-
 msgid "Search Results"
 msgstr "Hakutulokset"
-
-msgid "Search Taxes"
-msgstr "Aseta hakuehdot"
 
 msgid "Search attendees"
 msgstr "Etsi osallistujia"
@@ -8782,6 +8868,9 @@ msgstr "Etsi varatut ajanvaraukset"
 
 msgid "Search bookings"
 msgstr "Etsi varauksia"
+
+msgid "Search coupons"
+msgstr ""
 
 msgid "Search customers"
 msgstr "Etsi asiakkaita"
@@ -8819,8 +8908,14 @@ msgstr "Hae ilmoitukset"
 msgid "Search packages"
 msgstr "Etsi paketteja"
 
+msgid "Search resources"
+msgstr ""
+
 msgid "Search services"
 msgstr "Hakupalvelut"
+
+msgid "Search taxes"
+msgstr ""
 
 msgid "Second"
 msgstr "Toinen"
@@ -8950,6 +9045,9 @@ msgstr "Valitse WooCommerce-tuote"
 msgid "Select Zoom User"
 msgstr "Valitse Zoom-käyttäjä"
 
+msgid "Select a form..."
+msgstr ""
+
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr "Valitse paikkamerkki, joka lisätään kohtaan, jossa kursori on."
 
@@ -8997,9 +9095,6 @@ msgstr ""
 
 msgid "Select or Create New"
 msgstr "Valitse tai luo uusi"
-
-msgid "Select or Create Tag"
-msgstr "Valitse tai luo tunniste"
 
 msgid "Select package"
 msgstr "Valitse paketti"
@@ -9058,6 +9153,9 @@ msgstr "Valitse tämä työntekijä"
 
 msgid "Select tickets"
 msgstr "Valitse liput"
+
+msgid "Select which IvyForms form to show before booking"
+msgstr ""
 
 msgid "Select your Square Location"
 msgstr "Valitse Square-sijaintisi"
@@ -10531,6 +10629,8 @@ msgid ""
 "This email is linked to both a customer and an employee account. Please "
 "delete and rebook."
 msgstr ""
+"Tämä sähköpostiosoite on liitetty sekä asiakas- että työntekijätiliin. "
+"Poistakaa varaus ja tehkää uusi varaus."
 
 msgid "This employee is the only one assigned to {service}."
 msgstr "Tämä työntekijä on ainoa, joka on osoitettu osoitteeseen {service}."
@@ -11949,8 +12049,14 @@ msgstr "/"
 msgid "on"
 msgstr "päivänä"
 
+msgid "opens in new tab"
+msgstr ""
+
 msgid "out of"
 msgstr "/"
+
+msgid "payment button"
+msgstr ""
 
 msgid "people"
 msgstr "henkilöt"

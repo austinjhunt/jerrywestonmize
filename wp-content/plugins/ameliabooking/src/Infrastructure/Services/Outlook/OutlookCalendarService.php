@@ -305,14 +305,11 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                     /** @var ProviderApplicationService $providerApplicationService */
                     $providerApplicationService = $this->container->get('application.user.provider.service');
 
+                    $outlookCalendarData = $provider->getOutlookCalendar()->toArray();
+                    $outlookCalendarData['token'] = $authorizedToken;
+
                     $provider->setOutlookCalendar(
-                        OutlookCalendarFactory::create(
-                            [
-                                'id'         => $provider->getOutlookCalendar()->getId()->getValue(),
-                                'token'      => $authorizedToken,
-                                'calendarId' => $provider->getOutlookCalendar()->getCalendarId()->getValue()
-                            ]
-                        )
+                        OutlookCalendarFactory::create($outlookCalendarData)
                     );
 
                     $providerApplicationService->updateProviderOutlookCalendar($provider);

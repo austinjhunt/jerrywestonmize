@@ -75,12 +75,18 @@ class Statement
         $query = $this->statement;
 
         if ($this->bindings) {
-            // Sort bindings by key length, descending, to avoid replacing ":p1" with value of ":p10"
+            // Sort bindings by key length, descending, to avoid matching ":p1" inside ":p10"
             uksort($this->bindings, function ($a, $b) {
                 return strlen($b) - strlen($a);
             });
 
+            $replacements = [];
+
             foreach ($this->bindings as $placeholder => $value) {
+                if (strpos($this->statement, $placeholder) === false) {
+                    continue;
+                }
+
                 $replacement = 'NULL';
 
                 if ($value !== null) {
@@ -88,7 +94,11 @@ class Statement
                     $replacement = $this->wpdb->prepare($format, $value);
                 }
 
-                $query = str_replace($placeholder, $replacement, $query);
+                $replacements[$placeholder] = $replacement;
+            }
+
+            if ($replacements) {
+                $query = strtr($this->statement, $replacements);
             }
         }
 

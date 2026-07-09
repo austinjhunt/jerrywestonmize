@@ -1151,6 +1151,7 @@ class AppointmentReservationService extends AbstractReservationService
             'package'            => [],
             'locale'             => $reservation->getLocale()->getValue(),
             'timeZone'           => $reservation->getTimeZone()->getValue(),
+            'ivy'                => !empty($requestData['ivy']) ? $requestData['ivy'] : null,
         ];
 
         foreach ($booking->getExtras()->keys() as $extraKey) {

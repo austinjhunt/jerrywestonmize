@@ -45,6 +45,9 @@ abstract class AbstractCustomerBooking
     /** @var Json */
     protected $tax;
 
+    /** @var Id */
+    protected $ivyEntryId;
+
     /**
      * @return Id
      */
@@ -174,6 +177,22 @@ abstract class AbstractCustomerBooking
     }
 
     /**
+     * @return Id
+     */
+    public function getIvyEntryId()
+    {
+        return $this->ivyEntryId;
+    }
+
+    /**
+     * @param Id $ivyEntryId
+     */
+    public function setIvyEntryId(Id $ivyEntryId)
+    {
+        $this->ivyEntryId = $ivyEntryId;
+    }
+
+    /**
      * @return array
      */
     public function toArray()
@@ -187,6 +206,7 @@ abstract class AbstractCustomerBooking
             'price'        => null !== $this->getPrice() ? $this->getPrice()->getValue() : null,
             'coupon'       => null !== $this->getCoupon() ? $this->getCoupon()->toArray() : null,
             'tax'          => null !== $this->getTax() ? json_decode($this->getTax()->getValue(), true) : null,
+            'ivyEntryId'   => null !== $this->getIvyEntryId() ? $this->getIvyEntryId()->getValue() : null,
         ];
     }
 }

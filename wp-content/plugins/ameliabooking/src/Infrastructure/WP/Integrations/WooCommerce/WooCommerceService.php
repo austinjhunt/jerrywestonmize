@@ -1079,13 +1079,13 @@ class WooCommerceService
 
             $cartInfo[$serviceId]['name'] =
                 '<strong>' .
-                self::$settingsService->getCategorySettings('labels')['service'] .
+                FrontendStrings::getCommonStrings()['service'] .
                 ':</strong> ' .
                 $booking['bookable']['name'];
 
             $cartInfo[$serviceId]['data'][] =
                 '<strong>' .
-                self::$settingsService->getCategorySettings('labels')['employee'] .
+                FrontendStrings::getCommonStrings()['employee'] .
                 ':</strong> ' .
                 $booking['firstName'] . ' ' . $booking['lastName'];
 
@@ -1141,13 +1141,13 @@ class WooCommerceService
 
             $packageInfo[$serviceId]['name'] =
                 '<strong>' .
-                self::$settingsService->getCategorySettings('labels')['service'] .
+                FrontendStrings::getCommonStrings()['service'] .
                 ':</strong> ' .
                 $booking['bookable']['name'];
 
             $packageInfo[$serviceId]['data'][] =
                 '<strong>' .
-                self::$settingsService->getCategorySettings('labels')['employee'] .
+                FrontendStrings::getCommonStrings()['employee'] .
                 ':</strong> ' .
                 $booking['firstName'] . ' ' . $booking['lastName'];
 
@@ -1208,9 +1208,9 @@ class WooCommerceService
                 $data['type']
             ),
             [
-                '<strong>' . self::$settingsService->getCategorySettings('labels')['service']
+                '<strong>' . FrontendStrings::getCommonStrings()['service']
                 . ':</strong> ' . $bookableName,
-                '<strong>' . self::$settingsService->getCategorySettings('labels')['employee']
+                '<strong>' . FrontendStrings::getCommonStrings()['employee']
                 . ':</strong> ' . $providerFullName,
                 '<strong>' . FrontendStrings::getCommonStrings()['total_number_of_persons'] . '</strong> '
                 . $data['bookings'][0]['persons'],
@@ -1947,7 +1947,8 @@ class WooCommerceService
                 foreach ($customTickets as $key => $customTicket) {
                     $eventCustomPricing[$key] = [
                         'dateRanges' => '[]',
-                        'price'      => !empty($customTicket['dateRangePrice'])
+                        'price'      => array_key_exists('dateRangePrice', $customTicket) &&
+                        $customTicket['dateRangePrice'] !== null
                             ? $customTicket['dateRangePrice'] : $customTicket['price'],
                     ];
                 }

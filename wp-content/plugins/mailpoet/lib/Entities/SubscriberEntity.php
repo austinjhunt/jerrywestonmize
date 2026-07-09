@@ -168,6 +168,15 @@ class SubscriberEntity {
   private $countConfirmations = 0;
 
   /**
+   * Denormalized number of subscribed memberships in non-deleted segments.
+   * Maintained by SegmentsCountRecalculator; used to quickly find subscribers
+   * without a list (segments_count = 0).
+   * @ORM\Column(type="integer", options={"unsigned":true})
+   * @var int
+   */
+  private $segmentsCount = 0;
+
+  /**
    * @ORM\Column(type="string", nullable=true)
    * @var string|null
    */
@@ -555,6 +564,14 @@ class SubscriberEntity {
     $this->countConfirmations = $countConfirmations;
   }
 
+  public function getSegmentsCount(): int {
+    return $this->segmentsCount;
+  }
+
+  public function setSegmentsCount(int $segmentsCount): void {
+    $this->segmentsCount = $segmentsCount;
+  }
+
   /**
    * @return string|null
    */
@@ -668,8 +685,24 @@ class SubscriberEntity {
     return $this->lastEngagementAt;
   }
 
+  /**
+   * Sets the raw engagement timestamp without touching status. Prefer markEngaged() when
+   * recording a real engagement event (open, click, purchase, page view) so inactive
+   * subscribers are reactivated immediately instead of waiting for the maintenance cron.
+   */
   public function setLastEngagementAt(DateTimeInterface $lastEngagementAt): void {
     $this->lastEngagementAt = $lastEngagementAt;
+  }
+
+  /**
+   * Records engagement and immediately reactivates the subscriber if they were inactive,
+   * so they don't wait for the InactiveSubscribersMaintenance cron to be reactivated.
+   */
+  public function markEngaged(DateTimeInterface $engagedAt): void {
+    $this->setLastEngagementAt($engagedAt);
+    if ($this->getStatus() === self::STATUS_INACTIVE) {
+      $this->setStatus(self::STATUS_SUBSCRIBED);
+    }
   }
 
   public function getLastSendingAt(): ?DateTimeInterface {

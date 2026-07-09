@@ -894,6 +894,8 @@ msgid ""
 "Application (client) ID must be a valid GUID (UUID), as shown in the Azure "
 "portal."
 msgstr ""
+"Forrits (client) auðkenni verður að vera gilt GUID (UUID), eins og sýnt er í "
+"Azure-gáttinni."
 
 msgid "Application fee amount (%)"
 msgstr "Umsóknargjald (%)"
@@ -1854,7 +1856,7 @@ msgstr ""
 "fyrirliggjandi!"
 
 msgid "By employees"
-msgstr ""
+msgstr "Eftir starfsmönnum"
 
 msgid ""
 "By entering your phone number you agree to receive messages via WhatsApp"
@@ -2248,6 +2250,8 @@ msgid ""
 "Client secret is too short or looks invalid. Copy the full value from the "
 "Azure portal."
 msgstr ""
+"Client secret er of stutt eða virðist ógilt. Afritaðu allt gildið úr Azure "
+"portal."
 
 msgid "Close"
 msgstr "Loka"
@@ -2284,6 +2288,11 @@ msgstr "Fella allt saman"
 
 msgid "Collapse menu"
 msgstr "Fella saman valmynd"
+
+msgid ""
+"Collect additional information from your customers before they complete a "
+"booking."
+msgstr ""
 
 msgid "Collect the information your business truly needs"
 msgstr "Safnaðu þeim upplýsingum sem fyrirtækið þitt þarfnast í raun og veru"
@@ -2487,6 +2496,9 @@ msgstr ""
 msgid "Consulting"
 msgstr "Ráðgjöf"
 
+msgid "Contact Form"
+msgstr ""
+
 msgid "Contact message"
 msgstr "Tengiliðaskilaboð"
 
@@ -2669,6 +2681,9 @@ msgstr "Stofna starfsmann"
 
 msgid "Create event"
 msgstr "Búa til viðburð"
+
+msgid "Create form"
+msgstr ""
 
 msgid "Create meetings for pending appointments"
 msgstr "Búa til fundi fyrir biðtíma"
@@ -3046,7 +3061,7 @@ msgid "Date and time"
 msgstr "Dagsetning og tími"
 
 msgid "Date busyness indicator"
-msgstr ""
+msgstr "Bókunarálagsvísir dagsetningar"
 
 msgid "Date of Birth"
 msgstr "Fæðingardagur"
@@ -3911,6 +3926,9 @@ msgstr ""
 "skilvirkan hátt. Sérsníddu liti og merkimiða til að skapa óaðfinnanlega og "
 "vörumerkta upplifun."
 
+msgid "Enable data usage"
+msgstr ""
+
 msgid "Enable guest booking"
 msgstr "Virkja bókun gesta"
 
@@ -4203,6 +4221,9 @@ msgid "Enter booking ID"
 msgstr "Sláðu inn bókunarauðkenni"
 
 msgid "Enter both the application (client) ID and client secret."
+msgstr "Sláðu inn bæði application (client) ID og biðlaraleyndarlykil."
+
+msgid "Enter code"
 msgstr ""
 
 msgid "Enter date of birth"
@@ -4370,6 +4391,9 @@ msgstr "Tegund viðburðar"
 msgid "Event available"
 msgstr "Viðburður í boði"
 
+msgid "Event booking"
+msgstr ""
+
 msgid "Event booking has been created."
 msgstr "Bókun viðburðar hefur verið búin til."
 
@@ -4484,6 +4508,9 @@ msgstr "Viðburður hefur verið vistaður"
 msgid "Event has been updated."
 msgstr "Viðburðurinn hefur verið uppfærður."
 
+msgid "Event image gallery"
+msgstr ""
+
 msgid "Event info"
 msgstr "Upplýsingar um viðburð"
 
@@ -4595,6 +4622,9 @@ msgstr "Listi yfir viðburði"
 
 msgid "Events list view"
 msgstr "Listi yfir viðburði"
+
+msgid "Events pagination"
+msgstr ""
 
 msgid "Events pricing"
 msgstr "Verðlagning viðburða"
@@ -5174,6 +5204,11 @@ msgid "Healthcare"
 msgstr "Heilbrigðisþjónusta"
 
 msgid ""
+"Help us improve Amelia by sharing anonymous data about your plugin usage. No "
+"personal data is collected."
+msgstr ""
+
+msgid ""
 "Here, you can connect your personal Apple Calendar,<br/>so once the booking "
 "is scheduled,<br/>it will be automatically added to your calendar of choice."
 msgstr ""
@@ -5509,6 +5544,9 @@ msgstr "Mynd"
 msgid "Image Color"
 msgstr "Litur myndar"
 
+msgid "Image navigation"
+msgstr ""
+
 msgid "Image thumbs"
 msgstr "Smámyndir"
 
@@ -5529,6 +5567,9 @@ msgstr "Innflutningur tókst"
 
 msgid "Importing customers"
 msgstr "Flytja inn viðskiptavini"
+
+msgid "Improve Amelia"
+msgstr ""
 
 msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
@@ -5702,6 +5743,9 @@ msgstr "Settu inn stuttkóða fyrir bókun Amelia"
 msgid "Insert pending appointments"
 msgstr "Setja inn tímapantanir sem bíða"
 
+msgid "Install & Activate"
+msgstr ""
+
 msgid "Integrate with WooCommerce to enable advanced e-commerce capabilities."
 msgstr ""
 "Samþætting við WooCommerce til að virkja háþróaða netverslunarmöguleika."
@@ -5799,6 +5843,24 @@ msgstr "Vara"
 
 msgid "Item status"
 msgstr "Staða hlutar"
+
+msgid "IvyForms"
+msgstr ""
+
+msgid "IvyForms Entries"
+msgstr ""
+
+msgid "IvyForms Field"
+msgstr ""
+
+msgid "IvyForms Form"
+msgstr ""
+
+msgid "IvyForms validation failed."
+msgstr ""
+
+msgid "Ivy setup"
+msgstr ""
 
 msgid "Jane Doe"
 msgstr ""
@@ -6043,8 +6105,17 @@ msgstr "Hlaða inn bókunarformi handvirkt"
 msgid "Load page"
 msgstr "Hlaða síðu"
 
+msgid "Loading"
+msgstr ""
+
 msgid "Loading..."
 msgstr "Hleður..."
+
+msgid "Loading event information"
+msgstr ""
+
+msgid "Loading header"
+msgstr ""
 
 msgid "Local Time"
 msgstr "Staðartími"
@@ -6190,6 +6261,7 @@ msgstr "Gera aukalega skyldubundna"
 
 msgid "Make sure you are using the correct Outlook credentials."
 msgstr ""
+"Staðfestu að þú sért að nota réttar innskráningarupplýsingar fyrir Outlook."
 
 msgid "Make sure you are using the correct WhatsApp credentials."
 msgstr ""
@@ -6260,6 +6332,9 @@ msgstr "Hámarksgeta uppstigningar"
 
 msgid "Max Capacity Desc"
 msgstr "Lýsing á hámarksgetu"
+
+msgid "Maximum"
+msgstr ""
 
 msgid "Maximum Quantity:"
 msgstr "Hámarksfjöldi:"
@@ -6354,6 +6429,9 @@ msgstr "Uppsetning Microsoft Teams"
 
 msgid "Min. Capacity"
 msgstr "Lágmarks getu"
+
+msgid "Minimum"
+msgstr ""
 
 msgid "Minimum bookings required"
 msgstr "Lágmarksbókanir krafist"
@@ -6576,6 +6654,9 @@ msgstr "Næsta þjónusta"
 
 msgid "Next day reminder"
 msgstr "Áminning um næsta dag"
+
+msgid "Next image"
+msgstr ""
 
 msgid "No"
 msgstr "Nei"
@@ -7174,6 +7255,9 @@ msgstr "PDF-skrá"
 msgid "PHP Mail"
 msgstr "PHP póstur"
 
+msgid "PRE-BOOKING INTAKE FORM (IVYFORMS)"
+msgstr ""
+
 msgid "Package"
 msgstr "Pakki"
 
@@ -7593,6 +7677,9 @@ msgstr "Tímabil"
 
 msgid "Permanent access token"
 msgstr "Varanlegt aðgangsmerki"
+
+msgid "Permanently linked"
+msgstr ""
 
 msgid "Person"
 msgstr "Manneskja"
@@ -8078,6 +8165,9 @@ msgstr "Sprettigluggar"
 msgid "Popup title"
 msgstr "Sprettigluggi"
 
+msgid "Pre-booking form details"
+msgstr ""
+
 msgid "Preload entities when page loads"
 msgstr "Forhlaða einingar þegar síðan hleðst inn"
 
@@ -8119,8 +8209,14 @@ msgstr "Forskoðun reiknings"
 msgid "Preview invoice"
 msgstr "Forskoða reikning"
 
+msgid "Previous image"
+msgstr ""
+
 msgid "Previous range"
 msgstr "Fyrra svið"
+
+msgid "Previous step"
+msgstr ""
 
 msgid "Price"
 msgstr "Verð"
@@ -8761,23 +8857,14 @@ msgstr "Leita"
 msgid "Search..."
 msgstr "Leita..."
 
-msgid "Search Coupons"
-msgstr "Leita að afsláttarmiðum"
-
 msgid "Search Filters"
 msgstr "Leit síur"
 
 msgid "Search Input Field"
 msgstr "Leitarinnsláttarreitur"
 
-msgid "Search Resources"
-msgstr "Leita að úrræðum"
-
 msgid "Search Results"
 msgstr "Leit niðurstöður"
-
-msgid "Search Taxes"
-msgstr "Leita í sköttum"
 
 msgid "Search attendees"
 msgstr "Leita að þátttakendum"
@@ -8787,6 +8874,9 @@ msgstr "Leita að bókuðum tíma"
 
 msgid "Search bookings"
 msgstr "Leita að bókunum"
+
+msgid "Search coupons"
+msgstr ""
 
 msgid "Search customers"
 msgstr "Leita að viðskiptavinum"
@@ -8824,8 +8914,14 @@ msgstr "Leitartilkynningar"
 msgid "Search packages"
 msgstr "Leita að pakka"
 
+msgid "Search resources"
+msgstr ""
+
 msgid "Search services"
 msgstr "Leitarþjónustur"
+
+msgid "Search taxes"
+msgstr ""
 
 msgid "Second"
 msgstr "Sekúndu"
@@ -8955,6 +9051,9 @@ msgstr "Veldu WooCommerce vöru"
 msgid "Select Zoom User"
 msgstr "Veldu Zoom notanda"
 
+msgid "Select a form..."
+msgstr ""
+
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr ""
 "Veldu staðgengil til að setja hann inn þar sem bendillinn er staðsettur."
@@ -9003,9 +9102,6 @@ msgstr ""
 
 msgid "Select or Create New"
 msgstr "Veldu eða búa til nýtt"
-
-msgid "Select or Create Tag"
-msgstr "Veldu eða búa til tag"
 
 msgid "Select package"
 msgstr "Veldu pakka"
@@ -9065,6 +9161,9 @@ msgstr "Veldu þennan starfsmann"
 
 msgid "Select tickets"
 msgstr "Veldu miða"
+
+msgid "Select which IvyForms form to show before booking"
+msgstr ""
 
 msgid "Select your Square Location"
 msgstr "Veldu staðsetningu þína á Square"
@@ -10548,6 +10647,8 @@ msgid ""
 "This email is linked to both a customer and an employee account. Please "
 "delete and rebook."
 msgstr ""
+"Þetta tölvupóstfang er skráð bæði á viðskiptavina- og starfsmannareikning. "
+"Vinsamlegast eyðið bókuninni og bókið aftur."
 
 msgid "This employee is the only one assigned to {service}."
 msgstr "Þessi starfsmaður er sá eini sem er úthlutaður til{service} ."
@@ -11969,8 +12070,14 @@ msgstr "af"
 msgid "on"
 msgstr "á"
 
+msgid "opens in new tab"
+msgstr ""
+
 msgid "out of"
 msgstr "út af"
+
+msgid "payment button"
+msgstr ""
 
 msgid "people"
 msgstr "fólk"

@@ -475,6 +475,7 @@ class Forminator_Export {
 				}
 
 				$headers = array(
+					esc_html__( 'Submission ID', 'forminator' ),
 					esc_html__( 'Date', 'forminator' ),
 					esc_html__( 'Question', 'forminator' ),
 					esc_html__( 'Answer', 'forminator' ),
@@ -529,6 +530,7 @@ class Forminator_Export {
 							$i = 1;
 							foreach ( $meta['answers'] as $answer ) {
 								$row   = array();
+								$row[] = 1 === $i ? $entry->entry_id : '';
 								$row[] = 1 === $i ? $entry->time_created : '';
 								$row[] = ! empty( $answer['question'] ) ? sprintf( '"%s"', $answer['question'] ) : '';
 								$row[] = $answer['answer'];
@@ -570,6 +572,7 @@ class Forminator_Export {
 							$i = 1;
 							foreach ( $meta as $answer ) {
 								$row   = array();
+								$row[] = 1 === $i ? $entry->entry_id : '';
 								$row[] = 1 === $i ? $entry->time_created : '';
 								$row[] = ! empty( $answer['question'] ) ? sprintf( '"%s"', $answer['question'] ) : '';
 								if ( isset( $answer['answer'] ) ) {
@@ -634,6 +637,7 @@ class Forminator_Export {
 				$fields_array = $model->get_fields_as_array();
 				$map_entries  = Forminator_Form_Entry_Model::map_polls_entries_for_export( $form_id, $fields_array );
 				$header       = array(
+					esc_html__( 'Submission ID', 'forminator' ),
 					esc_html__( 'Date', 'forminator' ),
 					esc_html__( 'Answer', 'forminator' ),
 					esc_html__( 'Extra', 'forminator' ),
@@ -650,6 +654,7 @@ class Forminator_Export {
 					$entry = new Forminator_Form_Entry_Model( $map_entry['entry_id'] );
 					$extra = $entry->get_meta( 'extra', null );
 					$row   = array(
+						$entry->entry_id,
 						$entry->time_created,
 						$label,
 						$extra,
@@ -976,6 +981,12 @@ class Forminator_Export {
 		$field_mappers = self::get_mappers( $fields, $model );
 		$mappers       = array_merge(
 			array(
+				array(
+					// read form model's property.
+					'property' => 'entry_id', // Submission ID.
+					'label'    => esc_html__( 'Submission ID', 'forminator' ),
+					'type'     => 'entry_id',
+				),
 				array(
 					// read form model's property.
 					'property' => 'time_created', // must be on export.

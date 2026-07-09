@@ -25,4 +25,109 @@
       fill: "#9E94F8"
     })
   )
+
+  // Shared Gutenberg helpers (icon script loads first for all Amelia blocks).
+  window.ameliaGutenbergShared = window.ameliaGutenbergShared || {}
+
+  window.ameliaGutenbergShared.getSharedShortcodeDepricatedAttributes = function () {
+    return {
+      ivy: {type: 'string', default: ''},
+      trigger: {type: 'string', default: ''},
+      trigger_type: {type: 'string', default: 'id'},
+      in_dialog: {type: 'boolean', default: false},
+    }
+  }
+
+  window.ameliaGutenbergShared.getSharedShortcodeAttributes = function () {
+    return {
+      ivy: {
+        type: 'string',
+        default: ''
+      },
+      trigger: {
+        type: 'string',
+        default: ''
+      },
+      trigger_type: {
+        type: 'string',
+        default: 'id'
+      },
+      in_dialog: {
+        type: 'boolean',
+        default: false
+      },
+    }
+  }
+
+  window.ameliaGutenbergShared.setSharedShortcodeElements = function (inspectorElements, components, attributes, props, options, data) {
+    inspectorElements.push(el(components.TextControl, {
+      id: 'amelia-js-trigger',
+      label: wpAmeliaLabels.manually_loading,
+      value: attributes.trigger,
+      help: wpAmeliaLabels.manually_loading_description,
+      onChange: function (TextControl) {
+        return props.setAttributes({trigger: TextControl})
+      }
+    }))
+
+    if (attributes.trigger) {
+      inspectorElements.push(el(components.SelectControl, {
+        id: 'amelia-js-trigger_type',
+        label: wpAmeliaLabels.trigger_type,
+        value: attributes.trigger_type,
+        options: options.trigger_type,
+        help: wpAmeliaLabels.trigger_type_tooltip,
+        onChange: function (selectControl) {
+          return props.setAttributes({trigger_type: selectControl})
+        }
+      }))
+
+      inspectorElements.push(el(components.PanelRow,
+        {},
+        el('label', {htmlFor: 'amelia-js-in-dialog'}, wpAmeliaLabels.in_dialog),
+        el(components.FormToggle, {
+          id: 'amelia-js-in-dialog',
+          checked: attributes.in_dialog,
+          onChange: function () {
+            return props.setAttributes({in_dialog: !props.attributes.in_dialog})
+          }
+        })
+      ))
+    }
+    
+    if (!attributes.trigger && data.ivy && data.ivy.length) {
+      inspectorElements.push(el(components.SelectControl, {
+        id: "amelia-js-select-ivy",
+        label: wpAmeliaLabels.ivy,
+        help: wpAmeliaLabels.ivy_tooltip,
+        value: String(attributes.ivy),
+        options: data.ivy,
+        onChange: function (selectControl) {
+          return props.setAttributes({ivy: selectControl})
+        }
+      }))
+    }
+  }
+
+  window.ameliaGutenbergShared.getSharedShortcodeString = function (attributes) {
+    let shortCode = ''
+
+    if (attributes.trigger) {
+      shortCode += ' trigger=' + attributes.trigger + ''
+    }
+
+    if (attributes.trigger && attributes.trigger_type) {
+      shortCode += ' trigger_type=' + attributes.trigger_type + ''
+    }
+
+    if (attributes.trigger && attributes.in_dialog) {
+      shortCode += ' in_dialog=1'
+    }
+
+    if (attributes.trigger === '' && attributes.ivy) {
+      shortCode += ' ivy=' + attributes.ivy + ''
+    }
+
+    return shortCode
+  }
 })(window.wp)

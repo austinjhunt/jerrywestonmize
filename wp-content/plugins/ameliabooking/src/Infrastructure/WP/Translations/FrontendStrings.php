@@ -826,7 +826,7 @@ class FrontendStrings
             'event_status_changed'                   => __('Booking status has been changed to ', 'wpamelia'),
             'event_tags'                             => __('Tags', 'wpamelia'),
             'event_tags_create'                      => __('No Tags. Create a new one.', 'wpamelia'),
-            'event_tags_select_or_create'            => __('Select or Create Tag', 'wpamelia'),
+            'event_tags_select'                      => __('Select Tag', 'wpamelia'),
             'manage_event_tags'                      => __('Manage Event Tags', 'wpamelia'),
             'create_new_event_tag'                   => __('Create New Tag', 'wpamelia'),
             'tag_label'                              => __('Tag label', 'wpamelia'),

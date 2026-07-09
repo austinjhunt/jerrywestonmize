@@ -891,6 +891,8 @@ msgid ""
 "Application (client) ID must be a valid GUID (UUID), as shown in the Azure "
 "portal."
 msgstr ""
+"Application (client) ID måste vara en giltig GUID (UUID), enligt vad som "
+"visas i Azure portal."
 
 msgid "Application fee amount (%)"
 msgstr "Ansökningsavgift (%)"
@@ -1856,7 +1858,7 @@ msgstr ""
 "grupptid!"
 
 msgid "By employees"
-msgstr ""
+msgstr "Efter anställd"
 
 msgid ""
 "By entering your phone number you agree to receive messages via WhatsApp"
@@ -2251,6 +2253,8 @@ msgid ""
 "Client secret is too short or looks invalid. Copy the full value from the "
 "Azure portal."
 msgstr ""
+"Klienthemligheten är för kort eller ser ogiltig ut. Kopiera hela värdet från "
+"Azure portal."
 
 msgid "Close"
 msgstr "Stäng"
@@ -2287,6 +2291,11 @@ msgstr "Minimera alla"
 
 msgid "Collapse menu"
 msgstr "Komprimera menyn"
+
+msgid ""
+"Collect additional information from your customers before they complete a "
+"booking."
+msgstr ""
 
 msgid "Collect the information your business truly needs"
 msgstr "Samla in den information som ditt företag verkligen behöver"
@@ -2490,6 +2499,9 @@ msgstr ""
 msgid "Consulting"
 msgstr "Konsulttjänster"
 
+msgid "Contact Form"
+msgstr ""
+
 msgid "Contact message"
 msgstr "Kontaktmeddelande"
 
@@ -2672,6 +2684,9 @@ msgstr "Skapa anställd"
 
 msgid "Create event"
 msgstr "Skapa händelse"
+
+msgid "Create form"
+msgstr ""
 
 msgid "Create meetings for pending appointments"
 msgstr "Skapa möten för väntande avtalade tider"
@@ -3049,7 +3064,7 @@ msgid "Date and time"
 msgstr "Datum och tid"
 
 msgid "Date busyness indicator"
-msgstr ""
+msgstr "Beläggningsindikator per dag"
 
 msgid "Date of Birth"
 msgstr "Födelsedatum"
@@ -3907,6 +3922,9 @@ msgstr ""
 "effektivt. Anpassa färger och etiketter för att skapa en sömlös och "
 "varumärkesanpassad upplevelse."
 
+msgid "Enable data usage"
+msgstr ""
+
 msgid "Enable guest booking"
 msgstr "Aktivera gästbokning"
 
@@ -4202,6 +4220,9 @@ msgid "Enter booking ID"
 msgstr "Ange företags-ID"
 
 msgid "Enter both the application (client) ID and client secret."
+msgstr "Ange både applikations-ID (klient-ID) och klienthemlighet."
+
+msgid "Enter code"
 msgstr ""
 
 msgid "Enter date of birth"
@@ -4364,6 +4385,9 @@ msgstr "Händelsetyp"
 msgid "Event available"
 msgstr "Evenemang tillgängligt"
 
+msgid "Event booking"
+msgstr ""
+
 msgid "Event booking has been created."
 msgstr "Evenemangsbokningen har skapats."
 
@@ -4480,6 +4504,9 @@ msgstr "Händelsen har sparats"
 msgid "Event has been updated."
 msgstr "Händelsen har uppdaterats."
 
+msgid "Event image gallery"
+msgstr ""
+
 msgid "Event info"
 msgstr "Evenemangsinformation"
 
@@ -4591,6 +4618,9 @@ msgstr "Händelselista"
 
 msgid "Events list view"
 msgstr "Händelselista"
+
+msgid "Events pagination"
+msgstr ""
 
 msgid "Events pricing"
 msgstr "Prissättning för evenemang"
@@ -5171,6 +5201,11 @@ msgid "Healthcare"
 msgstr "Hälsovård"
 
 msgid ""
+"Help us improve Amelia by sharing anonymous data about your plugin usage. No "
+"personal data is collected."
+msgstr ""
+
+msgid ""
 "Here, you can connect your personal Apple Calendar,<br/>so once the booking "
 "is scheduled,<br/>it will be automatically added to your calendar of choice."
 msgstr ""
@@ -5506,6 +5541,9 @@ msgstr "Bild"
 msgid "Image Color"
 msgstr "Bildfärg"
 
+msgid "Image navigation"
+msgstr ""
+
 msgid "Image thumbs"
 msgstr "Bildminiatyrer"
 
@@ -5526,6 +5564,9 @@ msgstr "Import lyckades"
 
 msgid "Importing customers"
 msgstr "Importerar kunder"
+
+msgid "Improve Amelia"
+msgstr ""
 
 msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
@@ -5704,6 +5745,9 @@ msgstr "Infoga Amelia bokning Shortcode"
 msgid "Insert pending appointments"
 msgstr "Infoga väntande bokningar"
 
+msgid "Install & Activate"
+msgstr ""
+
 msgid "Integrate with WooCommerce to enable advanced e-commerce capabilities."
 msgstr ""
 "Integrera med WooCommerce för att aktivera avancerade e-handelsfunktioner."
@@ -5801,6 +5845,24 @@ msgstr "Artikel"
 
 msgid "Item status"
 msgstr "Objektstatus"
+
+msgid "IvyForms"
+msgstr ""
+
+msgid "IvyForms Entries"
+msgstr ""
+
+msgid "IvyForms Field"
+msgstr ""
+
+msgid "IvyForms Form"
+msgstr ""
+
+msgid "IvyForms validation failed."
+msgstr ""
+
+msgid "Ivy setup"
+msgstr ""
 
 msgid "Jane Doe"
 msgstr "Lena Svensson"
@@ -6044,8 +6106,17 @@ msgstr "Ladda bokningsformuläret manuellt"
 msgid "Load page"
 msgstr "Ladda sidan"
 
+msgid "Loading"
+msgstr ""
+
 msgid "Loading..."
 msgstr "Laddar..."
+
+msgid "Loading event information"
+msgstr ""
+
+msgid "Loading header"
+msgstr ""
 
 msgid "Local Time"
 msgstr "Lokal tid:"
@@ -6192,7 +6263,7 @@ msgid "Make extra mandatory"
 msgstr "Gör extra obligatorisk"
 
 msgid "Make sure you are using the correct Outlook credentials."
-msgstr ""
+msgstr "Se till att du använder rätt inloggningsuppgifter för Outlook."
 
 msgid "Make sure you are using the correct WhatsApp credentials."
 msgstr "Se till att du använder rätt WhatsApp-inloggningsuppgifter."
@@ -6261,6 +6332,9 @@ msgstr "Maxkapacitet stigande"
 
 msgid "Max Capacity Desc"
 msgstr "Beskrivning av maxkapacitet"
+
+msgid "Maximum"
+msgstr ""
 
 msgid "Maximum Quantity:"
 msgstr "Maxkvantitet:"
@@ -6355,6 +6429,9 @@ msgstr "Inställningar för Microsoft Teams"
 
 msgid "Min. Capacity"
 msgstr "Min. kapacitet"
+
+msgid "Minimum"
+msgstr ""
 
 msgid "Minimum bookings required"
 msgstr "Minsta antal bokningar krävs"
@@ -6577,6 +6654,9 @@ msgstr "Nästa tjänst"
 
 msgid "Next day reminder"
 msgstr "Påminnelse nästa dag"
+
+msgid "Next image"
+msgstr ""
 
 msgid "No"
 msgstr "Nej"
@@ -7170,6 +7250,9 @@ msgstr ""
 msgid "PHP Mail"
 msgstr "PHP-post"
 
+msgid "PRE-BOOKING INTAKE FORM (IVYFORMS)"
+msgstr ""
+
 msgid "Package"
 msgstr "Paket"
 
@@ -7588,6 +7671,9 @@ msgstr "Perioder"
 
 msgid "Permanent access token"
 msgstr "Permanent åtkomsttoken"
+
+msgid "Permanently linked"
+msgstr ""
 
 msgid "Person"
 msgstr ""
@@ -8072,6 +8158,9 @@ msgstr "Popup-knappar"
 msgid "Popup title"
 msgstr "Popup-titel"
 
+msgid "Pre-booking form details"
+msgstr ""
+
 msgid "Preload entities when page loads"
 msgstr "Förladda entiteter när sidan laddas"
 
@@ -8113,8 +8202,14 @@ msgstr "Förhandsgranska"
 msgid "Preview invoice"
 msgstr "Förhandsgranska faktura"
 
+msgid "Previous image"
+msgstr ""
+
 msgid "Previous range"
 msgstr "Föregående intervall"
+
+msgid "Previous step"
+msgstr ""
 
 msgid "Price"
 msgstr "Pris"
@@ -8753,23 +8848,14 @@ msgstr "Sök"
 msgid "Search..."
 msgstr "Sök…"
 
-msgid "Search Coupons"
-msgstr "Sök rabattkuponger"
-
 msgid "Search Filters"
 msgstr "Sök filter"
 
 msgid "Search Input Field"
 msgstr "Inmatningsfält"
 
-msgid "Search Resources"
-msgstr "Sök resurser"
-
 msgid "Search Results"
 msgstr "Sökresultat"
-
-msgid "Search Taxes"
-msgstr "Sök filter"
 
 msgid "Search attendees"
 msgstr "Sök deltagare"
@@ -8779,6 +8865,9 @@ msgstr "Sök bokade möten"
 
 msgid "Search bookings"
 msgstr "Sök bokningar"
+
+msgid "Search coupons"
+msgstr ""
 
 msgid "Search customers"
 msgstr "Sök kunder"
@@ -8816,8 +8905,14 @@ msgstr "Sök aviseringar"
 msgid "Search packages"
 msgstr "Sök paket"
 
+msgid "Search resources"
+msgstr ""
+
 msgid "Search services"
 msgstr "Sök tjänster"
+
+msgid "Search taxes"
+msgstr ""
 
 msgid "Second"
 msgstr "Sekund"
@@ -8947,6 +9042,9 @@ msgstr "Välj WooCommerce-produkt"
 msgid "Select Zoom User"
 msgstr "Välj Zoom användare"
 
+msgid "Select a form..."
+msgstr ""
+
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr "Välj en platshållare för att infoga den där markören är placerad."
 
@@ -8993,9 +9091,6 @@ msgstr ""
 
 msgid "Select or Create New"
 msgstr "Välj eller skapa ny"
-
-msgid "Select or Create Tag"
-msgstr "Välj eller skapa tagg"
 
 msgid "Select package"
 msgstr "Välj paket"
@@ -9055,6 +9150,9 @@ msgstr "Välj denna medarbetare"
 
 msgid "Select tickets"
 msgstr "Välj biljetter"
+
+msgid "Select which IvyForms form to show before booking"
+msgstr ""
 
 msgid "Select your Square Location"
 msgstr "Välj din Square-plats"
@@ -10532,6 +10630,8 @@ msgid ""
 "This email is linked to both a customer and an employee account. Please "
 "delete and rebook."
 msgstr ""
+"Den här e-postadressen är kopplad till både ett kundkonto och ett "
+"anställdkonto. Ta bort den befintliga posten och boka igen."
 
 msgid "This employee is the only one assigned to {service}."
 msgstr "Denna medarbetare är den enda som är tilldelad {service}."
@@ -11947,8 +12047,14 @@ msgstr "av"
 msgid "on"
 msgstr "på"
 
+msgid "opens in new tab"
+msgstr ""
+
 msgid "out of"
 msgstr "av"
+
+msgid "payment button"
+msgstr ""
 
 msgid "people"
 msgstr "personer"

@@ -85,8 +85,8 @@ class UpdateNotificationCommandHandler extends CommandHandler
             // If content has paragraph tags, only remove newlines between HTML tags (formatting)
             // Otherwise convert newlines to <br> tags for plain text content
             if (strpos($content, '<p>') !== false || strpos($content, '<P>') !== false) {
-                // WYSIWYG mode: remove only formatting newlines between tags
-                $content = preg_replace('/>\s+</', '><', $content);
+                // WYSIWYG mode: strip line breaks/indentation between tags only; keep spaces (e.g. between inline elements)
+                $content = preg_replace('/>(?:\s*\R\s*)+</', '><', $content);
             } else {
                 // Plain text/HTML mode: convert newlines to <br> tags
                 $content = nl2br($content);
@@ -159,6 +159,6 @@ class UpdateNotificationCommandHandler extends CommandHandler
 
         do_action('amelia_after_notification_updated', $notification->toArray());
 
-        return $result;
+         return $result;
     }
 }

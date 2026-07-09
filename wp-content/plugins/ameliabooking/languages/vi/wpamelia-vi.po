@@ -889,6 +889,8 @@ msgid ""
 "Application (client) ID must be a valid GUID (UUID), as shown in the Azure "
 "portal."
 msgstr ""
+"Application (client) ID phải là một GUID (UUID) hợp lệ, như hiển thị trong "
+"Azure portal."
 
 msgid "Application fee amount (%)"
 msgstr "Số tiền phí ứng dụng (%)"
@@ -1854,7 +1856,7 @@ msgstr ""
 "ngoài ra nếu có!"
 
 msgid "By employees"
-msgstr ""
+msgstr "Theo nhân viên"
 
 msgid ""
 "By entering your phone number you agree to receive messages via WhatsApp"
@@ -2245,6 +2247,8 @@ msgid ""
 "Client secret is too short or looks invalid. Copy the full value from the "
 "Azure portal."
 msgstr ""
+"Client secret quá ngắn hoặc có vẻ không hợp lệ. Hãy sao chép đầy đủ giá trị "
+"từ Azure portal."
 
 msgid "Close"
 msgstr "Đóng"
@@ -2281,6 +2285,11 @@ msgstr "Thu gọn tất cả"
 
 msgid "Collapse menu"
 msgstr "Thu gọn menu"
+
+msgid ""
+"Collect additional information from your customers before they complete a "
+"booking."
+msgstr ""
 
 msgid "Collect the information your business truly needs"
 msgstr "Thu thập thông tin mà doanh nghiệp của bạn thực sự cần"
@@ -2483,6 +2492,9 @@ msgstr ""
 msgid "Consulting"
 msgstr "Tư vấn"
 
+msgid "Contact Form"
+msgstr ""
+
 msgid "Contact message"
 msgstr "Thông báo liên hệ"
 
@@ -2664,6 +2676,9 @@ msgstr "Tạo nhân viên"
 
 msgid "Create event"
 msgstr "Tạo sự kiện"
+
+msgid "Create form"
+msgstr ""
 
 msgid "Create meetings for pending appointments"
 msgstr "Tạo cuộc họp cho các cuộc hẹn đang chờ xử lý"
@@ -3035,7 +3050,7 @@ msgid "Date and time"
 msgstr "Ngày và giờ"
 
 msgid "Date busyness indicator"
-msgstr ""
+msgstr "Chỉ báo mức độ đặt lịch theo ngày"
 
 msgid "Date of Birth"
 msgstr "Ngày Sinh"
@@ -3893,6 +3908,9 @@ msgstr ""
 "Cho phép khách hàng quản lý cuộc hẹn và sự kiện của họ một cách hiệu quả. Cá "
 "nhân hóa màu sắc và nhãn để tạo ra trải nghiệm liền mạch và có thương hiệu."
 
+msgid "Enable data usage"
+msgstr ""
+
 msgid "Enable guest booking"
 msgstr "Kích hoạt đặt lịch cho khách vãng lai"
 
@@ -4182,6 +4200,9 @@ msgid "Enter booking ID"
 msgstr "Nhập ID Doanh nghiệp"
 
 msgid "Enter both the application (client) ID and client secret."
+msgstr "Nhập cả ID ứng dụng (client) và client secret."
+
+msgid "Enter code"
 msgstr ""
 
 msgid "Enter date of birth"
@@ -4347,6 +4368,9 @@ msgstr "Loại Sự kiện"
 msgid "Event available"
 msgstr "Sự kiện có sẵn"
 
+msgid "Event booking"
+msgstr ""
+
 msgid "Event booking has been created."
 msgstr "Đặt chỗ sự kiện đã được tạo."
 
@@ -4463,6 +4487,9 @@ msgstr "Sự kiện đã được lưu"
 msgid "Event has been updated."
 msgstr "Sự kiện đã được cập nhật."
 
+msgid "Event image gallery"
+msgstr ""
+
 msgid "Event info"
 msgstr "Thông tin sự kiện"
 
@@ -4574,6 +4601,9 @@ msgstr "Danh sách sự kiện"
 
 msgid "Events list view"
 msgstr "Danh sách sự kiện"
+
+msgid "Events pagination"
+msgstr ""
 
 msgid "Events pricing"
 msgstr "Giá sự kiện"
@@ -5151,6 +5181,11 @@ msgid "Healthcare"
 msgstr "Chăm sóc sức khỏe"
 
 msgid ""
+"Help us improve Amelia by sharing anonymous data about your plugin usage. No "
+"personal data is collected."
+msgstr ""
+
+msgid ""
 "Here, you can connect your personal Apple Calendar,<br/>so once the booking "
 "is scheduled,<br/>it will be automatically added to your calendar of choice."
 msgstr ""
@@ -5484,6 +5519,9 @@ msgstr "Hình ảnh"
 msgid "Image Color"
 msgstr "Màu Hình ảnh"
 
+msgid "Image navigation"
+msgstr ""
+
 msgid "Image thumbs"
 msgstr "Hình thu nhỏ"
 
@@ -5504,6 +5542,9 @@ msgstr "Nhập thành công"
 
 msgid "Importing customers"
 msgstr "Đang nhập khách hàng"
+
+msgid "Improve Amelia"
+msgstr ""
 
 msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
@@ -5684,6 +5725,9 @@ msgstr "Chèn Mã rút gọn Đặt lịch Amelia"
 msgid "Insert pending appointments"
 msgstr "Chèn các cuộc hẹn đang chờ xử lý"
 
+msgid "Install & Activate"
+msgstr ""
+
 msgid "Integrate with WooCommerce to enable advanced e-commerce capabilities."
 msgstr ""
 "Tích hợp với WooCommerce để kích hoạt các khả năng thương mại điện tử nâng "
@@ -5782,6 +5826,24 @@ msgstr "Mục"
 
 msgid "Item status"
 msgstr "Trạng thái mục"
+
+msgid "IvyForms"
+msgstr ""
+
+msgid "IvyForms Entries"
+msgstr ""
+
+msgid "IvyForms Field"
+msgstr ""
+
+msgid "IvyForms Form"
+msgstr ""
+
+msgid "IvyForms validation failed."
+msgstr ""
+
+msgid "Ivy setup"
+msgstr ""
 
 msgid "Jane Doe"
 msgstr ""
@@ -6026,8 +6088,17 @@ msgstr "Tải biểu mẫu đặt lịch hẹn  thủ công"
 msgid "Load page"
 msgstr "Tải trang"
 
+msgid "Loading"
+msgstr ""
+
 msgid "Loading..."
 msgstr "Đang tải..."
+
+msgid "Loading event information"
+msgstr ""
+
+msgid "Loading header"
+msgstr ""
 
 msgid "Local Time"
 msgstr "Thời gian địa phương"
@@ -6173,6 +6244,7 @@ msgstr "Bắt buộc thêm tùy chọn"
 
 msgid "Make sure you are using the correct Outlook credentials."
 msgstr ""
+"Hãy đảm bảo bạn đang dùng đúng thông tin đăng nhập của tài khoản Outlook."
 
 msgid "Make sure you are using the correct WhatsApp credentials."
 msgstr ""
@@ -6242,6 +6314,9 @@ msgstr "Sức chứa tối đa tăng dần"
 
 msgid "Max Capacity Desc"
 msgstr "Mô tả sức chứa tối đa"
+
+msgid "Maximum"
+msgstr ""
 
 msgid "Maximum Quantity:"
 msgstr "Số Lượng Tối Đa:"
@@ -6336,6 +6411,9 @@ msgstr "Cài đặt Microsoft Teams"
 
 msgid "Min. Capacity"
 msgstr "Sức chứa tối thiểu"
+
+msgid "Minimum"
+msgstr ""
 
 msgid "Minimum bookings required"
 msgstr "Số lượng đặt tối thiểu yêu cầu"
@@ -6558,6 +6636,9 @@ msgstr "Dịch vụ tiếp theo"
 
 msgid "Next day reminder"
 msgstr "Nhắc nhở vào ngày hôm sau"
+
+msgid "Next image"
+msgstr ""
 
 msgid "No"
 msgstr "Không"
@@ -7153,6 +7234,9 @@ msgstr ""
 msgid "PHP Mail"
 msgstr "Thư PHP"
 
+msgid "PRE-BOOKING INTAKE FORM (IVYFORMS)"
+msgstr ""
+
 msgid "Package"
 msgstr "Gói"
 
@@ -7571,6 +7655,9 @@ msgstr "Khoảng thời gian"
 
 msgid "Permanent access token"
 msgstr "Mã thông báo cố định"
+
+msgid "Permanently linked"
+msgstr ""
 
 msgid "Person"
 msgstr "Người"
@@ -8051,6 +8138,9 @@ msgstr "Nút popup"
 msgid "Popup title"
 msgstr "Tiêu đề cửa sổ popup"
 
+msgid "Pre-booking form details"
+msgstr ""
+
 msgid "Preload entities when page loads"
 msgstr "Tải trước các thực thể khi trang được tải"
 
@@ -8092,8 +8182,14 @@ msgstr "Xem trước"
 msgid "Preview invoice"
 msgstr "Xem trước hóa đơn"
 
+msgid "Previous image"
+msgstr ""
+
 msgid "Previous range"
 msgstr "Phạm vi trước đó"
+
+msgid "Previous step"
+msgstr ""
 
 msgid "Price"
 msgstr "Giá"
@@ -8741,23 +8837,14 @@ msgstr "Tìm kiếm"
 msgid "Search..."
 msgstr "Tìm kiếm..."
 
-msgid "Search Coupons"
-msgstr "Tìm Kiếm Mã Giảm Giá"
-
 msgid "Search Filters"
 msgstr "Bộ lọc Tìm kiếm"
 
 msgid "Search Input Field"
 msgstr "Ô nhập liệu"
 
-msgid "Search Resources"
-msgstr "Tìm kiếm Tài nguyên"
-
 msgid "Search Results"
 msgstr "Kết quả Tìm kiếm"
-
-msgid "Search Taxes"
-msgstr "Bộ lọc Tìm kiếm"
 
 msgid "Search attendees"
 msgstr "Tìm kiếm người tham dự"
@@ -8767,6 +8854,9 @@ msgstr "Tìm kiếm các cuộc hẹn đã đặt"
 
 msgid "Search bookings"
 msgstr "Tìm kiếm đặt chỗ"
+
+msgid "Search coupons"
+msgstr ""
 
 msgid "Search customers"
 msgstr "Tìm kiếm khách hàng"
@@ -8804,8 +8894,14 @@ msgstr "Tìm kiếm thông báo"
 msgid "Search packages"
 msgstr "Tìm kiếm gói dịch vụ"
 
+msgid "Search resources"
+msgstr ""
+
 msgid "Search services"
 msgstr "Tìm kiếm dịch vụ"
+
+msgid "Search taxes"
+msgstr ""
 
 msgid "Second"
 msgstr "Thứ hai"
@@ -8935,6 +9031,9 @@ msgstr "Chọn sản phẩm WooCommerce"
 msgid "Select Zoom User"
 msgstr "Chọn Người Dùng Zoom"
 
+msgid "Select a form..."
+msgstr ""
+
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr "Chọn một chỗ giữ chỗ để chèn vào vị trí con trỏ của bạn."
 
@@ -8982,9 +9081,6 @@ msgstr ""
 
 msgid "Select or Create New"
 msgstr "Chọn hoặc Tạo Mới"
-
-msgid "Select or Create Tag"
-msgstr "Chọn hoặc Tạo thẻ"
 
 msgid "Select package"
 msgstr "Chọn gói"
@@ -9044,6 +9140,9 @@ msgstr "Chọn nhân viên này"
 
 msgid "Select tickets"
 msgstr "Chọn vé"
+
+msgid "Select which IvyForms form to show before booking"
+msgstr ""
 
 msgid "Select your Square Location"
 msgstr "Chọn địa điểm Square của bạn"
@@ -10511,6 +10610,8 @@ msgid ""
 "This email is linked to both a customer and an employee account. Please "
 "delete and rebook."
 msgstr ""
+"Địa chỉ email này được liên kết với cả tài khoản Khách hàng và tài khoản "
+"Nhân viên. Vui lòng xóa và đặt lại lịch."
 
 msgid "This employee is the only one assigned to {service}."
 msgstr "Nhân viên này là người duy nhất được chỉ định cho {service}."
@@ -11932,8 +12033,14 @@ msgstr "của"
 msgid "on"
 msgstr "vào"
 
+msgid "opens in new tab"
+msgstr ""
+
 msgid "out of"
 msgstr "trong tổng số"
+
+msgid "payment button"
+msgstr ""
 
 msgid "people"
 msgstr "mọi người"

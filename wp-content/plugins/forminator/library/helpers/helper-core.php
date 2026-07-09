@@ -1907,6 +1907,59 @@ function forminator_delete_permissions() {
 }
 
 /**
+ * Validate captcha placement in paginated forms.
+ *
+ * Ensures that if a form has pagination (page-breaks), then captcha field
+ * must be placed only on the last page. This prevents users from bypassing
+ * captcha validation by navigating past the captcha page.
+ *
+ * @param array $fields Form fields array from template.
+ * @return bool|WP_Error True if valid, WP_Error if captcha is not on last page.
+ *
+ * @since 1.55.0
+ */
+function forminator_validate_captcha_placement_in_paginated_forms( $fields ) {
+	// Track the last page-break and earliest captcha positions.
+	$last_page_break_position = -1;
+	$first_captcha_position   = -1;
+
+	foreach ( $fields as $wrapper_index => $wrapper ) {
+		if ( ! isset( $wrapper['fields'] ) || ! is_array( $wrapper['fields'] ) ) {
+			continue;
+		}
+
+		foreach ( $wrapper['fields'] as $field ) {
+			if ( ! isset( $field['type'] ) ) {
+				continue;
+			}
+
+			switch ( $field['type'] ) {
+				case 'page-break':
+					if ( $wrapper_index > $last_page_break_position ) {
+						$last_page_break_position = $wrapper_index;
+					}
+					break;
+
+				case 'captcha':
+					if ( -1 === $first_captcha_position || $wrapper_index < $first_captcha_position ) {
+						$first_captcha_position = $wrapper_index;
+					}
+					break;
+			}
+		}
+	}
+
+	if ( $first_captcha_position < $last_page_break_position ) {
+		return new WP_Error(
+			'captcha_placement_invalid',
+			esc_html__( 'Captcha can only be placed on the last page in a paginated form.', 'forminator' )
+		);
+	}
+
+	return true;
+}
+
+/**
  * Searches for $needle in the multidimensional array $haystack.
  *
  * @url https://stackoverflow.com/a/28473219

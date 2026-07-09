@@ -1659,28 +1659,24 @@ class AppointmentApplicationService
                 /** @var IntervalService $intervalService */
                 $intervalService = $this->container->get('domain.interval.service');
 
+                $timeZone = $provider->getTimeZone() && $settingsService->isFeatureEnabled('timezones')
+                    ? $provider->getTimeZone()->getValue()
+                    : DateTimeService::getTimeZone()->getName();
+
                 $start = DateTimeService::getCustomDateTimeObject(
                     $bookingStart
                 )->setTimezone(
-                    DateTimeService::createTimeZone(
-                        $provider->getTimeZone()
-                            ? $provider->getTimeZone()->getValue()
-                            : DateTimeService::getTimeZone()->getName()
-                    )
+                    DateTimeService::createTimeZone($timeZone)
                 );
 
                 $price = $providerService->getDateTimePrice(
                     $providerService->getCustomPricing(
                         $service,
-                        $provider->getTimeZone()
-                            ? $provider->getTimeZone()->getValue()
-                            : DateTimeService::getTimeZone()->getName()
+                        $timeZone
                     ),
                     $start->format('Y-m-d'),
                     $intervalService->getSeconds($start->format('H:i:s')),
-                    $provider->getTimeZone()
-                        ? $provider->getTimeZone()->getValue()
-                        : DateTimeService::getTimeZone()->getName()
+                    $timeZone
                 );
 
                 return $price !== null ? $price : $service->getPrice()->getValue();

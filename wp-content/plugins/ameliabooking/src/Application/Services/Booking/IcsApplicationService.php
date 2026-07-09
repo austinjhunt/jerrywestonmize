@@ -27,6 +27,7 @@ use AmeliaVendor\Sabre\VObject\UUIDUtil;
 use Exception;
 use Interop\Container\Exception\ContainerException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
+use mysql_xdevapi\Warning;
 
 /**
  * Class IcsApplicationService
@@ -465,7 +466,7 @@ class IcsApplicationService
      */
     private function getCalendar($periodsData, $separateCalendars, $isTranslation)
     {
-        $vCalendars = $separateCalendars ? [] : [$this->createVCalendar()];
+        $vCalendars = [];
 
         foreach ($periodsData as $periodData) {
             foreach ($periodData['periods'] as $period) {
@@ -473,6 +474,9 @@ class IcsApplicationService
                     $vCalendar    = $this->createVCalendar();
                     $vCalendars[] = $vCalendar;
                 } else {
+                    if (empty($vCalendars)) {
+                        $vCalendars[] = $this->createVCalendar();
+                    }
                     $vCalendar = $vCalendars[0];
                 }
 
@@ -518,10 +522,7 @@ class IcsApplicationService
         return $result;
     }
 
-    /**
-     * @return VCalendar
-     */
-    private function createVCalendar()
+    private function createVCalendar(): VCalendar
     {
         $vCalendar         = new VCalendar();
         $vCalendar->PRODID = '-//AMELIA//Amelia//EN';

@@ -259,6 +259,7 @@ class AppointmentFactory
                     'duration'       => isset($row['booking_duration']) ? $row['booking_duration'] : null,
                     'created'        => !empty($row['booking_created']) ? DateTimeService::getCustomDateTimeFromUtc($row['booking_created']) : null,
                     'tax'            => isset($row['booking_tax']) ? $row['booking_tax'] : null,
+                    'ivyEntryId'     => isset($row['booking_ivyEntryId']) ? $row['booking_ivyEntryId'] : null,
                 ];
             }
 

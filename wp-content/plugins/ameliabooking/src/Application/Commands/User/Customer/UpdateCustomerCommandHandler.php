@@ -57,6 +57,8 @@ class UpdateCustomerCommandHandler extends CommandHandler
 
         $customerData = $command->getFields();
 
+        $customerData['type'] = Entities::CUSTOMER;
+
         if (!$command->getPermissionService()->currentUserCanWrite(Entities::CUSTOMERS)) {
             if ($command->getToken()) {
                 /** @var AbstractUser $provider */
@@ -83,6 +85,12 @@ class UpdateCustomerCommandHandler extends CommandHandler
                     );
 
                     return $result;
+                }
+
+                // Customers updating their own profile via cabinet token cannot change their role.
+                if ($provider === null && $oldUser !== null) {
+                    $customerData['type'] = $oldUser->getType();
+                    $command->setField('type', $oldUser->getType());
                 }
             } else {
                 throw new AccessDeniedException('You are not allowed to perform this action!');
@@ -135,7 +143,30 @@ class UpdateCustomerCommandHandler extends CommandHandler
         $oldExternalId = $oldUser->getExternalId() ? $oldUser->getExternalId()->getValue() : null;
         $newExternalId = $newUser->getExternalId() ? $newUser->getExternalId()->getValue() : null;
 
-        if ($oldExternalId !== $newExternalId && (!$currentUser || $currentUser->getType() !== AbstractUser::USER_ROLE_ADMIN)) {
+        if (
+            $oldExternalId !== $newExternalId &&
+            (
+                !$currentUser ||
+                !(
+                    $currentUser->getType() === AbstractUser::USER_ROLE_ADMIN ||
+                    $currentUser->getType() === AbstractUser::USER_ROLE_MANAGER
+                )
+            )
+        ) {
+           // Non-admin/manager cannot change externalId at all
+
+            $result->setResult(CommandResult::RESULT_ERROR);
+            $result->setMessage('Could not update user.');
+
+            return $result;
+        }
+
+        if (
+            $newExternalId &&
+            !$userAS->isRoleForExternalIdAllowed($newExternalId, Entities::CUSTOMER)
+        ) {
+            // Linking to existing WP user must pass role check
+
             $result->setResult(CommandResult::RESULT_ERROR);
             $result->setMessage('Could not update user.');
 

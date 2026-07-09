@@ -236,6 +236,7 @@ class PackageCustomerServiceRepository extends AbstractRepository
                     pc.status AS package_customer_status,
                     pc.bookingsCount AS package_customer_bookingsCount,
                     pc.couponId AS package_customer_couponId,
+                    pc.ivyEntryId AS package_customer_ivyEntryId,
                     
                     pa.name as package_name,
                     

@@ -36,6 +36,7 @@ class BarionPaymentController extends Controller
         'deposit',
         'componentProps',
         'returnUrl',
+        'ivy',
     ];
 
     /**

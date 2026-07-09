@@ -114,6 +114,10 @@ class PackageCustomerFactory
             $packageCustomer->setCoupon(CouponFactory::create($data['coupon']));
         }
 
+        if (isset($data['ivyEntryId'])) {
+            $packageCustomer->setIvyEntryId(new Id($data['ivyEntryId']));
+        }
+
         if (!empty($data['tax'])) {
             if (is_string($data['tax'])) {
                 $packageCustomer->setTax(new Json($data['tax']));
@@ -185,6 +189,7 @@ class PackageCustomerFactory
                     'tax'           => $row['package_customer_tax'],
                     'couponId'      => $row['package_customer_couponId'],
                     'token'         => !empty($row['package_customer_token']) ? $row['package_customer_token'] : null,
+                    'ivyEntryId'    => !empty($row['package_customer_ivyEntryId']) ? $row['package_customer_ivyEntryId'] : null,
                 ];
             }
 

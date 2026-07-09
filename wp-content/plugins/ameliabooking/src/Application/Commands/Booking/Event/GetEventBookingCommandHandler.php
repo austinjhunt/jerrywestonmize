@@ -26,6 +26,7 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
 use AmeliaBooking\Infrastructure\Repository\CustomField\CustomFieldRepository;
+use AmeliaBooking\Infrastructure\WP\Integrations\IvyForms\IvyFormsService;
 use Exception;
 
 /**
@@ -307,6 +308,8 @@ class GetEventBookingCommandHandler extends CommandHandler
                 $customFieldService->reformatCustomField(CustomerBookingFactory::create($booking), [], $customFieldsCollection) :
                 null,
             'qrCodes' => !empty($booking['qrCodes']) ? $booking['qrCodes'] : null,
+            'ivyEntryId' => !empty($booking['ivyEntryId']) ? $booking['ivyEntryId'] : null,
+            'ivyEntryFields' => !empty($booking['ivyEntryId']) ? IvyFormsService::getEntryFields($booking['ivyEntryId']) : [],
         ];
 
         if ($noShowTagEnabled && $customersNoShowCountIds) {

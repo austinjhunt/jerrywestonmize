@@ -898,6 +898,8 @@ msgid ""
 "Application (client) ID must be a valid GUID (UUID), as shown in the Azure "
 "portal."
 msgstr ""
+"ID-ul aplicației (client) trebuie să fie un GUID (UUID) valid, așa cum se "
+"arată în portalul Azure."
 
 msgid "Application fee amount (%)"
 msgstr "Sumă taxă de aplicație (%)"
@@ -2264,6 +2266,8 @@ msgid ""
 "Client secret is too short or looks invalid. Copy the full value from the "
 "Azure portal."
 msgstr ""
+"Secretul clientului este prea scurt sau pare invalid. Copiați valoarea "
+"completă din portalul Azure."
 
 msgid "Close"
 msgstr "Închide"
@@ -2300,6 +2304,11 @@ msgstr "Restrânge tot"
 
 msgid "Collapse menu"
 msgstr "Restrângeți meniul"
+
+msgid ""
+"Collect additional information from your customers before they complete a "
+"booking."
+msgstr ""
 
 msgid "Collect the information your business truly needs"
 msgstr "Colectează informațiile de care afacerea ta are cu adevărat nevoie"
@@ -2505,6 +2514,9 @@ msgstr ""
 msgid "Consulting"
 msgstr "Consultanță"
 
+msgid "Contact Form"
+msgstr ""
+
 msgid "Contact message"
 msgstr "Mesaj de contact"
 
@@ -2689,6 +2701,9 @@ msgstr "Creați un angajat"
 
 msgid "Create event"
 msgstr "Creați un eveniment"
+
+msgid "Create form"
+msgstr ""
 
 msgid "Create meetings for pending appointments"
 msgstr "Creează întâlniri pentru programările în așteptare"
@@ -3069,7 +3084,7 @@ msgid "Date and time"
 msgstr "Data și ora"
 
 msgid "Date busyness indicator"
-msgstr ""
+msgstr "Indicator de ocupare a datei"
 
 msgid "Date of Birth"
 msgstr "Data nașterii"
@@ -3942,6 +3957,9 @@ msgstr ""
 "Personalizează culorile și etichetele pentru a crea o experiență fluidă și "
 "personalizată."
 
+msgid "Enable data usage"
+msgstr ""
+
 msgid "Enable guest booking"
 msgstr "Activați rezervarea oaspeților"
 
@@ -4240,6 +4258,10 @@ msgstr "Introduceți ID-ul programării"
 
 msgid "Enter both the application (client) ID and client secret."
 msgstr ""
+"Introduceți atât ID-ul aplicației (client), cât și secretul clientului."
+
+msgid "Enter code"
+msgstr ""
 
 msgid "Enter date of birth"
 msgstr "Introduceți data nașterii"
@@ -4406,6 +4428,9 @@ msgstr "Tipul Evenimentului"
 msgid "Event available"
 msgstr "Eveniment disponibil"
 
+msgid "Event booking"
+msgstr ""
+
 msgid "Event booking has been created."
 msgstr "Rezervarea evenimentului a fost creată."
 
@@ -4521,6 +4546,9 @@ msgstr "Evenimentul a fost salvat"
 msgid "Event has been updated."
 msgstr "Evenimentul a fost actualizat."
 
+msgid "Event image gallery"
+msgstr ""
+
 msgid "Event info"
 msgstr "Informații Eveniment"
 
@@ -4633,6 +4661,9 @@ msgstr "Lista de evenimente"
 
 msgid "Events list view"
 msgstr "Vizualizare listă evenimente"
+
+msgid "Events pagination"
+msgstr ""
 
 msgid "Events pricing"
 msgstr "Prețuri evenimente"
@@ -5222,6 +5253,11 @@ msgid "Healthcare"
 msgstr "Îngrijire medicală"
 
 msgid ""
+"Help us improve Amelia by sharing anonymous data about your plugin usage. No "
+"personal data is collected."
+msgstr ""
+
+msgid ""
 "Here, you can connect your personal Apple Calendar,<br/>so once the booking "
 "is scheduled,<br/>it will be automatically added to your calendar of choice."
 msgstr ""
@@ -5559,6 +5595,9 @@ msgstr "Imagine"
 msgid "Image Color"
 msgstr "Culoarea imaginii"
 
+msgid "Image navigation"
+msgstr ""
+
 msgid "Image thumbs"
 msgstr "Miniaturi imagini"
 
@@ -5579,6 +5618,9 @@ msgstr "Import cu succes"
 
 msgid "Importing customers"
 msgstr "Importarea clienților"
+
+msgid "Improve Amelia"
+msgstr ""
 
 msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
@@ -5759,6 +5801,9 @@ msgstr "Introduceți codul scurt de rezervare Amelia"
 msgid "Insert pending appointments"
 msgstr "Introduceți programările în așteptare"
 
+msgid "Install & Activate"
+msgstr ""
+
 msgid "Integrate with WooCommerce to enable advanced e-commerce capabilities."
 msgstr ""
 "Integrați-vă cu WooCommerce pentru a activa capabilități avansate de comerț "
@@ -5857,6 +5902,24 @@ msgstr "Articol"
 
 msgid "Item status"
 msgstr "Starea articolului"
+
+msgid "IvyForms"
+msgstr ""
+
+msgid "IvyForms Entries"
+msgstr ""
+
+msgid "IvyForms Field"
+msgstr ""
+
+msgid "IvyForms Form"
+msgstr ""
+
+msgid "IvyForms validation failed."
+msgstr ""
+
+msgid "Ivy setup"
+msgstr ""
 
 msgid "Jane Doe"
 msgstr "femeie necunoscută"
@@ -6102,8 +6165,17 @@ msgstr "Încărcați manual formularul de rezervare"
 msgid "Load page"
 msgstr "Încarcă pagina"
 
+msgid "Loading"
+msgstr ""
+
 msgid "Loading..."
 msgstr "Se încarcă..."
+
+msgid "Loading event information"
+msgstr ""
+
+msgid "Loading header"
+msgstr ""
 
 msgid "Local Time"
 msgstr "Ora locala"
@@ -6251,6 +6323,7 @@ msgstr "Fă opțiunea suplimentară obligatorie"
 
 msgid "Make sure you are using the correct Outlook credentials."
 msgstr ""
+"Asigurați-vă că utilizați datele de autentificare corecte pentru Outlook."
 
 msgid "Make sure you are using the correct WhatsApp credentials."
 msgstr "Asigură-te că folosești datele de autentificare WhatsApp corecte."
@@ -6319,6 +6392,9 @@ msgstr "Capacitate maximă ascendentă"
 
 msgid "Max Capacity Desc"
 msgstr "Capacitate maximă - Descriere"
+
+msgid "Maximum"
+msgstr ""
 
 msgid "Maximum Quantity:"
 msgstr "Cantitate maximă:"
@@ -6413,6 +6489,9 @@ msgstr "Configurare Microsoft Teams"
 
 msgid "Min. Capacity"
 msgstr "Min. Capacitate"
+
+msgid "Minimum"
+msgstr ""
 
 msgid "Minimum bookings required"
 msgstr "Sunt necesare rezervări minime"
@@ -6636,6 +6715,9 @@ msgstr "Următorul serviciu"
 
 msgid "Next day reminder"
 msgstr "Memento pentru ziua următoare"
+
+msgid "Next image"
+msgstr ""
 
 msgid "No"
 msgstr "Nu"
@@ -7234,6 +7316,9 @@ msgstr ""
 msgid "PHP Mail"
 msgstr "Mail PHP"
 
+msgid "PRE-BOOKING INTAKE FORM (IVYFORMS)"
+msgstr ""
+
 msgid "Package"
 msgstr "Pachet"
 
@@ -7652,6 +7737,9 @@ msgstr "Perioadele"
 
 msgid "Permanent access token"
 msgstr "Jeton de acces permanent"
+
+msgid "Permanently linked"
+msgstr ""
 
 msgid "Person"
 msgstr "Persoană"
@@ -8138,6 +8226,9 @@ msgstr "Butoane pop-up"
 msgid "Popup title"
 msgstr "Titlu pop-up"
 
+msgid "Pre-booking form details"
+msgstr ""
+
 msgid "Preload entities when page loads"
 msgstr "Preîncărcați entitățile când se încarcă pagina"
 
@@ -8179,8 +8270,14 @@ msgstr "Previzualizare factură"
 msgid "Preview invoice"
 msgstr "Previzualizare factură"
 
+msgid "Previous image"
+msgstr ""
+
 msgid "Previous range"
 msgstr "Intervalul anterior"
+
+msgid "Previous step"
+msgstr ""
 
 msgid "Price"
 msgstr "Preț"
@@ -8823,23 +8920,14 @@ msgstr "Caută"
 msgid "Search..."
 msgstr "Caută..."
 
-msgid "Search Coupons"
-msgstr "Căutați vouchere"
-
 msgid "Search Filters"
 msgstr "Filtre Căutare"
 
 msgid "Search Input Field"
 msgstr "Câmp de introducere a căutării"
 
-msgid "Search Resources"
-msgstr "Caută Resurse"
-
 msgid "Search Results"
 msgstr "Rezultatele căutării"
-
-msgid "Search Taxes"
-msgstr "Caută Taxe"
 
 msgid "Search attendees"
 msgstr "Caută participanți"
@@ -8849,6 +8937,9 @@ msgstr "Caută programări rezervate"
 
 msgid "Search bookings"
 msgstr "Caută rezervări"
+
+msgid "Search coupons"
+msgstr ""
 
 msgid "Search customers"
 msgstr "Caută clienți"
@@ -8886,8 +8977,14 @@ msgstr "Caută notificări"
 msgid "Search packages"
 msgstr "Caută pachete"
 
+msgid "Search resources"
+msgstr ""
+
 msgid "Search services"
 msgstr "Caută servicii"
+
+msgid "Search taxes"
+msgstr ""
 
 msgid "Second"
 msgstr "Al doilea"
@@ -9017,6 +9114,9 @@ msgstr "Selectați produsul WooCommerce"
 msgid "Select Zoom User"
 msgstr "Selectați utilizator Zoom"
 
+msgid "Select a form..."
+msgstr ""
+
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr ""
 "Selectează un substituent pentru a-l insera acolo unde este plasat cursorul."
@@ -9065,9 +9165,6 @@ msgstr ""
 
 msgid "Select or Create New"
 msgstr "Selectați sau Creați nou"
-
-msgid "Select or Create Tag"
-msgstr "Selectați sau Creați etichetă"
 
 msgid "Select package"
 msgstr "Selectați pachetul"
@@ -9130,6 +9227,9 @@ msgstr "Selectați acest angajat"
 
 msgid "Select tickets"
 msgstr "Selectați bilete"
+
+msgid "Select which IvyForms form to show before booking"
+msgstr ""
 
 msgid "Select your Square Location"
 msgstr "Selectați locația dvs. Square"
@@ -10627,6 +10727,8 @@ msgid ""
 "This email is linked to both a customer and an employee account. Please "
 "delete and rebook."
 msgstr ""
+"Această adresă de e-mail este asociată atât unui cont de client, cât și unui "
+"cont de angajat. Vă rugăm să ștergeți și să efectuați o nouă rezervare."
 
 msgid "This employee is the only one assigned to {service}."
 msgstr "Acest angajat este singurul atribuit la {service}."
@@ -12054,8 +12156,14 @@ msgstr "din"
 msgid "on"
 msgstr "pe"
 
+msgid "opens in new tab"
+msgstr ""
+
 msgid "out of"
 msgstr "din"
+
+msgid "payment button"
+msgstr ""
 
 msgid "people"
 msgstr "oameni"

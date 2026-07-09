@@ -404,6 +404,8 @@ class ServiceRepository extends AbstractRepository implements ServiceRepositoryI
             $where[] = 's.categoryId = :categoryId';
         }
 
+        $providersJoin = $this->getProvidersJoin($criteria, $params, $where);
+
         $where = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
         $order = "ORDER BY {$orderColumn} {$orderDirection}";
@@ -415,8 +417,9 @@ class ServiceRepository extends AbstractRepository implements ServiceRepositoryI
 
         try {
             $statement = $this->connection->prepare(
-                "SELECT s.*
+                "SELECT DISTINCT s.*
                 FROM {$this->table} s
+                {$providersJoin}
                 {$where}
                 {$order}
                 {$limit}"
@@ -474,14 +477,16 @@ class ServiceRepository extends AbstractRepository implements ServiceRepositoryI
             $where[] = 's.categoryId = :categoryId';
         }
 
+        $providersJoin = $this->getProvidersJoin($criteria, $params, $where);
+
         $where = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
         try {
             $statement = $this->connection->prepare(
-                "SELECT COUNT(*) as count
+                "SELECT COUNT(DISTINCT s.id) as count
                 FROM {$this->table} s
-                {$where}
-                ORDER BY s.position, s.id"
+                {$providersJoin}
+                {$where}"
             );
 
             $statement->execute($params);
@@ -1063,5 +1068,31 @@ class ServiceRepository extends AbstractRepository implements ServiceRepositoryI
         } catch (\Exception $e) {
             throw new QueryExecutionException('Unable to delete data from ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
+    }
+
+    /**
+     * @param array  $criteria
+     * @param array  $params
+     * @param array  $where
+     *
+     * @return string
+     */
+    private function getProvidersJoin($criteria, &$params, &$where)
+    {
+        if (empty($criteria['providers'])) {
+            return '';
+        }
+
+        $queryProviders = [];
+
+        foreach ((array)$criteria['providers'] as $index => $value) {
+            $param            = ':provider' . $index;
+            $queryProviders[] = $param;
+            $params[$param]   = $value;
+        }
+
+        $where[] = 'ps.userId IN (' . implode(', ', $queryProviders) . ')';
+
+        return "INNER JOIN {$this->providerServicesTable} ps ON ps.serviceId = s.id";
     }
 }

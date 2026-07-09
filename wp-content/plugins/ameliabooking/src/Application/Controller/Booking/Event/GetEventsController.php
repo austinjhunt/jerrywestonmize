@@ -35,6 +35,14 @@ class GetEventsController extends Controller
 
         $this->setArrayParams($params);
 
+        if (isset($params['events'])) {
+            $params['events'] = array_map('intval', $params['events']);
+        }
+
+        if (isset($params['excludeIds'])) {
+            $params['excludeIds'] = array_map('intval', $params['excludeIds']);
+        }
+
         $command->setField('params', $params);
 
         $command->setToken($request);

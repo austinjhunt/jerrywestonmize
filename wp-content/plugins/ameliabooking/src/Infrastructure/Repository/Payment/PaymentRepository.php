@@ -350,7 +350,7 @@ class PaymentRepository extends AbstractRepository
             $whereEvent[]        = 'p.parentId IS NULL';
         }
 
-        $basedOnDate = $invoice ? 'created' : 'dateTime';
+        $basedOnDate = 'created';
 
         if (!empty($criteria['ids'])) {
             $queryIds1 = [];
@@ -663,7 +663,7 @@ class PaymentRepository extends AbstractRepository
             $whereEvent[]        = 'p.parentId IS NULL';
         }
 
-        $basedOnDate = $invoice ? 'created' : 'dateTime';
+        $basedOnDate = 'created';
 
         if (!empty($criteria['ids'])) {
             $queryIds1 = [];

@@ -1061,9 +1061,10 @@ abstract class Forminator_Base_Form_Model {
 			 * Forminator_Form_Field_Model
 			 *
 			 * @var Forminator_Form_Field_Model $field */
-			if ( strpos( $field->form_id, 'wrapper-' ) === 0 ) {
+			$form_id = '';
+			if ( ! empty( $field->form_id ) && strpos( (string) $field->form_id, 'wrapper-' ) === 0 ) {
 				$form_id = $field->form_id;
-			} else {
+			} elseif ( ! empty( $field->formID ) ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 				// Backward Compat.
 				$form_id = $field->formID; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 			}

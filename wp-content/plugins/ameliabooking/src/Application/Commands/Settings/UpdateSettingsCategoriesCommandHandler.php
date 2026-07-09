@@ -52,10 +52,14 @@ class UpdateSettingsCategoriesCommandHandler extends CommandHandler
         foreach ($command->getField('categories') as $category => $data) {
             $categorySettings = $settingsService->getCategorySettings($category);
 
-            if ($categorySettings) {
+            if ($categorySettings !== null) {
                 if ($category === 'general' && array_key_exists('usedLanguages', $data)) {
                     $categorySettings['usedLanguages'] = $data['usedLanguages'];
                     unset($data['usedLanguages']);
+                }
+
+                if ($category === 'ivy') {
+                    $categorySettings = !empty($data['ivy']) ? $data['ivy'] : [];
                 }
 
                 $categorySettings = array_replace_recursive($categorySettings, $data);

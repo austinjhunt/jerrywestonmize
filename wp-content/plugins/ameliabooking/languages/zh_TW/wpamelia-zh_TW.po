@@ -867,6 +867,7 @@ msgid ""
 "Application (client) ID must be a valid GUID (UUID), as shown in the Azure "
 "portal."
 msgstr ""
+"應用程式 (用戶端) ID 必須為有效的 GUID (UUID)，如 Azure 入口網站中所示。"
 
 msgid "Application fee amount (%)"
 msgstr "申請費金額（%）"
@@ -1797,7 +1798,7 @@ msgid ""
 msgstr "通過預約這個時間段，將在現有的團體預約之上預約一個預約!"
 
 msgid "By employees"
-msgstr ""
+msgstr "按員工"
 
 msgid ""
 "By entering your phone number you agree to receive messages via WhatsApp"
@@ -2164,7 +2165,7 @@ msgstr "客戶端密鑰"
 msgid ""
 "Client secret is too short or looks invalid. Copy the full value from the "
 "Azure portal."
-msgstr ""
+msgstr "用戶端密碼太短或格式似乎無效。請從 Azure 入口網站複製完整的值。"
 
 msgid "Close"
 msgstr "關閉"
@@ -2201,6 +2202,11 @@ msgstr "收合所有"
 
 msgid "Collapse menu"
 msgstr "崩潰的菜單"
+
+msgid ""
+"Collect additional information from your customers before they complete a "
+"booking."
+msgstr ""
 
 msgid "Collect the information your business truly needs"
 msgstr "收集您的企業真正需要的資訊"
@@ -2384,6 +2390,9 @@ msgstr "無法連線至 Zoom。請聯絡管理員以獲取協助。"
 msgid "Consulting"
 msgstr "諮詢"
 
+msgid "Contact Form"
+msgstr ""
+
 msgid "Contact message"
 msgstr "聯絡訊息"
 
@@ -2555,6 +2564,9 @@ msgstr "建立員工"
 
 msgid "Create event"
 msgstr "建立活動"
+
+msgid "Create form"
+msgstr ""
 
 msgid "Create meetings for pending appointments"
 msgstr "為待處理的預約建立會議"
@@ -2907,7 +2919,7 @@ msgid "Date and time"
 msgstr "日期與時間"
 
 msgid "Date busyness indicator"
-msgstr ""
+msgstr "日期繁忙度指示器"
 
 msgid "Date of Birth"
 msgstr "出生日期"
@@ -3734,6 +3746,9 @@ msgid ""
 msgstr ""
 "讓客戶能有效管理預約與活動。自訂顏色與標籤，打造無縫且具品牌特色的體驗。"
 
+msgid "Enable data usage"
+msgstr ""
+
 msgid "Enable guest booking"
 msgstr "啓用客人預約功能"
 
@@ -3972,6 +3987,9 @@ msgid "Enter booking ID"
 msgstr "輸入企業用戶"
 
 msgid "Enter both the application (client) ID and client secret."
+msgstr "同時輸入應用程式（用戶端）ID 和用戶端密鑰。"
+
+msgid "Enter code"
 msgstr ""
 
 msgid "Enter date of birth"
@@ -4131,6 +4149,9 @@ msgstr "活動類型"
 msgid "Event available"
 msgstr "活動可用"
 
+msgid "Event booking"
+msgstr ""
+
 msgid "Event booking has been created."
 msgstr "活動預約已建立。"
 
@@ -4245,6 +4266,9 @@ msgstr "活動已儲存"
 msgid "Event has been updated."
 msgstr "事件已更新。"
 
+msgid "Event image gallery"
+msgstr ""
+
 msgid "Event info"
 msgstr "活動資訊"
 
@@ -4356,6 +4380,9 @@ msgstr "活動清單"
 
 msgid "Events list view"
 msgstr "事件列表檢視"
+
+msgid "Events pagination"
+msgstr ""
 
 msgid "Events pricing"
 msgstr "活動定價"
@@ -4914,6 +4941,11 @@ msgid "Healthcare"
 msgstr "醫療保健"
 
 msgid ""
+"Help us improve Amelia by sharing anonymous data about your plugin usage. No "
+"personal data is collected."
+msgstr ""
+
+msgid ""
 "Here, you can connect your personal Apple Calendar,<br/>so once the booking "
 "is scheduled,<br/>it will be automatically added to your calendar of choice."
 msgstr ""
@@ -5209,6 +5241,9 @@ msgstr "圖片"
 msgid "Image Color"
 msgstr "圖片的顔色"
 
+msgid "Image navigation"
+msgstr ""
+
 msgid "Image thumbs"
 msgstr "圖片縮略圖"
 
@@ -5229,6 +5264,9 @@ msgstr "輸入成功"
 
 msgid "Importing customers"
 msgstr "匯入客戶"
+
+msgid "Improve Amelia"
+msgstr ""
 
 msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
@@ -5380,6 +5418,9 @@ msgstr "插入Amelia預約短碼"
 msgid "Insert pending appointments"
 msgstr "插入待處理的預約"
 
+msgid "Install & Activate"
+msgstr ""
+
 msgid "Integrate with WooCommerce to enable advanced e-commerce capabilities."
 msgstr "整合 WooCommerce 以啟用進階電子商務功能。"
 
@@ -5469,6 +5510,24 @@ msgstr "項目"
 
 msgid "Item status"
 msgstr "項目狀態"
+
+msgid "IvyForms"
+msgstr ""
+
+msgid "IvyForms Entries"
+msgstr ""
+
+msgid "IvyForms Field"
+msgstr ""
+
+msgid "IvyForms Form"
+msgstr ""
+
+msgid "IvyForms validation failed."
+msgstr ""
+
+msgid "Ivy setup"
+msgstr ""
 
 msgid "Jane Doe"
 msgstr "簡·多伊"
@@ -5703,8 +5762,17 @@ msgstr "手動訂載表格"
 msgid "Load page"
 msgstr "載入頁面"
 
+msgid "Loading"
+msgstr ""
+
 msgid "Loading..."
 msgstr "加載……"
+
+msgid "Loading event information"
+msgstr ""
+
+msgid "Loading header"
+msgstr ""
 
 msgid "Local Time"
 msgstr "當地時間"
@@ -5849,7 +5917,7 @@ msgid "Make extra mandatory"
 msgstr "強制執行額外要求"
 
 msgid "Make sure you are using the correct Outlook credentials."
-msgstr ""
+msgstr "請確認您使用的是正確的 Outlook 登入憑證。"
 
 msgid "Make sure you are using the correct WhatsApp credentials."
 msgstr "請確保您使用的是正確的 WhatsApp 憑證。"
@@ -5914,6 +5982,9 @@ msgstr "最大容量（升序）"
 
 msgid "Max Capacity Desc"
 msgstr "最大容量說明"
+
+msgid "Maximum"
+msgstr ""
 
 msgid "Maximum Quantity:"
 msgstr "最大數量:"
@@ -6007,6 +6078,9 @@ msgstr "Microsoft Teams 設定"
 
 msgid "Min. Capacity"
 msgstr "最小能力"
+
+msgid "Minimum"
+msgstr ""
 
 msgid "Minimum bookings required"
 msgstr "最低預約要求"
@@ -6228,6 +6302,9 @@ msgstr "下一個服務"
 
 msgid "Next day reminder"
 msgstr "隔日提醒"
+
+msgid "Next image"
+msgstr ""
 
 msgid "No"
 msgstr "無"
@@ -6797,6 +6874,9 @@ msgstr ""
 msgid "PHP Mail"
 msgstr "PHP郵件"
 
+msgid "PRE-BOOKING INTAKE FORM (IVYFORMS)"
+msgstr ""
+
 msgid "Package"
 msgstr "套裝"
 
@@ -7209,6 +7289,9 @@ msgstr "期"
 
 msgid "Permanent access token"
 msgstr "永久訪問令牌"
+
+msgid "Permanently linked"
+msgstr ""
 
 msgid "Person"
 msgstr "人們"
@@ -7683,6 +7766,9 @@ msgstr "彈出式按鈕"
 msgid "Popup title"
 msgstr "彈出視窗標題"
 
+msgid "Pre-booking form details"
+msgstr ""
+
 msgid "Preload entities when page loads"
 msgstr "頁面載入時預先載入實體"
 
@@ -7720,8 +7806,14 @@ msgstr "預覽"
 msgid "Preview invoice"
 msgstr "預覽發票"
 
+msgid "Previous image"
+msgstr ""
+
 msgid "Previous range"
 msgstr "先前範圍"
+
+msgid "Previous step"
+msgstr ""
 
 msgid "Price"
 msgstr "價格"
@@ -8348,23 +8440,14 @@ msgstr "搜索"
 msgid "Search..."
 msgstr "搜索…"
 
-msgid "Search Coupons"
-msgstr "搜索優惠券"
-
 msgid "Search Filters"
 msgstr "搜索過濾器"
 
 msgid "Search Input Field"
 msgstr "輸入字段"
 
-msgid "Search Resources"
-msgstr "搜尋資源"
-
 msgid "Search Results"
 msgstr "搜索結果"
-
-msgid "Search Taxes"
-msgstr "搜索過濾器"
 
 msgid "Search attendees"
 msgstr "搜尋與會者"
@@ -8374,6 +8457,9 @@ msgstr "搜尋已預約的行程"
 
 msgid "Search bookings"
 msgstr "搜尋預訂"
+
+msgid "Search coupons"
+msgstr ""
 
 msgid "Search customers"
 msgstr "搜尋客戶"
@@ -8411,8 +8497,14 @@ msgstr "搜尋通知"
 msgid "Search packages"
 msgstr "搜尋套件"
 
+msgid "Search resources"
+msgstr ""
+
 msgid "Search services"
 msgstr "搜尋服務"
+
+msgid "Search taxes"
+msgstr ""
 
 msgid "Second"
 msgstr "第二個"
@@ -8539,6 +8631,9 @@ msgstr "選擇WooCommerce産品"
 msgid "Select Zoom User"
 msgstr "選擇 Zoom 使用者"
 
+msgid "Select a form..."
+msgstr ""
+
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr "選取一個占位符，即可將其插入游標所在位置。"
 
@@ -8585,9 +8680,6 @@ msgstr ""
 
 msgid "Select or Create New"
 msgstr "選擇或新建"
-
-msgid "Select or Create Tag"
-msgstr "選擇或建立卡片"
 
 msgid "Select package"
 msgstr "選擇套件"
@@ -8646,6 +8738,9 @@ msgstr "選擇該員工"
 
 msgid "Select tickets"
 msgstr "選擇票券"
+
+msgid "Select which IvyForms form to show before booking"
+msgstr ""
 
 msgid "Select your Square Location"
 msgstr "選擇您的 Square 位置"
@@ -10029,7 +10124,7 @@ msgstr "此電子郵件地址已被使用。請輸入其他電子郵件地址。
 msgid ""
 "This email is linked to both a customer and an employee account. Please "
 "delete and rebook."
-msgstr ""
+msgstr "此電子郵件地址同時關聯至客戶與員工帳戶。請刪除後重新預訂。"
 
 msgid "This employee is the only one assigned to {service}."
 msgstr "此員工是唯一被指派至{service} 的員工。"
@@ -11359,8 +11454,14 @@ msgstr "的"
 msgid "on"
 msgstr "在.......上"
 
+msgid "opens in new tab"
+msgstr ""
+
 msgid "out of"
 msgstr "離開"
+
+msgid "payment button"
+msgstr ""
 
 msgid "people"
 msgstr "人們"

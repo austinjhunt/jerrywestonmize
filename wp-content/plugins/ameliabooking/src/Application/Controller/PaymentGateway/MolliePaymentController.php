@@ -42,6 +42,7 @@ class MolliePaymentController extends Controller
         'deposit',
         'componentProps',
         'returnUrl',
+        'ivy',
     ];
 
     /**

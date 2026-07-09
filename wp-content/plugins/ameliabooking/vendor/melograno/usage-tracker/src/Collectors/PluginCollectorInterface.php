@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Melograno\UsageTracker\Collectors;
+namespace AmeliaVendor\Melograno\UsageTracker\Collectors;
 
 interface PluginCollectorInterface
 {

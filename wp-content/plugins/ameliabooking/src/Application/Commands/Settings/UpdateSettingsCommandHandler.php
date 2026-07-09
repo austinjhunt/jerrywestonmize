@@ -17,10 +17,10 @@ use AmeliaBooking\Infrastructure\Services\Apple\AbstractAppleCalendarService;
 use AmeliaBooking\Infrastructure\Services\LessonSpace\AbstractLessonSpaceService;
 use AmeliaBooking\Infrastructure\Services\Outlook\OutlookCredentialsValidatorService;
 use AmeliaBooking\Infrastructure\WP\Integrations\WooCommerce\WooCommerceService;
-use Melograno\UsageTracker\Collectors\Plugin\AmeliaCollector;
-use Melograno\UsageTracker\Core\UsageTracker;
+use AmeliaVendor\Melograno\UsageTracker\Core\UsageTracker;
 use Exception;
 use Interop\Container\Exception\ContainerException;
+use AmeliaVendor\Melograno\UsageTracker\Collectors\Plugin\AmeliaCollector;
 use Slim\Exception\ContainerValueNotFoundException;
 
 /**
@@ -290,7 +290,12 @@ class UpdateSettingsCommandHandler extends CommandHandler
         }
 
         if (isset($settingsFields['general'])) {
-            UsageTracker::updateSettings(new AmeliaCollector(), $settingsFields['general']);
+            $armUsageTrackingNoticeOnDisable = (bool) $command->getField('armUsageTrackingNoticeOnDisable');
+            UsageTracker::updateSettings(
+                $settingsFields['general'],
+                new AmeliaCollector(),
+                $armUsageTrackingNoticeOnDisable
+            );
         }
 
         $settingsFields = apply_filters('amelia_before_settings_updated_filter', $settingsFields);

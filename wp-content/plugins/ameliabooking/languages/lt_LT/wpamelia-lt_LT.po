@@ -896,6 +896,8 @@ msgid ""
 "Application (client) ID must be a valid GUID (UUID), as shown in the Azure "
 "portal."
 msgstr ""
+"Application (client) ID turi būti tinkamo GUID (UUID) formato, kaip nurodyta "
+"Azure portale."
 
 msgid "Application fee amount (%)"
 msgstr "Paraiškos mokesčio suma (%)"
@@ -1862,7 +1864,7 @@ msgstr ""
 "susitikimas!"
 
 msgid "By employees"
-msgstr ""
+msgstr "Pagal darbuotojus"
 
 msgid ""
 "By entering your phone number you agree to receive messages via WhatsApp"
@@ -2260,6 +2262,8 @@ msgid ""
 "Client secret is too short or looks invalid. Copy the full value from the "
 "Azure portal."
 msgstr ""
+"Kliento paslaptis yra per trumpa arba atrodo netinkama. Nukopijuokite visą "
+"reikšmę iš Azure valdymo portalo."
 
 msgid "Close"
 msgstr "Uždaryti"
@@ -2296,6 +2300,11 @@ msgstr "Sutraukti viską"
 
 msgid "Collapse menu"
 msgstr "Sutraukti meniu"
+
+msgid ""
+"Collect additional information from your customers before they complete a "
+"booking."
+msgstr ""
 
 msgid "Collect the information your business truly needs"
 msgstr "Rinkite informaciją, kurios jūsų verslui tikrai reikia"
@@ -2502,6 +2511,9 @@ msgstr ""
 msgid "Consulting"
 msgstr "Konsultavimas"
 
+msgid "Contact Form"
+msgstr ""
+
 msgid "Contact message"
 msgstr "Kontaktinis pranešimas"
 
@@ -2686,6 +2698,9 @@ msgstr "Sukurti darbuotoją"
 
 msgid "Create event"
 msgstr "Sukurti įvykį"
+
+msgid "Create form"
+msgstr ""
 
 msgid "Create meetings for pending appointments"
 msgstr "Sukurti susitikimus dėl laukiančių susitikimų"
@@ -3060,7 +3075,7 @@ msgid "Date and time"
 msgstr "Data ir laikas"
 
 msgid "Date busyness indicator"
-msgstr ""
+msgstr "Datos užimtumo indikatorius"
 
 msgid "Date of Birth"
 msgstr "Gimimo data"
@@ -3935,6 +3950,9 @@ msgstr ""
 "Pritaikykite spalvas ir etiketes, kad sukurtumėte sklandžią ir prekės ženklą "
 "atspindinčią patirtį."
 
+msgid "Enable data usage"
+msgstr ""
+
 msgid "Enable guest booking"
 msgstr "Įjungti svečių užsakymus"
 
@@ -4228,6 +4246,9 @@ msgid "Enter booking ID"
 msgstr "Įveskite užsakymo ID"
 
 msgid "Enter both the application (client) ID and client secret."
+msgstr "Įveskite tiek programos (client) ID, tiek kliento slaptąjį raktą."
+
+msgid "Enter code"
 msgstr ""
 
 msgid "Enter date of birth"
@@ -4395,6 +4416,9 @@ msgstr "Renginio tipas"
 msgid "Event available"
 msgstr "Renginys prieinamas"
 
+msgid "Event booking"
+msgstr ""
+
 msgid "Event booking has been created."
 msgstr "Renginio užsakymas sukurtas."
 
@@ -4509,6 +4533,9 @@ msgstr "Renginys išsaugotas"
 msgid "Event has been updated."
 msgstr "Renginys buvo atnaujintas."
 
+msgid "Event image gallery"
+msgstr ""
+
 msgid "Event info"
 msgstr "Renginio informacija"
 
@@ -4620,6 +4647,9 @@ msgstr "Renginių sąrašas"
 
 msgid "Events list view"
 msgstr "Renginių sąrašo peržiūra"
+
+msgid "Events pagination"
+msgstr ""
 
 msgid "Events pricing"
 msgstr "Renginių kainos"
@@ -5199,6 +5229,11 @@ msgid "Healthcare"
 msgstr "Sveikatos priežiūra"
 
 msgid ""
+"Help us improve Amelia by sharing anonymous data about your plugin usage. No "
+"personal data is collected."
+msgstr ""
+
+msgid ""
 "Here, you can connect your personal Apple Calendar,<br/>so once the booking "
 "is scheduled,<br/>it will be automatically added to your calendar of choice."
 msgstr ""
@@ -5536,6 +5571,9 @@ msgstr "Vaizdas"
 msgid "Image Color"
 msgstr "Vaizdo spalva"
 
+msgid "Image navigation"
+msgstr ""
+
 msgid "Image thumbs"
 msgstr "Vaizdų miniatiūros"
 
@@ -5556,6 +5594,9 @@ msgstr "Importavimas sėkmingas"
 
 msgid "Importing customers"
 msgstr "Klientų importavimas"
+
+msgid "Improve Amelia"
+msgstr ""
 
 msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
@@ -5732,6 +5773,9 @@ msgstr "Įterpti Amelia užsakymo trumpąjį kodą"
 msgid "Insert pending appointments"
 msgstr "Įterpti laukiančius susitikimus"
 
+msgid "Install & Activate"
+msgstr ""
+
 msgid "Integrate with WooCommerce to enable advanced e-commerce capabilities."
 msgstr ""
 "Integruokite su „WooCommerce“, kad galėtumėte naudotis pažangiomis "
@@ -5828,6 +5872,24 @@ msgstr "Elementas"
 
 msgid "Item status"
 msgstr "Prekės būsena"
+
+msgid "IvyForms"
+msgstr ""
+
+msgid "IvyForms Entries"
+msgstr ""
+
+msgid "IvyForms Field"
+msgstr ""
+
+msgid "IvyForms Form"
+msgstr ""
+
+msgid "IvyForms validation failed."
+msgstr ""
+
+msgid "Ivy setup"
+msgstr ""
 
 msgid "Jane Doe"
 msgstr ""
@@ -6072,8 +6134,17 @@ msgstr "Įkelti užsakymo formą rankiniu būdu"
 msgid "Load page"
 msgstr "Įkelti puslapį"
 
+msgid "Loading"
+msgstr ""
+
 msgid "Loading..."
 msgstr "Palaukite…"
+
+msgid "Loading event information"
+msgstr ""
+
+msgid "Loading header"
+msgstr ""
 
 msgid "Local Time"
 msgstr "Laikas:"
@@ -6219,6 +6290,7 @@ msgstr "Padaryti papildomą privalomą"
 
 msgid "Make sure you are using the correct Outlook credentials."
 msgstr ""
+"Įsitikinkite, kad naudojate teisingus Outlook paskyros prisijungimo duomenis."
 
 msgid "Make sure you are using the correct WhatsApp credentials."
 msgstr ""
@@ -6288,6 +6360,9 @@ msgstr "Maksimali talpa Asc"
 
 msgid "Max Capacity Desc"
 msgstr "Maksimali talpa Aprašymas"
+
+msgid "Maximum"
+msgstr ""
 
 msgid "Maximum Quantity:"
 msgstr "Maksimalus kiekis:"
@@ -6382,6 +6457,9 @@ msgstr "„Microsoft Teams“ nustatymas"
 
 msgid "Min. Capacity"
 msgstr "Min. talpa"
+
+msgid "Minimum"
+msgstr ""
 
 msgid "Minimum bookings required"
 msgstr "Reikalingas minimalus užsakymų skaičius"
@@ -6607,6 +6685,9 @@ msgstr "Kitas paslaugos"
 
 msgid "Next day reminder"
 msgstr "Kitą dieną priminimas"
+
+msgid "Next image"
+msgstr ""
 
 msgid "No"
 msgstr "Ne"
@@ -7203,6 +7284,9 @@ msgstr ""
 msgid "PHP Mail"
 msgstr "PHP paštas"
 
+msgid "PRE-BOOKING INTAKE FORM (IVYFORMS)"
+msgstr ""
+
 msgid "Package"
 msgstr "Rezervacija išsaugota"
 
@@ -7621,6 +7705,9 @@ msgstr "Kropelės"
 
 msgid "Permanent access token"
 msgstr "Nuolatinis prieigos žetonas"
+
+msgid "Permanently linked"
+msgstr ""
 
 msgid "Person"
 msgstr "Asmuo"
@@ -8104,6 +8191,9 @@ msgstr "Iššokantys mygtukai"
 msgid "Popup title"
 msgstr "Iššokantis langas pavadinimas"
 
+msgid "Pre-booking form details"
+msgstr ""
+
 msgid "Preload entities when page loads"
 msgstr "Iš anksto įkelti elementus, kai puslapis įkeliama"
 
@@ -8145,8 +8235,14 @@ msgstr "Sąskaitos faktūros peržiūra"
 msgid "Preview invoice"
 msgstr "Sąskaitos faktūros peržiūra"
 
+msgid "Previous image"
+msgstr ""
+
 msgid "Previous range"
 msgstr "Ankstesnis diapazonas"
+
+msgid "Previous step"
+msgstr ""
 
 msgid "Price"
 msgstr "Kaina"
@@ -8786,23 +8882,14 @@ msgstr "Ieškoti…"
 msgid "Search..."
 msgstr "Ieškoti…"
 
-msgid "Search Coupons"
-msgstr "Ieškoti kuponų"
-
 msgid "Search Filters"
 msgstr "Paieškos filtrai"
 
 msgid "Search Input Field"
 msgstr "Darbuotojo el. paštas"
 
-msgid "Search Resources"
-msgstr "Ieškoti išteklių"
-
 msgid "Search Results"
 msgstr "Paieškos rezultatai"
-
-msgid "Search Taxes"
-msgstr "Paieškos filtrai"
 
 msgid "Search attendees"
 msgstr "Ieškoti dalyvių"
@@ -8812,6 +8899,9 @@ msgstr "Ieškoti užsakytų susitikimų"
 
 msgid "Search bookings"
 msgstr "Ieškoti užsakymų"
+
+msgid "Search coupons"
+msgstr ""
 
 msgid "Search customers"
 msgstr "Ieškoti klientų"
@@ -8849,8 +8939,14 @@ msgstr "Paieškos pranešimai"
 msgid "Search packages"
 msgstr "Ieškoti paketų"
 
+msgid "Search resources"
+msgstr ""
+
 msgid "Search services"
 msgstr "Paieškos paslaugos"
+
+msgid "Search taxes"
+msgstr ""
 
 msgid "Second"
 msgstr "Antrasis"
@@ -8980,6 +9076,9 @@ msgstr "Pasirinkite „WooCommerce“ produktą"
 msgid "Select Zoom User"
 msgstr "Pasirinkite „Zoom“ vartotoją"
 
+msgid "Select a form..."
+msgstr ""
+
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr ""
 "Pasirinkite vietos laikiklį, kad jį įterptumėte ten, kur yra kursorius."
@@ -9028,9 +9127,6 @@ msgstr ""
 
 msgid "Select or Create New"
 msgstr "Pasirinkite arba kurkite naują"
-
-msgid "Select or Create Tag"
-msgstr "Pasirinkite arba sukurkite žymę"
 
 msgid "Select package"
 msgstr "Pasirinkite paketą"
@@ -9091,6 +9187,9 @@ msgstr "Pasirinkite šį darbuotoją"
 
 msgid "Select tickets"
 msgstr "Pasirinkite bilietus"
+
+msgid "Select which IvyForms form to show before booking"
+msgstr ""
 
 msgid "Select your Square Location"
 msgstr "Pasirinkite savo „Square“ vietą"
@@ -10581,6 +10680,8 @@ msgid ""
 "This email is linked to both a customer and an employee account. Please "
 "delete and rebook."
 msgstr ""
+"Šis el. pašto adresas susietas ir su kliento, ir su darbuotojo paskyra. "
+"Ištrinkite esamą rezervaciją ir užsakykite iš naujo."
 
 msgid "This employee is the only one assigned to {service}."
 msgstr "Šis darbuotojas yra vienintelis, priskirtas „ {service} “."
@@ -11996,8 +12097,14 @@ msgstr "iš"
 msgid "on"
 msgstr "į"
 
+msgid "opens in new tab"
+msgstr ""
+
 msgid "out of"
 msgstr "iš"
+
+msgid "payment button"
+msgstr ""
 
 msgid "people"
 msgstr "žmonės"

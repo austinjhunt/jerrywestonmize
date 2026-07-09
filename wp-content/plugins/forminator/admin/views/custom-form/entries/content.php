@@ -194,7 +194,7 @@ if ( $this->total_entries() > 0 ) :
 
 								echo '<td>';
 
-								echo '<div class="forminator-submissions-column-ellipsis">' . esc_html( $summary_item['value'] ) . '</div>';
+								echo '<div class="forminator-submissions-column-ellipsis">' . esc_html( wp_strip_all_tags( $summary_item['value'] ) ) . '</div>';
 
 								echo '<span class="sui-accordion-open-indicator fui-mobile-only" aria-hidden="true">';
 								echo '<i class="sui-icon-chevron-down"></i>';

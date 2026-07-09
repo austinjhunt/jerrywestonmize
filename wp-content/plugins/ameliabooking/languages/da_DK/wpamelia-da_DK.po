@@ -890,6 +890,8 @@ msgid ""
 "Application (client) ID must be a valid GUID (UUID), as shown in the Azure "
 "portal."
 msgstr ""
+"Application (client) ID skal være et gyldigt GUID (UUID), som vist i Azure "
+"portal."
 
 msgid "Application fee amount (%)"
 msgstr "Applikationsgebyr (%)"
@@ -1855,7 +1857,7 @@ msgstr ""
 "eksisterende aftale!"
 
 msgid "By employees"
-msgstr ""
+msgstr "Efter medarbejder"
 
 msgid ""
 "By entering your phone number you agree to receive messages via WhatsApp"
@@ -2251,6 +2253,8 @@ msgid ""
 "Client secret is too short or looks invalid. Copy the full value from the "
 "Azure portal."
 msgstr ""
+"Klienthemmeligheden er for kort eller ser ud til at være ugyldig. Kopiér "
+"hele værdien fra Azure portal."
 
 msgid "Close"
 msgstr "Luk"
@@ -2287,6 +2291,11 @@ msgstr "Skjul alle"
 
 msgid "Collapse menu"
 msgstr "Skjul menu"
+
+msgid ""
+"Collect additional information from your customers before they complete a "
+"booking."
+msgstr ""
 
 msgid "Collect the information your business truly needs"
 msgstr "Indsaml de oplysninger, din virksomhed virkelig har brug for"
@@ -2489,6 +2498,9 @@ msgstr ""
 msgid "Consulting"
 msgstr "Rådgivning"
 
+msgid "Contact Form"
+msgstr ""
+
 msgid "Contact message"
 msgstr "Kontaktmeddelelse"
 
@@ -2671,6 +2683,9 @@ msgstr "Opret medarbejder"
 
 msgid "Create event"
 msgstr "Opret begivenhed"
+
+msgid "Create form"
+msgstr ""
 
 msgid "Create meetings for pending appointments"
 msgstr "Opret møder for afventende aftaler"
@@ -3052,7 +3067,7 @@ msgid "Date and time"
 msgstr "Dato og klokkeslæt"
 
 msgid "Date busyness indicator"
-msgstr ""
+msgstr "Belægningsindikator pr. dato"
 
 msgid "Date of Birth"
 msgstr "Fødselsdato"
@@ -3910,6 +3925,9 @@ msgstr ""
 "Gør det muligt for kunder at administrere deres aftaler og events effektivt. "
 "Tilpas farver og etiketter for at skabe en problemfri og brandet oplevelse."
 
+msgid "Enable data usage"
+msgstr ""
+
 msgid "Enable guest booking"
 msgstr "Aktivér gæstebooking"
 
@@ -4202,6 +4220,9 @@ msgid "Enter booking ID"
 msgstr "Indtast venligst reservationstype"
 
 msgid "Enter both the application (client) ID and client secret."
+msgstr "Indtast både application (client)-ID og client secret."
+
+msgid "Enter code"
 msgstr ""
 
 msgid "Enter date of birth"
@@ -4368,6 +4389,9 @@ msgstr "Arrangement type"
 msgid "Event available"
 msgstr "Begivenhed tilgængelig"
 
+msgid "Event booking"
+msgstr ""
+
 msgid "Event booking has been created."
 msgstr "Begivenhedsbooking er blevet oprettet."
 
@@ -4482,6 +4506,9 @@ msgstr "Begivenheden er gemt"
 msgid "Event has been updated."
 msgstr "Begivenheden er blevet opdateret."
 
+msgid "Event image gallery"
+msgstr ""
+
 msgid "Event info"
 msgstr "Begivenhedsoplysninger"
 
@@ -4593,6 +4620,9 @@ msgstr "Begivenhedsliste"
 
 msgid "Events list view"
 msgstr "Visning af begivenhedsliste"
+
+msgid "Events pagination"
+msgstr ""
 
 msgid "Events pricing"
 msgstr "Prissætning af begivenheder"
@@ -5171,6 +5201,11 @@ msgid "Healthcare"
 msgstr "Sundhedsvæsen"
 
 msgid ""
+"Help us improve Amelia by sharing anonymous data about your plugin usage. No "
+"personal data is collected."
+msgstr ""
+
+msgid ""
 "Here, you can connect your personal Apple Calendar,<br/>so once the booking "
 "is scheduled,<br/>it will be automatically added to your calendar of choice."
 msgstr ""
@@ -5505,6 +5540,9 @@ msgstr "Billede"
 msgid "Image Color"
 msgstr "Billedfarve"
 
+msgid "Image navigation"
+msgstr ""
+
 msgid "Image thumbs"
 msgstr "Billedminiaturer"
 
@@ -5525,6 +5563,9 @@ msgstr "Importen lykkedes"
 
 msgid "Importing customers"
 msgstr "Importerer kunder"
+
+msgid "Improve Amelia"
+msgstr ""
 
 msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
@@ -5702,6 +5743,9 @@ msgstr "Indsæt Amelia Booking genvejskode"
 msgid "Insert pending appointments"
 msgstr "Indsæt afventende aftaler"
 
+msgid "Install & Activate"
+msgstr ""
+
 msgid "Integrate with WooCommerce to enable advanced e-commerce capabilities."
 msgstr ""
 "Integrer med WooCommerce for at aktivere avancerede e-handelsfunktioner."
@@ -5799,6 +5843,24 @@ msgstr "Vare"
 
 msgid "Item status"
 msgstr "Vare status"
+
+msgid "IvyForms"
+msgstr ""
+
+msgid "IvyForms Entries"
+msgstr ""
+
+msgid "IvyForms Field"
+msgstr ""
+
+msgid "IvyForms Form"
+msgstr ""
+
+msgid "IvyForms validation failed."
+msgstr ""
+
+msgid "Ivy setup"
+msgstr ""
 
 msgid "Jane Doe"
 msgstr ""
@@ -6042,8 +6104,17 @@ msgstr "Indlæs bookingformular manuelt"
 msgid "Load page"
 msgstr "Indlæs side"
 
+msgid "Loading"
+msgstr ""
+
 msgid "Loading..."
 msgstr "Indlæser..."
+
+msgid "Loading event information"
+msgstr ""
+
+msgid "Loading header"
+msgstr ""
 
 msgid "Local Time"
 msgstr "Lokal tid:"
@@ -6188,7 +6259,7 @@ msgid "Make extra mandatory"
 msgstr "Gør ekstra obligatorisk"
 
 msgid "Make sure you are using the correct Outlook credentials."
-msgstr ""
+msgstr "Sørg for, at du bruger de korrekte Outlook-adgangsoplysninger."
 
 msgid "Make sure you are using the correct WhatsApp credentials."
 msgstr "Sørg for, at du bruger de korrekte WhatsApp-loginoplysninger."
@@ -6257,6 +6328,9 @@ msgstr "Maksimal kapacitet stigende"
 
 msgid "Max Capacity Desc"
 msgstr "Beskrivelse af maksimal kapacitet"
+
+msgid "Maximum"
+msgstr ""
 
 msgid "Maximum Quantity:"
 msgstr "Maksimum antal:"
@@ -6351,6 +6425,9 @@ msgstr "Opsætning af Microsoft Teams"
 
 msgid "Min. Capacity"
 msgstr "Min. kapacitet"
+
+msgid "Minimum"
+msgstr ""
 
 msgid "Minimum bookings required"
 msgstr "Minimum antal krævede bookinger"
@@ -6573,6 +6650,9 @@ msgstr "Næste service"
 
 msgid "Next day reminder"
 msgstr "Påmindelse næste dag"
+
+msgid "Next image"
+msgstr ""
 
 msgid "No"
 msgstr "Nej"
@@ -7169,6 +7249,9 @@ msgstr ""
 msgid "PHP Mail"
 msgstr "PHP mail"
 
+msgid "PRE-BOOKING INTAKE FORM (IVYFORMS)"
+msgstr ""
+
 msgid "Package"
 msgstr "Gennemsnitlige bookinger"
 
@@ -7587,6 +7670,9 @@ msgstr "Dato & tidsperioder for begivenheden med Zoom tilslutningslink"
 
 msgid "Permanent access token"
 msgstr "Permanent adgangstoken"
+
+msgid "Permanently linked"
+msgstr ""
 
 msgid "Person"
 msgstr ""
@@ -8071,6 +8157,9 @@ msgstr "Popup-knapper"
 msgid "Popup title"
 msgstr "Popup-titel"
 
+msgid "Pre-booking form details"
+msgstr ""
+
 msgid "Preload entities when page loads"
 msgstr "Forudindlæs enheder, når siden indlæses"
 
@@ -8112,8 +8201,14 @@ msgstr "Forhåndsvis faktura"
 msgid "Preview invoice"
 msgstr "Forhåndsvisning af faktura"
 
+msgid "Previous image"
+msgstr ""
+
 msgid "Previous range"
 msgstr "Forrige interval"
+
+msgid "Previous step"
+msgstr ""
 
 msgid "Price"
 msgstr "Pris"
@@ -8749,23 +8844,14 @@ msgstr "Søg"
 msgid "Search..."
 msgstr "Søg..."
 
-msgid "Search Coupons"
-msgstr "Søg kuponer"
-
 msgid "Search Filters"
 msgstr "Søge kriterier"
 
 msgid "Search Input Field"
 msgstr "Medarbejdernotat"
 
-msgid "Search Resources"
-msgstr "Søg Ressourcer"
-
 msgid "Search Results"
 msgstr "Søgeresultater"
-
-msgid "Search Taxes"
-msgstr "Søge kriterier"
 
 msgid "Search attendees"
 msgstr "Søg efter deltagere"
@@ -8775,6 +8861,9 @@ msgstr "Søg i bookede aftaler"
 
 msgid "Search bookings"
 msgstr "Søg i bookinger"
+
+msgid "Search coupons"
+msgstr ""
 
 msgid "Search customers"
 msgstr "Søg efter kunder"
@@ -8812,8 +8901,14 @@ msgstr "Søg efter meddelelser"
 msgid "Search packages"
 msgstr "Søg pakker"
 
+msgid "Search resources"
+msgstr ""
+
 msgid "Search services"
 msgstr "Søg tjenester"
+
+msgid "Search taxes"
+msgstr ""
 
 msgid "Second"
 msgstr "Sekund"
@@ -8945,6 +9040,9 @@ msgstr "Vælg WooCommerce-produkt"
 msgid "Select Zoom User"
 msgstr "Vælg Zoom bruger"
 
+msgid "Select a form..."
+msgstr ""
+
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr "Vælg en pladsholder for at indsætte den, hvor din markør er placeret."
 
@@ -8992,9 +9090,6 @@ msgstr ""
 
 msgid "Select or Create New"
 msgstr "Vælg eller Opret nyt"
-
-msgid "Select or Create Tag"
-msgstr "Vælg eller opret tag"
 
 msgid "Select package"
 msgstr "Vælg pakke"
@@ -9054,6 +9149,9 @@ msgstr "Vælg denne medarbejder"
 
 msgid "Select tickets"
 msgstr "Vælg billetter"
+
+msgid "Select which IvyForms form to show before booking"
+msgstr ""
 
 msgid "Select your Square Location"
 msgstr "Vælg din Square-lokation"
@@ -10537,6 +10635,8 @@ msgid ""
 "This email is linked to both a customer and an employee account. Please "
 "delete and rebook."
 msgstr ""
+"Denne e-mailadresse er knyttet til både en kundekonto og en "
+"medarbejderkonto. Slet bookingen, og book igen."
 
 msgid "This employee is the only one assigned to {service}."
 msgstr "Denne medarbejder er den eneste tildelt {service}."
@@ -11957,8 +12057,14 @@ msgstr "af"
 msgid "on"
 msgstr "Skrifttype"
 
+msgid "opens in new tab"
+msgstr ""
+
 msgid "out of"
 msgstr "ud af"
+
+msgid "payment button"
+msgstr ""
 
 msgid "people"
 msgstr "Prisen ganges med antallet af mennesker"

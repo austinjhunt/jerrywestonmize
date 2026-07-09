@@ -327,14 +327,18 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
         /** @var ReservationServiceInterface $reservationService */
         $reservationService = $this->container->get('application.reservation.service')->get(Entities::PACKAGE);
 
+        $hasBookedPackagePrice = $packageCustomer && $packageCustomer->getPrice();
+
+        $packagePrice = $hasBookedPackagePrice ?
+            $packageCustomer->getPrice()->getValue() :
+            $package['price'];
+
         /** @var Package $bookable */
         $bookable = PackageFactory::create(
             [
-                'price'           => ($packageCustomer && $packageCustomer->getPrice()) ?
-                    $packageCustomer->getPrice()->getValue() :
-                    $package['price'],
-                'calculatedPrice' => $package['calculatedPrice'],
-                'discount'        => $package['discount'],
+                'price'           => $packagePrice,
+                'calculatedPrice' => $hasBookedPackagePrice || empty($package['calculatedPrice']) ? false : $package['calculatedPrice'],
+                'discount'        => $hasBookedPackagePrice || empty($package['discount']) ? 0 : $package['discount'],
             ]
         );
 

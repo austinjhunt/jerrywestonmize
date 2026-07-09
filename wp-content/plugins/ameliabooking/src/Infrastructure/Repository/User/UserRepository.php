@@ -535,13 +535,36 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
      */
     public function updateFieldsByEmail($email, $data)
     {
+        // Whitelist of columns that may be updated through this method. Keys in
+        // $data originate from user-supplied import payloads and are used as SQL
+        // identifiers below, so they must never be interpolated unvalidated.
+        $allowedColumns = [
+            'firstName',
+            'lastName',
+            'note',
+            'description',
+            'phone',
+            'gender',
+            'birthday',
+            'countryPhoneIso',
+            'customFields',
+        ];
+
         $fields = [];
 
         $params = [':email' => $email];
 
         foreach ($data as $key => $item) {
+            if (!in_array($key, $allowedColumns, true)) {
+                continue;
+            }
+
             $params[":$key"] = $item;
             $fields[]        = "`$key` = :$key";
+        }
+
+        if (empty($fields)) {
+            return false;
         }
 
         $fields = implode(', ', $fields);

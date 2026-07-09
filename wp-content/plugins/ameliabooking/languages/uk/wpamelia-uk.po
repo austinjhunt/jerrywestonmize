@@ -896,6 +896,8 @@ msgid ""
 "Application (client) ID must be a valid GUID (UUID), as shown in the Azure "
 "portal."
 msgstr ""
+"Application (client) ID має бути дійсним GUID (UUID), як показано в порталі "
+"Azure."
 
 msgid "Application fee amount (%)"
 msgstr "Сума комісії за заявку (%)"
@@ -1861,7 +1863,7 @@ msgstr ""
 "Продовжуючи, ви призначите зустріч на час, який вже зайнятий іншою зустріччю!"
 
 msgid "By employees"
-msgstr ""
+msgstr "За працівниками"
 
 msgid ""
 "By entering your phone number you agree to receive messages via WhatsApp"
@@ -2259,6 +2261,8 @@ msgid ""
 "Client secret is too short or looks invalid. Copy the full value from the "
 "Azure portal."
 msgstr ""
+"Секрет клієнта надто короткий або виглядає недійсним. Скопіюйте значення "
+"повністю з порталу Azure."
 
 msgid "Close"
 msgstr "Закрити"
@@ -2295,6 +2299,11 @@ msgstr "Згорнути все"
 
 msgid "Collapse menu"
 msgstr "Згорнути меню"
+
+msgid ""
+"Collect additional information from your customers before they complete a "
+"booking."
+msgstr ""
 
 msgid "Collect the information your business truly needs"
 msgstr "Збирайте інформацію, яка дійсно потрібна вашому бізнесу"
@@ -2499,6 +2508,9 @@ msgstr ""
 msgid "Consulting"
 msgstr "Консалтинг"
 
+msgid "Contact Form"
+msgstr ""
+
 msgid "Contact message"
 msgstr "Контактне повідомлення"
 
@@ -2681,6 +2693,9 @@ msgstr "Створити співробітника"
 
 msgid "Create event"
 msgstr "Створити подію"
+
+msgid "Create form"
+msgstr ""
 
 msgid "Create meetings for pending appointments"
 msgstr "Створити зустрічі для невиконаних записів"
@@ -3058,7 +3073,7 @@ msgid "Date and time"
 msgstr "Дата та час"
 
 msgid "Date busyness indicator"
-msgstr ""
+msgstr "Індикатор зайнятості дати"
 
 msgid "Date of Birth"
 msgstr "Дата народження"
@@ -3928,6 +3943,9 @@ msgstr ""
 "Персоналізуйте кольори та мітки, щоб створити безперервний і брендовий "
 "досвід."
 
+msgid "Enable data usage"
+msgstr ""
+
 msgid "Enable guest booking"
 msgstr "Увімкнути бронювання для гостей"
 
@@ -4225,6 +4243,9 @@ msgid "Enter booking ID"
 msgstr "Будь ласка, введіть тип бронювання"
 
 msgid "Enter both the application (client) ID and client secret."
+msgstr "Введіть обидва значення: ID застосунку (клієнта) та секрет клієнта."
+
+msgid "Enter code"
 msgstr ""
 
 msgid "Enter date of birth"
@@ -4391,6 +4412,9 @@ msgstr "Тип Події"
 msgid "Event available"
 msgstr "Подія доступна"
 
+msgid "Event booking"
+msgstr ""
+
 msgid "Event booking has been created."
 msgstr "Бронювання події було створено."
 
@@ -4505,6 +4529,9 @@ msgstr "Подію збережено"
 msgid "Event has been updated."
 msgstr "Подію оновлено."
 
+msgid "Event image gallery"
+msgstr ""
+
 msgid "Event info"
 msgstr "Інформація про подію"
 
@@ -4616,6 +4643,9 @@ msgstr "Список подій"
 
 msgid "Events list view"
 msgstr "Перегляд списку подій"
+
+msgid "Events pagination"
+msgstr ""
 
 msgid "Events pricing"
 msgstr "Ціни на заходи"
@@ -5197,6 +5227,11 @@ msgid "Healthcare"
 msgstr "Охорона здоров'я"
 
 msgid ""
+"Help us improve Amelia by sharing anonymous data about your plugin usage. No "
+"personal data is collected."
+msgstr ""
+
+msgid ""
 "Here, you can connect your personal Apple Calendar,<br/>so once the booking "
 "is scheduled,<br/>it will be automatically added to your calendar of choice."
 msgstr ""
@@ -5530,6 +5565,9 @@ msgstr "Зображення"
 msgid "Image Color"
 msgstr "Колір зображення"
 
+msgid "Image navigation"
+msgstr ""
+
 msgid "Image thumbs"
 msgstr "Ескізи зображень"
 
@@ -5550,6 +5588,9 @@ msgstr "Імпорт успішний"
 
 msgid "Importing customers"
 msgstr "Імпорт клієнтів"
+
+msgid "Improve Amelia"
+msgstr ""
 
 msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
@@ -5727,6 +5768,9 @@ msgstr "Вставте короткий код бронювання Amelia"
 msgid "Insert pending appointments"
 msgstr "Додати заплановані зустрічі"
 
+msgid "Install & Activate"
+msgstr ""
+
 msgid "Integrate with WooCommerce to enable advanced e-commerce capabilities."
 msgstr ""
 "Інтегруйте з WooCommerce, щоб увімкнути розширені можливості електронної "
@@ -5824,6 +5868,24 @@ msgstr "Елемент"
 
 msgid "Item status"
 msgstr "Статус товару"
+
+msgid "IvyForms"
+msgstr ""
+
+msgid "IvyForms Entries"
+msgstr ""
+
+msgid "IvyForms Field"
+msgstr ""
+
+msgid "IvyForms Form"
+msgstr ""
+
+msgid "IvyForms validation failed."
+msgstr ""
+
+msgid "Ivy setup"
+msgstr ""
 
 msgid "Jane Doe"
 msgstr "Джейн Доу"
@@ -6068,8 +6130,17 @@ msgstr "Завантажте форму бронювання вручну"
 msgid "Load page"
 msgstr "Завантажити сторінку"
 
+msgid "Loading"
+msgstr ""
+
 msgid "Loading..."
 msgstr "Завантаження..."
+
+msgid "Loading event information"
+msgstr ""
+
+msgid "Loading header"
+msgstr ""
 
 msgid "Local Time"
 msgstr "Місцевий час:"
@@ -6216,6 +6287,7 @@ msgstr "Зробити додаткове обов'язковим"
 
 msgid "Make sure you are using the correct Outlook credentials."
 msgstr ""
+"Перевірте, чи використовуєте правильні облікові дані для входу в Outlook."
 
 msgid "Make sure you are using the correct WhatsApp credentials."
 msgstr "Переконайтеся, що ви використовуєте правильні облікові дані WhatsApp."
@@ -6284,6 +6356,9 @@ msgstr "Макс. місткість за зростанням"
 
 msgid "Max Capacity Desc"
 msgstr "Опис максимальної місткості"
+
+msgid "Maximum"
+msgstr ""
 
 msgid "Maximum Quantity:"
 msgstr "Максимальна кількість:"
@@ -6378,6 +6453,9 @@ msgstr "Налаштування Microsoft Teams"
 
 msgid "Min. Capacity"
 msgstr "Мін. Ємність"
+
+msgid "Minimum"
+msgstr ""
 
 msgid "Minimum bookings required"
 msgstr "Необхідна мінімальна кількість бронювань"
@@ -6600,6 +6678,9 @@ msgstr "Наступна послуга"
 
 msgid "Next day reminder"
 msgstr "Нагадування на наступний день"
+
+msgid "Next image"
+msgstr ""
 
 msgid "No"
 msgstr "Ні"
@@ -7198,6 +7279,9 @@ msgstr ""
 msgid "PHP Mail"
 msgstr ""
 
+msgid "PRE-BOOKING INTAKE FORM (IVYFORMS)"
+msgstr ""
+
 msgid "Package"
 msgstr "Пакет"
 
@@ -7616,6 +7700,9 @@ msgstr "Періоди"
 
 msgid "Permanent access token"
 msgstr "Постійний токен доступу"
+
+msgid "Permanently linked"
+msgstr ""
 
 msgid "Person"
 msgstr "Персона"
@@ -8099,6 +8186,9 @@ msgstr "Спливаючі кнопки"
 msgid "Popup title"
 msgstr "Заголовок спливаючого вікна"
 
+msgid "Pre-booking form details"
+msgstr ""
+
 msgid "Preload entities when page loads"
 msgstr "Попередньо завантажити сутності при завантаженні сторінки"
 
@@ -8140,8 +8230,14 @@ msgstr "Попередній перегляд"
 msgid "Preview invoice"
 msgstr "Перегляд рахунку-фактури"
 
+msgid "Previous image"
+msgstr ""
+
 msgid "Previous range"
 msgstr "Попередній діапазон"
+
+msgid "Previous step"
+msgstr ""
 
 msgid "Price"
 msgstr "Вартість:"
@@ -8780,23 +8876,14 @@ msgstr "Шукайте тут"
 msgid "Search..."
 msgstr "Пошук..."
 
-msgid "Search Coupons"
-msgstr "Пошук купонів"
-
 msgid "Search Filters"
 msgstr "Пошукові фільтри"
 
 msgid "Search Input Field"
 msgstr "Профіль співробітника"
 
-msgid "Search Resources"
-msgstr "Пошук ресурсів"
-
 msgid "Search Results"
 msgstr "Результати пошуку"
-
-msgid "Search Taxes"
-msgstr "Пошукові фільтри"
 
 msgid "Search attendees"
 msgstr "Пошук учасників"
@@ -8806,6 +8893,9 @@ msgstr "Пошук заброньованих зустрічей"
 
 msgid "Search bookings"
 msgstr "Пошук бронювань"
+
+msgid "Search coupons"
+msgstr ""
 
 msgid "Search customers"
 msgstr "Пошук клієнтів"
@@ -8843,8 +8933,14 @@ msgstr "Пошук сповіщень"
 msgid "Search packages"
 msgstr "Пошук пакетів"
 
+msgid "Search resources"
+msgstr ""
+
 msgid "Search services"
 msgstr "Пошук послуг"
+
+msgid "Search taxes"
+msgstr ""
 
 msgid "Second"
 msgstr "Другий(гу)"
@@ -8974,6 +9070,9 @@ msgstr "Виберіть продукт WooCommerce"
 msgid "Select Zoom User"
 msgstr "Виберіть Користувача Zoom"
 
+msgid "Select a form..."
+msgstr ""
+
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr ""
 "Виберіть заповнювач, щоб вставити його в місце, де знаходиться ваш курсор."
@@ -9022,9 +9121,6 @@ msgstr ""
 
 msgid "Select or Create New"
 msgstr "Виберіть або створіть новий"
-
-msgid "Select or Create Tag"
-msgstr "Виберіть або Створіть тег"
 
 msgid "Select package"
 msgstr "Виберіть пакет"
@@ -9086,6 +9182,9 @@ msgstr "Вибрати цього працівника"
 
 msgid "Select tickets"
 msgstr "Вибрати квитки"
+
+msgid "Select which IvyForms form to show before booking"
+msgstr ""
 
 msgid "Select your Square Location"
 msgstr "Виберіть своє місце розташування Square"
@@ -10572,6 +10671,9 @@ msgid ""
 "This email is linked to both a customer and an employee account. Please "
 "delete and rebook."
 msgstr ""
+"Цю адресу електронної пошти пов’язано одночасно з обліковим записом клієнта "
+"та обліковим записом співробітника. Будь ласка, видаліть і створіть "
+"бронювання знову."
 
 msgid "This employee is the only one assigned to {service}."
 msgstr "Цей працівник є єдиним призначеним на {service}."
@@ -11992,8 +12094,14 @@ msgstr "із"
 msgid "on"
 msgstr "у"
 
+msgid "opens in new tab"
+msgstr ""
+
 msgid "out of"
 msgstr "із"
+
+msgid "payment button"
+msgstr ""
 
 msgid "people"
 msgstr "Помножте суму депозиту на кількість людей в одному бронюванні"

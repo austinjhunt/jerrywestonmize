@@ -11,9 +11,12 @@ use AmeliaBooking\Application\Controller\Booking\Appointment\GetTimeSlotsControl
 use AmeliaBooking\Application\Controller\Booking\Appointment\UpdateBookingStatusController;
 use AmeliaBooking\Application\Controller\Booking\Event\AddEventController;
 use AmeliaBooking\Application\Controller\Booking\Event\GetEventsController;
+use AmeliaBooking\Application\Controller\Booking\Event\UpdateEventBookingController;
 use AmeliaBooking\Application\Controller\User\Customer\AddCustomerController;
 use AmeliaBooking\Application\Controller\User\Customer\GetCustomersController;
 use AmeliaBooking\Application\Controller\User\Provider\GetProvidersController;
+use AmeliaBooking\Domain\Entity\Entities;
+use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 use AmeliaVendor\Psr\Http\Message\ResponseInterface as Response;
 use Slim\Psr7\Factory\ResponseFactory;
@@ -22,6 +25,12 @@ use WP_Error;
 
 class AmeliaAbilitiesRegistrar
 {
+    private const MCP_LIST_DEFAULT_LIMIT = 25;
+
+    private const MCP_LIST_MAX_LIMIT = 500;
+
+    private const MCP_DEFAULT_DATE_RANGE_DAYS = 90;
+
     /**
      * Register Amelia ability categories.
      */
@@ -143,7 +152,8 @@ class AmeliaAbilitiesRegistrar
         'label'       => __('List Services', 'wpamelia'),
         'description' => __(
             'Use when the user asks what services are available, what can be booked, appointment types,' .
-            ' or pricing. Returns all bookable services with IDs, durations, and prices.' .
+            ' or pricing. Returns bookable services with IDs, durations, and prices.' .
+            ' Results are paginated (use page and limit; default 25 per page).' .
             ' Call this first before amelia/check-availability or amelia/create-appointment.',
             'wpamelia'
         ),
@@ -156,7 +166,12 @@ class AmeliaAbilitiesRegistrar
                     'type'        => 'integer',
                     'minimum'     => 1,
                     'maximum'     => 500,
-                    'description' => 'Number of services to retrieve (default 10, max 500)',
+                    'description' => 'Number of services per page (default 25, max 500). Use with page for pagination.',
+               ),
+                'page' => array(
+                    'type'        => 'integer',
+                    'minimum'     => 1,
+                    'description' => 'Page number for pagination (default 1)',
                ),
                 'search' => array(
                     'type'        => 'string',
@@ -195,11 +210,11 @@ class AmeliaAbilitiesRegistrar
         ),
         'execute_callback' => function ($input) {
             $input  = is_array($input) ? $input : array();
-            $params = array('sort' => 'idAsc');
+            $params = array_merge(
+                array('sort' => 'idAsc'),
+                AmeliaAbilitiesRegistrar::getMcpListPaginationParams($input)
+            );
 
-            if (!empty($input['limit'])) {
-                $params['limit'] = min(500, max(1, (int) $input['limit']));
-            }
             if (!empty($input['search'])) {
                 $params['search'] = sanitize_text_field($input['search']);
             }
@@ -207,7 +222,7 @@ class AmeliaAbilitiesRegistrar
             return AmeliaAbilitiesRegistrar::invokeApplication(GetServicesController::class, $params, [], 'GET');
         },
         'permission_callback' => function () {
-            return current_user_can('amelia_read_services');
+            return AmeliaAbilitiesRegistrar::canListServices();
         },
         'meta' => array(
             'annotations' => array(
@@ -226,7 +241,8 @@ class AmeliaAbilitiesRegistrar
         'label'       => __('List Employees', 'wpamelia'),
         'description' => __(
             'Use when the user asks about staff, employees, therapists, or who performs a service.' .
-            ' Returns provider IDs required by amelia/create-appointment and amelia/check-availability.',
+            ' Returns provider IDs required by amelia/create-appointment and amelia/check-availability.' .
+            ' Results are paginated (use page and limit; default 25 per page).',
             'wpamelia'
         ),
         'category'    => 'amelia-read',
@@ -234,6 +250,17 @@ class AmeliaAbilitiesRegistrar
             'type'       => 'object',
             'default'    => array(),
             'properties' => array(
+                'limit' => array(
+                    'type'        => 'integer',
+                    'minimum'     => 1,
+                    'maximum'     => 500,
+                    'description' => 'Number of employees per page (default 25, max 500). Use with page for pagination.',
+               ),
+                'page' => array(
+                    'type'        => 'integer',
+                    'minimum'     => 1,
+                    'description' => 'Page number for pagination (default 1)',
+               ),
                 'search' => array(
                     'type'        => 'string',
                     'description' => 'Search employees by name',
@@ -273,7 +300,7 @@ class AmeliaAbilitiesRegistrar
         ),
         'execute_callback' => function ($input) {
             $input  = is_array($input) ? $input : array();
-            $params = array();
+            $params = AmeliaAbilitiesRegistrar::getMcpListPaginationParams($input);
 
             if (!empty($input['search'])) {
                 $params['search'] = sanitize_text_field($input['search']);
@@ -301,7 +328,8 @@ class AmeliaAbilitiesRegistrar
         'label'       => __('List Customers', 'wpamelia'),
         'description' => __(
             'Use when the user asks to look up a customer, find a client, or before booking on behalf' .
-            ' of an existing person. Returns customer IDs required by amelia/create-appointment and amelia/book-event.',
+            ' of an existing person. Returns customer IDs required by amelia/create-appointment and amelia/book-event.' .
+            ' Results are paginated (use page and limit; default 25 per page).',
             'wpamelia'
         ),
         'category'    => 'amelia-read',
@@ -313,7 +341,7 @@ class AmeliaAbilitiesRegistrar
                     'type'        => 'integer',
                     'minimum'     => 1,
                     'maximum'     => 500,
-                    'description' => 'Number of customers to retrieve (default 100, max 500)',
+                    'description' => 'Number of customers per page (default 25, max 500). Use with page for pagination.',
                ),
                 'search' => array(
                     'type'        => 'string',
@@ -353,22 +381,16 @@ class AmeliaAbilitiesRegistrar
         ),
         'execute_callback' => function ($input) {
             $input  = is_array($input) ? $input : array();
-            $params = array();
+            $params = AmeliaAbilitiesRegistrar::getMcpListPaginationParams($input);
 
-            if (!empty($input['page'])) {
-                $params['page'] = max(1, (int) $input['page']);
-            }
             if (!empty($input['search'])) {
                 $params['search'] = sanitize_text_field($input['search']);
-            }
-            if (!empty($input['limit'])) {
-                $params['itemsPerPage'] = min(500, max(1, (int) $input['limit']));
             }
 
             return AmeliaAbilitiesRegistrar::invokeApplication(GetCustomersController::class, $params, [], 'GET');
         },
         'permission_callback' => function () {
-            return current_user_can('amelia_read_customers');
+            return AmeliaAbilitiesRegistrar::canListCustomers();
         },
         'meta' => array(
             'annotations' => array(
@@ -387,7 +409,8 @@ class AmeliaAbilitiesRegistrar
         'label'       => __('List Events', 'wpamelia'),
         'description' => __(
             'Use when the user asks about events, classes, workshops, or group sessions.' .
-            ' Returns event IDs, periods, capacity, and availability. Call this before amelia/book-event.',
+            ' Returns event IDs, periods, capacity, and availability. Call this before amelia/book-event.' .
+            ' Results are paginated (use page and limit). When dates are omitted, only events from today through the next 90 days are returned.',
             'wpamelia'
         ),
         'category'    => 'amelia-read',
@@ -399,7 +422,7 @@ class AmeliaAbilitiesRegistrar
                     'type'        => 'integer',
                     'minimum'     => 1,
                     'maximum'     => 500,
-                    'description' => 'Number of events to retrieve (default 100, max 500)',
+                    'description' => 'Number of events per page (default 25, max 500). Use with page for pagination.',
                ),
                 'search' => array(
                     'type'        => 'string',
@@ -413,7 +436,8 @@ class AmeliaAbilitiesRegistrar
                 'dates'  => array(
                     'type'        => 'array',
                     'items'       => array('type' => 'string'),
-                    'description' => 'Filter events by dates in YYYY-MM-DD format',
+                    'maxItems'    => 2,
+                    'description' => 'Optional date range as [startDate, endDate] in YYYY-MM-DD format. Defaults to today through 90 days ahead.',
                ),
            ),
             'additionalProperties' => false,
@@ -452,29 +476,27 @@ class AmeliaAbilitiesRegistrar
                                ),
                            ),
                             'tags'     => array('type' => 'array', 'items' => array('type' => 'object')),
-                            'bookings' => array('type' => 'array', 'items' => array('type' => 'object')),
                        ),
                    ),
                ),
-                'count'      => array('type' => array('integer', 'null')),
-                'countTotal' => array('type' => array('integer', 'null')),
+                'count'      => array('type' => array('integer', 'null'), 'description' => 'Events matching filters on the current page query'),
+                'countTotal' => array('type' => array('integer', 'null'), 'description' => 'Total events in the system'),
            ),
         ),
         'execute_callback' => function ($input) {
             $input  = is_array($input) ? $input : array();
-            $params = array();
+            $params = array_merge(
+                AmeliaAbilitiesRegistrar::getMcpListPaginationParams($input),
+                array('bookings' => false)
+            );
 
             if (!empty($input['search'])) {
                 $params['search'] = sanitize_text_field($input['search']);
             }
             if (!empty($input['dates']) && is_array($input['dates'])) {
                 $params['dates'] = array_map('sanitize_text_field', $input['dates']);
-            }
-            if (!empty($input['page'])) {
-                $params['page'] = max(1, (int) $input['page']);
-            }
-            if (!empty($input['limit'])) {
-                $params['itemsPerPage'] = min(500, max(1, (int) $input['limit']));
+            } else {
+                $params['dates'] = AmeliaAbilitiesRegistrar::getDefaultMcpDateRange();
             }
 
             return AmeliaAbilitiesRegistrar::invokeApplication(GetEventsController::class, $params, [], 'GET');
@@ -501,7 +523,8 @@ class AmeliaAbilitiesRegistrar
                 'Use when the user asks about existing appointments, upcoming bookings, or wants to find' .
                 ' a specific appointment to reschedule or cancel. Returns appointments with IDs, dates,' .
                 ' service, provider, customer, and status. Supports filtering by date range, provider,' .
-                ' service, customer, and status.',
+                ' service, customer, and status. Results are paginated (use page and limit; default 25 per page).' .
+                ' When dates are omitted, only appointments from today through the next 90 days are returned.',
                 'wpamelia'
             ),
             'category'    => 'amelia-read',
@@ -513,7 +536,13 @@ class AmeliaAbilitiesRegistrar
                         'type'        => 'array',
                         'items'       => array('type' => 'string'),
                         'maxItems'    => 2,
-                        'description' => 'Date range as [startDate, endDate] in YYYY-MM-DD format. Omit to use today as the start.',
+                        'description' => 'Optional date range as [startDate, endDate] in YYYY-MM-DD format. Defaults to today through 90 days ahead.',
+                    ),
+                    'limit' => array(
+                        'type'        => 'integer',
+                        'minimum'     => 1,
+                        'maximum'     => 500,
+                        'description' => 'Number of appointments per page (default 25, max 500). Use with page for pagination.',
                     ),
                     'providers' => array(
                         'type'        => 'array',
@@ -605,10 +634,15 @@ class AmeliaAbilitiesRegistrar
             ),
             'execute_callback' => function ($input) {
                 $input  = is_array($input) ? $input : array();
-                $params = array('asArray' => false);
+                $params = array_merge(
+                    array('asArray' => false),
+                    AmeliaAbilitiesRegistrar::getMcpListPaginationParams($input)
+                );
 
                 if (!empty($input['dates']) && is_array($input['dates'])) {
                     $params['dates'] = array_map('sanitize_text_field', $input['dates']);
+                } else {
+                    $params['dates'] = AmeliaAbilitiesRegistrar::getDefaultMcpDateRange();
                 }
                 if (!empty($input['providers'])) {
                     $params['providers'] = array_map('intval', (array) $input['providers']);
@@ -624,9 +658,6 @@ class AmeliaAbilitiesRegistrar
                 }
                 if (!empty($input['search'])) {
                     $params['search'] = sanitize_text_field($input['search']);
-                }
-                if (!empty($input['page'])) {
-                    $params['page'] = max(1, (int) $input['page']);
                 }
 
                 return AmeliaAbilitiesRegistrar::invokeApplication(GetAppointmentsController::class, $params, [], 'GET');
@@ -761,7 +792,7 @@ class AmeliaAbilitiesRegistrar
             return AmeliaAbilitiesRegistrar::invokeApplication(GetTimeSlotsController::class, $params, [], 'GET');
         },
         'permission_callback' => function () {
-            return current_user_can('amelia_read_services');
+            return AmeliaAbilitiesRegistrar::canListServices();
         },
         'meta' => array(
             'annotations' => array(
@@ -924,6 +955,7 @@ class AmeliaAbilitiesRegistrar
                 'lastName'  => sanitize_text_field($input['lastName']),
                 'email'     => sanitize_email($input['email']),
                 'type'      => 'customer',
+                'status'    => 'visible',
             );
 
             if (!empty($input['phone'])) {
@@ -1322,10 +1354,18 @@ class AmeliaAbilitiesRegistrar
                     'description' => 'Updated event (present when type is "event")',
                     'properties'  => array(
                         'id'     => array('type' => 'integer'),
-                        'name'   => array('type' => 'string'),
-                        'status' => array('type' => 'string'),
+                        'name'   => array('type' => array('string', 'null')),
+                        'status' => array(
+                            'type'        => array('string', 'null'),
+                            'description' => 'Raw event status; see newEventStatus for computed display status',
+                        ),
                    ),
                ),
+                'newEventStatus' => array(
+                    'type'        => 'string',
+                    'description' => 'Computed event display status after cancellation (event bookings only)',
+                ),
+                'bookingStatusChanged' => array('type' => 'boolean'),
                 'booking' => array(
                     'type'        => 'object',
                     'description' => 'The canceled CustomerBooking record',
@@ -1345,6 +1385,21 @@ class AmeliaAbilitiesRegistrar
         'execute_callback' => function ($input) {
             $bookingId = (int) $input['bookingId'];
             $type      = !empty($input['type']) ? sanitize_text_field($input['type']) : 'appointment';
+
+            if ($type === Entities::EVENT) {
+                return AmeliaAbilitiesRegistrar::invokeApplication(
+                    UpdateEventBookingController::class,
+                    array(
+                        'bookings' => array(
+                            array(
+                                'id'     => $bookingId,
+                                'status' => 'canceled',
+                            ),
+                        ),
+                    ),
+                    array('id' => $bookingId)
+                );
+            }
 
             return AmeliaAbilitiesRegistrar::invokeApplication(
                 UpdateBookingStatusController::class,
@@ -1368,5 +1423,55 @@ class AmeliaAbilitiesRegistrar
             'mcp'          => array('public' => true),
         ),
         ));
+    }
+
+    /**
+     * Default page/limit query params for MCP list abilities.
+     *
+     * @param array $input
+     * @return array<string, int>
+     */
+    protected static function getMcpListPaginationParams(array $input): array
+    {
+        return array(
+            'page'  => !empty($input['page']) ? max(1, (int) $input['page']) : 1,
+            'limit' => !empty($input['limit'])
+                ? min(self::MCP_LIST_MAX_LIMIT, max(1, (int) $input['limit']))
+                : self::MCP_LIST_DEFAULT_LIMIT,
+        );
+    }
+
+    /**
+     * Default date range for MCP list abilities: today through N days ahead (site timezone).
+     *
+     * @return array{0: string, 1: string}
+     */
+    protected static function getDefaultMcpDateRange(): array
+    {
+        $start = current_time('Y-m-d');
+        $end   = wp_date(
+            'Y-m-d',
+            strtotime('+' . self::MCP_DEFAULT_DATE_RANGE_DAYS . ' days', current_time('timestamp'))
+        );
+
+        return array($start, $end);
+    }
+
+    protected static function canListCustomers(): bool
+    {
+        $container = static::getContainer();
+        $currentUser = $container->get('logged.in.user');
+
+        return $container->getPermissionsService()->currentUserCanRead(Entities::CUSTOMERS)
+            || ($currentUser && $currentUser->getType() === AbstractUser::USER_ROLE_PROVIDER);
+    }
+
+    protected static function canListServices(): bool
+    {
+        $container = static::getContainer();
+        $currentUser = $container->get('logged.in.user');
+
+        return $container->getPermissionsService()->currentUserCanRead(Entities::SERVICES)
+            || ($currentUser && $currentUser->getType() === AbstractUser::USER_ROLE_PROVIDER);
     }
 }

@@ -40,6 +40,7 @@ class PackagesCustomersTable extends AbstractDatabaseTable
                   `bookingsCount` INT(5) DEFAULT NULL,
                   `couponId` INT(11) DEFAULT NULL,
                   `token` VARCHAR({$token}) NULL,
+                  `ivyEntryId` INT(11) DEFAULT NULL,
                   PRIMARY KEY (`id`)
                 ) {$charsetCollate};";
     }

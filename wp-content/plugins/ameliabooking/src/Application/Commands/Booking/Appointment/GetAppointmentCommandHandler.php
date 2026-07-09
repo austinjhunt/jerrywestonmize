@@ -17,6 +17,8 @@ use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
+use AmeliaBooking\Domain\Entity\Bookable\Service\PackageCustomer;
+use AmeliaBooking\Domain\Entity\Bookable\Service\PackageCustomerService;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
@@ -25,9 +27,11 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ServiceRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
+use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageCustomerServiceRepository;
 use AmeliaBooking\Infrastructure\Repository\CustomField\CustomFieldRepository;
 use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
 use AmeliaBooking\Infrastructure\Services\LessonSpace\AbstractLessonSpaceService;
+use AmeliaBooking\Infrastructure\WP\Integrations\IvyForms\IvyFormsService;
 use DateTimeZone;
 use Slim\Exception\ContainerValueNotFoundException;
 
@@ -60,6 +64,9 @@ class GetAppointmentCommandHandler extends CommandHandler
 
         /** @var AppointmentApplicationService $appointmentAS */
         $appointmentAS = $this->container->get('application.booking.appointment.service');
+
+        /** @var PackageCustomerServiceRepository $packageCustomerServiceRepository */
+        $packageCustomerServiceRepository = $this->container->get('domain.bookable.packageCustomerService.repository');
 
         try {
             /** @var AbstractUser $user */
@@ -229,6 +236,27 @@ class GetAppointmentCommandHandler extends CommandHandler
 
             /** @var CustomerBooking $booking */
             foreach ($appointment->getBookings()->getItems() as $booking) {
+                $ivyEntryId = $booking->getIvyEntryId() ? $booking->getIvyEntryId()->getValue() : null;
+
+                if ($booking->getPackageCustomerService()) {
+                    /** @var Collection $packageCustomerServices */
+                    $packageCustomerServices = $packageCustomerServiceRepository->getByCriteria(
+                        [
+                            'ids'   => [$booking->getPackageCustomerService()->getId()->getValue()],
+                        ]
+                    );
+
+                    /** @var PackageCustomerService $packageCustomerService */
+                    foreach ($packageCustomerServices->getItems() as $packageCustomerService) {
+                        /** @var PackageCustomer $packageCustomer */
+                        $packageCustomer = $packageCustomerService->getPackageCustomer();
+
+                        $ivyEntryId = $packageCustomer && $packageCustomer->getIvyEntryId()
+                            ? $packageCustomer->getIvyEntryId()->getValue()
+                            : null;
+                    }
+                }
+
                 $customFields   = [];
                 $bookingPrice   = $paymentAS->calculateAppointmentPrice($booking->toArray(), 'appointment');
                 $bookingsPrice += $bookingPrice;
@@ -312,6 +340,8 @@ class GetAppointmentCommandHandler extends CommandHandler
                     'duration' => $booking->getDuration()
                         ? $booking->getDuration()->getValue()
                         : $service->getDuration()->getValue(),
+                    'ivyEntryId' => $ivyEntryId,
+                    'ivyEntryFields' => $ivyEntryId ? IvyFormsService::getEntryFields($ivyEntryId) : [],
                 ];
             }
 

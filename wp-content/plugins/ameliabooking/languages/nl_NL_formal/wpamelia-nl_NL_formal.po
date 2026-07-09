@@ -892,6 +892,8 @@ msgid ""
 "Application (client) ID must be a valid GUID (UUID), as shown in the Azure "
 "portal."
 msgstr ""
+"Application (client) ID moet een geldige GUID (UUID) zijn, zoals weergegeven "
+"in de Azure portal."
 
 msgid "Application fee amount (%)"
 msgstr "Bedrag applicatiekosten (%)"
@@ -1860,7 +1862,7 @@ msgstr ""
 "een bestaande groepsafspraak!"
 
 msgid "By employees"
-msgstr ""
+msgstr "Per medewerkers"
 
 msgid ""
 "By entering your phone number you agree to receive messages via WhatsApp"
@@ -2255,6 +2257,8 @@ msgid ""
 "Client secret is too short or looks invalid. Copy the full value from the "
 "Azure portal."
 msgstr ""
+"Client secret is te kort of lijkt ongeldig. Kopieer de volledige waarde uit "
+"het Azure-portal."
 
 msgid "Close"
 msgstr "Sluit"
@@ -2291,6 +2295,11 @@ msgstr "Alles samenvouwen"
 
 msgid "Collapse menu"
 msgstr "Menu inklappen"
+
+msgid ""
+"Collect additional information from your customers before they complete a "
+"booking."
+msgstr ""
 
 msgid "Collect the information your business truly needs"
 msgstr "Verzamel de informatie die uw bedrijf echt nodig heeft"
@@ -2495,6 +2504,9 @@ msgstr ""
 msgid "Consulting"
 msgstr "Consultancy"
 
+msgid "Contact Form"
+msgstr ""
+
 msgid "Contact message"
 msgstr "Contactbericht"
 
@@ -2678,6 +2690,9 @@ msgstr "Werknemer aanmaken"
 
 msgid "Create event"
 msgstr "Evenement aanmaken"
+
+msgid "Create form"
+msgstr ""
 
 msgid "Create meetings for pending appointments"
 msgstr "Vergaderingen maken voor openstaande afspraken"
@@ -3057,7 +3072,7 @@ msgid "Date and time"
 msgstr "Datum en tijd"
 
 msgid "Date busyness indicator"
-msgstr ""
+msgstr "Datumdrukte-indicator"
 
 msgid "Date of Birth"
 msgstr "Geboortedatum"
@@ -3925,6 +3940,9 @@ msgstr ""
 "Personaliseer kleuren en labels om een naadloze en merkgebonden ervaring te "
 "creëren."
 
+msgid "Enable data usage"
+msgstr ""
+
 msgid "Enable guest booking"
 msgstr "Gasten boeken mogelijk maken"
 
@@ -4222,6 +4240,9 @@ msgid "Enter booking ID"
 msgstr "Business ID invoeren"
 
 msgid "Enter both the application (client) ID and client secret."
+msgstr "Voer zowel de applicatie (client)-ID als de client secret in."
+
+msgid "Enter code"
 msgstr ""
 
 msgid "Enter date of birth"
@@ -4389,6 +4410,9 @@ msgstr "Eventtype"
 msgid "Event available"
 msgstr "Evenement beschikbaar"
 
+msgid "Event booking"
+msgstr ""
+
 msgid "Event booking has been created."
 msgstr "Evenementboeking is aangemaakt."
 
@@ -4503,6 +4527,9 @@ msgstr "Event is opgeslagen"
 msgid "Event has been updated."
 msgstr "Evenement is bijgewerkt."
 
+msgid "Event image gallery"
+msgstr ""
+
 msgid "Event info"
 msgstr "Evenementinformatie"
 
@@ -4614,6 +4641,9 @@ msgstr "Lijst met evenementen"
 
 msgid "Events list view"
 msgstr "Lijst met evenementen"
+
+msgid "Events pagination"
+msgstr ""
 
 msgid "Events pricing"
 msgstr "Evenementenprijzen"
@@ -5195,6 +5225,11 @@ msgid "Healthcare"
 msgstr "Gezondheidszorg"
 
 msgid ""
+"Help us improve Amelia by sharing anonymous data about your plugin usage. No "
+"personal data is collected."
+msgstr ""
+
+msgid ""
 "Here, you can connect your personal Apple Calendar,<br/>so once the booking "
 "is scheduled,<br/>it will be automatically added to your calendar of choice."
 msgstr ""
@@ -5533,6 +5568,9 @@ msgstr "Afbeelding"
 msgid "Image Color"
 msgstr "Afbeelding Kleur"
 
+msgid "Image navigation"
+msgstr ""
+
 msgid "Image thumbs"
 msgstr "Afbeelding miniaturen"
 
@@ -5553,6 +5591,9 @@ msgstr "Import geslaagd"
 
 msgid "Importing customers"
 msgstr "Klanten importeren"
+
+msgid "Improve Amelia"
+msgstr ""
 
 msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
@@ -5733,6 +5774,9 @@ msgstr "Voeg Amelia Booking shortcode in"
 msgid "Insert pending appointments"
 msgstr "Voeg lopende afspraken in"
 
+msgid "Install & Activate"
+msgstr ""
+
 msgid "Integrate with WooCommerce to enable advanced e-commerce capabilities."
 msgstr ""
 "Integreer met WooCommerce om geavanceerde e-commercefunctionaliteiten te "
@@ -5831,6 +5875,24 @@ msgstr ""
 
 msgid "Item status"
 msgstr "Itemstatus"
+
+msgid "IvyForms"
+msgstr ""
+
+msgid "IvyForms Entries"
+msgstr ""
+
+msgid "IvyForms Field"
+msgstr ""
+
+msgid "IvyForms Form"
+msgstr ""
+
+msgid "IvyForms validation failed."
+msgstr ""
+
+msgid "Ivy setup"
+msgstr ""
 
 msgid "Jane Doe"
 msgstr ""
@@ -6076,8 +6138,17 @@ msgstr "Boekingsformulier handmatig laden"
 msgid "Load page"
 msgstr "Pagina laden"
 
+msgid "Loading"
+msgstr ""
+
 msgid "Loading..."
 msgstr "Laden..."
+
+msgid "Loading event information"
+msgstr ""
+
+msgid "Loading header"
+msgstr ""
 
 msgid "Local Time"
 msgstr "Lokale tijd"
@@ -6223,7 +6294,7 @@ msgid "Make extra mandatory"
 msgstr "Maak extra verplicht"
 
 msgid "Make sure you are using the correct Outlook credentials."
-msgstr ""
+msgstr "Zorg ervoor dat je de juiste Outlook-inloggegevens gebruikt."
 
 msgid "Make sure you are using the correct WhatsApp credentials."
 msgstr "Zorg ervoor dat u de juiste WhatsApp-inloggegevens gebruikt."
@@ -6292,6 +6363,9 @@ msgstr "Maximale capaciteit oplopend"
 
 msgid "Max Capacity Desc"
 msgstr "Beschrijving maximale capaciteit"
+
+msgid "Maximum"
+msgstr ""
 
 msgid "Maximum Quantity:"
 msgstr "Maximum aantal:"
@@ -6386,6 +6460,9 @@ msgstr "Microsoft Teams instellen"
 
 msgid "Min. Capacity"
 msgstr "Min. Capaciteit"
+
+msgid "Minimum"
+msgstr ""
 
 msgid "Minimum bookings required"
 msgstr "Minimale boekingen vereist"
@@ -6610,6 +6687,9 @@ msgstr "Volgende dienst"
 
 msgid "Next day reminder"
 msgstr "Herinnering voor de volgende dag"
+
+msgid "Next image"
+msgstr ""
 
 msgid "No"
 msgstr "Nee"
@@ -7211,6 +7291,9 @@ msgstr ""
 msgid "PHP Mail"
 msgstr "PHP mail"
 
+msgid "PRE-BOOKING INTAKE FORM (IVYFORMS)"
+msgstr ""
+
 msgid "Package"
 msgstr "Pakket"
 
@@ -7631,6 +7714,9 @@ msgstr "Perioden"
 
 msgid "Permanent access token"
 msgstr "Permanent toegangstoken"
+
+msgid "Permanently linked"
+msgstr ""
 
 msgid "Person"
 msgstr "Persoon"
@@ -8115,6 +8201,9 @@ msgstr "Pop-upknoppen"
 msgid "Popup title"
 msgstr "Pop-up titel"
 
+msgid "Pre-booking form details"
+msgstr ""
+
 msgid "Preload entities when page loads"
 msgstr "Entiteiten vooraf laden wanneer de pagina wordt geladen"
 
@@ -8156,8 +8245,14 @@ msgstr "Voorbeeld"
 msgid "Preview invoice"
 msgstr "Voorbeeld factuur"
 
+msgid "Previous image"
+msgstr ""
+
 msgid "Previous range"
 msgstr "Vorige reeks"
+
+msgid "Previous step"
+msgstr ""
 
 msgid "Price"
 msgstr "Prijs"
@@ -8797,23 +8892,14 @@ msgstr "Zoeken"
 msgid "Search..."
 msgstr "Zoeken..."
 
-msgid "Search Coupons"
-msgstr "Zoek Kortingsbonnen"
-
 msgid "Search Filters"
 msgstr "Zoekfilters"
 
 msgid "Search Input Field"
 msgstr "Service Invoerveld"
 
-msgid "Search Resources"
-msgstr "Zoek middelen"
-
 msgid "Search Results"
 msgstr "Zoekresultaten"
-
-msgid "Search Taxes"
-msgstr "Zoekfilters"
 
 msgid "Search attendees"
 msgstr "Zoek deelnemers"
@@ -8823,6 +8909,9 @@ msgstr "Zoek geboekte afspraken"
 
 msgid "Search bookings"
 msgstr "Zoek boekingen"
+
+msgid "Search coupons"
+msgstr ""
 
 msgid "Search customers"
 msgstr "Zoek klanten"
@@ -8860,8 +8949,14 @@ msgstr "Zoek meldingen"
 msgid "Search packages"
 msgstr "Zoek pakketten"
 
+msgid "Search resources"
+msgstr ""
+
 msgid "Search services"
 msgstr "Zoek diensten"
+
+msgid "Search taxes"
+msgstr ""
 
 msgid "Second"
 msgstr "Tweede"
@@ -8991,6 +9086,9 @@ msgstr "Selecteer WooCommerce product"
 msgid "Select Zoom User"
 msgstr "Selecteer Zoom Gebruiker"
 
+msgid "Select a form..."
+msgstr ""
+
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr "Selecteer een placeholder om deze in te voegen waar uw cursor staat."
 
@@ -9038,9 +9136,6 @@ msgstr ""
 
 msgid "Select or Create New"
 msgstr "Selecteer of Maak Nieuwe"
-
-msgid "Select or Create Tag"
-msgstr "Tag selecteren of aanmaken"
 
 msgid "Select package"
 msgstr "Selecteer pakket"
@@ -9101,6 +9196,9 @@ msgstr "Selecteer deze medewerker"
 
 msgid "Select tickets"
 msgstr "Tickets selecteren"
+
+msgid "Select which IvyForms form to show before booking"
+msgstr ""
 
 msgid "Select your Square Location"
 msgstr "Selecteer uw Square-locatie"
@@ -10600,6 +10698,8 @@ msgid ""
 "This email is linked to both a customer and an employee account. Please "
 "delete and rebook."
 msgstr ""
+"Dit e-mailadres is gekoppeld aan zowel een klantaccount als een "
+"medewerkeraccount. Verwijder de boeking en boek opnieuw."
 
 msgid "This employee is the only one assigned to {service}."
 msgstr "Deze medewerker is de enige die is toegewezen aan {service}."
@@ -12026,8 +12126,14 @@ msgstr "van"
 msgid "on"
 msgstr "aan"
 
+msgid "opens in new tab"
+msgstr ""
+
 msgid "out of"
 msgstr "van"
+
+msgid "payment button"
+msgstr ""
 
 msgid "people"
 msgstr "personen"

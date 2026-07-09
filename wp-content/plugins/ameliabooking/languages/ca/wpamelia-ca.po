@@ -900,6 +900,8 @@ msgid ""
 "Application (client) ID must be a valid GUID (UUID), as shown in the Azure "
 "portal."
 msgstr ""
+"L’ID d’aplicació (client) ha de ser un GUID (UUID) vàlid, tal com es mostra "
+"al portal d’Azure."
 
 msgid "Application fee amount (%)"
 msgstr "Import de la quota de sol·licitud (%)"
@@ -1868,7 +1870,7 @@ msgstr ""
 "existent!"
 
 msgid "By employees"
-msgstr ""
+msgstr "Per empleat"
 
 msgid ""
 "By entering your phone number you agree to receive messages via WhatsApp"
@@ -2265,6 +2267,8 @@ msgid ""
 "Client secret is too short or looks invalid. Copy the full value from the "
 "Azure portal."
 msgstr ""
+"El secret de client és massa curt o sembla invàlid. Copieu el valor complet "
+"des del Portal d’Azure."
 
 msgid "Close"
 msgstr "Tancar"
@@ -2301,6 +2305,11 @@ msgstr "Collapsar tot"
 
 msgid "Collapse menu"
 msgstr "Collapse menú"
+
+msgid ""
+"Collect additional information from your customers before they complete a "
+"booking."
+msgstr ""
 
 msgid "Collect the information your business truly needs"
 msgstr "Recopila la informació que realment necessita la teva empresa"
@@ -2509,6 +2518,9 @@ msgstr ""
 msgid "Consulting"
 msgstr "Consultoria"
 
+msgid "Contact Form"
+msgstr ""
+
 msgid "Contact message"
 msgstr "Missatge de contacte"
 
@@ -2692,6 +2704,9 @@ msgstr "Crear empleat"
 
 msgid "Create event"
 msgstr "Crea un esdeveniment"
+
+msgid "Create form"
+msgstr ""
 
 msgid "Create meetings for pending appointments"
 msgstr "Crear reunions per a cites pendents"
@@ -3071,7 +3086,7 @@ msgid "Date and time"
 msgstr "Data i hora"
 
 msgid "Date busyness indicator"
-msgstr ""
+msgstr "Indicador d’ocupació del dia"
 
 msgid "Date of Birth"
 msgstr "Data de naixement"
@@ -3948,6 +3963,9 @@ msgstr ""
 "eficient. Personalitzeu colors i etiquetes per crear una experiència "
 "perfecta i de marca."
 
+msgid "Enable data usage"
+msgstr ""
+
 msgid "Enable guest booking"
 msgstr "Activa la reserva de clients"
 
@@ -4242,6 +4260,9 @@ msgid "Enter booking ID"
 msgstr "Si us plau, introdueix el tipus de reserva"
 
 msgid "Enter both the application (client) ID and client secret."
+msgstr "Introduïu tant l'ID de l'aplicació (client) com el client secret."
+
+msgid "Enter code"
 msgstr ""
 
 msgid "Enter date of birth"
@@ -4410,6 +4431,9 @@ msgstr "Tipus d'esdeveniment"
 msgid "Event available"
 msgstr "Esdeveniment disponible"
 
+msgid "Event booking"
+msgstr ""
+
 msgid "Event booking has been created."
 msgstr "S'ha creat la reserva d'esdeveniments."
 
@@ -4531,6 +4555,9 @@ msgstr "L'esdeveniment s'ha guardat"
 msgid "Event has been updated."
 msgstr "L'esdeveniment s'ha actualitzat."
 
+msgid "Event image gallery"
+msgstr ""
+
 msgid "Event info"
 msgstr "Informació de l&#39;esdeveniment"
 
@@ -4643,6 +4670,9 @@ msgstr "Llista d&#39;esdeveniments"
 
 msgid "Events list view"
 msgstr "Vista de llista d&#39;esdeveniments"
+
+msgid "Events pagination"
+msgstr ""
 
 msgid "Events pricing"
 msgstr "Tarifa d'esdeveniments"
@@ -5230,6 +5260,11 @@ msgid "Healthcare"
 msgstr "Assistència sanitària"
 
 msgid ""
+"Help us improve Amelia by sharing anonymous data about your plugin usage. No "
+"personal data is collected."
+msgstr ""
+
+msgid ""
 "Here, you can connect your personal Apple Calendar,<br/>so once the booking "
 "is scheduled,<br/>it will be automatically added to your calendar of choice."
 msgstr ""
@@ -5572,6 +5607,9 @@ msgstr "Imatge"
 msgid "Image Color"
 msgstr "Color de la imatge"
 
+msgid "Image navigation"
+msgstr ""
+
 msgid "Image thumbs"
 msgstr "Miniatures d&#39;imatge"
 
@@ -5592,6 +5630,9 @@ msgstr "Importació reeixida"
 
 msgid "Importing customers"
 msgstr "Importació de clients"
+
+msgid "Improve Amelia"
+msgstr ""
 
 msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
@@ -5772,6 +5813,9 @@ msgstr "Inserir el codi curt de Amelia Booking"
 msgid "Insert pending appointments"
 msgstr "Insereix cites pendents"
 
+msgid "Install & Activate"
+msgstr ""
+
 msgid "Integrate with WooCommerce to enable advanced e-commerce capabilities."
 msgstr ""
 "Integrar amb WooCommerce per habilitar capacitats avançades de comerç "
@@ -5870,6 +5914,24 @@ msgstr "Element"
 
 msgid "Item status"
 msgstr "Estat de l&#39;element"
+
+msgid "IvyForms"
+msgstr ""
+
+msgid "IvyForms Entries"
+msgstr ""
+
+msgid "IvyForms Field"
+msgstr ""
+
+msgid "IvyForms Form"
+msgstr ""
+
+msgid "IvyForms validation failed."
+msgstr ""
+
+msgid "Ivy setup"
+msgstr ""
 
 msgid "Jane Doe"
 msgstr ""
@@ -6114,8 +6176,17 @@ msgstr "Carregar manualment el formulari de reserva"
 msgid "Load page"
 msgstr "Carregar la pàgina"
 
+msgid "Loading"
+msgstr ""
+
 msgid "Loading..."
 msgstr "Carregant..."
+
+msgid "Loading event information"
+msgstr ""
+
+msgid "Loading header"
+msgstr ""
 
 msgid "Local Time"
 msgstr "Hora:"
@@ -6264,6 +6335,7 @@ msgstr "Fer un extra obligatori"
 
 msgid "Make sure you are using the correct Outlook credentials."
 msgstr ""
+"Assegureu-vos que utilitzeu les credencials d’accés correctes d’Outlook."
 
 msgid "Make sure you are using the correct WhatsApp credentials."
 msgstr ""
@@ -6333,6 +6405,9 @@ msgstr "Capacitat màxima Asc"
 
 msgid "Max Capacity Desc"
 msgstr "Desc de capacitat màxima"
+
+msgid "Maximum"
+msgstr ""
 
 msgid "Maximum Quantity:"
 msgstr "Quantitat màxima:"
@@ -6427,6 +6502,9 @@ msgstr "Configuració de Microsoft Teams"
 
 msgid "Min. Capacity"
 msgstr "Capacitat mínima"
+
+msgid "Minimum"
+msgstr ""
 
 msgid "Minimum bookings required"
 msgstr "Es requereix un mínim de reserves"
@@ -6649,6 +6727,9 @@ msgstr "Pròxim servei"
 
 msgid "Next day reminder"
 msgstr "Recordatori de l&#39;endemà"
+
+msgid "Next image"
+msgstr ""
 
 msgid "No"
 msgstr "NO"
@@ -7248,6 +7329,9 @@ msgstr ""
 msgid "PHP Mail"
 msgstr "Correu PHP"
 
+msgid "PRE-BOOKING INTAKE FORM (IVYFORMS)"
+msgstr ""
+
 msgid "Package"
 msgstr "Paquet"
 
@@ -7668,6 +7752,9 @@ msgstr "Períodes"
 
 msgid "Permanent access token"
 msgstr "Fitxa d'accés permanent"
+
+msgid "Permanently linked"
+msgstr ""
 
 msgid "Person"
 msgstr "persona"
@@ -8155,6 +8242,9 @@ msgstr "Botons emergents"
 msgid "Popup title"
 msgstr "Títol emergent"
 
+msgid "Pre-booking form details"
+msgstr ""
+
 msgid "Preload entities when page loads"
 msgstr "Carregueu prèviament les entitats quan es carrega la pàgina"
 
@@ -8196,8 +8286,14 @@ msgstr "Vista prèvia de la factura"
 msgid "Preview invoice"
 msgstr "Previsualitza la factura"
 
+msgid "Previous image"
+msgstr ""
+
 msgid "Previous range"
 msgstr "Interval anterior"
+
+msgid "Previous step"
+msgstr ""
 
 msgid "Price"
 msgstr "Preu"
@@ -8841,23 +8937,14 @@ msgstr "Buscar"
 msgid "Search..."
 msgstr "Buscar..."
 
-msgid "Search Coupons"
-msgstr "Buscar cupons"
-
 msgid "Search Filters"
 msgstr "Filtres de cerca"
 
 msgid "Search Input Field"
 msgstr "Nota de l'empleat"
 
-msgid "Search Resources"
-msgstr "Cerca Recursos"
-
 msgid "Search Results"
 msgstr "Resultats de la cerca"
-
-msgid "Search Taxes"
-msgstr "Filtres de cerca"
 
 msgid "Search attendees"
 msgstr "Cerca assistents"
@@ -8867,6 +8954,9 @@ msgstr "Cercar cites reservades"
 
 msgid "Search bookings"
 msgstr "Cercar reserves"
+
+msgid "Search coupons"
+msgstr ""
 
 msgid "Search customers"
 msgstr "Buscar clients"
@@ -8904,8 +8994,14 @@ msgstr "Cercar notificacions"
 msgid "Search packages"
 msgstr "Cercar paquets"
 
+msgid "Search resources"
+msgstr ""
+
 msgid "Search services"
 msgstr "Serveis de cerca"
+
+msgid "Search taxes"
+msgstr ""
 
 msgid "Second"
 msgstr "Segon"
@@ -9035,6 +9131,9 @@ msgstr "Selecciona el producte WooCommerce"
 msgid "Select Zoom User"
 msgstr "Selecciona l'usuari de Zoom"
 
+msgid "Select a form..."
+msgstr ""
+
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr ""
 "Seleccioneu un marcador de posició per inserir-lo on es col·loca el cursor."
@@ -9083,9 +9182,6 @@ msgstr ""
 
 msgid "Select or Create New"
 msgstr "Selecciona o crea un de nou"
-
-msgid "Select or Create Tag"
-msgstr "Seleccionar o crear una etiqueta"
 
 msgid "Select package"
 msgstr "Selecciona el paquet"
@@ -9149,6 +9245,9 @@ msgstr "Selecciona aquest empleat"
 
 msgid "Select tickets"
 msgstr "Selecciona entrades"
+
+msgid "Select which IvyForms form to show before booking"
+msgstr ""
 
 msgid "Select your Square Location"
 msgstr "Selecciona la teva plaça"
@@ -10657,6 +10756,9 @@ msgid ""
 "This email is linked to both a customer and an employee account. Please "
 "delete and rebook."
 msgstr ""
+"Aquesta adreça de correu electrònic està associada tant a un compte de "
+"client com a un compte d'empleat. Si us plau, suprimiu la reserva i torneu-"
+"la a crear."
 
 msgid "This employee is the only one assigned to {service}."
 msgstr "Aquest empleat és l'únic assignat{service}."
@@ -12082,8 +12184,14 @@ msgstr "de"
 msgid "on"
 msgstr "en"
 
+msgid "opens in new tab"
+msgstr ""
+
 msgid "out of"
 msgstr "fora de"
+
+msgid "payment button"
+msgstr ""
 
 msgid "people"
 msgstr "El preu es multiplicarà per la quantitat de persones"

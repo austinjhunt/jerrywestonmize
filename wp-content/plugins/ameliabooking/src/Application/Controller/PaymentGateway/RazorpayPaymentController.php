@@ -43,6 +43,7 @@ class RazorpayPaymentController extends Controller
         'deposit',
         'componentProps',
         'returnUrl',
+        'ivy',
     ];
 
     /**

@@ -54,8 +54,8 @@
 	// Avoid Plugin.prototype conflicts
 	$.extend(ForminatorLoader.prototype, {
 		init: function () {
-			var param = (decodeURI(document.location.search)).replace(/(^\?)/, '').split("&").map(function (n) {
-				return n = n.split("="), this[n[0]] = n[1], this
+			const param = (decodeURI(document.location.search)).replace(/(^\?)/, '').split("&").map(function (n) {
+				return n = n.split("="), this[n[0].replace(/[.]/g, '_')] = n[1], this
 			}.bind({}))[0];
 			var saved_render_id = param.render_id;
 
@@ -181,10 +181,17 @@
 			    message         = '',
 			    wrapper_message = null;
 
-			wrapper_message = $(html).find('.forminator-response-message');
-			if (wrapper_message.length) {
+			// Try to find message in current DOM, if not found, try to find in new HTML
+			wrapper_message = this.$el.find('.forminator-response-message');
+			if (wrapper_message.length && $.trim(wrapper_message.text()) !== '') {
 				message = wrapper_message.get(0).outerHTML;
+			} else {
+				wrapper_message = $(html).find('.forminator-response-message');
+				if (wrapper_message.length && $.trim(wrapper_message.text()) !== '') {
+					message = wrapper_message.get(0).outerHTML;
+				}
 			}
+
 			wrapper_message = this.$el.find('.forminator-poll-response-message');
 			if (wrapper_message.length) {
 				message = wrapper_message.get(0).outerHTML;

@@ -1378,9 +1378,7 @@ class Forminator_Form_Entry_Model {
 								continue;
 							}
 
-							$normalized_upload_root = wp_normalize_path( $upload_root );
-							$normalized_path        = wp_normalize_path( $path );
-							if ( ! empty( $normalized_upload_root ) && 0 !== strpos( $normalized_path, $normalized_upload_root ) ) {
+							if ( ! forminator_attachment_path_is_allowed( $path ) ) {
 								continue;
 							}
 

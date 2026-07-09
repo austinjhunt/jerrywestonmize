@@ -3,7 +3,7 @@ Contributors: WPMUDEV
 Tags: contact form, custom form, forms, payment form, WordPress form plugin
 Requires at least: 6.4
 Tested up to: 7.0
-Stable tag: 1.54
+Stable tag: 1.55.0
 Requires PHP: 7.4
 License: GPL v3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -231,6 +231,62 @@ We take plugin security incredibly seriously; if you have a bug or vulnerability
 
 == Changelog ==
 
+= 1.55.1 ( 2026-07-02 ) =
+
+- Fix: Security improvements
+
+
+= 1.55.0 ( 2026-06-10 ) =
+
+- Enhancement: Improved performance for forms with complex conditional logic and large numbers of fields in Safari
+- Enhancement: Added configurable PDF rendering options for displaying images as images or links/text
+- Enhancement: Improved MailerLite integration support for double opt-in workflows
+- Enhancement: Added support for default values in the Rating field
+- Enhancement: Added submission ID support to both manual and scheduled submission exports
+- Enhancement: Improved Post Data field error messages to display the relevant field label
+- Enhancement: Added clearer password strength requirement guidance
+- Enhancement: Added validation for Poll notification subject fields
+- Enhancement: Security improvements
+- Fix: Form submissions no longer fail when a required field has visibility condition based on Upload field
+- Fix: Save Draft now works correctly for repeated Group fields containing Multiple File Upload fields when resuming drafts
+- Fix: Signature field submissions are now saved correctly when forms are loaded via AJAX inside popups
+- Fix: Captcha v2 validation is now enforced before users can proceed to the next page in paginated forms
+- Fix: Resolved reCAPTCHA invalid alerts appearing on paginated forms
+- Fix: Defender Login Protection feature now works correctly in Forminator login forms
+- Fix: Warning appears when Group Field and Save & Continue are enabled
+- Fix: Corrected warning message displayed after draft submission when using Page Reload with AJAX-loaded forms
+- Fix: Misc Data fields now work correctly in Resume Message for Save & Continue forms
+- Fix: Submissions Export button no longer redirects users to the front-end site while the page is loading
+- Fix: TinyMCE editor now initializes correctly inside Elementor popups
+- Fix: Improved Rich Text field compatibility with modal boxes and popups
+- Fix: Resolved AJAX loading conflicts between Forminator forms and Hustle popups on the same page
+- Fix: Eliminated unnecessary multiple views when creating, editing, and saving posts with attached forms, quizzes, or polls
+- Fix: Resolved console errors when creating new forms or copying shortcodes
+- Fix: HTML field now works correctly when multiple forms are present on the same page
+- Fix: Datepicker limits based on another Datepicker now work correctly when multiple copies of the same form exist on a page
+- Fix: Datepicker now validates pasted and browser-autofilled date values correctly
+- Fix: Corrected file size calculations during uploads to ensure accurate validation messages
+- Fix: Upload field now correctly restricts selectable file types when only ZIP files are allowed
+- Fix: Multiple uploaded files now display correctly in HTML fields
+- Fix: Prevented HTML from appearing in Textarea field submissions
+- Fix: Select fields containing HTML tags in option values can now be submitted correctly
+- Fix: Submission limits for Select fields now work correctly in Quiz Lead forms
+- Fix: Quiz submission CSV exports now include values for questions with multiple correct answers
+- Fix: Removed duplicate "Ready to send" button from paginated Personality Quiz previews
+- Fix: Pagination step labels no longer persist after removing Page Break fields and re-importing forms
+- Fix: Resolved empty Hidden field data issue when using the "Embed Post/Page Title" option
+- Fix: Country Address field pre-population now works correctly when default values are modified
+- Fix: Corrected phone number validation issues for some countries
+- Fix: Post Data field macros now work correctly inside HTML fields
+- Fix: Removed obsolete calculator values from Google Sheets after Calculation fields are removed from forms
+- Fix: Corrected display issues with custom-sized radio and checkbox images when horizontally aligned
+- Fix: Added support for customizing quiz question description colors
+- Fix: Social share messages now post correctly to LinkedIn profiles
+- Fix: View Poll Results now scrolls correctly to the results chart
+- Fix: Poll notification fields now display properly
+- Fix: Forminator blocks can now be aligned properly within the Gutenberg editor
+- Fix: Removed PHP 8.5 deprecation warning related to Poll functionality
+
 
 = 1.54.0 ( 2026-05-20 ) =
 
@@ -413,65 +469,6 @@ We take plugin security incredibly seriously; if you have a bug or vulnerability
 - Fix: Incorrect column order for cloned Group sub-fields in the Google Sheets integration
 - Fix: "Open in New Tab" is not working in the HTML field
 - Fix: Offset calculation for the Datepicker is affected by the visitor's timezone
-
-
-= 1.50.3 ( 2026-02-10 ) =
-
-- Fix: Security improvements
-
-
-= 1.50.2 ( 2026-02-10 ) =
-
-- Fix: Security improvements
-
-
-= 1.50.1 ( 2026-01-15 ) =
-
-- Fix: Fatal error caused by 'FORMINATOR_ENCRYPTION_KEY' when leftover integration data exists in the database
-
-
-= 1.50.0 ( 2026-01-12 ) =
-
-- Enhancement: Improve Stripe Payments to support BLIK payment method
-- Enhancement: Add an "Email Image Options" setting to choose between image links or image previews in Email Notifications
-- Enhancement: Add Forminator plugin deactivation survey
-- Enhancement: Add Hub disconnect survey
-- Enhancement: Remove all documentation links when White Label is enabled
-- Enhancement: Improve compatibility with B2BKing plugin
-- Enhancement: Add notification when webhook connection fails
-- Enhancement: Add the 'forminator_custom_form_mail_exclude_html_fields' filter to exclude HTML fields from email notifications
-- Enhancement: Add the 'forminator_akismet_values' filter to modify data sent to Akismet
-- Enhancement: Add an admin notice prompting users to set FORMINATOR_ENCRYPTION_KEY for security integration API keys
-- Enhancement: Collapse the WordPress admin menu in the Form Builder
-- Enhancement: Add response data to the 'forminator:form:submit:success' JS event
-- Enhancement: Add character limit to Feature survey
-- Fix: An error occurs when pre-filling PayPal billing details using the Name field
-- Fix: The PayPal checkout button doesn't display for some languages
-- Fix: Submit button visibility condition can be bypassed by removing hidden class in browser
-- Fix: Users with permission to view the Add-ons page cannot install add-ons
-- Fix: Send the Select field "Other option" value to the Google Sheets integration
-- Fix: Line breaks don't work on the Submissions page for Post Content and Textarea fields
-- Fix: Weekly notifications don't work when scheduled for a time other than 12:00 AM
-- Fix: Filtering by ID doesn't work for quizzes without leads on the Submissions page
-- Fix: Form fields don't reset when submitting a draft
-- Fix: Select field checkboxes don't reset after submission
-- Fix: Date field's Start Date option doesn't work inside Group field
-- Fix: "Save as draft" link isn't enabled when adding or removing items from a Field Group
-- Fix: Special characters like "&" in Select options break submission limits
-- Fix: Select fields have a grey background even when the "Use Theme Colors" option is enabled
-- Fix: Required error messages don't display for the Signature field in paginated forms
-- Fix: Color picker is missing transparency setting in Appearance Presets editor
-- Fix: Field rows overflow in the Form Builder on small screens
-- Fix: Akismet Protection toggle issue
-- Fix: Stripe field amount issues caused by custom currency field formatting
-- Fix: Rich-text editor for Textarea field doesn't load in preview
-- Fix: Euro currency values are rounded in emails
-- Fix: The first section isn't selected in the Field Settings popup for some fields
-- Fix: Field labels and descriptions overlap when using the Material Design style
-- Fix: Button text and icons overlap in the Form Builder for RTL languages
-- Fix: Some Email notification conditions aren't displayed for Personality Quizzes
-- Fix: Name prefix is not translated on Submissions page
-- Fix: Calculation field causes Google PSI issue
 
 
 **Full changelog can be found here – [Forminator changelog](https://wpmudev.com/project/forminator-pro/#changelog_all?utm_source=wordpress.org&utm_medium=readme&utm_campaign=forminator-readme&utm_content=wpmu_dev_changelog_link).**

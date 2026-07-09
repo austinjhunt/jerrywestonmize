@@ -108,7 +108,8 @@ class PackageCustomerServiceFactory
                         'couponId'      => $row['package_customer_couponId'],
                         'package'       => [
                             'name' => $row['package_name']
-                        ]
+                        ],
+                        'ivyEntryId'    => $row['package_customer_ivyEntryId'],
                     ]
                 ];
             }

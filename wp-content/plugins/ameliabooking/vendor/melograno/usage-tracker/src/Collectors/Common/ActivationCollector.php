@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Melograno\UsageTracker\Collectors\Common;
+namespace AmeliaVendor\Melograno\UsageTracker\Collectors\Common;
 
 class ActivationCollector
 {

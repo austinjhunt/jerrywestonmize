@@ -69,16 +69,14 @@ class LoginCabinetCommandHandler extends CommandHandler
         }
 
         // If logged in as WP user that is connected with Amelia user
-        if ($user && $user->getId() !== null && $user->getType() === $cabinetType) {
+        if (
+            $user &&
+            (
+                ($user->getId() !== null && $user->getType() === $cabinetType) ||
+                in_array($user->getType(), [AbstractUser::USER_ROLE_ADMIN, AbstractUser::USER_ROLE_MANAGER], true)
+            )
+        ) {
             return $userAS->getAuthenticatedUserResponse($user, true, false, LoginType::WP_USER, $cabinetType);
-        }
-
-        // If it's not WP user connected with Amelia user, and it should only check WP login (tokens not sent)
-        if ($command->getField('checkIfWpUser')) {
-            $result->setResult(CommandResult::RESULT_SUCCESS);
-            $result->setData(['authentication_required' => true]);
-
-            return $result;
         }
 
         // If token is sent return authenticated user
@@ -99,6 +97,14 @@ class LoginCabinetCommandHandler extends CommandHandler
             }
 
             return $userAS->getAuthenticatedUserResponse($user, true, true, $user->getLoginType(), $cabinetType, $command->getField('changePass'));
+        }
+
+        // If it's not WP user connected with Amelia user, and it should only check WP login (tokens not sent)
+        if ($command->getField('checkIfWpUser')) {
+            $result->setResult(CommandResult::RESULT_SUCCESS);
+            $result->setData(['authentication_required' => true]);
+
+            return $result;
         }
 
         // If token is not set, check if email and password are passed

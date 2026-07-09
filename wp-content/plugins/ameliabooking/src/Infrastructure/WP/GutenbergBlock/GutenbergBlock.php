@@ -23,6 +23,9 @@ use AmeliaBooking\Infrastructure\Repository\Bookable\Service\CategoryRepository;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ServiceRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventTagsRepository;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
+use AmeliaBooking\Infrastructure\WP\Integrations\IvyForms\IvyFormsService;
+use AmeliaBooking\Infrastructure\WP\Integrations\PluginInstaller;
+use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use Exception;
 
@@ -312,6 +315,14 @@ class GutenbergBlock
 
             $finalData['tags'] = $tags->toArray();
 
+            $forms = $settingsDS->isFeatureEnabled('ivy') && PluginInstaller::isPluginActive('ivyforms')
+                ? IvyFormsService::getForms()
+                : [];
+
+            $finalData['ivy'] = $forms
+                ? array_merge([['value' => '0', 'label' => BackendStrings::get('ivy_select')]], $forms)
+                : [];
+
             self::$entities = ['data' => $finalData];
 
             return self::$entities;
@@ -324,6 +335,7 @@ class GutenbergBlock
                 'events'       => [],
                 'tags'         => [],
                 'packages'     => [],
+                'ivy'          => [],
             ]];
         }
     }

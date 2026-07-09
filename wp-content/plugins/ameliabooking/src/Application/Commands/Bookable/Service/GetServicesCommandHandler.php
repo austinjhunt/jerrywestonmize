@@ -14,6 +14,7 @@ use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Entities;
+use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Domain\ValueObjects\String\Status;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
@@ -41,7 +42,13 @@ class GetServicesCommandHandler extends CommandHandler
      */
     public function handle(GetServicesCommand $command)
     {
-        if (!$command->getPermissionService()->currentUserCanRead(Entities::SERVICES)) {
+        /** @var AbstractUser|null $currentUser */
+        $currentUser = $this->container->get('logged.in.user');
+
+        if (
+            !$command->getPermissionService()->currentUserCanRead(Entities::SERVICES) &&
+            !($currentUser && $currentUser->getType() === AbstractUser::USER_ROLE_PROVIDER)
+        ) {
             throw new AccessDeniedException('You are not allowed to read services.');
         }
 
@@ -57,18 +64,28 @@ class GetServicesCommandHandler extends CommandHandler
 
         $params = $command->getField('params');
 
+        if (
+            !$command->getPermissionService()->currentUserCanReadOthers(Entities::SERVICES) &&
+            $currentUser &&
+            $currentUser->getType() === AbstractUser::USER_ROLE_PROVIDER
+        ) {
+            $params['providers'] = [$currentUser->getId()->getValue()];
+        }
+
         $itemsPerPage = !empty($params['limit']) ? $params['limit'] : 10;
+
+        $queryParams = array_merge(
+            $params,
+            [
+                'sort' => !empty($command->getField('params')['sort'])
+                    ? $command->getField('params')['sort']
+                    : 'idAsc',
+            ]
+        );
 
         /** @var Collection $services */
         $services = $serviceRepository->getFiltered(
-            array_merge(
-                $params,
-                [
-                    'sort' => !empty($command->getField('params')['sort'])
-                        ? $command->getField('params')['sort']
-                        : 'idAsc',
-                ]
-            ),
+            $queryParams,
             $itemsPerPage
         );
 
@@ -121,7 +138,7 @@ class GetServicesCommandHandler extends CommandHandler
         $result->setData(
             [
                 Entities::SERVICES => $servicesArray,
-                'countFiltered'             => (int)$serviceRepository->getCount($command->getField('params')),
+                'countFiltered'             => (int)$serviceRepository->getCount($params),
                 'countTotalByCategory'   => (int)$serviceRepository->getCount([
                     'categoryId' => !empty($command->getField('params')['categoryId'])
                         ? $command->getField('params')['categoryId']

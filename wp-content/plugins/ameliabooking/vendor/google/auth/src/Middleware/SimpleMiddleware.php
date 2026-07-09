@@ -21,7 +21,7 @@ use AmeliaVendor\GuzzleHttp\Psr7\Query;
 use AmeliaVendor\Psr\Http\Message\RequestInterface;
 
 /**
- * SimpleMiddleware is a Guzzle Middleware that implements AmeliaVendor\Google's Simple API
+ * SimpleMiddleware is a Guzzle Middleware that implements Google's Simple API
  * access.
  *
  * Requests are accessed using the Simple API access developer key.

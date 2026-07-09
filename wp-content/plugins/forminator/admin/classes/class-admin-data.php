@@ -49,6 +49,7 @@ class Forminator_Admin_Data {
 		$data['fieldsPro'] = forminator_get_pro_fields();
 
 		$data['default_required_messages'] = Forminator_Field::$default_required_messages;
+		$data['passwordStrengthMessages']  = Forminator_Password::get_strength_messages();
 
 		return $data;
 	}

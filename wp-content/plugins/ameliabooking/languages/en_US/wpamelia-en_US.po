@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Amelia\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-03 08:05+0000\n"
+"POT-Creation-Date: 2026-06-15 07:47+0000\n"
 "PO-Revision-Date: 2025-11-20 16:11+0100\n"
 "Last-Translator: \n"
 "Language-Team: Amelia\n"
@@ -1434,7 +1434,7 @@ msgid ""
 "It's used for internal management purposes."
 msgstr ""
 
-msgid "Search Resources"
+msgid "Search resources"
 msgstr ""
 
 msgid "Quantity is shared"
@@ -1727,9 +1727,6 @@ msgstr ""
 msgid "Expired"
 msgstr ""
 
-msgid "Discard"
-msgstr ""
-
 msgid "Discount (%)"
 msgstr ""
 
@@ -1944,7 +1941,7 @@ msgstr ""
 msgid "Edit Tax"
 msgstr ""
 
-msgid "Search Taxes"
+msgid "Search taxes"
 msgstr ""
 
 msgid "New tax"
@@ -1999,7 +1996,7 @@ msgstr ""
 msgid "Event name"
 msgstr ""
 
-msgid "Search Coupons"
+msgid "Search coupons"
 msgstr ""
 
 msgid "Invoice"
@@ -4754,6 +4751,9 @@ msgstr ""
 msgid "Mailchimp setup"
 msgstr ""
 
+msgid "Ivy setup"
+msgstr ""
+
 msgid "Meta"
 msgstr ""
 
@@ -4881,6 +4881,9 @@ msgid "Please enter a ticket code."
 msgstr ""
 
 msgid "Enter ticket code manually"
+msgstr ""
+
+msgid "Enter code"
 msgstr ""
 
 msgid "reCAPTCHA Type"
@@ -6042,7 +6045,7 @@ msgstr ""
 msgid "No Tags. Create a new one."
 msgstr ""
 
-msgid "Select or Create Tag"
+msgid "Select Tag"
 msgstr ""
 
 msgid "Manage Event Tags"
@@ -7068,6 +7071,17 @@ msgid ""
 "Plugin and spread the word about it."
 msgstr ""
 
+msgid "Improve Amelia"
+msgstr ""
+
+msgid "Enable data usage"
+msgstr ""
+
+msgid ""
+"Help us improve Amelia by sharing anonymous data about your plugin usage. No "
+"personal data is collected."
+msgstr ""
+
 msgid "Send all notifications to additional addresses"
 msgstr ""
 
@@ -7126,6 +7140,9 @@ msgid "Comma-dot"
 msgstr ""
 
 msgid "Company"
+msgstr ""
+
+msgid "Discard"
 msgstr ""
 
 msgid "Meta Pixel"
@@ -9020,9 +9037,6 @@ msgstr ""
 msgid "Select Events"
 msgstr ""
 
-msgid "Select Tag"
-msgstr ""
-
 msgid "Select Tags"
 msgstr ""
 
@@ -9107,6 +9121,47 @@ msgid "Class"
 msgstr ""
 
 msgid "Trigger by attribute"
+msgstr ""
+
+msgid "Install & Activate"
+msgstr ""
+
+msgid "PRE-BOOKING INTAKE FORM (IVYFORMS)"
+msgstr ""
+
+msgid "Select which IvyForms form to show before booking"
+msgstr ""
+
+msgid "Select a form..."
+msgstr ""
+
+msgid "IvyForms"
+msgstr ""
+
+msgid ""
+"Collect additional information from your customers before they complete a "
+"booking."
+msgstr ""
+
+msgid "IvyForms Form"
+msgstr ""
+
+msgid "Create form"
+msgstr ""
+
+msgid "Contact Form"
+msgstr ""
+
+msgid "IvyForms Field"
+msgstr ""
+
+msgid "IvyForms Entries"
+msgstr ""
+
+msgid "Pre-booking form details"
+msgstr ""
+
+msgid "Permanently linked"
 msgstr ""
 
 msgid "Step Booking"
@@ -11307,6 +11362,18 @@ msgstr ""
 msgid "Oops..."
 msgstr ""
 
+msgid "opens in new tab"
+msgstr ""
+
+msgid "Previous step"
+msgstr ""
+
+msgid "Loading"
+msgstr ""
+
+msgid "Loading header"
+msgstr ""
+
 msgid "Phone:"
 msgstr ""
 
@@ -11331,10 +11398,28 @@ msgstr ""
 msgid "Please use a different email or phone number to complete the booking."
 msgstr ""
 
+msgid "Image navigation"
+msgstr ""
+
+msgid "Next image"
+msgstr ""
+
+msgid "Previous image"
+msgstr ""
+
+msgid "Minimum"
+msgstr ""
+
+msgid "Maximum"
+msgstr ""
+
 msgid "Email Address"
 msgstr ""
 
 msgid "Get in Touch"
+msgstr ""
+
+msgid "IvyForms validation failed."
 msgstr ""
 
 msgid "Or pay with card"
@@ -11373,6 +11458,9 @@ msgstr ""
 msgid "Local Time"
 msgstr ""
 
+msgid "payment button"
+msgstr ""
+
 msgid "Event Starts"
 msgstr ""
 
@@ -11389,6 +11477,18 @@ msgid "Event Available"
 msgstr ""
 
 msgid "Search for Events"
+msgstr ""
+
+msgid "Loading event information"
+msgstr ""
+
+msgid "Events pagination"
+msgstr ""
+
+msgid "Event booking"
+msgstr ""
+
+msgid "Event image gallery"
 msgstr ""
 
 msgid "Event Location"

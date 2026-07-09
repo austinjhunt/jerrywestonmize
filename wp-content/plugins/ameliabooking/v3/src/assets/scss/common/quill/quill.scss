@@ -1,10 +1,16 @@
 .ql-description {
   .ql-font-serif {
-    font-family: Georgia, Times New Roman, serif;
+    font-family:
+      Georgia,
+      Times New Roman,
+      serif;
   }
 
   .ql-font-monospace {
-    font-family: Monaco, Courier New, monospace;
+    font-family:
+      Monaco,
+      Courier New,
+      monospace;
   }
 
   .ql-size-small {
@@ -69,28 +75,28 @@
     content: '\2022';
   }
 
-  ul[data-checked=true],
-  ul[data-checked=false] {
+  ul[data-checked='true'],
+  ul[data-checked='false'] {
     pointer-events: none;
   }
 
-  ul[data-checked=true] > li *,
-  ul[data-checked=false] > li * {
+  ul[data-checked='true'] > li *,
+  ul[data-checked='false'] > li * {
     pointer-events: all;
   }
 
-  ul[data-checked=true] > li::before,
-  ul[data-checked=false] > li::before {
+  ul[data-checked='true'] > li::before,
+  ul[data-checked='false'] > li::before {
     color: #777;
     cursor: pointer;
     pointer-events: all;
   }
 
-  ul[data-checked=true] > li::before {
+  ul[data-checked='true'] > li::before {
     content: '\2611';
   }
 
-  ul[data-checked=false] > li::before {
+  ul[data-checked='false'] > li::before {
     content: '\2610';
   }
 

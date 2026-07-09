@@ -179,8 +179,8 @@ class AmeliaEventsListBookingButtonElementorWidget extends Widget_Button
         $autoTrigger = 'amelia-events-list-booking-btn-' . substr(md5($this->get_id()), 0, 8);
 
         $shortcode  = '[ameliaeventslistbooking';
-        $shortcode .= ' trigger=' . $autoTrigger;
-        $shortcode .= ' trigger_type=id';
+        $shortcode .= ' trigger="' . esc_attr($autoTrigger) . '"';
+        $shortcode .= ' trigger_type="id"';
         $shortcode .= ' in_dialog=1';
 
         $toCsvIds = static function ($value): string {
@@ -194,7 +194,7 @@ class AmeliaEventsListBookingButtonElementorWidget extends Widget_Button
             if (!empty($settings['select_event'])) {
                 $event = $toCsvIds($settings['select_event']);
                 if ($event !== '') {
-                    $shortcode .= ' event=' . $event;
+                    $shortcode .= ' event="' . esc_attr($event) . '"';
                 }
             } elseif (!empty($settings['event_to_show']) && $settings['event_to_show'] !== 'all') {
                 if ($settings['event_to_show'] === 'custom') {
@@ -204,27 +204,29 @@ class AmeliaEventsListBookingButtonElementorWidget extends Widget_Button
                         return;
                     }
 
-                    $shortcode .= ' range="' . sanitize_text_field((string) $settings['start_date'])
-                        . ' - '
-                        . sanitize_text_field((string) $settings['end_date']) . '"';
+                    $shortcode .= ' range="' . esc_attr($settings['start_date'] . ' - ' . $settings['end_date']) . '"';
                 } else {
-                    $shortcode .= ' range="' . sanitize_key((string) $settings['event_to_show']) . '"';
+                    $shortcode .= ' range="' . esc_attr($settings['event_to_show']) . '"';
                 }
             }
 
             if (!empty($settings['select_location'])) {
                 $location = $toCsvIds($settings['select_location']);
                 if ($location !== '') {
-                    $shortcode .= ' location=' . $location;
+                    $shortcode .= ' location="' . esc_attr($location) . '"';
                 }
             }
 
             if (!empty($settings['select_tag'])) {
                 $tags = is_array($settings['select_tag']) ? $settings['select_tag'] : [$settings['select_tag']];
-                $tags = array_values(array_filter(array_map('sanitize_text_field', $tags)));
+                $tags = array_values(array_filter($tags));
 
                 if (!empty($tags)) {
-                    $shortcode .= ' tag="{' . implode('},{', $tags) . '}"';
+                    $shortcode .= ' tag="';
+                    foreach ($tags as $index => $tag) {
+                        $shortcode .= ($index === 0 ? '' : ',') . '{' . esc_attr($tag) . '}';
+                    }
+                    $shortcode .= '"';
                 }
             }
 
@@ -312,7 +314,7 @@ class AmeliaEventsListBookingButtonElementorWidget extends Widget_Button
 
         // Keep the legacy shortcode class so existing frontend scans also pick this up.
         echo '<div class="amelia-step-booking-shortcode amelia-events-list-booking-shortcode" style="display:none">'
-            . esc_html($shortcode)
+            . $shortcode
             . '</div>';
     }
 }

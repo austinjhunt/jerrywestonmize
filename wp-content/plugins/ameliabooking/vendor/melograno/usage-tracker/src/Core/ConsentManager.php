@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Melograno\UsageTracker\Core;
+namespace AmeliaVendor\Melograno\UsageTracker\Core;
 
 class ConsentManager
 {
-    /** @var string */
-    private $optionName;
+    private string $optionName;
 
     public function __construct(string $optionName)
     {
@@ -22,7 +21,7 @@ class ConsentManager
     public function isEnabled(): bool
     {
         if (!$this->isConfigured()) {
-            return true;
+            return false;
         }
 
         return (bool) get_option($this->optionName, false);
@@ -36,11 +35,6 @@ class ConsentManager
     public function disable(): void
     {
         update_option($this->optionName, 0, true);
-    }
-
-    public function getOptionName(): string
-    {
-        return $this->optionName;
     }
 
     public function delete(): void

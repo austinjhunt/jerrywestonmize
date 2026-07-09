@@ -7,15 +7,27 @@ Shared WordPress library for anonymous plugin usage telemetry across Melograno p
 After Composer autoload is loaded:
 
 ```php
-\Melograno\UsageTracker\Core\UsageTracker::init(
-    new \Melograno\UsageTracker\Collectors\Plugin\AmeliaCollector(),
-    __FILE__ // activation: default consent opt-in; deactivation: clear cron
-);
+$savedVersion = /* host plugin version stored before upgrade */;
+$collector = new \Melograno\UsageTracker\Collectors\Plugin\AmeliaCollector();
+
+\Melograno\UsageTracker\Core\UsageTracker::init($collector, __FILE__, $savedVersion, '1.2.3');
 ```
 
-Each product collector (`AmeliaCollector`, `WpDataTablesCollector`, `IvyFormsCollector`) defines `getPluginSlug()` and `getConsentOptionName()`.
+When the collector implements `ConsentNoticeCollectorInterface`, `init()` registers a deferred admin notice in `admin_footer`, enable/dismiss AJAX handlers, and calls `renderConsentAdminNotice()` on the collector when the notice should be shown. The notice is injected after the host admin UI has loaded (for SPA pages such as Amelia, it waits until the app root has mounted).
 
-Host plugin settings UI should read/write consent via `ConsentManager` using the same collector instance (or `getConsentOptionName()`).
+Each product collector defines `getPluginSlug()`, `getConsentOptionName()`, and (for opt-in flows) notice/migration settings via `ConsentNoticeCollectorInterface`.
+
+Host plugin settings UI should read/write consent via `UsageTracker::getSettings()` / `UsageTracker::updateSettings()`. Enabling consent automatically dismisses the admin notice. When disabling consent from general settings, pass `armNoticeOnDisable` as `false` (default) so the notice is dismissed as a definitive opt-out. Pass `true` only for non-definitive flows such as the welcome wizard.
+
+Pass `$savedVersion` and the current plugin version to `init()`; when they differ, consent upgrade migration runs automatically for `ConsentNoticeCollectorInterface` collectors.
+
+New-install consent defaults are applied automatically on boot when the consent option has never been stored (`ConsentNoticeCollectorInterface` collectors only).
+
+On Amelia admin pages that strip third-party notices, the usage notice still renders via `admin_footer` and does not need to be re-registered on `admin_notices`. For manual rendering (e.g. tests), use:
+
+```php
+\Melograno\UsageTracker\Core\UsageTracker::renderConsentAdminNotice();
+```
 
 ### Build-time setup (once per plugin)
 
@@ -44,13 +56,16 @@ Host plugin settings UI should read/write consent via `ConsentManager` using the
 
 ## What the library provides
 
-- Weekly WP Cron send to `https://bi.melograno.io/v1/usage` (override with `MELOGRANO_USAGE_TRACKER_ENDPOINT`)
+- Weekly WP Cron send to `https://bi.melograno.io/v1/usage` (override with `MELOGRANO_BI_GATE_URL`)
 - Per-plugin consent `wp_option` (name from collector; host UI writes it; library reads it for cron/send)
+- `NoticeManager` for admin notice option state; auto-dismiss when consent is enabled
+- `ConsentNoticeService` for upgrade migration and new-install consent defaults
+- `ConsentNoticeCollectorInterface::renderConsentAdminNotice()` for host-branded admin notice UI
 - Common collectors (WP environment, activation stats)
 - Product collectors: `AmeliaCollector`, `WpDataTablesCollector`, `IvyFormsCollector`
 - `sha256` site identifier (no raw site URL in payload)
 - Deactivation (when `__FILE__` passed to `init`): clears scheduled cron only; consent option is kept
-- Uninstall: host plugin should `ConsentManager::delete()` using the collector’s option name
+- Uninstall: `UsageTracker::deleteStoredOptions()` removes consent and notice options
 
 ## Development
 

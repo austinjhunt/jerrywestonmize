@@ -65,6 +65,19 @@ class CustomerApplicationService extends UserApplicationService
     {
         $result = new CommandResult();
 
+        /** @var UserApplicationService $userAS */
+        $userAS = $this->container->get('application.user.service');
+
+        $fields['type'] = Entities::CUSTOMER;
+
+        if ((int)$fields['externalId'] && !$userAS->isRoleForExternalIdAllowed((int)$fields['externalId'], Entities::CUSTOMER)) {
+            $result->setResult(CommandResult::RESULT_ERROR);
+            $result->setMessage('Could not create user.');
+
+            return $result;
+        }
+
+        /** @var Customer $user */
         $user = UserFactory::create($fields);
 
         /** @var UserRepository $userRepository */

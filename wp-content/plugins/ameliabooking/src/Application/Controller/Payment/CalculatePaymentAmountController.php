@@ -40,6 +40,7 @@ class CalculatePaymentAmountController extends Controller
         'locale',
         'timeZone',
         'deposit',
+        'ivy',
     ];
 
     /**

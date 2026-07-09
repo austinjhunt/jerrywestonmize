@@ -824,7 +824,12 @@ class EventPlaceholderService extends PlaceholderService
                     /** @var EventTicket $ticket */
                     $ticket = $eventTicketRepository->getById($bookingToEventTicket['eventTicketId']);
 
-                    if ($bookingToEventTicket['price']) {
+                    $hasTicketPrice = array_key_exists('price', $bookingToEventTicket) &&
+                        $bookingToEventTicket['price'] !== null &&
+                        $bookingToEventTicket['price'] !== '';
+                    $ticketPrice = $hasTicketPrice ? $bookingToEventTicket['price'] : null;
+
+                    if ($hasTicketPrice) {
                         if ($ticketsPriceByDateRange && $ticketsPriceByDateRange->getItem($key)->getDateRangePrice()) {
                             $ticket->setPrice(new Price($ticketsPriceByDateRange->getItem($key)->getDateRangePrice()->getValue()));
                         }
@@ -841,13 +846,13 @@ class EventPlaceholderService extends PlaceholderService
 
                         $eventPrices[] = $helperService->getFormattedPrice($ticket->getPrice()->getValue());
                         $ticketsPrice +=
-                            $bookingToEventTicket['persons'] * $bookingToEventTicket['price'];
+                            $bookingToEventTicket['persons'] * $ticketPrice;
                     }
 
-                    $invoiceItems[] = $invoiceItems[] = [
+                    $invoiceItems[] = [
                         'item_id' => $bookingToEventTicket['id'],
                         'item_name' => $event['name'] . ' - ' . $ticket->getName()->getValue(),
-                        'invoice_unit_price' => $bookingToEventTicket['price'],
+                        'invoice_unit_price' => $hasTicketPrice ? $ticketPrice : $ticket->getPrice()->getValue(),
                         'invoice_qty' => $bookingToEventTicket['persons'],
                     ];
                 }
@@ -901,7 +906,12 @@ class EventPlaceholderService extends PlaceholderService
                     $ticketsPrice = 0;
                     $eventPrices  = [];
                     foreach ($booking['ticketsData'] as $key => $bookingToEventTicket) {
-                        if ($bookingToEventTicket['price']) {
+                        $hasTicketPrice = array_key_exists('price', $bookingToEventTicket) &&
+                            $bookingToEventTicket['price'] !== null &&
+                            $bookingToEventTicket['price'] !== '';
+                        $ticketPrice = $hasTicketPrice ? $bookingToEventTicket['price'] : null;
+
+                        if ($hasTicketPrice) {
                             /** @var EventTicket $ticket */
                             $ticket = $eventTicketRepository->getById($bookingToEventTicket['eventTicketId']);
 
@@ -919,7 +929,7 @@ class EventPlaceholderService extends PlaceholderService
 
                             $eventPrices[] = $helperService->getFormattedPrice($ticket->getPrice()->getValue());
                             $ticketsPrice +=
-                                $bookingToEventTicket['persons'] * $bookingToEventTicket['price'];
+                                $bookingToEventTicket['persons'] * $ticketPrice;
                         }
                     }
                 }

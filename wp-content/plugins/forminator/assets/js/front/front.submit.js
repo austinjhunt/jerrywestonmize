@@ -970,18 +970,31 @@
 						$captcha_field.addClass("error");
 					}
 
-					$target_message.removeAttr("aria-hidden").html('<label class="forminator-label--error forminator-invalid-captcha"><span>' + window.ForminatorFront.cform.captcha_error + '</span></label>');
+					var pagination    = self.$el.data( 'forminatorFrontPagination' ),
+						$captcha_page = $captcha_field.closest( '.forminator-pagination' ),
+						captcha_step  = $captcha_page.data( 'step' ),
+						navigated     = pagination && typeof pagination.go_to === 'function' &&
+							typeof captcha_step !== 'undefined' && captcha_step !== pagination.step;
 
-					if ( ! self.settings.inline_validation ) {
-						self.focus_to_element($target_message);
+					if ( navigated ) {
+						self.disable_form_submit( self, false );
+						pagination.go_to( captcha_step, true );
+						pagination.update_buttons();
+						$target_message.html( '' )
+							.removeClass( 'forminator-loading forminator-show forminator-error forminator-success forminator-accessible' )
+							.removeAttr( 'tabindex' ).attr( 'aria-hidden', true );
 					} else {
+						$target_message.removeAttr("aria-hidden").html('<label class="forminator-label--error forminator-invalid-captcha"><span>' + window.ForminatorFront.cform.captcha_error + '</span></label>');
+					}
 
+					if ( navigated || self.settings.inline_validation ) {
 						if ( ! $captcha_parent.hasClass( 'forminator-has_error' ) && $captcha_field.data( 'size' ) !== 'invisible' ) {
 							$captcha_parent.addClass( 'forminator-has_error' )
 								.append( '<span class="forminator-error-message forminator-invalid-captcha" aria-hidden="true">' + window.ForminatorFront.cform.captcha_error + '</span>' );
 							self.focus_to_element( $captcha_parent );
 						}
-
+					} else {
+						self.focus_to_element($target_message);
 					}
 
 					return false;

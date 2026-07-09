@@ -208,7 +208,7 @@ class Forminator_Textarea extends Forminator_Field {
 
 			// Counter.
 			if ( ( ! empty( $limit ) && ! empty( $limit_type ) ) ) {
-				$description_block .= sprintf( '<span data-limit="%s" data-type="%s" data-editor="%s">0 / %s</span>', $limit, $limit_type, $editor_type, $limit );
+				$description_block .= sprintf( '<span data-limit="%s" data-type="%s" data-editor="%s">0 / %s</span>', esc_attr( $limit ), esc_attr( $limit_type ), esc_attr( $editor_type ), esc_html( $limit ) );
 			}
 			$description_block .= '</span>';
 		}
@@ -411,6 +411,9 @@ class Forminator_Textarea extends Forminator_Field {
 		} else {
 			$data = forminator_sanitize_textarea( $data );
 		}
+
+		// Balance tags to ensure that user-added HTML tags are properly closed.
+		$data = force_balance_tags( $data );
 
 		return apply_filters( 'forminator_field_text_sanitize', $data, $field, $original_data );
 	}

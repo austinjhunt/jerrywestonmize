@@ -1443,14 +1443,11 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
             $accessToken = json_encode($accessToken);
         }
 
+        $googleCalendarData = $provider->getGoogleCalendar()->toArray();
+        $googleCalendarData['token'] = $accessToken;
+
         $provider->setGoogleCalendar(
-            GoogleCalendarFactory::create(
-                [
-                    'id'         => $provider->getGoogleCalendar()->getId()->getValue(),
-                    'token'      => $accessToken,
-                    'calendarId' => $provider->getGoogleCalendar()->getCalendarId()->getValue()
-                ]
-            )
+            GoogleCalendarFactory::create($googleCalendarData)
         );
 
         $providerApplicationService->updateProviderGoogleCalendar($provider);

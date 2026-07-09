@@ -46,7 +46,8 @@ class AddBookingController extends Controller
         'ticketsData',
         'isBackendOrCabinet',
         'packageBookingFromBackend',
-        'runInstantPostBookingActions'
+        'runInstantPostBookingActions',
+        'ivy',
     ];
 
     /**

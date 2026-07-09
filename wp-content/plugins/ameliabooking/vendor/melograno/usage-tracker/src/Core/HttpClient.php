@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Melograno\UsageTracker\Core;
+namespace AmeliaVendor\Melograno\UsageTracker\Core;
 
 class HttpClient
 {

@@ -148,6 +148,7 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
                     cb.duration AS booking_duration,
                     cb.created AS booking_created,
                     cb.tax AS booking_tax,
+                    cb.ivyEntryId AS booking_ivyEntryId,
                     
                     cbe.id AS bookingExtra_id,
                     cbe.extraId AS bookingExtra_extraId,

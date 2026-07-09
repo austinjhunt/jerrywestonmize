@@ -164,6 +164,16 @@ function divi5_amelia_add_inline_data()
             }
         }
 
+        // Add ivy forms
+        if (!empty($entitiesData['ivy'])) {
+            foreach ($entitiesData['ivy'] as $ivy) {
+                $ameliaOptions['ivy'][] = [
+                    'value' => (string)$ivy['value'],
+                    'label' => $ivy['label']
+                ];
+            }
+        }
+
         // Output inline script that will run in the Visual Builder iframe
         ?>
         <script type="text/javascript">

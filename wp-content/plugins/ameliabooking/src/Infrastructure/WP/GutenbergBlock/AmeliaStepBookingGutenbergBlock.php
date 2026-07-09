@@ -31,6 +31,7 @@ class AmeliaStepBookingGutenbergBlock extends GutenbergBlock
             'employee'    => ['type' => 'array', 'default' => [], 'items' => ['type' => 'string']],
             'parametars'  => ['type' => 'boolean', 'default' => false],
             'layout'      => ['type' => 'string', 'default' => '1'],
+            'ivy'         => ['type' => 'string', 'default' => ''],
         ];
     }
 

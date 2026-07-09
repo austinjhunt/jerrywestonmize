@@ -46,6 +46,7 @@ class CustomerBookingsTable extends AbstractDatabaseTable
                     `created` DATETIME NULL,
                     `actionsCompleted` TINYINT(1) NULL,
                     `qrCodes` TEXT NULL,
+                    `ivyEntryId` INT(11) DEFAULT NULL,
                     PRIMARY KEY (`id`)
                 ) {$charsetCollate};";
     }

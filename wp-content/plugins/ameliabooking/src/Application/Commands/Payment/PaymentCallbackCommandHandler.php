@@ -59,7 +59,7 @@ class PaymentCallbackCommandHandler extends CommandHandler
 
         $paymentId = $command->getField('paymentAmeliaId');
 
-        $gateway = $command->getField('paymentMethod');
+        $gateway = (string)$command->getField('paymentMethod');
 
         $redirectLink = '';
 
@@ -221,20 +221,27 @@ class PaymentCallbackCommandHandler extends CommandHandler
 
                     if ($status === 'paid') {
                         $amount = $command->getField('chargedAmount');
+                        $idempotencyKey = $transactionId ?: $this->getPaymentCallbackIdempotencyKey($payment, $gateway);
+
+                        if (
+                            $this->hasProcessedPaymentTransaction($paymentRepository, $payment, $gateway, $idempotencyKey)
+                        ) {
+                            $paymentRepository->commit();
+
+                            return $this->getSuccessfulCallbackResult($gateway, $redirectLink);
+                        }
 
                         if ($payment->getStatus()->getValue() !== PaymentStatus::PENDING) {
                             $payment->setStatus(new PaymentStatus(PaymentStatus::PAID));
                             $payment->setGateway(new PaymentGateway(new Name($gateway)));
-                            if ($transactionId) {
-                                $payment->setTransactionId($transactionId);
-                            }
+                            $payment->setTransactionId($idempotencyKey);
                             $linkPayment = $paymentAS->insertPaymentFromLink($payment->toArray(), $amount, $payment->getEntity()->getValue());
                             $paymentId   = $linkPayment->getId()->getValue();
                         } else {
                             $paymentRepository->updateFieldById($paymentId, $amount, 'amount');
                             $paymentRepository->updateFieldById($paymentId, $gateway, 'gateway');
                             $paymentRepository->updateFieldById($paymentId, $status, 'status');
-                            $paymentRepository->updateFieldById($paymentId, $transactionId, 'transactionId');
+                            $paymentRepository->updateFieldById($paymentId, $idempotencyKey, 'transactionId');
                             $paymentRepository->updateFieldById($paymentId, DateTimeService::getNowDateTimeObjectInUtc()->format('Y-m-d H:i:s'), 'dateTime');
                         }
 
@@ -298,11 +305,65 @@ class PaymentCallbackCommandHandler extends CommandHandler
             do_action('amelia_after_payment_link_callback', $payment->toArray(), $command->getFields());
         }
 
+        return $this->getSuccessfulCallbackResult($gateway, $redirectLink);
+    }
+
+    /**
+     * @throws QueryExecutionException
+     */
+    private function hasProcessedPaymentTransaction(
+        PaymentRepository $paymentRepository,
+        Payment $payment,
+        string $gateway,
+        string $idempotencyKey
+    ): bool {
+        if ($payment->getEntity()->getValue() === Entities::PACKAGE) {
+            $entityColumnName = 'packageCustomerId';
+            $entityId = $payment->getPackageCustomerId() ? $payment->getPackageCustomerId()->getValue() : null;
+        } else {
+            $entityColumnName = 'customerBookingId';
+            $entityId = $payment->getCustomerBookingId() ? $payment->getCustomerBookingId()->getValue() : null;
+        }
+
+        if (!$entityId) {
+            return false;
+        }
+
+        $payments = $paymentRepository->getByEntityId($entityId, $entityColumnName)->toArray();
+
+        foreach ($payments as $storedPayment) {
+            if (
+                $storedPayment['gateway'] === $gateway &&
+                $storedPayment['transactionId'] === $idempotencyKey &&
+                in_array($storedPayment['status'], [PaymentStatus::PAID, PaymentStatus::PARTIALLY_PAID], true)
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function getPaymentCallbackIdempotencyKey(Payment $payment, string $gateway): string
+    {
+        $paymentId = $payment->getId() ? $payment->getId()->getValue() : 'unknown';
+
+        return 'amelia-payment-link-' . $gateway . '-' . $paymentId;
+    }
+
+    private function getSuccessfulCallbackResult(string $gateway, string $redirectLink): CommandResult
+    {
+        $result = new CommandResult();
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('');
         $result->setData([]);
-        if ($gateway !== 'mollie' && $redirectLink) {
-            $result->setUrl($redirectLink);
+
+        if ($gateway !== 'mollie') {
+            if ($redirectLink) {
+                $result->setUrl($redirectLink);
+            } else {
+                $result->setHtml(BookingFallbackService::getFallbackHtml('payment_done'));
+            }
         }
 
         return $result;

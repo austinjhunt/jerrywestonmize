@@ -61,22 +61,25 @@ class AppointmentNotificationService
         $appointment,
         $logNotification = true
     ) {
+        $appointmentArray = $appointment->toArray();
+        $appointmentArray['sendCF'] = true;
+
         /** @var Collection $providerNotifications */
         $providerNotifications = $notificationService->getByNameAndType(
             "provider_appointment_{$appointment->getStatus()->getValue()}",
             $notificationService->getType()
         );
 
-        $sendDefault = $notificationService->sendDefault($providerNotifications, $appointment->toArray());
+        $sendDefault = $notificationService->sendDefault($providerNotifications, $appointmentArray);
 
         /** @var Notification $providerNotification */
         foreach ($providerNotifications->getItems() as $providerNotification) {
             if (
                 $providerNotification->getStatus()->getValue() === NotificationStatus::ENABLED &&
-                $notificationService->checkCustom($providerNotification, $appointment->toArray(), $sendDefault)
+                $notificationService->checkCustom($providerNotification, $appointmentArray, $sendDefault)
             ) {
                 $notificationService->sendNotification(
-                    $appointment->toArray(),
+                    $appointmentArray,
                     $providerNotification,
                     $logNotification
                 );

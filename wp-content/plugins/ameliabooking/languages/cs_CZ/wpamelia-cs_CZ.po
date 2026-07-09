@@ -889,6 +889,8 @@ msgid ""
 "Application (client) ID must be a valid GUID (UUID), as shown in the Azure "
 "portal."
 msgstr ""
+"Application (client) ID musí být platný identifikátor GUID (UUID), jak je "
+"uvedeno v portálu Azure."
 
 msgid "Application fee amount (%)"
 msgstr "Výše poplatku za podání žádosti (%)"
@@ -2241,6 +2243,8 @@ msgid ""
 "Client secret is too short or looks invalid. Copy the full value from the "
 "Azure portal."
 msgstr ""
+"Client secret je příliš krátký nebo vypadá jako neplatný. Zkopírujte celou "
+"hodnotu z portálu Azure."
 
 msgid "Close"
 msgstr "Zavřít"
@@ -2277,6 +2281,13 @@ msgstr "Sbalit vše"
 
 msgid "Collapse menu"
 msgstr "Sbalit menu"
+
+msgid ""
+"Collect additional information from your customers before they complete a "
+"booking."
+msgstr ""
+"Získejte od svých zákazníků další informace ještě předtím, než dokončí "
+"rezervaci."
 
 msgid "Collect the information your business truly needs"
 msgstr "Sbírejte informace, které skutečně potřebujete"
@@ -2476,6 +2487,9 @@ msgstr ""
 msgid "Consulting"
 msgstr "Konzultace"
 
+msgid "Contact Form"
+msgstr "Kontaktní formulář"
+
 msgid "Contact message"
 msgstr "Kontaktní zpráva"
 
@@ -2656,6 +2670,9 @@ msgstr "Založit pracovníka"
 
 msgid "Create event"
 msgstr "Založit akci"
+
+msgid "Create form"
+msgstr "Vytvořit formulář"
 
 msgid "Create meetings for pending appointments"
 msgstr "Vytvořit schůzky pro nepotvrzené rezervace"
@@ -3024,7 +3041,7 @@ msgid "Date and time"
 msgstr "Datum a čas"
 
 msgid "Date busyness indicator"
-msgstr ""
+msgstr "Indikátor obsazenosti data"
 
 msgid "Date of Birth"
 msgstr "Datum narození"
@@ -3891,6 +3908,9 @@ msgstr ""
 "Umožněte zákazníkům efektivně spravovat své termíny a akce. Přizpůsobte "
 "barvy a popisky, aby byl zážitek konzistentní s vaší značkou."
 
+msgid "Enable data usage"
+msgstr "Povolit využívání dat"
+
 msgid "Enable guest booking"
 msgstr "Povolit rezervaci hosta"
 
@@ -4180,7 +4200,10 @@ msgid "Enter booking ID"
 msgstr "Zadejte ID rezervace"
 
 msgid "Enter both the application (client) ID and client secret."
-msgstr ""
+msgstr "Zadejte application (client) ID a client secret."
+
+msgid "Enter code"
+msgstr "Zadat kód"
 
 msgid "Enter date of birth"
 msgstr "Zadejte datum narození"
@@ -4343,6 +4366,9 @@ msgstr "Typ akce"
 msgid "Event available"
 msgstr "Akce k dispozici"
 
+msgid "Event booking"
+msgstr "Rezervace akce"
+
 msgid "Event booking has been created."
 msgstr "Rezervace akce byla vytvořena."
 
@@ -4457,6 +4483,9 @@ msgstr "Akce byla uložena"
 msgid "Event has been updated."
 msgstr "Akce byla aktualizována."
 
+msgid "Event image gallery"
+msgstr "Galerie obrázků akce"
+
 msgid "Event info"
 msgstr "Informace o akci"
 
@@ -4568,6 +4597,9 @@ msgstr "Seznam akcí"
 
 msgid "Events list view"
 msgstr "Zobrazení seznamu akcí"
+
+msgid "Events pagination"
+msgstr "Stránkování akcí"
 
 msgid "Events pricing"
 msgstr "Ceník akcí"
@@ -5143,6 +5175,13 @@ msgid "Healthcare"
 msgstr "Zdravotnické služby"
 
 msgid ""
+"Help us improve Amelia by sharing anonymous data about your plugin usage. No "
+"personal data is collected."
+msgstr ""
+"Pomozte nám vylepšit aplikaci Amelia sdílením anonymních dat o vašem "
+"používání pluginu. Neshromažďujeme žádné osobní údaje."
+
+msgid ""
 "Here, you can connect your personal Apple Calendar,<br/>so once the booking "
 "is scheduled,<br/>it will be automatically added to your calendar of choice."
 msgstr ""
@@ -5472,6 +5511,9 @@ msgstr "Obrázek"
 msgid "Image Color"
 msgstr "Barva obrázku"
 
+msgid "Image navigation"
+msgstr "Navigace obrázků"
+
 msgid "Image thumbs"
 msgstr "Náhledy obrázku"
 
@@ -5492,6 +5534,9 @@ msgstr "Import úspěšný"
 
 msgid "Importing customers"
 msgstr "Právě importujeme zákazníky"
+
+msgid "Improve Amelia"
+msgstr "Vylepšit aplikaci Amelia"
 
 msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
@@ -5669,6 +5714,9 @@ msgstr "Vložit Amelia shortcode"
 msgid "Insert pending appointments"
 msgstr "Vložit nepotvrzené termíny"
 
+msgid "Install & Activate"
+msgstr "Instalovat & aktivovat"
+
 msgid "Integrate with WooCommerce to enable advanced e-commerce capabilities."
 msgstr "Propojete s WooCommerce a získejte pokročilé e‑commerce možnosti."
 
@@ -5765,6 +5813,24 @@ msgstr "Položka"
 
 msgid "Item status"
 msgstr "Stav položky"
+
+msgid "IvyForms"
+msgstr ""
+
+msgid "IvyForms Entries"
+msgstr "Záznamy IvyForms"
+
+msgid "IvyForms Field"
+msgstr "Pole IvyForms"
+
+msgid "IvyForms Form"
+msgstr "Formulář IvyForms"
+
+msgid "IvyForms validation failed."
+msgstr "Ověření IvyForms selhalo."
+
+msgid "Ivy setup"
+msgstr "Nastavení Ivy"
 
 msgid "Jane Doe"
 msgstr "Jana Nováková"
@@ -6007,8 +6073,17 @@ msgstr "Načíst rezervační formulář ručně"
 msgid "Load page"
 msgstr "Načíst stránku"
 
+msgid "Loading"
+msgstr "Načítání"
+
 msgid "Loading..."
 msgstr "Načítám..."
+
+msgid "Loading event information"
+msgstr "Načítání informací o akci"
+
+msgid "Loading header"
+msgstr "Záhlaví načítání"
 
 msgid "Local Time"
 msgstr "Místní čas"
@@ -6154,7 +6229,7 @@ msgid "Make extra mandatory"
 msgstr "Udělat doplněk povinným"
 
 msgid "Make sure you are using the correct Outlook credentials."
-msgstr ""
+msgstr "Ujistěte se, že používáte správné přihlašovací údaje k Outlooku."
 
 msgid "Make sure you are using the correct WhatsApp credentials."
 msgstr "Ujistěte se, že používáte správné přihlašovací údaje pro WhatsApp."
@@ -6223,6 +6298,9 @@ msgstr "Maximální kapacita vzestupně"
 
 msgid "Max Capacity Desc"
 msgstr "Maximální kapacita sestupně"
+
+msgid "Maximum"
+msgstr ""
 
 msgid "Maximum Quantity:"
 msgstr "Maximální počet:"
@@ -6317,6 +6395,9 @@ msgstr "Nastavení Microsoft Teams"
 
 msgid "Min. Capacity"
 msgstr "Min. kapacita"
+
+msgid "Minimum"
+msgstr ""
 
 msgid "Minimum bookings required"
 msgstr "Minimální počet rezervací"
@@ -6539,6 +6620,9 @@ msgstr "Další služba"
 
 msgid "Next day reminder"
 msgstr "Připomínka zítřejší akce"
+
+msgid "Next image"
+msgstr "Další obrázek"
 
 msgid "No"
 msgstr "Žádné"
@@ -7130,6 +7214,9 @@ msgstr ""
 msgid "PHP Mail"
 msgstr ""
 
+msgid "PRE-BOOKING INTAKE FORM (IVYFORMS)"
+msgstr "FORMULÁŘ PRO PŘEDBĚŽNOU REZERVACI (IVYFORMS)"
+
 msgid "Package"
 msgstr "Balíček"
 
@@ -7548,6 +7635,9 @@ msgstr "Období"
 
 msgid "Permanent access token"
 msgstr "Token trvalého přístupu"
+
+msgid "Permanently linked"
+msgstr "Trvale propojeno"
 
 msgid "Person"
 msgstr "Osoba"
@@ -8032,6 +8122,9 @@ msgstr "Tlačítka vyskakovacího okna"
 msgid "Popup title"
 msgstr "Název vyskakovacího okna"
 
+msgid "Pre-booking form details"
+msgstr "Podrobnosti formuláře pro předběžnou rezervaci"
+
 msgid "Preload entities when page loads"
 msgstr "Načíst entity při načtení stránky"
 
@@ -8073,8 +8166,14 @@ msgstr "Náhled faktury"
 msgid "Preview invoice"
 msgstr "Náhled faktury"
 
+msgid "Previous image"
+msgstr "Předchozí obrázek"
+
 msgid "Previous range"
 msgstr "Předchozí rozsah"
+
+msgid "Previous step"
+msgstr "Předchozí krok"
 
 msgid "Price"
 msgstr "Cena"
@@ -8711,23 +8810,14 @@ msgstr "Vyhledat"
 msgid "Search..."
 msgstr "Vyhledat..."
 
-msgid "Search Coupons"
-msgstr "Vyhledat slevové kódy"
-
 msgid "Search Filters"
 msgstr "Vyhledávací filtry"
 
 msgid "Search Input Field"
 msgstr "Vstupní pole vyhledávání"
 
-msgid "Search Resources"
-msgstr "Vyhledat zdroje"
-
 msgid "Search Results"
 msgstr "Výsledky hledání"
-
-msgid "Search Taxes"
-msgstr "Vyhledat daně"
 
 msgid "Search attendees"
 msgstr "Vyhledat účastníky"
@@ -8737,6 +8827,9 @@ msgstr "Vyhledat rezervované termíny"
 
 msgid "Search bookings"
 msgstr "Vyhledat rezervace"
+
+msgid "Search coupons"
+msgstr "Vyhledat slevové kódy"
 
 msgid "Search customers"
 msgstr "Vyhledat zákazníky"
@@ -8774,8 +8867,14 @@ msgstr "Vyhledat upozornění"
 msgid "Search packages"
 msgstr "Vyhledat balíčky"
 
+msgid "Search resources"
+msgstr "Vyhledat zdroje"
+
 msgid "Search services"
 msgstr "Vyhledat služby"
+
+msgid "Search taxes"
+msgstr "Vyhledat daně"
 
 msgid "Second"
 msgstr "Druhý"
@@ -8905,6 +9004,9 @@ msgstr "Zvolit WooCommerce produkt"
 msgid "Select Zoom User"
 msgstr "Zvolit Zoom uživatele"
 
+msgid "Select a form..."
+msgstr "Zvolit formulář..."
+
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr "Zvolte zástupný text a vložte ho na místo kurzoru."
 
@@ -8951,9 +9053,6 @@ msgstr ""
 
 msgid "Select or Create New"
 msgstr "Zvolit nebo vytvořit nové"
-
-msgid "Select or Create Tag"
-msgstr "Zvolit nebo vytvořit štítek"
 
 msgid "Select package"
 msgstr "Zvolit balíček"
@@ -9014,6 +9113,9 @@ msgstr "Zvolte tohoto pracovníka"
 
 msgid "Select tickets"
 msgstr "Vybrat vstupenky"
+
+msgid "Select which IvyForms form to show before booking"
+msgstr "Zvolte, který formulář IvyForms se má zobrazit před rezervací"
 
 msgid "Select your Square Location"
 msgstr "Zvolte své místo Square"
@@ -10481,6 +10583,8 @@ msgid ""
 "This email is linked to both a customer and an employee account. Please "
 "delete and rebook."
 msgstr ""
+"Tato e-mailová adresa je propojena jak s účtem zákazníka, tak s účtem "
+"pracovníka. Smažte rezervaci a proveďte ji znovu."
 
 msgid "This employee is the only one assigned to {service}."
 msgstr "Tento pracovník je jediný přiřazený službě {service}."
@@ -11886,8 +11990,14 @@ msgstr "z"
 msgid "on"
 msgstr "v"
 
+msgid "opens in new tab"
+msgstr "otevře se v nové kartě"
+
 msgid "out of"
 msgstr "z"
+
+msgid "payment button"
+msgstr "tlačítko platby"
 
 msgid "people"
 msgstr "osoby"

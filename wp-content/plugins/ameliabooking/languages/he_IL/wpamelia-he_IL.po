@@ -879,6 +879,7 @@ msgid ""
 "Application (client) ID must be a valid GUID (UUID), as shown in the Azure "
 "portal."
 msgstr ""
+"מזהה היישום (לקוח) חייב להיות GUID (UUID) תקין, כפי שמוצג בפורטל Azure."
 
 msgid "Application fee amount (%)"
 msgstr "סכום דמי הרישום (%)"
@@ -1822,7 +1823,7 @@ msgid ""
 msgstr "בהמשך, תגדיר את הפגישה לשעת פגישה שכבר קיימת!"
 
 msgid "By employees"
-msgstr ""
+msgstr "לפי עובדים"
 
 msgid ""
 "By entering your phone number you agree to receive messages via WhatsApp"
@@ -2200,6 +2201,7 @@ msgid ""
 "Client secret is too short or looks invalid. Copy the full value from the "
 "Azure portal."
 msgstr ""
+"Client secret קצר מדי או שנראה לא תקין. העתקו את הערך המלא מ-Azure portal."
 
 msgid "Close"
 msgstr "סגור"
@@ -2236,6 +2238,11 @@ msgstr "הסתר הכל"
 
 msgid "Collapse menu"
 msgstr "קפל תפריט"
+
+msgid ""
+"Collect additional information from your customers before they complete a "
+"booking."
+msgstr ""
 
 msgid "Collect the information your business truly needs"
 msgstr "אסוף את המידע שהעסק שלך באמת צריך"
@@ -2427,6 +2434,9 @@ msgstr "החיבור ל-Zoom אינו זמין. פנה למנהל המערכת �
 msgid "Consulting"
 msgstr "ייעוץ"
 
+msgid "Contact Form"
+msgstr ""
+
 msgid "Contact message"
 msgstr "הודעת יצירת קשר"
 
@@ -2602,6 +2612,9 @@ msgstr "צור עובד"
 
 msgid "Create event"
 msgstr "צור אירוע"
+
+msgid "Create form"
+msgstr ""
 
 msgid "Create meetings for pending appointments"
 msgstr "יצירת פגישות עבור פגישות מתוכננות"
@@ -2960,7 +2973,7 @@ msgid "Date and time"
 msgstr "תאריך ושעה"
 
 msgid "Date busyness indicator"
-msgstr ""
+msgstr "מחוון עומס בתאריך"
 
 msgid "Date of Birth"
 msgstr "תאריך לידה"
@@ -3801,6 +3814,9 @@ msgstr ""
 "אפשר ללקוחות לנהל את הפגישות והאירועים שלהם ביעילות. התאם אישית צבעים "
 "ותוויות כדי ליצור חוויה חלקה וממותגת."
 
+msgid "Enable data usage"
+msgstr ""
+
 msgid "Enable guest booking"
 msgstr "אפשר הזמנת אורחים"
 
@@ -4068,6 +4084,9 @@ msgid "Enter booking ID"
 msgstr "אנא הכנס את סוג ההזמנה"
 
 msgid "Enter both the application (client) ID and client secret."
+msgstr "הזינו את מזהה היישום (client) ID ואת סוד הלקוח."
+
+msgid "Enter code"
 msgstr ""
 
 msgid "Enter date of birth"
@@ -4230,6 +4249,9 @@ msgstr "סוג אירוע"
 msgid "Event available"
 msgstr "האירוע זמין"
 
+msgid "Event booking"
+msgstr ""
+
 msgid "Event booking has been created."
 msgstr "הזמנת האירוע נוצרה."
 
@@ -4344,6 +4366,9 @@ msgstr "האירוע נשמר"
 msgid "Event has been updated."
 msgstr "האירוע עודכן."
 
+msgid "Event image gallery"
+msgstr ""
+
 msgid "Event info"
 msgstr "מידע על האירוע"
 
@@ -4455,6 +4480,9 @@ msgstr "רשימת אירועים"
 
 msgid "Events list view"
 msgstr "תצוגת רשימת אירועים"
+
+msgid "Events pagination"
+msgstr ""
 
 msgid "Events pricing"
 msgstr "תמחור אירועים"
@@ -5023,6 +5051,11 @@ msgid "Healthcare"
 msgstr "בריאות"
 
 msgid ""
+"Help us improve Amelia by sharing anonymous data about your plugin usage. No "
+"personal data is collected."
+msgstr ""
+
+msgid ""
 "Here, you can connect your personal Apple Calendar,<br/>so once the booking "
 "is scheduled,<br/>it will be automatically added to your calendar of choice."
 msgstr ""
@@ -5345,6 +5378,9 @@ msgstr "תמונה"
 msgid "Image Color"
 msgstr "צבע תמונה"
 
+msgid "Image navigation"
+msgstr ""
+
 msgid "Image thumbs"
 msgstr "תמונות ממוזערות"
 
@@ -5365,6 +5401,9 @@ msgstr "הייבוא הצליח"
 
 msgid "Importing customers"
 msgstr "ייבוא לקוחות"
+
+msgid "Improve Amelia"
+msgstr ""
 
 msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
@@ -5526,6 +5565,9 @@ msgstr "הכנס קוד מקוצר עבור הזמנה"
 msgid "Insert pending appointments"
 msgstr "הוסף פגישות ממתינות"
 
+msgid "Install & Activate"
+msgstr ""
+
 msgid "Integrate with WooCommerce to enable advanced e-commerce capabilities."
 msgstr "שלב עם WooCommerce כדי לאפשר יכולות מסחר אלקטרוני מתקדמות."
 
@@ -5618,6 +5660,24 @@ msgstr "פריט"
 
 msgid "Item status"
 msgstr "סטטוס פריט"
+
+msgid "IvyForms"
+msgstr ""
+
+msgid "IvyForms Entries"
+msgstr ""
+
+msgid "IvyForms Field"
+msgstr ""
+
+msgid "IvyForms Form"
+msgstr ""
+
+msgid "IvyForms validation failed."
+msgstr ""
+
+msgid "Ivy setup"
+msgstr ""
 
 msgid "Jane Doe"
 msgstr "ג'יין דו"
@@ -5855,8 +5915,17 @@ msgstr "טען טופס הזמנה באופן ידני"
 msgid "Load page"
 msgstr "טען דף"
 
+msgid "Loading"
+msgstr ""
+
 msgid "Loading..."
 msgstr "טוען..."
+
+msgid "Loading event information"
+msgstr ""
+
+msgid "Loading header"
+msgstr ""
 
 msgid "Local Time"
 msgstr "זמן מקומי"
@@ -6001,7 +6070,7 @@ msgid "Make extra mandatory"
 msgstr "הפוך לחובה נוספת"
 
 msgid "Make sure you are using the correct Outlook credentials."
-msgstr ""
+msgstr "ודאו שפרטי ההתחברות ל-Outlook נכונים."
 
 msgid "Make sure you are using the correct WhatsApp credentials."
 msgstr "ודא שאתה משתמש בפרטי הזדהות WhatsApp הנכונים."
@@ -6070,6 +6139,9 @@ msgstr "קיבולת מקסימלית עולה"
 
 msgid "Max Capacity Desc"
 msgstr "תיאור קיבולת מקסימלית"
+
+msgid "Maximum"
+msgstr ""
 
 msgid "Maximum Quantity:"
 msgstr "כמות מקסימלית:"
@@ -6164,6 +6236,9 @@ msgstr "הגדרת Microsoft Teams"
 
 msgid "Min. Capacity"
 msgstr "קיבולת מינימלית"
+
+msgid "Minimum"
+msgstr ""
 
 msgid "Minimum bookings required"
 msgstr "מינימום הזמנות נדרש"
@@ -6385,6 +6460,9 @@ msgstr "השירות הבא"
 
 msgid "Next day reminder"
 msgstr "תזכורת ליום המחרת"
+
+msgid "Next image"
+msgstr ""
 
 msgid "No"
 msgstr "לא"
@@ -6971,6 +7049,9 @@ msgstr ""
 msgid "PHP Mail"
 msgstr "דואר PHP"
 
+msgid "PRE-BOOKING INTAKE FORM (IVYFORMS)"
+msgstr ""
+
 msgid "Package"
 msgstr "חבילה"
 
@@ -7386,6 +7467,9 @@ msgstr "תקופה"
 
 msgid "Permanent access token"
 msgstr "אסימון גישה קבוע"
+
+msgid "Permanently linked"
+msgstr ""
 
 msgid "Person"
 msgstr "אדם"
@@ -7863,6 +7947,9 @@ msgstr "כפתורי קופצים"
 msgid "Popup title"
 msgstr "כותרת חלון קופץ"
 
+msgid "Pre-booking form details"
+msgstr ""
+
 msgid "Preload entities when page loads"
 msgstr "טען מראש את הישויות בעת טעינת הדף"
 
@@ -7900,8 +7987,14 @@ msgstr "תצוגה מקדימה של חשבונית"
 msgid "Preview invoice"
 msgstr "תצוגה מקדימה של חשבונית"
 
+msgid "Previous image"
+msgstr ""
+
 msgid "Previous range"
 msgstr "טווח קודם"
+
+msgid "Previous step"
+msgstr ""
 
 msgid "Price"
 msgstr "מחיר"
@@ -8530,23 +8623,14 @@ msgstr "חפש"
 msgid "Search..."
 msgstr "חיפוש..."
 
-msgid "Search Coupons"
-msgstr "חפש קופונים"
-
 msgid "Search Filters"
 msgstr "פילטרים לחיפוש"
 
 msgid "Search Input Field"
 msgstr "שדה קלט שירות"
 
-msgid "Search Resources"
-msgstr "חיפוש משאבים"
-
 msgid "Search Results"
 msgstr "תוצאות חיפוש"
-
-msgid "Search Taxes"
-msgstr "פילטרים לחיפוש"
 
 msgid "Search attendees"
 msgstr "חפש משתתפים"
@@ -8556,6 +8640,9 @@ msgstr "חיפוש פגישות שהוזמנו"
 
 msgid "Search bookings"
 msgstr "חפש הזמנות"
+
+msgid "Search coupons"
+msgstr ""
 
 msgid "Search customers"
 msgstr "חיפוש לקוחות"
@@ -8593,8 +8680,14 @@ msgstr "הודעות חיפוש"
 msgid "Search packages"
 msgstr "חפש חבילות"
 
+msgid "Search resources"
+msgstr ""
+
 msgid "Search services"
 msgstr "שירותי חיפוש"
+
+msgid "Search taxes"
+msgstr ""
 
 msgid "Second"
 msgstr "שני"
@@ -8724,6 +8817,9 @@ msgstr "בחר מוצר WooCommerce"
 msgid "Select Zoom User"
 msgstr "בחר משתמש זום"
 
+msgid "Select a form..."
+msgstr ""
+
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr "בחר מחזיק מקום כדי להוסיף אותו במקום שבו נמצא הסמן."
 
@@ -8770,9 +8866,6 @@ msgstr ""
 
 msgid "Select or Create New"
 msgstr "בחר או צור חדש"
-
-msgid "Select or Create Tag"
-msgstr "בחר או צור תג"
 
 msgid "Select package"
 msgstr "בחר חבילה"
@@ -8831,6 +8924,9 @@ msgstr "בחר עובד זה"
 
 msgid "Select tickets"
 msgstr "בחר כרטיסים"
+
+msgid "Select which IvyForms form to show before booking"
+msgstr ""
 
 msgid "Select your Square Location"
 msgstr "בחר את מיקום Square שלך"
@@ -10253,6 +10349,8 @@ msgid ""
 "This email is linked to both a customer and an employee account. Please "
 "delete and rebook."
 msgstr ""
+"כתובת הדוא\"ל משויכת גם לחשבון לקוח וגם לחשבון עובד. נא למחוק את ההזמנה "
+"הקיימת ולהזמין מחדש."
 
 msgid "This employee is the only one assigned to {service}."
 msgstr "עובד זה הוא היחיד שהוקצה ל- {service}."
@@ -11621,8 +11719,14 @@ msgstr "של"
 msgid "on"
 msgstr "ב"
 
+msgid "opens in new tab"
+msgstr ""
+
 msgid "out of"
 msgstr "מִתוֹך"
+
+msgid "payment button"
+msgstr ""
 
 msgid "people"
 msgstr "אנשים"

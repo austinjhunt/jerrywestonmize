@@ -512,6 +512,7 @@ class EventFactory
                     'token'         => isset($row['booking_token']) ? $row['booking_token'] : null,
                     'created'       => !empty($row['booking_created']) ? DateTimeService::getCustomDateTimeFromUtc($row['booking_created']) : null,
                     'tax'           => isset($row['booking_tax']) ? $row['booking_tax'] : null,
+                    'ivyEntryId'    => isset($row['booking_ivyEntryId']) ? $row['booking_ivyEntryId'] : null,
                 ];
             }
 

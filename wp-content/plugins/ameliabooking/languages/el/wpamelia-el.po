@@ -901,6 +901,8 @@ msgid ""
 "Application (client) ID must be a valid GUID (UUID), as shown in the Azure "
 "portal."
 msgstr ""
+"Το Application (client) ID πρέπει να είναι ένα έγκυρο GUID (UUID), όπως "
+"εμφανίζεται στο Azure portal."
 
 msgid "Application fee amount (%)"
 msgstr "Ποσό τέλους αίτησης (%)"
@@ -1872,7 +1874,7 @@ msgstr ""
 "ένα υπάρχον ραντεβού!"
 
 msgid "By employees"
-msgstr ""
+msgstr "Ανά Υπαλλήλους"
 
 msgid ""
 "By entering your phone number you agree to receive messages via WhatsApp"
@@ -2278,6 +2280,8 @@ msgid ""
 "Client secret is too short or looks invalid. Copy the full value from the "
 "Azure portal."
 msgstr ""
+"Το μυστικό προγράμματος-πελάτη είναι πολύ σύντομο ή φαίνεται ότι δεν είναι "
+"έγκυρο. Αντιγράψτε ολόκληρη την τιμή από την πύλη του Azure."
 
 msgid "Close"
 msgstr "Κλείσιμο"
@@ -2314,6 +2318,11 @@ msgstr "Σύμπτυξη όλων"
 
 msgid "Collapse menu"
 msgstr "Σύμπτυξη μενού"
+
+msgid ""
+"Collect additional information from your customers before they complete a "
+"booking."
+msgstr ""
 
 msgid "Collect the information your business truly needs"
 msgstr ""
@@ -2528,6 +2537,9 @@ msgstr ""
 msgid "Consulting"
 msgstr "Συμβουλευτικές υπηρεσίες"
 
+msgid "Contact Form"
+msgstr ""
+
 msgid "Contact message"
 msgstr "Μήνυμα επικοινωνίας"
 
@@ -2712,6 +2724,9 @@ msgstr "Δημιουργία υπαλλήλου"
 
 msgid "Create event"
 msgstr "Δημιουργία εκδήλωσης"
+
+msgid "Create form"
+msgstr ""
 
 msgid "Create meetings for pending appointments"
 msgstr "Δημιουργία συναντήσεων για εκκρεμείς ραντεβού"
@@ -3096,7 +3111,7 @@ msgid "Date and time"
 msgstr "Ημερομηνία και ώρα"
 
 msgid "Date busyness indicator"
-msgstr ""
+msgstr "Δείκτης φόρτου ημερομηνίας"
 
 msgid "Date of Birth"
 msgstr "Ημερομηνία γέννησης"
@@ -3974,6 +3989,9 @@ msgstr ""
 "ραντεβού και τις εκδηλώσεις τους. Προσαρμόστε τα χρώματα και τις ετικέτες "
 "για να δημιουργήσετε μια ομαλή και επώνυμη εμπειρία."
 
+msgid "Enable data usage"
+msgstr ""
+
 msgid "Enable guest booking"
 msgstr "Ενεργοποίηση κράτησης επισκεπτών"
 
@@ -4279,6 +4297,11 @@ msgstr "Ομαδικό ραντεβού"
 
 msgid "Enter both the application (client) ID and client secret."
 msgstr ""
+"Εισαγάγετε τόσο το ID εφαρμογής (client) όσο και το μυστικό κλειδί του "
+"client."
+
+msgid "Enter code"
+msgstr ""
 
 msgid "Enter date of birth"
 msgstr "Ημερομηνία γέννησης"
@@ -4450,6 +4473,9 @@ msgstr "Τύπος εκδήλωσης"
 msgid "Event available"
 msgstr "Διαθέσιμο γεγονός"
 
+msgid "Event booking"
+msgstr ""
+
 msgid "Event booking has been created."
 msgstr "Η κράτηση εκδήλωσης έχει δημιουργηθεί."
 
@@ -4567,6 +4593,9 @@ msgstr "Το συμβάν έχει αποθηκευτεί"
 msgid "Event has been updated."
 msgstr "Το συμβάν έχει ενημερωθεί."
 
+msgid "Event image gallery"
+msgstr ""
+
 msgid "Event info"
 msgstr "Πληροφορίες για την εκδήλωση"
 
@@ -4679,6 +4708,9 @@ msgstr "Λίστα εκδηλώσεων"
 
 msgid "Events list view"
 msgstr "Προβολή λίστας εκδηλώσεων"
+
+msgid "Events pagination"
+msgstr ""
 
 msgid "Events pricing"
 msgstr "Τιμές εκδηλώσεων"
@@ -5270,6 +5302,11 @@ msgid "Healthcare"
 msgstr "Υγειονομική περίθαλψη"
 
 msgid ""
+"Help us improve Amelia by sharing anonymous data about your plugin usage. No "
+"personal data is collected."
+msgstr ""
+
+msgid ""
 "Here, you can connect your personal Apple Calendar,<br/>so once the booking "
 "is scheduled,<br/>it will be automatically added to your calendar of choice."
 msgstr ""
@@ -5618,6 +5655,9 @@ msgstr "Εικόνα"
 msgid "Image Color"
 msgstr "Χρώμα εικόνας"
 
+msgid "Image navigation"
+msgstr ""
+
 msgid "Image thumbs"
 msgstr "Μικρές εικόνες"
 
@@ -5638,6 +5678,9 @@ msgstr "Εισαγωγή επιτυχής"
 
 msgid "Importing customers"
 msgstr "Εισαγωγή πελατών"
+
+msgid "Improve Amelia"
+msgstr ""
 
 msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
@@ -5819,6 +5862,9 @@ msgstr "Εισαγωγή σύντομου κωδικού Amelia"
 msgid "Insert pending appointments"
 msgstr "Εισαγωγή εκκρεμών ραντεβού"
 
+msgid "Install & Activate"
+msgstr ""
+
 msgid "Integrate with WooCommerce to enable advanced e-commerce capabilities."
 msgstr ""
 "Ενσωματώστε το WooCommerce για να ενεργοποιήσετε προηγμένες δυνατότητες "
@@ -5917,6 +5963,24 @@ msgstr "Στοιχείο"
 
 msgid "Item status"
 msgstr "Κατάσταση στοιχείου"
+
+msgid "IvyForms"
+msgstr ""
+
+msgid "IvyForms Entries"
+msgstr ""
+
+msgid "IvyForms Field"
+msgstr ""
+
+msgid "IvyForms Form"
+msgstr ""
+
+msgid "IvyForms validation failed."
+msgstr ""
+
+msgid "Ivy setup"
+msgstr ""
 
 msgid "Jane Doe"
 msgstr ""
@@ -6162,8 +6226,17 @@ msgstr "Φόρτωση φόρμας κράτησης χειροκίνητα"
 msgid "Load page"
 msgstr "Φόρτωση σελίδας"
 
+msgid "Loading"
+msgstr ""
+
 msgid "Loading..."
 msgstr "Φόρτωση..."
+
+msgid "Loading event information"
+msgstr ""
+
+msgid "Loading header"
+msgstr ""
 
 msgid "Local Time"
 msgstr "Τοπική ώρα"
@@ -6311,7 +6384,7 @@ msgid "Make extra mandatory"
 msgstr "Κάντε το επιπλέον υποχρεωτικό"
 
 msgid "Make sure you are using the correct Outlook credentials."
-msgstr ""
+msgstr "Βεβαιωθείτε ότι χρησιμοποιείτε τα σωστά στοιχεία σύνδεσης του Outlook."
 
 msgid "Make sure you are using the correct WhatsApp credentials."
 msgstr "Βεβαιωθείτε ότι χρησιμοποιείτε τα σωστά διαπιστευτήρια WhatsApp."
@@ -6381,6 +6454,9 @@ msgstr "Μέγιστη χωρητικότητα Asc"
 
 msgid "Max Capacity Desc"
 msgstr "Μέγιστη χωρητικότητα Desc"
+
+msgid "Maximum"
+msgstr ""
 
 msgid "Maximum Quantity:"
 msgstr "Μέγιστη διαθεσιμότητα:"
@@ -6475,6 +6551,9 @@ msgstr "Ρύθμιση Microsoft Teams"
 
 msgid "Min. Capacity"
 msgstr "Ελάχιστη χωρητικότητα"
+
+msgid "Minimum"
+msgstr ""
 
 msgid "Minimum bookings required"
 msgstr "Ελάχιστος αριθμός κρατήσεων που απαιτείται"
@@ -6699,6 +6778,9 @@ msgstr "Επόμενη υπηρεσία"
 
 msgid "Next day reminder"
 msgstr "Υπενθύμιση επόμενης ημέρας"
+
+msgid "Next image"
+msgstr ""
 
 msgid "No"
 msgstr "Όχι"
@@ -7299,6 +7381,9 @@ msgstr ""
 msgid "PHP Mail"
 msgstr ""
 
+msgid "PRE-BOOKING INTAKE FORM (IVYFORMS)"
+msgstr ""
+
 msgid "Package"
 msgstr "Μέσος όρος κρατήσεων"
 
@@ -7717,6 +7802,9 @@ msgstr "Περίοδοι"
 
 msgid "Permanent access token"
 msgstr "Μόνιμο διακριτικό πρόσβασης"
+
+msgid "Permanently linked"
+msgstr ""
 
 msgid "Person"
 msgstr "άτομο"
@@ -8203,6 +8291,9 @@ msgstr "Κουμπιά αναδυόμενων παραθύρων"
 msgid "Popup title"
 msgstr "Τίτλος αναδυόμενου παραθύρου"
 
+msgid "Pre-booking form details"
+msgstr ""
+
 msgid "Preload entities when page loads"
 msgstr "Προφόρτωση οντοτήτων κατά τη φόρτωση της σελίδας"
 
@@ -8244,8 +8335,14 @@ msgstr "Προεπισκόπηση τιμολογίου"
 msgid "Preview invoice"
 msgstr "Προεπισκόπηση τιμολογίου"
 
+msgid "Previous image"
+msgstr ""
+
 msgid "Previous range"
 msgstr "Προηγούμενο εύρος"
+
+msgid "Previous step"
+msgstr ""
 
 msgid "Price"
 msgstr "Τιμή"
@@ -8887,23 +8984,14 @@ msgstr "Αναζήτηση..."
 msgid "Search..."
 msgstr "Αναζήτηση..."
 
-msgid "Search Coupons"
-msgstr "Αναζήτηση στα κουπόνια"
-
 msgid "Search Filters"
 msgstr "Κριτήρια αναζήτησης"
 
 msgid "Search Input Field"
 msgstr "Email εργαζόμενου"
 
-msgid "Search Resources"
-msgstr "Αναζήτηση πόρων"
-
 msgid "Search Results"
 msgstr "Αποτελέσματα αναζήτησης"
-
-msgid "Search Taxes"
-msgstr "Κριτήρια αναζήτησης"
 
 msgid "Search attendees"
 msgstr "Αναζήτηση συμμετεχόντων"
@@ -8913,6 +9001,9 @@ msgstr "Αναζήτηση κλεισμένων ραντεβού"
 
 msgid "Search bookings"
 msgstr "Αναζήτηση κρατήσεων"
+
+msgid "Search coupons"
+msgstr ""
 
 msgid "Search customers"
 msgstr "Αναζήτηση πελατών"
@@ -8950,8 +9041,14 @@ msgstr "Ειδοποιήσεις αναζήτησης"
 msgid "Search packages"
 msgstr "Αναζήτηση πακέτων"
 
+msgid "Search resources"
+msgstr ""
+
 msgid "Search services"
 msgstr "Υπηρεσίες αναζήτησης"
+
+msgid "Search taxes"
+msgstr ""
 
 msgid "Second"
 msgstr "Δεύτερο"
@@ -9081,6 +9178,9 @@ msgstr "Επιλέξτε προϊόν WooCommerce"
 msgid "Select Zoom User"
 msgstr "Επιλογή χρήστη Zoom"
 
+msgid "Select a form..."
+msgstr ""
+
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr ""
 "Επιλέξτε ένα σύμβολο κράτησης θέσης για να το εισαγάγετε στο σημείο όπου "
@@ -9130,9 +9230,6 @@ msgstr ""
 
 msgid "Select or Create New"
 msgstr "Επιλέξτε ή δημιουργήστε μια νέα"
-
-msgid "Select or Create Tag"
-msgstr "Επιλογή ή δημιουργία ετικέτας"
 
 msgid "Select package"
 msgstr "Επιλέξτε πακέτο"
@@ -9201,6 +9298,9 @@ msgstr "Επιλέξτε αυτόν τον υπάλληλο"
 
 msgid "Select tickets"
 msgstr "Επιλογή εισιτηρίων"
+
+msgid "Select which IvyForms form to show before booking"
+msgstr ""
 
 msgid "Select your Square Location"
 msgstr "Επιλέξτε την τοποθεσία σας στο Square"
@@ -10717,6 +10817,9 @@ msgid ""
 "This email is linked to both a customer and an employee account. Please "
 "delete and rebook."
 msgstr ""
+"Αυτή η διεύθυνση email είναι συνδεδεμένη τόσο με λογαριασμό πελάτη όσο και "
+"με λογαριασμό υπαλλήλου. Παρακαλούμε διαγράψτε την κράτηση και κάντε νέα "
+"κράτηση."
 
 msgid "This employee is the only one assigned to {service}."
 msgstr "Αυτός ο υπάλληλος είναι ο μόνος που έχει ανατεθεί στο {service}."
@@ -12165,8 +12268,14 @@ msgstr "από"
 msgid "on"
 msgstr "Γραμματοσειρά"
 
+msgid "opens in new tab"
+msgstr ""
+
 msgid "out of"
 msgstr "από"
+
+msgid "payment button"
+msgstr ""
 
 msgid "people"
 msgstr "άτομα"

@@ -203,6 +203,8 @@ class SubscriberSubscribeController {
       return $meta;
     }
 
+    $this->wp->doAction('mailpoet_subscription_after_subscribe', $subscriber, $data, $segmentIds, $form);
+
     if (!empty($formSettings['on_success'])) {
       if ($formSettings['on_success'] === 'page') {
         // redirect to a page on a success, pass the page url in the meta

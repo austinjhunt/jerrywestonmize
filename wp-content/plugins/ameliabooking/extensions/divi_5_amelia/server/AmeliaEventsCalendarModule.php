@@ -2,13 +2,12 @@
 
 namespace Divi5Amelia;
 
-use ET\Builder\Framework\DependencyManagement\Interfaces\DependencyInterface;
 use ET\Builder\Packages\ModuleLibrary\ModuleRegistration;
 
 /**
  * Class that handle "Amelia Events Calendar" module output in frontend.
  */
-class AmeliaEventsCalendarModule implements DependencyInterface
+class AmeliaEventsCalendarModule extends SharedShortcodeModule
 {
     /**
      * Register module.
@@ -40,20 +39,7 @@ class AmeliaEventsCalendarModule implements DependencyInterface
     {
         $shortcode = '[ameliaeventscalendarbooking';
 
-        $trigger = $attrs['trigger']['innerContent']['desktop']['value'] ?? null;
-        if ($trigger !== null && $trigger !== '') {
-            $shortcode .= ' trigger=' . esc_attr($trigger);
-        }
-
-        $trigger_type = $attrs['trigger_type']['innerContent']['desktop']['value'] ?? null;
-        if ($trigger && $trigger_type !== null && $trigger_type !== '') {
-            $shortcode .= ' trigger_type=' . $trigger_type;
-        }
-
-        $in_dialog = $attrs['in_dialog']['innerContent']['desktop']['value'] ?? false;
-        if ($trigger && $in_dialog === 'on') {
-            $shortcode .= ' in_dialog=1';
-        }
+        $shortcode .= self::getSharedShortcodeString($attrs);
 
         $booking_params = $attrs['booking_params']['innerContent']['desktop']['value'] ?? false;
         if ($booking_params === 'on') {

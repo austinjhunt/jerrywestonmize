@@ -69,8 +69,6 @@ class AddCustomerCommandHandler extends CommandHandler
 
         $userData = $command->getFields();
 
-        $userData['type'] = 'customer';
-
         $userData = apply_filters('amelia_before_customer_added_filter', $userData);
 
         do_action('amelia_before_customer_added', $userData);

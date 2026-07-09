@@ -893,6 +893,8 @@ msgid ""
 "Application (client) ID must be a valid GUID (UUID), as shown in the Azure "
 "portal."
 msgstr ""
+"ИД апликације (client) мора да буде важећи GUID (UUID), као што је приказано "
+"у Azure portal-у."
 
 msgid "Application fee amount (%)"
 msgstr "Износ накнаде за обраду (%)"
@@ -1856,7 +1858,7 @@ msgstr ""
 "заказани термин!"
 
 msgid "By employees"
-msgstr ""
+msgstr "По запосленима"
 
 msgid ""
 "By entering your phone number you agree to receive messages via WhatsApp"
@@ -2251,6 +2253,8 @@ msgid ""
 "Client secret is too short or looks invalid. Copy the full value from the "
 "Azure portal."
 msgstr ""
+"Тајна клијента је прекратка или изгледа неважећа. Копирајте целу вредност из "
+"Azure портала."
 
 msgid "Close"
 msgstr "Zatvori"
@@ -2287,6 +2291,11 @@ msgstr "Скупи све"
 
 msgid "Collapse menu"
 msgstr "Sakrij meni"
+
+msgid ""
+"Collect additional information from your customers before they complete a "
+"booking."
+msgstr ""
 
 msgid "Collect the information your business truly needs"
 msgstr "Прикупите информације које су вашем пословању заиста потребне"
@@ -2491,6 +2500,9 @@ msgstr ""
 msgid "Consulting"
 msgstr "Консалтинг"
 
+msgid "Contact Form"
+msgstr ""
+
 msgid "Contact message"
 msgstr "Контакт порука"
 
@@ -2674,6 +2686,9 @@ msgstr "Креирај запосленог"
 
 msgid "Create event"
 msgstr "Креирај догађај"
+
+msgid "Create form"
+msgstr ""
 
 msgid "Create meetings for pending appointments"
 msgstr "Креирај онлајн састанке за термине на чекању"
@@ -3045,7 +3060,7 @@ msgid "Date and time"
 msgstr "Датум и време"
 
 msgid "Date busyness indicator"
-msgstr ""
+msgstr "Показатељ заузетости датума"
 
 msgid "Date of Birth"
 msgstr "Datum Rođenja"
@@ -3914,6 +3929,9 @@ msgstr ""
 "Прилагодите боје и ознаке да бисте креирали неометано искуство у складу са "
 "вашим брендом."
 
+msgid "Enable data usage"
+msgstr ""
+
 msgid "Enable guest booking"
 msgstr "Uključi rezervacije za goste"
 
@@ -4207,6 +4225,9 @@ msgid "Enter booking ID"
 msgstr "Unesite Poslovni ID"
 
 msgid "Enter both the application (client) ID and client secret."
+msgstr "Унесите и ID апликације (клијента) и тајну клијента."
+
+msgid "Enter code"
 msgstr ""
 
 msgid "Enter date of birth"
@@ -4370,6 +4391,9 @@ msgstr "Tip Događaja"
 msgid "Event available"
 msgstr "Догађај има места"
 
+msgid "Event booking"
+msgstr ""
+
 msgid "Event booking has been created."
 msgstr "Резервација за догађај је креирана."
 
@@ -4488,6 +4512,9 @@ msgstr "Događaj je sačuvan"
 msgid "Event has been updated."
 msgstr "Догађај је ажуриран."
 
+msgid "Event image gallery"
+msgstr ""
+
 msgid "Event info"
 msgstr "Информације о догађају"
 
@@ -4599,6 +4626,9 @@ msgstr "Листа догађаја"
 
 msgid "Events list view"
 msgstr "Листни приказ догађаја"
+
+msgid "Events pagination"
+msgstr ""
 
 msgid "Events pricing"
 msgstr "Цене догађаја"
@@ -5177,6 +5207,11 @@ msgid "Healthcare"
 msgstr "Здравство"
 
 msgid ""
+"Help us improve Amelia by sharing anonymous data about your plugin usage. No "
+"personal data is collected."
+msgstr ""
+
+msgid ""
 "Here, you can connect your personal Apple Calendar,<br/>so once the booking "
 "is scheduled,<br/>it will be automatically added to your calendar of choice."
 msgstr ""
@@ -5510,6 +5545,9 @@ msgstr "Слика"
 msgid "Image Color"
 msgstr "Boja Slike"
 
+msgid "Image navigation"
+msgstr ""
+
 msgid "Image thumbs"
 msgstr "Сличице"
 
@@ -5530,6 +5568,9 @@ msgstr "Uvoz uspešan"
 
 msgid "Importing customers"
 msgstr "Увоз клијената"
+
+msgid "Improve Amelia"
+msgstr ""
 
 msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
@@ -5704,6 +5745,9 @@ msgstr "Ubaci shortcode za Amelia Rezervacije"
 msgid "Insert pending appointments"
 msgstr "Додај термине на чекању"
 
+msgid "Install & Activate"
+msgstr ""
+
 msgid "Integrate with WooCommerce to enable advanced e-commerce capabilities."
 msgstr ""
 "Интегришите се са WooCommerce-ом да бисте омогућили напредне могућности е-"
@@ -5800,6 +5844,24 @@ msgstr "Ставка"
 
 msgid "Item status"
 msgstr "Статус ставке"
+
+msgid "IvyForms"
+msgstr ""
+
+msgid "IvyForms Entries"
+msgstr ""
+
+msgid "IvyForms Field"
+msgstr ""
+
+msgid "IvyForms Form"
+msgstr ""
+
+msgid "IvyForms validation failed."
+msgstr ""
+
+msgid "Ivy setup"
+msgstr ""
 
 msgid "Jane Doe"
 msgstr "Petar Petrović"
@@ -6044,8 +6106,17 @@ msgstr "Učitaj formu za rezervacije ručno"
 msgid "Load page"
 msgstr "Учитај страницу"
 
+msgid "Loading"
+msgstr ""
+
 msgid "Loading..."
 msgstr "Učitavanje..."
+
+msgid "Loading event information"
+msgstr ""
+
+msgid "Loading header"
+msgstr ""
 
 msgid "Local Time"
 msgstr "Lokalno Vreme"
@@ -6191,7 +6262,7 @@ msgid "Make extra mandatory"
 msgstr "Учини додатну опцију обавезном"
 
 msgid "Make sure you are using the correct Outlook credentials."
-msgstr ""
+msgstr "Уверите се да користите исправне податке за пријаву на Outlook налог."
 
 msgid "Make sure you are using the correct WhatsApp credentials."
 msgstr "Уверите се да користите исправне WhatsApp приступне податке."
@@ -6261,6 +6332,9 @@ msgstr "Макс. капацитет – растуће"
 
 msgid "Max Capacity Desc"
 msgstr "Макс. капацитет – опадајуће"
+
+msgid "Maximum"
+msgstr ""
 
 msgid "Maximum Quantity:"
 msgstr "Maksimalna Količina:"
@@ -6355,6 +6429,9 @@ msgstr "Подешавање Microsoft Teams-а"
 
 msgid "Min. Capacity"
 msgstr "Min. Kapacitet"
+
+msgid "Minimum"
+msgstr ""
 
 msgid "Minimum bookings required"
 msgstr "Minimalni broj rezervacija koji je potreban"
@@ -6577,6 +6654,9 @@ msgstr "Sledeći Servis"
 
 msgid "Next day reminder"
 msgstr "Подсетник за наредни дан"
+
+msgid "Next image"
+msgstr ""
 
 msgid "No"
 msgstr "Ne"
@@ -7170,6 +7250,9 @@ msgstr ""
 msgid "PHP Mail"
 msgstr ""
 
+msgid "PRE-BOOKING INTAKE FORM (IVYFORMS)"
+msgstr ""
+
 msgid "Package"
 msgstr "Paket"
 
@@ -7588,6 +7671,9 @@ msgstr "Periodi"
 
 msgid "Permanent access token"
 msgstr "Trajni pristupni token"
+
+msgid "Permanently linked"
+msgstr ""
 
 msgid "Person"
 msgstr "Osoba"
@@ -8072,6 +8158,9 @@ msgstr "Дугмад искачућег прозора"
 msgid "Popup title"
 msgstr "Наслов искачућег прозора"
 
+msgid "Pre-booking form details"
+msgstr ""
+
 msgid "Preload entities when page loads"
 msgstr "Унапред учитај ентитете при отварању странице"
 
@@ -8113,8 +8202,14 @@ msgstr "Prikaži"
 msgid "Preview invoice"
 msgstr "Прегледај фактуру"
 
+msgid "Previous image"
+msgstr ""
+
 msgid "Previous range"
 msgstr "Претходни опсег"
+
+msgid "Previous step"
+msgstr ""
 
 msgid "Price"
 msgstr "Cena"
@@ -8750,23 +8845,14 @@ msgstr "Pretraži"
 msgid "Search..."
 msgstr "Pretraži..."
 
-msgid "Search Coupons"
-msgstr "Pretraži Kupone"
-
 msgid "Search Filters"
 msgstr "Pretraži Filtere"
 
 msgid "Search Input Field"
 msgstr "Polje za Unos"
 
-msgid "Search Resources"
-msgstr "Претражи ресурсе"
-
 msgid "Search Results"
 msgstr "Pretraži Rezultate"
-
-msgid "Search Taxes"
-msgstr "Pretraži Filtere"
 
 msgid "Search attendees"
 msgstr "Претражи присутне"
@@ -8776,6 +8862,9 @@ msgstr "Претражи заказане термине"
 
 msgid "Search bookings"
 msgstr "Претражи резервације"
+
+msgid "Search coupons"
+msgstr ""
 
 msgid "Search customers"
 msgstr "Претражи купце"
@@ -8813,8 +8902,14 @@ msgstr "Претражи обавештења"
 msgid "Search packages"
 msgstr "Претражи пакете"
 
+msgid "Search resources"
+msgstr ""
+
 msgid "Search services"
 msgstr "Претражи услуге"
+
+msgid "Search taxes"
+msgstr ""
 
 msgid "Second"
 msgstr "Drugi"
@@ -8944,6 +9039,9 @@ msgstr "Izaberite WooCommerce proizvod"
 msgid "Select Zoom User"
 msgstr "Izaberi Zoom korisnika"
 
+msgid "Select a form..."
+msgstr ""
+
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr "Изаберите токен да бисте га уметнули на тренутну позицију курсора."
 
@@ -8991,9 +9089,6 @@ msgstr ""
 
 msgid "Select or Create New"
 msgstr "Izaberi ili Kreiraj Novu"
-
-msgid "Select or Create Tag"
-msgstr "Izaberi ili Kreiraj Tag"
 
 msgid "Select package"
 msgstr "Изаберите пакет"
@@ -9054,6 +9149,9 @@ msgstr "Izaberite ovog zaposlenog"
 
 msgid "Select tickets"
 msgstr "Изаберите улазнице"
+
+msgid "Select which IvyForms form to show before booking"
+msgstr ""
 
 msgid "Select your Square Location"
 msgstr "Изаберите своју Square локацију"
@@ -10533,6 +10631,8 @@ msgid ""
 "This email is linked to both a customer and an employee account. Please "
 "delete and rebook."
 msgstr ""
+"Ова адреса е-поште је повезана и са налогом купца и са налогом запосленог. "
+"Обришите резервацију и поново закажите."
 
 msgid "This employee is the only one assigned to {service}."
 msgstr "Овај запослени је једини додељен за {service}."
@@ -11951,8 +12051,14 @@ msgstr "od"
 msgid "on"
 msgstr "na"
 
+msgid "opens in new tab"
+msgstr ""
+
 msgid "out of"
 msgstr "nema"
+
+msgid "payment button"
+msgstr ""
 
 msgid "people"
 msgstr "osobe"

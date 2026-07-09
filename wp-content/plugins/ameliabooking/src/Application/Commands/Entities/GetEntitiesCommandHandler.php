@@ -49,6 +49,8 @@ use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 use AmeliaBooking\Infrastructure\Services\LessonSpace\AbstractLessonSpaceService;
 use AmeliaBooking\Infrastructure\Services\Mailchimp\AbstractMailchimpService;
 use AmeliaBooking\Infrastructure\Services\Payment\SquareService;
+use AmeliaBooking\Infrastructure\WP\Integrations\IvyForms\IvyFormsService;
+use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
 
 class GetEntitiesCommandHandler extends CommandHandler
 {
@@ -300,6 +302,13 @@ class GetEntitiesCommandHandler extends CommandHandler
                 (array_key_exists('page', $params) && $params['page'] === Entities::BOOKING) ?
                     null : $currentUser
             );
+
+            if (array_key_exists('page', $params) && $params['page'] === Entities::BOOKING) {
+                $resultData['employees'] = $providerAS->filterEmployeesByEntitiesRelations(
+                    $resultData['employees'],
+                    $resultData['entitiesRelations']
+                );
+            }
 
             // Add calendar list to each provider's Google Calendar data
             $settingsDS->getSetting('general', 'googleCalendar');
@@ -693,6 +702,19 @@ class GetEntitiesCommandHandler extends CommandHandler
                     !empty($params['lessonSpaceSearch']) ? $params['lessonSpaceSearch'] : null
                 );
             }
+        }
+
+        /** IvyForms */
+        if (in_array('ivy', $params['types'], true)) {
+            $forms = IvyFormsService::getForms();
+
+            $resultData['ivy'] = $forms
+                ? array_merge([['value' => '', 'label' => BackendStrings::get('ivy_select')]], $forms)
+                : [];
+        }
+
+        if (!empty($params['ivyId'])) {
+            $resultData['ivyFields'] = IvyFormsService::getFormFields((int)$params['ivyId']);
         }
 
 

@@ -6,7 +6,7 @@ use AmeliaBooking\Application\Services\Location\AbstractCurrentLocation;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsStorageInterface;
 use AmeliaBooking\Infrastructure\Licence;
-use AmeliaBooking\Plugin;
+use AmeliaBooking\Infrastructure\WP\Integrations\PluginInstaller;
 
 /**
  * Class SettingsStorage
@@ -531,6 +531,7 @@ class SettingsStorage implements SettingsStorageInterface
                 'email' => $this->getSetting('company', 'email'),
                 'phone' => $this->getSetting('company', 'phone'),
             ],
+            'ivy'                    => $this->getCategorySettings('ivy'),
             'pageColumnSettings'     => $this->getCategorySettings('pageColumnSettings'),
             'featuresIntegrations'   => Licence\Licence::filterFeaturesByLicense(
                 $this->getCategorySettings('featuresIntegrations')
@@ -926,6 +927,10 @@ class SettingsStorage implements SettingsStorageInterface
                     $this->getSetting('zoom', 'clientId') &&
                     $this->getSetting('zoom', 'clientSecret')
                 )
+            ],
+            'ivy'          => [
+                'installed' => PluginInstaller::isPluginInstalled('ivyforms'),
+                'active'    => PluginInstaller::isPluginActive('ivyforms'),
             ],
         ];
     }

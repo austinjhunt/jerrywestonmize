@@ -2,13 +2,12 @@
 
 namespace Divi5Amelia;
 
-use ET\Builder\Framework\DependencyManagement\Interfaces\DependencyInterface;
 use ET\Builder\Packages\ModuleLibrary\ModuleRegistration;
 
 /**
  * Class that handle "Amelia Step Booking" module output in frontend.
  */
-class AmeliaStepBookingModule implements DependencyInterface
+class AmeliaStepBookingModule extends SharedShortcodeModule
 {
     /**
      * Register module.
@@ -27,9 +26,12 @@ class AmeliaStepBookingModule implements DependencyInterface
 
         ModuleRegistration::register_module(
             $module_json_folder_path,
-            [
-                'render_callback' => [AmeliaStepBookingModule::class, 'renderCallback'],
-            ]
+            ModuleMetadata::getRegistrationArgs(
+                $module_json_folder_path,
+                [
+                    'render_callback' => [AmeliaStepBookingModule::class, 'renderCallback'],
+                ]
+            )
         );
     }
 
@@ -45,28 +47,13 @@ class AmeliaStepBookingModule implements DependencyInterface
             $shortcode .= ' show=' . $show_all;
         }
 
-        $trigger = $attrs['trigger']['innerContent']['desktop']['value'] ?? null;
-        if ($trigger !== null && $trigger !== '') {
-            $shortcode .= ' trigger=' . esc_attr($trigger);
-        }
-
         // Layout
         $layout = $attrs['layout']['innerContent']['desktop']['value'] ?? null;
         if ($layout !== null && $layout !== '') {
             $shortcode .= ' layout=' . $layout;
         }
 
-        // Trigger Type
-        $trigger_type = $attrs['trigger_type']['innerContent']['desktop']['value'] ?? null;
-        if ($trigger && $trigger_type !== null && $trigger_type !== '') {
-            $shortcode .= ' trigger_type=' . $trigger_type;
-        }
-
-        // In Dialog
-        $in_dialog = $attrs['in_dialog']['innerContent']['desktop']['value'] ?? false;
-        if ($in_dialog === 'on') {
-            $shortcode .= ' in_dialog=1';
-        }
+        $shortcode .= self::getSharedShortcodeString($attrs);
 
         $preselect = $attrs['parameters']['innerContent']['desktop']['value'] ?? false;
         if ($preselect === 'on') {

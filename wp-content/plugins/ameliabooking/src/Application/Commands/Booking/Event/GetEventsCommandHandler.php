@@ -62,15 +62,19 @@ class GetEventsCommandHandler extends CommandHandler
         /** @var AbstractUser|null $user */
         $user = null;
 
-        $isFrontEnd = isset($params['page']) && empty($params['group']);
+        // Cabinet requests (source=cabinet-provider/customer) use page for *pagination*,
+        // not to signal a frontend booking-form context. Without this guard, sending
+        // page=1 from a provider JWT makes $isFrontEnd=true, which skips the auth block,
+        // clears provider scoping, and adds show=1 — exposing all published events.
+        $isCabinetPage = $command->getPage() === 'cabinet';
+
+        $isFrontEnd = isset($params['page']) && empty($params['group']) && !$isCabinetPage;
 
         $fetchBookings = !$isFrontEnd && (
             !isset($params['bookings']) || filter_var($params['bookings'], FILTER_VALIDATE_BOOLEAN)
         );
 
         $isCalendarPage = $isFrontEnd && (int)$params['page'] === 0;
-
-        $isCabinetPage = $command->getPage() === 'cabinet';
 
         if (!$isFrontEnd) {
             try {

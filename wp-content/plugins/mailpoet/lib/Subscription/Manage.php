@@ -115,7 +115,7 @@ class Manage {
             && $subscriber instanceof SubscriberEntity
             && $subscriber->getStatus() === SubscriberEntity::STATUS_SUBSCRIBED
           );
-          $subscriber = $this->subscriberSaveController->createOrUpdate($subscriberData, $subscriber);
+          $subscriber = $this->subscriberSaveController->createOrUpdate($this->filterToEditableFields($subscriberData), $subscriber);
           if ($shouldTrackUnsubscribe) {
             $this->unsubscribesTracker->track(
               (int)$subscriber->getId(),
@@ -178,7 +178,9 @@ class Manage {
         $this->subscriberSegmentRepository->createOrUpdate(
           $subscriber,
           $segment,
-          SubscriberEntity::STATUS_UNSUBSCRIBED
+          SubscriberEntity::STATUS_UNSUBSCRIBED,
+          false,
+          true
         );
       }
     }
@@ -190,9 +192,13 @@ class Manage {
       $this->subscriberSegmentRepository->createOrUpdate(
         $subscriber,
         $segments[$segmentId],
-        SubscriberEntity::STATUS_SUBSCRIBED
+        SubscriberEntity::STATUS_SUBSCRIBED,
+        false,
+        true
       );
     }
+
+    $this->subscribersRepository->recalculateSegmentsCount([(int)$subscriber->getId()]);
 
     $this->sendNotificationsForNewSegments(
       $subscriber,
@@ -230,7 +236,9 @@ class Manage {
       $this->subscriberSegmentRepository->createOrUpdate(
         $subscriber,
         $segments[$segmentId],
-        SubscriberEntity::STATUS_UNSUBSCRIBED
+        SubscriberEntity::STATUS_UNSUBSCRIBED,
+        false,
+        true
       );
     }
 
@@ -238,15 +246,33 @@ class Manage {
       $this->subscriberSegmentRepository->createOrUpdate(
         $subscriber,
         $segments[$segmentId],
-        SubscriberEntity::STATUS_SUBSCRIBED
+        SubscriberEntity::STATUS_SUBSCRIBED,
+        false,
+        true
       );
     }
+
+    $this->subscribersRepository->recalculateSegmentsCount([(int)$subscriber->getId()]);
 
     $this->sendNotificationsForNewSegments(
       $subscriber,
       $isGlobalResubscribe
         ? $this->getCurrentSubscribedSegmentIds($subscriber)
         : array_diff($subscribeIds, $currentSegmentIds)
+    );
+  }
+
+  /**
+   * The manage-subscription form only edits the subscriber's name, email and
+   * global status. Subscription choices and custom fields are handled
+   * separately. Keep only those fields when saving the subscriber so any other
+   * submitted key is ignored. `status` is already validated by
+   * hasInvalidStatus().
+   */
+  private function filterToEditableFields(array $subscriberData): array {
+    return array_intersect_key(
+      $subscriberData,
+      array_flip(['email', 'first_name', 'last_name', 'status'])
     );
   }
 

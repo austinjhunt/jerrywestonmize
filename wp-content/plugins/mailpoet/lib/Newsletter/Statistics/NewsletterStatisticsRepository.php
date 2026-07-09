@@ -17,9 +17,9 @@ use MailPoet\Entities\StatisticsUnsubscribeEntity;
 use MailPoet\Entities\StatisticsWooCommercePurchaseEntity;
 use MailPoet\Entities\SubscriberEntity;
 use MailPoet\Entities\UserAgentEntity;
-use MailPoet\Newsletter\Sending\NewsletterReplayMetadata;
 use MailPoet\Settings\TrackingConfig;
 use MailPoet\WooCommerce\Helper as WCHelper;
+use MailPoet\WooCommerce\OrderAttributionRevenueReader;
 use MailPoetVendor\Doctrine\ORM\EntityManager;
 use MailPoetVendor\Doctrine\ORM\Query\Expr\Join;
 use MailPoetVendor\Doctrine\ORM\QueryBuilder;
@@ -36,14 +36,19 @@ class NewsletterStatisticsRepository extends Repository {
   /** @var TrackingConfig */
   private $trackingConfig;
 
+  /** @var OrderAttributionRevenueReader */
+  private $orderAttributionRevenueReader;
+
   public function __construct(
     EntityManager $entityManager,
     WCHelper $wcHelper,
-    TrackingConfig $trackingConfig
+    TrackingConfig $trackingConfig,
+    OrderAttributionRevenueReader $orderAttributionRevenueReader
   ) {
     parent::__construct($entityManager);
     $this->wcHelper = $wcHelper;
     $this->trackingConfig = $trackingConfig;
+    $this->orderAttributionRevenueReader = $orderAttributionRevenueReader;
   }
 
   protected function getEntityClassName() {
@@ -205,9 +210,7 @@ class NewsletterStatisticsRepository extends Repository {
       ->where('t.status = :status')
       ->setParameter('status', ScheduledTaskEntity::STATUS_COMPLETED)
       ->andWhere('q.newsletter IN (:newsletters)')
-      ->andWhere('q.meta IS NULL OR q.meta NOT LIKE :latestNewsletterReplayMeta')
       ->setParameter('newsletters', $newsletters)
-      ->setParameter('latestNewsletterReplayMeta', NewsletterReplayMetadata::getMetaLikePattern())
       ->groupBy('n.id');
 
     if ($from && $to) {
@@ -268,12 +271,9 @@ class NewsletterStatisticsRepository extends Repository {
     return $this->entityManager->createQueryBuilder()
       ->select('IDENTITY(stats.newsletter) AS id, COUNT(DISTINCT stats.subscriber) as cnt')
       ->from($statisticsEntityName, 'stats')
-      ->leftJoin('stats.queue', 'q')
       ->where('stats.newsletter IN (:newsletters)')
-      ->andWhere('q.id IS NULL OR q.meta IS NULL OR q.meta NOT LIKE :latestNewsletterReplayMeta')
       ->groupBy('stats.newsletter')
-      ->setParameter('newsletters', $newsletters)
-      ->setParameter('latestNewsletterReplayMeta', NewsletterReplayMetadata::getMetaLikePattern());
+      ->setParameter('newsletters', $newsletters);
   }
 
   private function getWooCommerceRevenues(array $newsletters, ?\DateTimeImmutable $from = null, ?\DateTimeImmutable $to = null) {
@@ -281,20 +281,33 @@ class NewsletterStatisticsRepository extends Repository {
       return null;
     }
 
+    $newsletterIds = array_map(function(NewsletterEntity $newsletter): int {
+      return (int)$newsletter->getId();
+    }, $newsletters);
     $revenueStatus = $this->wcHelper->getPurchaseStates();
-
     $currency = $this->wcHelper->getWoocommerceCurrency();
+    $wooBackedRevenues = $this->orderAttributionRevenueReader->getNewsletterRevenues($newsletterIds, $from, $to);
+    if (is_array($wooBackedRevenues)) {
+      $revenues = [];
+      foreach ($wooBackedRevenues as $newsletterId => $result) {
+        $revenues[(int)$newsletterId] = new WooCommerceRevenue(
+          $currency,
+          (float)$result['total'],
+          (int)$result['count'],
+          $this->wcHelper
+        );
+      }
+      return $revenues;
+    }
+
     $query = $this->entityManager
       ->createQueryBuilder()
       ->select('IDENTITY(stats.newsletter) AS id, SUM(stats.orderPriceTotal) AS total, COUNT(stats.id) AS cnt')
       ->from(StatisticsWooCommercePurchaseEntity::class, 'stats')
-      ->leftJoin('stats.queue', 'q')
       ->where('stats.newsletter IN (:newsletters)')
-      ->andWhere('q.id IS NULL OR q.meta IS NULL OR q.meta NOT LIKE :latestNewsletterReplayMeta')
       ->andWhere('stats.orderCurrency = :currency')
       ->andWhere('stats.status IN (:revenue_status)')
       ->setParameter('newsletters', $newsletters)
-      ->setParameter('latestNewsletterReplayMeta', NewsletterReplayMetadata::getMetaLikePattern())
       ->setParameter('currency', $currency)
       ->setParameter('revenue_status', $revenueStatus)
       ->groupBy('stats.newsletter');

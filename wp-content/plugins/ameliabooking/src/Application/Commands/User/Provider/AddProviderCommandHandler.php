@@ -52,6 +52,19 @@ class AddProviderCommandHandler extends CommandHandler
             throw new AccessDeniedException('You are not allowed to add employee.');
         }
 
+        /** @var AbstractUser $currentUser */
+        $currentUser = $this->container->get('logged.in.user');
+
+        // Only admins may link a new provider to an existing WordPress user account.
+        $requestedExternalId = $command->getField('externalId');
+        if (
+            !empty($requestedExternalId) &&
+            (int)$requestedExternalId !== 0 &&
+            (!$currentUser || $currentUser->getType() !== AbstractUser::USER_ROLE_ADMIN)
+        ) {
+            throw new AccessDeniedException('You are not allowed to link to an existing WordPress user.');
+        }
+
         /** @var ProviderApplicationService $providerAS */
         $providerAS = $this->container->get('application.user.provider.service');
 

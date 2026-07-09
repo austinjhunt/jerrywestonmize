@@ -47,6 +47,7 @@
     "employees": "employees.innerContent.*",
     "locations": "locations.innerContent.*",
     "skip_categories": "skip_categories.innerContent.*",
+    "ivy": "ivy.innerContent.*",
     "trigger": "trigger.innerContent.*",
     "trigger_type": "trigger_type.innerContent.*",
     "in_dialog": "in_dialog.innerContent.*"

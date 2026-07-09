@@ -50,6 +50,7 @@ class Licence extends Pro\Licence
         'lessonSpace' => LicenceConstants::STARTER,
         'locations' => LicenceConstants::BASIC,
         'mailchimp' => LicenceConstants::BASIC,
+        'mobileApp' => LicenceConstants::PRO,
         'mollie' => LicenceConstants::BASIC,
         'mycred' => LicenceConstants::BASIC,
         'noShowTag' => LicenceConstants::BASIC,

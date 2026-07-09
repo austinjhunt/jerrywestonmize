@@ -191,14 +191,14 @@ class Forminator_Radio extends Forminator_Field {
 			if ( $required ) {
 				$html .= sprintf(
 					'<span id="%s" class="forminator-label">%s %s</span>',
-					$descr_id . '-label',
+					esc_attr( $descr_id . '-label' ),
 					$label,
 					forminator_get_required_icon()
 				);
 			} else {
 				$html .= sprintf(
 					'<span id="%s" class="forminator-label">%s</span>',
-					$descr_id . '-label',
+					esc_attr( $descr_id . '-label' ),
 					$label
 				);
 			}
@@ -318,11 +318,11 @@ class Forminator_Radio extends Forminator_Field {
 
 				$html .= sprintf(
 					'<input type="radio" name="%s" value="%s" id="%s" aria-labelledby="%s" data-calculation="%s" %s %s%s/>',
-					$name,
-					$value,
-					$input_id,
-					$label_id,
-					$calculation_value,
+					esc_attr( $name ),
+					esc_attr( $value ),
+					esc_attr( $input_id ),
+					esc_attr( $label_id ),
+					esc_attr( $calculation_value ),
 					$selected,
 					$hidden_calc_behavior,
 					( ! empty( $description ) ? ' aria-describedby="' . esc_attr( $id . '-' . $uniq_id . '-description' ) . '"' : '' )

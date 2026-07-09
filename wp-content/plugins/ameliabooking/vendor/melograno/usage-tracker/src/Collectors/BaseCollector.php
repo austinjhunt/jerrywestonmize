@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Melograno\UsageTracker\Collectors;
+namespace AmeliaVendor\Melograno\UsageTracker\Collectors;
 
-use Melograno\UsageTracker\Collectors\Common\ActivationCollector;
-use Melograno\UsageTracker\Collectors\Common\WpEnvironmentCollector;
+use AmeliaVendor\Melograno\UsageTracker\Collectors\Common\ActivationCollector;
+use AmeliaVendor\Melograno\UsageTracker\Collectors\Common\WpEnvironmentCollector;
 
 abstract class BaseCollector implements PluginCollectorInterface
 {

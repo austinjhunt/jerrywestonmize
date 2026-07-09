@@ -1,5 +1,24 @@
 === W3 Total Cache Changelog ===
 
+= 2.10.1 =
+* Fix: General Settings: "The link you followed has expired" when emptying all caches
+* Fix: Redis/Memcached/CDN: Restore connection handling after 2.10.0 at-rest credential encryption
+* Fix: At-rest credentials: Defer encryption until WordPress salts are available
+* Fix: Always Cached: Queue regeneration on nginx with Disk: Enhanced page cache
+* Fix: mfunc: Render unrecognized dynamic-fragment tags as empty output
+* Fix: Apache: Remove Options -MultiViews from root .htaccess (HTTP 500 on restrictive AllowOverride)
+* Fix: Multisite: Admin page links in network admin
+
+= 2.10.0 =
+* Security: Hardened authorization, capability, and request-verification (nonce/CSRF) checks across admin and AJAX endpoints
+* Security: Improved input validation and output escaping to prevent cross-site scripting (XSS)
+* Security: Strengthened protections against code, command, and file-inclusion injection
+* Security: Hardened processing of dynamic and cached content, including data serialization
+* Security: Restricted outbound server-side requests to mitigate server-side request forgery (SSRF)
+* Security: Restricted configuration changes to prevent unauthorized modification
+* Security: Improved handling of stored credentials, cookies, and generated server-configuration files
+* Security: Reduced potential information disclosure and improved security logging
+
 = 2.9.4 =
 * Fix: Output buffering: Reverted to previous output buffering from 2.9.1
 * Fix: Cloudflare: Token/Key validation

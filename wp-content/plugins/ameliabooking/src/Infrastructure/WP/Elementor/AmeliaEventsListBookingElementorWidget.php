@@ -38,6 +38,10 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
     }
     protected function register_controls()
     {
+        $controls_data = [];
+
+        ElementorSharedShortcodeWidget::setSharedShortcodeData(GutenbergBlock::getEntitiesData()['data'], $controls_data);
+
         $this->start_controls_section(
             'amelia_events_section',
             [
@@ -163,7 +167,6 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
                 'label' => BackendStrings::get('manually_loading'),
                 'label_block' => true,
                 'type' => Controls_Manager::TEXT,
-                'condition' => ['preselect' => 'yes'],
                 'placeholder' => '',
                 'description' => BackendStrings::get('manually_loading_description'),
             ]
@@ -174,11 +177,13 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
             [
                 'label' => BackendStrings::get('trigger_type'),
                 'type' => Controls_Manager::SELECT,
-                'condition' => ['preselect' => 'yes'],
                 'description' => BackendStrings::get('trigger_type_tooltip'),
                 'options' => [
                     'id' => BackendStrings::get('trigger_type_id'),
                     'class' => BackendStrings::get('trigger_type_class')
+                ],
+                'condition' => [
+                    'load_manually!' => '',
                 ],
                 'default' => 'id'
             ]
@@ -189,12 +194,30 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
             [
                 'label' => BackendStrings::get('in_dialog'),
                 'type' => Controls_Manager::SWITCHER,
-                'condition' => ['preselect' => 'yes'],
                 'default' => false,
                 'label_on' => BackendStrings::get('yes'),
                 'label_off' => BackendStrings::get('no'),
+                'condition' => [
+                    'load_manually!' => '',
+                ],
             ]
         );
+
+        if (!empty($controls_data['ivy'])) {
+            $this->add_control(
+                'ivy',
+                [
+                    'label' => BackendStrings::get('ivy'),
+                    'type' => Controls_Manager::SELECT,
+                    'description' => BackendStrings::get('ivy_tooltip'),
+                    'options' => $controls_data['ivy'],
+                    'default' => '',
+                    'condition' => [
+                        'load_manually' => '',
+                    ],
+                ]
+            );
+        }
 
         $this->end_controls_section();
     }
@@ -204,13 +227,16 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
 
         $settings = $this->get_settings_for_display();
 
-        if ($settings['preselect']) {
-            $trigger      = $settings['load_manually'] !== '' ? ' trigger=' . $settings['load_manually'] : '';
-            $trigger_type = $settings['load_manually'] && $settings['trigger_type'] !== '' ? ' trigger_type=' . $settings['trigger_type'] : '';
-            $in_dialog    = $settings['load_manually'] && $settings['in_dialog'] === 'yes' ? ' in_dialog=1' : '';
+        $ivy = empty($settings['load_manually']) && !empty($settings['ivy']) && $settings['ivy'] !== '0' ?
+            ' ivy="' . esc_attr($settings['ivy']) . '"' : '';
 
-            $selected_event = empty($settings['select_event']) ? '' : ' event=' . (is_array($settings['select_event']) ?
-                    implode(',', $settings['select_event']) : $settings['select_event']);
+        $trigger      = $settings['load_manually'] !== '' ? ' trigger="' . esc_attr($settings['load_manually']) . '"' : '';
+        $trigger_type = $settings['load_manually'] && $settings['trigger_type'] !== '' ? ' trigger_type="' . esc_attr($settings['trigger_type']) . '"' : '';
+        $in_dialog    = $settings['load_manually'] && $settings['in_dialog'] === 'yes' ? ' in_dialog=1' : '';
+
+        if ($settings['preselect']) {
+            $selected_event = empty($settings['select_event']) ? '' : ' event="' . (is_array($settings['select_event']) ?
+                    implode(',', array_map('esc_attr', $settings['select_event'])) : esc_attr($settings['select_event'])) . '"';
 
             $event_to_show = '';
             if (empty($settings['select_event']) && !empty($settings['event_to_show']) && $settings['event_to_show'] !== 'all') {
@@ -220,31 +246,32 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
                         return;
                     }
 
-                    $event_to_show = ' range="' . $settings['start_date'] . ' - ' . $settings['end_date'] . '"';
+                    $event_to_show = ' range="' . esc_attr($settings['start_date'] . ' - ' . $settings['end_date']) . '"';
                 } else {
-                    $event_to_show = ' range="' . $settings['event_to_show'] . '"';
+                    $event_to_show = ' range="' . esc_attr($settings['event_to_show']) . '"';
                 }
             }
 
             $show_recurring = $settings['show_recurring'] ? ' recurring=1' : '';
 
-            $selected_location = empty($settings['select_location']) ? '' : ' location=' . (is_array($settings['select_location']) ?
-                    implode(',', $settings['select_location']) : $settings['select_location']);
+            $selected_location = empty($settings['select_location']) ? '' : ' location="' . (is_array($settings['select_location']) ?
+                    implode(',', array_map('esc_attr', $settings['select_location'])) : esc_attr($settings['select_location'])) . '"';
 
             $selected_tag = '';
             if (!empty($settings['select_tag'])) {
                 $selected_tag .= ' tag="';
                 if (is_array($settings['select_tag'])) {
-                    foreach (array_filter($settings['select_tag']) as $index => $tag) {
-                        $selected_tag .= ($index === 0 ? '' : ',') . '{' . $tag . '}';
+                    $tags = array_values(array_filter($settings['select_tag']));
+                    foreach ($tags as $index => $tag) {
+                        $selected_tag .= ($index === 0 ? '' : ',') . '{' . esc_attr($tag) . '}';
                     }
                 } else {
-                    $selected_tag .= $settings['select_tag'];
+                    $selected_tag .= esc_attr($settings['select_tag']);
                 }
                 $selected_tag .= '"';
             }
 
-            echo esc_html('[ameliaeventslistbooking' .
+            echo '[ameliaeventslistbooking' .
                 $trigger .
                 $trigger_type .
                 $in_dialog .
@@ -252,9 +279,15 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
                 $event_to_show .
                 $selected_location .
                 $selected_tag .
-                $show_recurring . ']');
+                $ivy .
+                $show_recurring . ']';
         } else {
-            echo '[ameliaeventslistbooking]';
+            echo '[ameliaeventslistbooking' .
+                $trigger .
+                $trigger_type .
+                $in_dialog .
+                $ivy .
+                ']';
         }
     }
 

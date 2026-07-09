@@ -198,6 +198,10 @@ class CustomerBookingFactory
             }
         }
 
+        if (!empty($data['ivyEntryId'])) {
+            $customerBooking->setIvyEntryId(new Id($data['ivyEntryId']));
+        }
+
         return $customerBooking;
     }
 
@@ -245,6 +249,7 @@ class CustomerBookingFactory
                     'tax'             => isset($row['booking_tax']) ? $row['booking_tax'] : null,
                     'qrCodes'         => isset($row['booking_qrCodes']) ? $row['booking_qrCodes'] : (isset($row['qrCodes']) ? $row['qrCodes'] : null),
                     'created'         => isset($row['booking_created']) ? $row['booking_created'] : null,
+                    'ivyEntryId'      => isset($row['booking_ivyEntryId']) ? (int)$row['booking_ivyEntryId'] : null,
                 ];
             }
 

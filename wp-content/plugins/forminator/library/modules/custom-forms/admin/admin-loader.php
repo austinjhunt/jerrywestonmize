@@ -670,9 +670,21 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 			$form_model->clear_fields();
 		}
 
-		$fields = isset( $template->fields ) ? $template->fields : array();
+		$fields       = isset( $template->fields ) ? $template->fields : array();
+		$is_paginated = false;
+		$has_captcha  = false;
 		foreach ( $fields as $row ) {
 			foreach ( $row['fields'] as $f ) {
+				$field_type = $f['type'] ?? '';
+				switch ( $field_type ) {
+					case 'page-break':
+						$is_paginated = true;
+						break;
+					case 'captcha':
+						$has_captcha = true;
+						break;
+				}
+
 				$field          = new Forminator_Form_Field_Model();
 				$field->form_id = $row['wrapper_id'];
 				$field->slug    = $f['element_id'];
@@ -690,6 +702,14 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 			$validation_result = forminator_validate_registration_form_settings( $settings );
 			if ( is_wp_error( $validation_result ) ) {
 				return $validation_result;
+			}
+		}
+
+		// Validate captcha placement only when pagination and captcha exist.
+		if ( $is_paginated && $has_captcha ) {
+			$captcha_validation = forminator_validate_captcha_placement_in_paginated_forms( $fields );
+			if ( is_wp_error( $captcha_validation ) ) {
+				return $captcha_validation;
 			}
 		}
 

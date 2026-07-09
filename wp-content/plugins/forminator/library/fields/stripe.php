@@ -680,21 +680,6 @@ class Forminator_Stripe extends Forminator_Field {
 					forminator_maybe_log( __METHOD__, $e->getMessage() );
 				}
 			}
-
-			// Cards-only: create invoice PI on submit; skip on stripe-intent to avoid duplicate incomplete subscriptions.
-			if ( ! $is_intent && 'false' === $is_multi && class_exists( 'Forminator_Stripe_Subscription' ) ) {
-				try {
-					$stripe_addon   = Forminator_Stripe_Subscription::get_instance();
-					$field_object   = Forminator_Core::get_field_object( 'stripe' );
-					$payment_plan   = $field_object->get_payment_plan( $field );
-					$payment_intent = $stripe_addon->create_payment_intent( $field_object, Forminator_Front_Action::$module_object, Forminator_Front_Action::$prepared_data, $field, $payment_plan );
-
-					$response_data['paymentid']     = $payment_intent->id;
-					$response_data['paymentsecret'] = $payment_intent->client_secret;
-				} catch ( Exception $e ) {
-					$response_data['paymentmethod_failed'] = '1';
-				}
-			}
 			wp_send_json_success( $response_data );
 		}
 

@@ -120,21 +120,21 @@ class AmeliaEventsElementorWidget extends Widget_Base
 
         $settings = $this->get_settings_for_display();
 
-        $selected_type = $settings['selected_type'] ? ' type=' . $settings['selected_type'] : '';
+        $selected_type = $settings['selected_type'] ? ' type="' . esc_attr($settings['selected_type']) . '"' : '';
 
         if ($settings['preselect']) {
-            $trigger = $settings['load_manually'] !== '' ? ' trigger=' . $settings['load_manually'] : '';
+            $trigger = $settings['load_manually'] !== '' ? ' trigger="' . esc_attr($settings['load_manually']) . '"' : '';
 
-            $selected_event = $settings['select_event'] === '0' ? '' : ' event=' . $settings['select_event'];
+            $selected_event = $settings['select_event'] === '0' ? '' : ' event="' . esc_attr($settings['select_event']) . '"';
 
             $show_recurring = $settings['show_recurring'] ? ' recurring=1' : '';
 
-            $selected_tag = $settings['select_tag'] ? ' tag=' . '"' . $settings['select_tag'] . '"' : '';
+            $selected_tag = $settings['select_tag'] ? ' tag="' . esc_attr($settings['select_tag']) . '"' : '';
 
-            echo esc_html('[ameliaevents' . $selected_type . $trigger . $selected_event . $selected_tag . $show_recurring . ']');
+            echo wp_kses_post('[ameliaevents' . $selected_type . $trigger . $selected_event . $selected_tag . $show_recurring . ']');
         } else {
-            $selected_type = $settings['selected_type'] ? ' type=' . $settings['selected_type'] : '';
-            echo esc_html('[ameliaevents' . $selected_type . ']');
+            $selected_type = $settings['selected_type'] ? ' type="' . esc_attr($settings['selected_type']) . '"' : '';
+            echo wp_kses_post('[ameliaevents' . $selected_type . ']');
         }
     }
 

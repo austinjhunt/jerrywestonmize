@@ -15,7 +15,7 @@ use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
  *
  * @package AmeliaBooking\Infrastructure\WP\Elementor
  */
-class AmeliaCatalogBookingElementorWidget extends Widget_Base
+class AmeliaCatalogBookingElementorWidget extends ElementorSharedShortcodeWidget
 {
     protected $controls_data;
 
@@ -181,38 +181,7 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
             );
         }
 
-        $this->add_control(
-            'load_manually',
-            [
-                'label' => BackendStrings::get('manually_loading'),
-                'label_block' => true,
-                'type' => Controls_Manager::TEXT,
-                'placeholder' => '',
-                'description' => BackendStrings::get('manually_loading_description'),
-            ]
-        );
-
-        $this->add_control(
-            'trigger_type',
-            [
-                'label' => BackendStrings::get('trigger_type'),
-                'type' => Controls_Manager::SELECT,
-                'description' => BackendStrings::get('trigger_type_tooltip'),
-                'options' => $controls_data['trigger_types'],
-                'default' => 'id'
-            ]
-        );
-
-        $this->add_control(
-            'in_dialog',
-            [
-                'label' => BackendStrings::get('in_dialog'),
-                'type' => Controls_Manager::SWITCHER,
-                'default' => false,
-                'label_on' => BackendStrings::get('yes'),
-                'label_off' => BackendStrings::get('no'),
-            ]
-        );
+        $this->setSharedShortcodeElements($controls_data);
 
         $this->end_controls_section();
     }
@@ -226,10 +195,6 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
         }
 
         $skip_categories = $settings['skip_categories'] === 'yes' ? ' categories_hidden=1' : '';
-
-        $trigger      = $settings['load_manually'] !== '' ? ' trigger=' . $settings['load_manually'] : '';
-        $trigger_type = $settings['load_manually'] && $settings['trigger_type'] !== '' ? ' trigger_type=' . $settings['trigger_type'] : '';
-        $in_dialog    = $settings['load_manually'] && $settings['in_dialog'] === 'yes' ? ' in_dialog=1' : '';
 
         $show = '';
 
@@ -263,15 +228,16 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
             $employee = '';
             $location = '';
         }
-        echo esc_html('[ameliacatalogbooking' .
+
+        $sharedSortcode = $this->getSharedShortcodeString($settings);
+
+        echo '[ameliacatalogbooking' .
             $show .
-            $trigger .
-            $trigger_type .
-            $in_dialog .
+            $sharedSortcode .
             $category_service .
             $employee .
             $location .
-            $skip_categories . ']');
+            $skip_categories . ']';
     }
 
     public static function amelia_elementor_get_data()
@@ -315,10 +281,7 @@ class AmeliaCatalogBookingElementorWidget extends Widget_Base
             'packages' => BackendStrings::get('packages')
         ] : [];
 
-        $elementorData['trigger_types'] = [
-            'id' => BackendStrings::get('trigger_type_id'),
-            'class' => BackendStrings::get('trigger_type_class')
-        ];
+        self::setSharedShortcodeData($data, $elementorData);
 
         return $elementorData;
     }
