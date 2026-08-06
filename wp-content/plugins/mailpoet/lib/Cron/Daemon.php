@@ -112,7 +112,6 @@ class Daemon {
     yield $this->workersFactory->createWooCommercePastOrdersWorker();
     yield $this->workersFactory->createStatsNotificationsWorkerForAutomatedEmails();
     yield $this->workersFactory->createSubscriberLinkTokensWorker();
-    yield $this->workersFactory->createSubscribersEngagementScoreWorker();
     yield $this->workersFactory->createSubscribersLastEngagementWorker();
     yield $this->workersFactory->createSubscribersCountCacheRecalculationWorker();
     yield $this->workersFactory->createReEngagementEmailsSchedulerWorker();
@@ -125,5 +124,6 @@ class Daemon {
     yield $this->workersFactory->createStatisticsExportWorker();
     yield $this->workersFactory->createBulkConfirmationEmailResendWorker();
     yield $this->workersFactory->createSubscriberLimitNotificationWorker();
+    yield $this->workersFactory->createSubscribersEngagementScoreWorker();
   }
 }

@@ -288,10 +288,11 @@ class CustomerApplicationService extends UserApplicationService
     /**
      * @param Customer $customer
      * @param bool     $isNewCustomer
+     * @param bool     $sendNewUserNotification
      *
      * @return void
      */
-    public function setWPUserForCustomer($customer, $isNewCustomer)
+    public function setWPUserForCustomer($customer, $isNewCustomer, $sendNewUserNotification = true)
     {
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
@@ -305,7 +306,7 @@ class CustomerApplicationService extends UserApplicationService
             try {
                 if ($customer->getExternalId()) {
                     $userAS->setWpUserIdForExistingUser($customer->getId()->getValue(), $customer, Entities::CUSTOMER);
-                } elseif ($userAS->setWpUserIdForNewUser($customer->getId()->getValue(), $customer, Entities::CUSTOMER)) {
+                } elseif ($userAS->setWpUserIdForNewUser($customer->getId()->getValue(), $customer, Entities::CUSTOMER, null, $sendNewUserNotification)) {
                     do_action('AmeliaCustomerWPCreated', $customer->toArray(), $this->container);
                     do_action('amelia_customer_wp_created', $customer->toArray(), $this->container);
                 }

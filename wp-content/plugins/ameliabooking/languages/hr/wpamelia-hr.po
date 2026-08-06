@@ -427,6 +427,12 @@ msgid "Add Meta Pixel to track ad conversions and optimize marketing."
 msgstr ""
 "Dodajte Meta Pixel za praćenje konverzija oglasa i optimizaciju marketinga."
 
+msgid "Add New"
+msgstr ""
+
+msgid "Add New Event Page"
+msgstr ""
+
 msgid "Add Period"
 msgstr "Dodaj razdoblje"
 
@@ -620,6 +626,9 @@ msgstr "Svi kupci"
 
 msgid "All employees"
 msgstr "Svi zaposlenici"
+
+msgid "All entities imported"
+msgstr ""
 
 msgid "All events"
 msgstr "Sva događanja"
@@ -830,6 +839,15 @@ msgstr "Amelia - Rezervacija korak po korak"
 
 msgid "Amelia Add to calendar page"
 msgstr "Amelia Dodaj na stranicu kalendara"
+
+msgid "Amelia Event"
+msgstr ""
+
+msgid "Amelia Event Page"
+msgstr ""
+
+msgid "Amelia Event Pages"
+msgstr ""
 
 msgid "Amelia Events List Booking Settings"
 msgstr "Amelia Popis događaja – postavke rezervacija"
@@ -1354,6 +1372,9 @@ msgid ""
 msgstr ""
 "Automatski kreirajte Zoom sastanke za rezervacije i obavijestite kupce i "
 "zaposlenike."
+
+msgid "Automatically create an Event Page for new events"
+msgstr ""
 
 msgid ""
 "Automatically generate invoices for every booking, making payments easier, "
@@ -2293,7 +2314,7 @@ msgstr "Sažeti"
 msgid ""
 "Collect additional information from your customers before they complete a "
 "booking."
-msgstr ""
+msgstr "Prikupite dodatne informacije od kupaca prije dovršetka rezervacije."
 
 msgid "Collect the information your business truly needs"
 msgstr "Prikupite informacije koje su vašem poslovanju zaista potrebne"
@@ -2498,7 +2519,7 @@ msgid "Consulting"
 msgstr "Savjetovanje"
 
 msgid "Contact Form"
-msgstr ""
+msgstr "Kontaktni obrazac"
 
 msgid "Contact message"
 msgstr "Kontaktna poruka"
@@ -2681,8 +2702,11 @@ msgstr "Kreiraj zaposlenika"
 msgid "Create event"
 msgstr "Stvori događaj"
 
-msgid "Create form"
+msgid "Create event page"
 msgstr ""
+
+msgid "Create form"
+msgstr "Kreiraj obrazac"
 
 msgid "Create meetings for pending appointments"
 msgstr "Stvaranje sastanaka za sastanke na čekanju"
@@ -3004,11 +3028,17 @@ msgstr "Tamna tema"
 msgid "Dashboard"
 msgstr "Kontrolna ploča"
 
+msgid "Data export is ready."
+msgstr ""
+
 msgid "Data that remains unchanged:"
 msgstr "Podaci koji ostaju nepromijenjeni:"
 
 msgid "Data to be updated:"
 msgstr "Podaci koje treba ažurirati:"
+
+msgid "Data transfer"
+msgstr ""
 
 msgid "Date"
 msgstr "Datum"
@@ -3420,6 +3450,9 @@ msgstr ""
 "pregledaju, pretražuju i rezerviraju. Izvrstan način da istaknete nadolazeće "
 "događaje u interaktivnom formatu."
 
+msgid "Do not exit the import until it is finished."
+msgstr ""
+
 msgid "Do you want to cancel following events?"
 msgstr "Želite li otkazati sljedeće događaje?"
 
@@ -3632,6 +3665,9 @@ msgstr "Uredi kupca"
 msgid "Edit Event"
 msgstr "Uredi Događanje"
 
+msgid "Edit Event Page"
+msgstr ""
+
 msgid "Edit Extra"
 msgstr "Uredi dodatno"
 
@@ -3676,6 +3712,9 @@ msgstr "Uredi događaj"
 
 msgid "Edit event booking"
 msgstr "Uredi rezervaciju događaja"
+
+msgid "Edit event page"
+msgstr ""
 
 msgid "Edit location"
 msgstr "Uredi lokaciju"
@@ -3922,7 +3961,7 @@ msgstr ""
 "besprijekorno i brendirano iskustvo."
 
 msgid "Enable data usage"
-msgstr ""
+msgstr "Omogućavanje korištenja podataka"
 
 msgid "Enable guest booking"
 msgstr "Omogući rezervaciju gosta"
@@ -4217,7 +4256,7 @@ msgid "Enter both the application (client) ID and client secret."
 msgstr "Unesite oba podatka: ID aplikacije (client) i tajni ključ klijenta."
 
 msgid "Enter code"
-msgstr ""
+msgstr "Unesite kod"
 
 msgid "Enter date of birth"
 msgstr "Datum rođenja"
@@ -4367,6 +4406,9 @@ msgstr "Obrazac za rezervaciju popisa događaja"
 msgid "Event Location"
 msgstr "Mjesto događaja"
 
+msgid "Event Pages"
+msgstr ""
+
 msgid "Event Starts"
 msgstr "Status događaja"
 
@@ -4383,7 +4425,7 @@ msgid "Event available"
 msgstr "Događaj dostupan"
 
 msgid "Event booking"
-msgstr ""
+msgstr "Rezervacija događaja"
 
 msgid "Event booking has been created."
 msgstr "Rezervacija događaja je kreirana."
@@ -4505,7 +4547,7 @@ msgid "Event has been updated."
 msgstr "Događaj je ažuriran."
 
 msgid "Event image gallery"
-msgstr ""
+msgstr "Galerija slika događaja"
 
 msgid "Event info"
 msgstr "Informacije o događaju"
@@ -4620,7 +4662,7 @@ msgid "Events list view"
 msgstr "Prikaz popisa događaja"
 
 msgid "Events pagination"
-msgstr ""
+msgstr "Paginacija događaja"
 
 msgid "Events pricing"
 msgstr "Cijene događaja"
@@ -4679,8 +4721,14 @@ msgstr "Izvoz podataka o terminima s lakoćom"
 msgid "Export bookings"
 msgstr "Izvozne rezervacije"
 
+msgid "Export data"
+msgstr ""
+
 msgid "Export event booking data with ease"
 msgstr "Jednostavno izvezite podatke o rezervacijama za događaje"
+
+msgid "Export failed."
+msgstr ""
 
 msgid "Express Account"
 msgstr "Ekspresni račun"
@@ -5203,6 +5251,8 @@ msgid ""
 "Help us improve Amelia by sharing anonymous data about your plugin usage. No "
 "personal data is collected."
 msgstr ""
+"Pomozite nam poboljšati dodatak Amelia dijeljenjem anonimnih podataka o "
+"korištenju dodatka. Ne prikupljamo osobne podatke."
 
 msgid ""
 "Here, you can connect your personal Apple Calendar,<br/>so once the booking "
@@ -5375,6 +5425,9 @@ msgstr "ID uzlazno"
 msgid "ID Desc"
 msgstr "Opis ID-a"
 
+msgid "I understand this import will replace all current data permanently."
+msgstr ""
+
 msgid "I want to pay full amount"
 msgstr "Želim platiti puni iznos"
 
@@ -5537,7 +5590,7 @@ msgid "Image Color"
 msgstr "Boja slike"
 
 msgid "Image navigation"
-msgstr ""
+msgstr "Navigacija između slika"
 
 msgid "Image thumbs"
 msgstr "Sličice slika"
@@ -5554,14 +5607,212 @@ msgstr "Uvoz djelomično uspješan"
 msgid "Import Rules"
 msgstr "Pravila uvoza"
 
+msgid "Import completed"
+msgstr ""
+
+msgid "Import completed successfully."
+msgstr ""
+
+msgid "Import could not be started."
+msgstr ""
+
+msgid "Import data"
+msgstr ""
+
+msgid "Import errors"
+msgstr ""
+
+msgid "Import failed"
+msgstr ""
+
+msgid "Import failed. Review the details below."
+msgstr ""
+
+msgid "Import progress"
+msgstr ""
+
+msgid "Import progress could not be updated."
+msgstr ""
+
+msgid "Import started."
+msgstr ""
+
 msgid "Import successful"
 msgstr "Uvoz uspješan"
+
+msgid "Importing Google calendar sync"
+msgstr ""
+
+msgid "Importing Outlook calendar sync"
+msgstr ""
+
+msgid "Importing appointments"
+msgstr ""
+
+msgid "Importing booking extras"
+msgstr ""
+
+msgid "Importing bookings"
+msgstr ""
+
+msgid "Importing categories"
+msgstr ""
+
+msgid "Importing coupon-event relations"
+msgstr ""
+
+msgid "Importing coupon-package relations"
+msgstr ""
+
+msgid "Importing coupon-service relations"
+msgstr ""
+
+msgid "Importing coupons"
+msgstr ""
+
+msgid "Importing custom field events"
+msgstr ""
+
+msgid "Importing custom field options"
+msgstr ""
+
+msgid "Importing custom field services"
+msgstr ""
+
+msgid "Importing custom fields"
+msgstr ""
 
 msgid "Importing customers"
 msgstr "Uvoz kupaca"
 
-msgid "Improve Amelia"
+msgid "Importing days off"
 msgstr ""
+
+msgid "Importing employee locations"
+msgstr ""
+
+msgid "Importing employee services"
+msgstr ""
+
+msgid "Importing employee views"
+msgstr ""
+
+msgid "Importing employees"
+msgstr ""
+
+msgid "Importing event booking periods"
+msgstr ""
+
+msgid "Importing event booking tickets"
+msgstr ""
+
+msgid "Importing event periods"
+msgstr ""
+
+msgid "Importing event providers"
+msgstr ""
+
+msgid "Importing event tags"
+msgstr ""
+
+msgid "Importing event tickets"
+msgstr ""
+
+msgid "Importing events"
+msgstr ""
+
+msgid "Importing extras"
+msgstr ""
+
+msgid "Importing location view settings"
+msgstr ""
+
+msgid "Importing locations"
+msgstr ""
+
+msgid "Importing notification SMS history"
+msgstr ""
+
+msgid "Importing notification log"
+msgstr ""
+
+msgid "Importing notification relations"
+msgstr ""
+
+msgid "Importing notifications"
+msgstr ""
+
+msgid "Importing package booking services"
+msgstr ""
+
+msgid "Importing package bookings"
+msgstr ""
+
+msgid "Importing package service locations"
+msgstr ""
+
+msgid "Importing package service providers"
+msgstr ""
+
+msgid "Importing package services"
+msgstr ""
+
+msgid "Importing packages"
+msgstr ""
+
+msgid "Importing payments"
+msgstr ""
+
+msgid "Importing period-location relations"
+msgstr ""
+
+msgid "Importing period-service relations"
+msgstr ""
+
+msgid "Importing provider periods"
+msgstr ""
+
+msgid "Importing provider special-day periods"
+msgstr ""
+
+msgid "Importing resource relations"
+msgstr ""
+
+msgid "Importing resources"
+msgstr ""
+
+msgid "Importing service views"
+msgstr ""
+
+msgid "Importing services"
+msgstr ""
+
+msgid "Importing settings"
+msgstr ""
+
+msgid "Importing special-day period-location relations"
+msgstr ""
+
+msgid "Importing special-day period-service relations"
+msgstr ""
+
+msgid "Importing special days"
+msgstr ""
+
+msgid "Importing tax relations"
+msgstr ""
+
+msgid "Importing taxes"
+msgstr ""
+
+msgid "Importing time outs"
+msgstr ""
+
+msgid "Importing work periods"
+msgstr ""
+
+msgid "Improve Amelia"
+msgstr "Pomozite poboljšati Amelia"
 
 msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
@@ -5590,6 +5841,9 @@ msgid ""
 msgstr ""
 "Poboljšajte korisničko iskustvo tako što ćete klijentima omogućiti da "
 "odaberu lokaciju koja im najbolje odgovara"
+
+msgid "Improve plugin"
+msgstr "Poboljšajte dodatak"
 
 msgid ""
 "Improve reporting accuracy by accessing complete appointment data instantly"
@@ -5738,8 +5992,11 @@ msgstr "Umetnite skraćeni kod rezervacije Amelia"
 msgid "Insert pending appointments"
 msgstr "Unesite sastanke na čekanju"
 
-msgid "Install & Activate"
+msgid "Inserted"
 msgstr ""
+
+msgid "Install & Activate"
+msgstr "Instaliraj i aktiviraj"
 
 msgid "Integrate with WooCommerce to enable advanced e-commerce capabilities."
 msgstr ""
@@ -5844,19 +6101,19 @@ msgid "IvyForms"
 msgstr ""
 
 msgid "IvyForms Entries"
-msgstr ""
+msgstr "IvyForms unosi"
 
 msgid "IvyForms Field"
-msgstr ""
+msgstr "IvyForms polje"
 
 msgid "IvyForms Form"
-msgstr ""
+msgstr "IvyForms obrazac"
 
 msgid "IvyForms validation failed."
-msgstr ""
+msgstr "Validacija IvyForms nije uspjela."
 
 msgid "Ivy setup"
-msgstr ""
+msgstr "Postavljanje Ivy"
 
 msgid "Jane Doe"
 msgstr ""
@@ -6102,16 +6359,16 @@ msgid "Load page"
 msgstr "Učitaj stranicu"
 
 msgid "Loading"
-msgstr ""
+msgstr "Učitavanje"
 
 msgid "Loading..."
 msgstr "Učitavanje ..."
 
 msgid "Loading event information"
-msgstr ""
+msgstr "Učitavanje informacija o događaju"
 
 msgid "Loading header"
-msgstr ""
+msgstr "Učitavanje zaglavlja"
 
 msgid "Local Time"
 msgstr "Lokalno vrijeme"
@@ -6299,6 +6556,9 @@ msgstr "Upravljajte osobnim rasporedom"
 msgid "Manage shared resources with ease"
 msgstr "Upravljajte dijeljenim resursima s lakoćom"
 
+msgid "Manage this event in Amelia:"
+msgstr ""
+
 msgid "Managing assigned services"
 msgstr "Upravljanje dodijeljenim uslugama"
 
@@ -6328,7 +6588,7 @@ msgid "Max Capacity Desc"
 msgstr "Maksimalni kapacitet Desc"
 
 msgid "Maximum"
-msgstr ""
+msgstr "Maksimum"
 
 msgid "Maximum Quantity:"
 msgstr "Maksimalna količina:"
@@ -6583,6 +6843,9 @@ msgstr "Novi kupac"
 msgid "New Event"
 msgstr "Novo Događanje"
 
+msgid "New Event Page"
+msgstr ""
+
 msgid "New Location"
 msgstr "﻿Nova lokacija"
 
@@ -6650,7 +6913,7 @@ msgid "Next day reminder"
 msgstr "Podsjetnik za sljedeći dan"
 
 msgid "Next image"
-msgstr ""
+msgstr "Sljedeća slika"
 
 msgid "No"
 msgstr "Ne"
@@ -6726,6 +6989,12 @@ msgstr "Još nema zaposlenika"
 
 msgid "No event bookings yet"
 msgstr "Još nema rezervacija za događaje"
+
+msgid "No event pages found"
+msgstr ""
+
+msgid "No event pages found in Trash"
+msgstr ""
 
 msgid "No events found"
 msgstr "Nijedan događaj nije pronađen"
@@ -7143,6 +7412,9 @@ msgstr "Otvori"
 msgid "Open Event"
 msgstr "Otvori događaj"
 
+msgid "Open Event in Amelia"
+msgstr ""
+
 msgid "Open following"
 msgstr "Otvoreno praćenje"
 
@@ -7247,7 +7519,7 @@ msgid "PHP Mail"
 msgstr "PHP pošta"
 
 msgid "PRE-BOOKING INTAKE FORM (IVYFORMS)"
-msgstr ""
+msgstr "UPITNIK PRIJE REZERVACIJE (IVYFORMS)"
 
 msgid "Package"
 msgstr "Paket"
@@ -7669,7 +7941,7 @@ msgid "Permanent access token"
 msgstr "Trajni pristupni token"
 
 msgid "Permanently linked"
-msgstr ""
+msgstr "Trajno povezano"
 
 msgid "Person"
 msgstr "Osoba"
@@ -7755,6 +8027,9 @@ msgstr "Molimo pričekajte"
 
 msgid "Please add period"
 msgstr "Dodajte točku."
+
+msgid "Please back up before proceeding to avoid loss of data."
+msgstr ""
 
 msgid "Please cancel the event first before deleting it."
 msgstr "Prvo otkažite događaj prije nego što ga izbrišete."
@@ -8154,7 +8429,7 @@ msgid "Popup title"
 msgstr "Naslov skočnog prozora"
 
 msgid "Pre-booking form details"
-msgstr ""
+msgstr "Detalji obrasca za predrezervaciju"
 
 msgid "Preload entities when page loads"
 msgstr "Prethodno učitajte entitete kada se stranica učita"
@@ -8198,13 +8473,13 @@ msgid "Preview invoice"
 msgstr "Pregled fakture"
 
 msgid "Previous image"
-msgstr ""
+msgstr "Prethodna slika"
 
 msgid "Previous range"
 msgstr "Prethodni raspon"
 
 msgid "Previous step"
-msgstr ""
+msgstr "Prethodni korak"
 
 msgid "Price"
 msgstr "Cijena"
@@ -8840,6 +9115,9 @@ msgstr "Traži"
 msgid "Search..."
 msgstr "Traži..."
 
+msgid "Search Event Pages"
+msgstr ""
+
 msgid "Search Filters"
 msgstr "Filtri pretraživanja"
 
@@ -8859,7 +9137,7 @@ msgid "Search bookings"
 msgstr "Pretraživanje rezervacija"
 
 msgid "Search coupons"
-msgstr ""
+msgstr "Pretraži kupone"
 
 msgid "Search customers"
 msgstr "Pretraživanje kupaca"
@@ -8898,13 +9176,13 @@ msgid "Search packages"
 msgstr "Pretraživanje paketa"
 
 msgid "Search resources"
-msgstr ""
+msgstr "Pretraži resurse"
 
 msgid "Search services"
 msgstr "Usluge pretraživanja"
 
 msgid "Search taxes"
-msgstr ""
+msgstr "Pretraži poreze"
 
 msgid "Second"
 msgstr "Sekunda"
@@ -9034,8 +9312,11 @@ msgstr "Odaberite WooCommerce proizvod"
 msgid "Select Zoom User"
 msgstr "Odaberite Zoom User"
 
-msgid "Select a form..."
+msgid "Select a .ameliafile archive before starting the import."
 msgstr ""
+
+msgid "Select a form..."
+msgstr "Odaberite obrazac..."
 
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr ""
@@ -9148,7 +9429,7 @@ msgid "Select tickets"
 msgstr "Odaberite ulaznice"
 
 msgid "Select which IvyForms form to show before booking"
-msgstr ""
+msgstr "Odaberite koji IvyForms obrazac prikazati prije rezervacije"
 
 msgid "Select your Square Location"
 msgstr "Odaberite lokaciju svog trga"
@@ -9859,6 +10140,9 @@ msgstr "Preskočite pakete i nastavite s odabranom uslugom"
 msgid "Skip setup"
 msgstr "Preskoči postavljanje"
 
+msgid "Skipped"
+msgstr ""
+
 msgid "Slot end time"
 msgstr "Vrijeme završetka termina"
 
@@ -10404,6 +10688,9 @@ msgid ""
 "location"
 msgstr "Valuta u Amelia ne odgovara valuti odabrane lokacije Square"
 
+msgid "The custom post is ready."
+msgstr ""
+
 msgid ""
 "The customer didn’t provide an email address, so the invoice couldn’t be "
 "sent."
@@ -10630,6 +10917,13 @@ msgstr ""
 
 msgid "This employee is the only one assigned to {service}."
 msgstr "Ovaj zaposlenik je jedini dodijeljen{service}."
+
+msgid ""
+"This export includes, but is not limited to, bookings, customers, settings, "
+"notification logs, and SMS history. Site-specific data (such as URLs, "
+"images, and purchase codes) is excluded and must be set up manually on a new "
+"site."
+msgstr ""
 
 msgid "This field is required"
 msgstr "Ovo polje je obavezno"
@@ -11347,6 +11641,9 @@ msgstr "Prikaži više"
 msgid "View Employees"
 msgstr "Pogledajte Zaposlenike"
 
+msgid "View Event Page"
+msgstr ""
+
 msgid "View Less Packages"
 msgstr "Prikaži manje paketa"
 
@@ -11954,6 +12251,9 @@ msgstr "(Plaćanje sada)"
 msgid " (Incl. Tax)"
 msgstr " (s porezom)"
 
+msgid "added to cart"
+msgstr ""
+
 msgid "and"
 msgstr "i"
 
@@ -12023,6 +12323,9 @@ msgstr "iCloud adresa e-pošte"
 msgid "iCloud email address and iCloud app-specific password"
 msgstr "iCloud adresa e-pošte i lozinka specifična za iCloud aplikaciju"
 
+msgid "in cart"
+msgstr ""
+
 msgid "includes"
 msgstr "uključuje"
 
@@ -12051,13 +12354,13 @@ msgid "on"
 msgstr "uklj"
 
 msgid "opens in new tab"
-msgstr ""
+msgstr "otvara se u novoj kartici"
 
 msgid "out of"
 msgstr "od"
 
 msgid "payment button"
-msgstr ""
+msgstr "gumb za plaćanje"
 
 msgid "people"
 msgstr "ljudi"
@@ -12103,6 +12406,12 @@ msgstr "Postavljanje reCAPTCHA-e"
 
 msgid "reCAPTCHA validation failed."
 msgstr "reCAPTCHA validacija nije uspjela."
+
+msgid "remaining"
+msgstr ""
+
+msgid "removed from cart"
+msgstr ""
 
 msgid "results"
 msgstr "rezultati"

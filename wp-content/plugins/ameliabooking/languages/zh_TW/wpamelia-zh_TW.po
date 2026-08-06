@@ -420,6 +420,12 @@ msgstr "新增 Google Maps API 金鑰，以在「地點」頁面顯示 Google �
 msgid "Add Meta Pixel to track ad conversions and optimize marketing."
 msgstr "添加 Meta Pixel 以追蹤廣告轉換並優化行銷成效。"
 
+msgid "Add New"
+msgstr ""
+
+msgid "Add New Event Page"
+msgstr ""
+
 msgid "Add Period"
 msgstr "添加時間"
 
@@ -605,6 +611,9 @@ msgstr "所有客戶"
 
 msgid "All employees"
 msgstr "所有員工"
+
+msgid "All entities imported"
+msgstr ""
 
 msgid "All events"
 msgstr "所有的活動"
@@ -805,6 +814,15 @@ msgstr "Amelia - 逐步預約"
 
 msgid "Amelia Add to calendar page"
 msgstr "添加到日曆頁"
+
+msgid "Amelia Event"
+msgstr ""
+
+msgid "Amelia Event Page"
+msgstr ""
+
+msgid "Amelia Event Pages"
+msgstr ""
 
 msgid "Amelia Events List Booking Settings"
 msgstr "Amelia 活動列表預約設定"
@@ -1316,6 +1334,9 @@ msgid ""
 "Automatically create Zoom meetings for bookings and notify customers and "
 "employees."
 msgstr "為預約自動建立 Zoom 會議，並通知客戶與員工。"
+
+msgid "Automatically create an Event Page for new events"
+msgstr ""
 
 msgid ""
 "Automatically generate invoices for every booking, making payments easier, "
@@ -2206,7 +2227,7 @@ msgstr "崩潰的菜單"
 msgid ""
 "Collect additional information from your customers before they complete a "
 "booking."
-msgstr ""
+msgstr "在客戶確認預訂前，收集額外資訊。"
 
 msgid "Collect the information your business truly needs"
 msgstr "收集您的企業真正需要的資訊"
@@ -2391,7 +2412,7 @@ msgid "Consulting"
 msgstr "諮詢"
 
 msgid "Contact Form"
-msgstr ""
+msgstr "聯絡表單"
 
 msgid "Contact message"
 msgstr "聯絡訊息"
@@ -2565,8 +2586,11 @@ msgstr "建立員工"
 msgid "Create event"
 msgstr "建立活動"
 
-msgid "Create form"
+msgid "Create event page"
 msgstr ""
+
+msgid "Create form"
+msgstr "新增表單"
 
 msgid "Create meetings for pending appointments"
 msgstr "為待處理的預約建立會議"
@@ -2872,11 +2896,17 @@ msgstr "深色主題"
 msgid "Dashboard"
 msgstr "指示板"
 
+msgid "Data export is ready."
+msgstr ""
+
 msgid "Data that remains unchanged:"
 msgstr "保持不變的資料："
 
 msgid "Data to be updated:"
 msgstr "待更新資料："
+
+msgid "Data transfer"
+msgstr ""
 
 msgid "Date"
 msgstr "天"
@@ -3256,6 +3286,9 @@ msgstr ""
 "以行事曆視圖顯示活動，讓客戶能瀏覽、搜尋並直接預訂。這是以互動形式突顯即將舉"
 "辦活動的絕佳方式。"
 
+msgid "Do not exit the import until it is finished."
+msgstr ""
+
 msgid "Do you want to cancel following events?"
 msgstr "您想要取消後續活動嗎?"
 
@@ -3464,6 +3497,9 @@ msgstr "編輯客戶"
 msgid "Edit Event"
 msgstr "編輯活動"
 
+msgid "Edit Event Page"
+msgstr ""
+
 msgid "Edit Extra"
 msgstr "編輯額外內容"
 
@@ -3508,6 +3544,9 @@ msgstr "編輯活動"
 
 msgid "Edit event booking"
 msgstr "編輯活動預約"
+
+msgid "Edit event page"
+msgstr ""
 
 msgid "Edit location"
 msgstr "編輯位置"
@@ -3747,7 +3786,7 @@ msgstr ""
 "讓客戶能有效管理預約與活動。自訂顏色與標籤，打造無縫且具品牌特色的體驗。"
 
 msgid "Enable data usage"
-msgstr ""
+msgstr "啟用資料使用"
 
 msgid "Enable guest booking"
 msgstr "啓用客人預約功能"
@@ -3990,7 +4029,7 @@ msgid "Enter both the application (client) ID and client secret."
 msgstr "同時輸入應用程式（用戶端）ID 和用戶端密鑰。"
 
 msgid "Enter code"
-msgstr ""
+msgstr "輸入代碼"
 
 msgid "Enter date of birth"
 msgstr "出生日期"
@@ -4134,6 +4173,9 @@ msgstr "活動清單及預約表格"
 msgid "Event Location"
 msgstr "活動地點"
 
+msgid "Event Pages"
+msgstr ""
+
 msgid "Event Starts"
 msgstr "活動開始"
 
@@ -4150,7 +4192,7 @@ msgid "Event available"
 msgstr "活動可用"
 
 msgid "Event booking"
-msgstr ""
+msgstr "活動預訂"
 
 msgid "Event booking has been created."
 msgstr "活動預約已建立。"
@@ -4267,7 +4309,7 @@ msgid "Event has been updated."
 msgstr "事件已更新。"
 
 msgid "Event image gallery"
-msgstr ""
+msgstr "活動圖片相簿"
 
 msgid "Event info"
 msgstr "活動資訊"
@@ -4382,7 +4424,7 @@ msgid "Events list view"
 msgstr "事件列表檢視"
 
 msgid "Events pagination"
-msgstr ""
+msgstr "活動分頁導覽"
 
 msgid "Events pricing"
 msgstr "活動定價"
@@ -4439,8 +4481,14 @@ msgstr "輕鬆匯出預約資料"
 msgid "Export bookings"
 msgstr "匯出預訂"
 
+msgid "Export data"
+msgstr ""
+
 msgid "Export event booking data with ease"
 msgstr "輕鬆匯出活動預訂資料"
+
+msgid "Export failed."
+msgstr ""
 
 msgid "Express Account"
 msgstr "Express 帳戶"
@@ -4944,6 +4992,8 @@ msgid ""
 "Help us improve Amelia by sharing anonymous data about your plugin usage. No "
 "personal data is collected."
 msgstr ""
+"協助我們透過分享外掛使用情況的匿名資料來改善 Amelia。系統不會收集任何可識別個"
+"人身分的資料。"
 
 msgid ""
 "Here, you can connect your personal Apple Calendar,<br/>so once the booking "
@@ -5109,6 +5159,9 @@ msgstr "ID 升序"
 msgid "ID Desc"
 msgstr "ID 說明"
 
+msgid "I understand this import will replace all current data permanently."
+msgstr ""
+
 msgid "I want to pay full amount"
 msgstr "我想付全額"
 
@@ -5242,7 +5295,7 @@ msgid "Image Color"
 msgstr "圖片的顔色"
 
 msgid "Image navigation"
-msgstr ""
+msgstr "圖片瀏覽"
 
 msgid "Image thumbs"
 msgstr "圖片縮略圖"
@@ -5259,14 +5312,212 @@ msgstr "匯入部分成功"
 msgid "Import Rules"
 msgstr "匯入規則"
 
+msgid "Import completed"
+msgstr ""
+
+msgid "Import completed successfully."
+msgstr ""
+
+msgid "Import could not be started."
+msgstr ""
+
+msgid "Import data"
+msgstr ""
+
+msgid "Import errors"
+msgstr ""
+
+msgid "Import failed"
+msgstr ""
+
+msgid "Import failed. Review the details below."
+msgstr ""
+
+msgid "Import progress"
+msgstr ""
+
+msgid "Import progress could not be updated."
+msgstr ""
+
+msgid "Import started."
+msgstr ""
+
 msgid "Import successful"
 msgstr "輸入成功"
+
+msgid "Importing Google calendar sync"
+msgstr ""
+
+msgid "Importing Outlook calendar sync"
+msgstr ""
+
+msgid "Importing appointments"
+msgstr ""
+
+msgid "Importing booking extras"
+msgstr ""
+
+msgid "Importing bookings"
+msgstr ""
+
+msgid "Importing categories"
+msgstr ""
+
+msgid "Importing coupon-event relations"
+msgstr ""
+
+msgid "Importing coupon-package relations"
+msgstr ""
+
+msgid "Importing coupon-service relations"
+msgstr ""
+
+msgid "Importing coupons"
+msgstr ""
+
+msgid "Importing custom field events"
+msgstr ""
+
+msgid "Importing custom field options"
+msgstr ""
+
+msgid "Importing custom field services"
+msgstr ""
+
+msgid "Importing custom fields"
+msgstr ""
 
 msgid "Importing customers"
 msgstr "匯入客戶"
 
-msgid "Improve Amelia"
+msgid "Importing days off"
 msgstr ""
+
+msgid "Importing employee locations"
+msgstr ""
+
+msgid "Importing employee services"
+msgstr ""
+
+msgid "Importing employee views"
+msgstr ""
+
+msgid "Importing employees"
+msgstr ""
+
+msgid "Importing event booking periods"
+msgstr ""
+
+msgid "Importing event booking tickets"
+msgstr ""
+
+msgid "Importing event periods"
+msgstr ""
+
+msgid "Importing event providers"
+msgstr ""
+
+msgid "Importing event tags"
+msgstr ""
+
+msgid "Importing event tickets"
+msgstr ""
+
+msgid "Importing events"
+msgstr ""
+
+msgid "Importing extras"
+msgstr ""
+
+msgid "Importing location view settings"
+msgstr ""
+
+msgid "Importing locations"
+msgstr ""
+
+msgid "Importing notification SMS history"
+msgstr ""
+
+msgid "Importing notification log"
+msgstr ""
+
+msgid "Importing notification relations"
+msgstr ""
+
+msgid "Importing notifications"
+msgstr ""
+
+msgid "Importing package booking services"
+msgstr ""
+
+msgid "Importing package bookings"
+msgstr ""
+
+msgid "Importing package service locations"
+msgstr ""
+
+msgid "Importing package service providers"
+msgstr ""
+
+msgid "Importing package services"
+msgstr ""
+
+msgid "Importing packages"
+msgstr ""
+
+msgid "Importing payments"
+msgstr ""
+
+msgid "Importing period-location relations"
+msgstr ""
+
+msgid "Importing period-service relations"
+msgstr ""
+
+msgid "Importing provider periods"
+msgstr ""
+
+msgid "Importing provider special-day periods"
+msgstr ""
+
+msgid "Importing resource relations"
+msgstr ""
+
+msgid "Importing resources"
+msgstr ""
+
+msgid "Importing service views"
+msgstr ""
+
+msgid "Importing services"
+msgstr ""
+
+msgid "Importing settings"
+msgstr ""
+
+msgid "Importing special-day period-location relations"
+msgstr ""
+
+msgid "Importing special-day period-service relations"
+msgstr ""
+
+msgid "Importing special days"
+msgstr ""
+
+msgid "Importing tax relations"
+msgstr ""
+
+msgid "Importing taxes"
+msgstr ""
+
+msgid "Importing time outs"
+msgstr ""
+
+msgid "Importing work periods"
+msgstr ""
+
+msgid "Improve Amelia"
+msgstr "回饋 Amelia"
 
 msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
@@ -5287,6 +5538,9 @@ msgid ""
 "Improve customer experience by letting clients choose the location that "
 "suits them best"
 msgstr "透過讓客戶選擇最適合自己的地點，提升客戶體驗"
+
+msgid "Improve plugin"
+msgstr "改善外掛"
 
 msgid ""
 "Improve reporting accuracy by accessing complete appointment data instantly"
@@ -5418,8 +5672,11 @@ msgstr "插入Amelia預約短碼"
 msgid "Insert pending appointments"
 msgstr "插入待處理的預約"
 
-msgid "Install & Activate"
+msgid "Inserted"
 msgstr ""
+
+msgid "Install & Activate"
+msgstr "安裝並啟用"
 
 msgid "Integrate with WooCommerce to enable advanced e-commerce capabilities."
 msgstr "整合 WooCommerce 以啟用進階電子商務功能。"
@@ -5515,19 +5772,19 @@ msgid "IvyForms"
 msgstr ""
 
 msgid "IvyForms Entries"
-msgstr ""
+msgstr "IvyForms 提交記錄"
 
 msgid "IvyForms Field"
-msgstr ""
+msgstr "IvyForms 欄位"
 
 msgid "IvyForms Form"
-msgstr ""
+msgstr "IvyForms 表單"
 
 msgid "IvyForms validation failed."
-msgstr ""
+msgstr "IvyForms 驗證失敗。"
 
 msgid "Ivy setup"
-msgstr ""
+msgstr "Ivy 設定"
 
 msgid "Jane Doe"
 msgstr "簡·多伊"
@@ -5763,16 +6020,16 @@ msgid "Load page"
 msgstr "載入頁面"
 
 msgid "Loading"
-msgstr ""
+msgstr "載入中…"
 
 msgid "Loading..."
 msgstr "加載……"
 
 msgid "Loading event information"
-msgstr ""
+msgstr "活動資訊載入中"
 
 msgid "Loading header"
-msgstr ""
+msgstr "頁首載入中"
 
 msgid "Local Time"
 msgstr "當地時間"
@@ -5957,6 +6214,9 @@ msgstr "管理個人行程"
 msgid "Manage shared resources with ease"
 msgstr "輕鬆管理共享資源"
 
+msgid "Manage this event in Amelia:"
+msgstr ""
+
 msgid "Managing assigned services"
 msgstr "管理已指派服務"
 
@@ -5984,7 +6244,7 @@ msgid "Max Capacity Desc"
 msgstr "最大容量說明"
 
 msgid "Maximum"
-msgstr ""
+msgstr "上限"
 
 msgid "Maximum Quantity:"
 msgstr "最大數量:"
@@ -6080,7 +6340,7 @@ msgid "Min. Capacity"
 msgstr "最小能力"
 
 msgid "Minimum"
-msgstr ""
+msgstr "最小值"
 
 msgid "Minimum bookings required"
 msgstr "最低預約要求"
@@ -6237,6 +6497,9 @@ msgstr "新客戶"
 msgid "New Event"
 msgstr "新活動"
 
+msgid "New Event Page"
+msgstr ""
+
 msgid "New Location"
 msgstr "新地址"
 
@@ -6304,7 +6567,7 @@ msgid "Next day reminder"
 msgstr "隔日提醒"
 
 msgid "Next image"
-msgstr ""
+msgstr "下一張圖"
 
 msgid "No"
 msgstr "無"
@@ -6380,6 +6643,12 @@ msgstr "目前尚無員工"
 
 msgid "No event bookings yet"
 msgstr "目前尚無活動預約"
+
+msgid "No event pages found"
+msgstr ""
+
+msgid "No event pages found in Trash"
+msgstr ""
 
 msgid "No events found"
 msgstr "未找到任何事件"
@@ -6773,6 +7042,9 @@ msgstr "打開"
 msgid "Open Event"
 msgstr "開放活動"
 
+msgid "Open Event in Amelia"
+msgstr ""
+
 msgid "Open following"
 msgstr "開放追蹤"
 
@@ -6875,7 +7147,7 @@ msgid "PHP Mail"
 msgstr "PHP郵件"
 
 msgid "PRE-BOOKING INTAKE FORM (IVYFORMS)"
-msgstr ""
+msgstr "預約前資料蒐集表單 (IVYFORMS)"
 
 msgid "Package"
 msgstr "套裝"
@@ -7291,7 +7563,7 @@ msgid "Permanent access token"
 msgstr "永久訪問令牌"
 
 msgid "Permanently linked"
-msgstr ""
+msgstr "永久連結"
 
 msgid "Person"
 msgstr "人們"
@@ -7376,6 +7648,9 @@ msgstr "請稍等"
 
 msgid "Please add period"
 msgstr "請加上句號。"
+
+msgid "Please back up before proceeding to avoid loss of data."
+msgstr ""
 
 msgid "Please cancel the event first before deleting it."
 msgstr "刪除活動前請先取消該活動。"
@@ -7767,7 +8042,7 @@ msgid "Popup title"
 msgstr "彈出視窗標題"
 
 msgid "Pre-booking form details"
-msgstr ""
+msgstr "預約前表單詳細資訊"
 
 msgid "Preload entities when page loads"
 msgstr "頁面載入時預先載入實體"
@@ -7807,13 +8082,13 @@ msgid "Preview invoice"
 msgstr "預覽發票"
 
 msgid "Previous image"
-msgstr ""
+msgstr "上一張圖片"
 
 msgid "Previous range"
 msgstr "先前範圍"
 
 msgid "Previous step"
-msgstr ""
+msgstr "上一步"
 
 msgid "Price"
 msgstr "價格"
@@ -8440,6 +8715,9 @@ msgstr "搜索"
 msgid "Search..."
 msgstr "搜索…"
 
+msgid "Search Event Pages"
+msgstr ""
+
 msgid "Search Filters"
 msgstr "搜索過濾器"
 
@@ -8459,7 +8737,7 @@ msgid "Search bookings"
 msgstr "搜尋預訂"
 
 msgid "Search coupons"
-msgstr ""
+msgstr "搜尋優惠券"
 
 msgid "Search customers"
 msgstr "搜尋客戶"
@@ -8498,13 +8776,13 @@ msgid "Search packages"
 msgstr "搜尋套件"
 
 msgid "Search resources"
-msgstr ""
+msgstr "搜尋資源"
 
 msgid "Search services"
 msgstr "搜尋服務"
 
 msgid "Search taxes"
-msgstr ""
+msgstr "搜尋稅金"
 
 msgid "Second"
 msgstr "第二個"
@@ -8631,8 +8909,11 @@ msgstr "選擇WooCommerce産品"
 msgid "Select Zoom User"
 msgstr "選擇 Zoom 使用者"
 
-msgid "Select a form..."
+msgid "Select a .ameliafile archive before starting the import."
 msgstr ""
+
+msgid "Select a form..."
+msgstr "選擇表單..."
 
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr "選取一個占位符，即可將其插入游標所在位置。"
@@ -8740,7 +9021,7 @@ msgid "Select tickets"
 msgstr "選擇票券"
 
 msgid "Select which IvyForms form to show before booking"
-msgstr ""
+msgstr "選擇預訂前要顯示的 IvyForms 表單"
 
 msgid "Select your Square Location"
 msgstr "選擇您的 Square 位置"
@@ -9420,6 +9701,9 @@ msgstr "跳過套裝並繼續選擇服務"
 msgid "Skip setup"
 msgstr "跳過設定"
 
+msgid "Skipped"
+msgstr ""
+
 msgid "Slot end time"
 msgstr "時段結束時間"
 
@@ -9923,6 +10207,9 @@ msgid ""
 "location"
 msgstr "Amelia 系統中的貨幣單位與您選擇的 Square 地區貨幣單位不符"
 
+msgid "The custom post is ready."
+msgstr ""
+
 msgid ""
 "The customer didn’t provide an email address, so the invoice couldn’t be "
 "sent."
@@ -10128,6 +10415,13 @@ msgstr "此電子郵件地址同時關聯至客戶與員工帳戶。請刪除後
 
 msgid "This employee is the only one assigned to {service}."
 msgstr "此員工是唯一被指派至{service} 的員工。"
+
+msgid ""
+"This export includes, but is not limited to, bookings, customers, settings, "
+"notification logs, and SMS history. Site-specific data (such as URLs, "
+"images, and purchase codes) is excluded and must be set up manually on a new "
+"site."
+msgstr ""
 
 msgid "This field is required"
 msgstr "這個字段是必需的。"
@@ -10791,6 +11085,9 @@ msgstr "查看更多"
 msgid "View Employees"
 msgstr "查看員工"
 
+msgid "View Event Page"
+msgstr ""
+
 msgid "View Less Packages"
 msgstr "查看更少套裝"
 
@@ -11358,6 +11655,9 @@ msgstr "(立即付款)"
 msgid " (Incl. Tax)"
 msgstr " (含稅)"
 
+msgid "added to cart"
+msgstr ""
+
 msgid "and"
 msgstr "和"
 
@@ -11427,6 +11727,9 @@ msgstr "iCloud 電子郵件地址"
 msgid "iCloud email address and iCloud app-specific password"
 msgstr "iCloud 電子郵件地址與 iCloud 應用程式專用密碼"
 
+msgid "in cart"
+msgstr ""
+
 msgid "includes"
 msgstr "包括"
 
@@ -11455,13 +11758,13 @@ msgid "on"
 msgstr "在.......上"
 
 msgid "opens in new tab"
-msgstr ""
+msgstr "在新分頁中開啟"
 
 msgid "out of"
 msgstr "離開"
 
 msgid "payment button"
-msgstr ""
+msgstr "付款按鈕"
 
 msgid "people"
 msgstr "人們"
@@ -11507,6 +11810,12 @@ msgstr "reCAPTCHA 設定"
 
 msgid "reCAPTCHA validation failed."
 msgstr "reCAPTCHA 驗證失敗。"
+
+msgid "remaining"
+msgstr ""
+
+msgid "removed from cart"
+msgstr ""
 
 msgid "results"
 msgstr "結果"

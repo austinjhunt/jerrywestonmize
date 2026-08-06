@@ -16,6 +16,7 @@ use AmeliaBooking\Application\Controller\Booking\Event\GetEventBookingsControlle
 use AmeliaBooking\Application\Controller\Booking\Event\GetEventController;
 use AmeliaBooking\Application\Controller\Booking\Event\GetEventsController;
 use AmeliaBooking\Application\Controller\Booking\Event\GetCalendarEventsController;
+use AmeliaBooking\Application\Controller\Booking\Event\GenerateEventWpaCustomPostController;
 use AmeliaBooking\Application\Controller\Booking\Event\UpdateEventBookingController;
 use AmeliaBooking\Application\Controller\Booking\Event\UpdateEventController;
 use AmeliaBooking\Application\Controller\Booking\Event\UpdateEventStatusController;
@@ -45,6 +46,8 @@ class Event
         $app->post('/events/delete/{id:[0-9]+}', DeleteEventController::class);
 
         $app->post('/events/delete', DeleteEventsController::class);
+
+        $app->post('/events/{id:[0-9]+}/wpa-custom-post', GenerateEventWpaCustomPostController::class);
 
         $app->post('/events/{id:[0-9]+}', UpdateEventController::class);
 

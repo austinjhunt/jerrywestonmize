@@ -139,9 +139,11 @@ abstract class AbstractPackageApplicationService
     abstract public function getPackages();
 
     /**
+     * @param array $criteria
+     *
      * @return array
      */
-    abstract public function getPackagesArray();
+    abstract public function getPackagesArray($criteria = []);
 
     /**
      * @param array $paymentsData

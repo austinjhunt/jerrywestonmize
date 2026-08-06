@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit440ff333ea3747127d7dfe94d91a2a1a
+class ComposerStaticInit35c29752d476546fd6446d31130b3dfc
 {
     public static $files = array (
         '7b11c4dc42b3b3023073cb14e519683c_am' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
@@ -529,6 +529,8 @@ class ComposerStaticInit440ff333ea3747127d7dfe94d91a2a1a
         'AmeliaBooking\\Application\\Commands\\Booking\\Event\\DeleteEventCommandHandler' => __DIR__ . '/../..' . '/src/Application/Commands/Booking/Event/DeleteEventCommandHandler.php',
         'AmeliaBooking\\Application\\Commands\\Booking\\Event\\DeleteEventsCommand' => __DIR__ . '/../..' . '/src/Application/Commands/Booking/Event/DeleteEventsCommand.php',
         'AmeliaBooking\\Application\\Commands\\Booking\\Event\\DeleteEventsCommandHandler' => __DIR__ . '/../..' . '/src/Application/Commands/Booking/Event/DeleteEventsCommandHandler.php',
+        'AmeliaBooking\\Application\\Commands\\Booking\\Event\\GenerateEventWpaCustomPostCommand' => __DIR__ . '/../..' . '/src/Application/Commands/Booking/Event/GenerateEventWpaCustomPostCommand.php',
+        'AmeliaBooking\\Application\\Commands\\Booking\\Event\\GenerateEventWpaCustomPostCommandHandler' => __DIR__ . '/../..' . '/src/Application/Commands/Booking/Event/GenerateEventWpaCustomPostCommandHandler.php',
         'AmeliaBooking\\Application\\Commands\\Booking\\Event\\GetCalendarEventsCommand' => __DIR__ . '/../..' . '/src/Application/Commands/Booking/Event/GetCalendarEventsCommand.php',
         'AmeliaBooking\\Application\\Commands\\Booking\\Event\\GetCalendarEventsCommandHandler' => __DIR__ . '/../..' . '/src/Application/Commands/Booking/Event/GetCalendarEventsCommandHandler.php',
         'AmeliaBooking\\Application\\Commands\\Booking\\Event\\GetEventBookingCommand' => __DIR__ . '/../..' . '/src/Application/Commands/Booking/Event/GetEventBookingCommand.php',
@@ -754,10 +756,16 @@ class ComposerStaticInit440ff333ea3747127d7dfe94d91a2a1a
         'AmeliaBooking\\Application\\Commands\\Report\\GetPaymentsCommandHandler' => __DIR__ . '/../..' . '/src/Application/Commands/Report/GetPaymentsCommandHandler.php',
         'AmeliaBooking\\Application\\Commands\\Search\\GetSearchCommand' => __DIR__ . '/../..' . '/src/Application/Commands/Search/GetSearchCommand.php',
         'AmeliaBooking\\Application\\Commands\\Search\\GetSearchCommandHandler' => __DIR__ . '/../..' . '/src/Application/Commands/Search/GetSearchCommandHandler.php',
+        'AmeliaBooking\\Application\\Commands\\Settings\\ExportDataTransferCommand' => __DIR__ . '/../..' . '/src/Application/Commands/Settings/ExportDataTransferCommand.php',
+        'AmeliaBooking\\Application\\Commands\\Settings\\ExportDataTransferCommandHandler' => __DIR__ . '/../..' . '/src/Application/Commands/Settings/ExportDataTransferCommandHandler.php',
         'AmeliaBooking\\Application\\Commands\\Settings\\FeaturesIntegrations\\ToggleFeatureIntegrationCommand' => __DIR__ . '/../..' . '/src/Application/Commands/Settings/FeaturesIntegrations/ToggleFeatureIntegrationCommand.php',
         'AmeliaBooking\\Application\\Commands\\Settings\\FeaturesIntegrations\\ToggleFeatureIntegrationCommandHandler' => __DIR__ . '/../..' . '/src/Application/Commands/Settings/FeaturesIntegrations/ToggleFeatureIntegrationCommandHandler.php',
         'AmeliaBooking\\Application\\Commands\\Settings\\GetSettingsCommand' => __DIR__ . '/../..' . '/src/Application/Commands/Settings/GetSettingsCommand.php',
         'AmeliaBooking\\Application\\Commands\\Settings\\GetSettingsCommandHandler' => __DIR__ . '/../..' . '/src/Application/Commands/Settings/GetSettingsCommandHandler.php',
+        'AmeliaBooking\\Application\\Commands\\Settings\\ProcessImportDataTransferCommand' => __DIR__ . '/../..' . '/src/Application/Commands/Settings/ProcessImportDataTransferCommand.php',
+        'AmeliaBooking\\Application\\Commands\\Settings\\ProcessImportDataTransferCommandHandler' => __DIR__ . '/../..' . '/src/Application/Commands/Settings/ProcessImportDataTransferCommandHandler.php',
+        'AmeliaBooking\\Application\\Commands\\Settings\\StartImportDataTransferCommand' => __DIR__ . '/../..' . '/src/Application/Commands/Settings/StartImportDataTransferCommand.php',
+        'AmeliaBooking\\Application\\Commands\\Settings\\StartImportDataTransferCommandHandler' => __DIR__ . '/../..' . '/src/Application/Commands/Settings/StartImportDataTransferCommandHandler.php',
         'AmeliaBooking\\Application\\Commands\\Settings\\UpdateSettingsCategoriesCommand' => __DIR__ . '/../..' . '/src/Application/Commands/Settings/UpdateSettingsCategoriesCommand.php',
         'AmeliaBooking\\Application\\Commands\\Settings\\UpdateSettingsCategoriesCommandHandler' => __DIR__ . '/../..' . '/src/Application/Commands/Settings/UpdateSettingsCategoriesCommandHandler.php',
         'AmeliaBooking\\Application\\Commands\\Settings\\UpdateSettingsCommand' => __DIR__ . '/../..' . '/src/Application/Commands/Settings/UpdateSettingsCommand.php',
@@ -917,6 +925,7 @@ class ComposerStaticInit440ff333ea3747127d7dfe94d91a2a1a
         'AmeliaBooking\\Application\\Controller\\Booking\\Event\\DeleteEventBookingController' => __DIR__ . '/../..' . '/src/Application/Controller/Booking/Event/DeleteEventBookingController.php',
         'AmeliaBooking\\Application\\Controller\\Booking\\Event\\DeleteEventController' => __DIR__ . '/../..' . '/src/Application/Controller/Booking/Event/DeleteEventController.php',
         'AmeliaBooking\\Application\\Controller\\Booking\\Event\\DeleteEventsController' => __DIR__ . '/../..' . '/src/Application/Controller/Booking/Event/DeleteEventsController.php',
+        'AmeliaBooking\\Application\\Controller\\Booking\\Event\\GenerateEventWpaCustomPostController' => __DIR__ . '/../..' . '/src/Application/Controller/Booking/Event/GenerateEventWpaCustomPostController.php',
         'AmeliaBooking\\Application\\Controller\\Booking\\Event\\GetCalendarEventsController' => __DIR__ . '/../..' . '/src/Application/Controller/Booking/Event/GetCalendarEventsController.php',
         'AmeliaBooking\\Application\\Controller\\Booking\\Event\\GetEventBookingController' => __DIR__ . '/../..' . '/src/Application/Controller/Booking/Event/GetEventBookingController.php',
         'AmeliaBooking\\Application\\Controller\\Booking\\Event\\GetEventBookingsController' => __DIR__ . '/../..' . '/src/Application/Controller/Booking/Event/GetEventBookingsController.php',
@@ -1036,8 +1045,11 @@ class ComposerStaticInit440ff333ea3747127d7dfe94d91a2a1a
         'AmeliaBooking\\Application\\Controller\\Report\\GetEventBookingsController' => __DIR__ . '/../..' . '/src/Application/Controller/Report/GetEventBookingsController.php',
         'AmeliaBooking\\Application\\Controller\\Report\\GetPaymentsController' => __DIR__ . '/../..' . '/src/Application/Controller/Report/GetPaymentsController.php',
         'AmeliaBooking\\Application\\Controller\\Search\\GetSearchController' => __DIR__ . '/../..' . '/src/Application/Controller/Search/GetSearchController.php',
+        'AmeliaBooking\\Application\\Controller\\Settings\\ExportDataTransferController' => __DIR__ . '/../..' . '/src/Application/Controller/Settings/ExportDataTransferController.php',
         'AmeliaBooking\\Application\\Controller\\Settings\\FeaturesIntegrations\\ToggleFeatureIntegrationController' => __DIR__ . '/../..' . '/src/Application/Controller/Settings/FeaturesIntegrations/ToggleFeatureIntegrationController.php',
         'AmeliaBooking\\Application\\Controller\\Settings\\GetSettingsController' => __DIR__ . '/../..' . '/src/Application/Controller/Settings/GetSettingsController.php',
+        'AmeliaBooking\\Application\\Controller\\Settings\\ProcessImportDataTransferController' => __DIR__ . '/../..' . '/src/Application/Controller/Settings/ProcessImportDataTransferController.php',
+        'AmeliaBooking\\Application\\Controller\\Settings\\StartImportDataTransferController' => __DIR__ . '/../..' . '/src/Application/Controller/Settings/StartImportDataTransferController.php',
         'AmeliaBooking\\Application\\Controller\\Settings\\UpdateSettingsCategoriesController' => __DIR__ . '/../..' . '/src/Application/Controller/Settings/UpdateSettingsCategoriesController.php',
         'AmeliaBooking\\Application\\Controller\\Settings\\UpdateSettingsController' => __DIR__ . '/../..' . '/src/Application/Controller/Settings/UpdateSettingsController.php',
         'AmeliaBooking\\Application\\Controller\\Square\\DisconnectFromSquareAccountController' => __DIR__ . '/../..' . '/src/Application/Controller/Square/DisconnectFromSquareAccountController.php',
@@ -1579,6 +1591,7 @@ class ComposerStaticInit440ff333ea3747127d7dfe94d91a2a1a
         'AmeliaBooking\\Infrastructure\\Services\\Authentication\\AbstractSocialAuthenticationService' => __DIR__ . '/../..' . '/src/Infrastructure/Services/Authentication/AbstractSocialAuthenticationService.php',
         'AmeliaBooking\\Infrastructure\\Services\\Authentication\\SocialAuthenticationService' => __DIR__ . '/../..' . '/src/Infrastructure/Services/Authentication/SocialAuthenticationService.php',
         'AmeliaBooking\\Infrastructure\\Services\\Authentication\\StarterSocialAuthenticationService' => __DIR__ . '/../..' . '/src/Infrastructure/Services/Authentication/StarterSocialAuthenticationService.php',
+        'AmeliaBooking\\Infrastructure\\Services\\DataTransfer\\DataTransferService' => __DIR__ . '/../..' . '/src/Infrastructure/Services/DataTransfer/DataTransferService.php',
         'AmeliaBooking\\Infrastructure\\Services\\Google\\AbstractGoogleCalendarMiddlewareService' => __DIR__ . '/../..' . '/src/Infrastructure/Services/Google/AbstractGoogleCalendarMiddlewareService.php',
         'AmeliaBooking\\Infrastructure\\Services\\Google\\AbstractGoogleCalendarService' => __DIR__ . '/../..' . '/src/Infrastructure/Services/Google/AbstractGoogleCalendarService.php',
         'AmeliaBooking\\Infrastructure\\Services\\Google\\GoogleCalendarMiddlewareService' => __DIR__ . '/../..' . '/src/Infrastructure/Services/Google/GoogleCalendarMiddlewareService.php',
@@ -1633,6 +1646,15 @@ class ComposerStaticInit440ff333ea3747127d7dfe94d91a2a1a
         'AmeliaBooking\\Infrastructure\\Services\\Zoom\\ZoomService' => __DIR__ . '/../..' . '/src/Infrastructure/Services/Zoom/ZoomService.php',
         'AmeliaBooking\\Infrastructure\\WP\\ButtonService\\ButtonService' => __DIR__ . '/../..' . '/src/Infrastructure/WP/ButtonService/ButtonService.php',
         'AmeliaBooking\\Infrastructure\\WP\\Compatibility\\LiteSpeedCacheCompatibility' => __DIR__ . '/../..' . '/src/Infrastructure/WP/Compatibility/LiteSpeedCacheCompatibility.php',
+        'AmeliaBooking\\Infrastructure\\WP\\CustomPostTypes\\CptEntityCreateLock' => __DIR__ . '/../..' . '/src/Infrastructure/WP/CustomPostTypes/CptEntityCreateLock.php',
+        'AmeliaBooking\\Infrastructure\\WP\\CustomPostTypes\\CustomPostTypesBootstrap' => __DIR__ . '/../..' . '/src/Infrastructure/WP/CustomPostTypes/CustomPostTypesBootstrap.php',
+        'AmeliaBooking\\Infrastructure\\WP\\CustomPostTypes\\Events\\WpaEventsBootstrap' => __DIR__ . '/../..' . '/src/Infrastructure/WP/CustomPostTypes/Events/WpaEventsBootstrap.php',
+        'AmeliaBooking\\Infrastructure\\WP\\CustomPostTypes\\Events\\WpaEventsConstants' => __DIR__ . '/../..' . '/src/Infrastructure/WP/CustomPostTypes/Events/WpaEventsConstants.php',
+        'AmeliaBooking\\Infrastructure\\WP\\CustomPostTypes\\Events\\WpaEventsLandingCustomizeCss' => __DIR__ . '/../..' . '/src/Infrastructure/WP/CustomPostTypes/Events/WpaEventsLandingCustomizeCss.php',
+        'AmeliaBooking\\Infrastructure\\WP\\CustomPostTypes\\Events\\WpaEventsPostType' => __DIR__ . '/../..' . '/src/Infrastructure/WP/CustomPostTypes/Events/WpaEventsPostType.php',
+        'AmeliaBooking\\Infrastructure\\WP\\CustomPostTypes\\Events\\WpaEventsSync' => __DIR__ . '/../..' . '/src/Infrastructure/WP/CustomPostTypes/Events/WpaEventsSync.php',
+        'AmeliaBooking\\Infrastructure\\WP\\CustomPostTypes\\FrontendSingleCptTemplate' => __DIR__ . '/../..' . '/src/Infrastructure/WP/CustomPostTypes/FrontendSingleCptTemplate.php',
+        'AmeliaBooking\\Infrastructure\\WP\\CustomPostTypes\\MetaLinkedCptQuery' => __DIR__ . '/../..' . '/src/Infrastructure/WP/CustomPostTypes/MetaLinkedCptQuery.php',
         'AmeliaBooking\\Infrastructure\\WP\\Elementor\\ElementorBlock' => __DIR__ . '/../..' . '/src/Infrastructure/WP/Elementor/ElementorBlock.php',
         'AmeliaBooking\\Infrastructure\\WP\\ErrorService\\ErrorService' => __DIR__ . '/../..' . '/src/Infrastructure/WP/ErrorService/ErrorService.php',
         'AmeliaBooking\\Infrastructure\\WP\\EventListeners\\Booking\\Appointment\\AppointmentAddedEventHandler' => __DIR__ . '/../..' . '/src/Infrastructure/WP/EventListeners/Booking/Appointment/AppointmentAddedEventHandler.php',
@@ -11884,10 +11906,10 @@ class ComposerStaticInit440ff333ea3747127d7dfe94d91a2a1a
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit440ff333ea3747127d7dfe94d91a2a1a::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit440ff333ea3747127d7dfe94d91a2a1a::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit440ff333ea3747127d7dfe94d91a2a1a::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit440ff333ea3747127d7dfe94d91a2a1a::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit35c29752d476546fd6446d31130b3dfc::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit35c29752d476546fd6446d31130b3dfc::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit35c29752d476546fd6446d31130b3dfc::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit35c29752d476546fd6446d31130b3dfc::$classMap;
 
         }, null, ClassLoader::class);
     }

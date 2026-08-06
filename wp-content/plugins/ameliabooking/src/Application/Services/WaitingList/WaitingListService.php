@@ -2,11 +2,16 @@
 
 namespace AmeliaBooking\Application\Services\WaitingList;
 
+use AmeliaBooking\Application\Services\Booking\EventApplicationService;
 use AmeliaBooking\Application\Services\Notification\ApplicationNotificationService;
 use AmeliaBooking\Domain\Collection\Collection;
+use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
+use AmeliaBooking\Domain\Entity\Booking\Event\Event;
+use AmeliaBooking\Domain\Entity\Booking\Event\EventTicket;
+use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
@@ -17,8 +22,8 @@ use Slim\Exception\ContainerValueNotFoundException;
 /**
  * Class WaitingListService
  *
- * Encapsulates logic for determining whether a booking should be treated as a
- * waiting list booking (and therefore skip the regular slot availability check).
+ * Waiting-list helpers for appointments and events (joinability, capacity,
+ * and whether a booking should skip the regular slot availability check).
  */
 class WaitingListService
 {
@@ -138,5 +143,103 @@ class WaitingListService
         }
 
         return false;
+    }
+
+    /**
+     * Waiting-list joinability for an event (parity with frontend useWaitingListAvailability).
+     *
+     * Uses EventApplicationService::getEventInfo() occupancy fields (`full`, `closed`, `waiting`)
+     * plus event waiting-list settings.
+     *
+     * @param Event      $event
+     * @param array|null $info Result of getEventInfo(); computed when omitted.
+     *
+     * @return array{
+     *     available: bool,
+     *     maxCapacity: int,
+     *     peopleWaiting: int,
+     *     spotsLeft: int,
+     *     maxExtraPeople: int|null
+     * }|null Null when waiting list feature/settings are unavailable.
+     *
+     * @throws ContainerException
+     * @throws ContainerValueNotFoundException
+     * @throws InvalidArgumentException
+     */
+    public function getEventWaitingListAvailability($event, $info = null)
+    {
+        /** @var SettingsService $settingsDS */
+        $settingsDS = $this->container->get('domain.settings.service');
+
+        if (!$settingsDS->isFeatureEnabled('waitingList')) {
+            return null;
+        }
+
+        $eventSettings = $event->getSettings() && $event->getSettings()->getValue()
+            ? json_decode($event->getSettings()->getValue(), true)
+            : null;
+
+        if (!is_array($eventSettings) || empty($eventSettings['waitingList']['enabled'])) {
+            return null;
+        }
+
+        if ($info === null) {
+            /** @var EventApplicationService $eventApplicationService */
+            $eventApplicationService = $this->container->get('application.booking.event.service');
+            $info = $eventApplicationService->getEventInfo($event, true);
+        }
+
+        $waitingList = $eventSettings['waitingList'];
+        $peopleWaiting = isset($info['waiting']) ? (int) $info['waiting'] : 0;
+        $maxCapacity = isset($waitingList['maxCapacity']) ? (int) $waitingList['maxCapacity'] : 0;
+        $maxExtraPeople = null;
+
+        if (!empty($waitingList['maxExtraPeopleEnabled']) && isset($waitingList['maxExtraPeople'])) {
+            $maxExtraPeople = (int) $waitingList['maxExtraPeople'];
+        }
+
+        $capacityRule = false;
+        $waitingAlreadyStarted = 0;
+
+        if ($event->getCustomPricing() && $event->getCustomPricing()->getValue()) {
+            $capacityRulePerTicket = [];
+            $maxCustomCapacity = $event->getMaxCustomCapacity() && $event->getMaxCustomCapacity()->getValue();
+            $ticketWaitingCapacity = 0;
+
+            /** @var EventTicket $ticket */
+            foreach ($event->getCustomTickets()->getItems() as $ticket) {
+                $waiting = $ticket->getWaiting() ? $ticket->getWaiting()->getValue() : 0;
+                $waitingAlreadyStarted += $waiting;
+                $waitingListSpots = $ticket->getWaitingListSpots() ? $ticket->getWaitingListSpots()->getValue() : 0;
+                $ticketWaitingCapacity += $waitingListSpots;
+
+                if (!$maxCustomCapacity) {
+                    $capacityRulePerTicket[] = $waitingListSpots > $waiting;
+                }
+            }
+
+            if (!$maxCustomCapacity) {
+                $capacityRule = in_array(true, $capacityRulePerTicket, true);
+                $maxCapacity = $ticketWaitingCapacity;
+            } else {
+                $capacityRule = $maxCapacity > $peopleWaiting;
+            }
+        } else {
+            $capacityRule = $maxCapacity > $peopleWaiting;
+            $waitingAlreadyStarted = $peopleWaiting;
+        }
+
+        $spotsLeft = max(0, $maxCapacity - $peopleWaiting);
+        $available = empty($info['closed'])
+            && $capacityRule
+            && (!empty($info['full']) || $waitingAlreadyStarted !== 0);
+
+        return [
+            'available'      => $available,
+            'maxCapacity'    => $maxCapacity,
+            'peopleWaiting'  => $peopleWaiting,
+            'spotsLeft'      => $spotsLeft,
+            'maxExtraPeople' => $maxExtraPeople,
+        ];
     }
 }

@@ -64,7 +64,9 @@ class GetCalendarEventsCommandHandler extends CommandHandler
         }
 
         if ($currentUserType === Entities::PROVIDER) {
-            $queryParams['providers'] = [$currentUser->getId()->getValue()];
+            if (!$this->container->getPermissionsService()->currentUserCanReadOthers(Entities::APPOINTMENTS)) {
+                $queryParams['providers'] = [$currentUser->getId()->getValue()];
+            }
             /** @var ProviderApplicationService $providerAS */
             $providerAS = $this->container->get('application.user.provider.service');
             $timeZone = $providerAS->getTimeZone($currentUser);
@@ -144,17 +146,24 @@ class GetCalendarEventsCommandHandler extends CommandHandler
      */
     private function processEventDates(array &$filledDays, $item, string $counterKey): void
     {
-        if (!$item instanceof Appointment && !$item instanceof BlockTime) {
-            $eventStartDate = $item['eventPeriod']->getPeriodStart()->getValue()->setTime(0, 0, 0);
-            $eventEndDate   = $item['eventPeriod']->getPeriodEnd()->getValue()->setTime(23, 59, 59);
+        if ($item instanceof Appointment) {
+            return;
+        }
 
-            for ($date = (clone $eventStartDate)->modify('+1 day'); $date <= $eventEndDate; $date->modify('+1 day')) {
-                $formattedDate = $date->format('Y-m-d');
-                if (!isset($filledDays[$formattedDate])) {
-                    $filledDays[$formattedDate] = ['events' => [], 'count' => 0, 'more' => 0];
-                }
-                $filledDays[$formattedDate][$counterKey]++;
+        if ($item instanceof BlockTime) {
+            $startDate = $item->getStartDate()->getValue()->setTime(0, 0, 0);
+            $endDate   = $item->getEndDate()->getValue()->setTime(23, 59, 59);
+        } else {
+            $startDate = $item['eventPeriod']->getPeriodStart()->getValue()->setTime(0, 0, 0);
+            $endDate   = $item['eventPeriod']->getPeriodEnd()->getValue()->setTime(23, 59, 59);
+        }
+
+        for ($date = (clone $startDate)->modify('+1 day'); $date <= $endDate; $date->modify('+1 day')) {
+            $formattedDate = $date->format('Y-m-d');
+            if (!isset($filledDays[$formattedDate])) {
+                $filledDays[$formattedDate] = ['events' => [], 'count' => 0, 'more' => 0];
             }
+            $filledDays[$formattedDate][$counterKey]++;
         }
     }
 

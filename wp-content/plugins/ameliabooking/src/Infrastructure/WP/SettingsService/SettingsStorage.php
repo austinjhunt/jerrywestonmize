@@ -515,6 +515,7 @@ class SettingsStorage implements SettingsStorageInterface
             'customization'          => $this->getCategorySettings('customization'),
             'customizedData'         => $this->getCategorySettings('customizedData'),
             'appointments'           => $this->getCategorySettings('appointments'),
+            'events'                 => $this->getCategorySettings('events'),
             'slotDateConstraints'    => [
                 'minDate' => DateTimeService::getNowDateTimeObject()
                     ->modify(
@@ -660,6 +661,7 @@ class SettingsStorage implements SettingsStorageInterface
                 'waitingListEvents' => [
                     'addingMethod' => $this->getSetting('appointments', 'waitingListEvents')['addingMethod'],
                 ],
+                'automaticallyCreateEventCustomPost' => $this->getSetting('appointments', 'automaticallyCreateEventCustomPost'),
             ],
             'featuresIntegrations' => Licence\Licence::filterFeaturesByLicense(
                 $this->getCategorySettings('featuresIntegrations')

@@ -429,6 +429,12 @@ msgstr ""
 "Pridėkite „Meta Pixel“, kad galėtumėte stebėti reklamos konversijas ir "
 "optimizuoti rinkodarą."
 
+msgid "Add New"
+msgstr ""
+
+msgid "Add New Event Page"
+msgstr ""
+
 msgid "Add Period"
 msgstr "Pridėti laikotarpį"
 
@@ -622,6 +628,9 @@ msgstr "Visi klientai"
 
 msgid "All employees"
 msgstr "Visi darbuotojai"
+
+msgid "All entities imported"
+msgstr ""
 
 msgid "All events"
 msgstr "Visi įvykiai"
@@ -834,6 +843,15 @@ msgstr "Amelia – žingsnis po žingsnio užsakymas"
 
 msgid "Amelia Add to calendar page"
 msgstr "Amelia Pridėti į kalendorių puslapį"
+
+msgid "Amelia Event"
+msgstr ""
+
+msgid "Amelia Event Page"
+msgstr ""
+
+msgid "Amelia Event Pages"
+msgstr ""
 
 msgid "Amelia Events List Booking Settings"
 msgstr "Amelia renginių sąrašo rezervavimo nustatymai"
@@ -1358,6 +1376,9 @@ msgid ""
 msgstr ""
 "Automatiškai kurkite „Zoom“ susitikimus užsakymams ir praneškite apie juos "
 "klientams bei darbuotojams."
+
+msgid "Automatically create an Event Page for new events"
+msgstr ""
 
 msgid ""
 "Automatically generate invoices for every booking, making payments easier, "
@@ -2305,6 +2326,8 @@ msgid ""
 "Collect additional information from your customers before they complete a "
 "booking."
 msgstr ""
+"Surinkite papildomą informaciją iš savo klientų prieš jiems užbaigiant "
+"rezervacijos procesą."
 
 msgid "Collect the information your business truly needs"
 msgstr "Rinkite informaciją, kurios jūsų verslui tikrai reikia"
@@ -2512,7 +2535,7 @@ msgid "Consulting"
 msgstr "Konsultavimas"
 
 msgid "Contact Form"
-msgstr ""
+msgstr "Kontaktinė forma"
 
 msgid "Contact message"
 msgstr "Kontaktinis pranešimas"
@@ -2699,8 +2722,11 @@ msgstr "Sukurti darbuotoją"
 msgid "Create event"
 msgstr "Sukurti įvykį"
 
-msgid "Create form"
+msgid "Create event page"
 msgstr ""
+
+msgid "Create form"
+msgstr "Sukurti formą"
 
 msgid "Create meetings for pending appointments"
 msgstr "Sukurti susitikimus dėl laukiančių susitikimų"
@@ -3027,11 +3053,17 @@ msgstr "Tamsus tema"
 msgid "Dashboard"
 msgstr "Skydelis"
 
+msgid "Data export is ready."
+msgstr ""
+
 msgid "Data that remains unchanged:"
 msgstr "Duomenys, kurie lieka nepakitę:"
 
 msgid "Data to be updated:"
 msgstr "Atnaujinami duomenys:"
+
+msgid "Data transfer"
+msgstr ""
 
 msgid "Date"
 msgstr "Data"
@@ -3442,6 +3474,9 @@ msgstr ""
 "peržiūrėti, ieškoti ir užsisakyti tiesiogiai. Puikus būdas interaktyviame "
 "formate paryškinti artėjančius renginius."
 
+msgid "Do not exit the import until it is finished."
+msgstr ""
+
 msgid "Do you want to cancel following events?"
 msgstr "Ar norite atšaukti šiuos įvykius?"
 
@@ -3654,6 +3689,9 @@ msgstr "Redaguoti klientą"
 msgid "Edit Event"
 msgstr "Redaguoti renginį"
 
+msgid "Edit Event Page"
+msgstr ""
+
 msgid "Edit Extra"
 msgstr "Redaguoti papildomą informaciją"
 
@@ -3698,6 +3736,9 @@ msgstr "Redaguoti įvykį"
 
 msgid "Edit event booking"
 msgstr "Redaguoti renginio užsakymą"
+
+msgid "Edit event page"
+msgstr ""
 
 msgid "Edit location"
 msgstr "Redaguoti vietą"
@@ -3951,7 +3992,7 @@ msgstr ""
 "atspindinčią patirtį."
 
 msgid "Enable data usage"
-msgstr ""
+msgstr "Leisti naudoti duomenis"
 
 msgid "Enable guest booking"
 msgstr "Įjungti svečių užsakymus"
@@ -4249,7 +4290,7 @@ msgid "Enter both the application (client) ID and client secret."
 msgstr "Įveskite tiek programos (client) ID, tiek kliento slaptąjį raktą."
 
 msgid "Enter code"
-msgstr ""
+msgstr "Įveskite kodą"
 
 msgid "Enter date of birth"
 msgstr "Gimimo data"
@@ -4401,6 +4442,9 @@ msgstr "Renginių sąrašas Užsakymo forma"
 msgid "Event Location"
 msgstr "Renginio vieta"
 
+msgid "Event Pages"
+msgstr ""
+
 msgid "Event Starts"
 msgstr "Renginio data"
 
@@ -4417,7 +4461,7 @@ msgid "Event available"
 msgstr "Renginys prieinamas"
 
 msgid "Event booking"
-msgstr ""
+msgstr "Renginių rezervacija"
 
 msgid "Event booking has been created."
 msgstr "Renginio užsakymas sukurtas."
@@ -4534,7 +4578,7 @@ msgid "Event has been updated."
 msgstr "Renginys buvo atnaujintas."
 
 msgid "Event image gallery"
-msgstr ""
+msgstr "Renginio nuotraukų galerija"
 
 msgid "Event info"
 msgstr "Renginio informacija"
@@ -4649,7 +4693,7 @@ msgid "Events list view"
 msgstr "Renginių sąrašo peržiūra"
 
 msgid "Events pagination"
-msgstr ""
+msgstr "Renginių puslapiavimas"
 
 msgid "Events pricing"
 msgstr "Renginių kainos"
@@ -4709,8 +4753,14 @@ msgstr "Lengvai eksportuokite susitikimų duomenis"
 msgid "Export bookings"
 msgstr "Eksportuoti užsakymus"
 
+msgid "Export data"
+msgstr ""
+
 msgid "Export event booking data with ease"
 msgstr "Lengvai eksportuokite renginių rezervacijų duomenis"
+
+msgid "Export failed."
+msgstr ""
 
 msgid "Express Account"
 msgstr "Express sąskaita"
@@ -5232,6 +5282,8 @@ msgid ""
 "Help us improve Amelia by sharing anonymous data about your plugin usage. No "
 "personal data is collected."
 msgstr ""
+"Padėkite mums patobulinti Amelia pateikdami anonimizuotus duomenis apie tai, "
+"kaip naudojate įskiepį. Asmens duomenys nerenkami."
 
 msgid ""
 "Here, you can connect your personal Apple Calendar,<br/>so once the booking "
@@ -5408,6 +5460,9 @@ msgstr ""
 msgid "ID Desc"
 msgstr "ID Aprašymas"
 
+msgid "I understand this import will replace all current data permanently."
+msgstr ""
+
 msgid "I want to pay full amount"
 msgstr "Noriu sumokėti visą sumą"
 
@@ -5572,7 +5627,7 @@ msgid "Image Color"
 msgstr "Vaizdo spalva"
 
 msgid "Image navigation"
-msgstr ""
+msgstr "Perjungimas tarp vaizdų"
 
 msgid "Image thumbs"
 msgstr "Vaizdų miniatiūros"
@@ -5589,14 +5644,212 @@ msgstr "Importas iš dalies sėkmingas"
 msgid "Import Rules"
 msgstr "Importavimo taisyklės"
 
+msgid "Import completed"
+msgstr ""
+
+msgid "Import completed successfully."
+msgstr ""
+
+msgid "Import could not be started."
+msgstr ""
+
+msgid "Import data"
+msgstr ""
+
+msgid "Import errors"
+msgstr ""
+
+msgid "Import failed"
+msgstr ""
+
+msgid "Import failed. Review the details below."
+msgstr ""
+
+msgid "Import progress"
+msgstr ""
+
+msgid "Import progress could not be updated."
+msgstr ""
+
+msgid "Import started."
+msgstr ""
+
 msgid "Import successful"
 msgstr "Importavimas sėkmingas"
+
+msgid "Importing Google calendar sync"
+msgstr ""
+
+msgid "Importing Outlook calendar sync"
+msgstr ""
+
+msgid "Importing appointments"
+msgstr ""
+
+msgid "Importing booking extras"
+msgstr ""
+
+msgid "Importing bookings"
+msgstr ""
+
+msgid "Importing categories"
+msgstr ""
+
+msgid "Importing coupon-event relations"
+msgstr ""
+
+msgid "Importing coupon-package relations"
+msgstr ""
+
+msgid "Importing coupon-service relations"
+msgstr ""
+
+msgid "Importing coupons"
+msgstr ""
+
+msgid "Importing custom field events"
+msgstr ""
+
+msgid "Importing custom field options"
+msgstr ""
+
+msgid "Importing custom field services"
+msgstr ""
+
+msgid "Importing custom fields"
+msgstr ""
 
 msgid "Importing customers"
 msgstr "Klientų importavimas"
 
-msgid "Improve Amelia"
+msgid "Importing days off"
 msgstr ""
+
+msgid "Importing employee locations"
+msgstr ""
+
+msgid "Importing employee services"
+msgstr ""
+
+msgid "Importing employee views"
+msgstr ""
+
+msgid "Importing employees"
+msgstr ""
+
+msgid "Importing event booking periods"
+msgstr ""
+
+msgid "Importing event booking tickets"
+msgstr ""
+
+msgid "Importing event periods"
+msgstr ""
+
+msgid "Importing event providers"
+msgstr ""
+
+msgid "Importing event tags"
+msgstr ""
+
+msgid "Importing event tickets"
+msgstr ""
+
+msgid "Importing events"
+msgstr ""
+
+msgid "Importing extras"
+msgstr ""
+
+msgid "Importing location view settings"
+msgstr ""
+
+msgid "Importing locations"
+msgstr ""
+
+msgid "Importing notification SMS history"
+msgstr ""
+
+msgid "Importing notification log"
+msgstr ""
+
+msgid "Importing notification relations"
+msgstr ""
+
+msgid "Importing notifications"
+msgstr ""
+
+msgid "Importing package booking services"
+msgstr ""
+
+msgid "Importing package bookings"
+msgstr ""
+
+msgid "Importing package service locations"
+msgstr ""
+
+msgid "Importing package service providers"
+msgstr ""
+
+msgid "Importing package services"
+msgstr ""
+
+msgid "Importing packages"
+msgstr ""
+
+msgid "Importing payments"
+msgstr ""
+
+msgid "Importing period-location relations"
+msgstr ""
+
+msgid "Importing period-service relations"
+msgstr ""
+
+msgid "Importing provider periods"
+msgstr ""
+
+msgid "Importing provider special-day periods"
+msgstr ""
+
+msgid "Importing resource relations"
+msgstr ""
+
+msgid "Importing resources"
+msgstr ""
+
+msgid "Importing service views"
+msgstr ""
+
+msgid "Importing services"
+msgstr ""
+
+msgid "Importing settings"
+msgstr ""
+
+msgid "Importing special-day period-location relations"
+msgstr ""
+
+msgid "Importing special-day period-service relations"
+msgstr ""
+
+msgid "Importing special days"
+msgstr ""
+
+msgid "Importing tax relations"
+msgstr ""
+
+msgid "Importing taxes"
+msgstr ""
+
+msgid "Importing time outs"
+msgstr ""
+
+msgid "Importing work periods"
+msgstr ""
+
+msgid "Improve Amelia"
+msgstr "Tobulinkite Amelia"
 
 msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
@@ -5625,6 +5878,9 @@ msgid ""
 msgstr ""
 "Pagerinkite klientų patirtį, leidžiant jiems pasirinkti jiems labiausiai "
 "tinkamą vietą."
+
+msgid "Improve plugin"
+msgstr "Tobulink įskiepį"
 
 msgid ""
 "Improve reporting accuracy by accessing complete appointment data instantly"
@@ -5773,8 +6029,11 @@ msgstr "Įterpti Amelia užsakymo trumpąjį kodą"
 msgid "Insert pending appointments"
 msgstr "Įterpti laukiančius susitikimus"
 
-msgid "Install & Activate"
+msgid "Inserted"
 msgstr ""
+
+msgid "Install & Activate"
+msgstr "Įdiegti ir aktyvuoti"
 
 msgid "Integrate with WooCommerce to enable advanced e-commerce capabilities."
 msgstr ""
@@ -5877,19 +6136,19 @@ msgid "IvyForms"
 msgstr ""
 
 msgid "IvyForms Entries"
-msgstr ""
+msgstr "IvyForms įrašai"
 
 msgid "IvyForms Field"
-msgstr ""
+msgstr "IvyForms laukas"
 
 msgid "IvyForms Form"
-msgstr ""
+msgstr "IvyForms forma"
 
 msgid "IvyForms validation failed."
-msgstr ""
+msgstr "IvyForms patikra nepavyko."
 
 msgid "Ivy setup"
-msgstr ""
+msgstr "Ivy sąranka"
 
 msgid "Jane Doe"
 msgstr ""
@@ -6135,16 +6394,16 @@ msgid "Load page"
 msgstr "Įkelti puslapį"
 
 msgid "Loading"
-msgstr ""
+msgstr "Kraunama"
 
 msgid "Loading..."
 msgstr "Palaukite…"
 
 msgid "Loading event information"
-msgstr ""
+msgstr "Įkeliama renginio informacija"
 
 msgid "Loading header"
-msgstr ""
+msgstr "Įkeliama puslapio antraštė"
 
 msgid "Local Time"
 msgstr "Laikas:"
@@ -6333,6 +6592,9 @@ msgstr "Asmeninio tvarkaraščio tvarkymas"
 msgid "Manage shared resources with ease"
 msgstr "Lengvai tvarkykite bendrus išteklius"
 
+msgid "Manage this event in Amelia:"
+msgstr ""
+
 msgid "Managing assigned services"
 msgstr "Paskirtų paslaugų valdymas"
 
@@ -6362,7 +6624,7 @@ msgid "Max Capacity Desc"
 msgstr "Maksimali talpa Aprašymas"
 
 msgid "Maximum"
-msgstr ""
+msgstr "Maksimumas"
 
 msgid "Maximum Quantity:"
 msgstr "Maksimalus kiekis:"
@@ -6459,7 +6721,7 @@ msgid "Min. Capacity"
 msgstr "Min. talpa"
 
 msgid "Minimum"
-msgstr ""
+msgstr "Minimumas"
 
 msgid "Minimum bookings required"
 msgstr "Reikalingas minimalus užsakymų skaičius"
@@ -6620,6 +6882,9 @@ msgstr "Naujas klientas"
 msgid "New Event"
 msgstr "Naujas renginys"
 
+msgid "New Event Page"
+msgstr ""
+
 msgid "New Location"
 msgstr "Nauja vieta"
 
@@ -6687,7 +6952,7 @@ msgid "Next day reminder"
 msgstr "Kitą dieną priminimas"
 
 msgid "Next image"
-msgstr ""
+msgstr "Toliau"
 
 msgid "No"
 msgstr "Ne"
@@ -6763,6 +7028,12 @@ msgstr "Dar nėra darbuotojų"
 
 msgid "No event bookings yet"
 msgstr "Dar nėra užsakytų renginių"
+
+msgid "No event pages found"
+msgstr ""
+
+msgid "No event pages found in Trash"
+msgstr ""
 
 msgid "No events found"
 msgstr "Rasti įvykių nėra"
@@ -7181,6 +7452,9 @@ msgstr "Atidaryti"
 msgid "Open Event"
 msgstr "Atviras renginys"
 
+msgid "Open Event in Amelia"
+msgstr ""
+
 msgid "Open following"
 msgstr "Atidaryti šį failą"
 
@@ -7285,7 +7559,7 @@ msgid "PHP Mail"
 msgstr "PHP paštas"
 
 msgid "PRE-BOOKING INTAKE FORM (IVYFORMS)"
-msgstr ""
+msgstr "Prieš rezervaciją pildoma kliento anketa (IVYFORMS)"
 
 msgid "Package"
 msgstr "Rezervacija išsaugota"
@@ -7707,7 +7981,7 @@ msgid "Permanent access token"
 msgstr "Nuolatinis prieigos žetonas"
 
 msgid "Permanently linked"
-msgstr ""
+msgstr "Visam laikui susieta"
 
 msgid "Person"
 msgstr "Asmuo"
@@ -7794,6 +8068,9 @@ msgstr "Palaukite…"
 
 msgid "Please add period"
 msgstr "Pridėkite tašką sakinio pabaigoje."
+
+msgid "Please back up before proceeding to avoid loss of data."
+msgstr ""
 
 msgid "Please cancel the event first before deleting it."
 msgstr "Prieš ištrindami renginį, pirmiausia jį atšaukite."
@@ -8192,7 +8469,7 @@ msgid "Popup title"
 msgstr "Iššokantis langas pavadinimas"
 
 msgid "Pre-booking form details"
-msgstr ""
+msgstr "Priešrezervacijos formos informacija"
 
 msgid "Preload entities when page loads"
 msgstr "Iš anksto įkelti elementus, kai puslapis įkeliama"
@@ -8236,13 +8513,13 @@ msgid "Preview invoice"
 msgstr "Sąskaitos faktūros peržiūra"
 
 msgid "Previous image"
-msgstr ""
+msgstr "Ankstesnis vaizdas"
 
 msgid "Previous range"
 msgstr "Ankstesnis diapazonas"
 
 msgid "Previous step"
-msgstr ""
+msgstr "Ankstesnis žingsnis"
 
 msgid "Price"
 msgstr "Kaina"
@@ -8882,6 +9159,9 @@ msgstr "Ieškoti…"
 msgid "Search..."
 msgstr "Ieškoti…"
 
+msgid "Search Event Pages"
+msgstr ""
+
 msgid "Search Filters"
 msgstr "Paieškos filtrai"
 
@@ -8901,7 +9181,7 @@ msgid "Search bookings"
 msgstr "Ieškoti užsakymų"
 
 msgid "Search coupons"
-msgstr ""
+msgstr "Ieškoti kuponų"
 
 msgid "Search customers"
 msgstr "Ieškoti klientų"
@@ -8940,13 +9220,13 @@ msgid "Search packages"
 msgstr "Ieškoti paketų"
 
 msgid "Search resources"
-msgstr ""
+msgstr "Ieškoti išteklių"
 
 msgid "Search services"
 msgstr "Paieškos paslaugos"
 
 msgid "Search taxes"
-msgstr ""
+msgstr "Ieškoti mokesčių"
 
 msgid "Second"
 msgstr "Antrasis"
@@ -9076,8 +9356,11 @@ msgstr "Pasirinkite „WooCommerce“ produktą"
 msgid "Select Zoom User"
 msgstr "Pasirinkite „Zoom“ vartotoją"
 
-msgid "Select a form..."
+msgid "Select a .ameliafile archive before starting the import."
 msgstr ""
+
+msgid "Select a form..."
+msgstr "Pasirinkite formą..."
 
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr ""
@@ -9189,7 +9472,7 @@ msgid "Select tickets"
 msgstr "Pasirinkite bilietus"
 
 msgid "Select which IvyForms form to show before booking"
-msgstr ""
+msgstr "Pasirinkite, kurią IvyForms formą rodyti prieš rezervuojant"
 
 msgid "Select your Square Location"
 msgstr "Pasirinkite savo „Square“ vietą"
@@ -9912,6 +10195,9 @@ msgstr "Pereiti prie paketų ir tęsti su pasirinktąja paslauga"
 msgid "Skip setup"
 msgstr "Pereiti prie nustatymų"
 
+msgid "Skipped"
+msgstr ""
+
 msgid "Slot end time"
 msgstr "Sloto pabaigos laikas"
 
@@ -10454,6 +10740,9 @@ msgid ""
 "location"
 msgstr "Amelia valiuta neatitinka jūsų pasirinktos Square vietovės valiutos."
 
+msgid "The custom post is ready."
+msgstr ""
+
 msgid ""
 "The customer didn’t provide an email address, so the invoice couldn’t be "
 "sent."
@@ -10685,6 +10974,13 @@ msgstr ""
 
 msgid "This employee is the only one assigned to {service}."
 msgstr "Šis darbuotojas yra vienintelis, priskirtas „ {service} “."
+
+msgid ""
+"This export includes, but is not limited to, bookings, customers, settings, "
+"notification logs, and SMS history. Site-specific data (such as URLs, "
+"images, and purchase codes) is excluded and must be set up manually on a new "
+"site."
+msgstr ""
 
 msgid "This field is required"
 msgstr "Šis laukas yra privalomas"
@@ -11395,6 +11691,9 @@ msgstr "Plačiau"
 msgid "View Employees"
 msgstr "Naujas darbuotojas"
 
+msgid "View Event Page"
+msgstr ""
+
 msgid "View Less Packages"
 msgstr "Rodyti mažiau paketų"
 
@@ -12001,6 +12300,9 @@ msgstr "(Mokėjimas dabar)"
 msgid " (Incl. Tax)"
 msgstr " (su mokesčiais)"
 
+msgid "added to cart"
+msgstr ""
+
 msgid "and"
 msgstr "ir"
 
@@ -12070,6 +12372,9 @@ msgstr "„iCloud“ el. pašto adresas"
 msgid "iCloud email address and iCloud app-specific password"
 msgstr "„iCloud“ el. pašto adresas ir „iCloud“ programos slaptažodis"
 
+msgid "in cart"
+msgstr ""
+
 msgid "includes"
 msgstr "įtraukia"
 
@@ -12098,13 +12403,13 @@ msgid "on"
 msgstr "į"
 
 msgid "opens in new tab"
-msgstr ""
+msgstr "Atidaroma naujame skirtuke"
 
 msgid "out of"
 msgstr "iš"
 
 msgid "payment button"
-msgstr ""
+msgstr "Mokėjimo mygtukas"
 
 msgid "people"
 msgstr "žmonės"
@@ -12150,6 +12455,12 @@ msgstr "reCAPTCHA nustatymas"
 
 msgid "reCAPTCHA validation failed."
 msgstr "reCAPTCHA patvirtinimas nepavyko."
+
+msgid "remaining"
+msgstr ""
+
+msgid "removed from cart"
+msgstr ""
 
 msgid "results"
 msgstr "Nieko neradome…"

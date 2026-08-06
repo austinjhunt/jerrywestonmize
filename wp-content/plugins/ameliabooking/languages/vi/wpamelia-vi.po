@@ -426,6 +426,12 @@ msgstr ""
 "Thêm Meta Pixel để theo dõi chuyển đổi quảng cáo và tối ưu hóa chiến dịch "
 "marketing."
 
+msgid "Add New"
+msgstr ""
+
+msgid "Add New Event Page"
+msgstr ""
+
 msgid "Add Period"
 msgstr "Thêm Kỳ nghỉ"
 
@@ -619,6 +625,9 @@ msgstr "Tất cả khách hàng"
 
 msgid "All employees"
 msgstr "Tất cả nhân viên"
+
+msgid "All entities imported"
+msgstr ""
 
 msgid "All events"
 msgstr "Tất cả Sự kiện"
@@ -827,6 +836,15 @@ msgstr "AM - Bước đặt lịch hẹn "
 
 msgid "Amelia Add to calendar page"
 msgstr "Trang Thêm vào lịch Amelia"
+
+msgid "Amelia Event"
+msgstr ""
+
+msgid "Amelia Event Page"
+msgstr ""
+
+msgid "Amelia Event Pages"
+msgstr ""
 
 msgid "Amelia Events List Booking Settings"
 msgstr "Amelia Danh sách sự kiện - Cài đặt đặt lịch"
@@ -1350,6 +1368,9 @@ msgid ""
 msgstr ""
 "Tự động tạo các cuộc họp Zoom cho các đặt chỗ và thông báo cho khách hàng và "
 "nhân viên."
+
+msgid "Automatically create an Event Page for new events"
+msgstr ""
 
 msgid ""
 "Automatically generate invoices for every booking, making payments easier, "
@@ -2290,6 +2311,7 @@ msgid ""
 "Collect additional information from your customers before they complete a "
 "booking."
 msgstr ""
+"Thu thập thông tin bổ sung từ khách hàng trước khi họ hoàn tất đặt lịch."
 
 msgid "Collect the information your business truly needs"
 msgstr "Thu thập thông tin mà doanh nghiệp của bạn thực sự cần"
@@ -2493,7 +2515,7 @@ msgid "Consulting"
 msgstr "Tư vấn"
 
 msgid "Contact Form"
-msgstr ""
+msgstr "Form liên hệ"
 
 msgid "Contact message"
 msgstr "Thông báo liên hệ"
@@ -2677,8 +2699,11 @@ msgstr "Tạo nhân viên"
 msgid "Create event"
 msgstr "Tạo sự kiện"
 
-msgid "Create form"
+msgid "Create event page"
 msgstr ""
+
+msgid "Create form"
+msgstr "Tạo biểu mẫu"
 
 msgid "Create meetings for pending appointments"
 msgstr "Tạo cuộc họp cho các cuộc hẹn đang chờ xử lý"
@@ -3000,11 +3025,17 @@ msgstr "Chế độ tối"
 msgid "Dashboard"
 msgstr "Bảng Điều Khiển"
 
+msgid "Data export is ready."
+msgstr ""
+
 msgid "Data that remains unchanged:"
 msgstr "Dữ liệu không thay đổi:"
 
 msgid "Data to be updated:"
 msgstr "Dữ liệu cần được cập nhật:"
+
+msgid "Data transfer"
+msgstr ""
 
 msgid "Date"
 msgstr "Ngày"
@@ -3409,6 +3440,9 @@ msgstr ""
 "chỗ trực tiếp. Một cách tuyệt vời để làm nổi bật các sự kiện sắp tới trong "
 "một định dạng tương tác."
 
+msgid "Do not exit the import until it is finished."
+msgstr ""
+
 msgid "Do you want to cancel following events?"
 msgstr "Bạn muốn hủy những sự kiện sau không?"
 
@@ -3619,6 +3653,9 @@ msgstr "Sửa Khách Hàng"
 msgid "Edit Event"
 msgstr "Chỉnh sửa Sự kiện"
 
+msgid "Edit Event Page"
+msgstr ""
+
 msgid "Edit Extra"
 msgstr "Chỉnh sửa Phụ phí"
 
@@ -3663,6 +3700,9 @@ msgstr "Chỉnh sửa sự kiện"
 
 msgid "Edit event booking"
 msgstr "Chỉnh sửa đặt chỗ sự kiện"
+
+msgid "Edit event page"
+msgstr ""
 
 msgid "Edit location"
 msgstr "Chỉnh sửa địa điểm"
@@ -3909,7 +3949,7 @@ msgstr ""
 "nhân hóa màu sắc và nhãn để tạo ra trải nghiệm liền mạch và có thương hiệu."
 
 msgid "Enable data usage"
-msgstr ""
+msgstr "Bật sử dụng dữ liệu"
 
 msgid "Enable guest booking"
 msgstr "Kích hoạt đặt lịch cho khách vãng lai"
@@ -4203,7 +4243,7 @@ msgid "Enter both the application (client) ID and client secret."
 msgstr "Nhập cả ID ứng dụng (client) và client secret."
 
 msgid "Enter code"
-msgstr ""
+msgstr "Nhập mã"
 
 msgid "Enter date of birth"
 msgstr "Ngày Sinh"
@@ -4353,6 +4393,9 @@ msgstr "Biểu mẫu Đặt Hẹn Danh Sách Sự kiện"
 msgid "Event Location"
 msgstr "Địa điểm sự kiện"
 
+msgid "Event Pages"
+msgstr ""
+
 msgid "Event Starts"
 msgstr "Bắt đầu Sự kiện"
 
@@ -4369,7 +4412,7 @@ msgid "Event available"
 msgstr "Sự kiện có sẵn"
 
 msgid "Event booking"
-msgstr ""
+msgstr "Đăng ký sự kiện"
 
 msgid "Event booking has been created."
 msgstr "Đặt chỗ sự kiện đã được tạo."
@@ -4488,7 +4531,7 @@ msgid "Event has been updated."
 msgstr "Sự kiện đã được cập nhật."
 
 msgid "Event image gallery"
-msgstr ""
+msgstr "Thư viện ảnh của sự kiện"
 
 msgid "Event info"
 msgstr "Thông tin sự kiện"
@@ -4603,7 +4646,7 @@ msgid "Events list view"
 msgstr "Danh sách sự kiện"
 
 msgid "Events pagination"
-msgstr ""
+msgstr "Phân trang sự kiện"
 
 msgid "Events pricing"
 msgstr "Giá sự kiện"
@@ -4662,8 +4705,14 @@ msgstr "Xuất dữ liệu lịch hẹn một cách dễ dàng"
 msgid "Export bookings"
 msgstr "Xuất đặt chỗ"
 
+msgid "Export data"
+msgstr ""
+
 msgid "Export event booking data with ease"
 msgstr "Xuất dữ liệu đặt chỗ sự kiện dễ dàng"
+
+msgid "Export failed."
+msgstr ""
 
 msgid "Express Account"
 msgstr "Tài khoản Express"
@@ -5184,6 +5233,9 @@ msgid ""
 "Help us improve Amelia by sharing anonymous data about your plugin usage. No "
 "personal data is collected."
 msgstr ""
+"Hãy giúp chúng tôi cải thiện Amelia bằng cách chia sẻ dữ liệu ẩn danh về "
+"việc sử dụng plugin của bạn. Chúng tôi không thu thập bất kỳ dữ liệu cá nhân "
+"nào."
 
 msgid ""
 "Here, you can connect your personal Apple Calendar,<br/>so once the booking "
@@ -5356,6 +5408,9 @@ msgstr "ID Tăng dần"
 msgid "ID Desc"
 msgstr "ID Giảm dần"
 
+msgid "I understand this import will replace all current data permanently."
+msgstr ""
+
 msgid "I want to pay full amount"
 msgstr "Tôi muốn thanh toán toàn bộ số tiền"
 
@@ -5520,7 +5575,7 @@ msgid "Image Color"
 msgstr "Màu Hình ảnh"
 
 msgid "Image navigation"
-msgstr ""
+msgstr "Duyệt ảnh"
 
 msgid "Image thumbs"
 msgstr "Hình thu nhỏ"
@@ -5537,14 +5592,212 @@ msgstr "Nhập thành công một phần"
 msgid "Import Rules"
 msgstr "Quy tắc nhập"
 
+msgid "Import completed"
+msgstr ""
+
+msgid "Import completed successfully."
+msgstr ""
+
+msgid "Import could not be started."
+msgstr ""
+
+msgid "Import data"
+msgstr ""
+
+msgid "Import errors"
+msgstr ""
+
+msgid "Import failed"
+msgstr ""
+
+msgid "Import failed. Review the details below."
+msgstr ""
+
+msgid "Import progress"
+msgstr ""
+
+msgid "Import progress could not be updated."
+msgstr ""
+
+msgid "Import started."
+msgstr ""
+
 msgid "Import successful"
 msgstr "Nhập thành công"
+
+msgid "Importing Google calendar sync"
+msgstr ""
+
+msgid "Importing Outlook calendar sync"
+msgstr ""
+
+msgid "Importing appointments"
+msgstr ""
+
+msgid "Importing booking extras"
+msgstr ""
+
+msgid "Importing bookings"
+msgstr ""
+
+msgid "Importing categories"
+msgstr ""
+
+msgid "Importing coupon-event relations"
+msgstr ""
+
+msgid "Importing coupon-package relations"
+msgstr ""
+
+msgid "Importing coupon-service relations"
+msgstr ""
+
+msgid "Importing coupons"
+msgstr ""
+
+msgid "Importing custom field events"
+msgstr ""
+
+msgid "Importing custom field options"
+msgstr ""
+
+msgid "Importing custom field services"
+msgstr ""
+
+msgid "Importing custom fields"
+msgstr ""
 
 msgid "Importing customers"
 msgstr "Đang nhập khách hàng"
 
-msgid "Improve Amelia"
+msgid "Importing days off"
 msgstr ""
+
+msgid "Importing employee locations"
+msgstr ""
+
+msgid "Importing employee services"
+msgstr ""
+
+msgid "Importing employee views"
+msgstr ""
+
+msgid "Importing employees"
+msgstr ""
+
+msgid "Importing event booking periods"
+msgstr ""
+
+msgid "Importing event booking tickets"
+msgstr ""
+
+msgid "Importing event periods"
+msgstr ""
+
+msgid "Importing event providers"
+msgstr ""
+
+msgid "Importing event tags"
+msgstr ""
+
+msgid "Importing event tickets"
+msgstr ""
+
+msgid "Importing events"
+msgstr ""
+
+msgid "Importing extras"
+msgstr ""
+
+msgid "Importing location view settings"
+msgstr ""
+
+msgid "Importing locations"
+msgstr ""
+
+msgid "Importing notification SMS history"
+msgstr ""
+
+msgid "Importing notification log"
+msgstr ""
+
+msgid "Importing notification relations"
+msgstr ""
+
+msgid "Importing notifications"
+msgstr ""
+
+msgid "Importing package booking services"
+msgstr ""
+
+msgid "Importing package bookings"
+msgstr ""
+
+msgid "Importing package service locations"
+msgstr ""
+
+msgid "Importing package service providers"
+msgstr ""
+
+msgid "Importing package services"
+msgstr ""
+
+msgid "Importing packages"
+msgstr ""
+
+msgid "Importing payments"
+msgstr ""
+
+msgid "Importing period-location relations"
+msgstr ""
+
+msgid "Importing period-service relations"
+msgstr ""
+
+msgid "Importing provider periods"
+msgstr ""
+
+msgid "Importing provider special-day periods"
+msgstr ""
+
+msgid "Importing resource relations"
+msgstr ""
+
+msgid "Importing resources"
+msgstr ""
+
+msgid "Importing service views"
+msgstr ""
+
+msgid "Importing services"
+msgstr ""
+
+msgid "Importing settings"
+msgstr ""
+
+msgid "Importing special-day period-location relations"
+msgstr ""
+
+msgid "Importing special-day period-service relations"
+msgstr ""
+
+msgid "Importing special days"
+msgstr ""
+
+msgid "Importing tax relations"
+msgstr ""
+
+msgid "Importing taxes"
+msgstr ""
+
+msgid "Importing time outs"
+msgstr ""
+
+msgid "Importing work periods"
+msgstr ""
+
+msgid "Improve Amelia"
+msgstr "Nâng cấp Amelia"
 
 msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
@@ -5573,6 +5826,9 @@ msgid ""
 msgstr ""
 "Nâng cao trải nghiệm khách hàng bằng cách cho phép khách hàng lựa chọn vị "
 "trí phù hợp nhất với họ."
+
+msgid "Improve plugin"
+msgstr "Cải thiện plugin"
 
 msgid ""
 "Improve reporting accuracy by accessing complete appointment data instantly"
@@ -5725,8 +5981,11 @@ msgstr "Chèn Mã rút gọn Đặt lịch Amelia"
 msgid "Insert pending appointments"
 msgstr "Chèn các cuộc hẹn đang chờ xử lý"
 
-msgid "Install & Activate"
+msgid "Inserted"
 msgstr ""
+
+msgid "Install & Activate"
+msgstr "Cài đặt & Kích hoạt"
 
 msgid "Integrate with WooCommerce to enable advanced e-commerce capabilities."
 msgstr ""
@@ -5831,19 +6090,19 @@ msgid "IvyForms"
 msgstr ""
 
 msgid "IvyForms Entries"
-msgstr ""
+msgstr "Bài gửi IvyForms"
 
 msgid "IvyForms Field"
-msgstr ""
+msgstr "Trường IvyForms"
 
 msgid "IvyForms Form"
-msgstr ""
+msgstr "Biểu mẫu IvyForms"
 
 msgid "IvyForms validation failed."
-msgstr ""
+msgstr "Kiểm tra hợp lệ của IvyForms thất bại."
 
 msgid "Ivy setup"
-msgstr ""
+msgstr "Thiết lập Ivy"
 
 msgid "Jane Doe"
 msgstr ""
@@ -6089,16 +6348,16 @@ msgid "Load page"
 msgstr "Tải trang"
 
 msgid "Loading"
-msgstr ""
+msgstr "Đang tải"
 
 msgid "Loading..."
 msgstr "Đang tải..."
 
 msgid "Loading event information"
-msgstr ""
+msgstr "Đang tải thông tin sự kiện"
 
 msgid "Loading header"
-msgstr ""
+msgstr "Đang tải đầu trang"
 
 msgid "Local Time"
 msgstr "Thời gian địa phương"
@@ -6287,6 +6546,9 @@ msgstr "Quản lý lịch cá nhân"
 msgid "Manage shared resources with ease"
 msgstr "Quản lý tài nguyên chung một cách dễ dàng"
 
+msgid "Manage this event in Amelia:"
+msgstr ""
+
 msgid "Managing assigned services"
 msgstr "Quản lý các dịch vụ được giao"
 
@@ -6316,7 +6578,7 @@ msgid "Max Capacity Desc"
 msgstr "Mô tả sức chứa tối đa"
 
 msgid "Maximum"
-msgstr ""
+msgstr "Tối đa"
 
 msgid "Maximum Quantity:"
 msgstr "Số Lượng Tối Đa:"
@@ -6413,7 +6675,7 @@ msgid "Min. Capacity"
 msgstr "Sức chứa tối thiểu"
 
 msgid "Minimum"
-msgstr ""
+msgstr "Tối thiểu"
 
 msgid "Minimum bookings required"
 msgstr "Số lượng đặt tối thiểu yêu cầu"
@@ -6571,6 +6833,9 @@ msgstr "Khách Hàng Mới"
 msgid "New Event"
 msgstr "Sự kiện mới"
 
+msgid "New Event Page"
+msgstr ""
+
 msgid "New Location"
 msgstr "Địa Điểm Mới"
 
@@ -6638,7 +6903,7 @@ msgid "Next day reminder"
 msgstr "Nhắc nhở vào ngày hôm sau"
 
 msgid "Next image"
-msgstr ""
+msgstr "Ảnh tiếp theo"
 
 msgid "No"
 msgstr "Không"
@@ -6715,6 +6980,12 @@ msgstr "Chưa có nhân viên nào."
 
 msgid "No event bookings yet"
 msgstr "Chưa có đặt chỗ sự kiện nào."
+
+msgid "No event pages found"
+msgstr ""
+
+msgid "No event pages found in Trash"
+msgstr ""
 
 msgid "No events found"
 msgstr "Không tìm thấy sự kiện nào"
@@ -7131,6 +7402,9 @@ msgstr "Mở"
 msgid "Open Event"
 msgstr "Mở Sự kiện"
 
+msgid "Open Event in Amelia"
+msgstr ""
+
 msgid "Open following"
 msgstr "Mở theo sau"
 
@@ -7235,7 +7509,7 @@ msgid "PHP Mail"
 msgstr "Thư PHP"
 
 msgid "PRE-BOOKING INTAKE FORM (IVYFORMS)"
-msgstr ""
+msgstr "BIỂU MẪU THÔNG TIN TRƯỚC KHI ĐẶT LỊCH (IVYFORMS)"
 
 msgid "Package"
 msgstr "Gói"
@@ -7657,7 +7931,7 @@ msgid "Permanent access token"
 msgstr "Mã thông báo cố định"
 
 msgid "Permanently linked"
-msgstr ""
+msgstr "Liên kết vĩnh viễn"
 
 msgid "Person"
 msgstr "Người"
@@ -7743,6 +8017,9 @@ msgstr "Vui lòng đợi"
 
 msgid "Please add period"
 msgstr "Vui lòng thêm dấu chấm."
+
+msgid "Please back up before proceeding to avoid loss of data."
+msgstr ""
 
 msgid "Please cancel the event first before deleting it."
 msgstr "Vui lòng hủy sự kiện trước khi xóa nó."
@@ -8139,7 +8416,7 @@ msgid "Popup title"
 msgstr "Tiêu đề cửa sổ popup"
 
 msgid "Pre-booking form details"
-msgstr ""
+msgstr "Chi tiết biểu mẫu trước khi đặt lịch"
 
 msgid "Preload entities when page loads"
 msgstr "Tải trước các thực thể khi trang được tải"
@@ -8183,13 +8460,13 @@ msgid "Preview invoice"
 msgstr "Xem trước hóa đơn"
 
 msgid "Previous image"
-msgstr ""
+msgstr "Ảnh trước"
 
 msgid "Previous range"
 msgstr "Phạm vi trước đó"
 
 msgid "Previous step"
-msgstr ""
+msgstr "Bước trước"
 
 msgid "Price"
 msgstr "Giá"
@@ -8837,6 +9114,9 @@ msgstr "Tìm kiếm"
 msgid "Search..."
 msgstr "Tìm kiếm..."
 
+msgid "Search Event Pages"
+msgstr ""
+
 msgid "Search Filters"
 msgstr "Bộ lọc Tìm kiếm"
 
@@ -8856,7 +9136,7 @@ msgid "Search bookings"
 msgstr "Tìm kiếm đặt chỗ"
 
 msgid "Search coupons"
-msgstr ""
+msgstr "Tìm mã giảm giá"
 
 msgid "Search customers"
 msgstr "Tìm kiếm khách hàng"
@@ -8895,13 +9175,13 @@ msgid "Search packages"
 msgstr "Tìm kiếm gói dịch vụ"
 
 msgid "Search resources"
-msgstr ""
+msgstr "Tìm tài nguyên"
 
 msgid "Search services"
 msgstr "Tìm kiếm dịch vụ"
 
 msgid "Search taxes"
-msgstr ""
+msgstr "Tìm thuế"
 
 msgid "Second"
 msgstr "Thứ hai"
@@ -9031,8 +9311,11 @@ msgstr "Chọn sản phẩm WooCommerce"
 msgid "Select Zoom User"
 msgstr "Chọn Người Dùng Zoom"
 
-msgid "Select a form..."
+msgid "Select a .ameliafile archive before starting the import."
 msgstr ""
+
+msgid "Select a form..."
+msgstr "Chọn biểu mẫu..."
 
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr "Chọn một chỗ giữ chỗ để chèn vào vị trí con trỏ của bạn."
@@ -9142,7 +9425,7 @@ msgid "Select tickets"
 msgstr "Chọn vé"
 
 msgid "Select which IvyForms form to show before booking"
-msgstr ""
+msgstr "Chọn biểu mẫu IvyForms sẽ hiển thị trước khi đặt lịch"
 
 msgid "Select your Square Location"
 msgstr "Chọn địa điểm Square của bạn"
@@ -9848,6 +10131,9 @@ msgstr "Bỏ qua các gói và tiếp tục với dịch vụ đã chọn"
 msgid "Skip setup"
 msgstr "Bỏ qua cài đặt"
 
+msgid "Skipped"
+msgstr ""
+
 msgid "Slot end time"
 msgstr "Thời gian kết thúc slot"
 
@@ -10384,6 +10670,9 @@ msgstr ""
 "Đơn vị tiền tệ trong Amelia không khớp với đơn vị tiền tệ của địa điểm "
 "Square bạn chọn."
 
+msgid "The custom post is ready."
+msgstr ""
+
 msgid ""
 "The customer didn’t provide an email address, so the invoice couldn’t be "
 "sent."
@@ -10615,6 +10904,13 @@ msgstr ""
 
 msgid "This employee is the only one assigned to {service}."
 msgstr "Nhân viên này là người duy nhất được chỉ định cho {service}."
+
+msgid ""
+"This export includes, but is not limited to, bookings, customers, settings, "
+"notification logs, and SMS history. Site-specific data (such as URLs, "
+"images, and purchase codes) is excluded and must be set up manually on a new "
+"site."
+msgstr ""
 
 msgid "This field is required"
 msgstr "Trường này là bắt buộc"
@@ -11331,6 +11627,9 @@ msgstr "Xem thêm"
 msgid "View Employees"
 msgstr "Xem Nhân viên"
 
+msgid "View Event Page"
+msgstr ""
+
 msgid "View Less Packages"
 msgstr "Xem ít gói hơn"
 
@@ -11937,6 +12236,9 @@ msgstr "(Thanh toán ngay)"
 msgid " (Incl. Tax)"
 msgstr "(Bao gồm thuế)"
 
+msgid "added to cart"
+msgstr ""
+
 msgid "and"
 msgstr "và"
 
@@ -12006,6 +12308,9 @@ msgstr "Địa chỉ email iCloud"
 msgid "iCloud email address and iCloud app-specific password"
 msgstr "Địa chỉ email iCloud và mật khẩu dành riêng cho ứng dụng iCloud"
 
+msgid "in cart"
+msgstr ""
+
 msgid "includes"
 msgstr "bao gồm"
 
@@ -12034,13 +12339,13 @@ msgid "on"
 msgstr "vào"
 
 msgid "opens in new tab"
-msgstr ""
+msgstr "Mở trong thẻ mới"
 
 msgid "out of"
 msgstr "trong tổng số"
 
 msgid "payment button"
-msgstr ""
+msgstr "Nút thanh toán"
 
 msgid "people"
 msgstr "mọi người"
@@ -12086,6 +12391,12 @@ msgstr "Cài đặt reCAPTCHA"
 
 msgid "reCAPTCHA validation failed."
 msgstr "Xác minh reCAPTCHA không thành công."
+
+msgid "remaining"
+msgstr ""
+
+msgid "removed from cart"
+msgstr ""
 
 msgid "results"
 msgstr "kết quả"

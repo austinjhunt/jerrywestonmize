@@ -3,7 +3,7 @@
 Plugin Name: Amelia
 Plugin URI: https://wpamelia.com/
 Description: Amelia is a simple yet powerful automated booking specialist, working 24/7 to make sure your customers can make appointments and events even while you sleep!
-Version: 9.6.3
+Version: 9.7
 Author: Melograno Ventures
 Author URI: https://melograno.io/
 Text Domain: wpamelia
@@ -40,6 +40,7 @@ use AmeliaBooking\Infrastructure\WP\UserRoles\UserRoles;
 use AmeliaBooking\Infrastructure\WP\WPMenu\Submenu;
 use AmeliaBooking\Infrastructure\WP\WPMenu\SubmenuPageHandler;
 use AmeliaBooking\Infrastructure\WP\Compatibility\LiteSpeedCacheCompatibility;
+use AmeliaBooking\Infrastructure\WP\CustomPostTypes\CustomPostTypesBootstrap;
 use AmeliaBooking\Infrastructure\WP\WPMenu\AdminBarMenu;
 use AmeliaBooking\Infrastructure\Common\AmeliaErrorHandler;
 use Exception;
@@ -120,7 +121,7 @@ if (!defined('AMELIA_LOGIN_URL')) {
 
 // Const for Amelia version
 if (!defined('AMELIA_VERSION')) {
-    define('AMELIA_VERSION', '9.6.3');
+    define('AMELIA_VERSION', '9.7');
 }
 
 // Const for site URL
@@ -392,6 +393,8 @@ class Plugin
         if ($settingsService->isFeatureEnabled('buddyboss')) {
             require_once AMELIA_PATH . '/extensions/buddyboss-platform-addon/buddyboss-platform-addon.php';
         }
+
+        CustomPostTypesBootstrap::init();
     }
 
     /**
@@ -572,6 +575,8 @@ class Plugin
         }
 
         Infrastructure\WP\InstallActions\ActivationDatabaseHook::init();
+
+        CustomPostTypesBootstrap::onActivation();
 
         set_transient('amelia_activation_redirect', true, 30);
     }

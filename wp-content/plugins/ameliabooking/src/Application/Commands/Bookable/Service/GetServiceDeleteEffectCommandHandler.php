@@ -9,6 +9,7 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Commands\CommandHandler;
+use AmeliaBooking\Application\Services\Bookable\AbstractPackageApplicationService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageRepository;
 use Slim\Exception\ContainerValueNotFoundException;
@@ -37,8 +38,8 @@ class GetServiceDeleteEffectCommandHandler extends CommandHandler
 
         $result = new CommandResult();
 
-        /** @var PackageRepository $packageRepository */
-        $packageRepository = $this->container->get('domain.bookable.package.repository');
+        /** @var AbstractPackageApplicationService $packageApplicationService */
+        $packageApplicationService = $this->container->get('application.bookable.package');
 
         /** @var BookableApplicationService $bookableAS */
         $bookableAS = $this->getContainer()->get('application.bookable.service');
@@ -58,10 +59,10 @@ class GetServiceDeleteEffectCommandHandler extends CommandHandler
             $messageData = ['count' => $appointmentsCount['pastAppointments']];
         }
 
-        /** @var Collection $packages */
-        $packages = $packageRepository->getByCriteria(['services' => [$command->getArg('id')]]);
+        /** @var array $packages */
+        $packages = $packageApplicationService->getPackagesArray(['services' => [$command->getArg('id')]]);
 
-        if ($packages->length()) {
+        if ($packages && count($packages) > 0) {
             $messageKey = 'red_service_failed_to_be_deleted';
         }
 
@@ -69,7 +70,7 @@ class GetServiceDeleteEffectCommandHandler extends CommandHandler
         $result->setMessage('Successfully retrieved message.');
         $result->setData(
             [
-                'valid'       => !$appointmentsCount['futureAppointments'] && !$packages->length(),
+                'valid'       => !$appointmentsCount['futureAppointments'] && (!$packages || count($packages) === 0),
                 'messageKey'  => $messageKey,
                 'messageData' => $messageData,
             ]

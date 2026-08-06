@@ -24,10 +24,15 @@ class InactiveSubscribersController {
   /** @var EntityManager */
   private $entityManager;
 
+  /** @var TrackingConsentController */
+  private $trackingConsentController;
+
   public function __construct(
-    EntityManager $entityManager
+    EntityManager $entityManager,
+    TrackingConsentController $trackingConsentController
   ) {
     $this->entityManager = $entityManager;
+    $this->trackingConsentController = $trackingConsentController;
   }
 
   public function markInactiveSubscribers(int $daysToInactive, int $startId, int $endId, ?int $unopenedEmails = self::UNOPENED_EMAILS_THRESHOLD) {
@@ -100,6 +105,8 @@ class InactiveSubscribersController {
         JOIN {$processedTaskIdsTable} task_ids ON task_ids.id = sts.task_id
       WHERE s.last_subscribed_at < :thresholdDate
         AND s.status = :status
+        AND s.tracking_consent != 'denied'
+        AND (:trackUnknown = 1 OR s.tracking_consent != 'unknown')
         AND s.id >= :startId
         AND s.id <= :endId
         AND s.email_count >= {$lifetimeEmailsThreshold}
@@ -109,6 +116,7 @@ class InactiveSubscribersController {
       [
         'thresholdDate' => $thresholdDateIso,
         'status' => SubscriberEntity::STATUS_SUBSCRIBED,
+        'trackUnknown' => $this->trackingConsentController->shouldTrackUnknownConsent() ? 1 : 0,
         'startId' => $startId,
         'endId' => $endId,
         'unopenedEmailsThreshold' => $unopenedEmails,

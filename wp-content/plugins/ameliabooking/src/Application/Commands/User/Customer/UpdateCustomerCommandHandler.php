@@ -7,6 +7,7 @@ use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
+use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Entity\User\Customer;
@@ -44,6 +45,9 @@ class UpdateCustomerCommandHandler extends CommandHandler
 
         $this->checkMandatoryFields($command);
 
+        /** @var AbstractUser|null $provider */
+        $provider = null;
+
         /** @var UserApplicationService $userAS */
         $userAS = $this->getContainer()->get('application.user.service');
 
@@ -53,15 +57,12 @@ class UpdateCustomerCommandHandler extends CommandHandler
         /** @var AbstractMailchimpService $mailchimpService */
         $mailchimpService = $this->container->get('infrastructure.mailchimp.service');
 
-        $userRepository->beginTransaction();
-
         $customerData = $command->getFields();
 
         $customerData['type'] = Entities::CUSTOMER;
 
         if (!$command->getPermissionService()->currentUserCanWrite(Entities::CUSTOMERS)) {
             if ($command->getToken()) {
-                /** @var AbstractUser $provider */
                 $provider = $command->getCabinetType() === 'provider'
                     ? $userAS->getAuthenticatedUser($command->getToken(), false, 'providerCabinet')
                     : null;
@@ -98,8 +99,6 @@ class UpdateCustomerCommandHandler extends CommandHandler
         } else {
             $oldUser = $userRepository->getById($command->getArg('id'));
             if ($oldUser === null) {
-                $userRepository->rollback();
-
                 $result->setResult(CommandResult::RESULT_ERROR);
                 $result->setMessage('Could not retrieve user');
                 return $result;
@@ -115,6 +114,33 @@ class UpdateCustomerCommandHandler extends CommandHandler
 
         /** @var AbstractUser $currentUser */
         $currentUser = $this->container->get('logged.in.user');
+
+        $isProvider =
+            ($provider !== null && $provider->getType() === AbstractUser::USER_ROLE_PROVIDER) ||
+            ($currentUser !== null && $currentUser->getType() === AbstractUser::USER_ROLE_PROVIDER);
+
+        if ($isProvider) {
+            $providerId = $provider !== null ? $provider->getId()->getValue() : $currentUser->getId()->getValue();
+
+            $rolesSettings = $settingsService->getCategorySettings('roles');
+
+            if (empty($rolesSettings['allowWriteCustomers'])) {
+                throw new AccessDeniedException('You are not allowed to write user');
+            }
+
+            if (empty($rolesSettings['allowReadAllCustomers'])) {
+                /** @var Collection $providerCustomers */
+                $providerCustomers = $userRepository->getProviderAllowedCustomers(
+                    $providerId
+                );
+
+                $allowedCustomersIds = $providerCustomers->keys();
+
+                if (!in_array($command->getArg('id'), $allowedCustomersIds)) {
+                    throw new AccessDeniedException('You are not allowed to write user');
+                }
+            }
+        }
 
         if (
             $command->getField('email') === '' &&
@@ -139,6 +165,10 @@ class UpdateCustomerCommandHandler extends CommandHandler
 
         /** @var Customer $newUser */
         $newUser = UserFactory::create($newUserData);
+
+        if ($isProvider && $command->getField('password')) {
+            $newUser->setPassword($oldUser->getPassword());
+        }
 
         $oldExternalId = $oldUser->getExternalId() ? $oldUser->getExternalId()->getValue() : null;
         $newExternalId = $newUser->getExternalId() ? $newUser->getExternalId()->getValue() : null;
@@ -190,7 +220,9 @@ class UpdateCustomerCommandHandler extends CommandHandler
             return $result;
         }
 
-        if ($command->getField('password')) {
+        $userRepository->beginTransaction();
+
+        if ($command->getField('password') && !$isProvider) {
             $newPassword = new Password($command->getField('password'));
 
             $userRepository->updateFieldById($command->getArg('id'), $newPassword->getValue(), 'password');

@@ -428,6 +428,12 @@ msgstr ""
 "Tilføj Meta Pixel for at spore annoncekonverteringer og optimere "
 "markedsføringen."
 
+msgid "Add New"
+msgstr ""
+
+msgid "Add New Event Page"
+msgstr ""
+
 msgid "Add Period"
 msgstr "Tilføj periode"
 
@@ -621,6 +627,9 @@ msgstr "Alle kunder"
 
 msgid "All employees"
 msgstr "Alle medarbejdere"
+
+msgid "All entities imported"
+msgstr ""
 
 msgid "All events"
 msgstr "Alle arrangementer"
@@ -828,6 +837,15 @@ msgstr "Amelia - Trin-for-trin booking"
 
 msgid "Amelia Add to calendar page"
 msgstr "Amelia Tilføj til kalender-side"
+
+msgid "Amelia Event"
+msgstr ""
+
+msgid "Amelia Event Page"
+msgstr ""
+
+msgid "Amelia Event Pages"
+msgstr ""
 
 msgid "Amelia Events List Booking Settings"
 msgstr "Amelia Eventliste – Bookingindstillinger"
@@ -1352,6 +1370,9 @@ msgid ""
 msgstr ""
 "Opret automatisk Zoom-møder for reservationer og underret kunder og "
 "medarbejdere."
+
+msgid "Automatically create an Event Page for new events"
+msgstr ""
 
 msgid ""
 "Automatically generate invoices for every booking, making payments easier, "
@@ -2296,6 +2317,8 @@ msgid ""
 "Collect additional information from your customers before they complete a "
 "booking."
 msgstr ""
+"Indhent supplerende oplysninger fra dine kunder, før de gennemfører en "
+"booking."
 
 msgid "Collect the information your business truly needs"
 msgstr "Indsaml de oplysninger, din virksomhed virkelig har brug for"
@@ -2499,7 +2522,7 @@ msgid "Consulting"
 msgstr "Rådgivning"
 
 msgid "Contact Form"
-msgstr ""
+msgstr "Kontaktformular"
 
 msgid "Contact message"
 msgstr "Kontaktmeddelelse"
@@ -2684,8 +2707,11 @@ msgstr "Opret medarbejder"
 msgid "Create event"
 msgstr "Opret begivenhed"
 
-msgid "Create form"
+msgid "Create event page"
 msgstr ""
+
+msgid "Create form"
+msgstr "Opret formular"
 
 msgid "Create meetings for pending appointments"
 msgstr "Opret møder for afventende aftaler"
@@ -3018,11 +3044,17 @@ msgstr "Mørkt tema"
 msgid "Dashboard"
 msgstr "Kontrolpanel"
 
+msgid "Data export is ready."
+msgstr ""
+
 msgid "Data that remains unchanged:"
 msgstr "Data, der forbliver uændret:"
 
 msgid "Data to be updated:"
 msgstr "Data, der skal opdateres:"
+
+msgid "Data transfer"
+msgstr ""
 
 msgid "Date"
 msgstr "Dato"
@@ -3425,6 +3457,9 @@ msgstr ""
 "booke direkte. En fantastisk måde at fremhæve kommende begivenheder i et "
 "interaktivt format."
 
+msgid "Do not exit the import until it is finished."
+msgstr ""
+
 msgid "Do you want to cancel following events?"
 msgstr "Vil du annullere efterfølgende arrangementer?"
 
@@ -3636,6 +3671,9 @@ msgstr "Rediger kunde"
 msgid "Edit Event"
 msgstr "Rediger begivenhed"
 
+msgid "Edit Event Page"
+msgstr ""
+
 msgid "Edit Extra"
 msgstr "Rediger Ekstra"
 
@@ -3680,6 +3718,9 @@ msgstr "Rediger begivenhed"
 
 msgid "Edit event booking"
 msgstr "Rediger begivenhedsbooking"
+
+msgid "Edit event page"
+msgstr ""
 
 msgid "Edit location"
 msgstr "Rediger placering"
@@ -3926,7 +3967,7 @@ msgstr ""
 "Tilpas farver og etiketter for at skabe en problemfri og brandet oplevelse."
 
 msgid "Enable data usage"
-msgstr ""
+msgstr "Aktivér dataforbrug"
 
 msgid "Enable guest booking"
 msgstr "Aktivér gæstebooking"
@@ -4223,7 +4264,7 @@ msgid "Enter both the application (client) ID and client secret."
 msgstr "Indtast både application (client)-ID og client secret."
 
 msgid "Enter code"
-msgstr ""
+msgstr "Indtast kode"
 
 msgid "Enter date of birth"
 msgstr "Fødselsdato"
@@ -4374,6 +4415,9 @@ msgstr "Formular til liste over begivenhedsbookinger"
 msgid "Event Location"
 msgstr "Begivenhedssted"
 
+msgid "Event Pages"
+msgstr ""
+
 msgid "Event Starts"
 msgstr "Begivenhedsdato"
 
@@ -4390,7 +4434,7 @@ msgid "Event available"
 msgstr "Begivenhed tilgængelig"
 
 msgid "Event booking"
-msgstr ""
+msgstr "Tilmelding til event"
 
 msgid "Event booking has been created."
 msgstr "Begivenhedsbooking er blevet oprettet."
@@ -4507,7 +4551,7 @@ msgid "Event has been updated."
 msgstr "Begivenheden er blevet opdateret."
 
 msgid "Event image gallery"
-msgstr ""
+msgstr "Eventbilledgalleri"
 
 msgid "Event info"
 msgstr "Begivenhedsoplysninger"
@@ -4622,7 +4666,7 @@ msgid "Events list view"
 msgstr "Visning af begivenhedsliste"
 
 msgid "Events pagination"
-msgstr ""
+msgstr "Eventpaginering"
 
 msgid "Events pricing"
 msgstr "Prissætning af begivenheder"
@@ -4681,8 +4725,14 @@ msgstr "Eksporter aftaledata med lethed"
 msgid "Export bookings"
 msgstr "Eksporter bookinger"
 
+msgid "Export data"
+msgstr ""
+
 msgid "Export event booking data with ease"
 msgstr "Eksportér data om eventbookinger nemt"
+
+msgid "Export failed."
+msgstr ""
 
 msgid "Express Account"
 msgstr "Express-konto"
@@ -5204,6 +5254,8 @@ msgid ""
 "Help us improve Amelia by sharing anonymous data about your plugin usage. No "
 "personal data is collected."
 msgstr ""
+"Hjælp os med at forbedre Amelia ved at dele anonymiserede data om din brug "
+"af plugin'et. Der indsamles ingen personoplysninger."
 
 msgid ""
 "Here, you can connect your personal Apple Calendar,<br/>so once the booking "
@@ -5376,6 +5428,9 @@ msgstr "ID stigende"
 msgid "ID Desc"
 msgstr "ID faldende"
 
+msgid "I understand this import will replace all current data permanently."
+msgstr ""
+
 msgid "I want to pay full amount"
 msgstr "Jeg vil betale det fulde beløb"
 
@@ -5541,7 +5596,7 @@ msgid "Image Color"
 msgstr "Billedfarve"
 
 msgid "Image navigation"
-msgstr ""
+msgstr "Billednavigation"
 
 msgid "Image thumbs"
 msgstr "Billedminiaturer"
@@ -5558,14 +5613,212 @@ msgstr "Import delvist vellykket"
 msgid "Import Rules"
 msgstr "Importregler"
 
+msgid "Import completed"
+msgstr ""
+
+msgid "Import completed successfully."
+msgstr ""
+
+msgid "Import could not be started."
+msgstr ""
+
+msgid "Import data"
+msgstr ""
+
+msgid "Import errors"
+msgstr ""
+
+msgid "Import failed"
+msgstr ""
+
+msgid "Import failed. Review the details below."
+msgstr ""
+
+msgid "Import progress"
+msgstr ""
+
+msgid "Import progress could not be updated."
+msgstr ""
+
+msgid "Import started."
+msgstr ""
+
 msgid "Import successful"
 msgstr "Importen lykkedes"
+
+msgid "Importing Google calendar sync"
+msgstr ""
+
+msgid "Importing Outlook calendar sync"
+msgstr ""
+
+msgid "Importing appointments"
+msgstr ""
+
+msgid "Importing booking extras"
+msgstr ""
+
+msgid "Importing bookings"
+msgstr ""
+
+msgid "Importing categories"
+msgstr ""
+
+msgid "Importing coupon-event relations"
+msgstr ""
+
+msgid "Importing coupon-package relations"
+msgstr ""
+
+msgid "Importing coupon-service relations"
+msgstr ""
+
+msgid "Importing coupons"
+msgstr ""
+
+msgid "Importing custom field events"
+msgstr ""
+
+msgid "Importing custom field options"
+msgstr ""
+
+msgid "Importing custom field services"
+msgstr ""
+
+msgid "Importing custom fields"
+msgstr ""
 
 msgid "Importing customers"
 msgstr "Importerer kunder"
 
-msgid "Improve Amelia"
+msgid "Importing days off"
 msgstr ""
+
+msgid "Importing employee locations"
+msgstr ""
+
+msgid "Importing employee services"
+msgstr ""
+
+msgid "Importing employee views"
+msgstr ""
+
+msgid "Importing employees"
+msgstr ""
+
+msgid "Importing event booking periods"
+msgstr ""
+
+msgid "Importing event booking tickets"
+msgstr ""
+
+msgid "Importing event periods"
+msgstr ""
+
+msgid "Importing event providers"
+msgstr ""
+
+msgid "Importing event tags"
+msgstr ""
+
+msgid "Importing event tickets"
+msgstr ""
+
+msgid "Importing events"
+msgstr ""
+
+msgid "Importing extras"
+msgstr ""
+
+msgid "Importing location view settings"
+msgstr ""
+
+msgid "Importing locations"
+msgstr ""
+
+msgid "Importing notification SMS history"
+msgstr ""
+
+msgid "Importing notification log"
+msgstr ""
+
+msgid "Importing notification relations"
+msgstr ""
+
+msgid "Importing notifications"
+msgstr ""
+
+msgid "Importing package booking services"
+msgstr ""
+
+msgid "Importing package bookings"
+msgstr ""
+
+msgid "Importing package service locations"
+msgstr ""
+
+msgid "Importing package service providers"
+msgstr ""
+
+msgid "Importing package services"
+msgstr ""
+
+msgid "Importing packages"
+msgstr ""
+
+msgid "Importing payments"
+msgstr ""
+
+msgid "Importing period-location relations"
+msgstr ""
+
+msgid "Importing period-service relations"
+msgstr ""
+
+msgid "Importing provider periods"
+msgstr ""
+
+msgid "Importing provider special-day periods"
+msgstr ""
+
+msgid "Importing resource relations"
+msgstr ""
+
+msgid "Importing resources"
+msgstr ""
+
+msgid "Importing service views"
+msgstr ""
+
+msgid "Importing services"
+msgstr ""
+
+msgid "Importing settings"
+msgstr ""
+
+msgid "Importing special-day period-location relations"
+msgstr ""
+
+msgid "Importing special-day period-service relations"
+msgstr ""
+
+msgid "Importing special days"
+msgstr ""
+
+msgid "Importing tax relations"
+msgstr ""
+
+msgid "Importing taxes"
+msgstr ""
+
+msgid "Importing time outs"
+msgstr ""
+
+msgid "Importing work periods"
+msgstr ""
+
+msgid "Improve Amelia"
+msgstr "Gør Amelia bedre"
 
 msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
@@ -5594,6 +5847,9 @@ msgid ""
 msgstr ""
 "Forbedr kundeoplevelsen ved at lade kunderne vælge den placering, der passer "
 "dem bedst"
+
+msgid "Improve plugin"
+msgstr "Optimer plugin'et"
 
 msgid ""
 "Improve reporting accuracy by accessing complete appointment data instantly"
@@ -5743,8 +5999,11 @@ msgstr "Indsæt Amelia Booking genvejskode"
 msgid "Insert pending appointments"
 msgstr "Indsæt afventende aftaler"
 
-msgid "Install & Activate"
+msgid "Inserted"
 msgstr ""
+
+msgid "Install & Activate"
+msgstr "Installér og aktivér"
 
 msgid "Integrate with WooCommerce to enable advanced e-commerce capabilities."
 msgstr ""
@@ -5848,19 +6107,19 @@ msgid "IvyForms"
 msgstr ""
 
 msgid "IvyForms Entries"
-msgstr ""
+msgstr "IvyForms-indsendelser"
 
 msgid "IvyForms Field"
-msgstr ""
+msgstr "IvyForms-felt"
 
 msgid "IvyForms Form"
-msgstr ""
+msgstr "IvyForms-formular"
 
 msgid "IvyForms validation failed."
-msgstr ""
+msgstr "IvyForms-validering mislykkedes."
 
 msgid "Ivy setup"
-msgstr ""
+msgstr "Ivy-opsætning"
 
 msgid "Jane Doe"
 msgstr ""
@@ -6105,16 +6364,16 @@ msgid "Load page"
 msgstr "Indlæs side"
 
 msgid "Loading"
-msgstr ""
+msgstr "Indlæser"
 
 msgid "Loading..."
 msgstr "Indlæser..."
 
 msgid "Loading event information"
-msgstr ""
+msgstr "Indlæser eventoplysninger"
 
 msgid "Loading header"
-msgstr ""
+msgstr "Indlæser sidehoved"
 
 msgid "Local Time"
 msgstr "Lokal tid:"
@@ -6301,6 +6560,9 @@ msgstr "Administrer personlig tidsplan"
 msgid "Manage shared resources with ease"
 msgstr "Administrer delte ressourcer med lethed"
 
+msgid "Manage this event in Amelia:"
+msgstr ""
+
 msgid "Managing assigned services"
 msgstr "Administration af tildelte tjenester"
 
@@ -6330,7 +6592,7 @@ msgid "Max Capacity Desc"
 msgstr "Beskrivelse af maksimal kapacitet"
 
 msgid "Maximum"
-msgstr ""
+msgstr "Maksimum"
 
 msgid "Maximum Quantity:"
 msgstr "Maksimum antal:"
@@ -6585,6 +6847,9 @@ msgstr "Ny kunde"
 msgid "New Event"
 msgstr "Ny begivenhed"
 
+msgid "New Event Page"
+msgstr ""
+
 msgid "New Location"
 msgstr "Ny lokation"
 
@@ -6652,7 +6917,7 @@ msgid "Next day reminder"
 msgstr "Påmindelse næste dag"
 
 msgid "Next image"
-msgstr ""
+msgstr "Næste billede"
 
 msgid "No"
 msgstr "Nej"
@@ -6728,6 +6993,12 @@ msgstr "Ingen medarbejdere endnu"
 
 msgid "No event bookings yet"
 msgstr "Ingen begivenhedsbookinger endnu"
+
+msgid "No event pages found"
+msgstr ""
+
+msgid "No event pages found in Trash"
+msgstr ""
 
 msgid "No events found"
 msgstr "Ingen begivenheder fundet"
@@ -7146,6 +7417,9 @@ msgstr "Åben"
 msgid "Open Event"
 msgstr "Åbn arrangement"
 
+msgid "Open Event in Amelia"
+msgstr ""
+
 msgid "Open following"
 msgstr "Åben efterfølgende"
 
@@ -7250,7 +7524,7 @@ msgid "PHP Mail"
 msgstr "PHP mail"
 
 msgid "PRE-BOOKING INTAKE FORM (IVYFORMS)"
-msgstr ""
+msgstr "INDTAGELSESFORMULAR FØR BOOKING (IVYFORMS)"
 
 msgid "Package"
 msgstr "Gennemsnitlige bookinger"
@@ -7672,7 +7946,7 @@ msgid "Permanent access token"
 msgstr "Permanent adgangstoken"
 
 msgid "Permanently linked"
-msgstr ""
+msgstr "Permanent tilknytning"
 
 msgid "Person"
 msgstr ""
@@ -7760,6 +8034,9 @@ msgstr "Vent venligst"
 
 msgid "Please add period"
 msgstr "Tilføj et afsluttende punktum."
+
+msgid "Please back up before proceeding to avoid loss of data."
+msgstr ""
 
 msgid "Please cancel the event first before deleting it."
 msgstr "Annullér arrangementet først, før du sletter det."
@@ -8158,7 +8435,7 @@ msgid "Popup title"
 msgstr "Popup-titel"
 
 msgid "Pre-booking form details"
-msgstr ""
+msgstr "Formulardetaljer før booking"
 
 msgid "Preload entities when page loads"
 msgstr "Forudindlæs enheder, når siden indlæses"
@@ -8202,13 +8479,13 @@ msgid "Preview invoice"
 msgstr "Forhåndsvisning af faktura"
 
 msgid "Previous image"
-msgstr ""
+msgstr "Forrige billede"
 
 msgid "Previous range"
 msgstr "Forrige interval"
 
 msgid "Previous step"
-msgstr ""
+msgstr "Forrige trin"
 
 msgid "Price"
 msgstr "Pris"
@@ -8844,6 +9121,9 @@ msgstr "Søg"
 msgid "Search..."
 msgstr "Søg..."
 
+msgid "Search Event Pages"
+msgstr ""
+
 msgid "Search Filters"
 msgstr "Søge kriterier"
 
@@ -8863,7 +9143,7 @@ msgid "Search bookings"
 msgstr "Søg i bookinger"
 
 msgid "Search coupons"
-msgstr ""
+msgstr "Søg rabatkoder"
 
 msgid "Search customers"
 msgstr "Søg efter kunder"
@@ -8902,13 +9182,13 @@ msgid "Search packages"
 msgstr "Søg pakker"
 
 msgid "Search resources"
-msgstr ""
+msgstr "Søg ressourcer"
 
 msgid "Search services"
 msgstr "Søg tjenester"
 
 msgid "Search taxes"
-msgstr ""
+msgstr "Søg skatter"
 
 msgid "Second"
 msgstr "Sekund"
@@ -9040,8 +9320,11 @@ msgstr "Vælg WooCommerce-produkt"
 msgid "Select Zoom User"
 msgstr "Vælg Zoom bruger"
 
-msgid "Select a form..."
+msgid "Select a .ameliafile archive before starting the import."
 msgstr ""
+
+msgid "Select a form..."
+msgstr "Vælg en formular..."
 
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr "Vælg en pladsholder for at indsætte den, hvor din markør er placeret."
@@ -9151,7 +9434,7 @@ msgid "Select tickets"
 msgstr "Vælg billetter"
 
 msgid "Select which IvyForms form to show before booking"
-msgstr ""
+msgstr "Vælg hvilken IvyForms-formular der skal vises før booking"
 
 msgid "Select your Square Location"
 msgstr "Vælg din Square-lokation"
@@ -9865,6 +10148,9 @@ msgstr "Spring pakker over og fortsæt med den valgte service"
 msgid "Skip setup"
 msgstr "Spring opsætning over"
 
+msgid "Skipped"
+msgstr ""
+
 msgid "Slot end time"
 msgstr "Slot-sluttidspunkt"
 
@@ -10411,6 +10697,9 @@ msgstr ""
 "Valutaen i Amelia stemmer ikke overens med valutaen på din valgte Square-"
 "lokation"
 
+msgid "The custom post is ready."
+msgstr ""
+
 msgid ""
 "The customer didn’t provide an email address, so the invoice couldn’t be "
 "sent."
@@ -10640,6 +10929,13 @@ msgstr ""
 
 msgid "This employee is the only one assigned to {service}."
 msgstr "Denne medarbejder er den eneste tildelt {service}."
+
+msgid ""
+"This export includes, but is not limited to, bookings, customers, settings, "
+"notification logs, and SMS history. Site-specific data (such as URLs, "
+"images, and purchase codes) is excluded and must be set up manually on a new "
+"site."
+msgstr ""
 
 msgid "This field is required"
 msgstr "Feltet er påkrævet"
@@ -11351,6 +11647,9 @@ msgstr "Se mere"
 msgid "View Employees"
 msgstr "Ny medarbejder"
 
+msgid "View Event Page"
+msgstr ""
+
 msgid "View Less Packages"
 msgstr "Vis meddelelse"
 
@@ -11961,6 +12260,9 @@ msgstr "(Betaler nu)"
 msgid " (Incl. Tax)"
 msgstr " (Inkl. moms)"
 
+msgid "added to cart"
+msgstr ""
+
 msgid "and"
 msgstr "og"
 
@@ -12030,6 +12332,9 @@ msgstr "iCloud-e-mailadresse"
 msgid "iCloud email address and iCloud app-specific password"
 msgstr "iCloud-e-mailadresse og iCloud-appspecifikt kodeord"
 
+msgid "in cart"
+msgstr ""
+
 msgid "includes"
 msgstr "inkluderer"
 
@@ -12058,13 +12363,13 @@ msgid "on"
 msgstr "Skrifttype"
 
 msgid "opens in new tab"
-msgstr ""
+msgstr "åbnes i ny fane"
 
 msgid "out of"
 msgstr "ud af"
 
 msgid "payment button"
-msgstr ""
+msgstr "betalingsknap"
 
 msgid "people"
 msgstr "Prisen ganges med antallet af mennesker"
@@ -12110,6 +12415,12 @@ msgstr "reCAPTCHA-opsætning"
 
 msgid "reCAPTCHA validation failed."
 msgstr "reCAPTCHA-validering mislykkedes."
+
+msgid "remaining"
+msgstr ""
+
+msgid "removed from cart"
+msgstr ""
 
 msgid "results"
 msgstr "resultater"

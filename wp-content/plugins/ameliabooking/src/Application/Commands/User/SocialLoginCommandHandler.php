@@ -69,10 +69,10 @@ class SocialLoginCommandHandler extends CommandHandler
             return $result;
         }
 
-        if ($cabinetType) {
-            /** @var UserRepository $userRepository */
-            $userRepository = $this->container->get('domain.users.repository');
+        /** @var UserRepository $userRepository */
+        $userRepository = $this->container->get('domain.users.repository');
 
+        if ($cabinetType) {
             /** @var Provider|Customer $user */
             $user = $userRepository->getByEmail($userProfile['email'], true, false);
 
@@ -99,6 +99,14 @@ class SocialLoginCommandHandler extends CommandHandler
                 LoginType::AMELIA_SOCIAL_LOGIN,
                 $cabinetType
             );
+        }
+
+        /** @var Customer|null $existingCustomer */
+        $existingCustomer = !empty($userProfile['email']) ? $userRepository->getByEmail($userProfile['email']) : null;
+
+        if ($existingCustomer instanceof AbstractUser) {
+            $userProfile['phone']           = $existingCustomer->getPhone() ? $existingCustomer->getPhone()->getValue() : '';
+            $userProfile['countryPhoneIso'] = $existingCustomer->getCountryPhoneIso() ? $existingCustomer->getCountryPhoneIso()->getValue() : '';
         }
 
         $result->setData(

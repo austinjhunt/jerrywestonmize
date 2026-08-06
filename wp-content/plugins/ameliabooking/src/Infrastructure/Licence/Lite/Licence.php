@@ -61,6 +61,8 @@ class Licence
             Commands\Booking\Event\UpdateEventCommand::class                              => new Commands\Booking\Event\UpdateEventCommandHandler($c),
             Commands\Booking\Event\UpdateEventStatusCommand::class                        => new Commands\Booking\Event\UpdateEventStatusCommandHandler($c),
             Commands\Booking\Event\UpdateEventVisibilityCommand::class                    => new Commands\Booking\Event\UpdateEventVisibilityCommandHandler($c),
+            Commands\Booking\Event\GenerateEventWpaCustomPostCommand::class               =>
+            new Commands\Booking\Event\GenerateEventWpaCustomPostCommandHandler($c),
             Commands\Booking\Event\DeleteEventBookingCommand::class                       => new Commands\Booking\Event\DeleteEventBookingCommandHandler($c),
             Commands\Booking\Event\UpdateEventBookingCommand::class                       => new Commands\Booking\Event\UpdateEventBookingCommandHandler($c),
             Commands\Booking\Event\DeleteEventCommand::class                              => new Commands\Booking\Event\DeleteEventCommandHandler($c),
@@ -134,6 +136,9 @@ class Licence
             Commands\Square\SquareRefundWebhookCommand::class                             => new Commands\Square\SquareRefundWebhookCommandHandler($c),
             // Settings
             Commands\Settings\GetSettingsCommand::class                                   => new Commands\Settings\GetSettingsCommandHandler($c),
+            Commands\Settings\ExportDataTransferCommand::class                            => new Commands\Settings\ExportDataTransferCommandHandler($c),
+            Commands\Settings\StartImportDataTransferCommand::class                       => new Commands\Settings\StartImportDataTransferCommandHandler($c),
+            Commands\Settings\ProcessImportDataTransferCommand::class                     => new Commands\Settings\ProcessImportDataTransferCommandHandler($c),
             Commands\Settings\UpdateSettingsCommand::class                                => new Commands\Settings\UpdateSettingsCommandHandler($c),
             Commands\Settings\UpdateSettingsCategoriesCommand::class                      => new Commands\Settings\UpdateSettingsCategoriesCommandHandler($c),
             // Features & Integrations

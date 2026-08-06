@@ -90,7 +90,10 @@ class PaymentFactory
             $payment->setCreated(new DateTimeValue(DateTimeService::getCustomDateTimeObjectFromUtc($data['created'])));
         }
 
-        if (!empty($data['wcOrderId']) && WooCommerceService::isEnabled()) {
+        if (
+            !empty($data['wcOrderId']) &&
+            WooCommerceService::isEnabled()
+        ) {
             $payment->setWcOrderId(new Id($data['wcOrderId']));
 
             if (!empty($data['wcOrderItemId'])) {

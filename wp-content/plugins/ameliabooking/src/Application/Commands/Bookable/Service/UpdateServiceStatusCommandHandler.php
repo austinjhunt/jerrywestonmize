@@ -12,6 +12,7 @@ use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Entities;
+use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ServiceRepository;
 
@@ -36,6 +37,7 @@ class UpdateServiceStatusCommandHandler extends CommandHandler
      * @throws \Slim\Exception\ContainerValueNotFoundException
      * @throws InvalidArgumentException
      * @throws AccessDeniedException
+     * @throws NotFoundException
      * @throws QueryExecutionException
      */
     public function handle(UpdateServiceStatusCommand $command)
@@ -50,6 +52,9 @@ class UpdateServiceStatusCommandHandler extends CommandHandler
 
         /** @var ServiceRepository $serviceRepository */
         $serviceRepository = $this->container->get('domain.bookable.service.repository');
+
+        // Ensure the service exists before updating its status.
+        $serviceRepository->getById((int)$command->getArg('id'));
 
         do_action('amelia_before_service_status_updated', $command->getArg('id'), $command->getField('status'));
 

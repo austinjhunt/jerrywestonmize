@@ -1732,6 +1732,19 @@ This message does not have an option for responding. If you need additional info
         self::initSettings('ics', $settings);
     }
 
+    private static function isSquareTestMode(): bool
+    {
+        if (!defined('AMELIA_DEV')) {
+            return false;
+        }
+
+        return filter_var(
+            constant('AMELIA_DEV'),
+            FILTER_VALIDATE_BOOLEAN,
+            FILTER_NULL_ON_FAILURE
+        ) === true;
+    }
+
     /**
      * Get Payments Settings
      *
@@ -1996,7 +2009,7 @@ This message does not have an option for responding. If you need additional info
                 'enabled'            => false,
                 'locationId'         => '',
                 'accessToken'        => '',
-                'testMode'           => false,
+                'testMode'           => self::isSquareTestMode(),
                 'clientLiveId'       => 'sq0idp-TtDyGP_2RfKYpFzrDqs0lw',
                 'clientTestId'       => 'sandbox-sq0idb-Wxnxasx1NMG_ZyvM--JV4Q',
                 'countryCode'        => '',
@@ -2105,6 +2118,28 @@ This message does not have an option for responding. If you need additional info
             ],
             $settings
         );
+
+        self::syncSquareTestModeForDev();
+    }
+
+    /**
+     * Ensure Square sandbox mode is enabled on dev environments for existing installations.
+     */
+    private static function syncSquareTestModeForDev(): void
+    {
+        if (!self::isSquareTestMode()) {
+            return;
+        }
+
+        $settingsService = new SettingsService(new SettingsStorage());
+        $savedSettings = $settingsService->getCategorySettings('payments');
+
+        if (empty($savedSettings['square']) || !empty($savedSettings['square']['testMode'])) {
+            return;
+        }
+
+        $savedSettings['square']['testMode'] = true;
+        self::initSettings('payments', $savedSettings, true);
     }
 
     /**
@@ -2360,6 +2395,7 @@ This message does not have an option for responding. If you need additional info
             'pastDaysEvents'                       => 0,
             'employeeSelection'                    => 'random',
             'bringingAnyoneLogic'                  => 'additional',
+            'automaticallyCreateEventCustomPost'   => false,
         ];
     }
 

@@ -362,7 +362,10 @@ class PaymentApplicationService
      */
     public function addWcFields(&$item)
     {
-        if (!empty($item['wcOrderId']) && WooCommerceService::isEnabled()) {
+        if (
+            !empty($item['wcOrderId']) &&
+            WooCommerceService::isEnabled()
+        ) {
             $item['wcOrderUrl'] = HelperService::getWooCommerceOrderUrl($item['wcOrderId']);
 
             $wcOrderItemValues = HelperService::getWooCommerceOrderItemAmountValues($item['wcOrderId']);
@@ -1186,7 +1189,10 @@ class PaymentApplicationService
 
             do_action('amelia_before_payment_links_created', $methods, $data, $amount);
 
-            if (!empty($methods['wc'])  && WooCommerceService::isEnabled()) {
+            if (
+                !empty($methods['wc']) &&
+                WooCommerceService::isEnabled()
+            ) {
                 /** @var ReservationServiceInterface $reservationService */
                 $reservationService = $this->container->get('application.reservation.service')->get($type);
 

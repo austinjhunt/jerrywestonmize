@@ -39,8 +39,18 @@ class StarterWooCommerceService
         return null;
     }
 
-    public static function updateItemMetaData($orderId, $reservation)
+    public static function updateItemMetaData($orderId, $orderItemId, $reservation)
     {
+    }
+
+    public static function refund($order_id, $order_item_id, $amount, $refund_reason = '')
+    {
+        return ['error' => 'WooCommerce integration is not available on this site.'];
+    }
+
+    public static function getOrderAmount($order_id)
+    {
+        return null;
     }
 
     public static function getCacheData($orderId)

@@ -26,6 +26,17 @@ $entries['infrastructure.logger'] = function () {
 };
 
 /**
+ * Data Transfer Service
+ *
+ * @param Container $c
+ *
+ * @return \AmeliaBooking\Infrastructure\Services\DataTransfer\DataTransferService
+ */
+$entries['infrastructure.dataTransfer.service'] = function (Container $c) {
+    return new AmeliaBooking\Infrastructure\Services\DataTransfer\DataTransferService($c);
+};
+
+/**
  * Mailer Service
  *
  * @param Container $c

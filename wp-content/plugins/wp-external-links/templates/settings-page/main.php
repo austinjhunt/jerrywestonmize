@@ -55,7 +55,7 @@
     <div class="wpel-container-right">
         <div class="sidebar-box pro-ad-box">
             <p class="text-center"><a href="#" data-pro-feature="sidebar-box-logo" class="open-pro-dialog">
-            <img src="<?php echo esc_url(plugins_url('/public/images/logo.png', WPEL_Plugin::get_plugin_file())); ?>" alt="WP Links PRO" title="WP Links PRO"></a><br>PRO version is here! Grab the launch discount.<br><b>All prices are LIFETIME!</b></p>
+            <img src="<?php echo esc_url(plugins_url('/public/images/logo.png', WPEL_Plugin::get_plugin_file())); ?>" alt="WP Links PRO" title="WP Links PRO"></a><br><b>Get PRO for ONLY $9.99!</b></p>
             <ul class="plain-list">
                 <li>Complete control over all links</li>
                 <li>Exit Confirmation for traffic &amp; links protection</li>
@@ -90,7 +90,7 @@
 
   <div class="center logo"><a href="https://getwplinks.com/?ref=wpel-free-pricing-table" target="_blank"><img src="<?php echo esc_url(plugins_url('/public/images/logo.png', WPEL_Plugin::get_plugin_file())); ?>" alt="WP Links PRO" title="WP Links PRO"></a><br>
 
-  <span>Limited PRO Launch Discount - <b>all prices are LIFETIME</b>! Pay once &amp; use forever!</span>
+  <span>Limited PRO Discount - <b>get PRO for ONLY $9.99!</b></span>
   </div>
 
   <table id="wpel-pro-table">
@@ -167,6 +167,8 @@
   </tr>
 
   </table>
+
+  <div class="upsell-footer-2 center">Need the plugin only for a <b>short period of time</b>? <a class="button-buy" target="_blank" data-href-org="https://getwplinks.com/buy/?product=personal-monthly&ref=pricing-table" href="https://getwplinks.com/buy/?product=personal-monthly&ref=pricing-table"><b>Get it for ONLY $9.99</b><small> /month</small></a> &amp; cancel any time!</div>
 
   <div class="center footer"><b>100% No-Risk Money Back Guarantee!</b> If you don\'t like the plugin over the next 7 days, we will happily refund 100% of your money. No questions asked! Payments are processed by our merchant of records - <a href="https://paddle.com/" target="_blank">Paddle</a>.</div>
 </div>

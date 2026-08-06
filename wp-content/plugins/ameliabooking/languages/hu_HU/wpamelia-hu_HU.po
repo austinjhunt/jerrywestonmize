@@ -433,6 +433,12 @@ msgstr ""
 "Meta Pixel hozzáadása a hirdetéskonverziók nyomon követéséhez és a marketing "
 "optimalizálásához."
 
+msgid "Add New"
+msgstr ""
+
+msgid "Add New Event Page"
+msgstr ""
+
 msgid "Add Period"
 msgstr "Időszak hozzáadása"
 
@@ -627,6 +633,9 @@ msgstr "Minden ügyfél"
 
 msgid "All employees"
 msgstr "Minden munkatárs"
+
+msgid "All entities imported"
+msgstr ""
 
 msgid "All events"
 msgstr "Minden esemény"
@@ -850,6 +859,15 @@ msgstr "Amelia – Lépésről lépésre a foglalás"
 
 msgid "Amelia Add to calendar page"
 msgstr "Amelia Hozzáadás a naptárhoz oldal"
+
+msgid "Amelia Event"
+msgstr ""
+
+msgid "Amelia Event Page"
+msgstr ""
+
+msgid "Amelia Event Pages"
+msgstr ""
 
 msgid "Amelia Events List Booking Settings"
 msgstr "Amelia Eseménylista foglalás beállításai"
@@ -1373,6 +1391,9 @@ msgid ""
 msgstr ""
 "Automatikusan hozzon létre Zoom-találkozókat a foglalásokhoz, és értesítse "
 "az ügyfeleket és az alkalmazottakat."
+
+msgid "Automatically create an Event Page for new events"
+msgstr ""
 
 msgid ""
 "Automatically generate invoices for every booking, making payments easier, "
@@ -2326,6 +2347,8 @@ msgid ""
 "Collect additional information from your customers before they complete a "
 "booking."
 msgstr ""
+"Kérjen be további részleteket az ügyfeleitől, mielőtt véglegesítenék a "
+"foglalást."
 
 msgid "Collect the information your business truly needs"
 msgstr ""
@@ -2536,7 +2559,7 @@ msgid "Consulting"
 msgstr "Tanácsadás"
 
 msgid "Contact Form"
-msgstr ""
+msgstr "Kapcsolati űrlap"
 
 msgid "Contact message"
 msgstr "Kapcsolatfelvételi üzenet"
@@ -2723,8 +2746,11 @@ msgstr "Alkalmazott létrehozása"
 msgid "Create event"
 msgstr "Esemény létrehozása"
 
-msgid "Create form"
+msgid "Create event page"
 msgstr ""
+
+msgid "Create form"
+msgstr "Űrlap létrehozása"
 
 msgid "Create meetings for pending appointments"
 msgstr "Találkozók létrehozása függőben lévő időpontokhoz"
@@ -3055,11 +3081,17 @@ msgstr "Sötét téma"
 msgid "Dashboard"
 msgstr "Irányítópult"
 
+msgid "Data export is ready."
+msgstr ""
+
 msgid "Data that remains unchanged:"
 msgstr "Változatlan adatok:"
 
 msgid "Data to be updated:"
 msgstr "Frissítendő adatok:"
+
+msgid "Data transfer"
+msgstr ""
 
 msgid "Date"
 msgstr "Dátum"
@@ -3475,6 +3507,9 @@ msgstr ""
 "kereshetnek és közvetlenül foglalhatnak. Kiváló módszer a közelgő események "
 "interaktív formában történő kiemelésére."
 
+msgid "Do not exit the import until it is finished."
+msgstr ""
+
 msgid "Do you want to cancel following events?"
 msgstr "Le kívánja mondani a következő eseményeket?"
 
@@ -3687,6 +3722,9 @@ msgstr "Ügyfél szerkesztése"
 msgid "Edit Event"
 msgstr "Esemény szerkesztése"
 
+msgid "Edit Event Page"
+msgstr ""
+
 msgid "Edit Extra"
 msgstr "Extra szerkesztése"
 
@@ -3731,6 +3769,9 @@ msgstr "Esemény szerkesztése"
 
 msgid "Edit event booking"
 msgstr "Eseményfoglalás szerkesztése"
+
+msgid "Edit event page"
+msgstr ""
 
 msgid "Edit location"
 msgstr "Hely szerkesztése"
@@ -3980,7 +4021,7 @@ msgstr ""
 "zökkenőmentes és márkás élményt teremtsen."
 
 msgid "Enable data usage"
-msgstr ""
+msgstr "Adatfelhasználás engedélyezése"
 
 msgid "Enable guest booking"
 msgstr "Vendégfoglalás engedélyezése"
@@ -4283,7 +4324,7 @@ msgid "Enter both the application (client) ID and client secret."
 msgstr "Adja meg mind az alkalmazás (kliens) ID-ját, mind a kliens titkát."
 
 msgid "Enter code"
-msgstr ""
+msgstr "Kód megadása"
 
 msgid "Enter date of birth"
 msgstr "Születési dátum"
@@ -4434,6 +4475,9 @@ msgstr "Eseménylista foglalási űrlap"
 msgid "Event Location"
 msgstr "Esemény helyszíne"
 
+msgid "Event Pages"
+msgstr ""
+
 msgid "Event Starts"
 msgstr "Esemény dátum"
 
@@ -4450,7 +4494,7 @@ msgid "Event available"
 msgstr "Esemény elérhető"
 
 msgid "Event booking"
-msgstr ""
+msgstr "Eseményfoglalás"
 
 msgid "Event booking has been created."
 msgstr "Az eseményfoglalás létrehozásra került."
@@ -4567,7 +4611,7 @@ msgid "Event has been updated."
 msgstr "Az esemény frissült."
 
 msgid "Event image gallery"
-msgstr ""
+msgstr "Esemény képgalériája"
 
 msgid "Event info"
 msgstr "Eseményinformációk"
@@ -4683,7 +4727,7 @@ msgid "Events list view"
 msgstr "Események listája nézet"
 
 msgid "Events pagination"
-msgstr ""
+msgstr "Események lapozása"
 
 msgid "Events pricing"
 msgstr "Események árazása"
@@ -4742,8 +4786,14 @@ msgstr "A találkozók adatainak egyszerű exportálása"
 msgid "Export bookings"
 msgstr "Foglalások exportálása"
 
+msgid "Export data"
+msgstr ""
+
 msgid "Export event booking data with ease"
 msgstr "Eseményfoglalási adatok egyszerű exportálása"
+
+msgid "Export failed."
+msgstr ""
 
 msgid "Express Account"
 msgstr "Expressz számla"
@@ -5272,6 +5322,8 @@ msgid ""
 "Help us improve Amelia by sharing anonymous data about your plugin usage. No "
 "personal data is collected."
 msgstr ""
+"Segítsen nekünk az Amelia fejlesztésében a bővítményhasználati adatok "
+"névtelen megosztásával. Nem gyűjtünk személyes adatokat."
 
 msgid ""
 "Here, you can connect your personal Apple Calendar,<br/>so once the booking "
@@ -5443,6 +5495,9 @@ msgstr ""
 msgid "ID Desc"
 msgstr "ID Leírás"
 
+msgid "I understand this import will replace all current data permanently."
+msgstr ""
+
 msgid "I want to pay full amount"
 msgstr "A teljes összeget szeretném kifizetni."
 
@@ -5607,7 +5662,7 @@ msgid "Image Color"
 msgstr "Kép színe"
 
 msgid "Image navigation"
-msgstr ""
+msgstr "Képek közötti navigáció"
 
 msgid "Image thumbs"
 msgstr "Képek miniatűrjei"
@@ -5624,14 +5679,212 @@ msgstr "Importálás részben sikeres"
 msgid "Import Rules"
 msgstr "Importálási szabályok"
 
+msgid "Import completed"
+msgstr ""
+
+msgid "Import completed successfully."
+msgstr ""
+
+msgid "Import could not be started."
+msgstr ""
+
+msgid "Import data"
+msgstr ""
+
+msgid "Import errors"
+msgstr ""
+
+msgid "Import failed"
+msgstr ""
+
+msgid "Import failed. Review the details below."
+msgstr ""
+
+msgid "Import progress"
+msgstr ""
+
+msgid "Import progress could not be updated."
+msgstr ""
+
+msgid "Import started."
+msgstr ""
+
 msgid "Import successful"
 msgstr "Importálás sikeres"
+
+msgid "Importing Google calendar sync"
+msgstr ""
+
+msgid "Importing Outlook calendar sync"
+msgstr ""
+
+msgid "Importing appointments"
+msgstr ""
+
+msgid "Importing booking extras"
+msgstr ""
+
+msgid "Importing bookings"
+msgstr ""
+
+msgid "Importing categories"
+msgstr ""
+
+msgid "Importing coupon-event relations"
+msgstr ""
+
+msgid "Importing coupon-package relations"
+msgstr ""
+
+msgid "Importing coupon-service relations"
+msgstr ""
+
+msgid "Importing coupons"
+msgstr ""
+
+msgid "Importing custom field events"
+msgstr ""
+
+msgid "Importing custom field options"
+msgstr ""
+
+msgid "Importing custom field services"
+msgstr ""
+
+msgid "Importing custom fields"
+msgstr ""
 
 msgid "Importing customers"
 msgstr "Ügyfelek importálása"
 
-msgid "Improve Amelia"
+msgid "Importing days off"
 msgstr ""
+
+msgid "Importing employee locations"
+msgstr ""
+
+msgid "Importing employee services"
+msgstr ""
+
+msgid "Importing employee views"
+msgstr ""
+
+msgid "Importing employees"
+msgstr ""
+
+msgid "Importing event booking periods"
+msgstr ""
+
+msgid "Importing event booking tickets"
+msgstr ""
+
+msgid "Importing event periods"
+msgstr ""
+
+msgid "Importing event providers"
+msgstr ""
+
+msgid "Importing event tags"
+msgstr ""
+
+msgid "Importing event tickets"
+msgstr ""
+
+msgid "Importing events"
+msgstr ""
+
+msgid "Importing extras"
+msgstr ""
+
+msgid "Importing location view settings"
+msgstr ""
+
+msgid "Importing locations"
+msgstr ""
+
+msgid "Importing notification SMS history"
+msgstr ""
+
+msgid "Importing notification log"
+msgstr ""
+
+msgid "Importing notification relations"
+msgstr ""
+
+msgid "Importing notifications"
+msgstr ""
+
+msgid "Importing package booking services"
+msgstr ""
+
+msgid "Importing package bookings"
+msgstr ""
+
+msgid "Importing package service locations"
+msgstr ""
+
+msgid "Importing package service providers"
+msgstr ""
+
+msgid "Importing package services"
+msgstr ""
+
+msgid "Importing packages"
+msgstr ""
+
+msgid "Importing payments"
+msgstr ""
+
+msgid "Importing period-location relations"
+msgstr ""
+
+msgid "Importing period-service relations"
+msgstr ""
+
+msgid "Importing provider periods"
+msgstr ""
+
+msgid "Importing provider special-day periods"
+msgstr ""
+
+msgid "Importing resource relations"
+msgstr ""
+
+msgid "Importing resources"
+msgstr ""
+
+msgid "Importing service views"
+msgstr ""
+
+msgid "Importing services"
+msgstr ""
+
+msgid "Importing settings"
+msgstr ""
+
+msgid "Importing special-day period-location relations"
+msgstr ""
+
+msgid "Importing special-day period-service relations"
+msgstr ""
+
+msgid "Importing special days"
+msgstr ""
+
+msgid "Importing tax relations"
+msgstr ""
+
+msgid "Importing taxes"
+msgstr ""
+
+msgid "Importing time outs"
+msgstr ""
+
+msgid "Importing work periods"
+msgstr ""
+
+msgid "Improve Amelia"
+msgstr "Fejleszd az Ameliát"
 
 msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
@@ -5660,6 +5913,9 @@ msgid ""
 msgstr ""
 "Javítsa az ügyfélélményt azzal, hogy a kliensek kiválaszthatják a számukra "
 "legmegfelelőbb helyszínt."
+
+msgid "Improve plugin"
+msgstr "Bővítmény fejlesztése"
 
 msgid ""
 "Improve reporting accuracy by accessing complete appointment data instantly"
@@ -5813,8 +6069,11 @@ msgstr "Írja be az Amelia Booking Shortcode-ot"
 msgid "Insert pending appointments"
 msgstr "Függőben lévő találkozók beszúrása"
 
-msgid "Install & Activate"
+msgid "Inserted"
 msgstr ""
+
+msgid "Install & Activate"
+msgstr "Telepítse és aktiválja"
 
 msgid "Integrate with WooCommerce to enable advanced e-commerce capabilities."
 msgstr ""
@@ -5919,19 +6178,19 @@ msgid "IvyForms"
 msgstr ""
 
 msgid "IvyForms Entries"
-msgstr ""
+msgstr "IvyForms beküldések"
 
 msgid "IvyForms Field"
-msgstr ""
+msgstr "IvyForms mező"
 
 msgid "IvyForms Form"
-msgstr ""
+msgstr "IvyForms űrlap"
 
 msgid "IvyForms validation failed."
-msgstr ""
+msgstr "Az IvyForms-ellenőrzés sikertelen."
 
 msgid "Ivy setup"
-msgstr ""
+msgstr "Ivy beállítás"
 
 msgid "Jane Doe"
 msgstr ""
@@ -6177,16 +6436,16 @@ msgid "Load page"
 msgstr "Oldal betöltése"
 
 msgid "Loading"
-msgstr ""
+msgstr "Betöltés…"
 
 msgid "Loading..."
 msgstr "Betöltés folyamatban..."
 
 msgid "Loading event information"
-msgstr ""
+msgstr "Eseményinformációk betöltése"
 
 msgid "Loading header"
-msgstr ""
+msgstr "Fejléc betöltése"
 
 msgid "Local Time"
 msgstr "Helyi idő:"
@@ -6378,6 +6637,9 @@ msgstr "Személyes ütemterv kezelése"
 
 msgid "Manage shared resources with ease"
 msgstr "A megosztott erőforrások egyszerű kezelése"
+
+msgid "Manage this event in Amelia:"
+msgstr ""
 
 msgid "Managing assigned services"
 msgstr "A hozzárendelt szolgáltatások kezelése"
@@ -6667,6 +6929,9 @@ msgstr "Új ügyfél"
 msgid "New Event"
 msgstr "Új esemény"
 
+msgid "New Event Page"
+msgstr ""
+
 msgid "New Location"
 msgstr "Új helyszín"
 
@@ -6734,7 +6999,7 @@ msgid "Next day reminder"
 msgstr "Következő napi emlékeztető"
 
 msgid "Next image"
-msgstr ""
+msgstr "Következő"
 
 msgid "No"
 msgstr "Nem"
@@ -6810,6 +7075,12 @@ msgstr "Még nincsenek alkalmazottak"
 
 msgid "No event bookings yet"
 msgstr "Még nincs eseményfoglalás"
+
+msgid "No event pages found"
+msgstr ""
+
+msgid "No event pages found in Trash"
+msgstr ""
 
 msgid "No events found"
 msgstr "Nincs esemény található"
@@ -7231,6 +7502,9 @@ msgstr "Megnyit"
 msgid "Open Event"
 msgstr "Nyitott esemény"
 
+msgid "Open Event in Amelia"
+msgstr ""
+
 msgid "Open following"
 msgstr "Következő megnyitása"
 
@@ -7335,7 +7609,7 @@ msgid "PHP Mail"
 msgstr ""
 
 msgid "PRE-BOOKING INTAKE FORM (IVYFORMS)"
-msgstr ""
+msgstr "FOGLALÁS ELŐTTI ADATFELVÉTELI ŰRLAP (IVYFORMS)"
 
 msgid "Package"
 msgstr "Átlagos foglalásszám"
@@ -7757,7 +8031,7 @@ msgid "Permanent access token"
 msgstr "Állandó hozzáférési token"
 
 msgid "Permanently linked"
-msgstr ""
+msgstr "Tartósan társítva"
 
 msgid "Person"
 msgstr "Személy"
@@ -7843,6 +8117,9 @@ msgstr "Kérem várjon"
 
 msgid "Please add period"
 msgstr "Kérjük, tegyen pontot a végére."
+
+msgid "Please back up before proceeding to avoid loss of data."
+msgstr ""
 
 msgid "Please cancel the event first before deleting it."
 msgstr "Kérem mondja le előbb az eseményt a törlés előtt."
@@ -8246,7 +8523,7 @@ msgid "Popup title"
 msgstr "Felugró ablak címe"
 
 msgid "Pre-booking form details"
-msgstr ""
+msgstr "Foglalás előtti űrlap beállításai"
 
 msgid "Preload entities when page loads"
 msgstr "Entitások előzetes betöltése az oldal betöltésekor"
@@ -8290,13 +8567,13 @@ msgid "Preview invoice"
 msgstr "Számla előnézete"
 
 msgid "Previous image"
-msgstr ""
+msgstr "Előző kép"
 
 msgid "Previous range"
 msgstr "Előző tartomány"
 
 msgid "Previous step"
-msgstr ""
+msgstr "Előző lépés"
 
 msgid "Price"
 msgstr "Ár"
@@ -8939,6 +9216,9 @@ msgstr "Keresés"
 msgid "Search..."
 msgstr "Keresés..."
 
+msgid "Search Event Pages"
+msgstr ""
+
 msgid "Search Filters"
 msgstr "Keresési szűrők"
 
@@ -8958,7 +9238,7 @@ msgid "Search bookings"
 msgstr "Foglalások keresése"
 
 msgid "Search coupons"
-msgstr ""
+msgstr "Kuponok keresése"
 
 msgid "Search customers"
 msgstr "Ügyfelek keresése"
@@ -8997,13 +9277,13 @@ msgid "Search packages"
 msgstr "Csomagok keresése"
 
 msgid "Search resources"
-msgstr ""
+msgstr "Erőforrások keresése"
 
 msgid "Search services"
 msgstr "Keresési szolgáltatások"
 
 msgid "Search taxes"
-msgstr ""
+msgstr "Adók keresése"
 
 msgid "Second"
 msgstr "Második"
@@ -9133,8 +9413,11 @@ msgstr "WooCommerce termék kiválasztása"
 msgid "Select Zoom User"
 msgstr "Zoom felhasználó kiválasztása"
 
-msgid "Select a form..."
+msgid "Select a .ameliafile archive before starting the import."
 msgstr ""
+
+msgid "Select a form..."
+msgstr "Válasszon egy űrlapot..."
 
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr ""
@@ -9248,7 +9531,7 @@ msgid "Select tickets"
 msgstr "Jegyek kiválasztása"
 
 msgid "Select which IvyForms form to show before booking"
-msgstr ""
+msgstr "Válassza ki a foglalás előtt megjelenő IvyForms-űrlapot"
 
 msgid "Select your Square Location"
 msgstr "Válassza ki a Square helyét"
@@ -9971,6 +10254,9 @@ msgstr "Ugorja át a csomagokat, és folytassa a kiválasztott szolgáltatással
 msgid "Skip setup"
 msgstr "A beállítás kihagyása"
 
+msgid "Skipped"
+msgstr ""
+
 msgid "Slot end time"
 msgstr "Slot végidő"
 
@@ -10512,6 +10798,9 @@ msgid ""
 msgstr ""
 "Az Amelia pénzneme nem egyezik a kiválasztott Square helyszín pénznemével."
 
+msgid "The custom post is ready."
+msgstr ""
+
 msgid ""
 "The customer didn’t provide an email address, so the invoice couldn’t be "
 "sent."
@@ -10750,6 +11039,13 @@ msgstr ""
 msgid "This employee is the only one assigned to {service}."
 msgstr ""
 "Ez az alkalmazott az egyetlen, aki az {service} webhelyhez van rendelve."
+
+msgid ""
+"This export includes, but is not limited to, bookings, customers, settings, "
+"notification logs, and SMS history. Site-specific data (such as URLs, "
+"images, and purchase codes) is excluded and must be set up manually on a new "
+"site."
+msgstr ""
 
 msgid "This field is required"
 msgstr "Ezt a mezőt kötelező kitölteni"
@@ -11467,6 +11763,9 @@ msgstr "Továbbiak megtekintése"
 msgid "View Employees"
 msgstr "Új alkalmazott"
 
+msgid "View Event Page"
+msgstr ""
+
 msgid "View Less Packages"
 msgstr "Üzenet megtekintése"
 
@@ -12072,6 +12371,9 @@ msgstr "(Most fizet)"
 msgid " (Incl. Tax)"
 msgstr " (adóval együtt)"
 
+msgid "added to cart"
+msgstr ""
+
 msgid "and"
 msgstr "és"
 
@@ -12141,6 +12443,9 @@ msgstr "iCloud e-mail cím"
 msgid "iCloud email address and iCloud app-specific password"
 msgstr "iCloud e-mail cím és iCloud alkalmazás-specifikus jelszó"
 
+msgid "in cart"
+msgstr ""
+
 msgid "includes"
 msgstr "tartalmazza"
 
@@ -12169,13 +12474,13 @@ msgid "on"
 msgstr "Betűtípus"
 
 msgid "opens in new tab"
-msgstr ""
+msgstr "Új lapon nyílik meg"
 
 msgid "out of"
 msgstr "ki"
 
 msgid "payment button"
-msgstr ""
+msgstr "Fizetési gomb"
 
 msgid "people"
 msgstr "Az ár a résztvevők számával beszorzásra kerül"
@@ -12221,6 +12526,12 @@ msgstr "reCAPTCHA beállítás"
 
 msgid "reCAPTCHA validation failed."
 msgstr "A reCAPTCHA érvényesítése sikertelen volt."
+
+msgid "remaining"
+msgstr ""
+
+msgid "removed from cart"
+msgstr ""
 
 msgid "results"
 msgstr "eredmények"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Amelia\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-15 07:47+0000\n"
+"POT-Creation-Date: 2026-07-13 09:15+0000\n"
 "PO-Revision-Date: 2025-11-20 16:11+0100\n"
 "Last-Translator: \n"
 "Language-Team: Amelia\n"
@@ -5248,6 +5248,9 @@ msgstr ""
 msgid "Open side menu"
 msgstr ""
 
+msgid "remaining"
+msgstr ""
+
 msgid "Appointment Date:"
 msgstr ""
 
@@ -5449,6 +5452,15 @@ msgid "Additional people"
 msgstr ""
 
 msgid "Total people"
+msgstr ""
+
+msgid "in cart"
+msgstr ""
+
+msgid "removed from cart"
+msgstr ""
+
+msgid "added to cart"
 msgstr ""
 
 msgid "Recurring Appointment"
@@ -6728,6 +6740,12 @@ msgstr ""
 msgid "Attendee"
 msgstr ""
 
+msgid "Please back up before proceeding to avoid loss of data."
+msgstr ""
+
+msgid "Automatically create an Event Page for new events"
+msgstr ""
+
 msgid "Booked"
 msgstr ""
 
@@ -6785,6 +6803,48 @@ msgid "Please enter an email."
 msgstr ""
 
 msgid "Error occurred"
+msgstr ""
+
+msgid "Amelia Event Pages"
+msgstr ""
+
+msgid "Amelia Event Page"
+msgstr ""
+
+msgid "Add New"
+msgstr ""
+
+msgid "Add New Event Page"
+msgstr ""
+
+msgid "Edit Event Page"
+msgstr ""
+
+msgid "New Event Page"
+msgstr ""
+
+msgid "View Event Page"
+msgstr ""
+
+msgid "Search Event Pages"
+msgstr ""
+
+msgid "No event pages found"
+msgstr ""
+
+msgid "No event pages found in Trash"
+msgstr ""
+
+msgid "Event Pages"
+msgstr ""
+
+msgid "Manage this event in Amelia:"
+msgstr ""
+
+msgid "Open Event in Amelia"
+msgstr ""
+
+msgid "Amelia Event"
 msgstr ""
 
 msgid "Extras total price"
@@ -6950,6 +7010,244 @@ msgstr ""
 msgid "Import"
 msgstr ""
 
+msgid "I understand this import will replace all current data permanently."
+msgstr ""
+
+msgid "Data transfer"
+msgstr ""
+
+msgid ""
+"This export includes, but is not limited to, bookings, customers, settings, "
+"notification logs, and SMS history. Site-specific data (such as URLs, "
+"images, and purchase codes) is excluded and must be set up manually on a new "
+"site."
+msgstr ""
+
+msgid "Export data"
+msgstr ""
+
+msgid "Import data"
+msgstr ""
+
+msgid "Export failed."
+msgstr ""
+
+msgid "Data export is ready."
+msgstr ""
+
+msgid "Do not exit the import until it is finished."
+msgstr ""
+
+msgid "Import completed successfully."
+msgstr ""
+
+msgid "Import failed. Review the details below."
+msgstr ""
+
+msgid "Import progress"
+msgstr ""
+
+msgid "Import errors"
+msgstr ""
+
+msgid "Import completed"
+msgstr ""
+
+msgid "Import failed"
+msgstr ""
+
+msgid "All entities imported"
+msgstr ""
+
+msgid "Inserted"
+msgstr ""
+
+msgid "Skipped"
+msgstr ""
+
+msgid "Select a .ameliafile archive before starting the import."
+msgstr ""
+
+msgid "Import could not be started."
+msgstr ""
+
+msgid "Import started."
+msgstr ""
+
+msgid "Import progress could not be updated."
+msgstr ""
+
+msgid "Importing settings"
+msgstr ""
+
+msgid "Importing locations"
+msgstr ""
+
+msgid "Importing location view settings"
+msgstr ""
+
+msgid "Importing customers"
+msgstr ""
+
+msgid "Importing employees"
+msgstr ""
+
+msgid "Importing employee views"
+msgstr ""
+
+msgid "Importing Outlook calendar sync"
+msgstr ""
+
+msgid "Importing Google calendar sync"
+msgstr ""
+
+msgid "Importing employee locations"
+msgstr ""
+
+msgid "Importing work periods"
+msgstr ""
+
+msgid "Importing days off"
+msgstr ""
+
+msgid "Importing special days"
+msgstr ""
+
+msgid "Importing time outs"
+msgstr ""
+
+msgid "Importing provider periods"
+msgstr ""
+
+msgid "Importing provider special-day periods"
+msgstr ""
+
+msgid "Importing categories"
+msgstr ""
+
+msgid "Importing services"
+msgstr ""
+
+msgid "Importing notifications"
+msgstr ""
+
+msgid "Importing service views"
+msgstr ""
+
+msgid "Importing period-service relations"
+msgstr ""
+
+msgid "Importing period-location relations"
+msgstr ""
+
+msgid "Importing special-day period-service relations"
+msgstr ""
+
+msgid "Importing special-day period-location relations"
+msgstr ""
+
+msgid "Importing employee services"
+msgstr ""
+
+msgid "Importing extras"
+msgstr ""
+
+msgid "Importing packages"
+msgstr ""
+
+msgid "Importing coupons"
+msgstr ""
+
+msgid "Importing notification relations"
+msgstr ""
+
+msgid "Importing package services"
+msgstr ""
+
+msgid "Importing package service providers"
+msgstr ""
+
+msgid "Importing package service locations"
+msgstr ""
+
+msgid "Importing package bookings"
+msgstr ""
+
+msgid "Importing package booking services"
+msgstr ""
+
+msgid "Importing resources"
+msgstr ""
+
+msgid "Importing appointments"
+msgstr ""
+
+msgid "Importing events"
+msgstr ""
+
+msgid "Importing resource relations"
+msgstr ""
+
+msgid "Importing event tags"
+msgstr ""
+
+msgid "Importing event tickets"
+msgstr ""
+
+msgid "Importing event periods"
+msgstr ""
+
+msgid "Importing event providers"
+msgstr ""
+
+msgid "Importing bookings"
+msgstr ""
+
+msgid "Importing booking extras"
+msgstr ""
+
+msgid "Importing event booking periods"
+msgstr ""
+
+msgid "Importing event booking tickets"
+msgstr ""
+
+msgid "Importing notification log"
+msgstr ""
+
+msgid "Importing notification SMS history"
+msgstr ""
+
+msgid "Importing payments"
+msgstr ""
+
+msgid "Importing coupon-service relations"
+msgstr ""
+
+msgid "Importing coupon-event relations"
+msgstr ""
+
+msgid "Importing coupon-package relations"
+msgstr ""
+
+msgid "Importing custom fields"
+msgstr ""
+
+msgid "Importing custom field options"
+msgstr ""
+
+msgid "Importing custom field services"
+msgstr ""
+
+msgid "Importing custom field events"
+msgstr ""
+
+msgid "Importing taxes"
+msgstr ""
+
+msgid "Importing tax relations"
+msgstr ""
+
 msgid "All"
 msgstr ""
 
@@ -7072,6 +7370,9 @@ msgid ""
 msgstr ""
 
 msgid "Improve Amelia"
+msgstr ""
+
+msgid "Improve plugin"
 msgstr ""
 
 msgid "Enable data usage"
@@ -10180,9 +10481,6 @@ msgstr ""
 msgid "Front-end customer panel"
 msgstr ""
 
-msgid "Importing customers"
-msgstr ""
-
 msgid "Notification settings"
 msgstr ""
 
@@ -11027,6 +11325,15 @@ msgid "Event has been created."
 msgstr ""
 
 msgid "Event has been updated."
+msgstr ""
+
+msgid "Create event page"
+msgstr ""
+
+msgid "Edit event page"
+msgstr ""
+
+msgid "The custom post is ready."
 msgstr ""
 
 msgid "Event booking has been created."

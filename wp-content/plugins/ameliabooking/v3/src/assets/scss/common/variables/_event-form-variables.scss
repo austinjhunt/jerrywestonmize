@@ -1,0 +1,52 @@
+:root {
+  // Colors
+  // shortcuts
+  // -c-    color
+  // -bgr-  background
+  // -prim- primary
+  // -sec-  secondary
+  // primitive colors
+  --am-c-primary: #{$blue-1000};
+  --am-c-success: #{$green-1000};
+  --am-c-error: #{$red-900};
+  --am-c-warning: #{$yellow-1000};
+
+  // main container colors - right part of the form
+  --am-c-main-bgr: #{$am-white};
+  --am-c-main-heading-text: #{$shade-800};
+  --am-c-main-text: #{$shade-900};
+
+  // sidebar container colors - left part of the form
+  --am-c-sb-bgr: #17295a;
+  --am-c-sb-text: #{$am-white};
+
+  // input global colors - usage input, textarea, checkbox, radio button, select input, adv select input
+  --am-c-inp-bgr: #{$am-white};
+  --am-c-inp-border: #{$shade-250};
+  --am-c-inp-text: #{$shade-900};
+  --am-c-inp-placeholder: #{$shade-500};
+
+  // dropdown global colors - usage select dropdown, adv select dropdown
+  --am-c-drop-bgr: #{$am-white};
+  --am-c-drop-text: #{$shade-1000};
+
+  // button global colors
+  --am-c-btn-prim: #{$blue-900};
+  --am-c-btn-prim-text: #{$am-white};
+  --am-c-btn-sec: #{$am-white};
+  --am-c-btn-sec-text: #{$shade-900};
+
+  // Properties
+  // shortcuts
+  // -h- height
+  // -fs- font size
+  // -rad- border radius
+  --am-h-inp: 40px;
+  --am-fs-inp: 15px;
+  --am-rad-inp: 6px;
+  --am-fs-label: 15px;
+  --am-fs-btn: 15px;
+
+  // Font
+  --am-font-family: 'Amelia Roboto', sans-serif;
+}

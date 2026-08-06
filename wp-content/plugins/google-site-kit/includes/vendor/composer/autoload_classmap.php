@@ -138,6 +138,7 @@ return array(
     'Google\\Site_Kit\\Core\\Key_Metrics\\Key_Metrics' => $baseDir . '/Core/Key_Metrics/Key_Metrics.php',
     'Google\\Site_Kit\\Core\\Key_Metrics\\Key_Metrics_Settings' => $baseDir . '/Core/Key_Metrics/Key_Metrics_Settings.php',
     'Google\\Site_Kit\\Core\\Key_Metrics\\Key_Metrics_Setup_Completed_By' => $baseDir . '/Core/Key_Metrics/Key_Metrics_Setup_Completed_By.php',
+    'Google\\Site_Kit\\Core\\Key_Metrics\\Key_Metrics_Setup_Is_Widget_Area_Hidden' => $baseDir . '/Core/Key_Metrics/Key_Metrics_Setup_Is_Widget_Area_Hidden.php',
     'Google\\Site_Kit\\Core\\Key_Metrics\\Key_Metrics_Setup_New' => $baseDir . '/Core/Key_Metrics/Key_Metrics_Setup_New.php',
     'Google\\Site_Kit\\Core\\Key_Metrics\\REST_Key_Metrics_Controller' => $baseDir . '/Core/Key_Metrics/REST_Key_Metrics_Controller.php',
     'Google\\Site_Kit\\Core\\Modules\\AdSense\\Tag_Matchers' => $baseDir . '/Modules/AdSense/Tag_Matchers.php',

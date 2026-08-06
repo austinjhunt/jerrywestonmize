@@ -504,10 +504,22 @@ kbd {
   padding: 15px;
 }
 
+.wpel-pro-dialog .upsell-footer-2 {
+  padding: 10px;
+  text-align: center;
+  background-color: #1775a7;
+  color: white;
+  margin: 0 -16px 0 -16px;
+}
+
+.wpel-pro-dialog .upsell-footer-2 a {
+  color: white;
+}
+
 .wpel-pro-dialog .logo span {
   display: block;
   font-size: 18px;
-  margin: 10px;
+  margin: 5px;
 }
 
 .wpel-pro-dialog .logo span b {
@@ -516,7 +528,7 @@ kbd {
 
 #wpel-pro-table {
   width: 100%;
-  margin: 10px auto 10px auto;
+  margin: 0 auto 0 auto;
   border-collapse: collapse;
 }
 
@@ -557,7 +569,7 @@ kbd {
   color: #1775a7;
   line-height: 1;
   display: inline-block;
-  padding-bottom: 15px;
+  padding-bottom: 10px;
 }
 
 #wpel-pro-table tr:first-child td {
@@ -578,7 +590,7 @@ kbd {
 }
 
 #wpel-pro-table tr:last-child td {
-  padding: 20px 0 20px 0;
+  padding: 10px 0 10px 0;
   vertical-align: top;
 }
 

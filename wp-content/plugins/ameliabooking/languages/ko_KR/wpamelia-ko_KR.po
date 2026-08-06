@@ -423,6 +423,12 @@ msgstr ""
 msgid "Add Meta Pixel to track ad conversions and optimize marketing."
 msgstr "광고 전환을 추적하고 마케팅을 최적화하기 위해 메타 픽셀을 추가하세요."
 
+msgid "Add New"
+msgstr ""
+
+msgid "Add New Event Page"
+msgstr ""
+
 msgid "Add Period"
 msgstr "기간 추가"
 
@@ -613,6 +619,9 @@ msgstr "모든 고객"
 
 msgid "All employees"
 msgstr "모든 담당자"
+
+msgid "All entities imported"
+msgstr ""
 
 msgid "All events"
 msgstr "모든 이벤트"
@@ -821,6 +830,15 @@ msgstr "Amelia - 단계별 예약"
 
 msgid "Amelia Add to calendar page"
 msgstr "Amelia - 캘린더 페이지에 추가"
+
+msgid "Amelia Event"
+msgstr ""
+
+msgid "Amelia Event Page"
+msgstr ""
+
+msgid "Amelia Event Pages"
+msgstr ""
 
 msgid "Amelia Events List Booking Settings"
 msgstr "Amelia 이벤트 목록 예약 설정"
@@ -1339,6 +1357,9 @@ msgid ""
 "Automatically create Zoom meetings for bookings and notify customers and "
 "employees."
 msgstr "예약 시 자동으로 Zoom 회의를 생성하고 고객 및 담당자에게 알립니다."
+
+msgid "Automatically create an Event Page for new events"
+msgstr ""
 
 msgid ""
 "Automatically generate invoices for every booking, making payments easier, "
@@ -2624,6 +2645,9 @@ msgstr "직원 생성"
 msgid "Create event"
 msgstr "이벤트 생성"
 
+msgid "Create event page"
+msgstr ""
+
 msgid "Create form"
 msgstr "양식 생성"
 
@@ -2938,11 +2962,17 @@ msgstr "다크 테마"
 msgid "Dashboard"
 msgstr "알림판"
 
+msgid "Data export is ready."
+msgstr ""
+
 msgid "Data that remains unchanged:"
 msgstr "변하지 않는 데이터:"
 
 msgid "Data to be updated:"
 msgstr "업데이트할 데이터:"
+
+msgid "Data transfer"
+msgstr ""
 
 msgid "Date"
 msgstr "날짜"
@@ -3333,6 +3363,9 @@ msgstr ""
 "캘린더 뷰로 이벤트를 표시하여 고객이 직접 탐색, 검색 및 예약할 수 있도록 합니"
 "다. 다가오는 이벤트를 인터랙티브한 형식으로 강조하는 훌륭한 방법입니다."
 
+msgid "Do not exit the import until it is finished."
+msgstr ""
+
 msgid "Do you want to cancel following events?"
 msgstr "다음 이벤트를 취소하시겠습니까?"
 
@@ -3541,6 +3574,9 @@ msgstr "고객 수정"
 msgid "Edit Event"
 msgstr "이벤트 수정"
 
+msgid "Edit Event Page"
+msgstr ""
+
 msgid "Edit Extra"
 msgstr "부가 서비스 수정"
 
@@ -3585,6 +3621,9 @@ msgstr "이벤트 수정"
 
 msgid "Edit event booking"
 msgstr "이벤트 예약 수정"
+
+msgid "Edit event page"
+msgstr ""
 
 msgid "Edit location"
 msgstr "장소 수정"
@@ -4246,6 +4285,9 @@ msgstr "이벤트 목록 예약 양식"
 msgid "Event Location"
 msgstr "이벤트 장소"
 
+msgid "Event Pages"
+msgstr ""
+
 msgid "Event Starts"
 msgstr "이벤트 시작"
 
@@ -4551,8 +4593,14 @@ msgstr "예약 데이터를 손쉽게 내보내기"
 msgid "Export bookings"
 msgstr "예약 내보내기"
 
+msgid "Export data"
+msgstr ""
+
 msgid "Export event booking data with ease"
 msgstr "이벤트 예약 데이터를 손쉽게 내보내기"
+
+msgid "Export failed."
+msgstr ""
 
 msgid "Express Account"
 msgstr "익스프레스 계정"
@@ -5241,6 +5289,9 @@ msgstr "ID 오름차순"
 msgid "ID Desc"
 msgstr "ID 내림차순"
 
+msgid "I understand this import will replace all current data permanently."
+msgstr ""
+
 msgid "I want to pay full amount"
 msgstr "전액 결제하겠습니다"
 
@@ -5416,11 +5467,209 @@ msgstr "가져오기가 부분적으로 성공했습니다"
 msgid "Import Rules"
 msgstr "가져오기 규칙"
 
+msgid "Import completed"
+msgstr ""
+
+msgid "Import completed successfully."
+msgstr ""
+
+msgid "Import could not be started."
+msgstr ""
+
+msgid "Import data"
+msgstr ""
+
+msgid "Import errors"
+msgstr ""
+
+msgid "Import failed"
+msgstr ""
+
+msgid "Import failed. Review the details below."
+msgstr ""
+
+msgid "Import progress"
+msgstr ""
+
+msgid "Import progress could not be updated."
+msgstr ""
+
+msgid "Import started."
+msgstr ""
+
 msgid "Import successful"
 msgstr "가져오기 성공"
 
+msgid "Importing Google calendar sync"
+msgstr ""
+
+msgid "Importing Outlook calendar sync"
+msgstr ""
+
+msgid "Importing appointments"
+msgstr ""
+
+msgid "Importing booking extras"
+msgstr ""
+
+msgid "Importing bookings"
+msgstr ""
+
+msgid "Importing categories"
+msgstr ""
+
+msgid "Importing coupon-event relations"
+msgstr ""
+
+msgid "Importing coupon-package relations"
+msgstr ""
+
+msgid "Importing coupon-service relations"
+msgstr ""
+
+msgid "Importing coupons"
+msgstr ""
+
+msgid "Importing custom field events"
+msgstr ""
+
+msgid "Importing custom field options"
+msgstr ""
+
+msgid "Importing custom field services"
+msgstr ""
+
+msgid "Importing custom fields"
+msgstr ""
+
 msgid "Importing customers"
 msgstr "고객 가져오기"
+
+msgid "Importing days off"
+msgstr ""
+
+msgid "Importing employee locations"
+msgstr ""
+
+msgid "Importing employee services"
+msgstr ""
+
+msgid "Importing employee views"
+msgstr ""
+
+msgid "Importing employees"
+msgstr ""
+
+msgid "Importing event booking periods"
+msgstr ""
+
+msgid "Importing event booking tickets"
+msgstr ""
+
+msgid "Importing event periods"
+msgstr ""
+
+msgid "Importing event providers"
+msgstr ""
+
+msgid "Importing event tags"
+msgstr ""
+
+msgid "Importing event tickets"
+msgstr ""
+
+msgid "Importing events"
+msgstr ""
+
+msgid "Importing extras"
+msgstr ""
+
+msgid "Importing location view settings"
+msgstr ""
+
+msgid "Importing locations"
+msgstr ""
+
+msgid "Importing notification SMS history"
+msgstr ""
+
+msgid "Importing notification log"
+msgstr ""
+
+msgid "Importing notification relations"
+msgstr ""
+
+msgid "Importing notifications"
+msgstr ""
+
+msgid "Importing package booking services"
+msgstr ""
+
+msgid "Importing package bookings"
+msgstr ""
+
+msgid "Importing package service locations"
+msgstr ""
+
+msgid "Importing package service providers"
+msgstr ""
+
+msgid "Importing package services"
+msgstr ""
+
+msgid "Importing packages"
+msgstr ""
+
+msgid "Importing payments"
+msgstr ""
+
+msgid "Importing period-location relations"
+msgstr ""
+
+msgid "Importing period-service relations"
+msgstr ""
+
+msgid "Importing provider periods"
+msgstr ""
+
+msgid "Importing provider special-day periods"
+msgstr ""
+
+msgid "Importing resource relations"
+msgstr ""
+
+msgid "Importing resources"
+msgstr ""
+
+msgid "Importing service views"
+msgstr ""
+
+msgid "Importing services"
+msgstr ""
+
+msgid "Importing settings"
+msgstr ""
+
+msgid "Importing special-day period-location relations"
+msgstr ""
+
+msgid "Importing special-day period-service relations"
+msgstr ""
+
+msgid "Importing special days"
+msgstr ""
+
+msgid "Importing tax relations"
+msgstr ""
+
+msgid "Importing taxes"
+msgstr ""
+
+msgid "Importing time outs"
+msgstr ""
+
+msgid "Importing work periods"
+msgstr ""
 
 msgid "Improve Amelia"
 msgstr "Amelia 개선"
@@ -5449,6 +5698,9 @@ msgid ""
 msgstr ""
 "고객이 자신에게 가장 적합한 장소를 선택할 수 있도록 하여 고객 경험을 개선하십"
 "시오."
+
+msgid "Improve plugin"
+msgstr "플러그인 개선"
 
 msgid ""
 "Improve reporting accuracy by accessing complete appointment data instantly"
@@ -5585,6 +5837,9 @@ msgstr "Amelia 예약 단축코드 삽입"
 
 msgid "Insert pending appointments"
 msgstr "예약 대기 중인 일정 삽입"
+
+msgid "Inserted"
+msgstr ""
 
 msgid "Install & Activate"
 msgstr "설치 및 활성화"
@@ -6140,6 +6395,9 @@ msgstr "개인 일정 관리"
 msgid "Manage shared resources with ease"
 msgstr "공유 리소스를 간편하게 관리하세요"
 
+msgid "Manage this event in Amelia:"
+msgstr ""
+
 msgid "Managing assigned services"
 msgstr "할당된 서비스 관리"
 
@@ -6423,6 +6681,9 @@ msgstr "신규 고객"
 msgid "New Event"
 msgstr "새 이벤트"
 
+msgid "New Event Page"
+msgstr ""
+
 msgid "New Location"
 msgstr "새 장소"
 
@@ -6566,6 +6827,12 @@ msgstr "아직 담당자가 없습니다"
 
 msgid "No event bookings yet"
 msgstr "아직 예약된 이벤트가 없습니다"
+
+msgid "No event pages found"
+msgstr ""
+
+msgid "No event pages found in Trash"
+msgstr ""
 
 msgid "No events found"
 msgstr "이벤트를 찾을 수 없음"
@@ -6976,6 +7243,9 @@ msgstr "오픈"
 
 msgid "Open Event"
 msgstr "이벤트 열기"
+
+msgid "Open Event in Amelia"
+msgstr ""
 
 msgid "Open following"
 msgstr "다음 열기"
@@ -7584,6 +7854,9 @@ msgstr "잠시만 기다려주세요"
 
 msgid "Please add period"
 msgstr "기간을 추가해 주세요"
+
+msgid "Please back up before proceeding to avoid loss of data."
+msgstr ""
 
 msgid "Please cancel the event first before deleting it."
 msgstr "이벤트를 삭제하기 전에 먼저 취소하세요."
@@ -8655,6 +8928,9 @@ msgstr "검색"
 msgid "Search..."
 msgstr "검색..."
 
+msgid "Search Event Pages"
+msgstr ""
+
 msgid "Search Filters"
 msgstr "필터 검색"
 
@@ -8848,6 +9124,9 @@ msgstr "우커머스 제품 선택"
 
 msgid "Select Zoom User"
 msgstr "Zoom 사용자 선택"
+
+msgid "Select a .ameliafile archive before starting the import."
+msgstr ""
 
 msgid "Select a form..."
 msgstr "양식을 선택하세요..."
@@ -9651,6 +9930,9 @@ msgstr "패키지를 건너뛰고 선택한 서비스를 계속 진행"
 msgid "Skip setup"
 msgstr "설정 건너뛰기"
 
+msgid "Skipped"
+msgstr ""
+
 msgid "Slot end time"
 msgstr "슬롯 종료 시간"
 
@@ -10169,6 +10451,9 @@ msgid ""
 "location"
 msgstr "Amelia 의 통화가 선택한 Square 장소의 통화와 일치하지 않습니다"
 
+msgid "The custom post is ready."
+msgstr ""
+
 msgid ""
 "The customer didn’t provide an email address, so the invoice couldn’t be "
 "sent."
@@ -10389,6 +10674,13 @@ msgstr ""
 
 msgid "This employee is the only one assigned to {service}."
 msgstr "이 담당자는 {service}에 배정된 유일한 담당자입니다."
+
+msgid ""
+"This export includes, but is not limited to, bookings, customers, settings, "
+"notification logs, and SMS history. Site-specific data (such as URLs, "
+"images, and purchase codes) is excluded and must be set up manually on a new "
+"site."
+msgstr ""
 
 msgid "This field is required"
 msgstr "이 필드는 필수 입력 항목입니다"
@@ -11079,6 +11371,9 @@ msgstr "장바구니 보기"
 msgid "View Employees"
 msgstr "담당자 보기"
 
+msgid "View Event Page"
+msgstr ""
+
 msgid "View Less Packages"
 msgstr "패키지 덜 보기"
 
@@ -11679,6 +11974,9 @@ msgstr "(지금 결제)"
 msgid " (Incl. Tax)"
 msgstr " (세금 포함)"
 
+msgid "added to cart"
+msgstr ""
+
 msgid "and"
 msgstr "및"
 
@@ -11747,6 +12045,9 @@ msgstr "iCloud 이메일 주소"
 
 msgid "iCloud email address and iCloud app-specific password"
 msgstr "iCloud 이메일 주소 및 iCloud 앱 전용 비밀번호"
+
+msgid "in cart"
+msgstr ""
 
 msgid "includes"
 msgstr "포함"
@@ -11828,6 +12129,12 @@ msgstr "리캡챠 설정"
 
 msgid "reCAPTCHA validation failed."
 msgstr "reCAPTCHA 유효성 검사에 실패했습니다."
+
+msgid "remaining"
+msgstr ""
+
+msgid "removed from cart"
+msgstr ""
 
 msgid "results"
 msgstr "결과"

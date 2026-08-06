@@ -424,11 +424,9 @@ class GetTimeSlotsCommandHandler extends CommandHandler
           'duration' => $freeSlots['duration'],
         ];
 
-
         $resultData = apply_filters('amelia_get_timeslots_filter', $resultData, $props);
 
         do_action('amelia_get_timeslots', $resultData, $props);
-
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully retrieved free slots');

@@ -31,6 +31,10 @@ class AutoUpdateHook
      */
     public static function checkUpdate($transient)
     {
+        // Always remove WP.org Lite entry so it can never overwrite Pro
+        unset($transient->response[AMELIA_PLUGIN_BASENAME]);
+        unset($transient->no_update[AMELIA_PLUGIN_BASENAME]);
+
         if (empty($transient->checked)) {
             return $transient;
         }
@@ -49,6 +53,11 @@ class AutoUpdateHook
         // If a newer version is available, add the update
         if ($remoteInformation && version_compare(AMELIA_VERSION, $remoteInformation->new_version, '<')) {
             $transient->response[AMELIA_PLUGIN_BASENAME] = $remoteInformation;
+        } elseif ($remoteInformation) {
+            if (!isset($transient->no_update)) {
+                $transient->no_update = [];
+            }
+            $transient->no_update[AMELIA_PLUGIN_BASENAME] = $remoteInformation;
         }
 
         return $transient;

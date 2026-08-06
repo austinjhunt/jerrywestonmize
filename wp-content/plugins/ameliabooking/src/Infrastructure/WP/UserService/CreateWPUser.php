@@ -16,10 +16,11 @@ class CreateWPUser
      * @param string      $firstName
      * @param string      $lastName
      * @param string|null $role
+     * @param bool        $sendNewUserNotification
      *
      * @return mixed
      */
-    public function create($email, $firstName, $lastName, $role = null)
+    public function create($email, $firstName, $lastName, $role = null, $sendNewUserNotification = true)
     {
         if (username_exists($email)) {
             $user = get_user_by('login', $email);
@@ -53,12 +54,14 @@ class CreateWPUser
 
         $this->setRole($role, $userId);
 
-        // Wrapped in try/catch because wp_new_user_notification() calls wp_mail() which uses
-        // WordPress's own PHPMailer with the mail() transport. On servers where mail() is disabled,
-        // this throws a fatal Error that would otherwise abort the entire booking process.
-        try {
-            wp_new_user_notification($userId, null, 'user');
-        } catch (\Throwable $e) {
+        if ($sendNewUserNotification) {
+            // Wrapped in try/catch because wp_new_user_notification() calls wp_mail() which uses
+            // WordPress's own PHPMailer with the mail() transport. On servers where mail() is disabled,
+            // this throws a fatal Error that would otherwise abort the entire booking process.
+            try {
+                wp_new_user_notification($userId, null, 'user');
+            } catch (\Throwable $e) {
+            }
         }
 
         return (int)$userId;

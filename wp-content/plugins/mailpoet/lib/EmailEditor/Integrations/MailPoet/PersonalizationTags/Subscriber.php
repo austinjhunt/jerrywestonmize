@@ -35,18 +35,20 @@ class Subscriber {
 
   public function getFirstName(array $context, array $args = []): string {
     $subscriber = $this->getSubscriber($context);
+    $value = ($subscriber && $subscriber->getFirstName()) ? $subscriber->getFirstName() : ($args['default'] ?? '');
 
-    return ($subscriber && $subscriber->getFirstName()) ? $subscriber->getFirstName() : $args['default'] ?? '';
+    return htmlspecialchars($value, self::HTML_ENTITY_FLAGS);
   }
 
   public function getLastName(array $context, array $args = []): string {
     $subscriber = $this->getSubscriber($context);
+    $value = ($subscriber && $subscriber->getLastName()) ? $subscriber->getLastName() : ($args['default'] ?? '');
 
-    return ($subscriber && $subscriber->getLastName()) ? $subscriber->getLastName() : $args['default'] ?? '';
+    return htmlspecialchars($value, self::HTML_ENTITY_FLAGS);
   }
 
   public function getEmail(array $context, array $args = []): string {
-    return $context['recipient_email'] ?? '';
+    return htmlspecialchars($context['recipient_email'] ?? '', self::HTML_ENTITY_FLAGS);
   }
 
   public function getActivationLink(array $context, array $args = []): string {
@@ -60,15 +62,16 @@ class Subscriber {
   }
 
   public function getDisplayName(array $context, array $args = []): string {
-    $default = $args['default'] ?? '';
+    $value = $args['default'] ?? '';
     $subscriber = $this->getSubscriber($context);
-    if (!$subscriber || !$subscriber->getWpUserId()) {
-      return $default;
+    if ($subscriber && $subscriber->getWpUserId()) {
+      $wpUser = $this->wp->getUserdata($subscriber->getWpUserId());
+      if ($wpUser instanceof \WP_User) {
+        $value = (string)$wpUser->display_name; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+      }
     }
 
-    $wpUser = $this->wp->getUserdata($subscriber->getWpUserId());
-
-    return ($wpUser instanceof \WP_User) ? $wpUser->display_name : $default; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+    return htmlspecialchars($value, self::HTML_ENTITY_FLAGS, 'UTF-8', false);
   }
 
   public function getCount(array $context, array $args = []): string {

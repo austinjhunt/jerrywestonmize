@@ -7,9 +7,12 @@ use AmeliaBooking\Application\Services\User\UserApplicationService;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
+use AmeliaBooking\Domain\Collection\Collection;
+use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Domain\Repository\User\UserRepositoryInterface;
+use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 
 /**
@@ -23,7 +26,6 @@ class GetCustomerCommandHandler extends CommandHandler
      * @param GetCustomerCommand $command
      *
      * @return CommandResult
-     * @throws \Slim\Exception\ContainerValueNotFoundException
      * @throws AccessDeniedException
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
@@ -37,9 +39,20 @@ class GetCustomerCommandHandler extends CommandHandler
         /** @var UserApplicationService $userAS */
         $userAS = $this->getContainer()->get('application.user.service');
 
+        /** @var SettingsService $settingsService */
+        $settingsService = $this->container->get('domain.settings.service');
+
+        /** @var UserRepository $userRepository */
+        $userRepository = $this->container->get('domain.users.repository');
+
+        /** @var AbstractUser|null $currentUser */
+        $currentUser = null;
+
         if (!$command->getPermissionService()->currentUserCanRead(Entities::CUSTOMERS)) {
             if ($command->getToken()) {
-                if ($userAS->getAuthenticatedUser($command->getToken(), false, 'providerCabinet') === null) {
+                $currentUser = $userAS->getAuthenticatedUser($command->getToken(), false, 'providerCabinet');
+
+                if ($currentUser === null) {
                     $result->setResult(CommandResult::RESULT_ERROR);
                     $result->setMessage('Could not retrieve user');
                     $result->setData(
@@ -51,6 +64,27 @@ class GetCustomerCommandHandler extends CommandHandler
                     return $result;
                 }
             } else {
+                throw new AccessDeniedException('You are not allowed to read user');
+            }
+        } else {
+            $currentUser = $this->container->get('logged.in.user');
+        }
+
+        $rolesSettings = $settingsService->getCategorySettings('roles');
+
+        if (
+            $currentUser !== null &&
+            $currentUser->getType() === Entities::PROVIDER &&
+            empty($rolesSettings['allowReadAllCustomers'])
+        ) {
+            /** @var Collection $providerCustomers */
+            $providerCustomers = $userRepository->getProviderAllowedCustomers(
+                $currentUser->getId()->getValue()
+            );
+
+            $allowedCustomersIds = $providerCustomers->keys();
+
+            if (!in_array($command->getField('id'), $allowedCustomersIds)) {
                 throw new AccessDeniedException('You are not allowed to read user');
             }
         }

@@ -430,6 +430,12 @@ msgstr ""
 "Lisää Meta Pixel mainosten konversioiden seuraamiseksi ja markkinoinnin "
 "optimoimiseksi."
 
+msgid "Add New"
+msgstr ""
+
+msgid "Add New Event Page"
+msgstr ""
+
 msgid "Add Period"
 msgstr "Lisää ajanjakso"
 
@@ -623,6 +629,9 @@ msgstr "Kaikki asiakkaat"
 
 msgid "All employees"
 msgstr "Kaikki työntekijät"
+
+msgid "All entities imported"
+msgstr ""
 
 msgid "All events"
 msgstr "Kaikki tapahtumat"
@@ -834,6 +843,15 @@ msgstr "Amelia - Vaiheittainen Varaus"
 
 msgid "Amelia Add to calendar page"
 msgstr "Amelia Lisää Kalenteriin sivu"
+
+msgid "Amelia Event"
+msgstr ""
+
+msgid "Amelia Event Page"
+msgstr ""
+
+msgid "Amelia Event Pages"
+msgstr ""
 
 msgid "Amelia Events List Booking Settings"
 msgstr "Amelia tapahtumaluettelon varausasetukset"
@@ -1356,6 +1374,9 @@ msgid ""
 msgstr ""
 "Luo automaattisesti Zoom-kokouksia varauksille ja ilmoita siitä asiakkaille "
 "ja työntekijöille."
+
+msgid "Automatically create an Event Page for new events"
+msgstr ""
 
 msgid ""
 "Automatically generate invoices for every booking, making payments easier, "
@@ -2293,6 +2314,8 @@ msgid ""
 "Collect additional information from your customers before they complete a "
 "booking."
 msgstr ""
+"Mahdollistaa lisätietojen keräämisen asiakkailtasi ennen kuin he "
+"viimeistelevät varauksen."
 
 msgid "Collect the information your business truly needs"
 msgstr "Kerää yrityksesi todella tarvitsemat tiedot"
@@ -2500,7 +2523,7 @@ msgid "Consulting"
 msgstr "Konsultointi"
 
 msgid "Contact Form"
-msgstr ""
+msgstr "Yhteydenottolomake"
 
 msgid "Contact message"
 msgstr "Yhteydenottoviesti"
@@ -2685,8 +2708,11 @@ msgstr "Luo työntekijä"
 msgid "Create event"
 msgstr "Luo tapahtuma"
 
-msgid "Create form"
+msgid "Create event page"
 msgstr ""
+
+msgid "Create form"
+msgstr "Luo lomake"
 
 msgid "Create meetings for pending appointments"
 msgstr "Luo kokouksia odottaville tapaamisille"
@@ -3012,11 +3038,17 @@ msgstr "Tumma teema"
 msgid "Dashboard"
 msgstr "Koontinäyttö"
 
+msgid "Data export is ready."
+msgstr ""
+
 msgid "Data that remains unchanged:"
 msgstr "Muuttumattomat tiedot:"
 
 msgid "Data to be updated:"
 msgstr "Päivitettävät tiedot:"
+
+msgid "Data transfer"
+msgstr ""
 
 msgid "Date"
 msgstr "Päivämäärä"
@@ -3424,6 +3456,9 @@ msgstr ""
 "ja varata suoraan. Erinomainen tapa tuoda esiin tulevat tapahtumat "
 "interaktiivisessa muodossa."
 
+msgid "Do not exit the import until it is finished."
+msgstr ""
+
 msgid "Do you want to cancel following events?"
 msgstr "Haluatko peruuttaa seuraavat tapahtumat?"
 
@@ -3637,6 +3672,9 @@ msgstr "Muokkaa asiakasta"
 msgid "Edit Event"
 msgstr "Muokkaa tapahtumaa"
 
+msgid "Edit Event Page"
+msgstr ""
+
 msgid "Edit Extra"
 msgstr "Muokkaa lisätietoja"
 
@@ -3681,6 +3719,9 @@ msgstr "Muokkaa tapahtumaa"
 
 msgid "Edit event booking"
 msgstr "Muokkaa tapahtuman varausta"
+
+msgid "Edit event page"
+msgstr ""
 
 msgid "Edit location"
 msgstr "Muokkaa sijaintia"
@@ -3927,7 +3968,7 @@ msgstr ""
 "värejä ja nimikkeitä luodaksesi saumattoman ja brändättyjä kokemuksen."
 
 msgid "Enable data usage"
-msgstr ""
+msgstr "Ota tietojen hyödyntäminen käyttöön"
 
 msgid "Enable guest booking"
 msgstr "Ota vierasvaraus käyttöön"
@@ -4228,7 +4269,7 @@ msgid "Enter both the application (client) ID and client secret."
 msgstr "Syötä sekä sovelluksen (client) ID että client secret -avain."
 
 msgid "Enter code"
-msgstr ""
+msgstr "Syötä koodi"
 
 msgid "Enter date of birth"
 msgstr "Syntymäpäivä"
@@ -4377,6 +4418,9 @@ msgstr "Tapahtumaluettelon varauslomake"
 msgid "Event Location"
 msgstr "Tapahtuman Sijainti"
 
+msgid "Event Pages"
+msgstr ""
+
 msgid "Event Starts"
 msgstr "Tapahtuman tila"
 
@@ -4393,7 +4437,7 @@ msgid "Event available"
 msgstr "Tapahtuma saatavilla"
 
 msgid "Event booking"
-msgstr ""
+msgstr "Tapahtumavaraus"
 
 msgid "Event booking has been created."
 msgstr "Tapahtuman varaus on luotu."
@@ -4511,7 +4555,7 @@ msgid "Event has been updated."
 msgstr "Tapahtuma on päivitetty."
 
 msgid "Event image gallery"
-msgstr ""
+msgstr "Tapahtuman kuvagalleria"
 
 msgid "Event info"
 msgstr "Tapahtuman tiedot"
@@ -4626,7 +4670,7 @@ msgid "Events list view"
 msgstr "Tapahtumaluettelo"
 
 msgid "Events pagination"
-msgstr ""
+msgstr "Tapahtumien sivutus"
 
 msgid "Events pricing"
 msgstr "Tapahtumien hinnoittelu"
@@ -4685,8 +4729,14 @@ msgstr "Vie tapaamisetiedot helposti"
 msgid "Export bookings"
 msgstr "Vie varaukset"
 
+msgid "Export data"
+msgstr ""
+
 msgid "Export event booking data with ease"
 msgstr "Vie tapahtumavarausten tiedot vaivattomasti"
+
+msgid "Export failed."
+msgstr ""
 
 msgid "Express Account"
 msgstr "Express-tili"
@@ -5210,6 +5260,8 @@ msgid ""
 "Help us improve Amelia by sharing anonymous data about your plugin usage. No "
 "personal data is collected."
 msgstr ""
+"Auta meitä parantamaan Ameliaa jakamalla anonyymia tietoa WordPress-lisäosan "
+"käytöstä. Henkilötietoja ei kerätä."
 
 msgid ""
 "Here, you can connect your personal Apple Calendar,<br/>so once the booking "
@@ -5381,6 +5433,9 @@ msgstr ""
 msgid "ID Desc"
 msgstr "ID Kuvaus"
 
+msgid "I understand this import will replace all current data permanently."
+msgstr ""
+
 msgid "I want to pay full amount"
 msgstr "Haluan maksaa täyden määrän"
 
@@ -5543,7 +5598,7 @@ msgid "Image Color"
 msgstr "Kuvan Väri"
 
 msgid "Image navigation"
-msgstr ""
+msgstr "Kuvien selailu"
 
 msgid "Image thumbs"
 msgstr "Kuvien pikkukuvat"
@@ -5560,14 +5615,212 @@ msgstr "Tuonti osittain onnistunut"
 msgid "Import Rules"
 msgstr "Tuontisäännöt"
 
+msgid "Import completed"
+msgstr ""
+
+msgid "Import completed successfully."
+msgstr ""
+
+msgid "Import could not be started."
+msgstr ""
+
+msgid "Import data"
+msgstr ""
+
+msgid "Import errors"
+msgstr ""
+
+msgid "Import failed"
+msgstr ""
+
+msgid "Import failed. Review the details below."
+msgstr ""
+
+msgid "Import progress"
+msgstr ""
+
+msgid "Import progress could not be updated."
+msgstr ""
+
+msgid "Import started."
+msgstr ""
+
 msgid "Import successful"
 msgstr "Tuonti onnistui"
+
+msgid "Importing Google calendar sync"
+msgstr ""
+
+msgid "Importing Outlook calendar sync"
+msgstr ""
+
+msgid "Importing appointments"
+msgstr ""
+
+msgid "Importing booking extras"
+msgstr ""
+
+msgid "Importing bookings"
+msgstr ""
+
+msgid "Importing categories"
+msgstr ""
+
+msgid "Importing coupon-event relations"
+msgstr ""
+
+msgid "Importing coupon-package relations"
+msgstr ""
+
+msgid "Importing coupon-service relations"
+msgstr ""
+
+msgid "Importing coupons"
+msgstr ""
+
+msgid "Importing custom field events"
+msgstr ""
+
+msgid "Importing custom field options"
+msgstr ""
+
+msgid "Importing custom field services"
+msgstr ""
+
+msgid "Importing custom fields"
+msgstr ""
 
 msgid "Importing customers"
 msgstr "Asiakkaiden tuominen"
 
-msgid "Improve Amelia"
+msgid "Importing days off"
 msgstr ""
+
+msgid "Importing employee locations"
+msgstr ""
+
+msgid "Importing employee services"
+msgstr ""
+
+msgid "Importing employee views"
+msgstr ""
+
+msgid "Importing employees"
+msgstr ""
+
+msgid "Importing event booking periods"
+msgstr ""
+
+msgid "Importing event booking tickets"
+msgstr ""
+
+msgid "Importing event periods"
+msgstr ""
+
+msgid "Importing event providers"
+msgstr ""
+
+msgid "Importing event tags"
+msgstr ""
+
+msgid "Importing event tickets"
+msgstr ""
+
+msgid "Importing events"
+msgstr ""
+
+msgid "Importing extras"
+msgstr ""
+
+msgid "Importing location view settings"
+msgstr ""
+
+msgid "Importing locations"
+msgstr ""
+
+msgid "Importing notification SMS history"
+msgstr ""
+
+msgid "Importing notification log"
+msgstr ""
+
+msgid "Importing notification relations"
+msgstr ""
+
+msgid "Importing notifications"
+msgstr ""
+
+msgid "Importing package booking services"
+msgstr ""
+
+msgid "Importing package bookings"
+msgstr ""
+
+msgid "Importing package service locations"
+msgstr ""
+
+msgid "Importing package service providers"
+msgstr ""
+
+msgid "Importing package services"
+msgstr ""
+
+msgid "Importing packages"
+msgstr ""
+
+msgid "Importing payments"
+msgstr ""
+
+msgid "Importing period-location relations"
+msgstr ""
+
+msgid "Importing period-service relations"
+msgstr ""
+
+msgid "Importing provider periods"
+msgstr ""
+
+msgid "Importing provider special-day periods"
+msgstr ""
+
+msgid "Importing resource relations"
+msgstr ""
+
+msgid "Importing resources"
+msgstr ""
+
+msgid "Importing service views"
+msgstr ""
+
+msgid "Importing services"
+msgstr ""
+
+msgid "Importing settings"
+msgstr ""
+
+msgid "Importing special-day period-location relations"
+msgstr ""
+
+msgid "Importing special-day period-service relations"
+msgstr ""
+
+msgid "Importing special days"
+msgstr ""
+
+msgid "Importing tax relations"
+msgstr ""
+
+msgid "Importing taxes"
+msgstr ""
+
+msgid "Importing time outs"
+msgstr ""
+
+msgid "Importing work periods"
+msgstr ""
+
+msgid "Improve Amelia"
+msgstr "Paranna Amelia"
 
 msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
@@ -5596,6 +5849,9 @@ msgid ""
 msgstr ""
 "Paranna asiakaskokemusta antamalla asiakkaiden valita heille parhaiten "
 "sopiva sijainti."
+
+msgid "Improve plugin"
+msgstr "Paranna lisäosaa"
 
 msgid ""
 "Improve reporting accuracy by accessing complete appointment data instantly"
@@ -5747,8 +6003,11 @@ msgstr "Lisää Amelia Booking -lyhytkoodi"
 msgid "Insert pending appointments"
 msgstr "Lisää odottavat tapaamiset"
 
-msgid "Install & Activate"
+msgid "Inserted"
 msgstr ""
+
+msgid "Install & Activate"
+msgstr "Asenna ja aktivoi"
 
 msgid "Integrate with WooCommerce to enable advanced e-commerce capabilities."
 msgstr ""
@@ -5853,19 +6112,19 @@ msgid "IvyForms"
 msgstr ""
 
 msgid "IvyForms Entries"
-msgstr ""
+msgstr "IvyForms-merkinnät"
 
 msgid "IvyForms Field"
-msgstr ""
+msgstr "IvyForms-kenttä"
 
 msgid "IvyForms Form"
-msgstr ""
+msgstr "IvyForms-lomake"
 
 msgid "IvyForms validation failed."
-msgstr ""
+msgstr "IvyForms-validointi epäonnistui."
 
 msgid "Ivy setup"
-msgstr ""
+msgstr "Ivy-määritys"
 
 msgid "Jane Doe"
 msgstr ""
@@ -6110,16 +6369,16 @@ msgid "Load page"
 msgstr "Lataa sivu"
 
 msgid "Loading"
-msgstr ""
+msgstr "Ladataan"
 
 msgid "Loading..."
 msgstr "Ladataan…"
 
 msgid "Loading event information"
-msgstr ""
+msgstr "Ladataan tapahtuman tietoja"
 
 msgid "Loading header"
-msgstr ""
+msgstr "Ladataan ylätunnistetta"
 
 msgid "Local Time"
 msgstr "Paikallinen Aika"
@@ -6309,6 +6568,9 @@ msgstr "Hallitse henkilökohtaista aikataulua"
 msgid "Manage shared resources with ease"
 msgstr "Hallitse jaettuja resursseja helposti"
 
+msgid "Manage this event in Amelia:"
+msgstr ""
+
 msgid "Managing assigned services"
 msgstr "Määritettyjen palveluiden hallinta"
 
@@ -6338,7 +6600,7 @@ msgid "Max Capacity Desc"
 msgstr "Enimmäiskapasiteetti Desc"
 
 msgid "Maximum"
-msgstr ""
+msgstr "Enimmäis"
 
 msgid "Maximum Quantity:"
 msgstr "Enimmäismäärä:"
@@ -6435,7 +6697,7 @@ msgid "Min. Capacity"
 msgstr "Vähimmäiskapasiteetti"
 
 msgid "Minimum"
-msgstr ""
+msgstr "minimi"
 
 msgid "Minimum bookings required"
 msgstr "Vaaditut minimivaraukset"
@@ -6593,6 +6855,9 @@ msgstr "Uusi asiakas"
 msgid "New Event"
 msgstr "Uusi tapahtuma"
 
+msgid "New Event Page"
+msgstr ""
+
 msgid "New Location"
 msgstr "Uusi sijainti"
 
@@ -6660,7 +6925,7 @@ msgid "Next day reminder"
 msgstr "Seuraavan päivän muistutus"
 
 msgid "Next image"
-msgstr ""
+msgstr "Seuraava kuva"
 
 msgid "No"
 msgstr "Ei"
@@ -6737,6 +7002,12 @@ msgstr "Ei vielä työntekijöitä"
 
 msgid "No event bookings yet"
 msgstr "Ei vielä tapahtumavarauksia"
+
+msgid "No event pages found"
+msgstr ""
+
+msgid "No event pages found in Trash"
+msgstr ""
 
 msgid "No events found"
 msgstr "Tapahtumia ei löytynyt"
@@ -7151,6 +7422,9 @@ msgstr "Avoinna"
 msgid "Open Event"
 msgstr "Avoin tapahtuma"
 
+msgid "Open Event in Amelia"
+msgstr ""
+
 msgid "Open following"
 msgstr "Avaa tulevat"
 
@@ -7255,7 +7529,7 @@ msgid "PHP Mail"
 msgstr "PHP-sähköposti"
 
 msgid "PRE-BOOKING INTAKE FORM (IVYFORMS)"
-msgstr ""
+msgstr "ENNEN VARAUSTA TÄYTETTÄVÄ ESITIETOLOMAKE (IVYFORMS)"
 
 msgid "Package"
 msgstr "Paketti"
@@ -7674,7 +7948,7 @@ msgid "Permanent access token"
 msgstr "Lopullinen access token"
 
 msgid "Permanently linked"
-msgstr ""
+msgstr "Pysyvästi yhdistetty"
 
 msgid "Person"
 msgstr "Henkilö"
@@ -7760,6 +8034,9 @@ msgstr "Odota"
 
 msgid "Please add period"
 msgstr "Lisää piste loppuun."
+
+msgid "Please back up before proceeding to avoid loss of data."
+msgstr ""
 
 msgid "Please cancel the event first before deleting it."
 msgstr "Peruuta tapahtuma ennen sen poistamista."
@@ -8160,7 +8437,7 @@ msgid "Popup title"
 msgstr "Ponnahdusikkunan otsikko"
 
 msgid "Pre-booking form details"
-msgstr ""
+msgstr "Esivarauslomakkeen tiedot"
 
 msgid "Preload entities when page loads"
 msgstr "Esilataa entiteetit sivun latautuessa"
@@ -8203,13 +8480,13 @@ msgid "Preview invoice"
 msgstr "Esikatsele lasku"
 
 msgid "Previous image"
-msgstr ""
+msgstr "Edellinen kuva"
 
 msgid "Previous range"
 msgstr "Edellinen alue"
 
 msgid "Previous step"
-msgstr ""
+msgstr "Edellinen vaihe"
 
 msgid "Price"
 msgstr "Hinta"
@@ -8851,6 +9128,9 @@ msgstr "Etsi"
 msgid "Search..."
 msgstr "Etsi..."
 
+msgid "Search Event Pages"
+msgstr ""
+
 msgid "Search Filters"
 msgstr "Aseta hakuehdot"
 
@@ -8870,7 +9150,7 @@ msgid "Search bookings"
 msgstr "Etsi varauksia"
 
 msgid "Search coupons"
-msgstr ""
+msgstr "Etsi alennuskoodeja"
 
 msgid "Search customers"
 msgstr "Etsi asiakkaita"
@@ -8909,13 +9189,13 @@ msgid "Search packages"
 msgstr "Etsi paketteja"
 
 msgid "Search resources"
-msgstr ""
+msgstr "Etsi resursseja"
 
 msgid "Search services"
 msgstr "Hakupalvelut"
 
 msgid "Search taxes"
-msgstr ""
+msgstr "Etsi veroja"
 
 msgid "Second"
 msgstr "Toinen"
@@ -9045,8 +9325,11 @@ msgstr "Valitse WooCommerce-tuote"
 msgid "Select Zoom User"
 msgstr "Valitse Zoom-käyttäjä"
 
-msgid "Select a form..."
+msgid "Select a .ameliafile archive before starting the import."
 msgstr ""
+
+msgid "Select a form..."
+msgstr "Valitse lomake..."
 
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr "Valitse paikkamerkki, joka lisätään kohtaan, jossa kursori on."
@@ -9156,6 +9439,7 @@ msgstr "Valitse liput"
 
 msgid "Select which IvyForms form to show before booking"
 msgstr ""
+"Valitse, mikä IvyForms-lomake näytetään ennen ajanvarauksen vahvistamista"
 
 msgid "Select your Square Location"
 msgstr "Valitse Square-sijaintisi"
@@ -9870,6 +10154,9 @@ msgstr "Skippaa palvelupaketit ja jatka valitulla palvelulla"
 msgid "Skip setup"
 msgstr "Ohita asennus"
 
+msgid "Skipped"
+msgstr ""
+
 msgid "Slot end time"
 msgstr "Slotin päättymisaika"
 
@@ -10409,6 +10696,9 @@ msgid ""
 "location"
 msgstr "Amelian valuutta ei vastaa valitsemasi Square-sijainnin valuuttaa."
 
+msgid "The custom post is ready."
+msgstr ""
+
 msgid ""
 "The customer didn’t provide an email address, so the invoice couldn’t be "
 "sent."
@@ -10634,6 +10924,13 @@ msgstr ""
 
 msgid "This employee is the only one assigned to {service}."
 msgstr "Tämä työntekijä on ainoa, joka on osoitettu osoitteeseen {service}."
+
+msgid ""
+"This export includes, but is not limited to, bookings, customers, settings, "
+"notification logs, and SMS history. Site-specific data (such as URLs, "
+"images, and purchase codes) is excluded and must be set up manually on a new "
+"site."
+msgstr ""
 
 msgid "This field is required"
 msgstr "Tämä kenttä on pakollinen"
@@ -11349,6 +11646,9 @@ msgstr "Näytä lisää"
 msgid "View Employees"
 msgstr "Uusi työntekijä"
 
+msgid "View Event Page"
+msgstr ""
+
 msgid "View Less Packages"
 msgstr "Näytä viesti"
 
@@ -11953,6 +12253,9 @@ msgstr "(Maksetaan nyt)"
 msgid " (Incl. Tax)"
 msgstr " (sis. verot)"
 
+msgid "added to cart"
+msgstr ""
+
 msgid "and"
 msgstr "ja"
 
@@ -12022,6 +12325,9 @@ msgstr "iCloud-sähköpostiosoite"
 msgid "iCloud email address and iCloud app-specific password"
 msgstr "iCloud-sähköpostiosoite ja iCloud-sovelluskohtainen salasana"
 
+msgid "in cart"
+msgstr ""
+
 msgid "includes"
 msgstr "sisältää"
 
@@ -12050,13 +12356,13 @@ msgid "on"
 msgstr "päivänä"
 
 msgid "opens in new tab"
-msgstr ""
+msgstr "Avautuu uudessa välilehdessä"
 
 msgid "out of"
 msgstr "/"
 
 msgid "payment button"
-msgstr ""
+msgstr "Maksupainike"
 
 msgid "people"
 msgstr "henkilöt"
@@ -12102,6 +12408,12 @@ msgstr "reCAPTCHA-asetukset"
 
 msgid "reCAPTCHA validation failed."
 msgstr "reCAPTCHA-vahvistus epäonnistui."
+
+msgid "remaining"
+msgstr ""
+
+msgid "removed from cart"
+msgstr ""
 
 msgid "results"
 msgstr "tulosta"

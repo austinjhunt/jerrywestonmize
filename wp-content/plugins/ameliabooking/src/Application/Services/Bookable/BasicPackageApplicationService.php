@@ -134,9 +134,11 @@ class BasicPackageApplicationService extends AbstractPackageApplicationService
     }
 
     /**
+     * @param array $criteria
+     *
      * @return array
      */
-    public function getPackagesArray()
+    public function getPackagesArray($criteria = [])
     {
         return [];
     }

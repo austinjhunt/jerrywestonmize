@@ -429,6 +429,12 @@ msgstr ""
 "Adicione o Meta Pixel para acompanhar as conversões de anúncios e otimizar o "
 "marketing."
 
+msgid "Add New"
+msgstr ""
+
+msgid "Add New Event Page"
+msgstr ""
+
 msgid "Add Period"
 msgstr "Adicionar Período"
 
@@ -623,6 +629,9 @@ msgstr "Todos os clientes"
 
 msgid "All employees"
 msgstr "Todos os funcionários"
+
+msgid "All entities imported"
+msgstr ""
 
 msgid "All events"
 msgstr "Todos os eventos"
@@ -833,6 +842,15 @@ msgstr "Amelia - Marcação passo a passo"
 
 msgid "Amelia Add to calendar page"
 msgstr "Amelia Adicionar à página do calendário"
+
+msgid "Amelia Event"
+msgstr ""
+
+msgid "Amelia Event Page"
+msgstr ""
+
+msgid "Amelia Event Pages"
+msgstr ""
 
 msgid "Amelia Events List Booking Settings"
 msgstr "Amelia Definições de reserva da lista de eventos"
@@ -1358,6 +1376,9 @@ msgid ""
 msgstr ""
 "Crie automaticamente reuniões Zoom para reservas e notifique clientes e "
 "funcionários."
+
+msgid "Automatically create an Event Page for new events"
+msgstr ""
 
 msgid ""
 "Automatically generate invoices for every booking, making payments easier, "
@@ -2305,6 +2326,8 @@ msgid ""
 "Collect additional information from your customers before they complete a "
 "booking."
 msgstr ""
+"Recolha informações adicionais dos seus clientes antes de concluírem uma "
+"reserva."
 
 msgid "Collect the information your business truly needs"
 msgstr "Recolha as informações de que a sua empresa realmente precisa"
@@ -2515,7 +2538,7 @@ msgid "Consulting"
 msgstr "Consultoria"
 
 msgid "Contact Form"
-msgstr ""
+msgstr "Formulário de Contacto"
 
 msgid "Contact message"
 msgstr "Mensagem de contacto"
@@ -2705,8 +2728,11 @@ msgstr "Criar funcionário"
 msgid "Create event"
 msgstr "Criar evento"
 
-msgid "Create form"
+msgid "Create event page"
 msgstr ""
+
+msgid "Create form"
+msgstr "Criar formulário"
 
 msgid "Create meetings for pending appointments"
 msgstr "Criar reuniões para compromissos pendentes"
@@ -3031,11 +3057,17 @@ msgstr "Tema escuro"
 msgid "Dashboard"
 msgstr "Painel"
 
+msgid "Data export is ready."
+msgstr ""
+
 msgid "Data that remains unchanged:"
 msgstr "Dados que permanecem inalterados:"
 
 msgid "Data to be updated:"
 msgstr "Dados a serem atualizados:"
+
+msgid "Data transfer"
+msgstr ""
 
 msgid "Date"
 msgstr "Data"
@@ -3448,6 +3480,9 @@ msgstr ""
 "naveguem, pesquisem e reservem diretamente. Uma ótima maneira de destacar os "
 "próximos eventos num formato interativo."
 
+msgid "Do not exit the import until it is finished."
+msgstr ""
+
 msgid "Do you want to cancel following events?"
 msgstr "Deseja cancelar os seguintes eventos?"
 
@@ -3658,6 +3693,9 @@ msgstr "Editar cliente"
 msgid "Edit Event"
 msgstr "Editar Evento"
 
+msgid "Edit Event Page"
+msgstr ""
+
 msgid "Edit Extra"
 msgstr "Editar Extra"
 
@@ -3702,6 +3740,9 @@ msgstr "Editar evento"
 
 msgid "Edit event booking"
 msgstr "Editar reserva de evento"
+
+msgid "Edit event page"
+msgstr ""
 
 msgid "Edit location"
 msgstr "Editar localização"
@@ -3951,7 +3992,7 @@ msgstr ""
 "e com a marca."
 
 msgid "Enable data usage"
-msgstr ""
+msgstr "Ativar uso de dados"
 
 msgid "Enable guest booking"
 msgstr "Ativar reservas de convidados"
@@ -4246,7 +4287,7 @@ msgid "Enter both the application (client) ID and client secret."
 msgstr "Introduza tanto o ID da aplicação (cliente) como o segredo do cliente."
 
 msgid "Enter code"
-msgstr ""
+msgstr "Inserir código"
 
 msgid "Enter date of birth"
 msgstr "Insira a data de nascimento"
@@ -4398,6 +4439,9 @@ msgstr "Formulário de reserva da lista de eventos"
 msgid "Event Location"
 msgstr "Local do Evento"
 
+msgid "Event Pages"
+msgstr ""
+
 msgid "Event Starts"
 msgstr "Início do evento"
 
@@ -4414,7 +4458,7 @@ msgid "Event available"
 msgstr "Evento disponível"
 
 msgid "Event booking"
-msgstr ""
+msgstr "Reserva de evento"
 
 msgid "Event booking has been created."
 msgstr "A reserva do evento foi criada."
@@ -4532,7 +4576,7 @@ msgid "Event has been updated."
 msgstr "O evento foi atualizado."
 
 msgid "Event image gallery"
-msgstr ""
+msgstr "Galeria de imagens do Evento"
 
 msgid "Event info"
 msgstr "Informações sobre o evento"
@@ -4647,7 +4691,7 @@ msgid "Events list view"
 msgstr "Lista de eventos"
 
 msgid "Events pagination"
-msgstr ""
+msgstr "Paginação de eventos"
 
 msgid "Events pricing"
 msgstr "Preços dos eventos"
@@ -4706,8 +4750,14 @@ msgstr "Exporte dados de compromissos com facilidade"
 msgid "Export bookings"
 msgstr "Exportar reservas"
 
+msgid "Export data"
+msgstr ""
+
 msgid "Export event booking data with ease"
 msgstr "Exportar facilmente os dados das reservas de eventos"
+
+msgid "Export failed."
+msgstr ""
 
 msgid "Express Account"
 msgstr "Conta Express"
@@ -5237,6 +5287,8 @@ msgid ""
 "Help us improve Amelia by sharing anonymous data about your plugin usage. No "
 "personal data is collected."
 msgstr ""
+"Ajude-nos a melhorar a Amelia ao partilhar dados anonimizados sobre a "
+"utilização do plugin. Não são recolhidos dados pessoais."
 
 msgid ""
 "Here, you can connect your personal Apple Calendar,<br/>so once the booking "
@@ -5414,6 +5466,9 @@ msgstr ""
 msgid "ID Desc"
 msgstr "ID Descrição"
 
+msgid "I understand this import will replace all current data permanently."
+msgstr ""
+
 msgid "I want to pay full amount"
 msgstr "Quero pagar o valor total"
 
@@ -5580,7 +5635,7 @@ msgid "Image Color"
 msgstr "Cor da imagem"
 
 msgid "Image navigation"
-msgstr ""
+msgstr "Navegação entre imagens"
 
 msgid "Image thumbs"
 msgstr "Miniaturas de imagens"
@@ -5597,14 +5652,212 @@ msgstr "Importação parcialmente bem-sucedida"
 msgid "Import Rules"
 msgstr "Regras de importação"
 
+msgid "Import completed"
+msgstr ""
+
+msgid "Import completed successfully."
+msgstr ""
+
+msgid "Import could not be started."
+msgstr ""
+
+msgid "Import data"
+msgstr ""
+
+msgid "Import errors"
+msgstr ""
+
+msgid "Import failed"
+msgstr ""
+
+msgid "Import failed. Review the details below."
+msgstr ""
+
+msgid "Import progress"
+msgstr ""
+
+msgid "Import progress could not be updated."
+msgstr ""
+
+msgid "Import started."
+msgstr ""
+
 msgid "Import successful"
 msgstr "Importação bem sucedida"
+
+msgid "Importing Google calendar sync"
+msgstr ""
+
+msgid "Importing Outlook calendar sync"
+msgstr ""
+
+msgid "Importing appointments"
+msgstr ""
+
+msgid "Importing booking extras"
+msgstr ""
+
+msgid "Importing bookings"
+msgstr ""
+
+msgid "Importing categories"
+msgstr ""
+
+msgid "Importing coupon-event relations"
+msgstr ""
+
+msgid "Importing coupon-package relations"
+msgstr ""
+
+msgid "Importing coupon-service relations"
+msgstr ""
+
+msgid "Importing coupons"
+msgstr ""
+
+msgid "Importing custom field events"
+msgstr ""
+
+msgid "Importing custom field options"
+msgstr ""
+
+msgid "Importing custom field services"
+msgstr ""
+
+msgid "Importing custom fields"
+msgstr ""
 
 msgid "Importing customers"
 msgstr "Importação de clientes"
 
-msgid "Improve Amelia"
+msgid "Importing days off"
 msgstr ""
+
+msgid "Importing employee locations"
+msgstr ""
+
+msgid "Importing employee services"
+msgstr ""
+
+msgid "Importing employee views"
+msgstr ""
+
+msgid "Importing employees"
+msgstr ""
+
+msgid "Importing event booking periods"
+msgstr ""
+
+msgid "Importing event booking tickets"
+msgstr ""
+
+msgid "Importing event periods"
+msgstr ""
+
+msgid "Importing event providers"
+msgstr ""
+
+msgid "Importing event tags"
+msgstr ""
+
+msgid "Importing event tickets"
+msgstr ""
+
+msgid "Importing events"
+msgstr ""
+
+msgid "Importing extras"
+msgstr ""
+
+msgid "Importing location view settings"
+msgstr ""
+
+msgid "Importing locations"
+msgstr ""
+
+msgid "Importing notification SMS history"
+msgstr ""
+
+msgid "Importing notification log"
+msgstr ""
+
+msgid "Importing notification relations"
+msgstr ""
+
+msgid "Importing notifications"
+msgstr ""
+
+msgid "Importing package booking services"
+msgstr ""
+
+msgid "Importing package bookings"
+msgstr ""
+
+msgid "Importing package service locations"
+msgstr ""
+
+msgid "Importing package service providers"
+msgstr ""
+
+msgid "Importing package services"
+msgstr ""
+
+msgid "Importing packages"
+msgstr ""
+
+msgid "Importing payments"
+msgstr ""
+
+msgid "Importing period-location relations"
+msgstr ""
+
+msgid "Importing period-service relations"
+msgstr ""
+
+msgid "Importing provider periods"
+msgstr ""
+
+msgid "Importing provider special-day periods"
+msgstr ""
+
+msgid "Importing resource relations"
+msgstr ""
+
+msgid "Importing resources"
+msgstr ""
+
+msgid "Importing service views"
+msgstr ""
+
+msgid "Importing services"
+msgstr ""
+
+msgid "Importing settings"
+msgstr ""
+
+msgid "Importing special-day period-location relations"
+msgstr ""
+
+msgid "Importing special-day period-service relations"
+msgstr ""
+
+msgid "Importing special days"
+msgstr ""
+
+msgid "Importing tax relations"
+msgstr ""
+
+msgid "Importing taxes"
+msgstr ""
+
+msgid "Importing time outs"
+msgstr ""
+
+msgid "Importing work periods"
+msgstr ""
+
+msgid "Improve Amelia"
+msgstr "Melhorar a Amelia"
 
 msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
@@ -5633,6 +5886,9 @@ msgid ""
 msgstr ""
 "Melhore a experiência do cliente, permitindo que os clientes escolham o "
 "local que melhor lhes convém."
+
+msgid "Improve plugin"
+msgstr "Otimizar plugin"
 
 msgid ""
 "Improve reporting accuracy by accessing complete appointment data instantly"
@@ -5786,8 +6042,11 @@ msgstr "Insira Amelia Booking Shortcode"
 msgid "Insert pending appointments"
 msgstr "Inserir compromissos pendentes"
 
-msgid "Install & Activate"
+msgid "Inserted"
 msgstr ""
+
+msgid "Install & Activate"
+msgstr "Instalar & ativar"
 
 msgid "Integrate with WooCommerce to enable advanced e-commerce capabilities."
 msgstr ""
@@ -5892,19 +6151,19 @@ msgid "IvyForms"
 msgstr ""
 
 msgid "IvyForms Entries"
-msgstr ""
+msgstr "Submissões IvyForms"
 
 msgid "IvyForms Field"
-msgstr ""
+msgstr "Campo do formulário IvyForms"
 
 msgid "IvyForms Form"
-msgstr ""
+msgstr "Formulário IvyForms"
 
 msgid "IvyForms validation failed."
-msgstr ""
+msgstr "A validação do IvyForms falhou."
 
 msgid "Ivy setup"
-msgstr ""
+msgstr "Configuração do Ivy"
 
 msgid "Jane Doe"
 msgstr ""
@@ -6150,16 +6409,16 @@ msgid "Load page"
 msgstr "Carregar página"
 
 msgid "Loading"
-msgstr ""
+msgstr "A carregar"
 
 msgid "Loading..."
 msgstr "A carregar..."
 
 msgid "Loading event information"
-msgstr ""
+msgstr "A carregar informações do evento"
 
 msgid "Loading header"
-msgstr ""
+msgstr "A carregar o cabeçalho"
 
 msgid "Local Time"
 msgstr "Hora Local"
@@ -6352,6 +6611,9 @@ msgstr "Gerir agenda pessoal"
 msgid "Manage shared resources with ease"
 msgstr "Gerencie recursos partilhados com facilidade"
 
+msgid "Manage this event in Amelia:"
+msgstr ""
+
 msgid "Managing assigned services"
 msgstr "Gerenciamento de serviços atribuídos"
 
@@ -6381,7 +6643,7 @@ msgid "Max Capacity Desc"
 msgstr "Descrição da capacidade máxima"
 
 msgid "Maximum"
-msgstr ""
+msgstr "Máximo"
 
 msgid "Maximum Quantity:"
 msgstr "Quantidade máxima:"
@@ -6478,7 +6740,7 @@ msgid "Min. Capacity"
 msgstr "Capacidade mínima"
 
 msgid "Minimum"
-msgstr ""
+msgstr "Mínimo"
 
 msgid "Minimum bookings required"
 msgstr "Reservas mínimas exigidas"
@@ -6636,6 +6898,9 @@ msgstr "Novo Cliente"
 msgid "New Event"
 msgstr "Novo Evento"
 
+msgid "New Event Page"
+msgstr ""
+
 msgid "New Location"
 msgstr "Nova localização"
 
@@ -6703,7 +6968,7 @@ msgid "Next day reminder"
 msgstr "Lembrete para o dia seguinte"
 
 msgid "Next image"
-msgstr ""
+msgstr "Próxima imagem"
 
 msgid "No"
 msgstr "Não"
@@ -6781,6 +7046,12 @@ msgstr "Ainda não há funcionários"
 
 msgid "No event bookings yet"
 msgstr "Ainda não há reservas para eventos"
+
+msgid "No event pages found"
+msgstr ""
+
+msgid "No event pages found in Trash"
+msgstr ""
 
 msgid "No events found"
 msgstr "Nenhum evento encontrado"
@@ -7200,6 +7471,9 @@ msgstr "Abrir"
 msgid "Open Event"
 msgstr "Evento Aberto"
 
+msgid "Open Event in Amelia"
+msgstr ""
+
 msgid "Open following"
 msgstr "Abrir o seguinte"
 
@@ -7304,7 +7578,7 @@ msgid "PHP Mail"
 msgstr ""
 
 msgid "PRE-BOOKING INTAKE FORM (IVYFORMS)"
-msgstr ""
+msgstr "FORMULÁRIO DE ADMISSÃO PRÉ-RESERVA (IVYFORMS)"
 
 msgid "Package"
 msgstr "Pacote"
@@ -7726,7 +8000,7 @@ msgid "Permanent access token"
 msgstr "Token de acesso permanente"
 
 msgid "Permanently linked"
-msgstr ""
+msgstr "Vinculado permanentemente"
 
 msgid "Person"
 msgstr "Pessoa"
@@ -7814,6 +8088,9 @@ msgstr "Aguarde"
 
 msgid "Please add period"
 msgstr "Adicione um ponto final."
+
+msgid "Please back up before proceeding to avoid loss of data."
+msgstr ""
 
 msgid "Please cancel the event first before deleting it."
 msgstr "Por favor, cancele o evento primeiro antes de excluí-lo."
@@ -8212,7 +8489,7 @@ msgid "Popup title"
 msgstr "Título do pop-up"
 
 msgid "Pre-booking form details"
-msgstr ""
+msgstr "Detalhes do formulário de pré-marcação"
 
 msgid "Preload entities when page loads"
 msgstr "Pré-carregar entidades quando a página é carregada"
@@ -8256,13 +8533,13 @@ msgid "Preview invoice"
 msgstr "Pré-visualizar fatura"
 
 msgid "Previous image"
-msgstr ""
+msgstr "Imagem anterior"
 
 msgid "Previous range"
 msgstr "Intervalo anterior"
 
 msgid "Previous step"
-msgstr ""
+msgstr "Passo anterior"
 
 msgid "Price"
 msgstr "Preço"
@@ -8902,6 +9179,9 @@ msgstr "Pesquisar"
 msgid "Search..."
 msgstr "Pesquisar..."
 
+msgid "Search Event Pages"
+msgstr ""
+
 msgid "Search Filters"
 msgstr "Filtros de pesquisa"
 
@@ -8921,7 +9201,7 @@ msgid "Search bookings"
 msgstr "Pesquisar reservas"
 
 msgid "Search coupons"
-msgstr ""
+msgstr "Pesquisar cupões"
 
 msgid "Search customers"
 msgstr "Pesquisar clientes"
@@ -8960,13 +9240,13 @@ msgid "Search packages"
 msgstr "Pesquisar pacotes"
 
 msgid "Search resources"
-msgstr ""
+msgstr "Pesquisar recursos"
 
 msgid "Search services"
 msgstr "Serviços de pesquisa"
 
 msgid "Search taxes"
-msgstr ""
+msgstr "Pesquisar impostos"
 
 msgid "Second"
 msgstr "Segundo"
@@ -9096,8 +9376,11 @@ msgstr "Selecionar produto WooCommerce"
 msgid "Select Zoom User"
 msgstr "Selecionar Zoom Utilizador"
 
-msgid "Select a form..."
+msgid "Select a .ameliafile archive before starting the import."
 msgstr ""
+
+msgid "Select a form..."
+msgstr "Selecione um formulário..."
 
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr ""
@@ -9210,6 +9493,7 @@ msgstr "Selecionar bilhetes"
 
 msgid "Select which IvyForms form to show before booking"
 msgstr ""
+"Selecione o formulário IvyForms a apresentar antes de efetuar a reserva"
 
 msgid "Select your Square Location"
 msgstr "Selecione o seu local do Square"
@@ -9930,6 +10214,9 @@ msgstr "Ignorar pacotes e continuar com o serviço selecionado"
 msgid "Skip setup"
 msgstr "Ignorar configuração"
 
+msgid "Skipped"
+msgstr ""
+
 msgid "Slot end time"
 msgstr "Hora de término do slot"
 
@@ -10477,6 +10764,9 @@ msgid ""
 msgstr ""
 "A moeda no Amelia não corresponde à moeda do local do Square selecionado"
 
+msgid "The custom post is ready."
+msgstr ""
+
 msgid ""
 "The customer didn’t provide an email address, so the invoice couldn’t be "
 "sent."
@@ -10716,6 +11006,13 @@ msgstr ""
 
 msgid "This employee is the only one assigned to {service}."
 msgstr "Este funcionário é o único designado para {service}."
+
+msgid ""
+"This export includes, but is not limited to, bookings, customers, settings, "
+"notification logs, and SMS history. Site-specific data (such as URLs, "
+"images, and purchase codes) is excluded and must be set up manually on a new "
+"site."
+msgstr ""
 
 msgid "This field is required"
 msgstr "Este campo é obrigatório"
@@ -11436,6 +11733,9 @@ msgstr "Ver carrinho"
 msgid "View Employees"
 msgstr "Ver funcionários"
 
+msgid "View Event Page"
+msgstr ""
+
 msgid "View Less Packages"
 msgstr "Ver menos pacotes"
 
@@ -12048,6 +12348,9 @@ msgstr "(A pagar agora)"
 msgid " (Incl. Tax)"
 msgstr " (Incl. impostos)"
 
+msgid "added to cart"
+msgstr ""
+
 msgid "and"
 msgstr "e"
 
@@ -12119,6 +12422,9 @@ msgstr ""
 "Endereço de e-mail do iCloud e palavra-passe específica da aplicação do "
 "iCloud"
 
+msgid "in cart"
+msgstr ""
+
 msgid "includes"
 msgstr "inclui"
 
@@ -12147,13 +12453,13 @@ msgid "on"
 msgstr "em"
 
 msgid "opens in new tab"
-msgstr ""
+msgstr "abre num novo separador"
 
 msgid "out of"
 msgstr "fora de"
 
 msgid "payment button"
-msgstr ""
+msgstr "botão de pagamento"
 
 msgid "people"
 msgstr "pessoas"
@@ -12199,6 +12505,12 @@ msgstr "Configuração do reCAPTCHA"
 
 msgid "reCAPTCHA validation failed."
 msgstr "Falha na validação do reCAPTCHA."
+
+msgid "remaining"
+msgstr ""
+
+msgid "removed from cart"
+msgstr ""
 
 msgid "results"
 msgstr "resultados"

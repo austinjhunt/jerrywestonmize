@@ -10,13 +10,12 @@ namespace AmeliaBooking\Application\Commands\Bookable\Service;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
+use AmeliaBooking\Application\Services\Bookable\AbstractPackageApplicationService;
 use AmeliaBooking\Application\Services\Bookable\BookableApplicationService;
-use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
-use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageRepository;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ServiceRepository;
 use Slim\Exception\ContainerValueNotFoundException;
 
@@ -49,6 +48,9 @@ class DeleteServiceCommandHandler extends CommandHandler
         /** @var BookableApplicationService $bookableApplicationService */
         $bookableApplicationService = $this->getContainer()->get('application.bookable.service');
 
+        /** @var AbstractPackageApplicationService $packageApplicationService */
+        $packageApplicationService = $this->container->get('application.bookable.package');
+
         $appointmentsCount = $bookableApplicationService->getAppointmentsCountForServices([$command->getArg('id')]);
 
         if ($appointmentsCount['futureAppointments']) {
@@ -59,13 +61,10 @@ class DeleteServiceCommandHandler extends CommandHandler
             return $result;
         }
 
-        /** @var PackageRepository $packageRepository */
-        $packageRepository = $this->container->get('domain.bookable.package.repository');
+        /** @var array $packages */
+        $packages = $packageApplicationService->getPackagesArray(['services' => [$command->getArg('id')]]);
 
-        /** @var Collection $packages */
-        $packages = $packageRepository->getByCriteria(['services' => [$command->getArg('id')]]);
-
-        if ($packages->length()) {
+        if ($packages && count($packages) > 0) {
             $result->setResult(CommandResult::RESULT_CONFLICT);
             $result->setMessage('Could not delete service.');
             $result->setData([]);

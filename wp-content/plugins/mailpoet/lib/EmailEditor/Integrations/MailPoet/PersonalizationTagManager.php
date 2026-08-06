@@ -20,8 +20,22 @@ use MailPoet\EmailEditor\Integrations\MailPoet\PersonalizationTags\Site;
 use MailPoet\EmailEditor\Integrations\MailPoet\PersonalizationTags\Subscriber;
 use MailPoet\Newsletter\NewslettersRepository;
 use MailPoet\WP\Functions as WPFunctions;
+use MailPoetVendor\Doctrine\DBAL\Exception\InvalidFieldNameException;
+use MailPoetVendor\Doctrine\DBAL\Exception\TableNotFoundException;
 
 class PersonalizationTagManager {
+  /**
+   * URL tokens that don't depend on subscriber or order context and can be
+   * resolved before link tracking hashes hrefs. Context-dependent URL tokens
+   * (activation link, order URLs) must not be added here.
+   */
+  private const PRE_TRACKING_URL_TOKENS = [
+    '[mailpoet/site-homepage-url]',
+    '[woocommerce/site-homepage-url]',
+    '[woocommerce/store-url]',
+    '[woocommerce/my-account-url]',
+  ];
+
   private Subscriber $subscriber;
   private Site $site;
   private Link $link;
@@ -292,6 +306,15 @@ class PersonalizationTagManager {
         null,
         [EmailEditor::MAILPOET_EMAIL_POST_TYPE]
       ));
+      $registry->register(new Personalization_Tag(
+        __('Tracking opt-out URL', 'mailpoet'),
+        'mailpoet/subscription-tracking-opt-out-url',
+        __('Link', 'mailpoet'),
+        [$this->link, 'getSubscriptionTrackingOptOutUrl'],
+        [],
+        null,
+        [EmailEditor::MAILPOET_EMAIL_POST_TYPE]
+      ));
       return $registry;
     });
 
@@ -317,7 +340,14 @@ class PersonalizationTagManager {
   }
 
   private function registerSubscriberCustomFieldTags(Personalization_Tags_Registry $registry): void {
-    $customFields = $this->customFieldsRepository->findAllActive();
+    try {
+      $customFields = $this->customFieldsRepository->findAllActive();
+    } catch (InvalidFieldNameException | TableNotFoundException $e) {
+      // The custom_fields schema may be mid-migration during a plugin update (e.g. the deleted_at
+      // column added in 5.33.1). Skip custom-field tags for this request rather than fataling; they
+      // register on the next request once the migration completes.
+      return;
+    }
     foreach ($customFields as $customField) {
       $customFieldId = (int)$customField->getId();
       $registry->register(new Personalization_Tag(
@@ -338,7 +368,10 @@ class PersonalizationTagManager {
     if (!isset($emailContent['html'])) {
       return $emailContent;
     }
-    $emailContent['html'] = $this->linksToShortcodesConvertor->convertLinkTagsToShortcodes($emailContent['html']);
+    $emailContent['html'] = $this->linksToShortcodesConvertor->convertLinkTagsToShortcodes(
+      $emailContent['html'],
+      $this->getPreTrackingUrlTokens()
+    );
     return $emailContent;
   }
 
@@ -364,6 +397,27 @@ class PersonalizationTagManager {
     return [
       '[woocommerce/order-review-url]' => $this->orderReviewUrl->getUrl($context),
     ];
+  }
+
+  /**
+   * @return array<string, string>
+   */
+  private function getPreTrackingUrlTokens(): array {
+    $registry = Email_Editor_Container::container()->get(Personalization_Tags_Registry::class);
+    $tokens = [];
+    foreach (self::PRE_TRACKING_URL_TOKENS as $token) {
+      $tag = $registry->get_by_token($token);
+      if (!$tag) {
+        continue;
+      }
+      try {
+        $tokens[$token] = $tag->execute_callback([]);
+      } catch (\Throwable $e) {
+        // A broken tag callback must not block newsletter pre-processing
+        continue;
+      }
+    }
+    return $tokens;
   }
 
   /**

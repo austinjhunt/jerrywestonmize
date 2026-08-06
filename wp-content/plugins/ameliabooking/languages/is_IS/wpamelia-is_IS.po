@@ -428,6 +428,12 @@ msgstr ""
 "Bættu við Meta Pixel til að fylgjast með auglýsingaviðskiptum og hámarka "
 "markaðssetningu."
 
+msgid "Add New"
+msgstr ""
+
+msgid "Add New Event Page"
+msgstr ""
+
 msgid "Add Period"
 msgstr "Bæta við tímabili"
 
@@ -622,6 +628,9 @@ msgstr "Allir viðskiptavinir"
 
 msgid "All employees"
 msgstr "Allir starfsmenn"
+
+msgid "All entities imported"
+msgstr ""
 
 msgid "All events"
 msgstr "Allir viðburðir"
@@ -832,6 +841,15 @@ msgstr "Amelia - Skref fyrir skref bókun"
 
 msgid "Amelia Add to calendar page"
 msgstr "Amelia Bæta við dagatalssíðu"
+
+msgid "Amelia Event"
+msgstr ""
+
+msgid "Amelia Event Page"
+msgstr ""
+
+msgid "Amelia Event Pages"
+msgstr ""
 
 msgid "Amelia Events List Booking Settings"
 msgstr "Amelia viðburðalisti – bókunarstillingar"
@@ -1353,6 +1371,9 @@ msgid ""
 msgstr ""
 "Búðu sjálfkrafa til Zoom-fundi fyrir bókanir og láttu viðskiptavini og "
 "starfsmenn vita."
+
+msgid "Automatically create an Event Page for new events"
+msgstr ""
 
 msgid ""
 "Automatically generate invoices for every booking, making payments easier, "
@@ -2293,6 +2314,7 @@ msgid ""
 "Collect additional information from your customers before they complete a "
 "booking."
 msgstr ""
+"Safnaðu viðbótarupplýsingum frá viðskiptavinum áður en þeir ljúka bókun."
 
 msgid "Collect the information your business truly needs"
 msgstr "Safnaðu þeim upplýsingum sem fyrirtækið þitt þarfnast í raun og veru"
@@ -2497,7 +2519,7 @@ msgid "Consulting"
 msgstr "Ráðgjöf"
 
 msgid "Contact Form"
-msgstr ""
+msgstr "Samskiptaeyðublað"
 
 msgid "Contact message"
 msgstr "Tengiliðaskilaboð"
@@ -2682,8 +2704,11 @@ msgstr "Stofna starfsmann"
 msgid "Create event"
 msgstr "Búa til viðburð"
 
-msgid "Create form"
+msgid "Create event page"
 msgstr ""
+
+msgid "Create form"
+msgstr "Búa til eyðublað"
 
 msgid "Create meetings for pending appointments"
 msgstr "Búa til fundi fyrir biðtíma"
@@ -3011,11 +3036,17 @@ msgstr "Dökkt þema"
 msgid "Dashboard"
 msgstr "Yfirlit"
 
+msgid "Data export is ready."
+msgstr ""
+
 msgid "Data that remains unchanged:"
 msgstr "Gögn sem eru óbreytt:"
 
 msgid "Data to be updated:"
 msgstr "Gögn sem á að uppfæra:"
+
+msgid "Data transfer"
+msgstr ""
 
 msgid "Date"
 msgstr "Dagsetning"
@@ -3426,6 +3457,9 @@ msgstr ""
 "leita og bóka beint. Frábær leið til að varpa ljósi á komandi viðburði á "
 "gagnvirkan hátt."
 
+msgid "Do not exit the import until it is finished."
+msgstr ""
+
 msgid "Do you want to cancel following events?"
 msgstr "Viltu afturkalla eftirfarandi viðburði?"
 
@@ -3636,6 +3670,9 @@ msgstr "Breyta viðskiptavini"
 msgid "Edit Event"
 msgstr "Breyta viðburði"
 
+msgid "Edit Event Page"
+msgstr ""
+
 msgid "Edit Extra"
 msgstr "Breyta auka"
 
@@ -3680,6 +3717,9 @@ msgstr "Breyta viðburði"
 
 msgid "Edit event booking"
 msgstr "Breyta viðburðarbókun"
+
+msgid "Edit event page"
+msgstr ""
 
 msgid "Edit location"
 msgstr "Breyta staðsetningu"
@@ -3927,7 +3967,7 @@ msgstr ""
 "vörumerkta upplifun."
 
 msgid "Enable data usage"
-msgstr ""
+msgstr "Leyfa notkun gagna"
 
 msgid "Enable guest booking"
 msgstr "Virkja bókun gesta"
@@ -4224,7 +4264,7 @@ msgid "Enter both the application (client) ID and client secret."
 msgstr "Sláðu inn bæði application (client) ID og biðlaraleyndarlykil."
 
 msgid "Enter code"
-msgstr ""
+msgstr "Slá inn kóða"
 
 msgid "Enter date of birth"
 msgstr "Sláðu inn fæðingardag"
@@ -4376,6 +4416,9 @@ msgstr "Bókunarform fyrir viðburðalista"
 msgid "Event Location"
 msgstr "Staðsetning viðburðar"
 
+msgid "Event Pages"
+msgstr ""
+
 msgid "Event Starts"
 msgstr "Viðburður hefst"
 
@@ -4392,7 +4435,7 @@ msgid "Event available"
 msgstr "Viðburður í boði"
 
 msgid "Event booking"
-msgstr ""
+msgstr "Viðburðabókun"
 
 msgid "Event booking has been created."
 msgstr "Bókun viðburðar hefur verið búin til."
@@ -4509,7 +4552,7 @@ msgid "Event has been updated."
 msgstr "Viðburðurinn hefur verið uppfærður."
 
 msgid "Event image gallery"
-msgstr ""
+msgstr "Myndasafn viðburðar"
 
 msgid "Event info"
 msgstr "Upplýsingar um viðburð"
@@ -4624,7 +4667,7 @@ msgid "Events list view"
 msgstr "Listi yfir viðburði"
 
 msgid "Events pagination"
-msgstr ""
+msgstr "Síðuskipting viðburða"
 
 msgid "Events pricing"
 msgstr "Verðlagning viðburða"
@@ -4683,8 +4726,14 @@ msgstr "Flytja út fundargögn með auðveldum hætti"
 msgid "Export bookings"
 msgstr "Flytja út bókanir"
 
+msgid "Export data"
+msgstr ""
+
 msgid "Export event booking data with ease"
 msgstr "Flytja út bókunargögn fyrir viðburði á einfaldan hátt"
+
+msgid "Export failed."
+msgstr ""
 
 msgid "Express Account"
 msgstr "Express reikningur"
@@ -5207,6 +5256,8 @@ msgid ""
 "Help us improve Amelia by sharing anonymous data about your plugin usage. No "
 "personal data is collected."
 msgstr ""
+"Hjálpaðu okkur að bæta Amelia með því að deila nafnlausri notkunartölfræði "
+"um notkun viðbótarinnar. Engum persónuupplýsingum er safnað."
 
 msgid ""
 "Here, you can connect your personal Apple Calendar,<br/>so once the booking "
@@ -5379,6 +5430,9 @@ msgstr "Auðkenni uppstigandi"
 msgid "ID Desc"
 msgstr "Lýsing auðkennis"
 
+msgid "I understand this import will replace all current data permanently."
+msgstr ""
+
 msgid "I want to pay full amount"
 msgstr "Ég vil greiða fullt upphæð"
 
@@ -5545,7 +5599,7 @@ msgid "Image Color"
 msgstr "Litur myndar"
 
 msgid "Image navigation"
-msgstr ""
+msgstr "Flakk milli mynda"
 
 msgid "Image thumbs"
 msgstr "Smámyndir"
@@ -5562,14 +5616,212 @@ msgstr "Innflutningur tókst að hluta"
 msgid "Import Rules"
 msgstr "Innflutningsreglur"
 
+msgid "Import completed"
+msgstr ""
+
+msgid "Import completed successfully."
+msgstr ""
+
+msgid "Import could not be started."
+msgstr ""
+
+msgid "Import data"
+msgstr ""
+
+msgid "Import errors"
+msgstr ""
+
+msgid "Import failed"
+msgstr ""
+
+msgid "Import failed. Review the details below."
+msgstr ""
+
+msgid "Import progress"
+msgstr ""
+
+msgid "Import progress could not be updated."
+msgstr ""
+
+msgid "Import started."
+msgstr ""
+
 msgid "Import successful"
 msgstr "Innflutningur tókst"
+
+msgid "Importing Google calendar sync"
+msgstr ""
+
+msgid "Importing Outlook calendar sync"
+msgstr ""
+
+msgid "Importing appointments"
+msgstr ""
+
+msgid "Importing booking extras"
+msgstr ""
+
+msgid "Importing bookings"
+msgstr ""
+
+msgid "Importing categories"
+msgstr ""
+
+msgid "Importing coupon-event relations"
+msgstr ""
+
+msgid "Importing coupon-package relations"
+msgstr ""
+
+msgid "Importing coupon-service relations"
+msgstr ""
+
+msgid "Importing coupons"
+msgstr ""
+
+msgid "Importing custom field events"
+msgstr ""
+
+msgid "Importing custom field options"
+msgstr ""
+
+msgid "Importing custom field services"
+msgstr ""
+
+msgid "Importing custom fields"
+msgstr ""
 
 msgid "Importing customers"
 msgstr "Flytja inn viðskiptavini"
 
-msgid "Improve Amelia"
+msgid "Importing days off"
 msgstr ""
+
+msgid "Importing employee locations"
+msgstr ""
+
+msgid "Importing employee services"
+msgstr ""
+
+msgid "Importing employee views"
+msgstr ""
+
+msgid "Importing employees"
+msgstr ""
+
+msgid "Importing event booking periods"
+msgstr ""
+
+msgid "Importing event booking tickets"
+msgstr ""
+
+msgid "Importing event periods"
+msgstr ""
+
+msgid "Importing event providers"
+msgstr ""
+
+msgid "Importing event tags"
+msgstr ""
+
+msgid "Importing event tickets"
+msgstr ""
+
+msgid "Importing events"
+msgstr ""
+
+msgid "Importing extras"
+msgstr ""
+
+msgid "Importing location view settings"
+msgstr ""
+
+msgid "Importing locations"
+msgstr ""
+
+msgid "Importing notification SMS history"
+msgstr ""
+
+msgid "Importing notification log"
+msgstr ""
+
+msgid "Importing notification relations"
+msgstr ""
+
+msgid "Importing notifications"
+msgstr ""
+
+msgid "Importing package booking services"
+msgstr ""
+
+msgid "Importing package bookings"
+msgstr ""
+
+msgid "Importing package service locations"
+msgstr ""
+
+msgid "Importing package service providers"
+msgstr ""
+
+msgid "Importing package services"
+msgstr ""
+
+msgid "Importing packages"
+msgstr ""
+
+msgid "Importing payments"
+msgstr ""
+
+msgid "Importing period-location relations"
+msgstr ""
+
+msgid "Importing period-service relations"
+msgstr ""
+
+msgid "Importing provider periods"
+msgstr ""
+
+msgid "Importing provider special-day periods"
+msgstr ""
+
+msgid "Importing resource relations"
+msgstr ""
+
+msgid "Importing resources"
+msgstr ""
+
+msgid "Importing service views"
+msgstr ""
+
+msgid "Importing services"
+msgstr ""
+
+msgid "Importing settings"
+msgstr ""
+
+msgid "Importing special-day period-location relations"
+msgstr ""
+
+msgid "Importing special-day period-service relations"
+msgstr ""
+
+msgid "Importing special days"
+msgstr ""
+
+msgid "Importing tax relations"
+msgstr ""
+
+msgid "Importing taxes"
+msgstr ""
+
+msgid "Importing time outs"
+msgstr ""
+
+msgid "Importing work periods"
+msgstr ""
+
+msgid "Improve Amelia"
+msgstr "Bæta Amelia"
 
 msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
@@ -5596,6 +5848,9 @@ msgid ""
 msgstr ""
 "Bættu upplifun viðskiptavina með því að leyfa viðskiptavinum að velja "
 "staðsetningu sem hentar þeim best"
+
+msgid "Improve plugin"
+msgstr "Bæta viðbótina"
 
 msgid ""
 "Improve reporting accuracy by accessing complete appointment data instantly"
@@ -5743,8 +5998,11 @@ msgstr "Settu inn stuttkóða fyrir bókun Amelia"
 msgid "Insert pending appointments"
 msgstr "Setja inn tímapantanir sem bíða"
 
-msgid "Install & Activate"
+msgid "Inserted"
 msgstr ""
+
+msgid "Install & Activate"
+msgstr "Setja upp & virkja"
 
 msgid "Integrate with WooCommerce to enable advanced e-commerce capabilities."
 msgstr ""
@@ -5848,19 +6106,19 @@ msgid "IvyForms"
 msgstr ""
 
 msgid "IvyForms Entries"
-msgstr ""
+msgstr "IvyForms innsendingar"
 
 msgid "IvyForms Field"
-msgstr ""
+msgstr "IvyForms reitur"
 
 msgid "IvyForms Form"
-msgstr ""
+msgstr "IvyForms eyðublað"
 
 msgid "IvyForms validation failed."
-msgstr ""
+msgstr "Gildisprófun IvyForms tókst ekki."
 
 msgid "Ivy setup"
-msgstr ""
+msgstr "Ivy uppsetning"
 
 msgid "Jane Doe"
 msgstr ""
@@ -6106,16 +6364,16 @@ msgid "Load page"
 msgstr "Hlaða síðu"
 
 msgid "Loading"
-msgstr ""
+msgstr "Hleður..."
 
 msgid "Loading..."
 msgstr "Hleður..."
 
 msgid "Loading event information"
-msgstr ""
+msgstr "Hleður upplýsingum um viðburð"
 
 msgid "Loading header"
-msgstr ""
+msgstr "Hleður síðuhaus"
 
 msgid "Local Time"
 msgstr "Staðartími"
@@ -6305,6 +6563,9 @@ msgstr "Stjórna persónulegri áætlun"
 msgid "Manage shared resources with ease"
 msgstr "Stjórnaðu sameiginlegum auðlindum með auðveldum hætti"
 
+msgid "Manage this event in Amelia:"
+msgstr ""
+
 msgid "Managing assigned services"
 msgstr "Að stjórna úthlutaðri þjónustu"
 
@@ -6334,7 +6595,7 @@ msgid "Max Capacity Desc"
 msgstr "Lýsing á hámarksgetu"
 
 msgid "Maximum"
-msgstr ""
+msgstr "Hámark"
 
 msgid "Maximum Quantity:"
 msgstr "Hámarksfjöldi:"
@@ -6431,7 +6692,7 @@ msgid "Min. Capacity"
 msgstr "Lágmarks getu"
 
 msgid "Minimum"
-msgstr ""
+msgstr "Lágmark"
 
 msgid "Minimum bookings required"
 msgstr "Lágmarksbókanir krafist"
@@ -6589,6 +6850,9 @@ msgstr "Nýr viðskiptavinur"
 msgid "New Event"
 msgstr "Nýr viðburður"
 
+msgid "New Event Page"
+msgstr ""
+
 msgid "New Location"
 msgstr "Ný staðsetning"
 
@@ -6656,7 +6920,7 @@ msgid "Next day reminder"
 msgstr "Áminning um næsta dag"
 
 msgid "Next image"
-msgstr ""
+msgstr "Næsta mynd"
 
 msgid "No"
 msgstr "Nei"
@@ -6733,6 +6997,12 @@ msgstr "Engir starfsmenn ennþá"
 
 msgid "No event bookings yet"
 msgstr "Engar viðburðabókanir ennþá"
+
+msgid "No event pages found"
+msgstr ""
+
+msgid "No event pages found in Trash"
+msgstr ""
 
 msgid "No events found"
 msgstr "Engir viðburðir fundust"
@@ -7152,6 +7422,9 @@ msgstr "Opnað"
 msgid "Open Event"
 msgstr "Opinn viðburður"
 
+msgid "Open Event in Amelia"
+msgstr ""
+
 msgid "Open following"
 msgstr "Opna eftirfarandi"
 
@@ -7256,7 +7529,7 @@ msgid "PHP Mail"
 msgstr "PHP póstur"
 
 msgid "PRE-BOOKING INTAKE FORM (IVYFORMS)"
-msgstr ""
+msgstr "INNTÖKUFORM FYRIR BÓKUN (IVYFORMS)"
 
 msgid "Package"
 msgstr "Pakki"
@@ -7679,7 +7952,7 @@ msgid "Permanent access token"
 msgstr "Varanlegt aðgangsmerki"
 
 msgid "Permanently linked"
-msgstr ""
+msgstr "Tengt til frambúðar"
 
 msgid "Person"
 msgstr "Manneskja"
@@ -7766,6 +8039,9 @@ msgstr "Vinsamlegast bíðið"
 
 msgid "Please add period"
 msgstr "Bættu við punkti."
+
+msgid "Please back up before proceeding to avoid loss of data."
+msgstr ""
 
 msgid "Please cancel the event first before deleting it."
 msgstr "Vinsamlegast aflýstu viðburðinum áður en þú eyðir honum."
@@ -8166,7 +8442,7 @@ msgid "Popup title"
 msgstr "Sprettigluggi"
 
 msgid "Pre-booking form details"
-msgstr ""
+msgstr "Upplýsingar um forbókunareyðublað"
 
 msgid "Preload entities when page loads"
 msgstr "Forhlaða einingar þegar síðan hleðst inn"
@@ -8210,13 +8486,13 @@ msgid "Preview invoice"
 msgstr "Forskoða reikning"
 
 msgid "Previous image"
-msgstr ""
+msgstr "Fyrri mynd"
 
 msgid "Previous range"
 msgstr "Fyrra svið"
 
 msgid "Previous step"
-msgstr ""
+msgstr "Fyrra skref"
 
 msgid "Price"
 msgstr "Verð"
@@ -8857,6 +9133,9 @@ msgstr "Leita"
 msgid "Search..."
 msgstr "Leita..."
 
+msgid "Search Event Pages"
+msgstr ""
+
 msgid "Search Filters"
 msgstr "Leit síur"
 
@@ -8876,7 +9155,7 @@ msgid "Search bookings"
 msgstr "Leita að bókunum"
 
 msgid "Search coupons"
-msgstr ""
+msgstr "Leita afsláttarkóða"
 
 msgid "Search customers"
 msgstr "Leita að viðskiptavinum"
@@ -8915,13 +9194,13 @@ msgid "Search packages"
 msgstr "Leita að pakka"
 
 msgid "Search resources"
-msgstr ""
+msgstr "Leita að auðlindum"
 
 msgid "Search services"
 msgstr "Leitarþjónustur"
 
 msgid "Search taxes"
-msgstr ""
+msgstr "Leita að sköttum"
 
 msgid "Second"
 msgstr "Sekúndu"
@@ -9051,8 +9330,11 @@ msgstr "Veldu WooCommerce vöru"
 msgid "Select Zoom User"
 msgstr "Veldu Zoom notanda"
 
-msgid "Select a form..."
+msgid "Select a .ameliafile archive before starting the import."
 msgstr ""
+
+msgid "Select a form..."
+msgstr "Veldu form..."
 
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr ""
@@ -9163,7 +9445,7 @@ msgid "Select tickets"
 msgstr "Veldu miða"
 
 msgid "Select which IvyForms form to show before booking"
-msgstr ""
+msgstr "Veldu hvaða IvyForms eyðublað á að birta áður en bókun er staðfest"
 
 msgid "Select your Square Location"
 msgstr "Veldu staðsetningu þína á Square"
@@ -9879,6 +10161,9 @@ msgstr "Sleppa pakkningum og halda áfram með valda þjónustu"
 msgid "Skip setup"
 msgstr "Sleppa uppsetningu"
 
+msgid "Skipped"
+msgstr ""
+
 msgid "Slot end time"
 msgstr "Lokatími raufar"
 
@@ -10422,6 +10707,9 @@ msgstr ""
 "Gjaldmiðillinn í Amelia passar ekki við gjaldmiðilinn á þeim stað sem þú "
 "valdir á Square"
 
+msgid "The custom post is ready."
+msgstr ""
+
 msgid ""
 "The customer didn’t provide an email address, so the invoice couldn’t be "
 "sent."
@@ -10652,6 +10940,13 @@ msgstr ""
 
 msgid "This employee is the only one assigned to {service}."
 msgstr "Þessi starfsmaður er sá eini sem er úthlutaður til{service} ."
+
+msgid ""
+"This export includes, but is not limited to, bookings, customers, settings, "
+"notification logs, and SMS history. Site-specific data (such as URLs, "
+"images, and purchase codes) is excluded and must be set up manually on a new "
+"site."
+msgstr ""
 
 msgid "This field is required"
 msgstr "Þetta svæði er skylt"
@@ -11367,6 +11662,9 @@ msgstr "Sjá körfu"
 msgid "View Employees"
 msgstr "Sjá starfsmenn"
 
+msgid "View Event Page"
+msgstr ""
+
 msgid "View Less Packages"
 msgstr "Sjá færri pakka"
 
@@ -11974,6 +12272,9 @@ msgstr "Greiða núna"
 msgid " (Incl. Tax)"
 msgstr " (Með VSK)"
 
+msgid "added to cart"
+msgstr ""
+
 msgid "and"
 msgstr "og"
 
@@ -12043,6 +12344,9 @@ msgstr "iCloud netfang"
 msgid "iCloud email address and iCloud app-specific password"
 msgstr "iCloud netfang og lykilorð fyrir iCloud appið"
 
+msgid "in cart"
+msgstr ""
+
 msgid "includes"
 msgstr "inniheldur"
 
@@ -12071,13 +12375,13 @@ msgid "on"
 msgstr "á"
 
 msgid "opens in new tab"
-msgstr ""
+msgstr "Opnast í nýjum flipa"
 
 msgid "out of"
 msgstr "út af"
 
 msgid "payment button"
-msgstr ""
+msgstr "Fara í greiðslu"
 
 msgid "people"
 msgstr "fólk"
@@ -12123,6 +12427,12 @@ msgstr "reCAPTCHA uppsetning"
 
 msgid "reCAPTCHA validation failed."
 msgstr "reCAPTCHA staðfesting mistókst."
+
+msgid "remaining"
+msgstr ""
+
+msgid "removed from cart"
+msgstr ""
 
 msgid "results"
 msgstr "niðurstöður"

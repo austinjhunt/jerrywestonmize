@@ -151,13 +151,14 @@ class UserApplicationService
      * @param AbstractUser $user
      * @param string       $type
      * @param string|null  $password
+     * @param bool         $sendNewUserNotification
      *
      * @return boolean
      * @throws ContainerValueNotFoundException
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      */
-    public function setWpUserIdForNewUser($userId, $user, $type, $password = null)
+    public function setWpUserIdForNewUser($userId, $user, $type, $password = null, $sendNewUserNotification = true)
     {
         if (
             !$user->getEmail() ||
@@ -177,7 +178,8 @@ class UserApplicationService
             $user->getEmail()->getValue(),
             $user->getFirstName() ? $user->getFirstName()->getValue() : '',
             $user->getLastName() ? $user->getLastName()->getValue() : '',
-            'wpamelia-' . $user->getType()
+            'wpamelia-' . $user->getType(),
+            $sendNewUserNotification
         );
 
         if ($password) {

@@ -1,0 +1,533 @@
+/**
+ * WPA event single — layout tokens (Figma ref in repo history). Roboto from template assets.
+ */
+
+.amelia-wpa {
+    /* Palette */
+    --wpa-shade-1000: #0e1920;
+    --wpa-shade-900: #1a2c37;
+    --wpa-shade-700: #4d5b63;
+    --wpa-shade-600: #667279;
+    --wpa-shade-500: #808a90;
+    --wpa-shade-400: #33434c;
+    --wpa-shade-250: #d1d5d7;
+    --wpa-white: #fff;
+    --wpa-bg-soft: #fbfbfb;
+    --wpa-page-bg: #fff;
+    --wpa-blue-900: #265cf2;
+    --wpa-blue-1000: #1246d6;
+    --wpa-blue-600: #a8befa;
+    --wpa-blue-500: #d4defc;
+    --wpa-blue-400: #eaeffe;
+    --wpa-open: #1cb854;
+    --wpa-full: #4561db;
+    --wpa-canceled: #fe5b5b;
+    --wpa-radius-lg: 8px;
+    --wpa-radius-sm: 5px;
+    --wpa-radius-dot: 6px;
+    --wpa-shadow-btn: 0 1px 3px rgba(4, 8, 11, 0.08);
+    --wpa-shadow-footer: 0 2px 7px rgba(11, 7, 58, 0.14), 0 17px 35px rgba(15, 37, 74, 0.1);
+    --wpa-max: 1048px;
+
+    font-family: Roboto, system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-weight: 400;
+    color: var(--wpa-shade-400);
+    background: var(--wpa-page-bg);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+.amelia-wpa *,
+.amelia-wpa *::before,
+.amelia-wpa *::after {
+    box-sizing: border-box;
+}
+
+.wpa-events__shell {
+    min-height: 100vh;
+    padding-top: 24px;
+}
+
+.wpa-events__inner {
+    max-width: var(--wpa-max);
+    margin: 0 auto;
+    padding: 0 20px 48px;
+}
+
+.wpa-events__columns {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 24px;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.wpa-events__footer-mount {
+    position: sticky;
+    padding-top: 32px;
+    bottom: 0;
+}
+
+.wpa-events__col--event {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.wpa-events__col--tickets {
+    flex: 0 1 400px;
+    align-self: flex-start;
+    position: sticky;
+    top: 12px;
+}
+
+/* Carousel */
+.wpa-events__carousel {
+    width: 100%;
+}
+
+.wpa-events__carousel-viewport {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    border-radius: var(--wpa-radius-lg);
+    overflow: hidden;
+    background: var(--wpa-bg-soft);
+}
+
+.wpa-events__carousel-track {
+    display: flex;
+    height: 100%;
+    width: calc(var(--wpa-slides, 1) * 100%);
+    transition: transform 0.28s ease;
+}
+
+.wpa-events__carousel-slide {
+    flex: 0 0 calc(100% / var(--wpa-slides, 1));
+    height: 100%;
+    position: relative;
+}
+
+.wpa-events__carousel-slide img,
+.wpa-events__host-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.wpa-events__carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 1px solid var(--wpa-shade-250);
+    border-radius: var(--wpa-radius-dot);
+    background: var(--wpa-white);
+    box-shadow: var(--wpa-shadow-btn);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    line-height: 1;
+    color: var(--wpa-shade-900);
+}
+
+.wpa-events__carousel-nav:hover {
+    background: var(--wpa-bg-soft);
+}
+
+.wpa-events__carousel-nav--prev {
+    left: 12px;
+}
+
+.wpa-events__carousel-nav--next {
+    right: 12px;
+}
+
+.wpa-events__carousel-dots {
+    position: absolute;
+    left: 50%;
+    bottom: 12px;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.wpa-events__carousel-dot {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.55);
+    cursor: pointer;
+}
+
+.wpa-events__carousel-dot.is-active {
+    width: 18px;
+    background: var(--wpa-white);
+}
+
+/* Meta */
+.wpa-events__meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.wpa-events__begin {
+    min-width: 64px;
+    flex-shrink: 0;
+    white-space: nowrap;
+    font-size: 12px;
+    line-height: 18px;
+}
+
+.wpa-events__begin-label {
+    color: var(--wpa-shade-500);
+}
+
+.wpa-events__begin-date {
+    color: var(--wpa-shade-1000);
+}
+
+.wpa-events__begin-day {
+    font-size: 20px;
+    line-height: 24px;
+    font-weight: 500;
+}
+
+.wpa-events__begin-time {
+    color: var(--wpa-shade-400);
+}
+
+.wpa-events__meta-main {
+    flex: 1 1 200px;
+    min-width: 0;
+}
+
+.wpa-events__event-title {
+    margin: 0 0 2px;
+    font-size: 18px;
+    line-height: 28px;
+    font-weight: 500;
+    color: var(--wpa-shade-900);
+}
+
+.wpa-events__event-location,
+.wpa-events__desc {
+    font-size: 15px;
+    line-height: 24px;
+    color: var(--wpa-shade-400);
+}
+
+.wpa-events__event-location {
+    margin: 0 0 4px;
+}
+
+.wpa-events__event-status-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    font-size: 15px;
+    line-height: 24px;
+}
+
+.wpa-events__pill {
+    font-weight: 500;
+}
+
+.wpa-events__pill--open {
+    color: var(--wpa-open);
+}
+
+.wpa-events__pill--closed,
+.wpa-events__pill--upcoming {
+    color: var(--wpa-shade-500);
+}
+
+.wpa-events__pill--full {
+    color: var(--wpa-full);
+}
+
+.wpa-events__pill--canceled {
+    color: var(--wpa-canceled);
+}
+
+.wpa-events__slots {
+    color: var(--wpa-shade-400);
+}
+
+.wpa-events__slots strong {
+    font-weight: 700;
+}
+
+.wpa-events__price-block {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.wpa-events__price-line {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 18px;
+    line-height: 28px;
+    font-weight: 500;
+    color: var(--wpa-blue-900);
+}
+
+.wpa-events__vat-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0 4px;
+    border-radius: var(--wpa-radius-sm);
+    border: 1px solid var(--wpa-blue-500);
+    background: var(--wpa-blue-400);
+    color: var(--wpa-blue-1000);
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 500;
+}
+
+.wpa-events__muted {
+    color: var(--wpa-shade-500);
+}
+
+/* Blocks */
+.wpa-events__block {
+    width: 100%;
+}
+
+.wpa-events__block-label {
+    margin: 0 0 8px;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 500;
+    color: var(--wpa-shade-700);
+}
+
+.wpa-events__timetable-line,
+.wpa-events__rec-line {
+    margin: 0;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--wpa-shade-400);
+}
+
+.wpa-events__timetable-line .wpa-events__timetable-sep {
+    margin: 0 0.25em;
+    color: var(--wpa-shade-400);
+}
+
+.wpa-events__timetable-line .wpa-events__timetable-date {
+    font-weight: 500;
+}
+
+.wpa-events__link-btn {
+    margin-top: 2px;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    font: inherit;
+    font-size: 15px;
+    line-height: 24px;
+    color: var(--wpa-blue-900);
+    text-align: left;
+}
+
+.wpa-events__link-btn:hover {
+    text-decoration: underline;
+}
+
+.wpa-events__divider {
+    width: 100%;
+    height: 1px;
+    background: var(--wpa-shade-250);
+}
+
+/* Host */
+.wpa-events__host-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+.wpa-events__host {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    padding: 12px;
+    border-radius: var(--wpa-radius-sm);
+    background: var(--wpa-bg-soft);
+    width: 100%;
+}
+
+.wpa-events__host-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.wpa-events__host-avatar img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.wpa-events__host-text {
+    display: flex;
+    flex-direction: column;
+    font-size: 15px;
+    line-height: 24px;
+}
+
+.wpa-events__host-name {
+    font-weight: 500;
+    color: var(--wpa-shade-900);
+}
+
+.wpa-events__host-role {
+    color: var(--wpa-shade-600);
+}
+
+/* Unavailable */
+.wpa-events__empty {
+    padding: 48px 0;
+}
+
+.wpa-events__empty-card {
+    max-width: 440px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 32px 24px;
+    border: 1px solid var(--wpa-shade-250);
+    border-radius: var(--wpa-radius-lg);
+    background: var(--wpa-white);
+    box-shadow: var(--wpa-shadow-footer);
+}
+
+.wpa-events__empty-title {
+    margin: 0 0 8px;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--wpa-shade-900);
+}
+
+.wpa-events__empty-text {
+    margin: 0 0 20px;
+    font-size: 15px;
+    color: var(--wpa-shade-500);
+}
+
+.wpa-events__empty-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 20px;
+    border-radius: var(--wpa-radius-lg);
+    border: 1px solid var(--wpa-shade-250);
+    background: var(--wpa-white);
+    color: var(--wpa-shade-900);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.wpa-events__empty-link:hover {
+    background: var(--wpa-bg-soft);
+}
+
+@media (max-width: 899px) {
+    .wpa-events__shell {
+        padding-top: 16px;
+    }
+
+    .wpa-events__inner {
+        max-width: 100%;
+        padding: 0 16px calc(88px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .wpa-events__columns {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 20px;
+    }
+
+    .wpa-events__col--event,
+    .wpa-events__col--tickets {
+        flex: 1 1 auto;
+        max-width: 100%;
+        width: 100%;
+        position: relative;
+    }
+
+    .wpa-events__col--tickets {
+        min-height: 0;
+    }
+
+    .wpa-events__carousel-viewport {
+        height: 220px;
+    }
+
+    .wpa-events__carousel-nav {
+        width: 32px;
+        height: 32px;
+    }
+
+    .wpa-events__meta-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .wpa-events__meta-main {
+        flex: 0 1 auto;
+        width: 100%;
+    }
+
+    .wpa-events__price-block {
+        align-self: flex-start;
+    }
+
+    .wpa-events__event-title {
+        font-size: 17px;
+        line-height: 26px;
+    }
+}
+
+@media (max-width: 380px) {
+    .wpa-events__inner {
+        padding-inline: 12px;
+    }
+
+    .wpa-events__begin {
+        width: auto;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 8px 12px;
+    }
+}

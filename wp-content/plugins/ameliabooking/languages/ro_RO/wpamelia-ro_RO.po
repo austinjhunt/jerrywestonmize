@@ -429,6 +429,12 @@ msgstr ""
 "Adăugați Meta Pixel pentru a urmări conversiile publicitare și a optimiza "
 "marketingul."
 
+msgid "Add New"
+msgstr ""
+
+msgid "Add New Event Page"
+msgstr ""
+
 msgid "Add Period"
 msgstr "Adaugă perioada"
 
@@ -621,6 +627,9 @@ msgstr "Toți clienții"
 
 msgid "All employees"
 msgstr "Tot staff-ul"
+
+msgid "All entities imported"
+msgstr ""
 
 msgid "All events"
 msgstr "Toate evenimentele"
@@ -835,6 +844,15 @@ msgstr "Amelia - Rezervare pas cu pas"
 
 msgid "Amelia Add to calendar page"
 msgstr "Amelia Adaugă la pagina calendarului"
+
+msgid "Amelia Event"
+msgstr ""
+
+msgid "Amelia Event Page"
+msgstr ""
+
+msgid "Amelia Event Pages"
+msgstr ""
 
 msgid "Amelia Events List Booking Settings"
 msgstr "Amelia Lista de Evenimente Setări de Rezervare"
@@ -1360,6 +1378,9 @@ msgid ""
 msgstr ""
 "Creează automat întâlniri Zoom pentru rezervări și notifică clienții și "
 "angajații."
+
+msgid "Automatically create an Event Page for new events"
+msgstr ""
 
 msgid ""
 "Automatically generate invoices for every booking, making payments easier, "
@@ -2309,6 +2330,8 @@ msgid ""
 "Collect additional information from your customers before they complete a "
 "booking."
 msgstr ""
+"Colectați informații suplimentare de la clienți înainte ca aceștia să "
+"finalizeze o rezervare."
 
 msgid "Collect the information your business truly needs"
 msgstr "Colectează informațiile de care afacerea ta are cu adevărat nevoie"
@@ -2515,7 +2538,7 @@ msgid "Consulting"
 msgstr "Consultanță"
 
 msgid "Contact Form"
-msgstr ""
+msgstr "Formular de contact"
 
 msgid "Contact message"
 msgstr "Mesaj de contact"
@@ -2702,8 +2725,11 @@ msgstr "Creați un angajat"
 msgid "Create event"
 msgstr "Creați un eveniment"
 
-msgid "Create form"
+msgid "Create event page"
 msgstr ""
+
+msgid "Create form"
+msgstr "Creează formular"
 
 msgid "Create meetings for pending appointments"
 msgstr "Creează întâlniri pentru programările în așteptare"
@@ -3035,11 +3061,17 @@ msgstr "Temă Întunecată"
 msgid "Dashboard"
 msgstr "Tablou de bord"
 
+msgid "Data export is ready."
+msgstr ""
+
 msgid "Data that remains unchanged:"
 msgstr "Date care rămân neschimbate:"
 
 msgid "Data to be updated:"
 msgstr "Date de actualizat:"
+
+msgid "Data transfer"
+msgstr ""
 
 msgid "Date"
 msgstr "Dată"
@@ -3452,6 +3484,9 @@ msgstr ""
 "să navigheze, să caute și să rezerve direct. O modalitate excelentă de a "
 "evidenția evenimentele viitoare într-un format interactiv."
 
+msgid "Do not exit the import until it is finished."
+msgstr ""
+
 msgid "Do you want to cancel following events?"
 msgstr "Doriți să anulați următoarele evenimente?"
 
@@ -3665,6 +3700,9 @@ msgstr "Editare client"
 msgid "Edit Event"
 msgstr "Editează eveniment"
 
+msgid "Edit Event Page"
+msgstr ""
+
 msgid "Edit Extra"
 msgstr "Editează Extra"
 
@@ -3709,6 +3747,9 @@ msgstr "Editează evenimentul"
 
 msgid "Edit event booking"
 msgstr "Editați programarea evenimentului"
+
+msgid "Edit event page"
+msgstr ""
 
 msgid "Edit location"
 msgstr "Editează locația"
@@ -3958,7 +3999,7 @@ msgstr ""
 "personalizată."
 
 msgid "Enable data usage"
-msgstr ""
+msgstr "Activează utilizarea datelor"
 
 msgid "Enable guest booking"
 msgstr "Activați rezervarea oaspeților"
@@ -4261,7 +4302,7 @@ msgstr ""
 "Introduceți atât ID-ul aplicației (client), cât și secretul clientului."
 
 msgid "Enter code"
-msgstr ""
+msgstr "Introduceți cod"
 
 msgid "Enter date of birth"
 msgstr "Introduceți data nașterii"
@@ -4413,6 +4454,9 @@ msgstr "Formular de rezervare pentru lista evenimentelor"
 msgid "Event Location"
 msgstr "Locația evenimentului"
 
+msgid "Event Pages"
+msgstr ""
+
 msgid "Event Starts"
 msgstr "Începe evenimentul"
 
@@ -4429,7 +4473,7 @@ msgid "Event available"
 msgstr "Eveniment disponibil"
 
 msgid "Event booking"
-msgstr ""
+msgstr "Rezervare pentru evenimente"
 
 msgid "Event booking has been created."
 msgstr "Rezervarea evenimentului a fost creată."
@@ -4547,7 +4591,7 @@ msgid "Event has been updated."
 msgstr "Evenimentul a fost actualizat."
 
 msgid "Event image gallery"
-msgstr ""
+msgstr "Galerie de imagini pentru eveniment"
 
 msgid "Event info"
 msgstr "Informații Eveniment"
@@ -4663,7 +4707,7 @@ msgid "Events list view"
 msgstr "Vizualizare listă evenimente"
 
 msgid "Events pagination"
-msgstr ""
+msgstr "Paginare evenimente"
 
 msgid "Events pricing"
 msgstr "Prețuri evenimente"
@@ -4723,8 +4767,14 @@ msgstr "Exportați datele programărilor cu ușurință"
 msgid "Export bookings"
 msgstr "Exportă rezervările"
 
+msgid "Export data"
+msgstr ""
+
 msgid "Export event booking data with ease"
 msgstr "Exportați cu ușurință datele de rezervare a evenimentelor"
+
+msgid "Export failed."
+msgstr ""
 
 msgid "Express Account"
 msgstr "Cont Express"
@@ -5256,6 +5306,9 @@ msgid ""
 "Help us improve Amelia by sharing anonymous data about your plugin usage. No "
 "personal data is collected."
 msgstr ""
+"Ajutați-ne să îmbunătățim Amelia prin partajarea de date anonimizate despre "
+"modul în care este folosit pluginul. Nu se colectează date cu caracter "
+"personal."
 
 msgid ""
 "Here, you can connect your personal Apple Calendar,<br/>so once the booking "
@@ -5429,6 +5482,9 @@ msgstr ""
 msgid "ID Desc"
 msgstr ""
 
+msgid "I understand this import will replace all current data permanently."
+msgstr ""
+
 msgid "I want to pay full amount"
 msgstr "Vreau sa platesc suma intreaga"
 
@@ -5596,7 +5652,7 @@ msgid "Image Color"
 msgstr "Culoarea imaginii"
 
 msgid "Image navigation"
-msgstr ""
+msgstr "Navigare între imagini"
 
 msgid "Image thumbs"
 msgstr "Miniaturi imagini"
@@ -5613,14 +5669,212 @@ msgstr "Import parțial reușit"
 msgid "Import Rules"
 msgstr "Reguli de import"
 
+msgid "Import completed"
+msgstr ""
+
+msgid "Import completed successfully."
+msgstr ""
+
+msgid "Import could not be started."
+msgstr ""
+
+msgid "Import data"
+msgstr ""
+
+msgid "Import errors"
+msgstr ""
+
+msgid "Import failed"
+msgstr ""
+
+msgid "Import failed. Review the details below."
+msgstr ""
+
+msgid "Import progress"
+msgstr ""
+
+msgid "Import progress could not be updated."
+msgstr ""
+
+msgid "Import started."
+msgstr ""
+
 msgid "Import successful"
 msgstr "Import cu succes"
+
+msgid "Importing Google calendar sync"
+msgstr ""
+
+msgid "Importing Outlook calendar sync"
+msgstr ""
+
+msgid "Importing appointments"
+msgstr ""
+
+msgid "Importing booking extras"
+msgstr ""
+
+msgid "Importing bookings"
+msgstr ""
+
+msgid "Importing categories"
+msgstr ""
+
+msgid "Importing coupon-event relations"
+msgstr ""
+
+msgid "Importing coupon-package relations"
+msgstr ""
+
+msgid "Importing coupon-service relations"
+msgstr ""
+
+msgid "Importing coupons"
+msgstr ""
+
+msgid "Importing custom field events"
+msgstr ""
+
+msgid "Importing custom field options"
+msgstr ""
+
+msgid "Importing custom field services"
+msgstr ""
+
+msgid "Importing custom fields"
+msgstr ""
 
 msgid "Importing customers"
 msgstr "Importarea clienților"
 
-msgid "Improve Amelia"
+msgid "Importing days off"
 msgstr ""
+
+msgid "Importing employee locations"
+msgstr ""
+
+msgid "Importing employee services"
+msgstr ""
+
+msgid "Importing employee views"
+msgstr ""
+
+msgid "Importing employees"
+msgstr ""
+
+msgid "Importing event booking periods"
+msgstr ""
+
+msgid "Importing event booking tickets"
+msgstr ""
+
+msgid "Importing event periods"
+msgstr ""
+
+msgid "Importing event providers"
+msgstr ""
+
+msgid "Importing event tags"
+msgstr ""
+
+msgid "Importing event tickets"
+msgstr ""
+
+msgid "Importing events"
+msgstr ""
+
+msgid "Importing extras"
+msgstr ""
+
+msgid "Importing location view settings"
+msgstr ""
+
+msgid "Importing locations"
+msgstr ""
+
+msgid "Importing notification SMS history"
+msgstr ""
+
+msgid "Importing notification log"
+msgstr ""
+
+msgid "Importing notification relations"
+msgstr ""
+
+msgid "Importing notifications"
+msgstr ""
+
+msgid "Importing package booking services"
+msgstr ""
+
+msgid "Importing package bookings"
+msgstr ""
+
+msgid "Importing package service locations"
+msgstr ""
+
+msgid "Importing package service providers"
+msgstr ""
+
+msgid "Importing package services"
+msgstr ""
+
+msgid "Importing packages"
+msgstr ""
+
+msgid "Importing payments"
+msgstr ""
+
+msgid "Importing period-location relations"
+msgstr ""
+
+msgid "Importing period-service relations"
+msgstr ""
+
+msgid "Importing provider periods"
+msgstr ""
+
+msgid "Importing provider special-day periods"
+msgstr ""
+
+msgid "Importing resource relations"
+msgstr ""
+
+msgid "Importing resources"
+msgstr ""
+
+msgid "Importing service views"
+msgstr ""
+
+msgid "Importing services"
+msgstr ""
+
+msgid "Importing settings"
+msgstr ""
+
+msgid "Importing special-day period-location relations"
+msgstr ""
+
+msgid "Importing special-day period-service relations"
+msgstr ""
+
+msgid "Importing special days"
+msgstr ""
+
+msgid "Importing tax relations"
+msgstr ""
+
+msgid "Importing taxes"
+msgstr ""
+
+msgid "Importing time outs"
+msgstr ""
+
+msgid "Importing work periods"
+msgstr ""
+
+msgid "Improve Amelia"
+msgstr "Contribuiți la îmbunătățirea Amelia"
 
 msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
@@ -5649,6 +5903,9 @@ msgid ""
 msgstr ""
 "Îmbunătățiți experiența clienților, permițându-le să aleagă locația care li "
 "se potrivește cel mai bine."
+
+msgid "Improve plugin"
+msgstr "Îmbunătățește pluginul"
 
 msgid ""
 "Improve reporting accuracy by accessing complete appointment data instantly"
@@ -5801,8 +6058,11 @@ msgstr "Introduceți codul scurt de rezervare Amelia"
 msgid "Insert pending appointments"
 msgstr "Introduceți programările în așteptare"
 
-msgid "Install & Activate"
+msgid "Inserted"
 msgstr ""
+
+msgid "Install & Activate"
+msgstr "Instalează și activează"
 
 msgid "Integrate with WooCommerce to enable advanced e-commerce capabilities."
 msgstr ""
@@ -5907,19 +6167,19 @@ msgid "IvyForms"
 msgstr ""
 
 msgid "IvyForms Entries"
-msgstr ""
+msgstr "IvyForms Înregistrări"
 
 msgid "IvyForms Field"
-msgstr ""
+msgstr "IvyForms Câmp"
 
 msgid "IvyForms Form"
-msgstr ""
+msgstr "IvyForms Formular"
 
 msgid "IvyForms validation failed."
-msgstr ""
+msgstr "Validarea IvyForms a eșuat."
 
 msgid "Ivy setup"
-msgstr ""
+msgstr "Ivy configurare"
 
 msgid "Jane Doe"
 msgstr "femeie necunoscută"
@@ -6166,16 +6426,16 @@ msgid "Load page"
 msgstr "Încarcă pagina"
 
 msgid "Loading"
-msgstr ""
+msgstr "Se încarcă"
 
 msgid "Loading..."
 msgstr "Se încarcă..."
 
 msgid "Loading event information"
-msgstr ""
+msgstr "Se încarcă informațiile despre eveniment"
 
 msgid "Loading header"
-msgstr ""
+msgstr "Se încarcă antetul paginii"
 
 msgid "Local Time"
 msgstr "Ora locala"
@@ -6365,6 +6625,9 @@ msgstr "Gestionează programul personal"
 msgid "Manage shared resources with ease"
 msgstr "Gestionați cu ușurință resursele partajate"
 
+msgid "Manage this event in Amelia:"
+msgstr ""
+
 msgid "Managing assigned services"
 msgstr "Gestionarea serviciilor alocate"
 
@@ -6394,7 +6657,7 @@ msgid "Max Capacity Desc"
 msgstr "Capacitate maximă - Descriere"
 
 msgid "Maximum"
-msgstr ""
+msgstr "Maxim"
 
 msgid "Maximum Quantity:"
 msgstr "Cantitate maximă:"
@@ -6491,7 +6754,7 @@ msgid "Min. Capacity"
 msgstr "Min. Capacitate"
 
 msgid "Minimum"
-msgstr ""
+msgstr "Minim"
 
 msgid "Minimum bookings required"
 msgstr "Sunt necesare rezervări minime"
@@ -6650,6 +6913,9 @@ msgstr "Client nou"
 msgid "New Event"
 msgstr "Eveniment nou"
 
+msgid "New Event Page"
+msgstr ""
+
 msgid "New Location"
 msgstr "Locație nouă"
 
@@ -6717,7 +6983,7 @@ msgid "Next day reminder"
 msgstr "Memento pentru ziua următoare"
 
 msgid "Next image"
-msgstr ""
+msgstr "Următoarea imagine"
 
 msgid "No"
 msgstr "Nu"
@@ -6793,6 +7059,12 @@ msgstr "Încă nu există angajați"
 
 msgid "No event bookings yet"
 msgstr "Încă nu există rezervări pentru evenimente"
+
+msgid "No event pages found"
+msgstr ""
+
+msgid "No event pages found in Trash"
+msgstr ""
 
 msgid "No events found"
 msgstr "Nu au fost găsite evenimente"
@@ -7213,6 +7485,9 @@ msgstr "Deschis"
 msgid "Open Event"
 msgstr "Eveniment deschis"
 
+msgid "Open Event in Amelia"
+msgstr ""
+
 msgid "Open following"
 msgstr "Deschideți următorul"
 
@@ -7317,7 +7592,7 @@ msgid "PHP Mail"
 msgstr "Mail PHP"
 
 msgid "PRE-BOOKING INTAKE FORM (IVYFORMS)"
-msgstr ""
+msgstr "FORMULAR DE DATE ÎNAINTE DE REZERVARE (IVYFORMS)"
 
 msgid "Package"
 msgstr "Pachet"
@@ -7739,7 +8014,7 @@ msgid "Permanent access token"
 msgstr "Jeton de acces permanent"
 
 msgid "Permanently linked"
-msgstr ""
+msgstr "Asociat permanent"
 
 msgid "Person"
 msgstr "Persoană"
@@ -7825,6 +8100,9 @@ msgstr "Vă rugăm așteptați"
 
 msgid "Please add period"
 msgstr "Vă rugăm să adăugați perioada"
+
+msgid "Please back up before proceeding to avoid loss of data."
+msgstr ""
 
 msgid "Please cancel the event first before deleting it."
 msgstr "Vă rugăm să anulați întâi evenimentul înainte de a-l șterge."
@@ -8227,7 +8505,7 @@ msgid "Popup title"
 msgstr "Titlu pop-up"
 
 msgid "Pre-booking form details"
-msgstr ""
+msgstr "Detalii formular de preprogramare"
 
 msgid "Preload entities when page loads"
 msgstr "Preîncărcați entitățile când se încarcă pagina"
@@ -8271,13 +8549,13 @@ msgid "Preview invoice"
 msgstr "Previzualizare factură"
 
 msgid "Previous image"
-msgstr ""
+msgstr "Imagine anterioară"
 
 msgid "Previous range"
 msgstr "Intervalul anterior"
 
 msgid "Previous step"
-msgstr ""
+msgstr "Înapoi"
 
 msgid "Price"
 msgstr "Preț"
@@ -8920,6 +9198,9 @@ msgstr "Caută"
 msgid "Search..."
 msgstr "Caută..."
 
+msgid "Search Event Pages"
+msgstr ""
+
 msgid "Search Filters"
 msgstr "Filtre Căutare"
 
@@ -8939,7 +9220,7 @@ msgid "Search bookings"
 msgstr "Caută rezervări"
 
 msgid "Search coupons"
-msgstr ""
+msgstr "Caută cupoane"
 
 msgid "Search customers"
 msgstr "Caută clienți"
@@ -8978,13 +9259,13 @@ msgid "Search packages"
 msgstr "Caută pachete"
 
 msgid "Search resources"
-msgstr ""
+msgstr "Caută resurse"
 
 msgid "Search services"
 msgstr "Caută servicii"
 
 msgid "Search taxes"
-msgstr ""
+msgstr "Caută taxe"
 
 msgid "Second"
 msgstr "Al doilea"
@@ -9114,8 +9395,11 @@ msgstr "Selectați produsul WooCommerce"
 msgid "Select Zoom User"
 msgstr "Selectați utilizator Zoom"
 
-msgid "Select a form..."
+msgid "Select a .ameliafile archive before starting the import."
 msgstr ""
+
+msgid "Select a form..."
+msgstr "Selectați un formular..."
 
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr ""
@@ -9230,6 +9514,8 @@ msgstr "Selectați bilete"
 
 msgid "Select which IvyForms form to show before booking"
 msgstr ""
+"Selectați formularul IvyForms care să fie afișat înainte de pasul de "
+"rezervare"
 
 msgid "Select your Square Location"
 msgstr "Selectați locația dvs. Square"
@@ -9949,6 +10235,9 @@ msgstr "Omiteți pachetele și continuați cu serviciul selectat"
 msgid "Skip setup"
 msgstr "Sari peste configurare"
 
+msgid "Skipped"
+msgstr ""
+
 msgid "Slot end time"
 msgstr "Ora de încheiere a intervalului orar"
 
@@ -10494,6 +10783,9 @@ msgid ""
 msgstr ""
 "Moneda din Amelia nu se potrivește cu moneda locației alese de dvs. Square"
 
+msgid "The custom post is ready."
+msgstr ""
+
 msgid ""
 "The customer didn’t provide an email address, so the invoice couldn’t be "
 "sent."
@@ -10732,6 +11024,13 @@ msgstr ""
 
 msgid "This employee is the only one assigned to {service}."
 msgstr "Acest angajat este singurul atribuit la {service}."
+
+msgid ""
+"This export includes, but is not limited to, bookings, customers, settings, "
+"notification logs, and SMS history. Site-specific data (such as URLs, "
+"images, and purchase codes) is excluded and must be set up manually on a new "
+"site."
+msgstr ""
 
 msgid "This field is required"
 msgstr "Acest câmp este obligatoriu"
@@ -11448,6 +11747,9 @@ msgstr "Vizualizare coș"
 msgid "View Employees"
 msgstr "Membru staff nou"
 
+msgid "View Event Page"
+msgstr ""
+
 msgid "View Less Packages"
 msgstr "Vezi Mesaj"
 
@@ -12060,6 +12362,9 @@ msgstr "(Plătește acum)"
 msgid " (Incl. Tax)"
 msgstr " (inclusiv taxe)"
 
+msgid "added to cart"
+msgstr ""
+
 msgid "and"
 msgstr "și"
 
@@ -12129,6 +12434,9 @@ msgstr "adresă de email iCloud"
 msgid "iCloud email address and iCloud app-specific password"
 msgstr "adresă de email iCloud și parolă specifică aplicației iCloud"
 
+msgid "in cart"
+msgstr ""
+
 msgid "includes"
 msgstr "include"
 
@@ -12157,13 +12465,13 @@ msgid "on"
 msgstr "pe"
 
 msgid "opens in new tab"
-msgstr ""
+msgstr "Se deschide într-o filă nouă"
 
 msgid "out of"
 msgstr "din"
 
 msgid "payment button"
-msgstr ""
+msgstr "Buton de plată"
 
 msgid "people"
 msgstr "oameni"
@@ -12209,6 +12517,12 @@ msgstr "Configurare reCAPTCHA"
 
 msgid "reCAPTCHA validation failed."
 msgstr "Validarea reCAPTCHA a eșuat."
+
+msgid "remaining"
+msgstr ""
+
+msgid "removed from cart"
+msgstr ""
 
 msgid "results"
 msgstr "rezultate"

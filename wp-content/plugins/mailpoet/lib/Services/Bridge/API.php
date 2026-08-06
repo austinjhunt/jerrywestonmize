@@ -153,7 +153,7 @@ class API {
     );
     remove_action('requests-curl.after_request', [$this, 'logCurlInformation']);
     remove_action('requests-curl.before_request', [$this, 'setCurlHandle']);
-    if (is_wp_error($result)) {
+    if ($this->wp->isWpError($result)) {
       $this->logCurlError($result);
       return [
         'status' => self::SENDING_STATUS_CONNECTION_ERROR,
@@ -178,12 +178,14 @@ class API {
    * `from`/`to` datetime range, 1-based `p` pagination, and a response of the
    * shape `{ recipients: array<{email: string, type: string}>, page: int,
    * has_more: bool }`. The returned `recipients` are flattened to their email
-   * addresses so callers receive a plain list of strings. Returns null on a
-   * failed request.
+   * addresses so callers receive a plain list of strings.
    *
-   * @return array{recipients: string[], page: int, has_more: bool}|null
+   * @return array{recipients: string[], page: int, has_more: bool}
+   * @throws BouncesReportException The response status is carried on the
+   *   exception code so callers can distinguish a rejected key (401/403), which
+   *   no amount of retrying will fix, from a transient failure.
    */
-  public function getBouncesReport(\DateTimeInterface $from, \DateTimeInterface $to, int $page = 1): ?array {
+  public function getBouncesReport(\DateTimeInterface $from, \DateTimeInterface $to, int $page = 1): array {
     $utc = new \DateTimeZone('UTC');
     $fromUtc = (new \DateTimeImmutable('@' . $from->getTimestamp()))->setTimezone($utc);
     $toUtc = (new \DateTimeImmutable('@' . $to->getTimestamp()))->setTimezone($utc);
@@ -198,8 +200,24 @@ class API {
     );
 
     $result = $this->request($url, null, 'GET');
-    if ($this->wp->wpRemoteRetrieveResponseCode($result) !== 200) {
-      return null;
+    $responseCode = (int)$this->wp->wpRemoteRetrieveResponseCode($result);
+    if ($responseCode !== 200) {
+      $isWpError = $this->wp->isWpError($result);
+      $logData = [
+        'code' => $responseCode,
+        'error' => $isWpError ? $result->get_error_message() : $this->wp->wpRemoteRetrieveBody($result),
+      ];
+      $this->loggerFactory->getLogger(LoggerFactory::TOPIC_BRIDGE)->error('getBouncesReport API call failed.', $logData);
+      // The request never reached the service, so there is no status to report:
+      // say so rather than describing it as "response code 0". The code stays 0
+      // either way, which is what marks the failure as transient for callers.
+      $message = $isWpError
+        ? __('The bounces report request failed without a response', 'mailpoet')
+        // translators: %d is the HTTP response code.
+        : sprintf(__('The bounces report request failed with response code %d', 'mailpoet'), $responseCode);
+      throw BouncesReportException::create()
+        ->withCode($responseCode)
+        ->withMessage($message);
     }
     $body = $this->wp->wpRemoteRetrieveBody($result);
     $data = json_decode($body, true);
@@ -207,7 +225,8 @@ class API {
       // A 200 with a malformed payload must not be treated as a successful empty
       // page: that would advance the report window and silently skip bounces.
       $this->logInvalidDataFormat('getBouncesReport', is_string($body) ? $body : null);
-      return null;
+      throw BouncesReportException::create()
+        ->withMessage(__('The bounces report response was not in the expected format', 'mailpoet'));
     }
     $data['recipients'] = array_map(
       function (array $recipient): string {
@@ -251,7 +270,7 @@ class API {
     if (!$isSuccess) {
       $logData = [
         'code' => $code,
-        'error' => is_wp_error($result) ? $result->get_error_message() : null,
+        'error' => $this->wp->isWpError($result) ? $result->get_error_message() : null,
       ];
       $this->loggerFactory->getLogger(LoggerFactory::TOPIC_BRIDGE)->error('Stats API call failed.', $logData);
     }
@@ -290,7 +309,7 @@ class API {
       $errorBody = $this->wp->wpRemoteRetrieveBody($result);
       $logData = [
         'code' => $responseCode,
-        'error' => is_wp_error($result) ? $result->get_error_message() : $errorBody,
+        'error' => $this->wp->isWpError($result) ? $result->get_error_message() : $errorBody,
       ];
       $this->loggerFactory->getLogger(LoggerFactory::TOPIC_BRIDGE)->error('CreateAuthorizedEmailAddress API call failed.', $logData);
 
@@ -399,7 +418,7 @@ class API {
       }
       $logData = [
         'code' => $responseCode,
-        'error' => is_wp_error($result) ? $result->get_error_message() : $rawResponseBody,
+        'error' => $this->wp->isWpError($result) ? $result->get_error_message() : $rawResponseBody,
       ];
       $this->loggerFactory->getLogger(LoggerFactory::TOPIC_BRIDGE)->error('verifyAuthorizedSenderDomain API call failed.', $logData);
 

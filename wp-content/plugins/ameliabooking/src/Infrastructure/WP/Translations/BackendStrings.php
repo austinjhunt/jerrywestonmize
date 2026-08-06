@@ -1654,7 +1654,6 @@ class BackendStrings
             'red_edit_tracking'                               => __('Edit Tracking', 'wpamelia'),
             'red_tip_lesson_space_setup'                      => __('Lesson Space setup', 'wpamelia'),
             'red_tip_mailchimp_setup'                         => __('Mailchimp setup', 'wpamelia'),
-            'red_tip_ivy_setup'                               => __('Ivy setup', 'wpamelia'),
             'red_meta'                                        => __('Meta', 'wpamelia'),
             'red_pixel_id'                                    => __('Pixel ID', 'wpamelia'),
             'red_tip_recaptcha_setup'                         => __('reCAPTCHA setup', 'wpamelia'),

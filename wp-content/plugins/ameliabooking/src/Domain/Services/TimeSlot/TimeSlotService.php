@@ -164,24 +164,27 @@ class TimeSlotService
         $specialDays = [];
 
         foreach ($specialDaysIntervals as $specialDay) {
-            $specialDays = array_merge($specialDays, $specialDay['dates']);
+            $specialDays += $specialDay['dates'];
         }
+
+        $providerLocationId = $provider->getLocationId() ? $provider->getLocationId()->getValue() : null;
+        $providerTimeZone = $provider->getTimeZone() ? $provider->getTimeZone()->getValue() : null;
 
         /** @var Appointment $app */
         foreach ($provider->getAppointmentList()->getItems() as $app) {
-            $occupiedStart = $provider->getTimeZone() ?
-                DateTimeService::getDateTimeObjectInTimeZone(
-                    $app->getBookingStart()->getValue()->format('Y-m-d H:i'),
-                    $provider->getTimeZone()->getValue()
-                ) : DateTimeService::getCustomDateTimeObject($app->getBookingStart()->getValue()->format('Y-m-d H:i'));
+            $bookingStart        = $app->getBookingStart()->getValue();
+            $bookingEnd          = $app->getBookingEnd()->getValue();
+            $appServiceId        = $app->getServiceId()->getValue();
+            $appLocationId       = $app->getLocationId() ? $app->getLocationId()->getValue() : null;
+            $resolvedLocationId  = $appLocationId !== null ? $appLocationId : $providerLocationId;
+            $bookingStartTimeKey = $bookingStart->format('H:i');
+            $bookingEndString    = $bookingEnd->format('Y-m-d H:i:s');
 
-            $occupiedEnd = $provider->getTimeZone() ?
-                DateTimeService::getDateTimeObjectInTimeZone(
-                    $app->getBookingEnd()->getValue()->format('Y-m-d H:i'),
-                    $provider->getTimeZone()->getValue()
-                ) : DateTimeService::getCustomDateTimeObject($app->getBookingEnd()->getValue()->format('Y-m-d H:i'));
+            $occupiedStart = $this->getProviderTimeZoneDateTime($bookingStart->format('Y-m-d H:i'), $providerTimeZone);
 
-            if ($app->getServiceId()->getValue()) {
+            $occupiedEnd = $this->getProviderTimeZoneDateTime($bookingEnd->format('Y-m-d H:i'), $providerTimeZone);
+
+            if ($appServiceId) {
                 $occupiedStart->modify('-' . ($app->getService()->getTimeBefore() ? $app->getService()->getTimeBefore()->getValue() : 0) . ' seconds');
 
                 $occupiedEnd->modify('+' . ($app->getService()->getTimeAfter() ? $app->getService()->getTimeAfter()->getValue() : 0) . ' seconds');
@@ -194,8 +197,7 @@ class TimeSlotService
             $occupiedSecondsEnd = $this->intervalService->getSeconds($occupiedEnd->format('H:i:s'));
 
             if (
-                $occupiedDateStart === $occupiedEnd->format('Y-m-d') &&
-                (!$bookOverApp || !$app->getServiceId()->getValue())
+                $occupiedDateStart === $occupiedEnd->format('Y-m-d') && !$bookOverApp
             ) {
                 $intervals[$occupiedDateStart]['occupied'][$occupiedSecondsStart] = [
                     $occupiedSecondsStart,
@@ -207,7 +209,7 @@ class TimeSlotService
                         $occupiedSecondsEnd
                     )
                 ];
-            } elseif (!$bookOverApp || !$app->getServiceId()->getValue()) {
+            } elseif (!$bookOverApp) {
                 $dates = $this->getPeriodDates($occupiedStart, $occupiedEnd);
 
                 $datesCount = sizeof($dates);
@@ -243,9 +245,7 @@ class TimeSlotService
                 }
             }
 
-            $providerLocationId = $provider->getLocationId() ? $provider->getLocationId()->getValue() : null;
-
-            if ($app->getServiceId()->getValue() === $serviceId) {
+            if ($appServiceId === $serviceId) {
                 $persons = 0;
                 $personsWaiting = 0;
 
@@ -260,11 +260,11 @@ class TimeSlotService
 
                 $status = $app->getStatus()->getValue();
 
-                $appLocationId = $app->getLocationId() ? $app->getLocationId()->getValue() : null;
+                $maxCapacity = $app->getService()->getMaxCapacity()->getValue();
 
                 $hasCapacity =
                     $personsCount !== null &&
-                    ($persons + $personsCount) <= $app->getService()->getMaxCapacity()->getValue() &&
+                    ($persons + $personsCount) <= $maxCapacity &&
                     !($app->isFull() ? $app->isFull()->getValue() : false);
 
                 $hasLocation =
@@ -277,54 +277,98 @@ class TimeSlotService
                     (!$appLocationId && $providerLocationId &&
                         $locations->getItem($providerLocationId)->getStatus()->getValue() === Status::VISIBLE);
 
-                $duration = $app->getBookingStart()->getValue()->diff($app->getBookingEnd()->getValue());
+                $durationMinutes = $this->getAppointmentDurationMinutes($bookingStart, $bookingEnd);
 
                 if (
                     ($hasLocation && $status === BookingStatus::APPROVED && $hasCapacity) ||
                     ($hasLocation && $status === BookingStatus::PENDING && ($bookIfPending || $hasCapacity))
                 ) {
-                    $endDateTime = $app->getBookingEnd()->getValue()->format('Y-m-d H:i:s');
+                    $endDateTimeParts = explode(' ', $bookingEndString);
 
-                    $endDateTimeParts = explode(' ', $endDateTime);
-
-                    $intervals[$occupiedDateStart]['available'][$app->getBookingStart()->getValue()->format('H:i')] =
+                    $intervals[$occupiedDateStart]['available'][$bookingStartTimeKey] =
                         [
-                            'locationId' => $app->getLocationId() ?
-                                $app->getLocationId()->getValue() : $providerLocationId,
-                            'places'     => $app->getService()->getMaxCapacity()->getValue() - $persons,
+                            'locationId' => $resolvedLocationId,
+                            'places'     => $maxCapacity - $persons,
                             'endDate'    => $endDateTimeParts[0],
                             'endTime'    => $endDateTimeParts[1],
                             'serviceId'  => $serviceId,
-                            'duration'   => ($duration->days * 24 * 60) + ($duration->h * 60) + $duration->i,
+                            'duration'   => $durationMinutes,
                         ];
                 } else {
-                    $intervals[$occupiedDateStart]['full'][$app->getBookingStart()->getValue()->format('H:i')] =
+                    $this->setProviderFullInterval(
+                        $intervals,
+                        $occupiedDateStart,
+                        $bookingStartTimeKey,
                         [
-                            'locationId' => $app->getLocationId() ?
-                                $app->getLocationId()->getValue() : $providerLocationId,
-                            'places'     => $app->getService()->getMaxCapacity()->getValue() - $persons,
-                            'end'        => $app->getBookingEnd()->getValue()->format('Y-m-d H:i:s'),
-                            'serviceId'  => $app->getServiceId()->getValue(),
-                            'duration'   => ($duration->days * 24 * 60) + ($duration->h * 60) + $duration->i,
+                            'locationId' => $resolvedLocationId,
+                            'places'     => $maxCapacity - $persons,
+                            'end'        => $bookingEndString,
+                            'serviceId'  => $appServiceId,
+                            'duration'   => $durationMinutes,
                             'waiting'    => $personsWaiting,
-                        ];
+                        ]
+                    );
                 }
-            } elseif ($app->getServiceId()->getValue()) {
-                $duration = $app->getBookingStart()->getValue()->diff($app->getBookingEnd()->getValue());
-
-                $intervals[$occupiedDateStart]['full'][$app->getBookingStart()->getValue()->format('H:i')] =
+            } else {
+                $this->setProviderFullInterval(
+                    $intervals,
+                    $occupiedDateStart,
+                    $bookingStartTimeKey,
                     [
-                        'locationId' => $app->getLocationId() ?
-                            $app->getLocationId()->getValue() : $providerLocationId,
+                        'locationId' => $resolvedLocationId,
                         'places'     => 0,
-                        'end'        => $app->getBookingEnd()->getValue()->format('Y-m-d H:i:s'),
-                        'serviceId'  => $app->getServiceId()->getValue(),
-                        'duration'   => ($duration->days * 24 * 60) + ($duration->h * 60) + $duration->i,
-                    ];
+                        'end'        => $bookingEndString,
+                        'serviceId'  => $appServiceId,
+                        'duration'   => $this->getAppointmentDurationMinutes($bookingStart, $bookingEnd),
+                    ]
+                );
             }
         }
 
         return $intervals;
+    }
+
+    /**
+     * @param array  $intervals
+     * @param string $dateStart
+     * @param string $timeKey
+     * @param array  $entry
+     */
+    private function setProviderFullInterval(&$intervals, $dateStart, $timeKey, $entry)
+    {
+        if (
+            !isset($intervals[$dateStart]['full'][$timeKey]) ||
+            $entry['duration'] > $intervals[$dateStart]['full'][$timeKey]['duration']
+        ) {
+            $intervals[$dateStart]['full'][$timeKey] = $entry;
+        }
+    }
+
+    /**
+     * @param DateTime $bookingStart
+     * @param DateTime $bookingEnd
+     *
+     * @return int
+     */
+    private function getAppointmentDurationMinutes($bookingStart, $bookingEnd)
+    {
+        $duration = $bookingStart->diff($bookingEnd);
+
+        return ($duration->days * 24 * 60) + ($duration->h * 60) + $duration->i;
+    }
+
+    /**
+     * @param string      $dateTimeString
+     * @param string|null $providerTimeZone
+     *
+     * @return DateTime
+     * @throws Exception
+     */
+    private function getProviderTimeZoneDateTime($dateTimeString, $providerTimeZone)
+    {
+        return $providerTimeZone
+            ? DateTimeService::getDateTimeObjectInTimeZone($dateTimeString, $providerTimeZone)
+            : DateTimeService::getCustomDateTimeObject($dateTimeString);
     }
 
     /**

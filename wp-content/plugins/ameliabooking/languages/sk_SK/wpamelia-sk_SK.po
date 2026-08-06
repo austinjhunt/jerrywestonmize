@@ -428,6 +428,12 @@ msgstr ""
 "Pridajte Meta Pixel na sledovanie konverzií reklám a optimalizáciu "
 "marketingu."
 
+msgid "Add New"
+msgstr ""
+
+msgid "Add New Event Page"
+msgstr ""
+
 msgid "Add Period"
 msgstr "Pridať obdobie"
 
@@ -620,6 +626,9 @@ msgstr "Všetci zákazníci"
 
 msgid "All employees"
 msgstr "Všetci zamestnanci"
+
+msgid "All entities imported"
+msgstr ""
 
 msgid "All events"
 msgstr "Všetky udalosti"
@@ -829,6 +838,15 @@ msgstr "Amelia - Rezervácia krok za krokom"
 
 msgid "Amelia Add to calendar page"
 msgstr "Amelia Pridať do kalendára"
+
+msgid "Amelia Event"
+msgstr ""
+
+msgid "Amelia Event Page"
+msgstr ""
+
+msgid "Amelia Event Pages"
+msgstr ""
 
 msgid "Amelia Events List Booking Settings"
 msgstr "Amelia zoznam podujatí – nastavenia rezervácie"
@@ -1352,6 +1370,9 @@ msgid ""
 msgstr ""
 "Automaticky vytvárajte Zoom stretnutia pre rezervácie a informujte "
 "zákazníkov a zamestnancov."
+
+msgid "Automatically create an Event Page for new events"
+msgstr ""
 
 msgid ""
 "Automatically generate invoices for every booking, making payments easier, "
@@ -2293,7 +2314,7 @@ msgstr "Zbaliť menu"
 msgid ""
 "Collect additional information from your customers before they complete a "
 "booking."
-msgstr ""
+msgstr "Získajte od zákazníkov ďalšie informácie pred dokončením rezervácie."
 
 msgid "Collect the information your business truly needs"
 msgstr "Zbierajte informácie, ktoré vaša firma skutočne potrebuje"
@@ -2499,7 +2520,7 @@ msgid "Consulting"
 msgstr "Poradenstvo"
 
 msgid "Contact Form"
-msgstr ""
+msgstr "Kontaktný formulár"
 
 msgid "Contact message"
 msgstr "Kontaktná správa"
@@ -2683,8 +2704,11 @@ msgstr "Vytvoriť zamestnanca"
 msgid "Create event"
 msgstr "Vytvoriť udalosť"
 
-msgid "Create form"
+msgid "Create event page"
 msgstr ""
+
+msgid "Create form"
+msgstr "Vytvorte formulár"
 
 msgid "Create meetings for pending appointments"
 msgstr "Vytvoriť stretnutia pre čakajúce schôdzky"
@@ -3005,11 +3029,17 @@ msgstr "Tmavá téma"
 msgid "Dashboard"
 msgstr "Nástenka"
 
+msgid "Data export is ready."
+msgstr ""
+
 msgid "Data that remains unchanged:"
 msgstr "Údaje, ktoré zostávajú nezmenené:"
 
 msgid "Data to be updated:"
 msgstr "Údaje, ktoré sa majú aktualizovať:"
+
+msgid "Data transfer"
+msgstr ""
 
 msgid "Date"
 msgstr "Dátum"
@@ -3416,6 +3446,9 @@ msgstr ""
 "prehliadať, vyhľadávať a rezervovať priamo. Skvelý spôsob, ako zvýrazniť "
 "nadchádzajúce udalosti v interaktívnom formáte."
 
+msgid "Do not exit the import until it is finished."
+msgstr ""
+
 msgid "Do you want to cancel following events?"
 msgstr "Chcete zrušiť nasledujúce udalosti?"
 
@@ -3627,6 +3660,9 @@ msgstr "Upraviť zákazníka"
 msgid "Edit Event"
 msgstr "Upraviť udalosť"
 
+msgid "Edit Event Page"
+msgstr ""
+
 msgid "Edit Extra"
 msgstr "Upraviť extra"
 
@@ -3671,6 +3707,9 @@ msgstr "Upraviť udalosť"
 
 msgid "Edit event booking"
 msgstr "Upraviť rezerváciu udalosti"
+
+msgid "Edit event page"
+msgstr ""
 
 msgid "Edit location"
 msgstr "Upraviť miesto"
@@ -3918,7 +3957,7 @@ msgstr ""
 "Personalizujte farby a štítky pre vytvorenie plynulého a značkového zážitku."
 
 msgid "Enable data usage"
-msgstr ""
+msgstr "Povoliť spracúvanie údajov"
 
 msgid "Enable guest booking"
 msgstr "Povoliť rezerváciu pre hostí"
@@ -4213,7 +4252,7 @@ msgid "Enter both the application (client) ID and client secret."
 msgstr "Zadajte ID aplikácie (client) aj tajný kľúč klienta."
 
 msgid "Enter code"
-msgstr ""
+msgstr "Zadajte kód"
 
 msgid "Enter date of birth"
 msgstr "Dátum narodenia"
@@ -4363,6 +4402,9 @@ msgstr "Formulár na rezerváciu zoznamu podujatí"
 msgid "Event Location"
 msgstr "Miesto konania podujatia"
 
+msgid "Event Pages"
+msgstr ""
+
 msgid "Event Starts"
 msgstr "Termín udalosti"
 
@@ -4379,7 +4421,7 @@ msgid "Event available"
 msgstr "Udalosť je k dispozícii"
 
 msgid "Event booking"
-msgstr ""
+msgstr "Rezervácia na podujatie"
 
 msgid "Event booking has been created."
 msgstr "Rezervácia udalosti bola vytvorená."
@@ -4496,7 +4538,7 @@ msgid "Event has been updated."
 msgstr "Udalosť bola aktualizovaná."
 
 msgid "Event image gallery"
-msgstr ""
+msgstr "Galéria fotografií udalosti"
 
 msgid "Event info"
 msgstr "Informácie o podujatí"
@@ -4611,7 +4653,7 @@ msgid "Events list view"
 msgstr "Zobrazenie zoznamu udalostí"
 
 msgid "Events pagination"
-msgstr ""
+msgstr "Stránkovanie udalostí"
 
 msgid "Events pricing"
 msgstr "Ceny podujatí"
@@ -4670,8 +4712,14 @@ msgstr "Ľahký export údajov o schôdzkach"
 msgid "Export bookings"
 msgstr "Exportovať rezervácie"
 
+msgid "Export data"
+msgstr ""
+
 msgid "Export event booking data with ease"
 msgstr "Jednoducho exportujte údaje o rezerváciách na udalosti"
+
+msgid "Export failed."
+msgstr ""
 
 msgid "Express Account"
 msgstr "Express účet"
@@ -5193,6 +5241,8 @@ msgid ""
 "Help us improve Amelia by sharing anonymous data about your plugin usage. No "
 "personal data is collected."
 msgstr ""
+"Pomôžte nám zlepšovať Amelia zdieľaním anonymizovaných údajov o používaní "
+"pluginu, ktoré vás neidentifikujú. Nezhromažďujeme žiadne osobné údaje."
 
 msgid ""
 "Here, you can connect your personal Apple Calendar,<br/>so once the booking "
@@ -5362,6 +5412,9 @@ msgstr "ID vzostupne"
 msgid "ID Desc"
 msgstr "ID zostupne"
 
+msgid "I understand this import will replace all current data permanently."
+msgstr ""
+
 msgid "I want to pay full amount"
 msgstr "Chcem zaplatiť celú sumu"
 
@@ -5526,7 +5579,7 @@ msgid "Image Color"
 msgstr "Farba obrázka"
 
 msgid "Image navigation"
-msgstr ""
+msgstr "Navigácia medzi obrázkami"
 
 msgid "Image thumbs"
 msgstr "Miniatúry obrázkov"
@@ -5543,14 +5596,212 @@ msgstr "Import bol čiastočne úspešný"
 msgid "Import Rules"
 msgstr "Pravidlá importu"
 
+msgid "Import completed"
+msgstr ""
+
+msgid "Import completed successfully."
+msgstr ""
+
+msgid "Import could not be started."
+msgstr ""
+
+msgid "Import data"
+msgstr ""
+
+msgid "Import errors"
+msgstr ""
+
+msgid "Import failed"
+msgstr ""
+
+msgid "Import failed. Review the details below."
+msgstr ""
+
+msgid "Import progress"
+msgstr ""
+
+msgid "Import progress could not be updated."
+msgstr ""
+
+msgid "Import started."
+msgstr ""
+
 msgid "Import successful"
 msgstr "Import úspešný"
+
+msgid "Importing Google calendar sync"
+msgstr ""
+
+msgid "Importing Outlook calendar sync"
+msgstr ""
+
+msgid "Importing appointments"
+msgstr ""
+
+msgid "Importing booking extras"
+msgstr ""
+
+msgid "Importing bookings"
+msgstr ""
+
+msgid "Importing categories"
+msgstr ""
+
+msgid "Importing coupon-event relations"
+msgstr ""
+
+msgid "Importing coupon-package relations"
+msgstr ""
+
+msgid "Importing coupon-service relations"
+msgstr ""
+
+msgid "Importing coupons"
+msgstr ""
+
+msgid "Importing custom field events"
+msgstr ""
+
+msgid "Importing custom field options"
+msgstr ""
+
+msgid "Importing custom field services"
+msgstr ""
+
+msgid "Importing custom fields"
+msgstr ""
 
 msgid "Importing customers"
 msgstr "Importovanie zákazníkov"
 
-msgid "Improve Amelia"
+msgid "Importing days off"
 msgstr ""
+
+msgid "Importing employee locations"
+msgstr ""
+
+msgid "Importing employee services"
+msgstr ""
+
+msgid "Importing employee views"
+msgstr ""
+
+msgid "Importing employees"
+msgstr ""
+
+msgid "Importing event booking periods"
+msgstr ""
+
+msgid "Importing event booking tickets"
+msgstr ""
+
+msgid "Importing event periods"
+msgstr ""
+
+msgid "Importing event providers"
+msgstr ""
+
+msgid "Importing event tags"
+msgstr ""
+
+msgid "Importing event tickets"
+msgstr ""
+
+msgid "Importing events"
+msgstr ""
+
+msgid "Importing extras"
+msgstr ""
+
+msgid "Importing location view settings"
+msgstr ""
+
+msgid "Importing locations"
+msgstr ""
+
+msgid "Importing notification SMS history"
+msgstr ""
+
+msgid "Importing notification log"
+msgstr ""
+
+msgid "Importing notification relations"
+msgstr ""
+
+msgid "Importing notifications"
+msgstr ""
+
+msgid "Importing package booking services"
+msgstr ""
+
+msgid "Importing package bookings"
+msgstr ""
+
+msgid "Importing package service locations"
+msgstr ""
+
+msgid "Importing package service providers"
+msgstr ""
+
+msgid "Importing package services"
+msgstr ""
+
+msgid "Importing packages"
+msgstr ""
+
+msgid "Importing payments"
+msgstr ""
+
+msgid "Importing period-location relations"
+msgstr ""
+
+msgid "Importing period-service relations"
+msgstr ""
+
+msgid "Importing provider periods"
+msgstr ""
+
+msgid "Importing provider special-day periods"
+msgstr ""
+
+msgid "Importing resource relations"
+msgstr ""
+
+msgid "Importing resources"
+msgstr ""
+
+msgid "Importing service views"
+msgstr ""
+
+msgid "Importing services"
+msgstr ""
+
+msgid "Importing settings"
+msgstr ""
+
+msgid "Importing special-day period-location relations"
+msgstr ""
+
+msgid "Importing special-day period-service relations"
+msgstr ""
+
+msgid "Importing special days"
+msgstr ""
+
+msgid "Importing tax relations"
+msgstr ""
+
+msgid "Importing taxes"
+msgstr ""
+
+msgid "Importing time outs"
+msgstr ""
+
+msgid "Importing work periods"
+msgstr ""
+
+msgid "Improve Amelia"
+msgstr "Vylepšiť Ameliu"
 
 msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
@@ -5579,6 +5830,9 @@ msgid ""
 msgstr ""
 "Zlepšite zákaznícku skúsenosť tým, že klientom umožníte vybrať si lokalitu, "
 "ktorá im najviac vyhovuje."
+
+msgid "Improve plugin"
+msgstr "Vylepšiť plugin"
 
 msgid ""
 "Improve reporting accuracy by accessing complete appointment data instantly"
@@ -5729,8 +5983,11 @@ msgstr "Vložte Amélia Booking Shortcode"
 msgid "Insert pending appointments"
 msgstr "Vložiť čakajúce termíny"
 
-msgid "Install & Activate"
+msgid "Inserted"
 msgstr ""
+
+msgid "Install & Activate"
+msgstr "Nainštalujte & aktivujte"
 
 msgid "Integrate with WooCommerce to enable advanced e-commerce capabilities."
 msgstr ""
@@ -5834,19 +6091,19 @@ msgid "IvyForms"
 msgstr ""
 
 msgid "IvyForms Entries"
-msgstr ""
+msgstr "Odoslania IvyForms"
 
 msgid "IvyForms Field"
-msgstr ""
+msgstr "Pole formulára IvyForms"
 
 msgid "IvyForms Form"
-msgstr ""
+msgstr "Formulár IvyForms"
 
 msgid "IvyForms validation failed."
-msgstr ""
+msgstr "Validácia IvyForms zlyhala."
 
 msgid "Ivy setup"
-msgstr ""
+msgstr "Nastavenie Ivy"
 
 msgid "Jane Doe"
 msgstr ""
@@ -6091,16 +6348,16 @@ msgid "Load page"
 msgstr "Načítať stránku"
 
 msgid "Loading"
-msgstr ""
+msgstr "Načítava sa"
 
 msgid "Loading..."
 msgstr "Načítava sa..."
 
 msgid "Loading event information"
-msgstr ""
+msgstr "Načítavajú sa informácie o udalosti"
 
 msgid "Loading header"
-msgstr ""
+msgstr "Načítava sa hlavička"
 
 msgid "Local Time"
 msgstr "Lokálny Čas:"
@@ -6287,6 +6544,9 @@ msgstr "Správa osobného rozvrhu"
 
 msgid "Manage shared resources with ease"
 msgstr "Ľahká správa zdieľaných zdrojov"
+
+msgid "Manage this event in Amelia:"
+msgstr ""
 
 msgid "Managing assigned services"
 msgstr "Správa pridelených služieb"
@@ -6572,6 +6832,9 @@ msgstr "Nový zákazník"
 msgid "New Event"
 msgstr "Nová udalosť"
 
+msgid "New Event Page"
+msgstr ""
+
 msgid "New Location"
 msgstr "Nové lokalita"
 
@@ -6639,7 +6902,7 @@ msgid "Next day reminder"
 msgstr "Pripomenutie na druhý deň"
 
 msgid "Next image"
-msgstr ""
+msgstr "Nasledujúci obrázok"
 
 msgid "No"
 msgstr "Nie"
@@ -6716,6 +6979,12 @@ msgstr "Zatiaľ žiadni zamestnanci"
 
 msgid "No event bookings yet"
 msgstr "Zatiaľ nie sú žiadne rezervácie podujatí"
+
+msgid "No event pages found"
+msgstr ""
+
+msgid "No event pages found in Trash"
+msgstr ""
 
 msgid "No events found"
 msgstr "Nenašli sa žiadne udalosti"
@@ -7132,6 +7401,9 @@ msgstr "Otvorené"
 msgid "Open Event"
 msgstr "Otvorte udalosť"
 
+msgid "Open Event in Amelia"
+msgstr ""
+
 msgid "Open following"
 msgstr "Otvoriť nasledujúce"
 
@@ -7236,7 +7508,7 @@ msgid "PHP Mail"
 msgstr ""
 
 msgid "PRE-BOOKING INTAKE FORM (IVYFORMS)"
-msgstr ""
+msgstr "VSTUPNÝ FORMULÁR PRED REZERVÁCIOU (IVYFORMS)"
 
 msgid "Package"
 msgstr "Priemerné rezervácie"
@@ -7658,7 +7930,7 @@ msgid "Permanent access token"
 msgstr "Trvalý prístupový token"
 
 msgid "Permanently linked"
-msgstr ""
+msgstr "Natrvalo prepojené"
 
 msgid "Person"
 msgstr "Osoba"
@@ -7744,6 +8016,9 @@ msgstr "Čakajte prosím"
 
 msgid "Please add period"
 msgstr "Pridajte bodku."
+
+msgid "Please back up before proceeding to avoid loss of data."
+msgstr ""
 
 msgid "Please cancel the event first before deleting it."
 msgstr "Pred odstránením udalosti najprv zrušte túto udalosť."
@@ -8144,7 +8419,7 @@ msgid "Popup title"
 msgstr "Názov vyskakovacieho okna"
 
 msgid "Pre-booking form details"
-msgstr ""
+msgstr "Podrobnosti predrezervačného formulára"
 
 msgid "Preload entities when page loads"
 msgstr "Prednačítanie entít pri načítaní stránky"
@@ -8188,13 +8463,13 @@ msgid "Preview invoice"
 msgstr "Náhľad faktúry"
 
 msgid "Previous image"
-msgstr ""
+msgstr "Predchádzajúci obrázok"
 
 msgid "Previous range"
 msgstr "Predchádzajúci rozsah"
 
 msgid "Previous step"
-msgstr ""
+msgstr "Predchádzajúci krok"
 
 msgid "Price"
 msgstr "Cena"
@@ -8832,6 +9107,9 @@ msgstr "Vyhľadávanie"
 msgid "Search..."
 msgstr "Hľadať..."
 
+msgid "Search Event Pages"
+msgstr ""
+
 msgid "Search Filters"
 msgstr "Vyhľadávacie filtre"
 
@@ -8851,7 +9129,7 @@ msgid "Search bookings"
 msgstr "Vyhľadať rezervácie"
 
 msgid "Search coupons"
-msgstr ""
+msgstr "Hľadať kupóny"
 
 msgid "Search customers"
 msgstr "Vyhľadať zákazníkov"
@@ -8890,13 +9168,13 @@ msgid "Search packages"
 msgstr "Vyhľadať balíky"
 
 msgid "Search resources"
-msgstr ""
+msgstr "Vyhľadať zdroje"
 
 msgid "Search services"
 msgstr "Vyhľadať služby"
 
 msgid "Search taxes"
-msgstr ""
+msgstr "Vyhľadať dane"
 
 msgid "Second"
 msgstr "Sekunda"
@@ -9026,8 +9304,11 @@ msgstr "Vyberte produkt WooCommerce"
 msgid "Select Zoom User"
 msgstr "Vybrať používateľa Zoom"
 
-msgid "Select a form..."
+msgid "Select a .ameliafile archive before starting the import."
 msgstr ""
+
+msgid "Select a form..."
+msgstr "Vyberte formulár..."
 
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr ""
@@ -9139,7 +9420,7 @@ msgid "Select tickets"
 msgstr "Vybrať lístky"
 
 msgid "Select which IvyForms form to show before booking"
-msgstr ""
+msgstr "Vyberte formulár IvyForms, ktorý sa zobrazí pred rezerváciou"
 
 msgid "Select your Square Location"
 msgstr "Vyberte svoju lokalitu Square"
@@ -9858,6 +10139,9 @@ msgstr "Preskočiť balíky a pokračovať s vybranou službou"
 msgid "Skip setup"
 msgstr "Preskočiť nastavenie"
 
+msgid "Skipped"
+msgstr ""
+
 msgid "Slot end time"
 msgstr "Čas ukončenia slotu"
 
@@ -10400,6 +10684,9 @@ msgid ""
 "location"
 msgstr "Mena v Amelii sa nezhoduje s menou vašej vybranej lokality Square."
 
+msgid "The custom post is ready."
+msgstr ""
+
 msgid ""
 "The customer didn’t provide an email address, so the invoice couldn’t be "
 "sent."
@@ -10630,6 +10917,13 @@ msgstr ""
 
 msgid "This employee is the only one assigned to {service}."
 msgstr "Tento zamestnanec je jediný priradený k {service}."
+
+msgid ""
+"This export includes, but is not limited to, bookings, customers, settings, "
+"notification logs, and SMS history. Site-specific data (such as URLs, "
+"images, and purchase codes) is excluded and must be set up manually on a new "
+"site."
+msgstr ""
 
 msgid "This field is required"
 msgstr "Toto pole je povinné"
@@ -11339,6 +11633,9 @@ msgstr "Zobraziť viac"
 msgid "View Employees"
 msgstr "Nový zamestnanec"
 
+msgid "View Event Page"
+msgstr ""
+
 msgid "View Less Packages"
 msgstr "Zobraziť správu"
 
@@ -11944,6 +12241,9 @@ msgstr "(Platba teraz)"
 msgid " (Incl. Tax)"
 msgstr "(Vrátane DPH)"
 
+msgid "added to cart"
+msgstr ""
+
 msgid "and"
 msgstr "a"
 
@@ -12013,6 +12313,9 @@ msgstr "iCloud e-mailová adresa"
 msgid "iCloud email address and iCloud app-specific password"
 msgstr "iCloud e-mailová adresa a špecifické heslo pre aplikáciu iCloud"
 
+msgid "in cart"
+msgstr ""
+
 msgid "includes"
 msgstr "zahŕňa"
 
@@ -12041,13 +12344,13 @@ msgid "on"
 msgstr "zapnuté"
 
 msgid "opens in new tab"
-msgstr ""
+msgstr "otvorí sa v novej karte"
 
 msgid "out of"
 msgstr "z"
 
 msgid "payment button"
-msgstr ""
+msgstr "Tlačidlo platby"
 
 msgid "people"
 msgstr "Cena sa vynásobí počtom ľudí"
@@ -12093,6 +12396,12 @@ msgstr "Nastavenie reCAPTCHA"
 
 msgid "reCAPTCHA validation failed."
 msgstr "Overenie reCAPTCHA zlyhalo."
+
+msgid "remaining"
+msgstr ""
+
+msgid "removed from cart"
+msgstr ""
 
 msgid "results"
 msgstr "výsledky"

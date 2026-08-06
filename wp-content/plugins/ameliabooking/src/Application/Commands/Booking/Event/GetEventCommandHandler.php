@@ -24,6 +24,7 @@ use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\IntegerValue;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
+use AmeliaBooking\Infrastructure\WP\CustomPostTypes\Events\WpaEventsSync;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
 use AmeliaBooking\Infrastructure\Repository\CustomField\CustomFieldRepository;
@@ -264,6 +265,12 @@ class GetEventCommandHandler extends CommandHandler
 
         $allEventFields = $event->toArray();
 
+        $wpaCustomPostId = WpaEventsSync::findPostIdByAmeliaEventId((int)$command->getField('id'));
+        $wpaCustomPostEditLink = $wpaCustomPostId ? admin_url('post.php?post=' . $wpaCustomPostId . '&action=edit') : null;
+
+        $allEventFields['wpaCustomPostId'] = $wpaCustomPostId ?: null;
+        $allEventFields['wpaCustomPostEditLink'] = $wpaCustomPostEditLink;
+
         usort(
             $allEventFields['gallery'],
             function ($picture1, $picture2) {
@@ -318,6 +325,8 @@ class GetEventCommandHandler extends CommandHandler
             'lastName' => $eventArray['organizer']['lastName'],
             'picture' => $eventArray['organizer']['pictureThumbPath']
         ] : null;
+        $eventArray['wpaCustomPostId'] = $wpaCustomPostId ?: null;
+        $eventArray['wpaCustomPostEditLink'] = $wpaCustomPostEditLink;
 
 
         $eventArray = apply_filters('amelia_get_event_filter', $eventArray);

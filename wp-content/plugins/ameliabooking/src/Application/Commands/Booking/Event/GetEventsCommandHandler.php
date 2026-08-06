@@ -19,6 +19,7 @@ use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Factory\Booking\Event\EventPeriodFactory;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
+use AmeliaBooking\Infrastructure\WP\CustomPostTypes\Events\WpaEventsSync;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
 use DateTimeZone;
@@ -296,6 +297,15 @@ class GetEventsCommandHandler extends CommandHandler
 
         $noShowTagEnabled = $settingsDS->isFeatureEnabled('noShowTag');
 
+        $wpaCustomPostsMap = WpaEventsSync::findPostIdByAmeliaEventIds(
+            array_map(
+                static function (Event $event) {
+                    return (int)$event->getId()->getValue();
+                },
+                $events->getItems()
+            )
+        );
+
         /** @var Event $event */
         foreach ($events->getItems() as $event) {
             // this would affect paging on frontend, should be done in the database?
@@ -361,6 +371,12 @@ class GetEventsCommandHandler extends CommandHandler
             }
 
             $eventArray = $event->toArray();
+
+            $wpaCustomPostId = $wpaCustomPostsMap[(int)$eventArray['id']] ?? 0;
+            $eventArray['wpaCustomPostId'] = $wpaCustomPostId ?: null;
+            $eventArray['wpaCustomPostEditLink'] = $wpaCustomPostId
+                ? admin_url('post.php?post=' . $wpaCustomPostId . '&action=edit')
+                : null;
 
             $eventArray['staff'] = array_map(
                 function ($provider) use ($providerAS) {

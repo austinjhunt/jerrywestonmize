@@ -56,4 +56,27 @@ class StarterTaxApplicationService extends AbstractTaxApplicationService
     {
         return new Collection();
     }
+
+    /**
+     * @param int        $id
+     * @param string     $type
+     * @param Collection $taxes
+     *
+     * @return string|null
+     */
+    public function getTaxData($id, $type, $taxes)
+    {
+        return null;
+    }
+
+    /**
+     * @param float $value
+     * @param Tax   $tax
+     *
+     * @return float|string
+     */
+    public function getBasePrice($value, $tax)
+    {
+        return $value;
+    }
 }

@@ -7,7 +7,10 @@ use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
+use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Entity\Entities;
+use AmeliaBooking\Domain\Entity\User\AbstractUser;
+use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
@@ -38,6 +41,12 @@ class UpdateCustomerNoteCommandHandler extends CommandHandler
 
         /** @var UserRepository $userRepository */
         $userRepository = $this->getContainer()->get('domain.users.repository');
+
+        /** @var SettingsService $settingsService */
+        $settingsService = $this->container->get('domain.settings.service');
+
+        /** @var AbstractUser|null $provider */
+        $provider = null;
 
         if (!$command->getPermissionService()->currentUserCanWrite(Entities::CUSTOMERS)) {
             if ($command->getToken()) {
@@ -78,8 +87,37 @@ class UpdateCustomerNoteCommandHandler extends CommandHandler
             }
         }
 
+        /** @var AbstractUser $currentUser */
+        $currentUser = $this->container->get('logged.in.user');
+
         $customerId = (int)$command->getArg('id');
         $note       = $command->getField('note');
+
+        if (
+            ($provider !== null && $provider->getType() === Entities::PROVIDER) ||
+            ($currentUser !== null && $currentUser->getType() === Entities::PROVIDER)
+        ) {
+            $providerId = $provider !== null ? $provider->getId()->getValue() : $currentUser->getId()->getValue();
+
+            $rolesSettings = $settingsService->getCategorySettings('roles');
+
+            if (empty($rolesSettings['allowWriteCustomers'])) {
+                throw new AccessDeniedException('You are not allowed to read user');
+            }
+
+            if (empty($rolesSettings['allowReadAllCustomers'])) {
+                /** @var Collection $providerCustomers */
+                $providerCustomers = $userRepository->getProviderAllowedCustomers(
+                    $providerId
+                );
+
+                $allowedCustomersIds = $providerCustomers->keys();
+
+                if (!in_array($customerId, $allowedCustomersIds)) {
+                    throw new AccessDeniedException('You are not allowed to read user');
+                }
+            }
+        }
 
         $userRepository->beginTransaction();
 

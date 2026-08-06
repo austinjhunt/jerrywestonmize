@@ -24,6 +24,7 @@ use AmeliaBooking\Domain\Factory\Zoom\ZoomFactory;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
+use AmeliaBooking\Domain\ValueObjects\String\Description;
 use AmeliaBooking\Infrastructure\Common\Container;
 
 /**
@@ -328,7 +329,10 @@ class EventEditedEventHandler
             }
             if ($newInfo) {
                 $event->setName($newInfo['name']);
-                $event->setDescription($newInfo['description']);
+                $description = $newInfo['description'] ?? '';
+                $event->setDescription(
+                    $description instanceof Description ? $description : new Description($description)
+                );
             }
             if (($newProviders || $removeProviders || $newInfo) && (!$organizerChange || $newOrganizer)) {
                 $applicationIntegrationService->handleEvent(

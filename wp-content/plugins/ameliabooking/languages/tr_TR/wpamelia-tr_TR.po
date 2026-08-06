@@ -430,6 +430,12 @@ msgstr ""
 "Reklam dönüşümlerini izlemek ve pazarlamayı optimize etmek için Meta Piksel "
 "ekleyin."
 
+msgid "Add New"
+msgstr ""
+
+msgid "Add New Event Page"
+msgstr ""
+
 msgid "Add Period"
 msgstr "Dönem Ekle"
 
@@ -624,6 +630,9 @@ msgstr "Tüm müşteriler"
 
 msgid "All employees"
 msgstr "Tüm çalışanlar"
+
+msgid "All entities imported"
+msgstr ""
 
 msgid "All events"
 msgstr "Tüm etkinlikler"
@@ -839,6 +848,15 @@ msgstr "Amelia - Adım Adım Rezervasyon"
 
 msgid "Amelia Add to calendar page"
 msgstr "Amelia Takvim sayfasına ekle"
+
+msgid "Amelia Event"
+msgstr ""
+
+msgid "Amelia Event Page"
+msgstr ""
+
+msgid "Amelia Event Pages"
+msgstr ""
 
 msgid "Amelia Events List Booking Settings"
 msgstr "Amelia Etkinlik Listesi Rezervasyon Ayarları"
@@ -1361,6 +1379,9 @@ msgid ""
 msgstr ""
 "Rezervasyonlar için otomatik olarak Zoom toplantıları oluşturun ve "
 "müşterileri ve çalışanları bilgilendirin."
+
+msgid "Automatically create an Event Page for new events"
+msgstr ""
 
 msgid ""
 "Automatically generate invoices for every booking, making payments easier, "
@@ -2689,6 +2710,9 @@ msgstr "Çalışan oluştur"
 msgid "Create event"
 msgstr "Etkinlik oluştur"
 
+msgid "Create event page"
+msgstr ""
+
 msgid "Create form"
 msgstr "Form oluştur"
 
@@ -3020,11 +3044,17 @@ msgstr "Koyu Tema"
 msgid "Dashboard"
 msgstr "Gösterge Paneli"
 
+msgid "Data export is ready."
+msgstr ""
+
 msgid "Data that remains unchanged:"
 msgstr "Değişmeyen veriler:"
 
 msgid "Data to be updated:"
 msgstr "Güncellenecek veriler:"
+
+msgid "Data transfer"
+msgstr ""
 
 msgid "Date"
 msgstr "Tarih"
@@ -3147,7 +3177,7 @@ msgid ""
 "Dear <b>%customer_full_name%</b>, <br><br>Thank you for choosing our "
 "company, <br> <b>%company_name%</b>"
 msgstr ""
-"Sayın <b>%customer_full_name%</b>, <br><br>Firmamızı tercih ettiğiniz için "
+"Sayın <b>%customer_full_name%</b>, <br><br>Bizi tercih ettiğiniz için "
 "teşekkür ederiz, <br> <b>%company_name%</b>"
 
 msgid "Deduction"
@@ -3432,6 +3462,9 @@ msgstr ""
 "atmasına, aramasına ve rezervasyon yapmasına olanak tanır. Yaklaşan "
 "etkinlikleri etkileşimli bir biçimde öne çıkarmak için harika bir yoldur."
 
+msgid "Do not exit the import until it is finished."
+msgstr ""
+
 msgid "Do you want to cancel following events?"
 msgstr "Aşağıdaki etkinlikleri iptal etmek istiyor musunuz?"
 
@@ -3645,6 +3678,9 @@ msgstr "Müşteri Düzenle"
 msgid "Edit Event"
 msgstr "Etkinliği Düzenle"
 
+msgid "Edit Event Page"
+msgstr ""
+
 msgid "Edit Extra"
 msgstr "Ekstrayı Düzenle"
 
@@ -3689,6 +3725,9 @@ msgstr "Etkinliği düzenle"
 
 msgid "Edit event booking"
 msgstr "Etkinlik rezervasyonunu düzenle"
+
+msgid "Edit event page"
+msgstr ""
 
 msgid "Edit location"
 msgstr "Konumu düzenle"
@@ -4388,6 +4427,9 @@ msgstr "Etkinlik Listesi Rezervasyon Formu"
 msgid "Event Location"
 msgstr "Etkinlik Konumu"
 
+msgid "Event Pages"
+msgstr ""
+
 msgid "Event Starts"
 msgstr "Etkinlik Başlangıcı"
 
@@ -4695,8 +4737,14 @@ msgstr "Randevu verilerini kolaylıkla dışa aktarın"
 msgid "Export bookings"
 msgstr "Rezervasyonları dışa aktar"
 
+msgid "Export data"
+msgstr ""
+
 msgid "Export event booking data with ease"
 msgstr "Etkinlik rezervasyon verilerini kolaylıkla dışa aktarın"
+
+msgid "Export failed."
+msgstr ""
 
 msgid "Express Account"
 msgstr "Ekspress Hesap"
@@ -5394,6 +5442,9 @@ msgstr "Kimlik Artan"
 msgid "ID Desc"
 msgstr "ID Azalan"
 
+msgid "I understand this import will replace all current data permanently."
+msgstr ""
+
 msgid "I want to pay full amount"
 msgstr "Tüm tutarı ödemek istiyorum"
 
@@ -5573,11 +5624,209 @@ msgstr "İçe Aktarma Kısmen Başarılı"
 msgid "Import Rules"
 msgstr "İç Aktarma Kuralları"
 
+msgid "Import completed"
+msgstr ""
+
+msgid "Import completed successfully."
+msgstr ""
+
+msgid "Import could not be started."
+msgstr ""
+
+msgid "Import data"
+msgstr ""
+
+msgid "Import errors"
+msgstr ""
+
+msgid "Import failed"
+msgstr ""
+
+msgid "Import failed. Review the details below."
+msgstr ""
+
+msgid "Import progress"
+msgstr ""
+
+msgid "Import progress could not be updated."
+msgstr ""
+
+msgid "Import started."
+msgstr ""
+
 msgid "Import successful"
 msgstr "İçe aktarma başarılı"
 
+msgid "Importing Google calendar sync"
+msgstr ""
+
+msgid "Importing Outlook calendar sync"
+msgstr ""
+
+msgid "Importing appointments"
+msgstr ""
+
+msgid "Importing booking extras"
+msgstr ""
+
+msgid "Importing bookings"
+msgstr ""
+
+msgid "Importing categories"
+msgstr ""
+
+msgid "Importing coupon-event relations"
+msgstr ""
+
+msgid "Importing coupon-package relations"
+msgstr ""
+
+msgid "Importing coupon-service relations"
+msgstr ""
+
+msgid "Importing coupons"
+msgstr ""
+
+msgid "Importing custom field events"
+msgstr ""
+
+msgid "Importing custom field options"
+msgstr ""
+
+msgid "Importing custom field services"
+msgstr ""
+
+msgid "Importing custom fields"
+msgstr ""
+
 msgid "Importing customers"
 msgstr "Müşterileri içe aktarma"
+
+msgid "Importing days off"
+msgstr ""
+
+msgid "Importing employee locations"
+msgstr ""
+
+msgid "Importing employee services"
+msgstr ""
+
+msgid "Importing employee views"
+msgstr ""
+
+msgid "Importing employees"
+msgstr ""
+
+msgid "Importing event booking periods"
+msgstr ""
+
+msgid "Importing event booking tickets"
+msgstr ""
+
+msgid "Importing event periods"
+msgstr ""
+
+msgid "Importing event providers"
+msgstr ""
+
+msgid "Importing event tags"
+msgstr ""
+
+msgid "Importing event tickets"
+msgstr ""
+
+msgid "Importing events"
+msgstr ""
+
+msgid "Importing extras"
+msgstr ""
+
+msgid "Importing location view settings"
+msgstr ""
+
+msgid "Importing locations"
+msgstr ""
+
+msgid "Importing notification SMS history"
+msgstr ""
+
+msgid "Importing notification log"
+msgstr ""
+
+msgid "Importing notification relations"
+msgstr ""
+
+msgid "Importing notifications"
+msgstr ""
+
+msgid "Importing package booking services"
+msgstr ""
+
+msgid "Importing package bookings"
+msgstr ""
+
+msgid "Importing package service locations"
+msgstr ""
+
+msgid "Importing package service providers"
+msgstr ""
+
+msgid "Importing package services"
+msgstr ""
+
+msgid "Importing packages"
+msgstr ""
+
+msgid "Importing payments"
+msgstr ""
+
+msgid "Importing period-location relations"
+msgstr ""
+
+msgid "Importing period-service relations"
+msgstr ""
+
+msgid "Importing provider periods"
+msgstr ""
+
+msgid "Importing provider special-day periods"
+msgstr ""
+
+msgid "Importing resource relations"
+msgstr ""
+
+msgid "Importing resources"
+msgstr ""
+
+msgid "Importing service views"
+msgstr ""
+
+msgid "Importing services"
+msgstr ""
+
+msgid "Importing settings"
+msgstr ""
+
+msgid "Importing special-day period-location relations"
+msgstr ""
+
+msgid "Importing special-day period-service relations"
+msgstr ""
+
+msgid "Importing special days"
+msgstr ""
+
+msgid "Importing tax relations"
+msgstr ""
+
+msgid "Importing taxes"
+msgstr ""
+
+msgid "Importing time outs"
+msgstr ""
+
+msgid "Importing work periods"
+msgstr ""
 
 msgid "Improve Amelia"
 msgstr "Amelia'yı geliştirin"
@@ -5609,6 +5858,9 @@ msgid ""
 msgstr ""
 "Müşterilerin kendilerine en uygun konumu seçmelerine olanak tanıyarak "
 "müşteri deneyimini iyileştirin"
+
+msgid "Improve plugin"
+msgstr "Eklentiyi iyileştir"
 
 msgid ""
 "Improve reporting accuracy by accessing complete appointment data instantly"
@@ -5756,6 +6008,9 @@ msgstr "Amelia Rezervasyon Kısa Kodunu Ekle"
 
 msgid "Insert pending appointments"
 msgstr "Bekleyen randevuları ekle"
+
+msgid "Inserted"
+msgstr ""
 
 msgid "Install & Activate"
 msgstr "Yükle ve Etkinleştir"
@@ -6317,6 +6572,9 @@ msgstr "Kişisel programı yönet"
 msgid "Manage shared resources with ease"
 msgstr "Paylaşılan kaynakları kolaylıkla yönetin"
 
+msgid "Manage this event in Amelia:"
+msgstr ""
+
 msgid "Managing assigned services"
 msgstr "Atanan hizmetleri yönetme"
 
@@ -6601,6 +6859,9 @@ msgstr "Yeni Müşteri"
 msgid "New Event"
 msgstr "Yeni Etkinlik"
 
+msgid "New Event Page"
+msgstr ""
+
 msgid "New Location"
 msgstr "Yeni Konum"
 
@@ -6744,6 +7005,12 @@ msgstr "Henüz çalışan yok"
 
 msgid "No event bookings yet"
 msgstr "Henüz etkinlik rezervasyonu yok"
+
+msgid "No event pages found"
+msgstr ""
+
+msgid "No event pages found in Trash"
+msgstr ""
 
 msgid "No events found"
 msgstr "Hiçbir etkinlik bulunamadı"
@@ -7161,6 +7428,9 @@ msgstr "Açık"
 
 msgid "Open Event"
 msgstr "Açık Etkinlik"
+
+msgid "Open Event in Amelia"
+msgstr ""
 
 msgid "Open following"
 msgstr "Açılacak"
@@ -7774,6 +8044,9 @@ msgstr "Lütfen bekleyiniz"
 
 msgid "Please add period"
 msgstr "Lütfen nokta ekleyin"
+
+msgid "Please back up before proceeding to avoid loss of data."
+msgstr ""
 
 msgid "Please cancel the event first before deleting it."
 msgstr "Lütfen önce etkinliği iptal edin, sonra silin."
@@ -8872,6 +9145,9 @@ msgstr "Ara"
 msgid "Search..."
 msgstr "Ara..."
 
+msgid "Search Event Pages"
+msgstr ""
+
 msgid "Search Filters"
 msgstr "Arama Filtreleri"
 
@@ -9065,6 +9341,9 @@ msgstr "WooCommerce ürününü seçin"
 
 msgid "Select Zoom User"
 msgstr "Zoom Kullanıcısı Seç"
+
+msgid "Select a .ameliafile archive before starting the import."
+msgstr ""
 
 msgid "Select a form..."
 msgstr "Bir form seçin..."
@@ -9891,6 +10170,9 @@ msgstr "Paketleri atla ve seçilen hizmetle devam et"
 msgid "Skip setup"
 msgstr "Kurulumu atla"
 
+msgid "Skipped"
+msgstr ""
+
 msgid "Slot end time"
 msgstr "Zaman aralığı bitişi"
 
@@ -10435,6 +10717,9 @@ msgid ""
 msgstr ""
 "Amelia'daki para birimi seçtiğiniz Square konumunun para birimiyle eşleşmiyor"
 
+msgid "The custom post is ready."
+msgstr ""
+
 msgid ""
 "The customer didn’t provide an email address, so the invoice couldn’t be "
 "sent."
@@ -10662,6 +10947,13 @@ msgstr ""
 
 msgid "This employee is the only one assigned to {service}."
 msgstr "Bu çalışan, {service} adresine atanan tek kişidir."
+
+msgid ""
+"This export includes, but is not limited to, bookings, customers, settings, "
+"notification logs, and SMS history. Site-specific data (such as URLs, "
+"images, and purchase codes) is excluded and must be set up manually on a new "
+"site."
+msgstr ""
 
 msgid "This field is required"
 msgstr "Bu alan gereklidir"
@@ -11373,6 +11665,9 @@ msgstr "Sepeti Göster"
 msgid "View Employees"
 msgstr "Çalışlanları Göster"
 
+msgid "View Event Page"
+msgstr ""
+
 msgid "View Less Packages"
 msgstr "Daha Az Paket"
 
@@ -11980,6 +12275,9 @@ msgstr "(Şimdi ödeyeceğim)"
 msgid " (Incl. Tax)"
 msgstr "(Vergi Dahil)"
 
+msgid "added to cart"
+msgstr ""
+
 msgid "and"
 msgstr "ve"
 
@@ -12048,6 +12346,9 @@ msgstr "iCloud e-posta adresi"
 
 msgid "iCloud email address and iCloud app-specific password"
 msgstr "iCloud e-posta adresi ve iCloud uygulamasına özel şifre"
+
+msgid "in cart"
+msgstr ""
 
 msgid "includes"
 msgstr "şunları içerir"
@@ -12129,6 +12430,12 @@ msgstr "reCAPTCHA kurulumu"
 
 msgid "reCAPTCHA validation failed."
 msgstr "reCAPTCHA doğrulaması başarısız oldu."
+
+msgid "remaining"
+msgstr ""
+
+msgid "removed from cart"
+msgstr ""
 
 msgid "results"
 msgstr "sonuçlar"

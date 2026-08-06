@@ -426,6 +426,12 @@ msgstr ""
 "広告コンバージョンを追跡し、マーケティングを最適化するためにメタピクセルを追"
 "加してください。"
 
+msgid "Add New"
+msgstr ""
+
+msgid "Add New Event Page"
+msgstr ""
+
 msgid "Add Period"
 msgstr "時間枠を入力してください"
 
@@ -617,6 +623,9 @@ msgstr "すべてのお客様"
 
 msgid "All employees"
 msgstr "すべてのスタッフ"
+
+msgid "All entities imported"
+msgstr ""
 
 msgid "All events"
 msgstr "すべてのイベント"
@@ -823,6 +832,15 @@ msgstr "Amelia - ステップ・バイ・ステップ予約"
 
 msgid "Amelia Add to calendar page"
 msgstr "Ameliaカレンダーに追加"
+
+msgid "Amelia Event"
+msgstr ""
+
+msgid "Amelia Event Page"
+msgstr ""
+
+msgid "Amelia Event Pages"
+msgstr ""
 
 msgid "Amelia Events List Booking Settings"
 msgstr "Amelia イベント一覧 予約設定"
@@ -1343,6 +1361,9 @@ msgid ""
 "employees."
 msgstr ""
 "予約に対して自動的にZoomミーティングを作成し、顧客とスタッフに通知します。"
+
+msgid "Automatically create an Event Page for new events"
+msgstr ""
 
 msgid ""
 "Automatically generate invoices for every booking, making payments easier, "
@@ -2273,7 +2294,7 @@ msgstr "サイドバーを閉じる"
 msgid ""
 "Collect additional information from your customers before they complete a "
 "booking."
-msgstr ""
+msgstr "予約を完了する前に、顧客から追加情報を収集します。"
 
 msgid "Collect the information your business truly needs"
 msgstr "ビジネスに真に必要な情報を収集する"
@@ -2470,7 +2491,7 @@ msgid "Consulting"
 msgstr "コンサルティング"
 
 msgid "Contact Form"
-msgstr ""
+msgstr "お問い合わせフォーム"
 
 msgid "Contact message"
 msgstr "お問い合わせメッセージ"
@@ -2655,8 +2676,11 @@ msgstr "スタッフを作成する"
 msgid "Create event"
 msgstr "イベントを作成する"
 
-msgid "Create form"
+msgid "Create event page"
 msgstr ""
+
+msgid "Create form"
+msgstr "フォームを作成"
 
 msgid "Create meetings for pending appointments"
 msgstr "承認待ち（保留中）の予約でもミーティングを作成する"
@@ -2972,11 +2996,17 @@ msgstr "ダークテーマ"
 msgid "Dashboard"
 msgstr "ダッシュボード"
 
+msgid "Data export is ready."
+msgstr ""
+
 msgid "Data that remains unchanged:"
 msgstr "変更されないデータ:"
 
 msgid "Data to be updated:"
 msgstr "更新対象データ:"
+
+msgid "Data transfer"
+msgstr ""
 
 msgid "Date"
 msgstr "日付"
@@ -3378,6 +3408,9 @@ msgstr ""
 "し、そのままスムーズに予約できます。視覚的で使いやすい、イベント告知に最適な"
 "表示スタイルです。"
 
+msgid "Do not exit the import until it is finished."
+msgstr ""
+
 msgid "Do you want to cancel following events?"
 msgstr "今後すべてを中止しますか？"
 
@@ -3584,6 +3617,9 @@ msgstr "お客様を編集する"
 msgid "Edit Event"
 msgstr "イベントの編集する"
 
+msgid "Edit Event Page"
+msgstr ""
+
 msgid "Edit Extra"
 msgstr "追加オプションを編集"
 
@@ -3628,6 +3664,9 @@ msgstr "イベントを編集"
 
 msgid "Edit event booking"
 msgstr "イベント予約を編集する"
+
+msgid "Edit event page"
+msgstr ""
 
 msgid "Edit location"
 msgstr "場所を編集"
@@ -3875,7 +3914,7 @@ msgstr ""
 "パーソナライズして、シームレスでブランド化された体験を構築しましょう。"
 
 msgid "Enable data usage"
-msgstr ""
+msgstr "利用状況データの収集を有効化"
 
 msgid "Enable guest booking"
 msgstr "ゲスト予約の有効化"
@@ -4158,7 +4197,7 @@ msgstr ""
 "てください。"
 
 msgid "Enter code"
-msgstr ""
+msgstr "コードを入力"
 
 msgid "Enter date of birth"
 msgstr "生年月日を入力してください"
@@ -4306,6 +4345,9 @@ msgstr "イベントリスト予約フォーム"
 msgid "Event Location"
 msgstr "イベント会場"
 
+msgid "Event Pages"
+msgstr ""
+
 msgid "Event Starts"
 msgstr "イベント開始"
 
@@ -4322,7 +4364,7 @@ msgid "Event available"
 msgstr "イベントが利用可能です"
 
 msgid "Event booking"
-msgstr ""
+msgstr "イベント予約"
 
 msgid "Event booking has been created."
 msgstr "イベント予約が作成されました。"
@@ -4439,7 +4481,7 @@ msgid "Event has been updated."
 msgstr "イベントが更新されました。"
 
 msgid "Event image gallery"
-msgstr ""
+msgstr "イベント画像ギャラリー"
 
 msgid "Event info"
 msgstr "イベント情報"
@@ -4554,7 +4596,7 @@ msgid "Events list view"
 msgstr "イベント一覧表示"
 
 msgid "Events pagination"
-msgstr ""
+msgstr "イベント一覧のページネーション"
 
 msgid "Events pricing"
 msgstr "イベント料金"
@@ -4613,8 +4655,14 @@ msgstr "予約データを簡単にエクスポートできます。"
 msgid "Export bookings"
 msgstr "予約をエクスポート"
 
+msgid "Export data"
+msgstr ""
+
 msgid "Export event booking data with ease"
 msgstr "イベント予約データを簡単にエクスポートできます"
+
+msgid "Export failed."
+msgstr ""
 
 msgid "Express Account"
 msgstr "Expressのアカウント"
@@ -5132,6 +5180,8 @@ msgid ""
 "Help us improve Amelia by sharing anonymous data about your plugin usage. No "
 "personal data is collected."
 msgstr ""
+"Ameliaの改善のため、プラグインの利用状況に関する匿名化データの送信にご協力く"
+"ださい。個人情報は収集されません。"
 
 msgid ""
 "Here, you can connect your personal Apple Calendar,<br/>so once the booking "
@@ -5302,6 +5352,9 @@ msgstr "ID（小さい順）"
 msgid "ID Desc"
 msgstr "ID（大きい順）"
 
+msgid "I understand this import will replace all current data permanently."
+msgstr ""
+
 msgid "I want to pay full amount"
 msgstr "全額支払う"
 
@@ -5464,7 +5517,7 @@ msgid "Image Color"
 msgstr "イメージカラー"
 
 msgid "Image navigation"
-msgstr ""
+msgstr "画像ナビゲーション"
 
 msgid "Image thumbs"
 msgstr "画像サムネイル"
@@ -5481,14 +5534,212 @@ msgstr "インポートが部分的に成功しました"
 msgid "Import Rules"
 msgstr "インポートルール"
 
+msgid "Import completed"
+msgstr ""
+
+msgid "Import completed successfully."
+msgstr ""
+
+msgid "Import could not be started."
+msgstr ""
+
+msgid "Import data"
+msgstr ""
+
+msgid "Import errors"
+msgstr ""
+
+msgid "Import failed"
+msgstr ""
+
+msgid "Import failed. Review the details below."
+msgstr ""
+
+msgid "Import progress"
+msgstr ""
+
+msgid "Import progress could not be updated."
+msgstr ""
+
+msgid "Import started."
+msgstr ""
+
 msgid "Import successful"
 msgstr "インポート成功"
+
+msgid "Importing Google calendar sync"
+msgstr ""
+
+msgid "Importing Outlook calendar sync"
+msgstr ""
+
+msgid "Importing appointments"
+msgstr ""
+
+msgid "Importing booking extras"
+msgstr ""
+
+msgid "Importing bookings"
+msgstr ""
+
+msgid "Importing categories"
+msgstr ""
+
+msgid "Importing coupon-event relations"
+msgstr ""
+
+msgid "Importing coupon-package relations"
+msgstr ""
+
+msgid "Importing coupon-service relations"
+msgstr ""
+
+msgid "Importing coupons"
+msgstr ""
+
+msgid "Importing custom field events"
+msgstr ""
+
+msgid "Importing custom field options"
+msgstr ""
+
+msgid "Importing custom field services"
+msgstr ""
+
+msgid "Importing custom fields"
+msgstr ""
 
 msgid "Importing customers"
 msgstr "お客様のインポート"
 
-msgid "Improve Amelia"
+msgid "Importing days off"
 msgstr ""
+
+msgid "Importing employee locations"
+msgstr ""
+
+msgid "Importing employee services"
+msgstr ""
+
+msgid "Importing employee views"
+msgstr ""
+
+msgid "Importing employees"
+msgstr ""
+
+msgid "Importing event booking periods"
+msgstr ""
+
+msgid "Importing event booking tickets"
+msgstr ""
+
+msgid "Importing event periods"
+msgstr ""
+
+msgid "Importing event providers"
+msgstr ""
+
+msgid "Importing event tags"
+msgstr ""
+
+msgid "Importing event tickets"
+msgstr ""
+
+msgid "Importing events"
+msgstr ""
+
+msgid "Importing extras"
+msgstr ""
+
+msgid "Importing location view settings"
+msgstr ""
+
+msgid "Importing locations"
+msgstr ""
+
+msgid "Importing notification SMS history"
+msgstr ""
+
+msgid "Importing notification log"
+msgstr ""
+
+msgid "Importing notification relations"
+msgstr ""
+
+msgid "Importing notifications"
+msgstr ""
+
+msgid "Importing package booking services"
+msgstr ""
+
+msgid "Importing package bookings"
+msgstr ""
+
+msgid "Importing package service locations"
+msgstr ""
+
+msgid "Importing package service providers"
+msgstr ""
+
+msgid "Importing package services"
+msgstr ""
+
+msgid "Importing packages"
+msgstr ""
+
+msgid "Importing payments"
+msgstr ""
+
+msgid "Importing period-location relations"
+msgstr ""
+
+msgid "Importing period-service relations"
+msgstr ""
+
+msgid "Importing provider periods"
+msgstr ""
+
+msgid "Importing provider special-day periods"
+msgstr ""
+
+msgid "Importing resource relations"
+msgstr ""
+
+msgid "Importing resources"
+msgstr ""
+
+msgid "Importing service views"
+msgstr ""
+
+msgid "Importing services"
+msgstr ""
+
+msgid "Importing settings"
+msgstr ""
+
+msgid "Importing special-day period-location relations"
+msgstr ""
+
+msgid "Importing special-day period-service relations"
+msgstr ""
+
+msgid "Importing special days"
+msgstr ""
+
+msgid "Importing tax relations"
+msgstr ""
+
+msgid "Importing taxes"
+msgstr ""
+
+msgid "Importing time outs"
+msgstr ""
+
+msgid "Importing work periods"
+msgstr ""
+
+msgid "Improve Amelia"
+msgstr "Ameliaを改良"
 
 msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
@@ -5516,6 +5767,9 @@ msgid ""
 msgstr ""
 "お客様が場所を自由に選択できるようにして、アクセスの良さとお客様満足度を高め"
 "ましょう。"
+
+msgid "Improve plugin"
+msgstr "プラグインを最適化"
 
 msgid ""
 "Improve reporting accuracy by accessing complete appointment data instantly"
@@ -5662,8 +5916,11 @@ msgstr "Ameliaのショートコードを挿入"
 msgid "Insert pending appointments"
 msgstr "承認待ち（保留中）の予約を挿入"
 
-msgid "Install & Activate"
+msgid "Inserted"
 msgstr ""
+
+msgid "Install & Activate"
+msgstr "インストールして有効化"
 
 msgid "Integrate with WooCommerce to enable advanced e-commerce capabilities."
 msgstr "WooCommerceとの連携により、高度なEコマース機能を利用可能にします。"
@@ -5761,19 +6018,19 @@ msgid "IvyForms"
 msgstr ""
 
 msgid "IvyForms Entries"
-msgstr ""
+msgstr "IvyForms エントリー"
 
 msgid "IvyForms Field"
-msgstr ""
+msgstr "IvyForms フィールド"
 
 msgid "IvyForms Form"
-msgstr ""
+msgstr "IvyForms フォーム"
 
 msgid "IvyForms validation failed."
-msgstr ""
+msgstr "IvyForms のバリデーションに失敗しました。"
 
 msgid "Ivy setup"
-msgstr ""
+msgstr "Ivy 設定"
 
 msgid "Jane Doe"
 msgstr "John Doe"
@@ -6014,16 +6271,16 @@ msgid "Load page"
 msgstr "ページを読み込み"
 
 msgid "Loading"
-msgstr ""
+msgstr "読み込み中"
 
 msgid "Loading..."
 msgstr "読み込み中..."
 
 msgid "Loading event information"
-msgstr ""
+msgstr "イベント情報を読み込み中"
 
 msgid "Loading header"
-msgstr ""
+msgstr "ヘッダーを読み込み中"
 
 msgid "Local Time"
 msgstr "現地時間："
@@ -6211,6 +6468,9 @@ msgstr "個人スケジュールを管理する"
 msgid "Manage shared resources with ease"
 msgstr "共有の設備・備品を効率的に管理できます。"
 
+msgid "Manage this event in Amelia:"
+msgstr ""
+
 msgid "Managing assigned services"
 msgstr "割り当てられたサービスの管理"
 
@@ -6240,7 +6500,7 @@ msgid "Max Capacity Desc"
 msgstr "上限人数（大きい順）"
 
 msgid "Maximum"
-msgstr ""
+msgstr "最大値"
 
 msgid "Maximum Quantity:"
 msgstr "上限数量："
@@ -6337,7 +6597,7 @@ msgid "Min. Capacity"
 msgstr "定員の最小人数"
 
 msgid "Minimum"
-msgstr ""
+msgstr "最小値"
 
 msgid "Minimum bookings required"
 msgstr "最小予約数"
@@ -6494,6 +6754,9 @@ msgstr "+ 新規お客様"
 msgid "New Event"
 msgstr "+ 新規イベント"
 
+msgid "New Event Page"
+msgstr ""
+
 msgid "New Location"
 msgstr "＋ 新規場所"
 
@@ -6561,7 +6824,7 @@ msgid "Next day reminder"
 msgstr "翌日リマインダー"
 
 msgid "Next image"
-msgstr ""
+msgstr "次へ"
 
 msgid "No"
 msgstr "なし"
@@ -6637,6 +6900,12 @@ msgstr "まだスタッフはいません"
 
 msgid "No event bookings yet"
 msgstr "まだイベントの予約はありません"
+
+msgid "No event pages found"
+msgstr ""
+
+msgid "No event pages found in Trash"
+msgstr ""
 
 msgid "No events found"
 msgstr "イベントは見つかりませんでした"
@@ -7049,6 +7318,9 @@ msgstr "受付中"
 msgid "Open Event"
 msgstr "イベント受付を再開"
 
+msgid "Open Event in Amelia"
+msgstr ""
+
 msgid "Open following"
 msgstr "今後すべてを再開する"
 
@@ -7153,7 +7425,7 @@ msgid "PHP Mail"
 msgstr "PHPメール"
 
 msgid "PRE-BOOKING INTAKE FORM (IVYFORMS)"
-msgstr ""
+msgstr "予約前インテークフォーム (IVYFORMS)"
 
 msgid "Package"
 msgstr "コース"
@@ -7575,7 +7847,7 @@ msgid "Permanent access token"
 msgstr "永久アクセストークン"
 
 msgid "Permanently linked"
-msgstr ""
+msgstr "永続的に紐付け済み"
 
 msgid "Person"
 msgstr "人数"
@@ -7661,6 +7933,9 @@ msgstr "お待ちください"
 
 msgid "Please add period"
 msgstr "終了日を追加してください"
+
+msgid "Please back up before proceeding to avoid loss of data."
+msgstr ""
 
 msgid "Please cancel the event first before deleting it."
 msgstr "削除する前に、まずイベントをキャンセルしてください。"
@@ -8060,7 +8335,7 @@ msgid "Popup title"
 msgstr "ポップアップのタイトル"
 
 msgid "Pre-booking form details"
-msgstr ""
+msgstr "予約確定前フォームの詳細"
 
 msgid "Preload entities when page loads"
 msgstr "ページ読み込み時にエンティティをプリロードする"
@@ -8104,13 +8379,13 @@ msgid "Preview invoice"
 msgstr "請求書のプレビュー"
 
 msgid "Previous image"
-msgstr ""
+msgstr "前の画像"
 
 msgid "Previous range"
 msgstr "前の範囲"
 
 msgid "Previous step"
-msgstr ""
+msgstr "前のステップ"
 
 msgid "Price"
 msgstr "料金"
@@ -8742,6 +9017,9 @@ msgstr "検索"
 msgid "Search..."
 msgstr "検索"
 
+msgid "Search Event Pages"
+msgstr ""
+
 msgid "Search Filters"
 msgstr "絞り込み検索"
 
@@ -8761,7 +9039,7 @@ msgid "Search bookings"
 msgstr "予約を検索"
 
 msgid "Search coupons"
-msgstr ""
+msgstr "クーポンを検索"
 
 msgid "Search customers"
 msgstr "お客様を検索"
@@ -8800,13 +9078,13 @@ msgid "Search packages"
 msgstr "コースを検索"
 
 msgid "Search resources"
-msgstr ""
+msgstr "リソースを検索"
 
 msgid "Search services"
 msgstr "サービスを検索する"
 
 msgid "Search taxes"
-msgstr ""
+msgstr "税を検索"
 
 msgid "Second"
 msgstr "第二"
@@ -8936,8 +9214,11 @@ msgstr "WooCommerce製品を選択"
 msgid "Select Zoom User"
 msgstr "Zoomユーザーを選択"
 
-msgid "Select a form..."
+msgid "Select a .ameliafile archive before starting the import."
 msgstr ""
+
+msgid "Select a form..."
+msgstr "フォームを選択..."
 
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr "カーソル位置に挿入するプレースホルダーを選択してください。"
@@ -9045,7 +9326,7 @@ msgid "Select tickets"
 msgstr "チケットを選択"
 
 msgid "Select which IvyForms form to show before booking"
-msgstr ""
+msgstr "予約手続き前に表示するIvyFormsのフォームを選択"
 
 msgid "Select your Square Location"
 msgstr "スクエアの場所を選択"
@@ -9747,6 +10028,9 @@ msgstr "コースをスキップして、選択したサービスを続ける"
 msgid "Skip setup"
 msgstr "セットアップをスキップ"
 
+msgid "Skipped"
+msgstr ""
+
 msgid "Slot end time"
 msgstr "予約枠の終了時間"
 
@@ -10282,6 +10566,9 @@ msgid ""
 "location"
 msgstr "Ameliaの通貨が、選択したSquareの現地通貨と一致しません"
 
+msgid "The custom post is ready."
+msgstr ""
+
 msgid ""
 "The customer didn’t provide an email address, so the invoice couldn’t be "
 "sent."
@@ -10509,6 +10796,13 @@ msgstr ""
 
 msgid "This employee is the only one assigned to {service}."
 msgstr "このスタッフは、{service} に割り当てられている唯一のスタッフです。"
+
+msgid ""
+"This export includes, but is not limited to, bookings, customers, settings, "
+"notification logs, and SMS history. Site-specific data (such as URLs, "
+"images, and purchase codes) is excluded and must be set up manually on a new "
+"site."
+msgstr ""
 
 msgid "This field is required"
 msgstr "この項目は入力必須です"
@@ -11215,6 +11509,9 @@ msgstr "カートを確認する"
 msgid "View Employees"
 msgstr "スタッフを確認する"
 
+msgid "View Event Page"
+msgstr ""
+
 msgid "View Less Packages"
 msgstr "コース詳細を閉じる"
 
@@ -11818,6 +12115,9 @@ msgstr "(現在支払い中）"
 msgid " (Incl. Tax)"
 msgstr "(税込)"
 
+msgid "added to cart"
+msgstr ""
+
 msgid "and"
 msgstr " / "
 
@@ -11887,6 +12187,9 @@ msgstr "iCloudメールアドレス"
 msgid "iCloud email address and iCloud app-specific password"
 msgstr "iCloudメールアドレスとiCloudアプリ固有パスワード"
 
+msgid "in cart"
+msgstr ""
+
 msgid "includes"
 msgstr "含む"
 
@@ -11915,13 +12218,13 @@ msgid "on"
 msgstr ""
 
 msgid "opens in new tab"
-msgstr ""
+msgstr "新しいタブで開く"
 
 msgid "out of"
 msgstr "より"
 
 msgid "payment button"
-msgstr ""
+msgstr "支払いボタン"
 
 msgid "people"
 msgstr "人々"
@@ -11967,6 +12270,12 @@ msgstr "reCAPTCHAの設定"
 
 msgid "reCAPTCHA validation failed."
 msgstr "reCAPTCHAの検証に失敗しました。"
+
+msgid "remaining"
+msgstr ""
+
+msgid "removed from cart"
+msgstr ""
 
 msgid "results"
 msgstr "結果"

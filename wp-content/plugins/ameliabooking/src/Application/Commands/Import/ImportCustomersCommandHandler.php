@@ -178,7 +178,7 @@ class ImportCustomersCommandHandler extends CommandHandler
             }
 
             $newUser->setId(new Id($id));
-            $customerApplicationService->setWPUserForCustomer($newUser, true);
+            $customerApplicationService->setWPUserForCustomer($newUser, true, false);
 
             $addedUsers[] = $newUser;
         }

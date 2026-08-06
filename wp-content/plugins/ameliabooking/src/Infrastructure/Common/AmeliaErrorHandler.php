@@ -9,6 +9,7 @@ namespace AmeliaBooking\Infrastructure\Common;
 
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Controller\Controller;
+use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaVendor\Psr\Http\Message\ResponseInterface;
 use Slim\Exception\HttpException;
 use Slim\Handlers\ErrorHandler;
@@ -22,6 +23,8 @@ class AmeliaErrorHandler extends ErrorHandler
 
         if ($exception instanceof AccessDeniedException) {
             $status = Controller::STATUS_FORBIDDEN;
+        } elseif ($exception instanceof NotFoundException) {
+            $status = Controller::STATUS_NOT_FOUNT;
         } elseif ($exception instanceof HttpException) {
             $status = $exception->getCode();
         } else {

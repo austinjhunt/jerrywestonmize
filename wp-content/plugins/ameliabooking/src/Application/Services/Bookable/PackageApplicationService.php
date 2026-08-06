@@ -621,18 +621,20 @@ class PackageApplicationService extends AbstractPackageApplicationService
     }
 
     /**
+     * @param array $criteria
+     *
      * @return array
      *
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      */
-    public function getPackagesArray()
+    public function getPackagesArray($criteria = [])
     {
         /** @var PackageRepository $packageRepository */
         $packageRepository = $this->container->get('domain.bookable.package.repository');
 
         /** @var Collection $packages */
-        $packages = $packageRepository->getByCriteria([]);
+        $packages = $packageRepository->getByCriteria($criteria);
 
         $currentDateTime = DateTimeService::getNowDateTimeObject();
 

@@ -221,6 +221,7 @@ class FrontendStrings
             'custom_days'                  => __('Specific Date & Time', 'wpamelia'),
             'delete_appointment'           => __('Delete appointment', 'wpamelia'),
             'open_side_menu'               => __('Open side menu', 'wpamelia'),
+            'remaining'                    => __('remaining', 'wpamelia'),
         ] : [];
 
         return array_merge($labels, LiteFrontendStrings::getCommonStrings());
@@ -393,6 +394,9 @@ class FrontendStrings
             'cart_add_button'              => __('Book another', 'wpamelia'),
             'cart_view_button'             => __('View Cart', 'wpamelia'),
             'cart_title'                   => __('You can find below the appointments you selected for booking. If you want to book more, click on the button below.', 'wpamelia'),
+            'in_cart'                      => __('in cart', 'wpamelia'),
+            'removed_from_cart'            => __('removed from cart', 'wpamelia'),
+            'added_to_cart'                => __('added to cart', 'wpamelia'),
 
             'recurring_step'               => __('Recurring Appointment', 'wpamelia'),
             'recurrence'                   => __('Recurrence', 'wpamelia'),

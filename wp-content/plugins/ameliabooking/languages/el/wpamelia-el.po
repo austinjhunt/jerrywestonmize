@@ -266,7 +266,7 @@ msgid "AM - Events Calendar Booking"
 msgstr "AM - Ημερολόγιο εκδηλώσεων Κρατήσεις"
 
 msgid "AM - Events List Booking"
-msgstr "Μέσος όρος κρατήσεων"
+msgstr "AM - Λίστα εκδηλώσεων Κράτηση"
 
 msgid "AM - Events view"
 msgstr "AM - Προβολή εκδηλώσεων"
@@ -429,6 +429,12 @@ msgid "Add Meta Pixel to track ad conversions and optimize marketing."
 msgstr ""
 "Προσθέστε το Meta Pixel για να παρακολουθείτε τις μετατροπές διαφημίσεων και "
 "να βελτιστοποιείτε το μάρκετινγκ."
+
+msgid "Add New"
+msgstr ""
+
+msgid "Add New Event Page"
+msgstr ""
 
 msgid "Add Period"
 msgstr "Προσθήκη τελείας"
@@ -626,8 +632,11 @@ msgstr "Όλοι οι πελάτες"
 msgid "All employees"
 msgstr "Όλοι οι εργαζόμενοι"
 
+msgid "All entities imported"
+msgstr ""
+
 msgid "All events"
-msgstr "Όλα τα γεγονότα"
+msgstr "Όλες οι εκδηλώσεις"
 
 msgid "All extras"
 msgstr "Όλα τα έξτρα"
@@ -838,6 +847,15 @@ msgstr "Amelia - Βήμα-βήμα κράτηση"
 
 msgid "Amelia Add to calendar page"
 msgstr "Amelia Προσθήκη στη σελίδα ημερολογίου"
+
+msgid "Amelia Event"
+msgstr ""
+
+msgid "Amelia Event Page"
+msgstr ""
+
+msgid "Amelia Event Pages"
+msgstr ""
 
 msgid "Amelia Events List Booking Settings"
 msgstr "Amelia Λίστα Εκδηλώσεων - Ρυθμίσεις Κρατήσεων"
@@ -1366,6 +1384,9 @@ msgid ""
 msgstr ""
 "Δημιουργήστε αυτόματα συναντήσεις Zoom για κρατήσεις και ειδοποιήστε τους "
 "πελάτες και τους υπαλλήλους."
+
+msgid "Automatically create an Event Page for new events"
+msgstr ""
 
 msgid ""
 "Automatically generate invoices for every booking, making payments easier, "
@@ -2323,6 +2344,8 @@ msgid ""
 "Collect additional information from your customers before they complete a "
 "booking."
 msgstr ""
+"Συλλέξτε επιπλέον πληροφορίες από τους πελάτες σας πριν ολοκληρώσουν την "
+"κράτηση."
 
 msgid "Collect the information your business truly needs"
 msgstr ""
@@ -2538,7 +2561,7 @@ msgid "Consulting"
 msgstr "Συμβουλευτικές υπηρεσίες"
 
 msgid "Contact Form"
-msgstr ""
+msgstr "Φόρμα επικοινωνίας"
 
 msgid "Contact message"
 msgstr "Μήνυμα επικοινωνίας"
@@ -2725,8 +2748,11 @@ msgstr "Δημιουργία υπαλλήλου"
 msgid "Create event"
 msgstr "Δημιουργία εκδήλωσης"
 
-msgid "Create form"
+msgid "Create event page"
 msgstr ""
+
+msgid "Create form"
+msgstr "Δημιουργήστε φόρμα"
 
 msgid "Create meetings for pending appointments"
 msgstr "Δημιουργία συναντήσεων για εκκρεμείς ραντεβού"
@@ -3061,11 +3087,17 @@ msgstr "Σκούρο θέμα"
 msgid "Dashboard"
 msgstr "Πίνακας ελέγχου"
 
+msgid "Data export is ready."
+msgstr ""
+
 msgid "Data that remains unchanged:"
 msgstr "Δεδομένα που παραμένουν αμετάβλητα:"
 
 msgid "Data to be updated:"
 msgstr "Δεδομένα προς ενημέρωση:"
+
+msgid "Data transfer"
+msgstr ""
 
 msgid "Date"
 msgstr "Ημερομηνία"
@@ -3482,6 +3514,9 @@ msgstr ""
 "εξαιρετικός τρόπος για να αναδείξετε τις επερχόμενες εκδηλώσεις σε "
 "διαδραστική μορφή."
 
+msgid "Do not exit the import until it is finished."
+msgstr ""
+
 msgid "Do you want to cancel following events?"
 msgstr "Θέλετε να ακυρώσετε τα ακόλουθα συμβάντα;"
 
@@ -3695,6 +3730,9 @@ msgstr "Επεξεργασία πελάτη"
 msgid "Edit Event"
 msgstr "Επεξεργασία συμβάντος"
 
+msgid "Edit Event Page"
+msgstr ""
+
 msgid "Edit Extra"
 msgstr "Επεξεργασία επιπλέον"
 
@@ -3739,6 +3777,9 @@ msgstr "Επεξεργασία συμβάντος"
 
 msgid "Edit event booking"
 msgstr "Επεξεργασία κράτησης εκδήλωσης"
+
+msgid "Edit event page"
+msgstr ""
 
 msgid "Edit location"
 msgstr "Επεξεργασία τοποθεσίας"
@@ -3990,7 +4031,7 @@ msgstr ""
 "για να δημιουργήσετε μια ομαλή και επώνυμη εμπειρία."
 
 msgid "Enable data usage"
-msgstr ""
+msgstr "Ενεργοποίηση χρήσης δεδομένων"
 
 msgid "Enable guest booking"
 msgstr "Ενεργοποίηση κράτησης επισκεπτών"
@@ -4301,7 +4342,7 @@ msgstr ""
 "client."
 
 msgid "Enter code"
-msgstr ""
+msgstr "Εισαγάγετε κωδικό"
 
 msgid "Enter date of birth"
 msgstr "Ημερομηνία γέννησης"
@@ -4458,6 +4499,9 @@ msgstr "Φόρμα κράτησης λίστας εκδηλώσεων"
 msgid "Event Location"
 msgstr "Τοποθεσία εκδήλωσης"
 
+msgid "Event Pages"
+msgstr ""
+
 msgid "Event Starts"
 msgstr "Έναρξη εκδήλωσης"
 
@@ -4474,7 +4518,7 @@ msgid "Event available"
 msgstr "Διαθέσιμο γεγονός"
 
 msgid "Event booking"
-msgstr ""
+msgstr "Κράτηση εκδήλωσης"
 
 msgid "Event booking has been created."
 msgstr "Η κράτηση εκδήλωσης έχει δημιουργηθεί."
@@ -4594,7 +4638,7 @@ msgid "Event has been updated."
 msgstr "Το συμβάν έχει ενημερωθεί."
 
 msgid "Event image gallery"
-msgstr ""
+msgstr "Γκαλερί εικόνων εκδήλωσης"
 
 msgid "Event info"
 msgstr "Πληροφορίες για την εκδήλωση"
@@ -4710,7 +4754,7 @@ msgid "Events list view"
 msgstr "Προβολή λίστας εκδηλώσεων"
 
 msgid "Events pagination"
-msgstr ""
+msgstr "Σελιδοποίηση Εκδηλώσεων"
 
 msgid "Events pricing"
 msgstr "Τιμές εκδηλώσεων"
@@ -4769,8 +4813,14 @@ msgstr "Εξαγωγή δεδομένων ραντεβού με ευκολία"
 msgid "Export bookings"
 msgstr "Εξαγωγή κρατήσεων"
 
+msgid "Export data"
+msgstr ""
+
 msgid "Export event booking data with ease"
 msgstr "Εξαγάγετε εύκολα δεδομένα κρατήσεων εκδηλώσεων"
+
+msgid "Export failed."
+msgstr ""
 
 msgid "Express Account"
 msgstr "Λογαριασμός Express"
@@ -5305,6 +5355,9 @@ msgid ""
 "Help us improve Amelia by sharing anonymous data about your plugin usage. No "
 "personal data is collected."
 msgstr ""
+"Βοηθήστε μας να βελτιώσουμε την Amelia κοινοποιώντας ανωνυμοποιημένα "
+"δεδομένα σχετικά με τη χρήση του πρόσθετου, που δεν μπορούν να σας "
+"ταυτοποιήσουν. Δεν συλλέγονται προσωπικά δεδομένα."
 
 msgid ""
 "Here, you can connect your personal Apple Calendar,<br/>so once the booking "
@@ -5486,6 +5539,9 @@ msgstr "Αναρρίχηση ID"
 msgid "ID Desc"
 msgstr "ID Περιγραφή"
 
+msgid "I understand this import will replace all current data permanently."
+msgstr ""
+
 msgid "I want to pay full amount"
 msgstr "Θέλω να πληρώσω το πλήρες ποσό"
 
@@ -5656,7 +5712,7 @@ msgid "Image Color"
 msgstr "Χρώμα εικόνας"
 
 msgid "Image navigation"
-msgstr ""
+msgstr "Περιήγηση εικόνων"
 
 msgid "Image thumbs"
 msgstr "Μικρές εικόνες"
@@ -5673,14 +5729,212 @@ msgstr "Εισαγωγή μερικώς επιτυχής"
 msgid "Import Rules"
 msgstr "Κανόνες εισαγωγής"
 
+msgid "Import completed"
+msgstr ""
+
+msgid "Import completed successfully."
+msgstr ""
+
+msgid "Import could not be started."
+msgstr ""
+
+msgid "Import data"
+msgstr ""
+
+msgid "Import errors"
+msgstr ""
+
+msgid "Import failed"
+msgstr ""
+
+msgid "Import failed. Review the details below."
+msgstr ""
+
+msgid "Import progress"
+msgstr ""
+
+msgid "Import progress could not be updated."
+msgstr ""
+
+msgid "Import started."
+msgstr ""
+
 msgid "Import successful"
 msgstr "Εισαγωγή επιτυχής"
+
+msgid "Importing Google calendar sync"
+msgstr ""
+
+msgid "Importing Outlook calendar sync"
+msgstr ""
+
+msgid "Importing appointments"
+msgstr ""
+
+msgid "Importing booking extras"
+msgstr ""
+
+msgid "Importing bookings"
+msgstr ""
+
+msgid "Importing categories"
+msgstr ""
+
+msgid "Importing coupon-event relations"
+msgstr ""
+
+msgid "Importing coupon-package relations"
+msgstr ""
+
+msgid "Importing coupon-service relations"
+msgstr ""
+
+msgid "Importing coupons"
+msgstr ""
+
+msgid "Importing custom field events"
+msgstr ""
+
+msgid "Importing custom field options"
+msgstr ""
+
+msgid "Importing custom field services"
+msgstr ""
+
+msgid "Importing custom fields"
+msgstr ""
 
 msgid "Importing customers"
 msgstr "Εισαγωγή πελατών"
 
-msgid "Improve Amelia"
+msgid "Importing days off"
 msgstr ""
+
+msgid "Importing employee locations"
+msgstr ""
+
+msgid "Importing employee services"
+msgstr ""
+
+msgid "Importing employee views"
+msgstr ""
+
+msgid "Importing employees"
+msgstr ""
+
+msgid "Importing event booking periods"
+msgstr ""
+
+msgid "Importing event booking tickets"
+msgstr ""
+
+msgid "Importing event periods"
+msgstr ""
+
+msgid "Importing event providers"
+msgstr ""
+
+msgid "Importing event tags"
+msgstr ""
+
+msgid "Importing event tickets"
+msgstr ""
+
+msgid "Importing events"
+msgstr ""
+
+msgid "Importing extras"
+msgstr ""
+
+msgid "Importing location view settings"
+msgstr ""
+
+msgid "Importing locations"
+msgstr ""
+
+msgid "Importing notification SMS history"
+msgstr ""
+
+msgid "Importing notification log"
+msgstr ""
+
+msgid "Importing notification relations"
+msgstr ""
+
+msgid "Importing notifications"
+msgstr ""
+
+msgid "Importing package booking services"
+msgstr ""
+
+msgid "Importing package bookings"
+msgstr ""
+
+msgid "Importing package service locations"
+msgstr ""
+
+msgid "Importing package service providers"
+msgstr ""
+
+msgid "Importing package services"
+msgstr ""
+
+msgid "Importing packages"
+msgstr ""
+
+msgid "Importing payments"
+msgstr ""
+
+msgid "Importing period-location relations"
+msgstr ""
+
+msgid "Importing period-service relations"
+msgstr ""
+
+msgid "Importing provider periods"
+msgstr ""
+
+msgid "Importing provider special-day periods"
+msgstr ""
+
+msgid "Importing resource relations"
+msgstr ""
+
+msgid "Importing resources"
+msgstr ""
+
+msgid "Importing service views"
+msgstr ""
+
+msgid "Importing services"
+msgstr ""
+
+msgid "Importing settings"
+msgstr ""
+
+msgid "Importing special-day period-location relations"
+msgstr ""
+
+msgid "Importing special-day period-service relations"
+msgstr ""
+
+msgid "Importing special days"
+msgstr ""
+
+msgid "Importing tax relations"
+msgstr ""
+
+msgid "Importing taxes"
+msgstr ""
+
+msgid "Importing time outs"
+msgstr ""
+
+msgid "Importing work periods"
+msgstr ""
+
+msgid "Improve Amelia"
+msgstr "Βελτιώστε το Amelia"
 
 msgid ""
 "Improve accuracy and professionalism with consistent, clearly formatted "
@@ -5709,6 +5963,9 @@ msgid ""
 msgstr ""
 "Βελτιώστε την εμπειρία των πελατών, επιτρέποντάς τους να επιλέξουν την "
 "τοποθεσία που τους ταιριάζει καλύτερα."
+
+msgid "Improve plugin"
+msgstr "Βελτιώστε το πρόσθετο"
 
 msgid ""
 "Improve reporting accuracy by accessing complete appointment data instantly"
@@ -5862,8 +6119,11 @@ msgstr "Εισαγωγή σύντομου κωδικού Amelia"
 msgid "Insert pending appointments"
 msgstr "Εισαγωγή εκκρεμών ραντεβού"
 
-msgid "Install & Activate"
+msgid "Inserted"
 msgstr ""
+
+msgid "Install & Activate"
+msgstr "Εγκατάσταση & Ενεργοποίηση"
 
 msgid "Integrate with WooCommerce to enable advanced e-commerce capabilities."
 msgstr ""
@@ -5968,19 +6228,19 @@ msgid "IvyForms"
 msgstr ""
 
 msgid "IvyForms Entries"
-msgstr ""
+msgstr "Καταχωρήσεις IvyForms"
 
 msgid "IvyForms Field"
-msgstr ""
+msgstr "Πεδίο IvyForms"
 
 msgid "IvyForms Form"
-msgstr ""
+msgstr "Φόρμα IvyForms"
 
 msgid "IvyForms validation failed."
-msgstr ""
+msgstr "Η επικύρωση του IvyForms απέτυχε."
 
 msgid "Ivy setup"
-msgstr ""
+msgstr "Ρύθμιση Ivy"
 
 msgid "Jane Doe"
 msgstr ""
@@ -6227,16 +6487,16 @@ msgid "Load page"
 msgstr "Φόρτωση σελίδας"
 
 msgid "Loading"
-msgstr ""
+msgstr "Φόρτωση"
 
 msgid "Loading..."
 msgstr "Φόρτωση..."
 
 msgid "Loading event information"
-msgstr ""
+msgstr "Φόρτωση πληροφοριών εκδήλωσης"
 
 msgid "Loading header"
-msgstr ""
+msgstr "Φόρτωση κεφαλίδας"
 
 msgid "Local Time"
 msgstr "Τοπική ώρα"
@@ -6427,6 +6687,9 @@ msgstr "Διαχείριση προσωπικού προγράμματος"
 msgid "Manage shared resources with ease"
 msgstr "Διαχειριστείτε εύκολα τους κοινόχρηστους πόρους"
 
+msgid "Manage this event in Amelia:"
+msgstr ""
+
 msgid "Managing assigned services"
 msgstr "Διαχείριση ανατεθειμένων υπηρεσιών"
 
@@ -6456,7 +6719,7 @@ msgid "Max Capacity Desc"
 msgstr "Μέγιστη χωρητικότητα Desc"
 
 msgid "Maximum"
-msgstr ""
+msgstr "Μέγιστο"
 
 msgid "Maximum Quantity:"
 msgstr "Μέγιστη διαθεσιμότητα:"
@@ -6553,7 +6816,7 @@ msgid "Min. Capacity"
 msgstr "Ελάχιστη χωρητικότητα"
 
 msgid "Minimum"
-msgstr ""
+msgstr "Ελάχιστο"
 
 msgid "Minimum bookings required"
 msgstr "Ελάχιστος αριθμός κρατήσεων που απαιτείται"
@@ -6713,6 +6976,9 @@ msgstr "Νέος πελάτης"
 msgid "New Event"
 msgstr "Νέο γεγονός"
 
+msgid "New Event Page"
+msgstr ""
+
 msgid "New Location"
 msgstr "Νέα τοποθεσία"
 
@@ -6780,7 +7046,7 @@ msgid "Next day reminder"
 msgstr "Υπενθύμιση επόμενης ημέρας"
 
 msgid "Next image"
-msgstr ""
+msgstr "Επόμενη εικόνα"
 
 msgid "No"
 msgstr "Όχι"
@@ -6856,6 +7122,12 @@ msgstr "Δεν υπάρχουν ακόμη υπάλληλοι"
 
 msgid "No event bookings yet"
 msgstr "Δεν υπάρχουν ακόμη κρατήσεις για εκδηλώσεις"
+
+msgid "No event pages found"
+msgstr ""
+
+msgid "No event pages found in Trash"
+msgstr ""
 
 msgid "No events found"
 msgstr "Δεν βρέθηκαν συμβάντα"
@@ -7278,6 +7550,9 @@ msgstr "Άνοιγμα"
 msgid "Open Event"
 msgstr "Ανοιχτή εκδήλωση"
 
+msgid "Open Event in Amelia"
+msgstr ""
+
 msgid "Open following"
 msgstr "Ανοίξτε το ακόλουθο"
 
@@ -7382,7 +7657,7 @@ msgid "PHP Mail"
 msgstr ""
 
 msgid "PRE-BOOKING INTAKE FORM (IVYFORMS)"
-msgstr ""
+msgstr "Φόρμα συλλογής στοιχείων πριν από την κράτηση (IVYFORMS)"
 
 msgid "Package"
 msgstr "Μέσος όρος κρατήσεων"
@@ -7804,7 +8079,7 @@ msgid "Permanent access token"
 msgstr "Μόνιμο διακριτικό πρόσβασης"
 
 msgid "Permanently linked"
-msgstr ""
+msgstr "Μόνιμα συνδεδεμένο"
 
 msgid "Person"
 msgstr "άτομο"
@@ -7892,6 +8167,9 @@ msgstr "Παρακαλώ περιμένετε"
 
 msgid "Please add period"
 msgstr "Παρακαλούμε προσθέστε τελεία."
+
+msgid "Please back up before proceeding to avoid loss of data."
+msgstr ""
 
 msgid "Please cancel the event first before deleting it."
 msgstr "Παρακαλώ ακυρώστε πρώτα την εκδήλωση πριν τη διαγράψετε."
@@ -8292,7 +8570,7 @@ msgid "Popup title"
 msgstr "Τίτλος αναδυόμενου παραθύρου"
 
 msgid "Pre-booking form details"
-msgstr ""
+msgstr "Στοιχεία φόρμας πριν την κράτηση"
 
 msgid "Preload entities when page loads"
 msgstr "Προφόρτωση οντοτήτων κατά τη φόρτωση της σελίδας"
@@ -8336,13 +8614,13 @@ msgid "Preview invoice"
 msgstr "Προεπισκόπηση τιμολογίου"
 
 msgid "Previous image"
-msgstr ""
+msgstr "Προηγούμενη εικόνα"
 
 msgid "Previous range"
 msgstr "Προηγούμενο εύρος"
 
 msgid "Previous step"
-msgstr ""
+msgstr "Προηγούμενο βήμα"
 
 msgid "Price"
 msgstr "Τιμή"
@@ -8984,6 +9262,9 @@ msgstr "Αναζήτηση..."
 msgid "Search..."
 msgstr "Αναζήτηση..."
 
+msgid "Search Event Pages"
+msgstr ""
+
 msgid "Search Filters"
 msgstr "Κριτήρια αναζήτησης"
 
@@ -9003,7 +9284,7 @@ msgid "Search bookings"
 msgstr "Αναζήτηση κρατήσεων"
 
 msgid "Search coupons"
-msgstr ""
+msgstr "Αναζητήστε κουπόνια"
 
 msgid "Search customers"
 msgstr "Αναζήτηση πελατών"
@@ -9042,13 +9323,13 @@ msgid "Search packages"
 msgstr "Αναζήτηση πακέτων"
 
 msgid "Search resources"
-msgstr ""
+msgstr "Αναζήτηση πόρων"
 
 msgid "Search services"
 msgstr "Υπηρεσίες αναζήτησης"
 
 msgid "Search taxes"
-msgstr ""
+msgstr "Αναζήτηση φόρων"
 
 msgid "Second"
 msgstr "Δεύτερο"
@@ -9178,8 +9459,11 @@ msgstr "Επιλέξτε προϊόν WooCommerce"
 msgid "Select Zoom User"
 msgstr "Επιλογή χρήστη Zoom"
 
-msgid "Select a form..."
+msgid "Select a .ameliafile archive before starting the import."
 msgstr ""
+
+msgid "Select a form..."
+msgstr "Επιλέξτε μια φόρμα..."
 
 msgid "Select a placeholder to insert it where your cursor is placed."
 msgstr ""
@@ -9301,6 +9585,7 @@ msgstr "Επιλογή εισιτηρίων"
 
 msgid "Select which IvyForms form to show before booking"
 msgstr ""
+"Επιλέξτε ποια φόρμα IvyForms θα εμφανίζεται πριν από τη διαδικασία κράτησης"
 
 msgid "Select your Square Location"
 msgstr "Επιλέξτε την τοποθεσία σας στο Square"
@@ -10030,6 +10315,9 @@ msgstr "Παράλειψη πακέτων και συνέχιση με την ε
 msgid "Skip setup"
 msgstr "Παράλειψη ρύθμισης"
 
+msgid "Skipped"
+msgstr ""
+
 msgid "Slot end time"
 msgstr "Ώρα λήξης θέσης"
 
@@ -10580,6 +10868,9 @@ msgstr ""
 "Το νόμισμα στην Amelia δεν ταιριάζει με το νόμισμα της τοποθεσίας Square που "
 "έχετε επιλέξει."
 
+msgid "The custom post is ready."
+msgstr ""
+
 msgid ""
 "The customer didn’t provide an email address, so the invoice couldn’t be "
 "sent."
@@ -10823,6 +11114,13 @@ msgstr ""
 
 msgid "This employee is the only one assigned to {service}."
 msgstr "Αυτός ο υπάλληλος είναι ο μόνος που έχει ανατεθεί στο {service}."
+
+msgid ""
+"This export includes, but is not limited to, bookings, customers, settings, "
+"notification logs, and SMS history. Site-specific data (such as URLs, "
+"images, and purchase codes) is excluded and must be set up manually on a new "
+"site."
+msgstr ""
 
 msgid "This field is required"
 msgstr "Το πεδίο αυτό είναι υποχρεωτικό"
@@ -11556,6 +11854,9 @@ msgstr "Περισσότερα"
 msgid "View Employees"
 msgstr "Νέος εργαζόμενος"
 
+msgid "View Event Page"
+msgstr ""
+
 msgid "View Less Packages"
 msgstr "Προβολή λιγότερων πακέτων"
 
@@ -12171,6 +12472,9 @@ msgstr "(Πληρώνω τώρα)"
 msgid " (Incl. Tax)"
 msgstr " (συμπεριλαμβανομένου ΦΠΑ)"
 
+msgid "added to cart"
+msgstr ""
+
 msgid "and"
 msgstr "και"
 
@@ -12241,6 +12545,9 @@ msgid "iCloud email address and iCloud app-specific password"
 msgstr ""
 "Διεύθυνση email iCloud και κωδικός πρόσβασης ειδικός για την εφαρμογή iCloud"
 
+msgid "in cart"
+msgstr ""
+
 msgid "includes"
 msgstr "περιλαμβάνει"
 
@@ -12269,13 +12576,13 @@ msgid "on"
 msgstr "Γραμματοσειρά"
 
 msgid "opens in new tab"
-msgstr ""
+msgstr "Ανοίγει σε νέα καρτέλα"
 
 msgid "out of"
 msgstr "από"
 
 msgid "payment button"
-msgstr ""
+msgstr "Κουμπί πληρωμής"
 
 msgid "people"
 msgstr "άτομα"
@@ -12321,6 +12628,12 @@ msgstr "Ρύθμιση reCAPTCHA"
 
 msgid "reCAPTCHA validation failed."
 msgstr "Η επικύρωση reCAPTCHA απέτυχε."
+
+msgid "remaining"
+msgstr ""
+
+msgid "removed from cart"
+msgstr ""
 
 msgid "results"
 msgstr "αποτελέσματα"

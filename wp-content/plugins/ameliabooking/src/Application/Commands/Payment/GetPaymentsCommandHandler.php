@@ -16,6 +16,7 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
+use AmeliaBooking\Infrastructure\Licence\Licence;
 use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
 
 /**
@@ -71,15 +72,26 @@ class GetPaymentsCommandHandler extends CommandHandler
         $payments = [];
 
         foreach ($paymentsData as $paymentId => $payment) {
-            /** @var ReservationServiceInterface $reservationService */
-            $reservationService = $this->container->get('application.reservation.service')->get(
-                $payment['type']
-            );
+            if ($payment['type'] === Entities::PACKAGE && !Licence::hasFeatureAccess('packages')) {
+                $paymentsData[$paymentId]['summary'] = [
+                    'bookable'   => 0,
+                    'subtotal'   => 0,
+                    'discount'   => 0,
+                    'wcDiscount' => 0,
+                    'tax'        => 0,
+                    'wcTax'      => 0,
+                ];
+            } else {
+                /** @var ReservationServiceInterface $reservationService */
+                $reservationService = $this->container->get('application.reservation.service')->get(
+                    $payment['type']
+                );
 
-            $paymentsData[$paymentId]['summary'] = $reservationService->getPaymentSummary(
-                $payment,
-                $isInvoicePage
-            );
+                $paymentsData[$paymentId]['summary'] = $reservationService->getPaymentSummary(
+                    $payment,
+                    $isInvoicePage
+                );
+            }
 
             $payments[] = $paymentsData[$paymentId];
         }

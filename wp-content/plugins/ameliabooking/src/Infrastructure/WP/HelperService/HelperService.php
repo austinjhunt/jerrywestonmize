@@ -7,8 +7,6 @@
 
 namespace AmeliaBooking\Infrastructure\WP\HelperService;
 
-use AmeliaBooking\Infrastructure\WP\Integrations\WooCommerce\WooCommerceService;
-
 /**
  * Class HelperService
  *
@@ -96,7 +94,7 @@ class HelperService
 
         if ($order) {
             foreach ($order->get_items() as $itemId => $orderItem) {
-                $data = wc_get_order_item_meta($itemId, WooCommerceService::AMELIA);
+                $data = wc_get_order_item_meta($itemId, 'ameliabooking');
 
                 if ($data && is_array($data)) {
                     $prices[$itemId] = [
