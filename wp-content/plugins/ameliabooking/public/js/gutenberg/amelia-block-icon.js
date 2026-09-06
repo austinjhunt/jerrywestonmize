@@ -1,33 +1,154 @@
 /* eslint-disable quotes */
 (function (wp) {
   var el = wp.element.createElement
+  var useNeutralShortcodes = Boolean(window.wpAmeliaUseNeutralShortcodes)
+  var shortcodeAliases = window.wpAmeliaShortcodeAliases || {}
 
-  // Shared Amelia block icon
-  window.ameliaBlockIcon = el(
-    "svg",
-    {
-      width: "20",
-      height: "20",
-      viewBox: "0 0 20 20",
-      fill: "none",
-      xmlns: "http://www.w3.org/2000/svg"
-    },
-    el("path", {
-      d: "M11.0084 1.32972V7.10632C11.0084 7.58281 11.2628 8.02212 11.675 8.25862L16.6701 11.1222C17.5529 11.6284 18.6513 10.9892 18.6513 9.96993V4.22064C18.6513 3.74647 18.3991 3.30833 17.9893 3.07124L12.9942 0.179748C12.1114 -0.331029 11.0078 0.307587 11.0078 1.32914L11.0084 1.32972Z",
-      fill: "#4A3BD6"
-    }),
-    el("path", {
-      d: "M9.64395 1.32972V7.10632C9.64395 7.58281 9.3895 8.02212 8.97739 8.25862L3.98222 11.1222C3.09946 11.6284 2.00108 10.9892 2.00108 9.96993V4.22064C2.00108 3.74647 2.25321 3.30833 2.663 3.07124L7.65817 0.179748C8.54093 -0.331029 9.64453 0.307587 9.64453 1.32914L9.64395 1.32972Z",
-      fill: "#7165DF"
-    }),
-    el("path", {
-      d: "M9.5927 9.40127L4.56913 12.2811C3.68231 12.7896 3.67941 14.0709 4.56449 14.5828L9.58806 17.4906C9.99785 17.7277 10.5027 17.7277 10.9119 17.4906L15.9355 14.5828C16.8206 14.0709 16.8177 12.7896 15.9308 12.2811L10.9073 9.40127C10.4998 9.16767 10.0002 9.16767 9.5927 9.40127Z",
-      fill: "#9E94F8"
+  window.ameliaShortcodeTag = function (view, legacyTag) {
+    return useNeutralShortcodes && shortcodeAliases[view] ? shortcodeAliases[view] : legacyTag
+  }
+
+  window.ameliaResolvePluginName = function () {
+    var customName = window.wpAmeliaPluginName && String(window.wpAmeliaPluginName).trim()
+
+    if (customName) {
+      return customName
+    }
+
+    if (useNeutralShortcodes && window.wpAmeliaBuilderBrandName) {
+      return String(window.wpAmeliaBuilderBrandName).trim() || 'Amelia'
+    }
+
+    return 'Amelia'
+  }
+
+  window.ameliaGutenbergLabel = function (label) {
+    // Keep custom name, or default "Amelia" when white-label has no plugin name.
+    label = String(label || '').replace(/\{pluginName\}/g, window.ameliaResolvePluginName())
+
+    if (!useNeutralShortcodes) {
+      return label
+    }
+
+    return label.replace(/\s\(Legacy\)$/, '')
+  }
+
+  function sanitizeLabels(labels) {
+    Object.keys(labels || {}).forEach(function (key) {
+      if (typeof labels[key] === 'string') {
+        labels[key] = window.ameliaGutenbergLabel(labels[key])
+        return
+      }
+
+      if (labels[key] && typeof labels[key] === 'object') {
+        sanitizeLabels(labels[key])
+      }
     })
-  )
+  }
+
+  // Always resolve {pluginName}; also strip brand when neutral shortcodes are active.
+  sanitizeLabels(window.wpAmeliaLabels)
+
+  window.ameliaGutenbergHelpLink = function (href, style) {
+    if (useNeutralShortcodes) {
+      return null
+    }
+
+    return el(
+      "a",
+      {href: href, target: "_blank", rel: "noopener noreferrer", style: style},
+      "Start working with Amelia WordPress Appointment Booking plugin"
+    )
+  }
+
+  // Shared Amelia block icon.
+  // White-label + custom image: uploaded brand logo.
+  // White-label without image / no white-label: Amelia logo.
+  function createAmeliaSvgIcon() {
+    return el(
+      "svg",
+      {
+        width: "20",
+        height: "20",
+        viewBox: "0 0 20 20",
+        fill: "none",
+        xmlns: "http://www.w3.org/2000/svg"
+      },
+      el("path", {
+        d: "M11.0084 1.32972V7.10632C11.0084 7.58281 11.2628 8.02212 11.675 8.25862L16.6701 11.1222C17.5529 11.6284 18.6513 10.9892 18.6513 9.96993V4.22064C18.6513 3.74647 18.3991 3.30833 17.9893 3.07124L12.9942 0.179748C12.1114 -0.331029 11.0078 0.307587 11.0078 1.32914L11.0084 1.32972Z",
+        fill: "#4A3BD6"
+      }),
+      el("path", {
+        d: "M9.64395 1.32972V7.10632C9.64395 7.58281 9.3895 8.02212 8.97739 8.25862L3.98222 11.1222C3.09946 11.6284 2.00108 10.9892 2.00108 9.96993V4.22064C2.00108 3.74647 2.25321 3.30833 2.663 3.07124L7.65817 0.179748C8.54093 -0.331029 9.64453 0.307587 9.64453 1.32914L9.64395 1.32972Z",
+        fill: "#7165DF"
+      }),
+      el("path", {
+        d: "M9.5927 9.40127L4.56913 12.2811C3.68231 12.7896 3.67941 14.0709 4.56449 14.5828L9.58806 17.4906C9.99785 17.7277 10.5027 17.7277 10.9119 17.4906L15.9355 14.5828C16.8206 14.0709 16.8177 12.7896 15.9308 12.2811L10.9073 9.40127C10.4998 9.16767 10.0002 9.16767 9.5927 9.40127Z",
+        fill: "#9E94F8"
+      })
+    )
+  }
+
+  function createBlockIcon() {
+    var imageUrl = useNeutralShortcodes && window.wpAmeliaPluginImage
+      ? String(window.wpAmeliaPluginImage).trim()
+      : ''
+
+    if (imageUrl) {
+      return el("img", {
+        src: imageUrl,
+        alt: "",
+        width: 20,
+        height: 20,
+        style: {
+          objectFit: "contain",
+          display: "block"
+        }
+      })
+    }
+
+    return createAmeliaSvgIcon()
+  }
+
+  window.ameliaBlockIcon = createBlockIcon()
 
   // Shared Gutenberg helpers (icon script loads first for all Amelia blocks).
   window.ameliaGutenbergShared = window.ameliaGutenbergShared || {}
+
+  // Enables the hover preview card in the block inserter.
+  // Gutenberg shows "No preview available." when `example` is missing.
+  window.ameliaGutenbergShared.getBlockExample = function () {
+    return {
+      attributes: {
+        ameliaInserterPreview: true
+      }
+    }
+  }
+
+  window.ameliaGutenbergShared.isInserterPreview = function (attributes) {
+    return !!(attributes && attributes.ameliaInserterPreview)
+  }
+
+  window.ameliaGutenbergShared.getBlockPreview = function (preview) {
+    preview = preview || {}
+
+    return el('picture', {},
+      el('source', {
+        media: '(max-width: 479px)',
+        srcSet: preview.mobile || ''
+      }),
+      el('img', {
+        src: preview.desktop || '',
+        alt: '',
+        style: {
+          maxWidth: '100%',
+          height: 'auto',
+          display: 'block',
+          margin: '0 auto'
+        }
+      })
+    )
+  }
 
   window.ameliaGutenbergShared.getSharedShortcodeDepricatedAttributes = function () {
     return {

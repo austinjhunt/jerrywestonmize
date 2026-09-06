@@ -7,6 +7,7 @@
 
 namespace AmeliaBooking\Application\Commands\Payment;
 
+use AmeliaBooking\Domain\Services\Logger\LoggerInterface;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
@@ -75,6 +76,14 @@ class RefundPaymentCommandHandler extends CommandHandler
                 ]
             );
 
+            $this->container->getLoggerService()->channel(LoggerInterface::CHANNEL_PAYMENT)->error(
+                'Payment refund failed',
+                [
+                    'paymentId' => $paymentId,
+                    'amount'    => $payment->getAmount()->getValue(),
+                ]
+            );
+
             return $result;
         }
 
@@ -116,6 +125,15 @@ class RefundPaymentCommandHandler extends CommandHandler
                 [
                     Entities::PAYMENT => $payment->toArray(),
                     'response'        => $response
+                ]
+            );
+
+            $this->container->getLoggerService()->channel(LoggerInterface::CHANNEL_PAYMENT)->error(
+                'Payment refund failed',
+                [
+                    'paymentId' => $paymentId,
+                    'amount'    => $amount,
+                    'error'     => $response['error'],
                 ]
             );
 

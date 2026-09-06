@@ -529,4 +529,55 @@ class TimeSlotService
             $this->getBookedAppointments($slotsEntities, $props)
         );
     }
+
+    /**
+     * Calculate date busyness percentages from slot data for the booking calendar.
+     *
+     * Occupied slots may include bookings for other services on the same employee,
+     * so only entries matching the requested service are counted.
+     *
+     * @param array $freeSlots
+     * @param int   $serviceId
+     * @param bool  $structured
+     *
+     * @return array
+     */
+    public function getBusynessFromSlots(array $freeSlots, int $serviceId, bool $structured): array
+    {
+        $busyness = [];
+
+        $dates = array_unique(array_merge(
+            array_keys($freeSlots['available'] ?? []),
+            array_keys($freeSlots['occupied'] ?? [])
+        ));
+
+        foreach ($dates as $slotDate) {
+            $slotTimes = $freeSlots['available'][$slotDate] ?? [];
+            $occupiedSlots = !empty($freeSlots['occupied'][$slotDate]) ? $freeSlots['occupied'][$slotDate] : [];
+            $occupiedForService = [];
+
+            foreach ($occupiedSlots as $slotTime => $slotTimesProviders) {
+                foreach ($slotTimesProviders as $providerData) {
+                    $slotServiceId = $structured ?
+                        ($providerData['s'] ?? null) :
+                        ($providerData[3] ?? null);
+
+                    if ($slotServiceId !== null && (int) $slotServiceId === $serviceId) {
+                        $occupiedForService[$slotTime] = $slotTimesProviders;
+
+                        break;
+                    }
+                }
+            }
+
+            $availableCount = count($slotTimes);
+            $occupiedCount = count($occupiedForService);
+
+            $busyness[$slotDate] = $availableCount + $occupiedCount > 0 ?
+                (int) round($occupiedCount / ($availableCount + $occupiedCount) * 100) :
+                0;
+        }
+
+        return $busyness;
+    }
 }

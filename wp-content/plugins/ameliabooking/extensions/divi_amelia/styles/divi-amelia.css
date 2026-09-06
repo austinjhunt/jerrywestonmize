@@ -1,60 +1,46 @@
-.divi_customer:before {
+/* Module picker icons only — do not show on canvas shortcode display. */
+.et-fb-modules-list .divi_customer:before,
+.et-fb-modules-list .divi_employee:before,
+.et-fb-modules-list .divi_step_booking:before,
+.et-fb-modules-list .divi_catalog_booking:before,
+.et-fb-modules-list .divi_events_list_booking:before,
+.et-fb-modules-list .divi_events_calendar_booking:before,
+.et-fb-modules-list .divi_booking:before,
+.et-fb-modules-list .divi_catalog:before,
+.et-fb-modules-list .divi_events:before,
+.et-fb-modules-list .divi_search:before {
     content: "" !important;
     background-image: url(../includes/images/amelia-logo-admin-icon.svg);
     background-repeat: no-repeat;
     background-position: center center;
-    margin: 0 auto 5px;
+    background-size: contain;
+    display: block;
+    margin: 0 auto 1px !important;
     height: 20px;
-    margin-bottom: 1px !important;
 }
 
-.divi_employee:before {
-    content: "" !important;
-    background-image: url(../includes/images/amelia-logo-admin-icon.svg);
-    background-repeat: no-repeat;
-    background-position: center center;
-    margin: 0 auto 5px;
-    height: 20px;
-    margin-bottom: 1px !important;
+/* Hide logo next to shortcode preview on the Visual Builder canvas. */
+.et_pb_module.divi_customer:before,
+.et_pb_module.divi_employee:before,
+.et_pb_module.divi_step_booking:before,
+.et_pb_module.divi_catalog_booking:before,
+.et_pb_module.divi_events_list_booking:before,
+.et_pb_module.divi_events_calendar_booking:before,
+.et_pb_module.divi_booking:before,
+.et_pb_module.divi_catalog:before,
+.et_pb_module.divi_events:before,
+.et_pb_module.divi_search:before,
+.et-fb-module.divi_customer:before,
+.et-fb-module.divi_employee:before,
+.et-fb-module.divi_step_booking:before,
+.et-fb-module.divi_catalog_booking:before,
+.et-fb-module.divi_events_list_booking:before,
+.et-fb-module.divi_events_calendar_booking:before,
+.et-fb-module.divi_booking:before,
+.et-fb-module.divi_catalog:before,
+.et-fb-module.divi_events:before,
+.et-fb-module.divi_search:before {
+    content: none !important;
+    display: none !important;
+    background-image: none !important;
 }
-
-.divi_step_booking:before {
-    content: "" !important;
-    background-image: url(../includes/images/amelia-logo-admin-icon.svg);
-    background-repeat: no-repeat;
-    background-position: center center;
-    margin: 0 auto 5px;
-    height: 20px;
-    margin-bottom: 1px !important;
-}
-
-.divi_catalog_booking:before {
-    content: "" !important;
-    background-image: url(../includes/images/amelia-logo-admin-icon.svg);
-    background-repeat: no-repeat;
-    background-position: center center;
-    margin: 0 auto 5px;
-    height: 20px;
-    margin-bottom: 1px !important;
-}
-
-.divi_events_list_booking:before {
-    content: "" !important;
-    background-image: url(../includes/images/amelia-logo-admin-icon.svg);
-    background-repeat: no-repeat;
-    background-position: center center;
-    margin: 0 auto 5px;
-    height: 20px;
-    margin-bottom: 1px !important;
-}
-
-.divi_events_calendar_booking:before {
-    content: "" !important;
-    background-image: url(../includes/images/amelia-logo-admin-icon.svg);
-    background-repeat: no-repeat;
-    background-position: center center;
-    margin: 0 auto 5px;
-    height: 20px;
-    margin-bottom: 1px !important;
-}
-

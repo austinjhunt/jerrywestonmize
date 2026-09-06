@@ -7,6 +7,7 @@
 
 namespace AmeliaBooking\Application\Services\Notification;
 
+use AmeliaBooking\Domain\Services\Logger\LoggerInterface;
 use AmeliaBooking\Application\Services\Helper\HelperService;
 use AmeliaBooking\Application\Services\Placeholder\PlaceholderService;
 use AmeliaBooking\Domain\Collection\Collection;
@@ -743,7 +744,19 @@ class WhatsAppNotificationService extends AbstractWhatsAppNotificationService
             $data
         );
 
-        $whatsAppService->sendMessage($to, $text);
+        try {
+            $whatsAppService->sendMessage($to, $text);
+        } catch (\Exception $e) {
+            $this->container->getLoggerService()->channel(LoggerInterface::CHANNEL_NOTIFICATION)->error(
+                'WhatsApp: Error sending message',
+                [
+                    'exception'  => $e,
+                    'to'         => $to,
+                    'customerId' => $customers[0]['id'],
+                ]
+            );
+            throw $e;
+        }
     }
 
     /**

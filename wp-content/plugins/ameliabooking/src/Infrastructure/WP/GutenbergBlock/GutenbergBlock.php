@@ -27,6 +27,8 @@ use AmeliaBooking\Infrastructure\WP\Integrations\IvyForms\IvyFormsService;
 use AmeliaBooking\Infrastructure\WP\Integrations\PluginInstaller;
 use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
+use AmeliaBooking\Infrastructure\WP\SettingsService\SettingsStorage;
+use AmeliaBooking\Infrastructure\WP\ShortcodeService\ShortcodeAliasService;
 use Exception;
 
 /**
@@ -82,6 +84,15 @@ class GutenbergBlock
                 array('wp-element'),
                 AMELIA_VERSION
             );
+
+            $settingsService = new SettingsService(new SettingsStorage());
+            $localize = 'window.wpAmeliaUseNeutralShortcodes=' . wp_json_encode(ShortcodeAliasService::shouldUseNeutralShortcodes($settingsService)) . ';'
+                . 'window.wpAmeliaPluginName=' . wp_json_encode(ShortcodeAliasService::getWhiteLabelPluginName($settingsService)) . ';'
+                . 'window.wpAmeliaBuilderBrandName=' . wp_json_encode(ShortcodeAliasService::getBuilderBrandName($settingsService)) . ';'
+                . 'window.wpAmeliaShortcodeAliases=' . wp_json_encode(ShortcodeAliasService::getAliases()) . ';'
+                . 'window.wpAmeliaPluginImage=' . wp_json_encode(ShortcodeAliasService::getWhiteLabelPluginImage($settingsService)) . ';';
+            wp_add_inline_script('amelia_block_icon', $localize, 'before');
+
             $enqueued = true;
         }
     }
@@ -105,6 +116,76 @@ class GutenbergBlock
     }
 
     /**
+     * Localize desktop/mobile preview image URLs for a Gutenberg block script.
+     *
+     * @param string $scriptHandle
+     * @param string $objectName
+     * @param string $desktopFile
+     * @param string $mobileFile
+     */
+    public static function localizePreviewImages($scriptHandle, $objectName, $desktopFile, $mobileFile)
+    {
+        wp_localize_script(
+            $scriptHandle,
+            $objectName,
+            [
+                'desktop' => AMELIA_URL . 'public/img/shortcode/' . $desktopFile,
+                'mobile'  => AMELIA_URL . 'public/img/shortcode/' . $mobileFile,
+            ]
+        );
+    }
+
+    /**
+     * Backend strings for the block editor, with white-label placeholders already resolved.
+     *
+     * @return array
+     */
+    public static function getBlockStrings(): array
+    {
+        static $strings = null;
+
+        if ($strings === null) {
+            $settingsService = new SettingsService(new SettingsStorage());
+
+            $strings = self::applyBrandName(
+                BackendStrings::getAllStrings(),
+                ShortcodeAliasService::getBuilderBrandName($settingsService),
+                (bool)ShortcodeAliasService::shouldUseNeutralShortcodes($settingsService)
+            );
+        }
+
+        return $strings;
+    }
+
+    /**
+     * @param array  $strings
+     * @param string $brandName
+     * @param bool   $neutralShortcodes
+     *
+     * @return array
+     */
+    private static function applyBrandName(array $strings, string $brandName, bool $neutralShortcodes): array
+    {
+        foreach ($strings as $key => $value) {
+            if (is_array($value)) {
+                $strings[$key] = self::applyBrandName($value, $brandName, $neutralShortcodes);
+
+                continue;
+            }
+
+            if (!is_string($value)) {
+                continue;
+            }
+
+            $value = str_replace('{pluginName}', $brandName, $value);
+
+            $strings[$key] = $neutralShortcodes ? preg_replace('/\s\(Legacy\)$/', '', $value) : $value;
+        }
+
+        return $strings;
+    }
+
+    /**
      * Register block type with attributes and render_callback for frontend rendering.
      * Override in child classes.
      */
@@ -117,6 +198,36 @@ class GutenbergBlock
      */
     public static function registerBlockType()
     {
+    }
+
+    /**
+     * @param string $shortCode
+     * @param array  $allowedTags
+     *
+     * @return bool
+     */
+    protected static function isAllowedShortCode(string $shortCode, array $allowedTags): bool
+    {
+        foreach ($allowedTags as $tag) {
+            if (preg_match('/^\[' . preg_quote($tag, '/') . '(?=[\s\]\/])/u', $shortCode) === 1) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param string $view
+     * @param string $legacyTag
+     *
+     * @return array
+     */
+    protected static function getAllowedShortcodeTags(string $view, string $legacyTag): array
+    {
+        $aliasTag = ShortcodeAliasService::shortcodeTag($view, $legacyTag);
+
+        return $aliasTag === $legacyTag ? [$legacyTag] : [$legacyTag, $aliasTag];
     }
 
     /**

@@ -230,7 +230,7 @@
           el(inspectorControls, {},
             el(
               components.PanelBody,
-              {title: getLabel('step_booking_shortcode', 'Amelia Step Booking Shortcode'), initialOpen: true},
+              {title: window.ameliaGutenbergLabel(getLabel('step_booking_shortcode', 'Amelia Step Booking Shortcode')), initialOpen: true},
               renderShortcodeSettingsControls(targetAttributes, setAttrs, options)
             )
           )
@@ -242,14 +242,14 @@
   var stepBookingBlockMeta = wpAmeliaLabels && wpAmeliaLabels.step_booking_button_gutenberg_block
     ? wpAmeliaLabels.step_booking_button_gutenberg_block
     : {
-        title: 'Amelia - Booking Button',
+        title: window.ameliaGutenbergLabel('{pluginName} - Booking Button'),
         description: 'Step-by-Step booking view guides the customers through several steps in order to make their bookings.'
       }
 
   // Registering the Block for booking shotcode
   wp.blocks.registerBlockType('amelia/step-booking-button-gutenberg-block', {
     apiVersion: 3,
-    title: stepBookingBlockMeta.title,
+    title: window.ameliaGutenbergLabel(stepBookingBlockMeta.title),
     description: stepBookingBlockMeta.description,
     icon: window.ameliaBlockIcon,
     category: 'amelia-blocks',
@@ -264,7 +264,7 @@
     attributes: {
       short_code: {
         type: 'string',
-        default: '[ameliastepbooking]'
+        default: '[' + window.ameliaShortcodeTag('stepbooking', 'ameliastepbooking') + ']'
       },
       trigger: {
         type: 'string',
@@ -469,7 +469,7 @@
         var shortCode
         if (categories.length !== 0 && services.length !== 0 && employees.length !== 0) {
           if (attributes.parametars) {
-            shortCode = '[ameliastepbooking'
+            shortCode = '[' + window.ameliaShortcodeTag('stepbooking', 'ameliastepbooking')
 
             if (attributes.show) {
               shortCode += ' show=' + attributes.show + ''
@@ -493,7 +493,7 @@
               shortCode += ' package=' + attributes.package + ''
             }
           } else {
-            shortCode = '[ameliastepbooking'
+            shortCode = '[' + window.ameliaShortcodeTag('stepbooking', 'ameliastepbooking')
           }
 
           if (activeTrigger) {
@@ -684,7 +684,10 @@
         ]
       } else {
         inspectorElements.push(el('p', {style: {'margin-bottom': '1em'}}, 'Please create category, services and employee first. You can find instructions in our documentation on link below.'))
-        inspectorElements.push(el('a', {href: 'https://wpamelia.com/quickstart/', target: '_blank', style: {'margin-bottom': '1em'}}, 'Start working with Amelia WordPress Appointment Booking plugin'))
+        var helpLink = window.ameliaGutenbergHelpLink('https://wpamelia.com/quickstart/', {'margin-bottom': '1em'})
+        if (helpLink) {
+          inspectorElements.push(helpLink)
+        }
 
         return [
           el(blockControls, {key: 'controls'}),

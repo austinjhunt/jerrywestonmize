@@ -2,8 +2,10 @@
 
 namespace AmeliaBooking\Application\Commands\PaymentGateway;
 
+use AmeliaBooking\Domain\Services\Logger\LoggerInterface;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
+use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
 
 /**
@@ -29,7 +31,20 @@ class PayPalPaymentCallbackCommandHandler extends CommandHandler
     {
         $result = new CommandResult();
 
-        $this->checkMandatoryFields($command);
+        try {
+            $this->checkMandatoryFields($command);
+        } catch (InvalidArgumentException $e) {
+            $this->container->getLoggerService()->channel(LoggerInterface::CHANNEL_PAYMENT)->error(
+                'PayPal payment callback processing failed',
+                [
+                    'exception'  => $e,
+                    'hasToken'   => $command->getField('token') !== null,
+                    'hasPayerId' => $command->getField('PayerID') !== null,
+                ]
+            );
+
+            throw $e;
+        }
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('');

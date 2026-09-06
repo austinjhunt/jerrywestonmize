@@ -12,7 +12,6 @@ use AmeliaBooking\Application\Services\Reservation\EventReservationService;
 use AmeliaBooking\Application\Services\User\CustomerApplicationService;
 use AmeliaBooking\Application\Services\User\ProviderApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
-use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Booking\Event\CustomerBookingEventTicket;
@@ -29,7 +28,6 @@ use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingR
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
 use AmeliaBooking\Infrastructure\Repository\CustomField\CustomFieldRepository;
 use Exception;
-use Slim\Exception\ContainerValueNotFoundException;
 
 /**
  * Class GetEventCommandHandler
@@ -42,7 +40,6 @@ class GetEventCommandHandler extends CommandHandler
      * @param GetEventCommand $command
      *
      * @return CommandResult
-     * @throws ContainerValueNotFoundException
      * @throws AccessDeniedException
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
@@ -50,28 +47,10 @@ class GetEventCommandHandler extends CommandHandler
      */
     public function handle(GetEventCommand $command)
     {
+        /** @var AbstractUser $user */
+        $user = $command->authorize();
+
         $result = new CommandResult();
-
-        try {
-            /** @var AbstractUser $user */
-            $user = $command->getUserApplicationService()->authorization(
-                $command->getPage() === 'cabinet' ? $command->getToken() : null,
-                $command->getCabinetType()
-            );
-        } catch (AuthorizationException $e) {
-            $result->setResult(CommandResult::RESULT_ERROR);
-            $result->setData(
-                [
-                    'reauthorize' => true
-                ]
-            );
-
-            return $result;
-        }
-
-        if ($user === null) {
-            throw new AccessDeniedException('You are not allowed to read events');
-        }
 
         /** @var EventApplicationService $eventApplicationService */
         $eventApplicationService = $this->container->get('application.booking.event.service');

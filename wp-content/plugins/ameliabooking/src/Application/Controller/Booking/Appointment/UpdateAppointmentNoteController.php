@@ -3,9 +3,7 @@
 namespace AmeliaBooking\Application\Controller\Booking\Appointment;
 
 use AmeliaBooking\Application\Commands\Booking\Appointment\UpdateAppointmentNoteCommand;
-use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Controller\Controller;
-use AmeliaBooking\Domain\Events\DomainEventBus;
 use RuntimeException;
 use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -48,18 +46,5 @@ class UpdateAppointmentNoteController extends Controller
         }
 
         return $command;
-    }
-
-    /**
-     * @param DomainEventBus $eventBus
-     * @param CommandResult  $result
-     *
-     * @return void
-     */
-    protected function emitSuccessEvent(DomainEventBus $eventBus, CommandResult $result)
-    {
-        if ($result->getResult() === CommandResult::RESULT_SUCCESS) {
-            $eventBus->emit('AppointmentEdited', $result);
-        }
     }
 }

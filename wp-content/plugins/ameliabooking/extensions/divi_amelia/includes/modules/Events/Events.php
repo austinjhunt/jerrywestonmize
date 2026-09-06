@@ -6,7 +6,6 @@ use AmeliaBooking\Infrastructure\Licence;
 
 class DIVI_Events extends ET_Builder_Module
 {
-
     public $slug       = 'divi_events';
     public $vb_support = 'on';
 
@@ -23,7 +22,7 @@ class DIVI_Events extends ET_Builder_Module
 
     public function init()
     {
-        $this->name = esc_html__(BackendStrings::get('events_divi'), 'divi-divi_amelia');
+        $this->name = esc_html__(DIVI_AmeliaWhiteLabelHelper::label(BackendStrings::get('events_divi')), 'divi-divi_amelia');
 
         $isLite = !Licence\Licence::$premium;
 
@@ -150,14 +149,14 @@ class DIVI_Events extends ET_Builder_Module
     public function render($attrs, $content = null, $render_slug = null)
     {
         $preselect =  $this->props['booking_params'];
-        $shortcode = '[ameliaevents';
+        $shortcode = '[' . DIVI_AmeliaWhiteLabelHelper::shortcodeTag('events', 'ameliaevents');
         $type      = $this->props['type'];
         $trigger   = $this->props['trigger'];
         if ($type !== null && $type !== '' && $type !== '0') {
-            $shortcode .= ' type='.$type;
+            $shortcode .= ' type=' . $type;
         }
         if ($trigger !== null && $trigger !== '') {
-            $shortcode .= ' trigger='.$trigger;
+            $shortcode .= ' trigger=' . $trigger;
         }
         if ($preselect === 'on') {
             $event = $this->checkValues($this->props['events']);
@@ -179,4 +178,4 @@ class DIVI_Events extends ET_Builder_Module
     }
 }
 
-new DIVI_Events;
+new DIVI_Events();

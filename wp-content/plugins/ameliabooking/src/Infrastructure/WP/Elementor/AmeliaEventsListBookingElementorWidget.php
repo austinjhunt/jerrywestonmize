@@ -15,7 +15,7 @@ use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
  *
  * @package AmeliaBooking\Infrastructure\WP\Elementor
  */
-class AmeliaEventsListBookingElementorWidget extends Widget_Base
+class AmeliaEventsListBookingElementorWidget extends ElementorSharedShortcodeWidget
 {
     public function get_name()
     {
@@ -24,12 +24,12 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
 
     public function get_title()
     {
-        return BackendStrings::get('events_list_booking_gutenberg_block')['title'];
+        return AmeliaElementorWhiteLabelHelper::label(BackendStrings::get('events_list_booking_gutenberg_block')['title']);
     }
 
     public function get_icon()
     {
-        return 'amelia-logo';
+        return AmeliaElementorWhiteLabelHelper::icon();
     }
 
     public function get_categories()
@@ -46,9 +46,9 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
             'amelia_events_section',
             [
                 'label' => '<div class="amelia-elementor-content"><p class="amelia-elementor-content-title">'
-                    . BackendStrings::get('events_list_booking_gutenberg_block')['title']
+                    . AmeliaElementorWhiteLabelHelper::label(BackendStrings::get('events_list_booking_gutenberg_block')['title'])
                     . '</p><br><p class="amelia-elementor-content-p">'
-                    . BackendStrings::get('events_list_booking_gutenberg_block')['description']
+                    . AmeliaElementorWhiteLabelHelper::label(BackendStrings::get('events_list_booking_gutenberg_block')['description'])
                     . '</p>',
             ]
         );
@@ -161,78 +161,30 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
             ]
         );
 
-        $this->add_control(
-            'load_manually',
-            [
-                'label' => BackendStrings::get('manually_loading'),
-                'label_block' => true,
-                'type' => Controls_Manager::TEXT,
-                'placeholder' => '',
-                'description' => BackendStrings::get('manually_loading_description'),
-            ]
-        );
-
-        $this->add_control(
-            'trigger_type',
-            [
-                'label' => BackendStrings::get('trigger_type'),
-                'type' => Controls_Manager::SELECT,
-                'description' => BackendStrings::get('trigger_type_tooltip'),
-                'options' => [
-                    'id' => BackendStrings::get('trigger_type_id'),
-                    'class' => BackendStrings::get('trigger_type_class')
-                ],
-                'condition' => [
-                    'load_manually!' => '',
-                ],
-                'default' => 'id'
-            ]
-        );
-
-        $this->add_control(
-            'in_dialog',
-            [
-                'label' => BackendStrings::get('in_dialog'),
-                'type' => Controls_Manager::SWITCHER,
-                'default' => false,
-                'label_on' => BackendStrings::get('yes'),
-                'label_off' => BackendStrings::get('no'),
-                'condition' => [
-                    'load_manually!' => '',
-                ],
-            ]
-        );
-
-        if (!empty($controls_data['ivy'])) {
-            $this->add_control(
-                'ivy',
-                [
-                    'label' => BackendStrings::get('ivy'),
-                    'type' => Controls_Manager::SELECT,
-                    'description' => BackendStrings::get('ivy_tooltip'),
-                    'options' => $controls_data['ivy'],
-                    'default' => '',
-                    'condition' => [
-                        'load_manually' => '',
-                    ],
-                ]
-            );
-        }
+        $this->setSharedShortcodeElements($controls_data);
 
         $this->end_controls_section();
     }
 
-    protected function render()
+    protected function render(): void
     {
+        if (Plugin::$instance->editor->is_edit_mode()) {
+            $alt = esc_attr(BackendStrings::get('events_list_booking_gutenberg_block')['title']);
+            printf(
+                '<picture>' .
+                '<source media="(max-width: 360px)" srcset="%s" />' .
+                '<img class="amelia-elementor-preview" src="%s" alt="%s" style="max-width:100%%;height:auto;display:block;margin:0 auto;" />' .
+                '</picture>',
+                esc_url(AMELIA_URL . 'public/img/shortcode/elf-mobile-preview.svg'),
+                esc_url(AMELIA_URL . 'public/img/shortcode/elf-preview.svg'),
+                $alt
+            );
+            return;
+        }
 
         $settings = $this->get_settings_for_display();
 
-        $ivy = empty($settings['load_manually']) && !empty($settings['ivy']) && $settings['ivy'] !== '0' ?
-            ' ivy="' . esc_attr($settings['ivy']) . '"' : '';
-
-        $trigger      = $settings['load_manually'] !== '' ? ' trigger="' . esc_attr($settings['load_manually']) . '"' : '';
-        $trigger_type = $settings['load_manually'] && $settings['trigger_type'] !== '' ? ' trigger_type="' . esc_attr($settings['trigger_type']) . '"' : '';
-        $in_dialog    = $settings['load_manually'] && $settings['in_dialog'] === 'yes' ? ' in_dialog=1' : '';
+        $sharedShortcode = $this->getSharedShortcodeString($settings);
 
         if ($settings['preselect']) {
             $selected_event = empty($settings['select_event']) ? '' : ' event="' . (is_array($settings['select_event']) ?
@@ -271,23 +223,17 @@ class AmeliaEventsListBookingElementorWidget extends Widget_Base
                 $selected_tag .= '"';
             }
 
-            echo '[ameliaeventslistbooking' .
-                $trigger .
-                $trigger_type .
-                $in_dialog .
+            echo do_shortcode('[' . AmeliaElementorWhiteLabelHelper::shortcodeTag('eventslistbooking', 'ameliaeventslistbooking') .
+                $sharedShortcode .
                 $selected_event .
                 $event_to_show .
                 $selected_location .
                 $selected_tag .
-                $ivy .
-                $show_recurring . ']';
+                $show_recurring . ']');
         } else {
-            echo '[ameliaeventslistbooking' .
-                $trigger .
-                $trigger_type .
-                $in_dialog .
-                $ivy .
-                ']';
+            echo do_shortcode('[' . AmeliaElementorWhiteLabelHelper::shortcodeTag('eventslistbooking', 'ameliaeventslistbooking') .
+                $sharedShortcode .
+                ']');
         }
     }
 

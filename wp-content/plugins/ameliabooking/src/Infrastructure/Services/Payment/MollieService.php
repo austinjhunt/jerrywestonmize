@@ -102,7 +102,31 @@ class MollieService extends AbstractPaymentService implements PaymentServiceInte
             $payload['method'] = $data['method'];
         }
 
-        return new MollieResponse($this->getClient()->createPayment($payload));
+        try {
+            $response = $this->getClient()->createPayment($payload);
+        } catch (\Exception $e) {
+            $this->logger->error(
+                'Mollie payment creation failed',
+                ['gateway' => 'mollie', 'exception' => $e]
+            );
+
+            throw $e;
+        }
+
+        $mollieResponse = new MollieResponse($response);
+
+        if (!$mollieResponse->isSuccessful()) {
+            $this->logger->error(
+                'Mollie payment creation failed',
+                [
+                    'gateway' => 'mollie',
+                    'status'  => $mollieResponse->getCode(),
+                    'message' => $mollieResponse->getMessage(),
+                ]
+            );
+        }
+
+        return $mollieResponse;
     }
 
     /**
@@ -201,15 +225,31 @@ class MollieService extends AbstractPaymentService implements PaymentServiceInte
             ],
         ];
 
-        $response = $this->getClient()->createRefund($data['id'], $payload);
+        try {
+            $response = $this->getClient()->createRefund($data['id'], $payload);
+        } catch (\Exception $e) {
+            $this->logger->error(
+                'Mollie refund failed',
+                ['gateway' => 'mollie', 'exception' => $e]
+            );
+
+            throw $e;
+        }
 
         $httpCode = $response['_http_code'] ?? 0;
 
-        return [
-            'error' => ($httpCode >= 200 && $httpCode < 300)
-                ? false
-                : ($response['detail'] ?? $response['title'] ?? $response['message'] ?? 'Refund failed'),
-        ];
+        $error = ($httpCode >= 200 && $httpCode < 300)
+            ? false
+            : ($response['detail'] ?? $response['title'] ?? $response['message'] ?? 'Refund failed');
+
+        if ($error !== false) {
+            $this->logger->error(
+                'Mollie refund failed',
+                ['gateway' => 'mollie', 'message' => $error]
+            );
+        }
+
+        return ['error' => $error];
     }
 
     /**

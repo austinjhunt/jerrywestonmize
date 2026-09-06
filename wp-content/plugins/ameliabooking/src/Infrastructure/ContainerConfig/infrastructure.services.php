@@ -6,7 +6,9 @@
  */
 
 use AmeliaBooking\Infrastructure\Common\Container;
-use AmeliaBooking\Infrastructure\Services\Logger\WPLogger;
+use AmeliaBooking\Infrastructure\Services\Logger\LogRetentionCleanupService;
+use AmeliaBooking\Infrastructure\Services\Logger\MonologChannelLogger;
+use AmeliaBooking\Infrastructure\Services\Logger\MonologLoggerFactory;
 use AmeliaBooking\Infrastructure\Services\Notification\MailerFactory;
 use AmeliaBooking\Infrastructure\Services\Notification\MailgunService;
 use AmeliaBooking\Infrastructure\Services\Notification\OutlookService;
@@ -17,12 +19,36 @@ use AmeliaBooking\Infrastructure\Services\Notification\WpMailService;
 defined('ABSPATH') or die('No script kiddies please!');
 
 /**
- * Logger Service
+ * Logger factory (Monolog stack builder)
  *
- * @return AmeliaBooking\Infrastructure\Services\Logger\WPLogger
+ * @param Container $c
+ *
+ * @return MonologLoggerFactory
  */
-$entries['infrastructure.logger'] = function () {
-    return new WPLogger('Amelia');
+$entries['infrastructure.logger.factory'] = function ($c) {
+    return new MonologLoggerFactory($c->get('domain.settings.service'));
+};
+
+/**
+ * Logger Service (Domain LoggerInterface, with channel routing)
+ *
+ * @param Container $c
+ *
+ * @return MonologChannelLogger
+ */
+$entries['infrastructure.logger'] = function ($c) {
+    return new MonologChannelLogger($c->get('infrastructure.logger.factory'));
+};
+
+/**
+ * Log retention cleanup service
+ *
+ * @param Container $c
+ *
+ * @return LogRetentionCleanupService
+ */
+$entries['infrastructure.logger.retention'] = function ($c) {
+    return new LogRetentionCleanupService($c->get('domain.settings.service'));
 };
 
 /**
@@ -123,7 +149,8 @@ $entries['infrastructure.payment.square.service'] = function ($c) {
         $c->get('domain.settings.service'),
         new AmeliaBooking\Infrastructure\Services\Payment\CurrencyService(
             $c->get('domain.settings.service')
-        )
+        ),
+        $c->get('infrastructure.logger')
     );
 };
 

@@ -7,7 +7,6 @@ use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Booking\EventApplicationService;
 use AmeliaBooking\Application\Services\Coupon\CouponApplicationService;
 use AmeliaBooking\Application\Services\Deposit\AbstractDepositApplicationService;
-use AmeliaBooking\Application\Services\Helper\HelperService;
 use AmeliaBooking\Application\Services\QrCode\QrCodeApplicationService;
 use AmeliaBooking\Application\Services\Tax\TaxApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
@@ -46,7 +45,6 @@ use AmeliaBooking\Domain\ValueObjects\BooleanValueObject;
 use AmeliaBooking\Domain\ValueObjects\Number\Float\Price;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\IntegerValue;
-use AmeliaBooking\Domain\ValueObjects\String\AmountType;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Domain\ValueObjects\String\PaymentType;
 use AmeliaBooking\Domain\ValueObjects\String\Token;
@@ -62,8 +60,6 @@ use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
 use DateTime;
 use Exception;
-use Slim\Exception\ContainerException;
-use Slim\Exception\ContainerValueNotFoundException;
 
 /**
  * Class EventReservationService
@@ -91,7 +87,6 @@ class EventReservationService extends AbstractReservationService
      * @throws CouponInvalidException
      * @throws CouponUnknownException
      * @throws BookingUnavailableException
-     * @throws ContainerValueNotFoundException
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      * @throws Exception
@@ -163,10 +158,16 @@ class EventReservationService extends AbstractReservationService
         $bookingStatus = empty($eventData['bookings'][0]['status']) ? BookingStatus::APPROVED : $eventData['bookings'][0]['status'];
 
         if (!empty($eventData['payment']['gateway'])) {
-            $bookingStatus = in_array($eventData['payment']['gateway'], [PaymentType::MOLLIE, PaymentType::BARION]) ?
+            $isDeferredPayment = $this->isDeferredPaymentGateway($eventData['payment']);
+
+            $bookingStatus = $isDeferredPayment ?
                 BookingStatus::PENDING : (empty($eventData['bookings'][0]['status']) ? BookingStatus::APPROVED : $eventData['bookings'][0]['status']);
 
-            if (!empty($eventData['payment']['orderStatus'])) {
+            // see AppointmentReservationService - the order status is WooCommerce-only and server-derived
+            if (
+                $eventData['payment']['gateway'] === PaymentType::WC &&
+                !empty($eventData['payment']['orderStatus'])
+            ) {
                 $bookingStatus = $this->getWcStatus(
                     Entities::EVENT,
                     $eventData['payment']['orderStatus'],
@@ -228,14 +229,9 @@ class EventReservationService extends AbstractReservationService
 
         $isCustomer = (!$currentUser || ($currentUser->getType() === AbstractUser::USER_ROLE_CUSTOMER));
 
-        $isProvider =
-            $reservation->getLoggedInUser() &&
-            $reservation->getLoggedInUser()->getType() === AbstractUser::USER_ROLE_PROVIDER;
-
         if (
             $reservation->hasAvailabilityValidation()->getValue() &&
             $isCustomer &&
-            !$isProvider &&
             !$this->isBookable($event, $booking, DateTimeService::getNowDateTimeObject())
         ) {
             throw new BookingUnavailableException(
@@ -325,6 +321,17 @@ class EventReservationService extends AbstractReservationService
             }
 
             $booking->setId(new Id($bookingId));
+
+            // The reservation is only handed the persisted entities at the end of this method, but the
+            // payment row is written just below - hand it the booking as soon as the booking row exists,
+            // so a throwable raised while saving can still be rolled back in processRequest instead of
+            // leaving a committed booking behind. Both are reassigned unchanged further down.
+            if ($booking->getCustomer()) {
+                $reservation->setCustomer($booking->getCustomer());
+            }
+
+            $reservation->setBooking($booking);
+            $reservation->setReservation($event);
 
             // BEGIN QR Codes generation for event booking
             if ($settingsDS->isFeatureEnabled('eTickets')) {
@@ -433,8 +440,6 @@ class EventReservationService extends AbstractReservationService
      *
      * @return array
      *
-     * @throws ContainerException
-     * @throws ContainerValueNotFoundException
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      * @throws BookingCancellationException
@@ -503,7 +508,6 @@ class EventReservationService extends AbstractReservationService
      *
      * @return AbstractBookable
      *
-     * @throws ContainerValueNotFoundException
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      */
@@ -587,6 +591,7 @@ class EventReservationService extends AbstractReservationService
                             $customer->getCountryPhoneIso()->getValue() : null,
                         'customFields'    => $customer->getCustomFields() ?
                             json_decode($customer->getCustomFields()->getValue(), true) : null,
+                        'subscribeToMailchimp' => $this->isMailchimpSubscriptionRequested($requestData),
                     ],
                     'info'         => $booking->getInfo()->getValue(),
                     'persons'      => $booking->getPersons()->getValue(),
@@ -658,7 +663,6 @@ class EventReservationService extends AbstractReservationService
 
         $customerInfo = !empty($booking['info']) ? json_decode($booking['info'], true) : null;
 
-        /** @var EventPeriod $period */
         foreach ($event['periods'] as $period) {
             $dateTimeValues[] = [
                 'start' => $period['periodStart'],
@@ -719,7 +723,6 @@ class EventReservationService extends AbstractReservationService
      *
      * @return Event
      *
-     * @throws ContainerValueNotFoundException
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      */

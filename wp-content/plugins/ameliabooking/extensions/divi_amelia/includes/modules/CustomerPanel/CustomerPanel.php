@@ -4,7 +4,6 @@ use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
 
 class DIVI_Customer extends ET_Builder_Module
 {
-
     public $slug       = 'divi_customer';
     public $vb_support = 'on';
 
@@ -17,7 +16,7 @@ class DIVI_Customer extends ET_Builder_Module
 
     public function init()
     {
-        $this->name = esc_html__(BackendStrings::get('customer_cabinet_divi'), 'divi-divi_amelia');
+        $this->name = esc_html__(DIVI_AmeliaWhiteLabelHelper::label(BackendStrings::get('customer_cabinet_divi')), 'divi-divi_amelia');
     }
 
     /**
@@ -70,12 +69,12 @@ class DIVI_Customer extends ET_Builder_Module
 
     public function render($attrs, $content = null, $render_slug = null)
     {
-        $shortcode    = '[ameliacustomerpanel';
+        $shortcode    = '[' . DIVI_AmeliaWhiteLabelHelper::shortcodeTag('customer_panel', 'ameliacustomerpanel');
         $trigger      = $this->props['trigger'];
         $appointments = $this->props['appointments'];
         $events       = $this->props['events'];
         if ($trigger !== null && $trigger !== '') {
-            $shortcode .= ' trigger='.$trigger;
+            $shortcode .= ' trigger=' . $trigger;
         }
         if ($appointments === 'on') {
             $shortcode .= ' appointments=1';
@@ -89,4 +88,4 @@ class DIVI_Customer extends ET_Builder_Module
     }
 }
 
-new DIVI_Customer;
+new DIVI_Customer();

@@ -37,6 +37,7 @@ use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService
 use AmeliaBooking\Infrastructure\WP\HelperService\HelperService as WPHelperService;
 use AmeliaBooking\Infrastructure\WP\UserService\CreateWPUser;
 use AmeliaBooking\Infrastructure\WP\UserService\UserService;
+use AmeliaBooking\Infrastructure\WP\UserRoles\SuperAdminRoleService;
 use AmeliaBooking\Infrastructure\WP\UserRoles\UserRoles;
 use AmeliaVendor\Firebase\JWT\Key;
 use Exception;
@@ -198,6 +199,85 @@ class UserApplicationService
     }
 
     /**
+     * Differences from setWpUserIdForNewUser():
+     *  - Creates the WP user with a single wp_insert_user()
+     *  - Hashes the password at bcrypt's minimum cost.
+     *
+     * @param int          $userId
+     * @param AbstractUser $user
+     * @param string       $type
+     *
+     * @return boolean
+     * @throws InvalidArgumentException
+     * @throws QueryExecutionException
+     */
+    public function setWpUserIdForNewUserImported($userId, $user, $type)
+    {
+        if (
+            !$user->getEmail() ||
+            !$user->getEmail()->getValue() ||
+            !trim($user->getEmail()->getValue()) ||
+            !$this->isRoleForEmailAllowed($user->getEmail()->getValue(), $type)
+        ) {
+            return false;
+        }
+
+        do_action('amelia_set_wp_user_for_new_' . $type, $user->toArray());
+
+        $email = $user->getEmail()->getValue();
+        $role  = 'wpamelia-' . $user->getType();
+
+        $userData = [
+            'user_login' => $email,
+            'user_email' => $email,
+            'user_pass'  => wp_generate_password(),
+            'first_name' => $user->getFirstName() ? $user->getFirstName()->getValue() : '',
+            'last_name'  => $user->getLastName() ? $user->getLastName()->getValue() : '',
+        ];
+
+        if (get_role($role)) {
+            $userData['role'] = $role;
+        }
+
+        $lowerHashCost = static function ($options, $algorithm) {
+            if ($algorithm === PASSWORD_BCRYPT) {
+                $options['cost'] = 4;
+            }
+
+            return $options;
+        };
+
+        add_filter('wp_hash_password_options', $lowerHashCost, 10, 2);
+
+        $externalId = wp_insert_user($userData);
+
+        remove_filter('wp_hash_password_options', $lowerHashCost, 10);
+
+        if ($externalId instanceof \WP_Error) {
+            // Login/email already taken - attach the role to the existing WP user instead.
+            $existingWpUser = get_user_by('email', $email) ?: get_user_by('login', $email);
+
+            if (!$existingWpUser) {
+                return false;
+            }
+
+            $existingWpUser->add_role($role);
+
+            $externalId = $existingWpUser->ID;
+        }
+
+        /** @var UserRepository $userRepository */
+        $userRepository = $this->container->get('domain.users.repository');
+
+        if ($externalId && !$userRepository->findByExternalId($externalId)) {
+            $user->setExternalId(new Id($externalId));
+            $userRepository->updateFieldById($userId, $externalId, 'externalId');
+        }
+
+        return true;
+    }
+
+    /**
      * @param int          $userId
      * @param AbstractUser $user
      * @param string       $type
@@ -249,6 +329,42 @@ class UserApplicationService
     }
 
     /**
+     * Whether the caller may write password/email onto the target user's linked WP account.
+     *
+     * Allowed when the caller is an Amelia admin, or when the caller is updating their own
+     * profile. A null $currentUser means a token-only cabinet session where the target was
+     * already authorized as the caller. A non-null caller without a matching Amelia ID
+     * (e.g. Manager) must not be treated as the account owner.
+     *
+     * @param AbstractUser|null $currentUser
+     * @param AbstractUser      $targetUser
+     *
+     * @return bool
+     */
+    public function canWriteLinkedWpCredentials(?AbstractUser $currentUser, AbstractUser $targetUser): bool
+    {
+        if ($currentUser && $currentUser->getType() === AbstractUser::USER_ROLE_ADMIN) {
+            return true;
+        }
+
+        $targetId = $targetUser->getId() ? $targetUser->getId()->getValue() : null;
+
+        if ($targetId === null) {
+            return false;
+        }
+
+        // Token-only cabinet session (get_current_user_id() returns 0): $currentUser is null
+        // and prior auth already ensured the token belongs to $targetUser.
+        if ($currentUser === null) {
+            return true;
+        }
+
+        $callerId = $currentUser->getId() ? $currentUser->getId()->getValue() : null;
+
+        return $callerId !== null && $callerId === $targetId;
+    }
+
+    /**
      * @param string $email
      * @param string $type
      *
@@ -259,11 +375,19 @@ class UserApplicationService
     {
         $user = get_user_by('email', $email);
 
+        // Network super admins may have no role on the current site; roles alone is not enough.
+        if ($user && is_super_admin($user->ID)) {
+            return false;
+        }
+
+        $blockedCustomerRoles = ['administrator', 'wpamelia-manager', 'wpamelia-provider', SuperAdminRoleService::ROLE];
+        $blockedProviderRoles = ['administrator', 'wpamelia-manager', 'wpamelia-customer', SuperAdminRoleService::ROLE];
+
         if (
             $user &&
             (
-                ($type === Entities::CUSTOMER && array_intersect(['administrator', 'wpamelia-manager', 'wpamelia-provider'], (array)$user->roles)) ||
-                ($type === Entities::PROVIDER && array_intersect(['administrator', 'wpamelia-manager', 'wpamelia-customer'], (array)$user->roles))
+                ($type === Entities::CUSTOMER && array_intersect($blockedCustomerRoles, (array)$user->roles)) ||
+                ($type === Entities::PROVIDER && array_intersect($blockedProviderRoles, (array)$user->roles))
             )
         ) {
             return false;
@@ -285,7 +409,11 @@ class UserApplicationService
     {
         $user = get_user_by('ID', $externalId);
 
-        return $user && array_intersect(["wpamelia-$type"], (array)$user->roles);
+        if (!$user || is_super_admin($user->ID)) {
+            return false;
+        }
+
+        return (bool)array_intersect(["wpamelia-$type"], (array)$user->roles);
     }
 
     /**

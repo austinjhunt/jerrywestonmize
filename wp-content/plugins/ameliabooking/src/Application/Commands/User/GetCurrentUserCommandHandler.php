@@ -2,17 +2,15 @@
 
 namespace AmeliaBooking\Application\Commands\User;
 
-use AmeliaBooking\Application\Services\User\UserApplicationService;
 use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Commands\CommandHandler;
+use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\ValueObjects\String\Email;
 use Exception;
-use Interop\Container\Exception\ContainerException;
-use Slim\Exception\ContainerValueNotFoundException;
 
 /**
  * Class GetCurrentUserCommandHandler
@@ -25,11 +23,8 @@ class GetCurrentUserCommandHandler extends CommandHandler
      * @param GetCurrentUserCommand $command
      *
      * @return CommandResult
-     * @throws \Slim\Exception\ContainerException
-     * @throws \InvalidArgumentException
-     * @throws ContainerValueNotFoundException
      * @throws InvalidArgumentException
-     * @throws ContainerException
+     * @throws AccessDeniedException
      * @throws Exception
      */
     public function handle(GetCurrentUserCommand $command)
@@ -38,19 +33,13 @@ class GetCurrentUserCommandHandler extends CommandHandler
 
         $this->checkMandatoryFields($command);
 
-        $userData = null;
-
         if ($command->getToken()) {
-            /** @var UserApplicationService $userAS */
-            $userAS = $this->getContainer()->get('application.user.service');
-
             try {
                 /** @var AbstractUser $user */
-                $user = $userAS->authorization(
-                    $command->getToken(),
-                    $command->getCabinetType() ? $command->getCabinetType() : 'customer'
-                );
+                $user = $command->authorize(AbstractUser::USER_ROLE_CUSTOMER);
             } catch (AuthorizationException $e) {
+                $user = null;
+            } catch (AccessDeniedException $e) {
                 $user = null;
             }
         } else {
@@ -73,7 +62,7 @@ class GetCurrentUserCommandHandler extends CommandHandler
         $result->setMessage('Successfully retrieved current user');
         $result->setData(
             [
-            Entities::USER => $userArray
+                Entities::USER => $userArray,
             ]
         );
 

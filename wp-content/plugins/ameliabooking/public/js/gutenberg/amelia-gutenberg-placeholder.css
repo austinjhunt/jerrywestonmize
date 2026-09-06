@@ -14,9 +14,12 @@
   margin-bottom: 12px;
 }
 
-.amelia-gutenberg-placeholder__icon svg {
+.amelia-gutenberg-placeholder__icon svg,
+.amelia-gutenberg-placeholder__icon img {
   width: 24px;
   height: 24px;
+  object-fit: contain;
+  display: block;
 }
 
 .amelia-gutenberg-placeholder__title {

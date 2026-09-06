@@ -125,6 +125,7 @@ if (is_divi_5_active()) {
 
     // Shared helpers used by booking button modules.
     require_once __DIR__ . '/AmeliaBookingButtonRendererTrait.php';
+    require_once __DIR__ . '/AmeliaCatalogShortcodeHelper.php';
 
     require_once __DIR__ . '/ModuleMetadata.php';
     require_once __DIR__ . '/SharedShortcodeModule.php';

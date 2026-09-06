@@ -31,7 +31,8 @@ class InfrastructureService extends \AmeliaBooking\Infrastructure\Licence\Starte
     public static function getCalendarGoogleMiddlewareService($c)
     {
         return new InfrastructureServices\Google\GoogleCalendarMiddlewareService(
-            $c->get('domain.settings.service')
+            $c->get('domain.settings.service'),
+            $c->get('infrastructure.logger')
         );
     }
 
@@ -53,7 +54,8 @@ class InfrastructureService extends \AmeliaBooking\Infrastructure\Licence\Starte
     public static function getOutlookCalendarMiddlewareService($c)
     {
         return new InfrastructureServices\Outlook\OutlookCalendarMiddlewareService(
-            $c->get('domain.settings.service')
+            $c->get('domain.settings.service'),
+            $c->get('infrastructure.logger')
         );
     }
 
@@ -85,7 +87,8 @@ class InfrastructureService extends \AmeliaBooking\Infrastructure\Licence\Starte
     public static function getZoomService($c)
     {
         return new InfrastructureServices\Zoom\ZoomService(
-            $c->get('domain.settings.service')
+            $c->get('domain.settings.service'),
+            $c->get('infrastructure.logger')
         );
     }
 
@@ -100,7 +103,8 @@ class InfrastructureService extends \AmeliaBooking\Infrastructure\Licence\Starte
             $c->get('domain.settings.service'),
             new InfrastructureServices\Payment\CurrencyService(
                 $c->get('domain.settings.service')
-            )
+            ),
+            $c->get('infrastructure.logger')
         );
     }
 
@@ -115,7 +119,8 @@ class InfrastructureService extends \AmeliaBooking\Infrastructure\Licence\Starte
             $c->get('domain.settings.service'),
             new InfrastructureServices\Payment\CurrencyService(
                 $c->get('domain.settings.service')
-            )
+            ),
+            $c->get('infrastructure.logger')
         );
     }
 
@@ -130,7 +135,8 @@ class InfrastructureService extends \AmeliaBooking\Infrastructure\Licence\Starte
             $c->get('domain.settings.service'),
             new InfrastructureServices\Payment\CurrencyService(
                 $c->get('domain.settings.service')
-            )
+            ),
+            $c->get('infrastructure.logger')
         );
     }
 
@@ -145,7 +151,8 @@ class InfrastructureService extends \AmeliaBooking\Infrastructure\Licence\Starte
             $c->get('domain.settings.service'),
             new InfrastructureServices\Payment\CurrencyService(
                 $c->get('domain.settings.service')
-            )
+            ),
+            $c->get('infrastructure.logger')
         );
     }
 
@@ -155,7 +162,8 @@ class InfrastructureService extends \AmeliaBooking\Infrastructure\Licence\Starte
             $c->get('domain.settings.service'),
             new InfrastructureServices\Payment\CurrencyService(
                 $c->get('domain.settings.service')
-            )
+            ),
+            $c->get('infrastructure.logger')
         );
     }
 

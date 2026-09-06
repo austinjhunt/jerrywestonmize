@@ -2,9 +2,9 @@
 
 Contributors: ExtendThemes
 Tags:  page builder, editor, landing page, drag-and-drop, colibri, visual editor, wysiwyg, design, website builder, landing page builder, front-end builder
-Stable tag: 1.0.378
+Stable tag: 1.0.390
 Requires at least: 5.6
-Tested up to: 7.0
+Tested up to: 7.1
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
 
@@ -562,3 +562,7 @@ The exceptions to this license are as follows:
 
 *   extend-builder/assets/partial-images/0-1561966717537-1.jpg
     Source: https://pxhere.com/en/photo/1459953
+
+The following image files are the creation of ExtendThemes and are distributed under the Creative Commons Zero License, http://creativecommons.org/publicdomain/zero/1.0/:
+
+*   extend-builder/assets/media-fixes/writing-hand-glass-adventure-travel-spring-931328-pxhere-com.jpg

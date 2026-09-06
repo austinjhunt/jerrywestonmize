@@ -1,7 +1,7 @@
 {
   "name": "divi5-amelia/stepbookingbutton",
-  "title": "Amelia - Step Booking Button",
-  "titles": "Amelia Step Booking Buttons",
+  "title": "{pluginName} - Step Booking Button",
+  "titles": "{pluginName} Step Booking Buttons",
   "category": "module",
   "moduleClassName": "divi5_amelia_stepbooking_button",
   "moduleOrderClassName": "divi5_amelia_stepbooking_button",
@@ -33,7 +33,7 @@
         "meta": {
           "adminLabel": {
             "desktop": {
-              "value": "Amelia Step Booking Button"
+              "value": "{pluginName} Step Booking Button"
             }
           }
         }

@@ -7,8 +7,6 @@
 
 namespace AmeliaBooking\Infrastructure\WP\GutenbergBlock;
 
-use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
-
 /**
  * Class AmeliaStepBookingGutenbergBlock
  *
@@ -34,7 +32,7 @@ class AmeliaStepBookingButtonGutenbergBlock extends GutenbergBlock
             'amelia_step_booking_button_gutenberg_block',
             'wpAmeliaLabels',
             array_merge(
-                BackendStrings::getAllStrings(),
+                self::getBlockStrings(),
                 self::getEntitiesData()
             )
         );

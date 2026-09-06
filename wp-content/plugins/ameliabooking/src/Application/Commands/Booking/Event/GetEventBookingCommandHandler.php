@@ -10,7 +10,6 @@ use AmeliaBooking\Application\Services\CustomField\AbstractCustomFieldApplicatio
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Application\Services\Reservation\EventReservationService;
 use AmeliaBooking\Domain\Collection\Collection;
-use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Event\CustomerBookingEventTicket;
 use AmeliaBooking\Domain\Entity\Booking\Event\Event;
@@ -48,6 +47,9 @@ class GetEventBookingCommandHandler extends CommandHandler
      */
     public function handle(GetEventBookingCommand $command)
     {
+        /** @var AbstractUser $user */
+        $user = $command->authorize();
+
         $result = new CommandResult();
 
         /** @var SettingsService $settingsDS */
@@ -66,23 +68,6 @@ class GetEventBookingCommandHandler extends CommandHandler
         $reservationService = $this->container->get('application.reservation.service')->get(Entities::EVENT);
         /** @var CustomFieldRepository $customFieldRepository */
         $customFieldRepository = $this->container->get('domain.customField.repository');
-
-        try {
-            /** @var AbstractUser $user */
-            $user = $command->getUserApplicationService()->authorization(
-                null,
-                $command->getCabinetType()
-            );
-        } catch (AuthorizationException $e) {
-            $result->setResult(CommandResult::RESULT_ERROR);
-            $result->setData(
-                [
-                    'reauthorize' => true
-                ]
-            );
-
-            return $result;
-        }
 
         $providerTimeZoneSet = $user && $user instanceof Provider && $user->getTimeZone() && $user->getTimeZone()->getValue();
 

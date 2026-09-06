@@ -9,7 +9,6 @@ use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\Booking\EventApplicationService;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
-use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Booking\Event\Event;
@@ -21,8 +20,6 @@ use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
-use Interop\Container\Exception\ContainerException;
-use Slim\Exception\ContainerValueNotFoundException;
 
 /**
  * Class DeleteEventBookingCommandHandler
@@ -35,14 +32,19 @@ class DeleteEventBookingCommandHandler extends CommandHandler
      * @param DeleteEventBookingCommand $command
      *
      * @return CommandResult
-     * @throws ContainerValueNotFoundException
      * @throws AccessDeniedException
      * @throws QueryExecutionException
-     * @throws ContainerException
      * @throws InvalidArgumentException
      */
     public function handle(DeleteEventBookingCommand $command)
     {
+        $user = null;
+
+        if (!$command->getPermissionService()->currentUserCanDelete(Entities::EVENTS)) {
+            /** @var AbstractUser $user */
+            $user = $command->authorize(Entities::PROVIDER);
+        }
+
         $result = new CommandResult();
 
         /** @var UserApplicationService $userAS */
@@ -50,33 +52,6 @@ class DeleteEventBookingCommandHandler extends CommandHandler
 
         /** @var SettingsService $settingsDS */
         $settingsDS = $this->container->get('domain.settings.service');
-
-
-        $user = null;
-        if (!$command->getPermissionService()->currentUserCanDelete(Entities::EVENTS)) {
-            try {
-                /** @var AbstractUser $user */
-                $user = $userAS->authorization(
-                    $command->getToken(),
-                    Entities::PROVIDER
-                );
-            } catch (AuthorizationException $e) {
-                $result = new CommandResult();
-
-                $result->setResult(CommandResult::RESULT_ERROR);
-                $result->setData(
-                    [
-                    'reauthorize' => true
-                    ]
-                );
-
-                return $result;
-            }
-
-            if ($userAS->isCustomer($user)) {
-                throw new AccessDeniedException('You are not allowed to delete event bookings');
-            }
-        }
 
         /** @var CustomerBookingRepository $customerBookingRepository */
         $customerBookingRepository = $this->container->get('domain.booking.customerBooking.repository');

@@ -51,7 +51,9 @@ function ameliaPluginActionCallback (pluginActionUrl, pluginActionText) {
     let titleLabel = document.createElement('label');
 
     titleLabel.setAttribute('for', 'ameliaDeleteAll');
-    titleLabel.appendChild(document.createTextNode('Amelia'));
+    titleLabel.appendChild(document.createTextNode(
+      typeof wpAmeliaPluginName !== 'undefined' && wpAmeliaPluginName ? wpAmeliaPluginName : 'Amelia'
+    ));
 
     titleLabel.style.cssText =
       'vertical-align: baseline;' +
@@ -99,7 +101,7 @@ function ameliaPluginActionCallback (pluginActionUrl, pluginActionText) {
     let text = 'Delete tables, roles, files and settings once the Amelia plugin is deleted.';
 
     if (typeof wpAmeliaLabels !== 'undefined') {
-      text = wpAmeliaLabels['delete_amelia'];
+      text = wpAmeliaLabels['delete_amelia'].replace('{pluginName}', typeof wpAmeliaPluginName !== 'undefined' && wpAmeliaPluginName ? wpAmeliaPluginName : 'Amelia');
     }
 
 
@@ -218,10 +220,13 @@ function ameliaPluginActionCallback (pluginActionUrl, pluginActionText) {
 document.addEventListener('DOMContentLoaded', function () {
   let pluginLink1 = document.getElementById('deactivate-ameliabooking');
   let pluginLink2 = document.getElementById('deactivate-amelia');
+  let pluginLink3 = document.querySelector('a[href*="action=deactivate"][href*="ameliabooking.php"]');
 
   let pluginLink = typeof pluginLink1 !== 'undefined' && pluginLink1
     ? pluginLink1
-    : (typeof pluginLink2 !== 'undefined' && pluginLink2 ? pluginLink2 : null);
+    : (typeof pluginLink2 !== 'undefined' && pluginLink2
+      ? pluginLink2
+      : (typeof pluginLink3 !== 'undefined' && pluginLink3 ? pluginLink3 : null));
 
   if (pluginLink &&
     typeof wpAmeliaDeleteSettings !== 'undefined' &&
@@ -232,7 +237,7 @@ document.addEventListener('DOMContentLoaded', function () {
     pluginLink.addEventListener(
       'click',
       function (e) {
-        let href = e.target.getAttribute('href');
+        let href = e.currentTarget.getAttribute('href');
 
         e.preventDefault();
 

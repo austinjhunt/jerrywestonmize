@@ -638,6 +638,12 @@ class HelperService
                 'wp_locale' => 'fi',
                 'country_code' => 'fi'
             ) ,
+            'fo_FO' => array(
+                'name' => 'Faroese (Faroe Islands)',
+                'code' => 'fo',
+                'wp_locale' => 'fo_FO',
+                'country_code' => 'fo'
+            ) ,
             'fr_FR' => array(
                 'name' => 'French (France)',
                 'code' => 'fr',

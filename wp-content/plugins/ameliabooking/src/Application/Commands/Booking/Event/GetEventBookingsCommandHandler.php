@@ -11,7 +11,6 @@ use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Application\Services\User\ProviderApplicationService;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
-use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Booking\Event\CustomerBookingEventTicket;
@@ -50,6 +49,9 @@ class GetEventBookingsCommandHandler extends CommandHandler
      */
     public function handle(GetEventBookingsCommand $command)
     {
+        /** @var AbstractUser $user */
+        $user = $command->authorize();
+
         $result = new CommandResult();
 
         /** @var SettingsService $settingsDS */
@@ -76,23 +78,6 @@ class GetEventBookingsCommandHandler extends CommandHandler
         }
 
         $isCabinetPage = $command->getPage() === 'cabinet';
-
-        try {
-            /** @var AbstractUser $user */
-            $user = $command->getUserApplicationService()->authorization(
-                $isCabinetPage ? $command->getToken() : null,
-                $command->getCabinetType()
-            );
-        } catch (AuthorizationException $e) {
-            $result->setResult(CommandResult::RESULT_ERROR);
-            $result->setData(
-                [
-                    'reauthorize' => true
-                ]
-            );
-
-            return $result;
-        }
 
         if ($user && $userAS->isAmeliaUser($user) && $userAS->isCustomer($user)) {
             $params['customers'] = [$user->getId()->getValue()];

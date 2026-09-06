@@ -7,6 +7,7 @@
 
 namespace AmeliaBooking\Infrastructure\Services\Payment;
 
+use AmeliaBooking\Domain\Services\Logger\LoggerInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 
 /**
@@ -20,15 +21,22 @@ class SquareMiddlewareService
     private $middlewareApiUrl;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * SquareMiddlewareService constructor.
      *
      * @param SettingsService $settingsService
+     * @param LoggerInterface $logger
      */
-    public function __construct(SettingsService $settingsService)
+    public function __construct(SettingsService $settingsService, LoggerInterface $logger)
     {
         $squareSettings         = $settingsService->getCategorySettings('payments')['square'];
         $this->middlewareApiUrl = $squareSettings['testMode'] ?
             'https://middleware-dev.wpamelia.com/' : AMELIA_MIDDLEWARE_URL;
+        $this->logger           = $logger->channel(LoggerInterface::CHANNEL_PAYMENT);
     }
 
     /**
@@ -147,6 +155,15 @@ class SquareMiddlewareService
         if ($response && curl_getinfo($ch, CURLINFO_HTTP_CODE) === 200) {
             $response = json_decode($response, true);
         } else {
+            $this->logger->error(
+                'Square access token refresh failed',
+                [
+                    'gateway' => 'square',
+                    'curl_error' => curl_error($ch),
+                    'http_status' => curl_getinfo($ch, CURLINFO_HTTP_CODE),
+                ]
+            );
+
             $response = null;
         }
 

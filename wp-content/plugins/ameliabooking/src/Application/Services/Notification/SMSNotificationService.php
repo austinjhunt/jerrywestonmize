@@ -7,6 +7,7 @@
 
 namespace AmeliaBooking\Application\Services\Notification;
 
+use AmeliaBooking\Domain\Services\Logger\LoggerInterface;
 use AmeliaBooking\Application\Services\Helper\HelperService;
 use AmeliaBooking\Application\Services\Placeholder\PlaceholderService;
 use AmeliaBooking\Domain\Collection\Collection;
@@ -157,6 +158,16 @@ class SMSNotificationService extends AbstractNotificationService
                         );
                     }
                 } catch (QueryExecutionException $e) {
+                    $this->container->getLoggerService()->channel(LoggerInterface::CHANNEL_NOTIFICATION)->error(
+                        'Failed to send SMS notification',
+                        [
+                            'exception'        => $e,
+                            'notificationType' => $notification->getName()->getValue(),
+                            'userId'           => $user['id'] ?? null,
+                            'appointmentId'    => $appointmentArray['id'] ?? null,
+                            'bookingKey'       => $bookingKey,
+                        ]
+                    );
                 }
             }
         }
@@ -447,6 +458,16 @@ class SMSNotificationService extends AbstractNotificationService
     {
         /** @var NotificationSMSHistoryRepository $notificationsSMSHistoryRepo */
         $notificationsSMSHistoryRepo = $this->container->get('domain.notificationSMSHistory.repository');
+
+        if (in_array($apiResponse->message->status, ['failed', 'undelivered'], true)) {
+            $this->container->getLoggerService()->channel(LoggerInterface::CHANNEL_NOTIFICATION)->warning(
+                'SMS provider reported delivery failure',
+                [
+                    'historyId' => $historyId,
+                    'status'    => $apiResponse->message->status,
+                ]
+            );
+        }
 
         $notificationsSMSHistoryRepo->update(
             $historyId,

@@ -14,8 +14,8 @@ use InvalidArgumentException;
 use AmeliaVendor\Psr\Http\Message\ResponseInterface;
 use AmeliaVendor\Psr\Http\Message\ServerRequestInterface;
 use AmeliaVendor\Psr\Http\Message\StreamFactoryInterface;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
+use AmeliaVendor\Psr\Http\Server\MiddlewareInterface;
+use AmeliaVendor\Psr\Http\Server\RequestHandlerInterface;
 use Throwable;
 
 use function in_array;

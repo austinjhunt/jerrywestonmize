@@ -10,6 +10,7 @@ namespace AmeliaBooking\Infrastructure\WP\ButtonService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\WP\HelperService\HelperService;
 use AmeliaBooking\Infrastructure\WP\SettingsService\SettingsStorage;
+use AmeliaBooking\Infrastructure\WP\ShortcodeService\ShortcodeAliasService;
 use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
 
 /**
@@ -86,6 +87,32 @@ class ButtonService
         wp_enqueue_style('amelia_booking_tinymce_styles', AMELIA_URL . 'public/js/tinymce/amelia-tinymce-styles.css', array(), AMELIA_VERSION);
 
         $settingsService = new SettingsService(new SettingsStorage());
+        $whiteLabelPluginName = ShortcodeAliasService::getWhiteLabelPluginName($settingsService);
+
+        HelperService::exportJSVar(
+            'wpAmeliaPluginName',
+            $whiteLabelPluginName
+        );
+
+        HelperService::exportJSVar(
+            'wpAmeliaUseNeutralShortcodes',
+            ShortcodeAliasService::shouldUseNeutralShortcodes()
+        );
+
+        HelperService::exportJSVar(
+            'wpAmeliaBuilderBrandName',
+            ShortcodeAliasService::getBuilderBrandName($settingsService)
+        );
+
+        HelperService::exportJSVar(
+            'wpAmeliaPluginImage',
+            ShortcodeAliasService::getWhiteLabelPluginImage($settingsService)
+        );
+
+        HelperService::exportJSVar(
+            'wpAmeliaShortcodeAliases',
+            ShortcodeAliasService::getAliases()
+        );
 
         HelperService::exportJSVar(
             'wpAmeliaDeleteSettings',
@@ -103,6 +130,14 @@ class ButtonService
             'wpAmeliaLabels',
             BackendStrings::getAllStrings(),
         );
+
+        add_filter('admin_body_class', static function ($classes) use ($settingsService) {
+            if (ShortcodeAliasService::shouldUseNeutralShortcodes($settingsService)) {
+                $classes .= ' amelia-white-label-active';
+            }
+
+            return $classes;
+        });
 
         HelperService::printJSVars();
     }

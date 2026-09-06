@@ -1,8 +1,8 @@
 {
   "name": "divi5-amelia/events",
   "d4Shortcode": "divi_events",
-  "title": "Amelia - Events (Legacy)",
-  "titles": "Amelia Events",
+  "title": "{pluginName} - Events (Legacy)",
+  "titles": "{pluginName} Events",
   "category": "module",
   "moduleClassName": "divi5_amelia_events",
   "moduleOrderClassName": "divi5_amelia_events",
@@ -15,7 +15,7 @@
         "meta": {
           "adminLabel": {
             "desktop": {
-              "value": "Amelia Events"
+              "value": "{pluginName} Events"
             }
           }
         }

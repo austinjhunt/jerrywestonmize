@@ -1,8 +1,8 @@
 {
   "name": "divi5-amelia/catalogbooking",
   "d4Shortcode": "divi_catalog_booking",
-  "title": "Amelia - Catalog Booking",
-  "titles": "Amelia - Catalog Bookings",
+  "title": "{pluginName} - Catalog Booking",
+  "titles": "{pluginName} - Catalog Bookings",
   "category": "module",
   "moduleClassName": "divi5_amelia_catalog_booking",
   "moduleOrderClassName": "divi5_amelia_catalog_booking",
@@ -15,7 +15,7 @@
         "meta": {
           "adminLabel": {
             "desktop": {
-              "value": "Amelia Catalog Booking"
+              "value": "{pluginName} Catalog Booking"
             }
           }
         }

@@ -25,6 +25,7 @@ class DeleteBookingRemotelyController extends Controller
         'skipEventHandler',
         'type',
         'token',
+        'statusOnly',
     ];
 
     /**

@@ -12,7 +12,7 @@ namespace Slim\Interfaces;
 
 use AmeliaVendor\Psr\Http\Message\ResponseInterface;
 use AmeliaVendor\Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
+use AmeliaVendor\Psr\Http\Server\MiddlewareInterface;
 
 /** @api */
 interface RouteInterface

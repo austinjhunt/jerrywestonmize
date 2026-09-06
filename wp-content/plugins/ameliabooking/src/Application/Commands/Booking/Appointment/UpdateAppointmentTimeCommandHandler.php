@@ -10,7 +10,6 @@ use AmeliaBooking\Application\Services\Booking\AppointmentApplicationService;
 use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
-use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\BookingCancellationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
@@ -58,6 +57,9 @@ class UpdateAppointmentTimeCommandHandler extends CommandHandler
      */
     public function handle(UpdateAppointmentTimeCommand $command)
     {
+        /** @var AbstractUser $user */
+        $user = $command->authorize();
+
         $this->checkMandatoryFields($command);
 
         $result = new CommandResult();
@@ -79,29 +81,16 @@ class UpdateAppointmentTimeCommandHandler extends CommandHandler
         /** @var PaymentApplicationService $paymentAS */
         $paymentAS = $this->container->get('application.payment.service');
 
-        try {
-            /** @var AbstractUser $user */
-            $user = $command->getUserApplicationService()->authorization(
-                $command->getPage() === 'cabinet' ? $command->getToken() : null,
-                $command->getCabinetType()
-            );
-        } catch (AuthorizationException $e) {
-            $result->setResult(CommandResult::RESULT_ERROR);
-            $result->setData(
-                [
-                    'reauthorize' => true
-                ]
-            );
-
-            return $result;
-        }
-
         if ($userAS->isCustomer($user) && !$settingsDS->getSetting('roles', 'allowCustomerReschedule')) {
             throw new AccessDeniedException('You are not allowed to update appointment');
         }
 
         /** @var Appointment $appointment */
         $appointment = $appointmentRepo->getById((int)$command->getArg('id'));
+
+        if ($userAS->isProvider($user) && $user->getId()->getValue() !== $appointment->getProviderId()->getValue()) {
+            throw new AccessDeniedException('You are not allowed to update appointment');
+        }
 
         $oldAppointment = clone $appointment;
 

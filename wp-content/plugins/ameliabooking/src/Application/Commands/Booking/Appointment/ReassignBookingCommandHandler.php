@@ -12,7 +12,6 @@ use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Application\Services\Reservation\AppointmentReservationService;
 use AmeliaBooking\Application\Services\TimeSlot\TimeSlotService as ApplicationTimeSlotService;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
-use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\BookingCancellationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
@@ -41,7 +40,6 @@ use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
 use Exception;
-use Interop\Container\Exception\ContainerException;
 
 /**
  * Class ReassignBookingCommandHandler
@@ -65,11 +63,13 @@ class ReassignBookingCommandHandler extends CommandHandler
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      * @throws NotFoundException
-     * @throws ContainerException
      * @throws Exception
      */
     public function handle(ReassignBookingCommand $command)
     {
+        /** @var AbstractUser $user */
+        $user = $command->authorize();
+
         $this->checkMandatoryFields($command);
 
         $result = new CommandResult();
@@ -96,23 +96,6 @@ class ReassignBookingCommandHandler extends CommandHandler
         $paymentAS = $this->container->get('application.payment.service');
         /** @var BookingApplicationService $bookingAS */
         $bookingAS = $this->container->get('application.booking.booking.service');
-
-        try {
-            /** @var AbstractUser $user */
-            $user = $command->getUserApplicationService()->authorization(
-                $command->getPage() === 'cabinet' ? $command->getToken() : null,
-                $command->getCabinetType()
-            );
-        } catch (AuthorizationException $e) {
-            $result->setResult(CommandResult::RESULT_ERROR);
-            $result->setData(
-                [
-                    'reauthorize' => true
-                ]
-            );
-
-            return $result;
-        }
 
         if (
             $userAS->isCustomer($user) && !$settingsDS->getSetting('roles', 'allowCustomerReschedule')

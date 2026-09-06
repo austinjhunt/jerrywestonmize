@@ -17,7 +17,6 @@ use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Booking\Event\Event;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
-use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
@@ -141,12 +140,7 @@ class GetCustomFieldFileCommandHandler extends CommandHandler
 
                 $event->getBookings()->addItem($customerBooking, $customerBooking->getId()->getValue());
 
-                /** @var Provider $provider */
-                foreach ($event->getProviders()->getItems() as $provider) {
-                    if ($currentUser->getId()->getValue() === $provider->getId()->getValue()) {
-                        $allowedReading = true;
-                    }
-                }
+                $allowedReading = $event->hasProvider($currentUser) || $event->isOrganizer($currentUser);
             }
 
             if (!$allowedReading) {

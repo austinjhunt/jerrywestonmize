@@ -5,7 +5,6 @@ use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
 
 class DIVI_Catalog extends ET_Builder_Module
 {
-
     public $slug       = 'divi_catalog';
     public $vb_support = 'on';
 
@@ -27,7 +26,7 @@ class DIVI_Catalog extends ET_Builder_Module
 
     public function init()
     {
-        $this->name = esc_html__(BackendStrings::get('catalog_divi'), 'divi-divi_amelia');
+        $this->name = esc_html__(DIVI_AmeliaWhiteLabelHelper::label(BackendStrings::get('catalog_divi')), 'divi-divi_amelia');
 
         $this->type['0']        = BackendStrings::get('show_all');
         $this->type['services'] = BackendStrings::get('services');
@@ -48,7 +47,7 @@ class DIVI_Catalog extends ET_Builder_Module
         if ($this->showPackages) {
             $this->catalog['package'] = BackendStrings::get('show_package');
         }
-        
+
 
         $this->categories['0'] = BackendStrings::get('choose_category');
         foreach ($data['categories'] as $category) {
@@ -58,13 +57,13 @@ class DIVI_Catalog extends ET_Builder_Module
         $this->services['0'] = BackendStrings::get('choose_service');
         foreach ($data['servicesList'] as $service) {
             if ($service) {
-                $this->services[$service['id']] = $service['name']. ' (id: ' . $service['id'] . ')';
+                $this->services[$service['id']] = $service['name'] . ' (id: ' . $service['id'] . ')';
             }
         }
 
         $this->packages['0'] = BackendStrings::get('choose_package');
         foreach ($data['packages'] as $package) {
-            $this->packages[$package['id']] = $package['name']. ' (id: ' . $package['id'] . ')';
+            $this->packages[$package['id']] = $package['name'] . ' (id: ' . $package['id'] . ')';
         }
 
         $this->employees['0'] = BackendStrings::get('show_all_employees');
@@ -196,14 +195,14 @@ class DIVI_Catalog extends ET_Builder_Module
     public function render($attrs, $content = null, $render_slug = null)
     {
         $preselect =  $this->props['booking_params'];
-        $shortcode = '[ameliacatalog';
+        $shortcode = '[' . DIVI_AmeliaWhiteLabelHelper::shortcodeTag('catalog', 'ameliacatalog');
         $trigger   = $this->props['trigger'];
         $showAll   = isset($this->props['type']) ? $this->props['type'] : null;
         if ($showAll !== null && $showAll !== '' && $showAll !== '0') {
-            $shortcode .= ' show='.$showAll;
+            $shortcode .= ' show=' . $showAll;
         }
         if ($trigger !== null && $trigger !== '') {
-            $shortcode .= ' trigger='.$trigger;
+            $shortcode .= ' trigger=' . $trigger;
         }
         $catalog = $this->props['catalog'];
         if ($catalog !== '0') {
@@ -213,9 +212,9 @@ class DIVI_Catalog extends ET_Builder_Module
 
             if ($category !== '0' && $catalog === 'category') {
                 $shortcode .= ' category=' . $category;
-            } else if ($service !== '0' && $catalog === 'service') {
+            } elseif ($service !== '0' && $catalog === 'service') {
                 $shortcode .= ' service=' . $service;
-            } else if ($package1 !== '0' && $catalog === 'package') {
+            } elseif ($package1 !== '0' && $catalog === 'package') {
                 $shortcode .= ' package=' . $package1;
             }
         }
@@ -236,4 +235,4 @@ class DIVI_Catalog extends ET_Builder_Module
     }
 }
 
-new DIVI_Catalog;
+new DIVI_Catalog();

@@ -51,6 +51,8 @@ class Import {
   /** @var array<string, mixed> */
   public $requiredSubscribersFields;
   const DB_QUERY_CHUNK_SIZE = 100;
+  // Matches the subscribers.tracking_consent_method column width.
+  const TRACKING_CONSENT_METHOD_MAX_LENGTH = 40;
   const STATUS_DONT_UPDATE = 'dont_update';
 
   public const ACTION_CREATE = 'create';
@@ -173,6 +175,7 @@ class Import {
         $newSubscribers = $this->setSubscriptionStatusToDefault($newSubscribers, $this->newSubscribersStatus);
         $newSubscribers = $this->setSource($newSubscribers);
         $newSubscribers = $this->setLinkToken($newSubscribers);
+        $newSubscribers = $this->applyTrackingConsentToNewSubscribers($newSubscribers);
         $createdSubscribers =
           $this->createOrUpdateSubscribers(
             self::ACTION_CREATE,
@@ -199,9 +202,10 @@ class Import {
           $updatedSubscribers =
             $this->createOrUpdateSubscribers(
               self::ACTION_UPDATE,
-              $existingSubscribers,
+              $this->stripTrackingConsentColumns($existingSubscribers),
               $this->subscribersCustomFields
             );
+          $this->updateTrackingConsent($existingSubscribers);
           if ($wpUsers) {
             $this->synchronizeWPUsers($wpUsers);
           }
@@ -272,6 +276,22 @@ class Import {
           array_keys($data),
           $data
         );
+      }
+      if ($column === 'tracking_consent') {
+        $validStates = [
+          SubscriberEntity::TRACKING_CONSENT_GRANTED,
+          SubscriberEntity::TRACKING_CONSENT_DENIED,
+          SubscriberEntity::TRACKING_CONSENT_UNKNOWN,
+        ];
+        $data = array_map(function($value) use ($validStates) {
+          $value = trim((string)$value);
+          // A blank cell is left blank on purpose: blank means "leave the stored value alone",
+          // which is a different thing from an invalid value, and only the caller can act on it.
+          if ($value === '') {
+            return '';
+          }
+          return in_array($value, $validStates, true) ? $value : SubscriberEntity::TRACKING_CONSENT_UNKNOWN;
+        }, $data);
       }
       // if this is a custom column
       if (in_array($column, $this->subscribersCustomFields)) {
@@ -491,6 +511,124 @@ class Import {
       array_fill(0, $subscribersCount, null)
     );
     return $subscribersData;
+  }
+
+  /**
+   * Stamps consent evidence for newly created subscribers. A blank cell needs no
+   * work: the column defaults (unknown/NULL/NULL/NULL) already mean "untouched"
+   * for a row that did not exist. A non-blank cell is the collection event, so
+   * the timestamp is stamped now and never read from the CSV — it drives the
+   * tracked-at-send predicate, and a backdated value could push a rate over 100%.
+   */
+  private function applyTrackingConsentToNewSubscribers(array $subscribersData): array {
+    if (!in_array('tracking_consent', $subscribersData['fields'], true)) {
+      // Evidence with no consent behind it is not a record of anything, so a CSV that
+      // maps only the method or wording column is dropped rather than stored against
+      // the default `unknown` with no timestamp. Same rule the public API applies.
+      return $this->stripTrackingConsentEvidenceColumns($subscribersData);
+    }
+    $states = $subscribersData['data']['tracking_consent'];
+    $methods = $subscribersData['data']['tracking_consent_method'] ?? [];
+    $copies = $subscribersData['data']['tracking_consent_copy'] ?? [];
+
+    $stateValues = $updatedAtValues = $methodValues = $copyValues = [];
+    foreach ($states as $index => $state) {
+      if (trim((string)$state) === '') {
+        // The column is NOT NULL, so a blank cell has to be written as the default
+        // rather than as an empty string.
+        $stateValues[] = SubscriberEntity::TRACKING_CONSENT_UNKNOWN;
+        $updatedAtValues[] = null;
+        $methodValues[] = null;
+        $copyValues[] = null;
+        continue;
+      }
+      $stateValues[] = trim((string)$state);
+      $updatedAtValues[] = $this->createdAt;
+      $method = trim((string)($methods[$index] ?? ''));
+      $methodValues[] = $method !== '' ? mb_substr($method, 0, self::TRACKING_CONSENT_METHOD_MAX_LENGTH) : SubscriberEntity::TRACKING_CONSENT_METHOD_IMPORT;
+      $copy = trim((string)($copies[$index] ?? ''));
+      $copyValues[] = $copy !== '' ? $copy : null;
+    }
+
+    $evidence = [
+      'tracking_consent' => $stateValues,
+      'tracking_consent_updated_at' => $updatedAtValues,
+      'tracking_consent_method' => $methodValues,
+      'tracking_consent_copy' => $copyValues,
+    ];
+    foreach ($evidence as $field => $values) {
+      if (!in_array($field, $subscribersData['fields'], true)) {
+        $subscribersData['fields'][] = $field;
+      }
+      $subscribersData['data'][$field] = $values;
+    }
+    return $subscribersData;
+  }
+
+  /** Drops the evidence columns, used when no consent state came with them. */
+  private function stripTrackingConsentEvidenceColumns(array $subscribersData): array {
+    $evidenceFields = ['tracking_consent_method', 'tracking_consent_copy'];
+    foreach ($evidenceFields as $field) {
+      unset($subscribersData['data'][$field]);
+    }
+    $subscribersData['fields'] = array_values(array_diff($subscribersData['fields'], $evidenceFields));
+    return $subscribersData;
+  }
+
+  /**
+   * Removes the consent columns from the standard update write. updateMultiple()
+   * writes one uniform set of columns per call, so leaving them in would let a
+   * blank CSV cell overwrite a stored value. updateTrackingConsent() below does
+   * the real write, scoped to the rows that actually supplied a state.
+   */
+  private function stripTrackingConsentColumns(array $subscribersData): array {
+    $consentFields = ['tracking_consent', 'tracking_consent_method', 'tracking_consent_copy'];
+    foreach ($consentFields as $field) {
+      unset($subscribersData['data'][$field]);
+    }
+    $subscribersData['fields'] = array_values(array_diff($subscribersData['fields'], $consentFields));
+    return $subscribersData;
+  }
+
+  /**
+   * Writes consent for existing subscribers, skipping every row whose CSV cell
+   * was blank so their stored value is left alone.
+   */
+  private function updateTrackingConsent(array $subscribersData): void {
+    if (!in_array('tracking_consent', $subscribersData['fields'], true)) {
+      return;
+    }
+    $emails = $subscribersData['data']['email'];
+    $states = $subscribersData['data']['tracking_consent'];
+    $methods = $subscribersData['data']['tracking_consent_method'] ?? [];
+    $copies = $subscribersData['data']['tracking_consent_copy'] ?? [];
+
+    $rows = [];
+    foreach ($states as $index => $state) {
+      $state = trim((string)$state);
+      if ($state === '') {
+        continue;
+      }
+      $method = trim((string)($methods[$index] ?? ''));
+      $copy = trim((string)($copies[$index] ?? ''));
+      $rows[] = [
+        $emails[$index],
+        $state,
+        $this->updatedAt,
+        $method !== '' ? mb_substr($method, 0, self::TRACKING_CONSENT_METHOD_MAX_LENGTH) : SubscriberEntity::TRACKING_CONSENT_METHOD_IMPORT,
+        $copy !== '' ? $copy : null,
+      ];
+    }
+    if (!$rows) {
+      return;
+    }
+    foreach (array_chunk($rows, self::DB_QUERY_CHUNK_SIZE) as $chunk) {
+      $this->importExportRepository->updateMultiple(
+        SubscriberEntity::class,
+        ['email', 'tracking_consent', 'tracking_consent_updated_at', 'tracking_consent_method', 'tracking_consent_copy'],
+        $chunk
+      );
+    }
   }
 
   public function getSubscribersFields(array $subscribersFields): array {

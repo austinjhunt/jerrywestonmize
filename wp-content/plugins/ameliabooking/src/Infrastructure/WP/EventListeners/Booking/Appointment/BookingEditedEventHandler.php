@@ -72,9 +72,19 @@ class BookingEditedEventHandler
         $bookingStatusChanged = $commandResult->getData()['bookingStatusChanged'];
         $sendInvoice          = null;
 
+        $reservationObject = $eventRepository->getById($appointment['id']);
+
+        // Sync period integrations with current event settings on every booking edit
+        // (TIME_UPDATED runs insert/update paths that persist Meet/Teams URLs).
+        $applicationIntegrationService->handleEvent(
+            $reservationObject,
+            $reservationObject->getPeriods(),
+            $appointment,
+            ApplicationIntegrationService::TIME_UPDATED
+        );
+
         if ($bookingStatusChanged) {
-            $reservationObject = $eventRepository->getById($appointment['id']);
-            $paymentId         = $booking['payments'][0]['id'];
+            $paymentId = !empty($booking['payments'][0]['id']) ? $booking['payments'][0]['id'] : null;
 
             if ($commandResult->getData()['createPaymentLinks']) {
                 $paymentData  = [
@@ -89,26 +99,6 @@ class BookingEditedEventHandler
                 if ($bookingIndex !== false && !empty($paymentId)) {
                     $appointment['bookings'][$bookingIndex]['payments'][0]['paymentLinks'] = $paymentAS->createPaymentLink($paymentData, $bookingIndex);
                 }
-            }
-
-
-            if (
-                $booking['status'] === BookingStatus::APPROVED ||
-                $booking['status'] === BookingStatus::CANCELED ||
-                $booking['status'] === BookingStatus::REJECTED
-            ) {
-                $applicationIntegrationService->handleEvent(
-                    $reservationObject,
-                    $reservationObject->getPeriods(),
-                    $reservation,
-                    $booking['status'] === BookingStatus::APPROVED
-                        ? ApplicationIntegrationService::BOOKING_ADDED
-                        : ApplicationIntegrationService::BOOKING_CANCELED,
-                    [
-                        ApplicationIntegrationService::SKIP_ZOOM_MEETING => true,
-                        ApplicationIntegrationService::SKIP_LESSON_SPACE => true,
-                    ]
-                );
             }
 
             if (

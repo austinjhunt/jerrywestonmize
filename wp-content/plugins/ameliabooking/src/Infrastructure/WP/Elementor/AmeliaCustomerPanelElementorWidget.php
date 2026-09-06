@@ -23,12 +23,12 @@ class AmeliaCustomerPanelElementorWidget extends Widget_Base
 
     public function get_title()
     {
-        return BackendStrings::get('customer_cabinet_gutenberg_block')['title'];
+        return AmeliaElementorWhiteLabelHelper::label(BackendStrings::get('customer_cabinet_gutenberg_block')['title']);
     }
 
     public function get_icon()
     {
-        return 'amelia-logo';
+        return AmeliaElementorWhiteLabelHelper::icon();
     }
 
     public function get_categories()
@@ -42,9 +42,9 @@ class AmeliaCustomerPanelElementorWidget extends Widget_Base
             'amelia_customer_panel_section',
             [
                 'label' => '<div class="amelia-elementor-content"><p class="amelia-elementor-content-title">'
-                    . BackendStrings::get('customer_cabinet_gutenberg_block')['title']
+                    . AmeliaElementorWhiteLabelHelper::label(BackendStrings::get('customer_cabinet_gutenberg_block')['title'])
                     . '</p><br><p class="amelia-elementor-content-p">'
-                    . BackendStrings::get('customer_cabinet_gutenberg_block')['description']
+                    . AmeliaElementorWhiteLabelHelper::label(BackendStrings::get('customer_cabinet_gutenberg_block')['description'])
                     . '</p>',
             ]
         );
@@ -88,7 +88,8 @@ class AmeliaCustomerPanelElementorWidget extends Widget_Base
         $trigger      = $settings['load_manually'] !== '' ? ' trigger=' . $settings['load_manually'] : '';
         $events       = $settings['events'] ? ' events=1' : '';
         if ($settings['appointments'] || $settings['events']) {
-            echo esc_html('[ameliacustomerpanel' . $trigger . $appointments . $events . ']');
+            echo esc_html('[' . AmeliaElementorWhiteLabelHelper::shortcodeTag('customer_panel', 'ameliacustomerpanel') .
+                $trigger . $appointments . $events . ']');
         } else {
             echo esc_html(BackendStrings::get('notice_panel'));
         }

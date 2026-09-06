@@ -1,8 +1,8 @@
 {
   "name": "divi5-amelia/catalog",
   "d4Shortcode": "divi_catalog",
-  "title": "Amelia - Catalog (Legacy)",
-  "titles": "Amelia Catalogs (Legacy)",
+  "title": "{pluginName} - Catalog (Legacy)",
+  "titles": "{pluginName} Catalogs (Legacy)",
   "category": "module",
   "moduleClassName": "divi5_amelia_catalog",
   "moduleOrderClassName": "divi5_amelia_catalog",
@@ -15,7 +15,7 @@
         "meta": {
           "adminLabel": {
             "desktop": {
-              "value": "Amelia Catalog"
+              "value": "{pluginName} Catalog"
             }
           }
         }

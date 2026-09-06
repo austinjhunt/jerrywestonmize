@@ -2,6 +2,8 @@
 
 namespace AmeliaBooking\Infrastructure\WP\Translations;
 
+use AmeliaBooking\Infrastructure\WP\ShortcodeService\ShortcodeAliasService;
+
 /**
  * Class LiteBackendStrings
  *
@@ -23,7 +25,7 @@ class LiteBackendStrings
      *
      * @param string $key
      *
-     * @return string
+     * @return string|array
      */
     public static function get($key)
     {
@@ -31,7 +33,51 @@ class LiteBackendStrings
             self::$liteStrings = self::getAllStrings();
         }
 
-        return self::$liteStrings[$key] ?? '';
+        $value = self::$liteStrings[$key] ?? '';
+
+        return self::replacePluginNamePlaceholder($value);
+    }
+
+    /**
+     * Resolve the white-label plugin display name.
+     *
+     * - No white-label: Amelia
+     * - White-label + custom name: custom name
+     * - White-label without custom name: Amelia (default)
+     *
+     * @return string
+     */
+    public static function getPluginDisplayName()
+    {
+        try {
+            return ShortcodeAliasService::getBuilderBrandName();
+        } catch (\Throwable $e) {
+            return 'Amelia';
+        }
+    }
+
+    /**
+     * Replace {pluginName} placeholders in translated strings.
+     *
+     * @param string|array $value
+     *
+     * @return string|array
+     */
+    public static function replacePluginNamePlaceholder($value)
+    {
+        if (is_array($value)) {
+            foreach ($value as $key => $item) {
+                $value[$key] = self::replacePluginNamePlaceholder($item);
+            }
+
+            return $value;
+        }
+
+        if (!is_string($value) || strpos($value, '{pluginName}') === false) {
+            return $value;
+        }
+
+        return str_replace('{pluginName}', self::getPluginDisplayName(), $value);
     }
 
     /**
@@ -102,8 +148,8 @@ class LiteBackendStrings
             'error_occurred'                                   => __('Error occurred', 'wpamelia'),
             'event'                                            => __('Event', 'wpamelia'),
             'events'                                           => __('Events', 'wpamelia'),
-            'wpa_events_cpt_name'                              => __('Amelia Event Pages', 'wpamelia'),
-            'wpa_events_cpt_singular_name'                     => __('Amelia Event Page', 'wpamelia'),
+            'wpa_events_cpt_name'                              => __('{pluginName} Event Pages', 'wpamelia'),
+            'wpa_events_cpt_singular_name'                     => __('{pluginName} Event Page', 'wpamelia'),
             'wpa_events_cpt_add_new'                           => __('Add New', 'wpamelia'),
             'wpa_events_cpt_add_new_item'                      => __('Add New Event Page', 'wpamelia'),
             'wpa_events_cpt_edit_item'                         => __('Edit Event Page', 'wpamelia'),
@@ -113,9 +159,9 @@ class LiteBackendStrings
             'wpa_events_cpt_not_found'                         => __('No event pages found', 'wpamelia'),
             'wpa_events_cpt_not_found_in_trash'                => __('No event pages found in Trash', 'wpamelia'),
             'wpa_events_cpt_menu_name'                         => __('Event Pages', 'wpamelia'),
-            'wpa_events_manage_in_amelia_notice'               => __('Manage this event in Amelia:', 'wpamelia'),
-            'wpa_events_open_in_amelia_button'                 => __('Open Event in Amelia', 'wpamelia'),
-            'wpa_events_default_post_title'                    => __('Amelia Event', 'wpamelia'),
+            'wpa_events_manage_in_amelia_notice'               => __('Manage this event in {pluginName}:', 'wpamelia'),
+            'wpa_events_open_in_amelia_button'                 => __('Open Event in {pluginName}', 'wpamelia'),
+            'wpa_events_default_post_title'                    => __('{pluginName} Event', 'wpamelia'),
             'export'                                           => __('Export', 'wpamelia'),
             'extra'                                            => __('Extra', 'wpamelia'),
             'extras'                                           => __('Extras', 'wpamelia'),
@@ -134,8 +180,8 @@ class LiteBackendStrings
             'licence_pro_description'                          => __('Available from Pro license', 'wpamelia'),
             'licence_dev_description'                          => __('Available in Elite licence', 'wpamelia'),
             'licence_button_text'                              => __('Upgrade', 'wpamelia'),
-            'delete_amelia_short'                              => __('Delete Amelia content', 'wpamelia'),
-            'delete_amelia'                                    => __('Delete tables, roles, files and settings once the Amelia plugin is deleted.', 'wpamelia'),
+            'delete_amelia_short'                              => __('Delete {pluginName} content', 'wpamelia'),
+            'delete_amelia'                                    => __('Delete tables, roles, files and settings once the {pluginName} plugin is deleted.', 'wpamelia'),
             'delete_amelia_tooltip'                            => __('Enable this option if you want to delete plugin tables, roles, files and settings<br>when deleting the plugin from plugins page', 'wpamelia'),
             'appointment_space_name'                           => __('Appointment space name', 'wpamelia'),
             'event_space_name'                                 => __('Event space name', 'wpamelia'),
@@ -340,14 +386,14 @@ class LiteBackendStrings
             'show_waiting_list_booking_full'                   => __('Show waiting list after booking is full', 'wpamelia'),
             'approve_appointment_success_url'                  => __('Redirect URL for successfully approved booking', 'wpamelia'),
             'approve_appointment_error_url'                    => __('Redirect URL for unsuccessfully approved booking', 'wpamelia'),
-            'automatically_create_customer'                    => __('Automatically create Amelia Customer user', 'wpamelia'),
-            'automatically_create_customer_tooltip'            => __('If you enable this option every time a new customer schedules the appointment he will get Amelia Customer user role and automatic email with login details.', 'wpamelia'),
-            'back_links'                                       => __('Support Amelia by displaying a backlink', 'wpamelia'),
-            'back_links_tooltip'                               => __('Allow the short description below the booking form to support Amelia Booking Plugin and spread the word about it.', 'wpamelia'),
-            'improve_amelia'                                   => __('Improve Amelia', 'wpamelia'),
+            'automatically_create_customer'                    => __('Automatically create {pluginName} Customer user', 'wpamelia'),
+            'automatically_create_customer_tooltip'            => __('If you enable this option every time a new customer schedules the appointment he will get {pluginName} Customer user role and automatic email with login details.', 'wpamelia'),
+            'back_links'                                       => __('Support {pluginName} by displaying a backlink', 'wpamelia'),
+            'back_links_tooltip'                               => __('Allow the short description below the booking form to support {pluginName} Booking Plugin and spread the word about it.', 'wpamelia'),
+            'improve_amelia'                                   => __('Improve {pluginName}', 'wpamelia'),
             'improve_plugin'                                   => __('Improve plugin', 'wpamelia'),
             'enable_data_usage'                                => __('Enable data usage', 'wpamelia'),
-            'usage_tracking_description'                       => __('Help us improve Amelia by sharing anonymous data about your plugin usage. No personal data is collected.', 'wpamelia'),
+            'usage_tracking_description'                       => __('Help us improve {pluginName} by sharing anonymous data about your plugin usage. No personal data is collected.', 'wpamelia'),
             'bcc_email'                                        => __('Send all notifications to additional addresses', 'wpamelia'),
             'bcc_email_tooltip'                                => __('Here you can enter additional email addresses where all notifications will be sent. To add an address click Enter.', 'wpamelia'),
             'bcc_sms'                                          => __('Send all SMS messages to additional numbers', 'wpamelia'),
@@ -510,7 +556,7 @@ class LiteBackendStrings
             'stash_entities_tooltip'                           => __('When enabled, all entities (services, employees, locations, packages, and tags) load as soon as the page opens, instead of being loaded dynamically via AJAX.', 'wpamelia'),
             'square'                                           => __('Square', 'wpamelia'),
             'square_disconnected'                              => __('Square account successfully disconnected', 'wpamelia'),
-            'square_currency_error'                            => __('The currency in Amelia does not match the currency of your chosen Square location', 'wpamelia'),
+            'square_currency_error'                            => __('The currency in {pluginName} does not match the currency of your chosen Square location', 'wpamelia'),
             'square_default_location'                          => __('Default Square location', 'wpamelia'),
             'square_login_error'                               => __('Please log in to Square', 'wpamelia'),
             'square_location_error'                            => __('Select your Square Location', 'wpamelia'),
@@ -532,7 +578,7 @@ class LiteBackendStrings
             'stripe'                                           => __('Stripe', 'wpamelia'),
             'razorpay'                                         => __('Razorpay', 'wpamelia'),
             'barion'                                           => __('Barion', 'wpamelia'),
-            'amelia_sms'                                       => __('Amelia SMS', 'wpamelia'),
+            'amelia_sms'                                       => __('{pluginName} SMS', 'wpamelia'),
             'balance_colon'                                    => __('Balance', 'wpamelia'),
             'balance_recharged'                                => __('Your balance has been recharged.', 'wpamelia'),
             'carrier'                                          => __('Carrier', 'wpamelia'),
@@ -787,7 +833,7 @@ class LiteBackendStrings
             'male'                                             => __('Male', 'wpamelia'),
             'notification_language'                            => __('Notification language', 'wpamelia'),
             'wp_user'                                          => __('WordPress user', 'wpamelia'),
-            'wp_user_customer_tooltip'                         => __('Link this customer to a WordPress user so they can log in and view their appointments in Amelia’s back end.', 'wpamelia'),
+            'wp_user_customer_tooltip'                         => __('Link this customer to a WordPress user so they can log in and view their appointments in the {pluginName} back-end.', 'wpamelia'),
             'wp_user_employee_tooltip'                         => __('Map a WordPress user to this employee to give them access to view their appointments in the plugin’s back-end.', 'wpamelia'),
             'wp_customer_lang_tooltip'                         => __('Defines the language used for notifications sent to this customer for bookings created from the admin or employee panel. If a supported language was used in a previous booking, it will be automatically selected; otherwise, you can set it manually.', 'wpamelia'),
             'edit_employee'                                    => __('Edit employee', 'wpamelia'),
@@ -1236,7 +1282,7 @@ class LiteBackendStrings
             'choose_package'                                   => __('Choose Package', 'wpamelia'),
             'filter'                                           => __('Preselect Booking Parameters', 'wpamelia'),
             'skip_categories'                                  => __('Skip Categories step', 'wpamelia'),
-            'insert_amelia_shortcode'                          => __('Insert Amelia Booking Shortcode', 'wpamelia'),
+            'insert_amelia_shortcode'                          => __('Insert {pluginName} Booking Shortcode', 'wpamelia'),
             'select_catalog_view'                              => __('Select Catalog View', 'wpamelia'),
             'select_category'                                  => __('Select category', 'wpamelia'),
             'select_employee'                                  => __('Select employee', 'wpamelia'),
@@ -1250,7 +1296,7 @@ class LiteBackendStrings
             'show'                                             => __('Show', 'wpamelia'),
             'show_all'                                         => __('Show All', 'wpamelia'),
             'manually_loading'                                 => __('Load booking form manually', 'wpamelia'),
-            'manually_loading_description'                     => __('Add element (button, link...) ID, that will manually load amelia shortcode content', 'wpamelia'),
+            'manually_loading_description'                     => __('Add element (button, link...) ID, that will manually load shortcode content', 'wpamelia'),
             'multiselect_note'                                 => __('For multiselect: hold CTRL / Command (⌘).', 'wpamelia'),
             'show_all_categories'                              => __('Show all categories', 'wpamelia'),
             'show_all_employees'                               => __('Show all employees', 'wpamelia'),
@@ -1293,48 +1339,48 @@ class LiteBackendStrings
             'catalog_booking'                                  => __('Catalog Booking', 'wpamelia'),
             'events_list_booking'                              => __('Events List Booking', 'wpamelia'),
             'recurring_event'                                  => __('Show recurring events', 'wpamelia'),
-            'in_dialog'                                        => __('Show in Amelia Popup', 'wpamelia'),
-            'booking_divi'                                     => __('AM - Booking view', 'wpamelia'),
-            'step_booking_divi'                                => __('AM - Step Booking', 'wpamelia'),
-            'catalog_booking_divi'                             => __('AM - Catalog Booking', 'wpamelia'),
-            'catalog_divi'                                     => __('AM - Catalog view', 'wpamelia'),
-            'events_divi'                                      => __('AM - Events view', 'wpamelia'),
-            'events_list_booking_divi'                         => __('AM - Events List Booking', 'wpamelia'),
-            'events_calendar_booking_divi'                     => __('AM - Events Calendar Booking', 'wpamelia'),
+            'in_dialog'                                        => __('Show in {pluginName} Popup', 'wpamelia'),
+            'booking_divi'                                     => __('{pluginName} - Booking view', 'wpamelia'),
+            'step_booking_divi'                                => __('{pluginName} - Step Booking', 'wpamelia'),
+            'catalog_booking_divi'                             => __('{pluginName} - Catalog Booking', 'wpamelia'),
+            'catalog_divi'                                     => __('{pluginName} - Catalog view', 'wpamelia'),
+            'events_divi'                                      => __('{pluginName} - Events view', 'wpamelia'),
+            'events_list_booking_divi'                         => __('{pluginName} - Events List Booking', 'wpamelia'),
+            'events_calendar_booking_divi'                     => __('{pluginName} - Events Calendar Booking', 'wpamelia'),
             'booking_gutenberg_block'                          => [
-                'title'       => __('Amelia - Booking view', 'wpamelia'),
+                'title'       => __('{pluginName} - Booking view', 'wpamelia'),
                 'description' => __('Step-By-Step Booking Wizard gives your customers the option to choose everything about the booking in a few steps', 'wpamelia'),
             ],
             'step_booking_gutenberg_block'                     => [
-                'title'       => __('Amelia - Step-By-Step Booking', 'wpamelia'),
+                'title'       => __('{pluginName} - Step-By-Step Booking', 'wpamelia'),
                 'description' => __('Step-by-Step booking view guides the customers through several steps in order to make their bookings.', 'wpamelia'),
             ],
             'step_booking_button_gutenberg_block'                     => [
-                'title'       => __('Amelia - Booking Button', 'wpamelia'),
+                'title'       => __('{pluginName} - Booking Button', 'wpamelia'),
                 'description' => __('Step-by-Step booking view guides the customers through several steps in order to make their bookings.', 'wpamelia'),
             ],
             'events_list_booking_button_gutenberg_block'                     => [
-                'title'       => __('Amelia - Events List Button', 'wpamelia'),
+                'title'       => __('{pluginName} - Events List Button', 'wpamelia'),
                 'description' => __('Event Booking is shortcode that gives your customers the option to book one of the events that you\'ve created on the back-end in a simple event list view.', 'wpamelia'),
             ],
             'catalog_booking_gutenberg_block'                  => [
-                'title'       => __('Amelia - Catalog Booking', 'wpamelia'),
+                'title'       => __('{pluginName} - Catalog Booking', 'wpamelia'),
                 'description' => __('Front-end Booking Catalog is shortcode when you want to show your service in a form of a catalog', 'wpamelia'),
             ],
             'catalog_gutenberg_block'                          => [
-                'title'       => __('Amelia - Catalog view', 'wpamelia'),
+                'title'       => __('{pluginName} - Catalog view', 'wpamelia'),
                 'description' => __('Front-end Booking Catalog is shortcode when you want to show your service in a form of a cataloge', 'wpamelia'),
             ],
             'events_gutenberg_block'                           => [
-                'title'       => __('Amelia - Events', 'wpamelia'),
+                'title'       => __('{pluginName} - Events', 'wpamelia'),
                 'description' => __('Event Booking is shortcode that gives your customers the option to book one of the events that you\'ve created on the back-end in a simple event list view.', 'wpamelia'),
             ],
             'events_list_booking_gutenberg_block'              => [
-                'title'       => __('Amelia - Events List', 'wpamelia'),
+                'title'       => __('{pluginName} - Events List', 'wpamelia'),
                 'description' => __('Event Booking is shortcode that gives your customers the option to book one of the events that you\'ve created on the back-end in a simple event list view.', 'wpamelia'),
             ],
             'events_calendar_booking_gutenberg_block'          => [
-                'title'       => __('Amelia - Events Calendar', 'wpamelia'),
+                'title'       => __('{pluginName} - Events Calendar', 'wpamelia'),
                 'description' => __('Event Booking is shortcode that gives your customers the option to book one of the events that you\'ve created on the back-end in a simple event calendar view.', 'wpamelia'),
             ],
             'outdated_booking_gutenberg_block'                 => __('You are using a form that will be outdated soon!', 'wpamelia'),
@@ -1345,6 +1391,10 @@ class LiteBackendStrings
             'red_add_work_hours'                               => __('Add work hours', 'wpamelia'),
             'red_agencies'                                     => __('Agencies', 'wpamelia'),
             'red_api'                                          => __('API', 'wpamelia'),
+            'red_white_label'                                  => __('White label', 'wpamelia'),
+            'red_white_label_plugin_name'                      => __('Plugin name', 'wpamelia'),
+            'red_white_label_hide_external_links'              => __('Hide external links', 'wpamelia'),
+            'red_white_label_hide_external_links_tooltip'      => __('Hide documentation links, video tutorials, update notifications, and tips from the admin interface.', 'wpamelia'),
             'red_appointment_created_success'                  => __('Appointment has been created.', 'wpamelia'),
             'red_appointment_status_updated'                   => __('Appointment status has been updated.'),
             'red_appointment_details'                          => __('Appointment details', 'wpamelia'),
@@ -1434,9 +1484,10 @@ class LiteBackendStrings
             'red_facebook_social_login_description'            => __('Allow customers and employees to quickly sign in using their Facebook account, making the login process faster, simpler, and more secure.', 'wpamelia'),
             'red_facebook_social_login'                        => __('Facebook social login', 'wpamelia'),
             'red_feature_api_description'                      => __('Connect APIs effortlessly for smooth, integrated workflows.', 'wpamelia'),
+            'red_feature_white_label_description'              => __('Customize the admin experience with your own branding and hide external {pluginName} links.', 'wpamelia'),
             'red_feature_apple_calendar_description'           => __('Connect Apple Calendars to sync your personal and professional events, along with your employees’.', 'wpamelia'),
             'red_feature_barion_description'                   => __('Simple, secure payments powered by Barion.', 'wpamelia'),
-            'red_feature_buddyboss_description'                => __('Display Amelia booking forms and panels on BuddyBoss member profiles.', 'wpamelia'),
+            'red_feature_buddyboss_description'                => __('Display {pluginName} booking forms and panels on BuddyBoss member profiles.', 'wpamelia'),
             'red_feature_cart_description'                     => __('Allow customers to book multiple services in a single transaction for a streamlined experience.', 'wpamelia'),
             'red_feature_coupons_description'                  => __('Offer discounts or free appointments with customizable coupons.', 'wpamelia'),
             'red_feature_custom_duration_description'          => __('Offer services with multiple duration options for customers to choose from.', 'wpamelia'),
@@ -1547,7 +1598,7 @@ class LiteBackendStrings
             'red_no_transactions_title'                        => __('No transactions yet', 'wpamelia'),
             'red_no_upcoming_events_subtitle'                  => __('There are no future events scheduled. Please create a new event.', 'wpamelia'),
             'red_no_upcoming_events'                           => __('No upcoming events', 'wpamelia'),
-            'red_no_wp_users_with_amelia_customer_role'        => __('No WordPress users with the Amelia Customer role are available.', 'wpamelia'),
+            'red_no_wp_users_with_amelia_customer_role'        => __('No WordPress users with the {pluginName} Customer role are available.', 'wpamelia'),
             'red_notifications'                                => __('Notifications', 'wpamelia'),
             'red_occupancy_rate_info'                          => __('This widget shows monthly data instead of using the global date range.', 'wpamelia'),
             'red_occupancy_rate'                               => __('Occupancy rate', 'wpamelia'),
@@ -1640,7 +1691,7 @@ class LiteBackendStrings
             'red_tip_importing_customers'                      => __('Importing customers', 'wpamelia'),
             'red_tip_ivy_setup'                                => __('Ivy setup', 'wpamelia'),
             'red_tip_notification_settings'                    => __('Notification settings', 'wpamelia'),
-            'red_tip_notifications_in_amelia'                  => __('Notifications in Amelia', 'wpamelia'),
+            'red_tip_notifications_in_amelia'                  => __('Notifications in {pluginName}', 'wpamelia'),
             'red_tip_recurring_appointments_setup'             => __('Recurring appointments setup', 'wpamelia'),
             'red_tip_recurring_events_description'             => __('Create and manage recurring events with customizable schedules for flexibility and convenience.', 'wpamelia'),
             'red_tip_recurring_events'                         => __('Recurring events', 'wpamelia'),
@@ -1832,7 +1883,7 @@ class LiteBackendStrings
             'red_configuration'                                => __('Configuration', 'wpamelia'),
             'red_delete_user_effect_past'                      => __('This user has {count} appointment in the past. | This user has {count} appointments in the past.', 'wpamelia'),
             'red_delete_user_event_effect_future'              => __('This user is an attendee in future event. Are you sure you want to delete this user? | This user is an attendee in future events. Are you sure you want to delete this user?', 'wpamelia'),
-            'red_no_wp_users_with_amelia_employee_role'        => __('No WordPress users with the Amelia Employee role are available.', 'wpamelia'),
+            'red_no_wp_users_with_amelia_employee_role'        => __('No WordPress users with the {pluginName} Employee role are available.', 'wpamelia'),
             'red_set_up'                                       => __('Set up', 'wpamelia'),
             'red_disable'                                      => __('Disable', 'wpamelia'),
             'enter_email_then_press_enter_to_add'              => __('Enter email, then press Enter to add', 'wpamelia'),
@@ -1909,7 +1960,7 @@ class LiteBackendStrings
             'red_maximum_spots'                                => __('Maximum spots', 'wpamelia'),
             'red_continue_setup'                               => __('Continue setup', 'wpamelia'),
             'red_skip_setup'                                   => __('Skip setup', 'wpamelia'),
-            'red_welcome_amelia'                               => __('Welcome to Amelia!', 'wpamelia'),
+            'red_welcome_amelia'                               => __('Welcome to {pluginName}!', 'wpamelia'),
             'red_welcome_amelia_desc'                          => __('It looks like this is your first time here, so let’s walk through a few simple steps to help you get started.', 'wpamelia'),
             'red_set_general_settings'                         => __('Set general settings', 'wpamelia'),
             'red_set_general_settings_desc'                    =>__('Set your company working hours. This schedule will be used for all new employees, however you can customize schedule for each employee later.', 'wpamelia'),
@@ -1917,20 +1968,20 @@ class LiteBackendStrings
             'red_currency_desc'                                => __('Choose a currency that will be used for all price based settings.', 'wpamelia'),
             'red_next'                                         => __('Next', 'wpamelia'),
             'red_create_employee'                              => __('Create employee', 'wpamelia'),
-            'red_create_employee_desc'                         => __('In Amelia, an employee is a team member who provides services or hosts events, with their own schedule, working hours, and assigned offerings.', 'wpamelia'),
+            'red_create_employee_desc'                         => __('In {pluginName}, an employee is a team member who provides services or hosts events, with their own schedule, working hours, and assigned offerings.', 'wpamelia'),
             'red_skip_setup_confirmation_desc'                 => __('Are you sure you want to skip the setup? Once skipped, the guided setup will no longer be available. All settings will need to be configured later.', 'wpamelia'),
             'red_step_1'                                       => __('Step 1', 'wpamelia'),
             'red_step_2'                                       => __('Step 2', 'wpamelia'),
             'red_step_3'                                       => __('Step 3', 'wpamelia'),
             'red_step_4'                                       => __('Step 4', 'wpamelia'),
-            'red_how_will_use_amelia'                          => __('How will you use Amelia?', 'wpamelia'),
+            'red_how_will_use_amelia'                          => __('How will you use {pluginName}?', 'wpamelia'),
             'red_how_will_use_amelia_desc'                     => __('Choose whether you want to manage services, events, or both.', 'wpamelia'),
             'red_create_service'                               => __('Create service', 'wpamelia'),
             'red_create_service_desc'                          => __('Book time-based appointments with configurable durations, prices, and availability.', 'wpamelia'),
-            'red_create_service_page_desc'                     => __('In Amelia, a “service” is a specific appointment-type offering your business provides to clients - such as consultations, treatments, or classes - that can be fully customized with its own name, duration, price, capacity, availability, and extras, and booked online with assigned employees.', 'wpamelia'),
+            'red_create_service_page_desc'                     => __('In {pluginName}, a “service” is a specific appointment-type offering your business provides to clients - such as consultations, treatments, or classes - that can be fully customized with its own name, duration, price, capacity, availability, and extras, and booked online with assigned employees.', 'wpamelia'),
             'red_create_event'                                 => __('Create event', 'wpamelia'),
             'red_create_event_desc'                            => __('Create scheduled events with fixed dates, prices and capacities.', 'wpamelia'),
-            'red_create_event_page_desc'                       => __('In Amelia, an event is a booking-type offering designed for group activities or multi-day occasions - such as workshops, conferences, tours, or training series - that can be configured with its own schedule, capacity, pricing structure and assigned staff.', 'wpamelia'),
+            'red_create_event_page_desc'                       => __('In {pluginName}, an event is a booking-type offering designed for group activities or multi-day occasions - such as workshops, conferences, tours, or training series - that can be configured with its own schedule, capacity, pricing structure and assigned staff.', 'wpamelia'),
             'red_finish'                                       => __('Finish', 'wpamelia'),
             'red_filter'                                       => __('Filter', 'wpamelia'),
             'red_select_at_least_one_option'                   => __('Select at least one option.', 'wpamelia'),
@@ -1941,7 +1992,9 @@ class LiteBackendStrings
             'red_feature_outlook_general_description'          => __('Sync your and your employee\'s personal and professional events by connection Outlook calendars.', 'wpamelia'),
             'red_feature_outlook_sign_in_button'               => __('Sign in with Microsoft', 'wpamelia'),
             'red_smtp_validation_failed'                       => __('SMTP credentials validation failed. Please check your settings.', 'wpamelia'),
-            'red_stripe_keys_validation_error'                 => __('Invalid Stripe secret key.', 'wpamelia'),
+            'red_stripe_keys_validation_error'                 => __('Invalid Stripe API keys.', 'wpamelia'),
+            'red_stripe_publishable_key_validation_error'    => __('Invalid Stripe publishable key.', 'wpamelia'),
+            'red_stripe_secret_key_validation_error'         => __('Invalid Stripe secret key.', 'wpamelia'),
             'event_time_scope'                                 => __('Event time scope', 'wpamelia'),
             'future_events'                                    => __('Future events', 'wpamelia'),
             'past_events'                                      => __('Past events', 'wpamelia'),
@@ -1958,7 +2011,7 @@ class LiteBackendStrings
             'red_edit_block_time'                              => __('Edit block time', 'wpamelia'),
             'red_delete_this_appointment'                      => __('This email is linked to both a customer and an employee account. Please delete and rebook.', 'wpamelia'),
             'red_event_tags'                                   => __('Event tags', 'wpamelia'),
-            'red_feature_event_tags_description'               => __('Event tags allow you to label and organize events in Amelia based on criteria that matter most to your business.', 'wpamelia'),
+            'red_feature_event_tags_description'               => __('Event tags allow you to label and organize events in {pluginName} based on criteria that matter most to your business.', 'wpamelia'),
             'red_create_new_event_tag'                         => __('Create new tag', 'wpamelia'),
             'red_tag_label'                                    => __('Tag label', 'wpamelia'),
             'red_tag_name_required'                            => __('Tag label cannot be empty', 'wpamelia'),
@@ -1966,14 +2019,15 @@ class LiteBackendStrings
             'red_manage_event_tags'                            => __('Manage event tags', 'wpamelia'),
             'red_tip_event_tags_setup'                         => __('Event tags setup', 'wpamelia'),
             'red_event_tags_has_been_saved'                    => __('Event tags have been saved.', 'wpamelia'),
-            'step_booking_sidebar_select_block_help'           => __('Select Amelia Step-By-Step Booking Button block (or its inner button) to edit shortcode options.', 'wpamelia'),
+            'step_booking_sidebar_select_block_help'           => __('Select {pluginName} Step-By-Step Booking Button block (or its inner button) to edit shortcode options.', 'wpamelia'),
             'events_list_button_sidebar_select_block_help'     => __('Select Events List Booking Button block (or its inner button) to edit shortcode options.', 'wpamelia'),
             'shortcode_options'                                => __('Shortcode options', 'wpamelia'),
-            'step_booking_settings'                            => __('Amelia Step Booking Settings', 'wpamelia'),
-            'events_list_button_settings'                      => __('Amelia Events List Booking Settings', 'wpamelia'),
-            'step_booking_shortcode'                           => __('Amelia Step Booking Shortcode', 'wpamelia'),
-            'events_list_button_shortcode'                     => __('Amelia Events List Booking Shortcode', 'wpamelia'),
+            'step_booking_settings'                            => __('{pluginName} Step Booking Settings', 'wpamelia'),
+            'events_list_button_settings'                      => __('{pluginName} Events List Booking Settings', 'wpamelia'),
+            'step_booking_shortcode'                           => __('{pluginName} Step Booking Shortcode', 'wpamelia'),
+            'events_list_button_shortcode'                     => __('{pluginName} Events List Booking Shortcode', 'wpamelia'),
             'back'                                             => __('Back', 'wpamelia'),
+            'multiple_prices'                                  => __('Multiple prices', 'wpamelia'),
         ];
     }
 }

@@ -4,7 +4,7 @@ namespace AmeliaBooking\Application\Commands\User\Provider;
 
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
-use AmeliaBooking\Domain\Entity\Entities;
+use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
@@ -28,18 +28,14 @@ class UpdateProviderStatusCommandHandler extends CommandHandler
      * @param UpdateProviderStatusCommand $command
      *
      * @return CommandResult
-     * @throws \Slim\Exception\ContainerException
-     * @throws \InvalidArgumentException
-     * @throws \Slim\Exception\ContainerValueNotFoundException
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      * @throws AccessDeniedException
      */
     public function handle(UpdateProviderStatusCommand $command)
     {
-        if (!$command->getPermissionService()->currentUserCanWrite(Entities::EMPLOYEES)) {
-            throw new AccessDeniedException('You are not allowed to update employee.');
-        }
+        /** @var AbstractUser $user */
+        $user = $command->authorizeProviderWritePermission((int)$command->getArg('id'));
 
         $result = new CommandResult();
 

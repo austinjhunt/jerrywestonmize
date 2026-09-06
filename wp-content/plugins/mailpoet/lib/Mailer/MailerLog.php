@@ -110,7 +110,7 @@ class MailerLog {
 
     // ensure that sending frequency has not been reached
     if (self::isSendingLimitReached($mailerLog)) {
-      throw new \Exception(__('Sending frequency limit has been reached.', 'mailpoet'));
+      throw new SendingLimitReachedException(__('Sending frequency limit has been reached.', 'mailpoet'));
     }
     return null;
   }

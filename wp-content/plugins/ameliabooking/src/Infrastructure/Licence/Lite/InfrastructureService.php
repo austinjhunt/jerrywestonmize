@@ -120,7 +120,8 @@ class InfrastructureService
             $c->get('domain.settings.service'),
             new InfrastructureServices\Payment\CurrencyService(
                 $c->get('domain.settings.service')
-            )
+            ),
+            $c->get('infrastructure.logger')
         );
     }
 
@@ -135,7 +136,8 @@ class InfrastructureService
             $c->get('domain.settings.service'),
             new InfrastructureServices\Payment\CurrencyService(
                 $c->get('domain.settings.service')
-            )
+            ),
+            $c->get('infrastructure.logger')
         );
     }
 
@@ -150,7 +152,8 @@ class InfrastructureService
             $c->get('domain.settings.service'),
             new InfrastructureServices\Payment\CurrencyService(
                 $c->get('domain.settings.service')
-            )
+            ),
+            $c->get('infrastructure.logger')
         );
     }
 
@@ -165,7 +168,8 @@ class InfrastructureService
             $c->get('domain.settings.service'),
             new InfrastructureServices\Payment\CurrencyService(
                 $c->get('domain.settings.service')
-            )
+            ),
+            $c->get('infrastructure.logger')
         );
     }
 
@@ -175,7 +179,8 @@ class InfrastructureService
             $c->get('domain.settings.service'),
             new InfrastructureServices\Payment\CurrencyService(
                 $c->get('domain.settings.service')
-            )
+            ),
+            $c->get('infrastructure.logger')
         );
     }
 

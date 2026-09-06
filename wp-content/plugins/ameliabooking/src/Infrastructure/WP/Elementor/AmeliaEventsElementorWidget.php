@@ -31,11 +31,11 @@ class AmeliaEventsElementorWidget extends Widget_Base
             'amelia_events_section',
             [
                 'label' => '<div class="amelia-elementor-content-outdated"><p class="amelia-elementor-content-title">'
-                    . BackendStrings::get('events_gutenberg_block')['title']
+                    . AmeliaElementorWhiteLabelHelper::label(BackendStrings::get('events_gutenberg_block')['title'])
                     . '</p><br><p class="amelia-elementor-content-p">'
-                    . BackendStrings::get('events_gutenberg_block')['description']
+                    . AmeliaElementorWhiteLabelHelper::label(BackendStrings::get('events_gutenberg_block')['description'])
                     . '</p><br><p class="amelia-elementor-content-p amelia-elementor-content-p-outdated">'
-                    . BackendStrings::get('outdated_booking_gutenberg_block')
+                    . AmeliaElementorWhiteLabelHelper::label(BackendStrings::get('outdated_booking_gutenberg_block'))
                     . '</p>',
             ]
         );
@@ -120,7 +120,9 @@ class AmeliaEventsElementorWidget extends Widget_Base
 
         $settings = $this->get_settings_for_display();
 
-        $selected_type = $settings['selected_type'] ? ' type="' . esc_attr($settings['selected_type']) . '"' : '';
+        $selected_type = !empty($settings['selected_type'])
+            ? ' type="' . esc_attr($settings['selected_type']) . '"'
+            : '';
 
         if ($settings['preselect']) {
             $trigger = $settings['load_manually'] !== '' ? ' trigger="' . esc_attr($settings['load_manually']) . '"' : '';
@@ -131,10 +133,11 @@ class AmeliaEventsElementorWidget extends Widget_Base
 
             $selected_tag = $settings['select_tag'] ? ' tag="' . esc_attr($settings['select_tag']) . '"' : '';
 
-            echo wp_kses_post('[ameliaevents' . $selected_type . $trigger . $selected_event . $selected_tag . $show_recurring . ']');
+            echo esc_html('[' . AmeliaElementorWhiteLabelHelper::shortcodeTag('events', 'ameliaevents') .
+                $selected_type . $trigger . $selected_event . $selected_tag . $show_recurring . ']');
         } else {
-            $selected_type = $settings['selected_type'] ? ' type="' . esc_attr($settings['selected_type']) . '"' : '';
-            echo wp_kses_post('[ameliaevents' . $selected_type . ']');
+            echo esc_html('[' . AmeliaElementorWhiteLabelHelper::shortcodeTag('events', 'ameliaevents') .
+                $selected_type . ']');
         }
     }
 

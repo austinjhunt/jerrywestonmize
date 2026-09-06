@@ -45,6 +45,7 @@ use AmeliaBooking\Domain\Factory\Booking\Appointment\AppointmentFactory;
 use AmeliaBooking\Domain\Factory\Booking\Appointment\CustomerBookingFactory;
 use AmeliaBooking\Domain\Services\Booking\AppointmentDomainService;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
+use AmeliaBooking\Domain\Services\Logger\LoggerInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\BooleanValueObject;
 use AmeliaBooking\Domain\ValueObjects\Number\Float\Price;
@@ -57,6 +58,7 @@ use AmeliaBooking\Domain\ValueObjects\String\Status;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageCustomerServiceRepository;
+use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ServiceRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
 use AmeliaBooking\Infrastructure\Repository\CustomField\CustomFieldRepository;
@@ -69,8 +71,7 @@ use AmeliaBooking\Infrastructure\WP\Integrations\WooCommerce\WooCommerceService;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
 use DateTime;
 use Exception;
-use Interop\Container\Exception\ContainerException;
-use Slim\Exception\ContainerValueNotFoundException;
+use Throwable;
 
 /**
  * Class AppointmentReservationService
@@ -97,11 +98,9 @@ class AppointmentReservationService extends AbstractReservationService
      * @throws CouponExpiredException
      * @throws CouponInvalidException
      * @throws CouponUnknownException
-     * @throws ContainerValueNotFoundException
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      * @throws Exception
-     * @throws ContainerException
      */
     public function book($appointmentData, $reservation, $save)
     {
@@ -164,6 +163,12 @@ class AppointmentReservationService extends AbstractReservationService
                 $customFieldsCollection,
                 $appointmentData['serviceId']
             ) : null;
+
+        $reservation->setMandatoryPendingStatus(
+            new BooleanValueObject(
+                $this->isDeferredPaymentGateway($appointmentData['payment'])
+            )
+        );
 
         $this->bookSingle(
             $reservation,
@@ -277,6 +282,12 @@ class AppointmentReservationService extends AbstractReservationService
                         $recurringAppointmentData['serviceId']
                     ) : null;
 
+                $recurringReservation->setMandatoryPendingStatus(
+                    new BooleanValueObject(
+                        $this->isDeferredPaymentGateway($recurringAppointmentData['payment'])
+                    )
+                );
+
                 try {
                     $this->bookSingle(
                         $recurringReservation,
@@ -286,11 +297,16 @@ class AppointmentReservationService extends AbstractReservationService
                         $reservation->hasAvailabilityValidation()->getValue(),
                         $save
                     );
-                } catch (Exception $e) {
+                } catch (Throwable $e) {
                     if ($save) {
-                        /** @var Reservation $recurringReservation */
-                        foreach ($recurringReservations->getItems() as $recurringReservation) {
-                            $this->deleteSingleReservation($recurringReservation);
+                        // the reservation that just failed is only collected once bookSingle returns, so it is
+                        // not among the collected ones - bookSingle populated it with whatever it managed to
+                        // write, and without deleting it here that partial appointment would keep the slot
+                        $this->deleteSingleReservation($recurringReservation);
+
+                        /** @var Reservation $savedRecurringReservation */
+                        foreach ($recurringReservations->getItems() as $savedRecurringReservation) {
+                            $this->deleteSingleReservation($savedRecurringReservation);
                         }
 
                         $this->deleteSingleReservation($reservation);
@@ -337,11 +353,9 @@ class AppointmentReservationService extends AbstractReservationService
      * @throws BookingUnavailableException
      * @throws BookingsLimitReachedException
      * @throws CustomerBookedException
-     * @throws ContainerValueNotFoundException
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      * @throws Exception
-     * @throws ContainerException
      */
     public function bookSingle(
         $reservation,
@@ -402,7 +416,13 @@ class AppointmentReservationService extends AbstractReservationService
             $service
         );
 
-        if (!empty($appointmentData['payment']['gateway']) && !empty($appointmentData['payment']['orderStatus'])) {
+        // an order status only exists for WooCommerce, where Amelia reads it off the actual order - it is
+        // never taken from the request, so it must not map the booking status for any other gateway
+        if (
+            isset($appointmentData['payment']['gateway']) &&
+            $appointmentData['payment']['gateway'] === PaymentType::WC &&
+            !empty($appointmentData['payment']['orderStatus'])
+        ) {
             $appointmentData['bookings'][0]['status'] = $this->getWcStatus(
                 Entities::APPOINTMENT,
                 $appointmentData['payment']['orderStatus'],
@@ -411,16 +431,7 @@ class AppointmentReservationService extends AbstractReservationService
             ) ?: $bookingStatus;
         }
 
-        if (
-            (
-            (!empty($appointmentData['payment']['gateway']) &&
-                in_array($appointmentData['payment']['gateway'], [PaymentType::MOLLIE, PaymentType::BARION])) || !empty($appointmentData['isMollie'])
-            ) && !(
-                !empty($appointmentData['bookings'][0]['packageCustomerService']['id']) &&
-                $reservation->getLoggedInUser() &&
-                $reservation->getLoggedInUser()->getType() === AbstractUser::USER_ROLE_CUSTOMER
-            )
-        ) {
+        if ($reservation->hasMandatoryPendingStatus()->getValue()) {
             $appointmentData['bookings'][0]['status'] = BookingStatus::PENDING;
         }
 
@@ -584,8 +595,7 @@ class AppointmentReservationService extends AbstractReservationService
 
             if (
                 $booking->getPackageCustomerService() &&
-                $booking->getPackageCustomerService()->getId() &&
-                !empty($appointmentData['isCabinetBooking'])
+                $booking->getPackageCustomerService()->getId()
             ) {
                 /** @var AbstractPackageApplicationService $packageApplicationService */
                 $packageApplicationService = $this->container->get('application.bookable.package');
@@ -619,6 +629,8 @@ class AppointmentReservationService extends AbstractReservationService
         }
 
         if ($save) {
+            // computed before the try because none of it touches a repository - a throwable raised here
+            // means nothing was written yet, so the reservation must stay empty and the rollback a no-op
             if ($existingAppointment) {
                 $appointment->getBookings()->addItem($booking);
                 $bookingsCount = $appointmentDS->getBookingsStatusesCount($appointment);
@@ -632,21 +644,60 @@ class AppointmentReservationService extends AbstractReservationService
                     );
 
                 $appointmentAS->calculateAndSetAppointmentEnd($appointment, $service);
+            }
 
-                $appointmentAS->update(
-                    $existingAppointment,
-                    $appointment,
-                    new Collection(),
-                    $service,
-                    $appointmentData['payment']
-                );
-            } else {
-                $appointmentAS->add(
-                    $appointment,
-                    $service,
-                    !empty($appointmentData['payment']) ? $appointmentData['payment'] : null,
-                    !empty($appointmentData['payment']['isBackendBooking'])
-                );
+            try {
+                if ($existingAppointment) {
+                    $appointmentAS->update(
+                        $existingAppointment,
+                        $appointment,
+                        new Collection(),
+                        $service,
+                        $appointmentData['payment']
+                    );
+                } else {
+                    $appointmentAS->add(
+                        $appointment,
+                        $service,
+                        !empty($appointmentData['payment']) ? $appointmentData['payment'] : null,
+                        !empty($appointmentData['payment']['isBackendBooking'])
+                    );
+                }
+            } catch (Throwable $e) {
+                // The reservation is only handed the persisted entities further down, once this whole
+                // stage succeeded. The payment row is written last, so a throwable raised while saving
+                // would otherwise leave the rollback in processRequest with an empty reservation and
+                // the committed appointment would keep holding the slot. Both entities already carry
+                // the ids of whatever was written, and the delete calls are id-guarded, so a partial
+                // save is cleaned up and a save that never started is a no-op.
+                if ($existingAppointment) {
+                    try {
+                        // written back as it was read, never as the request wanted it: update() commits the
+                        // appointment row before the booking and the payment, so a throwable raised after it
+                        // would otherwise leave the status, the end and the requested location behind
+                        /** @var AppointmentRepository $appointmentRepository */
+                        $appointmentRepository = $this->container->get('domain.booking.appointment.repository');
+                        $appointmentRepository->update(
+                            $existingAppointment->getId()->getValue(),
+                            $existingAppointment
+                        );
+                    } catch (Throwable $restoreError) {
+                        $this->container->getLoggerService()->channel(LoggerInterface::CHANNEL_BOOKING)->error(
+                            'Amelia: appointment restore failed',
+                            ['exception' => $restoreError->getMessage()]
+                        );
+                    }
+                }
+
+                if ($booking->getCustomer()) {
+                    $reservation->setCustomer($booking->getCustomer());
+                }
+
+                $reservation->setBookable($service);
+                $reservation->setBooking($booking);
+                $reservation->setReservation($appointment);
+
+                throw $e;
             }
         }
 
@@ -756,9 +807,6 @@ class AppointmentReservationService extends AbstractReservationService
      *
      * @return array
      *
-     * @throws \Slim\Exception\ContainerException
-     * @throws \InvalidArgumentException
-     * @throws ContainerValueNotFoundException
      * @throws InvalidArgumentException
      * @throws NotFoundException
      * @throws QueryExecutionException
@@ -975,7 +1023,6 @@ class AppointmentReservationService extends AbstractReservationService
      * @return AbstractBookable
      *
      * @throws InvalidArgumentException
-     * @throws ContainerValueNotFoundException
      * @throws QueryExecutionException
      * @throws NotFoundException
      */
@@ -984,7 +1031,12 @@ class AppointmentReservationService extends AbstractReservationService
         /** @var BookableApplicationService $bookableAS */
         $bookableAS = $this->container->get('application.bookable.service');
 
-        return $bookableAS->getAppointmentService($data['serviceId'], $data['providerId']);
+        /** @var ServiceRepository $serviceRepository */
+        $serviceRepository = $this->container->get('domain.bookable.service.repository');
+
+        return !empty($data['providerId'])
+            ? $bookableAS->getAppointmentService($data['serviceId'], $data['providerId'])
+            : $serviceRepository->getById($data['serviceId']);
     }
 
     /**
@@ -1131,6 +1183,7 @@ class AppointmentReservationService extends AbstractReservationService
                             $customer->getCountryPhoneIso()->getValue() : null,
                         'customFields'    => $customer->getCustomFields() ?
                             json_decode($customer->getCustomFields()->getValue(), true) : null,
+                        'subscribeToMailchimp' => $this->isMailchimpSubscriptionRequested($requestData),
                     ],
                     'info'         => $booking->getInfo()->getValue(),
                     'persons'      => $booking->getPersons()->getValue(),
@@ -1258,8 +1311,6 @@ class AppointmentReservationService extends AbstractReservationService
      * @param Appointment     $appointment
      *
      * @return void
-     *
-     * @throws ContainerException
      */
     public function updateWooCommerceOrder($booking, $appointment)
     {
@@ -1318,7 +1369,6 @@ class AppointmentReservationService extends AbstractReservationService
      *
      * @return Appointment
      *
-     * @throws ContainerValueNotFoundException
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      */
@@ -1688,6 +1738,8 @@ class AppointmentReservationService extends AbstractReservationService
             $nextBooking = $nextAppointment->getBookings()->getItem(
                 $nextPayment->getCustomerBookingId()->getValue()
             );
+
+            $this->setToken($nextBooking);
 
             /** @var Service $nextService */
             $nextService = $bookableAS->getAppointmentService(

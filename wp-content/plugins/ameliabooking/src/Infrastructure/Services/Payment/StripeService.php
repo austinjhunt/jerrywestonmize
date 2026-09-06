@@ -18,7 +18,9 @@ use AmeliaBooking\Domain\ValueObjects\String\Name;
 use AmeliaBooking\Domain\ValueObjects\String\Token;
 use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
 use AmeliaVendor\Stripe\Customer;
+use AmeliaVendor\Stripe\ErrorObject;
 use AmeliaVendor\Stripe\Exception\ApiErrorException;
+use AmeliaVendor\Stripe\Exception\AuthenticationException;
 use AmeliaVendor\Stripe\PaymentMethod;
 use AmeliaVendor\Stripe\Stripe;
 use AmeliaVendor\Stripe\StripeClient;
@@ -42,187 +44,193 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
      */
     public function execute($data, &$transfers)
     {
-        $stripeSettings = $this->settingsService->getSetting('payments', 'stripe');
+        try {
+            $stripeSettings = $this->settingsService->getSetting('payments', 'stripe');
 
-        Stripe::setApiKey(
-            $stripeSettings['testMode'] === true ? $stripeSettings['testSecretKey'] : $stripeSettings['liveSecretKey']
-        );
+            Stripe::setApiKey(
+                $stripeSettings['testMode'] === true ? $stripeSettings['testSecretKey'] : $stripeSettings['liveSecretKey']
+            );
 
-        $stripeConnectSettings = $stripeSettings['connect'];
+            $stripeConnectSettings = $stripeSettings['connect'];
 
-        $intent = null;
+            $intent = null;
 
-        $customerId = null;
+            $customerId = null;
 
-        if ($data['paymentMethodId']) {
-            $stripeData = [
-                'payment_method'       => $data['paymentMethodId'],
-                'amount'               => $data['amount'],
-                'currency'             => $this->settingsService->getCategorySettings('payments')['currency'],
-                'confirm'              => true,
-                'automatic_payment_methods' => [
-                    'enabled'         => 'true',
-                    'allow_redirects' => 'never'
+            if ($data['paymentMethodId']) {
+                $stripeData = [
+                    'payment_method'       => $data['paymentMethodId'],
+                    'amount'               => $data['amount'],
+                    'currency'             => $this->settingsService->getCategorySettings('payments')['currency'],
+                    'confirm'              => true,
+                    'automatic_payment_methods' => [
+                        'enabled'         => 'true',
+                        'allow_redirects' => 'never'
+                    ]
+                ];
+
+                if ($stripeSettings['returnUrl']) {
+                    $stripeData['return_url'] = $stripeSettings['returnUrl'];
+                }
+
+                if (
+                    $stripeConnectSettings['enabled'] &&
+                    $stripeConnectSettings['method'] === 'transfer' &&
+                    sizeof($transfers['accounts']) > 0
+                ) {
+                    $hasTransfer = false;
+
+                    foreach ($transfers['accounts'] as $payments) {
+                        foreach ($payments as $payment) {
+                            if ($payment['amount'] && $payment['amount'] > 0) {
+                                $hasTransfer = true;
+                            }
+                        }
+                    }
+
+                    if ($hasTransfer) {
+                        $token = new Token();
+
+                        $stripeData['transfer_group'] = $token->getValue();
+                    }
+                }
+
+                $additionalStripeData = [];
+
+                if (
+                    $stripeConnectSettings['enabled'] &&
+                    sizeof($transfers['accounts']) === 1 &&
+                    $stripeConnectSettings['method'] === 'direct'
+                ) {
+                    $platformFee = 0;
+
+                    foreach ($transfers['accounts'] as $payments) {
+                        foreach ($payments as $payment) {
+                            $platformFee += $payment['amount'];
+                        }
+                    }
+
+                    $stripeData['application_fee_amount'] = $platformFee;
+
+                    $additionalStripeData = ['stripe_account' => array_keys($transfers['accounts'])[0]];
+                }
+
+                if ($stripeSettings['manualCapture']) {
+                    $stripeData['capture_method'] = 'manual';
+                }
+
+                if ($data['metaData']) {
+                    $stripeData['metadata'] = $data['metaData'];
+                }
+
+                if ($data['description']) {
+                    $stripeData['description'] = $data['description'];
+                }
+
+                $customerId = $this->createCustomer($data, $additionalStripeData);
+
+                if ($customerId) {
+                    $stripeData = array_merge($stripeData, ['customer' => $customerId]);
+                }
+
+                if (!empty($data['customerData']) && !empty($data['customerData']['email'])) {
+                    $stripeData['receipt_email'] = $data['customerData']['email'];
+                }
+
+                $stripeData = apply_filters(
+                    'amelia_before_stripe_payment',
+                    $stripeData
+                );
+
+                $intent = PaymentIntent::create($stripeData, $additionalStripeData);
+
+
+                if (
+                    $stripeConnectSettings['enabled'] &&
+                    $stripeConnectSettings['method'] === 'transfer'
+                ) {
+                    foreach ($transfers['accounts'] as $accountId => $payments) {
+                        foreach ($payments as $paymentId => $payment) {
+                            if (!$payment['amount']) {
+                                unset($transfers['accounts'][$accountId][$paymentId]);
+
+                                continue;
+                            }
+
+                            try {
+                                $transfer = Transfer::create(
+                                    [
+                                        'amount'         => $payment['amount'],
+                                        'currency'       => $stripeData['currency'],
+                                        'destination'    => $accountId,
+                                        'transfer_group' => $stripeData['transfer_group'],
+                                    ]
+                                );
+
+                                $transfers['accounts'][$accountId][$paymentId]['transferId'] = $transfer->id;
+                            } catch (Exception $e) {
+                                unset($transfers['accounts'][$accountId][$paymentId]);
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            if ($data['paymentIntentId']) {
+                $additionalData = [];
+
+                if (
+                    $stripeConnectSettings['enabled'] &&
+                    sizeof($transfers['accounts']) === 1 &&
+                    $stripeConnectSettings['method'] === 'direct'
+                ) {
+                    $additionalData['stripe_account'] = array_keys($transfers['accounts'])[0];
+                }
+
+                $intent = PaymentIntent::retrieve(
+                    $data['paymentIntentId'],
+                    $additionalData
+                );
+
+                if ($intent->status === 'requires_confirmation') {
+                    $intent->confirm();
+                }
+            }
+
+            if (
+                $intent &&
+                ($intent->status === 'requires_action' || $intent->status === 'requires_source_action') &&
+                $intent->next_action->type === 'use_stripe_sdk'
+            ) {
+                return  [
+                    'requiresAction'            => true,
+                    'paymentIntentClientSecret' => $intent->client_secret,
+                    'paymentIntentId'           => $intent->getLastResponse()->json['id'],
+                    'customerId'                => $customerId
+                ];
+            } elseif ($intent && ($intent->status === 'succeeded' || ($stripeSettings['manualCapture'] && $intent->status === 'requires_capture'))) {
+                return  [
+                    'paymentSuccessful' => true,
+                    'paymentIntentId'   => $intent->getLastResponse()->json['id'],
+                    'customerId'        => $customerId
+                ];
+            }
+
+            return  [
+                'paymentSuccessful' => false
+            ];
+        } catch (Exception $e) {
+            $this->logger->error(
+                'Stripe charge creation failed',
+                [
+                    'exception' => $e,
+                    'gateway'   => 'stripe',
                 ]
-            ];
-
-            if ($stripeSettings['returnUrl']) {
-                $stripeData['return_url'] = $stripeSettings['returnUrl'];
-            }
-
-            if (
-                $stripeConnectSettings['enabled'] &&
-                $stripeConnectSettings['method'] === 'transfer' &&
-                sizeof($transfers['accounts']) > 0
-            ) {
-                $hasTransfer = false;
-
-                foreach ($transfers['accounts'] as $payments) {
-                    foreach ($payments as $payment) {
-                        if ($payment['amount'] && $payment['amount'] > 0) {
-                            $hasTransfer = true;
-                        }
-                    }
-                }
-
-                if ($hasTransfer) {
-                    $token = new Token();
-
-                    $stripeData['transfer_group'] = $token->getValue();
-                }
-            }
-
-            $additionalStripeData = [];
-
-            if (
-                $stripeConnectSettings['enabled'] &&
-                sizeof($transfers['accounts']) === 1 &&
-                $stripeConnectSettings['method'] === 'direct'
-            ) {
-                $platformFee = 0;
-
-                foreach ($transfers['accounts'] as $payments) {
-                    foreach ($payments as $payment) {
-                        $platformFee += $payment['amount'];
-                    }
-                }
-
-                $stripeData['application_fee_amount'] = $platformFee;
-
-                $additionalStripeData = ['stripe_account' => array_keys($transfers['accounts'])[0]];
-            }
-
-            if ($stripeSettings['manualCapture']) {
-                $stripeData['capture_method'] = 'manual';
-            }
-
-            if ($data['metaData']) {
-                $stripeData['metadata'] = $data['metaData'];
-            }
-
-            // begin mods with fallback values
-            if ($data['description']) {
-                $stripeData['description'] = $data['description'];
-            } else if (!empty($data['metaData']['Customer Name'])) {
-                $stripeData['description'] = 'Payment for ' . $data['metaData']['Customer Name'] . ' - ' . $data['metaData']['Customer Email'] . ' - ' . $data['metaData']['Service'] . '';
-            }
-
-            $customerId = $this->createCustomer($data, $additionalStripeData);
-
-            if ($customerId) {
-                $stripeData = array_merge($stripeData, ['customer' => $customerId]);
-            }
-
-            if (!empty($data['customerData']) && !empty($data['customerData']['email'])) {
-                $stripeData['receipt_email'] = $data['customerData']['email'];
-            } else if (!empty($data['metaData']['Customer Email'])) {
-                $stripeData['receipt_email'] = $data['metaData']['Customer Email'];
-            }
-            // end mods with fallback values
-
-            $stripeData = apply_filters(
-                'amelia_before_stripe_payment',
-                $stripeData
             );
 
-            $intent = PaymentIntent::create($stripeData, $additionalStripeData);
-
-
-            if (
-                $stripeConnectSettings['enabled'] &&
-                $stripeConnectSettings['method'] === 'transfer'
-            ) {
-                foreach ($transfers['accounts'] as $accountId => $payments) {
-                    foreach ($payments as $paymentId => $payment) {
-                        if (!$payment['amount']) {
-                            unset($transfers['accounts'][$accountId][$paymentId]);
-
-                            continue;
-                        }
-
-                        try {
-                            $transfer = Transfer::create(
-                                [
-                                    'amount'         => $payment['amount'],
-                                    'currency'       => $stripeData['currency'],
-                                    'destination'    => $accountId,
-                                    'transfer_group' => $stripeData['transfer_group'],
-                                ]
-                            );
-
-                            $transfers['accounts'][$accountId][$paymentId]['transferId'] = $transfer->id;
-                        } catch (Exception $e) {
-                            unset($transfers['accounts'][$accountId][$paymentId]);
-                        }
-                    }
-                }
-            }
+            throw $e;
         }
-
-
-        if ($data['paymentIntentId']) {
-            $additionalData = [];
-
-            if (
-                $stripeConnectSettings['enabled'] &&
-                sizeof($transfers['accounts']) === 1 &&
-                $stripeConnectSettings['method'] === 'direct'
-            ) {
-                $additionalData['stripe_account'] = array_keys($transfers['accounts'])[0];
-            }
-
-            $intent = PaymentIntent::retrieve(
-                $data['paymentIntentId'],
-                $additionalData
-            );
-
-            if ($intent->status !== 'succeeded') {
-                $intent->confirm();
-            }
-        }
-
-        if (
-            $intent &&
-            ($intent->status === 'requires_action' || $intent->status === 'requires_source_action') &&
-            $intent->next_action->type === 'use_stripe_sdk'
-        ) {
-            return  [
-                'requiresAction'            => true,
-                'paymentIntentClientSecret' => $intent->client_secret,
-                'paymentIntentId'           => $intent->getLastResponse()->json['id'],
-                'customerId'                => $customerId
-            ];
-        } elseif ($intent && ($intent->status === 'succeeded' || ($stripeSettings['manualCapture'] && $intent->status === 'requires_capture'))) {
-            return  [
-                'paymentSuccessful' => true,
-                'paymentIntentId'   => $intent->getLastResponse()->json['id'],
-                'customerId'        => $customerId
-            ];
-        }
-
-        return  [
-            'paymentSuccessful' => false
-        ];
     }
 
     /**
@@ -233,111 +241,123 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
      */
     public function getPaymentLink($data)
     {
-        $stripeSettings = $this->settingsService->getSetting('payments', 'stripe');
+        try {
+            $stripeSettings = $this->settingsService->getSetting('payments', 'stripe');
 
-        $stripe = new StripeClient(
-            $stripeSettings['testMode'] === true ? $stripeSettings['testSecretKey'] : $stripeSettings['liveSecretKey']
-        );
+            $stripe = new StripeClient(
+                $stripeSettings['testMode'] === true ? $stripeSettings['testSecretKey'] : $stripeSettings['liveSecretKey']
+            );
 
-        $additionalStripeData = [];
+            $additionalStripeData = [];
 
-        $fromPanel = !empty($data['fromPanel']);
+            $fromPanel = !empty($data['fromPanel']);
 
-        $redirectUrl = $data['returnUrl'] . '&session_id={CHECKOUT_SESSION_ID}';
+            $redirectUrl = $data['returnUrl'] . '&session_id={CHECKOUT_SESSION_ID}';
 
-        $customerId = null;
+            $customerId = null;
 
-        if (!empty($data['transfer']) && $stripeSettings['connect']['method'] === 'direct') {
-            $additionalStripeData = ['stripe_account' => $data['transfer']['accountId']];
-        }
+            if (!empty($data['transfer']) && $stripeSettings['connect']['method'] === 'direct') {
+                $additionalStripeData = ['stripe_account' => $data['transfer']['accountId']];
+            }
 
-        $price = $stripe->prices->create(
-            [
-                'unit_amount'  => $data['amount'],
-                'currency'     => $data['currency'],
-                'product_data' => ['name' => $data['description']],
-            ],
-            $additionalStripeData
-        );
-
-        if ($price) {
-            $paymentLinkData = [
-                'line_items' => [
-                    [
-                        'price' => $price['id'],
-                        'quantity' => 1,
-                    ],
+            $price = $stripe->prices->create(
+                [
+                    'unit_amount'  => $data['amount'],
+                    'currency'     => $data['currency'],
+                    'product_data' => ['name' => $data['description']],
                 ],
-            ];
+                $additionalStripeData
+            );
 
-
-            if (!empty($data['metaData'])) {
-                $paymentLinkData['metadata'] = $data['metaData'];
-            }
-
-            if (!empty($data['transfer'])) {
-                $method = '';
-
-                $transferData = [];
-
-                if ($stripeSettings['connect']['method'] === 'direct') {
-                    $transferData['application_fee_amount'] = $data['amount'] - $data['transfer']['amount'];
-
-                    $method = 'direct';
-                } elseif ($stripeSettings['connect']['method'] === 'transfer') {
-                    $transferData['transfer_data'] = ['destination' => $data['transfer']['accountId']];
-
-                    $transferData['transfer_data']['amount'] = $data['transfer']['amount'];
-
-                    $method = 'destination';
-                }
-
-                if (!empty($transferData)) {
-                    if ($fromPanel) {
-                        $paymentLinkData['payment_intent_data'] = $transferData;
-                    } else {
-                        $paymentLinkData = array_merge($paymentLinkData, $transferData);
-                    }
-                }
-
-                $redirectUrl .= '&accountId=' . $data['transfer']['accountId'] . '&method=' . $method;
-            }
-
-            if (!empty($stripeSettings['address'])) {
-                $paymentLinkData['billing_address_collection'] = 'required';
-            }
-
-            if ($fromPanel) {
-                $paymentLinkData['success_url'] = $redirectUrl;
-
-                $customerId = $this->createCustomer($data, $additionalStripeData);
-
-                if ($customerId) {
-                    $paymentLinkData = array_merge($paymentLinkData, ['customer' => $customerId]);
-                }
-
-                $paymentLinkData['mode'] = 'payment';
-
-                $response = $stripe->checkout->sessions->create($paymentLinkData, $additionalStripeData);
-            } else {
-                $paymentLinkData['after_completion'] = [
-                    'type' => 'redirect',
-                    'redirect' => [
-                        'url' => $redirectUrl
-                    ]
+            if ($price) {
+                $paymentLinkData = [
+                    'line_items' => [
+                        [
+                            'price' => $price['id'],
+                            'quantity' => 1,
+                        ],
+                    ],
                 ];
 
-                $paymentLinkData['customer_creation'] = 'always';
 
-                $response = $stripe->paymentLinks->create($paymentLinkData, $additionalStripeData);
+                if (!empty($data['metaData'])) {
+                    $paymentLinkData['metadata'] = $data['metaData'];
+                }
+
+                if (!empty($data['transfer'])) {
+                    $method = '';
+
+                    $transferData = [];
+
+                    if ($stripeSettings['connect']['method'] === 'direct') {
+                        $transferData['application_fee_amount'] = $data['amount'] - $data['transfer']['amount'];
+
+                        $method = 'direct';
+                    } elseif ($stripeSettings['connect']['method'] === 'transfer') {
+                        $transferData['transfer_data'] = ['destination' => $data['transfer']['accountId']];
+
+                        $transferData['transfer_data']['amount'] = $data['transfer']['amount'];
+
+                        $method = 'destination';
+                    }
+
+                    if (!empty($transferData)) {
+                        if ($fromPanel) {
+                            $paymentLinkData['payment_intent_data'] = $transferData;
+                        } else {
+                            $paymentLinkData = array_merge($paymentLinkData, $transferData);
+                        }
+                    }
+
+                    $redirectUrl .= '&accountId=' . $data['transfer']['accountId'] . '&method=' . $method;
+                }
+
+                if (!empty($stripeSettings['address'])) {
+                    $paymentLinkData['billing_address_collection'] = 'required';
+                }
+
+                if ($fromPanel) {
+                    $paymentLinkData['success_url'] = $redirectUrl;
+
+                    $customerId = $this->createCustomer($data, $additionalStripeData);
+
+                    if ($customerId) {
+                        $paymentLinkData = array_merge($paymentLinkData, ['customer' => $customerId]);
+                    }
+
+                    $paymentLinkData['mode'] = 'payment';
+
+                    $response = $stripe->checkout->sessions->create($paymentLinkData, $additionalStripeData);
+                } else {
+                    $paymentLinkData['after_completion'] = [
+                        'type' => 'redirect',
+                        'redirect' => [
+                            'url' => $redirectUrl
+                        ]
+                    ];
+
+                    $paymentLinkData['customer_creation'] = 'always';
+
+                    $response = $stripe->paymentLinks->create($paymentLinkData, $additionalStripeData);
+                }
+
+                return $response && $response['url'] ?
+                    ['link' => $response['url'], 'status' => 200, 'customerId' => $customerId] :
+                    ['message' => $response['message'], 'status' => $response['status']];
             }
 
-            return $response && $response['url'] ?
-                ['link' => $response['url'], 'status' => 200, 'customerId' => $customerId] :
-                ['message' => $response['message'], 'status' => $response['status']];
-        }
+            return ['message' => $price['message'], 'status' => $price['status']];
+        } catch (Exception $e) {
+            $this->logger->error(
+                'Stripe payment link creation failed',
+                [
+                    'exception' => $e,
+                    'gateway'   => 'stripe',
+                ]
+            );
 
-        return ['message' => $price['message'], 'status' => $price['status']];
+            throw $e;
+        }
     }
 
     /**
@@ -348,45 +368,70 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
      */
     public function refund($data)
     {
-        $stripeSettings = $this->settingsService->getSetting('payments', 'stripe');
+        try {
+            $stripeSettings = $this->settingsService->getSetting('payments', 'stripe');
 
-        $secretKey = $stripeSettings['testMode'] === true ? $stripeSettings['testSecretKey'] : $stripeSettings['liveSecretKey'];
+            $secretKey = $stripeSettings['testMode'] === true ? $stripeSettings['testSecretKey'] : $stripeSettings['liveSecretKey'];
 
-        $stripe = new StripeClient($secretKey);
+            $stripe = new StripeClient($secretKey);
 
-        $props = [
-            'payment_intent' => $data['id'],
-        ];
+            $props = [
+                'payment_intent' => $data['id'],
+            ];
 
-        if (!empty($data['amount'])) {
-            $props['amount'] = $this->currencyService->getAmountInFractionalUnit(new Price($data['amount']));
-        }
+            if (!empty($data['amount'])) {
+                $props['amount'] = $this->currencyService->getAmountInFractionalUnit(new Price($data['amount']));
+            }
 
-        $additionalProps = [];
+            $additionalProps = [];
 
-        if (!empty($data['transfers']) && $data['transfers']['method'] === 'destination') {
-            $props['refund_application_fee'] = true;
+            if (!empty($data['transfers']) && $data['transfers']['method'] === 'destination') {
+                $props['refund_application_fee'] = true;
 
-            $props['reverse_transfer'] = true;
-        }
+                $props['reverse_transfer'] = true;
+            }
 
-        if (!empty($data['transfers']) && $data['transfers']['method'] === 'direct') {
-            $props['refund_application_fee'] = true;
+            if (!empty($data['transfers']) && $data['transfers']['method'] === 'direct') {
+                $props['refund_application_fee'] = true;
 
-            $additionalProps = ['stripe_account' => array_keys($data['transfers']['accounts'])[0]];
-        }
+                $additionalProps = ['stripe_account' => array_keys($data['transfers']['accounts'])[0]];
+            }
 
-        $response = $stripe->refunds->create($props, $additionalProps);
+            $response = $stripe->refunds->create($props, $additionalProps);
 
-        if (!empty($data['transfers']) && $data['transfers']['method'] === 'transfer') {
-            foreach ($data['transfers']['accounts'] as $transfers) {
-                foreach ($transfers as $transferId => $amount) {
-                    $stripe->transfers->createReversal($transferId, ['amount' => $amount]);
+            if (!empty($data['transfers']) && $data['transfers']['method'] === 'transfer') {
+                foreach ($data['transfers']['accounts'] as $transfers) {
+                    foreach ($transfers as $transferId => $amount) {
+                        $stripe->transfers->createReversal($transferId, ['amount' => $amount]);
+                    }
                 }
             }
-        }
 
-        return ['error' => $response->getLastResponse()->code !== 200];
+            $hasError = $response->getLastResponse()->code !== 200;
+
+            if ($hasError) {
+                $this->logger->error(
+                    'Stripe refund failed',
+                    [
+                        'gateway'    => 'stripe',
+                        'payment_id' => $data['id'] ?? null,
+                        'http_code'  => $response->getLastResponse()->code,
+                    ]
+                );
+            }
+
+            return ['error' => $hasError];
+        } catch (Exception $e) {
+            $this->logger->error(
+                'Stripe refund failed',
+                [
+                    'exception'  => $e,
+                    'payment_id' => $data['id'] ?? null,
+                ]
+            );
+
+            throw $e;
+        }
     }
 
     /**
@@ -438,6 +483,272 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
         );
 
         return $response->getLastResponse()->code === 200 ? $response->toArray()['amount'] / 100 : null;
+    }
+
+    /**
+     * Create a PaymentIntent for Stripe Payment Element / Express Checkout.
+     *
+     * @param array  $data
+     * @param array  $transfers
+     *
+     * @return array|null
+     * @throws ApiErrorException
+     */
+    public function createPaymentIntent($data, &$transfers)
+    {
+        $stripeSettings = $this->settingsService->getSetting('payments', 'stripe');
+
+        $stripe = new StripeClient(
+            $stripeSettings['testMode'] === true ? $stripeSettings['testSecretKey'] : $stripeSettings['liveSecretKey']
+        );
+
+        $stripeConnectSettings = $stripeSettings['connect'];
+
+        $params = [
+            'amount'                    => $data['amount'],
+            'currency'                  => $data['currency'],
+            'description'               => $data['description'],
+            'metadata'                  => $data['metaData'],
+            'automatic_payment_methods' => [
+                'enabled' => true,
+            ],
+            'excluded_payment_method_types' => [
+                'acss_debit',
+                'au_becs_debit',
+                'bacs_debit',
+                'boleto',
+                'customer_balance',
+                'konbini',
+                'multibanco',
+                'oxxo',
+                'paynow',
+                'promptpay',
+                'sepa_debit',
+                'us_bank_account',
+            ],
+        ];
+
+        if (!empty($data['receiptEmail'])) {
+            $params['receipt_email'] = $data['receiptEmail'];
+        }
+
+        if (!empty($stripeSettings['manualCapture'])) {
+            $params['capture_method'] = 'manual';
+        }
+
+        if (
+            !empty($stripeConnectSettings['enabled']) &&
+            !empty($transfers['accounts']) &&
+            $stripeConnectSettings['method'] === 'transfer'
+        ) {
+            $hasTransfer = false;
+
+            foreach ($transfers['accounts'] as $payments) {
+                foreach ($payments as $payment) {
+                    if (!empty($payment['amount']) && $payment['amount'] > 0) {
+                        $hasTransfer = true;
+                    }
+                }
+            }
+
+            if ($hasTransfer) {
+                $token = new Token();
+                $params['transfer_group'] = $token->getValue();
+                $transfers['transferGroup'] = $params['transfer_group'];
+            }
+        }
+
+        $additionalStripeData = [];
+
+        if (
+            !empty($stripeConnectSettings['enabled']) &&
+            !empty($transfers['accounts']) &&
+            count($transfers['accounts']) === 1 &&
+            $stripeConnectSettings['method'] === 'direct'
+        ) {
+            $platformFee = 0;
+
+            foreach ($transfers['accounts'] as $payments) {
+                foreach ($payments as $payment) {
+                    $platformFee += $payment['amount'];
+                }
+            }
+
+            $params['application_fee_amount'] = $platformFee;
+            $additionalStripeData = ['stripe_account' => array_keys($transfers['accounts'])[0]];
+        }
+
+        $params = apply_filters('amelia_before_stripe_payment_intent', $params);
+
+        $paymentIntent = $stripe->paymentIntents->create($params, $additionalStripeData);
+
+        return [
+            'clientSecret'    => $paymentIntent->client_secret,
+            'paymentIntentId' => $paymentIntent->id,
+            'connectAccountId' => !empty($additionalStripeData['stripe_account']) ? $additionalStripeData['stripe_account'] : null,
+        ];
+    }
+
+    /**
+     * Retrieve a PaymentIntent and create Connect transfers after a successful platform charge.
+     *
+     * @param string $paymentIntentId
+     * @param array  $transfers
+     *
+     * @return array{status: string, message: string|null}
+     * @throws ApiErrorException
+     */
+    public function completePaymentIntent($paymentIntentId, &$transfers)
+    {
+        $stripeSettings = $this->settingsService->getSetting('payments', 'stripe');
+
+        $stripe = new StripeClient(
+            $stripeSettings['testMode'] === true ? $stripeSettings['testSecretKey'] : $stripeSettings['liveSecretKey']
+        );
+
+        $additionalStripeData = [];
+
+        if (
+            !empty($transfers['method']) &&
+            !empty($transfers['accounts']) &&
+            $transfers['method'] === 'direct' &&
+            count($transfers['accounts']) === 1
+        ) {
+            $additionalStripeData = ['stripe_account' => array_keys($transfers['accounts'])[0]];
+        }
+
+        $paymentIntent = $stripe->paymentIntents->retrieve($paymentIntentId, [], $additionalStripeData);
+        $status = $paymentIntent->status;
+        $message = $this->getPaymentIntentErrorMessage($paymentIntent);
+
+        if (
+            $status === 'succeeded' &&
+            !empty($transfers['method']) &&
+            !empty($transfers['accounts']) &&
+            $transfers['method'] === 'transfer'
+        ) {
+            $transferFailed = false;
+
+            foreach ($transfers['accounts'] as $accountId => $payments) {
+                foreach ($payments as $paymentId => $payment) {
+                    if (empty($payment['amount'])) {
+                        unset($transfers['accounts'][$accountId][$paymentId]);
+                        continue;
+                    }
+
+                    if (!empty($payment['transferId'])) {
+                        continue;
+                    }
+
+                    try {
+                        $transferData = [
+                            'amount'      => $payment['amount'],
+                            'currency'    => $paymentIntent->currency,
+                            'destination' => $accountId,
+                        ];
+
+                        if (!empty($transfers['transferGroup'])) {
+                            $transferData['transfer_group'] = $transfers['transferGroup'];
+                        }
+
+                        $transfer = $stripe->transfers->create($transferData);
+
+                        $transfers['accounts'][$accountId][$paymentId]['transferId'] = $transfer->id;
+                        $transfers['accounts'][$accountId][$paymentId]['transferStatus'] = 'succeeded';
+                    } catch (Exception $e) {
+                        error_log('Amelia Stripe: failed to create Connect transfer: ' . $e->getMessage());
+
+                        $transfers['accounts'][$accountId][$paymentId]['transferStatus'] = 'failed';
+                        $transfers['accounts'][$accountId][$paymentId]['transferError'] = $e->getMessage();
+                        $transferFailed = true;
+                    }
+                }
+            }
+
+            if ($transferFailed) {
+                return [
+                    'status'  => 'transfer_failed',
+                    'message' => $message,
+                ];
+            }
+        }
+
+        return [
+            'status'  => $status,
+            'message' => $message,
+        ];
+    }
+
+    /**
+     * @param object $paymentIntent
+     *
+     * @return string|null
+     */
+    private function getPaymentIntentErrorMessage($paymentIntent)
+    {
+        if (empty($paymentIntent->last_payment_error)) {
+            return null;
+        }
+
+        $lastPaymentError = $paymentIntent->last_payment_error;
+
+        if (is_object($lastPaymentError) && !empty($lastPaymentError->message)) {
+            return (string)$lastPaymentError->message;
+        }
+
+        if (is_array($lastPaymentError) && !empty($lastPaymentError['message'])) {
+            return (string)$lastPaymentError['message'];
+        }
+
+        return null;
+    }
+
+    /**
+     * Cancel a PaymentIntent so its client secret can no longer confirm a charge.
+     *
+     * @param string $paymentIntentId
+     * @param array  $transfers
+     *
+     * @return string|null
+     */
+    public function cancelPaymentIntent($paymentIntentId, $transfers = [])
+    {
+        if (empty($paymentIntentId)) {
+            return null;
+        }
+
+        $stripeSettings = $this->settingsService->getSetting('payments', 'stripe');
+
+        $stripe = new StripeClient(
+            $stripeSettings['testMode'] === true ? $stripeSettings['testSecretKey'] : $stripeSettings['liveSecretKey']
+        );
+
+        $additionalStripeData = [];
+
+        if (
+            !empty($transfers['method']) &&
+            !empty($transfers['accounts']) &&
+            $transfers['method'] === 'direct' &&
+            count($transfers['accounts']) === 1
+        ) {
+            $additionalStripeData = ['stripe_account' => array_keys($transfers['accounts'])[0]];
+        }
+
+        try {
+            $paymentIntent = $stripe->paymentIntents->retrieve($paymentIntentId, [], $additionalStripeData);
+
+            if (in_array($paymentIntent->status, ['canceled', 'succeeded'], true)) {
+                return $paymentIntent->status;
+            }
+
+            $paymentIntent = $stripe->paymentIntents->cancel($paymentIntentId, [], $additionalStripeData);
+
+            return $paymentIntent->status;
+        } catch (ApiErrorException $e) {
+            error_log('Amelia Stripe: failed to cancel PaymentIntent: ' . $e->getMessage());
+
+            return null;
+        }
     }
 
     /**
@@ -712,61 +1023,70 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
     }
 
     /**
-     * Validate Stripe API keys
-     *
-     * @param string $publishableKey
-     * @param string $secretKey
-     * @param bool $testMode
-     *
-     * @return array
+     * Validates Stripe API keys by checking their format and making test API calls.
      */
     public function validateKeys(string $publishableKey, string $secretKey, bool $testMode): array
     {
+        $expectedPrefix = $testMode ? 'pk_test_' : 'pk_live_';
+        $expectedSecretPrefix = $testMode ? 'sk_test_' : 'sk_live_';
+        $invalidFields = [];
+
+        if (strpos($publishableKey, $expectedPrefix) !== 0) {
+            $invalidFields[] = 'publishableKey';
+        }
+
+        if (strpos($secretKey, $expectedSecretPrefix) !== 0) {
+            $invalidFields[] = 'secretKey';
+        }
+
+        if ($invalidFields !== []) {
+            return [
+                'valid' => false,
+                'message' => 'Invalid Stripe API keys.',
+                'invalidFields' => $invalidFields,
+            ];
+        }
+
         try {
-            // Publishable key format
-            $expectedPrefix = $testMode ? 'pk_test_' : 'pk_live_';
-            if (strpos($publishableKey, $expectedPrefix) !== 0) {
-                return [
-                    'valid' => false,
-                    'message' => sprintf(
-                        'Invalid publishable key format. Expected key to start with "%s"',
-                        $expectedPrefix
-                    )
-                ];
-            }
-
-            // Secret key format
-            $expectedSecretPrefix = $testMode ? 'sk_test_' : 'sk_live_';
-            if (strpos($secretKey, $expectedSecretPrefix) !== 0) {
-                return [
-                    'valid' => false,
-                    'message' => sprintf(
-                        'Invalid secret key format. Expected key to start with "%s"',
-                        $expectedSecretPrefix
-                    )
-                ];
-            }
-
-            Stripe::setApiKey($secretKey);
+            $stripe = new StripeClient($publishableKey);
 
             try {
-                // Account information
-                Account::retrieve();
-
-                return [
-                    'valid' => true,
-                    'message' => 'Stripe keys are valid'
-                ];
-            } catch (ApiErrorException $e) {
+                $stripe->customers->retrieve('cus_invalid');
+            } catch (AuthenticationException $e) {
                 return [
                     'valid' => false,
-                    'message' => 'Invalid Stripe secret key: ' . $e->getMessage()
+                    'message' => 'Invalid Stripe publishable key.',
+                    'invalidFields' => ['publishableKey'],
                 ];
+            } catch (ApiErrorException $e) {
+                if ($e->getStripeCode() !== ErrorObject::CODE_SECRET_KEY_REQUIRED) {
+                    return [
+                        'valid' => false,
+                        'message' => 'Invalid Stripe publishable key.',
+                        'invalidFields' => ['publishableKey'],
+                    ];
+                }
             }
+
+            $stripe = new StripeClient($secretKey);
+            $stripe->accounts->retrieve();
+
+            return [
+                'valid' => true,
+                'message' => 'Stripe keys are valid',
+                'invalidFields' => [],
+            ];
+        } catch (ApiErrorException $e) {
+            return [
+                'valid' => false,
+                'message' => 'Invalid Stripe secret key.',
+                'invalidFields' => ['secretKey'],
+            ];
         } catch (Exception $e) {
             return [
                 'valid' => false,
-                'message' => 'Error validating Stripe keys: ' . $e->getMessage()
+                'message' => 'Invalid Stripe API keys.',
+                'invalidFields' => ['publishableKey', 'secretKey'],
             ];
         }
     }

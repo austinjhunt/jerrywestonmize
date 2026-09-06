@@ -144,6 +144,7 @@ class EventEditedEventHandler
                     ApplicationIntegrationService::SKIP_OUTLOOK_CALENDAR => true,
                     ApplicationIntegrationService::SKIP_ZOOM_MEETING     => true,
                     ApplicationIntegrationService::SKIP_APPLE_CALENDAR   => true,
+                    ApplicationIntegrationService::SKIP_LESSON_SPACE     => true,
                 ]
             );
         }

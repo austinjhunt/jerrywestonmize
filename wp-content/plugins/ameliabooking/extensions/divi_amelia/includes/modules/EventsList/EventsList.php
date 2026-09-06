@@ -5,7 +5,6 @@ use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
 
 class DIVI_EventsList extends ET_Builder_Module
 {
-
     public $slug       = 'divi_events_list_booking';
     public $vb_support = 'on';
 
@@ -23,7 +22,7 @@ class DIVI_EventsList extends ET_Builder_Module
 
     public function init()
     {
-        $this->name = esc_html__(BackendStrings::get('events_list_booking_divi'), 'divi-divi_amelia');
+        $this->name = esc_html__(DIVI_AmeliaWhiteLabelHelper::label(BackendStrings::get('events_list_booking_divi')), 'divi-divi_amelia');
 
         if (!is_admin()) {
             return;
@@ -172,7 +171,7 @@ class DIVI_EventsList extends ET_Builder_Module
                 'option_category' => 'basic_option',
             ),
             'in_dialog' => array(
-                'label'             => esc_html__(BackendStrings::get('in_dialog'), 'divi-divi_amelia'),
+                'label'             => esc_html__(DIVI_AmeliaWhiteLabelHelper::label(BackendStrings::get('in_dialog')), 'divi-divi_amelia'),
                 'type'              => 'yes_no_button',
                 'options'           => array(
                     'on'  => esc_html__(BackendStrings::get('yes'), 'divi-divi_amelia'),
@@ -205,15 +204,15 @@ class DIVI_EventsList extends ET_Builder_Module
     public function render($attrs, $content = null, $render_slug = null)
     {
         $preselect =  $this->props['booking_params'];
-        $shortcode = '[ameliaeventslistbooking';
+        $shortcode = '[' . DIVI_AmeliaWhiteLabelHelper::shortcodeTag('eventslistbooking', 'ameliaeventslistbooking');
         $trigger   = $this->props['trigger'];
         $trigger_type = $this->props['trigger_type'];
         $in_dialog = $this->props['in_dialog'];
         if ($trigger !== null && $trigger !== '') {
-            $shortcode .= ' trigger='.$trigger;
+            $shortcode .= ' trigger=' . $trigger;
         }
         if (!empty($trigger) && !empty($trigger_type)) {
-            $shortcode .= ' trigger_type='.$trigger_type;
+            $shortcode .= ' trigger_type=' . $trigger_type;
         }
         if (!empty($trigger) && $in_dialog === 'on') {
             $shortcode .= ' in_dialog=1';
@@ -262,4 +261,4 @@ class DIVI_EventsList extends ET_Builder_Module
     }
 }
 
-new DIVI_EventsList;
+new DIVI_EventsList();

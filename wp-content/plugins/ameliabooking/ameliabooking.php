@@ -3,7 +3,7 @@
 Plugin Name: Amelia
 Plugin URI: https://wpamelia.com/
 Description: Amelia is a simple yet powerful automated booking specialist, working 24/7 to make sure your customers can make appointments and events even while you sleep!
-Version: 9.7
+Version: 9.8.1
 Author: Melograno Ventures
 Author URI: https://melograno.io/
 Text Domain: wpamelia
@@ -15,6 +15,7 @@ namespace AmeliaBooking;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Licence\LicenceConstants;
+use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Infrastructure\Routes\Routes;
 use AmeliaBooking\Infrastructure\Services\Payment\SquareService;
 use AmeliaBooking\Infrastructure\WP\ButtonService\ButtonService;
@@ -35,7 +36,9 @@ use AmeliaBooking\Infrastructure\WP\GutenbergBlock\AmeliaEventsCalendarBookingGu
 use AmeliaBooking\Infrastructure\WP\GutenbergBlock\AmeliaSearchGutenbergBlock;
 use AmeliaBooking\Infrastructure\WP\Integrations\WooCommerce\WooCommerceService;
 use AmeliaBooking\Infrastructure\WP\SettingsService\SettingsStorage;
+use AmeliaBooking\Infrastructure\WP\ShortcodeService\ShortcodeAliasService;
 use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
+use AmeliaBooking\Infrastructure\WP\UserRoles\SuperAdminRoleService;
 use AmeliaBooking\Infrastructure\WP\UserRoles\UserRoles;
 use AmeliaBooking\Infrastructure\WP\WPMenu\Submenu;
 use AmeliaBooking\Infrastructure\WP\WPMenu\SubmenuPageHandler;
@@ -121,7 +124,7 @@ if (!defined('AMELIA_LOGIN_URL')) {
 
 // Const for Amelia version
 if (!defined('AMELIA_VERSION')) {
-    define('AMELIA_VERSION', '9.7');
+    define('AMELIA_VERSION', '9.8.1');
 }
 
 // Const for site URL
@@ -218,6 +221,37 @@ require_once $ameliaVendorAutoload;
  */
 class Plugin
 {
+    const DEFAULT_PLUGIN_NAME = 'Amelia';
+    const DEFAULT_PLUGIN_URI = 'https://wpamelia.com/';
+    const DEFAULT_PLUGIN_DESCRIPTION = 'Amelia is a simple yet powerful automated booking specialist, working 24/7 to make sure your customers can make appointments and events even while you sleep!';
+    const DEFAULT_AUTHOR = 'Melograno Ventures';
+    const DEFAULT_AUTHOR_URI = 'https://melograno.io/';
+
+    private const LEGACY_SHORTCODE_HANDLERS = [
+        'ameliabooking'               => 'AmeliaBooking\Infrastructure\WP\ShortcodeService\StepBookingShortcodeService',
+        'ameliasearch'                => 'AmeliaBooking\Infrastructure\WP\ShortcodeService\CatalogBookingShortcodeService',
+        'ameliacatalog'               => 'AmeliaBooking\Infrastructure\WP\ShortcodeService\CatalogBookingShortcodeService',
+        'ameliaevents'                => 'AmeliaBooking\Infrastructure\WP\ShortcodeService\EventsShortcodeService',
+        'ameliaeventslistbooking'     => 'AmeliaBooking\Infrastructure\WP\ShortcodeService\EventsListBookingShortcodeService',
+        'ameliaeventscalendarbooking' => 'AmeliaBooking\Infrastructure\WP\ShortcodeService\EventsCalendarBookingShortcodeService',
+        'ameliacustomerpanel'         => 'AmeliaBooking\Infrastructure\WP\ShortcodeService\CabinetCustomerShortcodeService',
+        'ameliaemployeepanel'         => 'AmeliaBooking\Infrastructure\WP\ShortcodeService\CabinetEmployeeShortcodeService',
+        'ameliastepbooking'           => 'AmeliaBooking\Infrastructure\WP\ShortcodeService\StepBookingShortcodeService',
+        'ameliacatalogbooking'        => 'AmeliaBooking\Infrastructure\WP\ShortcodeService\CatalogBookingShortcodeService',
+    ];
+
+    private const ALIAS_SHORTCODE_HANDLERS = [
+        'booking'               => 'AmeliaBooking\Infrastructure\WP\ShortcodeService\StepBookingShortcodeService',
+        'search'                => 'AmeliaBooking\Infrastructure\WP\ShortcodeService\CatalogBookingShortcodeService',
+        'catalog'               => 'AmeliaBooking\Infrastructure\WP\ShortcodeService\CatalogBookingShortcodeService',
+        'events'                => 'AmeliaBooking\Infrastructure\WP\ShortcodeService\EventsShortcodeService',
+        'stepbooking'           => 'AmeliaBooking\Infrastructure\WP\ShortcodeService\StepBookingShortcodeService',
+        'catalogbooking'        => 'AmeliaBooking\Infrastructure\WP\ShortcodeService\CatalogBookingShortcodeService',
+        'eventslistbooking'     => 'AmeliaBooking\Infrastructure\WP\ShortcodeService\EventsListBookingShortcodeService',
+        'eventscalendarbooking' => 'AmeliaBooking\Infrastructure\WP\ShortcodeService\EventsCalendarBookingShortcodeService',
+        'customer_panel'        => 'AmeliaBooking\Infrastructure\WP\ShortcodeService\CabinetCustomerShortcodeService',
+        'employee_panel'        => 'AmeliaBooking\Infrastructure\WP\ShortcodeService\CabinetEmployeeShortcodeService',
+    ];
 
     /**
      * API Call
@@ -259,10 +293,18 @@ class Plugin
         }
     }
 
-    static function square_weekly_token_refresh( $schedules ) {
+    static function square_weekly_token_refresh($schedules) {
         $schedules['weekly'] = array(
             'interval' => 604800,
-            'display' => __('Add weekly cron to refresh square access token every 7 days')
+            'display' => __('Add weekly cron to refresh square access token every 7 days', AMELIA_DOMAIN)
+        );
+        return $schedules;
+    }
+
+    static function razorpay_reconciliation_schedule($schedules) {
+        $schedules['amelia_fifteen_minutes'] = array(
+            'interval' => 900,
+            'display' => __('Every 15 minutes (Amelia Razorpay payment reconciliation)', AMELIA_DOMAIN)
         );
         return $schedules;
     }
@@ -321,6 +363,35 @@ class Plugin
             add_action( 'amelia_square_access_token_refresh', [$squareService, 'refreshAccessToken'] );
         }
 
+        if (!empty($settingsService->getCategorySettings('payments')['razorpay']['enabled'])) {
+            add_filter( 'cron_schedules', [self::class, 'razorpay_reconciliation_schedule'] );
+
+            if (!wp_next_scheduled('amelia_razorpay_reconcile_pending_payments')) {
+                wp_schedule_event( time(), 'amelia_fifteen_minutes', 'amelia_razorpay_reconcile_pending_payments' );
+            }
+
+            /** @var Container $container */
+            $container = require AMELIA_PATH . '/src/Infrastructure/ContainerConfig/container.php';
+
+            /** @var PaymentApplicationService $paymentApplicationService */
+            $paymentApplicationService = $container->get('application.payment.service');
+
+            add_action(
+                'amelia_razorpay_reconcile_pending_payments',
+                [$paymentApplicationService, 'reconcilePendingRazorpayPayments']
+            );
+        }
+
+        if (!wp_next_scheduled('amelia_log_retention_cleanup')) {
+            wp_schedule_event(time(), 'daily', 'amelia_log_retention_cleanup');
+        }
+
+        add_action('amelia_log_retention_cleanup', static function () {
+            /** @var Container $container */
+            $container = require AMELIA_PATH . '/src/Infrastructure/ContainerConfig/container.php';
+            $container->get('infrastructure.logger.retention')->cleanup();
+        });
+
         $ameliaRole = UserRoles::getUserAmeliaRole(wp_get_current_user());
 
         // Register Gutenberg blocks for rendering on frontend (works for all users, logged in or not)
@@ -352,16 +423,7 @@ class Plugin
 
         if (!is_admin()) {
             add_filter('learn-press/frontend-default-scripts', array('AmeliaBooking\Plugin', 'learnPressConflict'));
-            add_shortcode('ameliabooking', array('AmeliaBooking\Infrastructure\WP\ShortcodeService\StepBookingShortcodeService', 'shortcodeHandler'));
-            add_shortcode('ameliasearch', array('AmeliaBooking\Infrastructure\WP\ShortcodeService\CatalogBookingShortcodeService', 'shortcodeHandler'));
-            add_shortcode('ameliacatalog', array('AmeliaBooking\Infrastructure\WP\ShortcodeService\CatalogBookingShortcodeService', 'shortcodeHandler'));
-            add_shortcode('ameliaevents', array('AmeliaBooking\Infrastructure\WP\ShortcodeService\EventsShortcodeService', 'shortcodeHandler'));
-            add_shortcode('ameliaeventslistbooking', array('AmeliaBooking\Infrastructure\WP\ShortcodeService\EventsListBookingShortcodeService', 'shortcodeHandler'));
-            add_shortcode('ameliaeventscalendarbooking', array('AmeliaBooking\Infrastructure\WP\ShortcodeService\EventsCalendarBookingShortcodeService', 'shortcodeHandler'));
-            add_shortcode('ameliacustomerpanel', array('AmeliaBooking\Infrastructure\WP\ShortcodeService\CabinetCustomerShortcodeService', 'shortcodeHandler'));
-            add_shortcode('ameliaemployeepanel', array('AmeliaBooking\Infrastructure\WP\ShortcodeService\CabinetEmployeeShortcodeService', 'shortcodeHandler'));
-            add_shortcode('ameliastepbooking', array('AmeliaBooking\Infrastructure\WP\ShortcodeService\StepBookingShortcodeService', 'shortcodeHandler'));
-            add_shortcode('ameliacatalogbooking', array('AmeliaBooking\Infrastructure\WP\ShortcodeService\CatalogBookingShortcodeService', 'shortcodeHandler'));
+            self::registerShortcodes();
         }
 
         if (defined('ELEMENTOR_VERSION')) {
@@ -406,7 +468,7 @@ class Plugin
             array(
                 array(
                     'slug'  => 'amelia-blocks',
-                    'title' => 'Amelia',
+                    'title' => self::getShortcodeBuilderBrandName(),
                 ),
             ),
             $categories
@@ -464,21 +526,54 @@ class Plugin
      */
     public static function learnPressConflict($data)
     {
+        $post = get_post(get_the_ID());
 
-        if (has_shortcode(get_post(get_the_ID())->post_content, 'ameliabooking') ||
-            has_shortcode(get_post(get_the_ID())->post_content, 'ameliacatalog') ||
-            has_shortcode(get_post(get_the_ID())->post_content, 'ameliasearch') ||
-            has_shortcode(get_post(get_the_ID())->post_content, 'ameliaevents') ||
-            has_shortcode(get_post(get_the_ID())->post_content, 'ameliacabinet') ||
-            has_shortcode(get_post(get_the_ID())->post_content, 'ameliaeventslistbooking') ||
-            has_shortcode(get_post(get_the_ID())->post_content, 'ameliaeventscalendarbooking') ||
-            has_shortcode(get_post(get_the_ID())->post_content, 'ameliastepbooking')
-        ) {
+        if ($post && self::contentHasBookingShortcode($post->post_content)) {
             return array();
-        } else {
-            return $data;
         }
 
+        return $data;
+    }
+
+    /**
+     * @return void
+     */
+    private static function registerShortcodes()
+    {
+        foreach (self::LEGACY_SHORTCODE_HANDLERS as $tag => $handlerClass) {
+            add_shortcode($tag, [$handlerClass, 'shortcodeHandler']);
+        }
+
+        foreach (ShortcodeAliasService::getAliases() as $view => $tag) {
+            if (!isset(self::ALIAS_SHORTCODE_HANDLERS[$view])) {
+                continue;
+            }
+
+            $handlerClass = self::ALIAS_SHORTCODE_HANDLERS[$view];
+            add_shortcode($tag, [$handlerClass, 'shortcodeHandler']);
+        }
+    }
+
+    /**
+     * @param string $content
+     *
+     * @return bool
+     */
+    private static function contentHasBookingShortcode($content)
+    {
+        $shortcodes = array_merge(
+            array_keys(self::LEGACY_SHORTCODE_HANDLERS),
+            array_values(ShortcodeAliasService::getAliases()),
+            ['ameliacabinet']
+        );
+
+        foreach ($shortcodes as $tag) {
+            if (has_shortcode($content, $tag)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static function initMenu()
@@ -579,6 +674,16 @@ class Plugin
         CustomPostTypesBootstrap::onActivation();
 
         set_transient('amelia_activation_redirect', true, 30);
+    }
+
+    /**
+     * Plugin deactivation hook.
+     */
+    public static function deactivation()
+    {
+        // Once the plugin is inactive its code no longer runs, so the all_plugins filter cannot
+        // rebrand the row — the header on disk is the only remaining source of the plugin name.
+        self::syncPluginHeader();
     }
 
     /**
@@ -708,10 +813,14 @@ class Plugin
                 unset($links['deactivate']);
             }
 
+            $upgradeLinks = self::shouldHideExternalLinksOnPluginsPage()
+                ? []
+                : ['<a href="https://wpamelia.com/pricing/?utm_source=wp_org&utm_medium=wp_org&utm_content=plugin_row&utm_campaign=wp_org" style="color: #5951F6; font-weight: bold;" target="_blank">Get Amelia Pro</a>'];
+
             return array_merge(
                 $primaryLinks,
                 $links,
-                ['<a href="https://wpamelia.com/pricing/?utm_source=wp_org&utm_medium=wp_org&utm_content=plugin_row&utm_campaign=wp_org" style="color: #5951F6; font-weight: bold;" target="_blank">Get Amelia Pro</a>'],
+                $upgradeLinks,
                 $deactivate
             );
         }
@@ -733,9 +842,280 @@ class Plugin
             return $links;
         }
 
+        if (self::shouldHideExternalLinksOnPluginsPage()) {
+            return array_filter($links, function ($link) {
+                return strpos($link, 'melograno.io') === false &&
+                    strpos($link, 'wpamelia.com') === false &&
+                    strpos($link, 'plugin-install.php?tab=plugin-information') === false &&
+                    strpos($link, 'View details') === false &&
+                    strpos($link, 'Visit plugin site') === false &&
+                    strpos($link, 'Docs') === false;
+            });
+        }
+
         $links[] = '<a href="https://wpamelia.com/documentation/" target="_blank" rel="noopener">Docs</a>';
 
         return $links;
+    }
+
+    /**
+     * @param array $plugins
+     *
+     * @return array
+     */
+    public static function applyPluginsPageWhiteLabel($plugins)
+    {
+        if (!isset($plugins[AMELIA_PLUGIN_BASENAME])) {
+            return $plugins;
+        }
+
+        $pluginName = self::getWhiteLabelPluginNameForPluginsPage();
+
+        if (!$pluginName) {
+            return self::applyDefaultPluginsPageMetadata($plugins);
+        }
+
+        $plugins[AMELIA_PLUGIN_BASENAME]['Name'] = $pluginName;
+        $plugins[AMELIA_PLUGIN_BASENAME]['Title'] = $pluginName;
+        $plugins[AMELIA_PLUGIN_BASENAME]['Description'] = self::getWhiteLabelPluginDescription($pluginName);
+
+        return $plugins;
+    }
+
+    /**
+     * @param array $plugins
+     *
+     * @return array
+     */
+    private static function applyDefaultPluginsPageMetadata($plugins)
+    {
+        $plugins[AMELIA_PLUGIN_BASENAME]['Name']        = self::DEFAULT_PLUGIN_NAME;
+        $plugins[AMELIA_PLUGIN_BASENAME]['Title']       = self::DEFAULT_PLUGIN_NAME;
+        $plugins[AMELIA_PLUGIN_BASENAME]['PluginURI']   = self::DEFAULT_PLUGIN_URI;
+        $plugins[AMELIA_PLUGIN_BASENAME]['Description'] = self::DEFAULT_PLUGIN_DESCRIPTION;
+        $plugins[AMELIA_PLUGIN_BASENAME]['Author']      = self::DEFAULT_AUTHOR;
+        $plugins[AMELIA_PLUGIN_BASENAME]['AuthorName']  = self::DEFAULT_AUTHOR;
+        $plugins[AMELIA_PLUGIN_BASENAME]['AuthorURI']   = self::DEFAULT_AUTHOR_URI;
+
+        return $plugins;
+    }
+
+    /**
+     * Sync plugin header with the current white-label state.
+     */
+    public static function syncPluginHeader()
+    {
+        if (!self::isWhiteLabelFeatureEnabledForPluginsPage()) {
+            self::restoreDefaultPluginHeader();
+            return;
+        }
+
+        $pluginName = self::getWhiteLabelPluginNameForPluginsPage();
+        $hideExternalLinks = self::shouldHideExternalLinksOnPluginsPage();
+
+        self::writePluginHeader(
+            $pluginName ?: self::DEFAULT_PLUGIN_NAME,
+            $pluginName ? self::getWhiteLabelPluginDescription($pluginName) : self::DEFAULT_PLUGIN_DESCRIPTION,
+            $hideExternalLinks ? '' : self::DEFAULT_PLUGIN_URI,
+            $hideExternalLinks ? '' : self::DEFAULT_AUTHOR,
+            $hideExternalLinks ? '' : self::DEFAULT_AUTHOR_URI
+        );
+    }
+
+    /**
+     * Restore the checked-in plugin header.
+     */
+    private static function restoreDefaultPluginHeader()
+    {
+        self::writePluginHeader(
+            self::DEFAULT_PLUGIN_NAME,
+            self::DEFAULT_PLUGIN_DESCRIPTION,
+            self::DEFAULT_PLUGIN_URI,
+            self::DEFAULT_AUTHOR,
+            self::DEFAULT_AUTHOR_URI
+        );
+    }
+
+    /**
+     * Sync plugin header after white-label feature or settings changes.
+     *
+     * @param array $settingsFields
+     */
+    public static function restoreActivePluginHeader($settingsFields = [])
+    {
+        if (
+            !is_array($settingsFields) ||
+            (
+                !array_key_exists('whiteLabel', $settingsFields) &&
+                !array_key_exists('featuresIntegrations', $settingsFields)
+            )
+        ) {
+            return;
+        }
+
+        self::syncPluginHeader();
+    }
+
+    /**
+     * @param string $name
+     * @param string $description
+     * @param string $pluginUri
+     * @param string $author
+     * @param string $authorUri
+     */
+    private static function writePluginHeader($name, $description, $pluginUri, $author, $authorUri)
+    {
+        $pluginFile = AMELIA_PATH . '/ameliabooking.php';
+        if (!is_readable($pluginFile) || !is_writable($pluginFile)) {
+            return;
+        }
+
+        $contents = file_get_contents($pluginFile);
+        if ($contents === false) {
+            return;
+        }
+
+        $updated = self::replacePluginHeader($contents, 'Plugin Name', $name, $nameCount);
+        $updated = self::replacePluginHeader($updated, 'Plugin URI', $pluginUri, $pluginUriCount);
+        $updated = self::replacePluginHeader($updated, 'Description', $description, $descriptionCount);
+        $updated = self::replacePluginHeader($updated, 'Author', $author, $authorCount);
+        $updated = self::replacePluginHeader($updated, 'Author URI', $authorUri, $authorUriCount);
+
+        if (
+            $nameCount !== 1 ||
+            $pluginUriCount !== 1 ||
+            $descriptionCount !== 1 ||
+            $authorCount !== 1 ||
+            $authorUriCount !== 1 ||
+            $updated === $contents
+        ) {
+            return;
+        }
+
+        if (file_put_contents($pluginFile, $updated, LOCK_EX) !== false && function_exists('wp_clean_plugins_cache')) {
+            wp_clean_plugins_cache(true);
+        }
+    }
+
+    /**
+     * @param string $contents
+     * @param string $header
+     * @param string $value
+     * @param int    $count
+     *
+     * @return string
+     */
+    private static function replacePluginHeader($contents, $header, $value, &$count)
+    {
+        // Use horizontal whitespace only — \s would match the newline and swallow the next header line
+        // when the current value is empty (e.g. "Plugin URI:" / "Author:" from hide-external-links).
+        return preg_replace_callback(
+            '/^(' . preg_quote($header, '/') . ':)[^\S\r\n]*.*$/m',
+            static function ($matches) use ($value) {
+                return $matches[1] . ($value !== '' ? ' ' . $value : '');
+            },
+            $contents,
+            1,
+            $count
+        );
+    }
+
+    /**
+     * @return bool
+     */
+    private static function shouldHideExternalLinksOnPluginsPage()
+    {
+        if (!self::isWhiteLabelFeatureEnabledForPluginsPage()) {
+            return false;
+        }
+
+        $whiteLabel = self::getSavedSettingsCategory('whiteLabel');
+
+        return !empty($whiteLabel['hideExternalLinks']);
+    }
+
+    /**
+     * @return string
+     */
+    private static function getWhiteLabelPluginNameForPluginsPage()
+    {
+        if (!self::isWhiteLabelFeatureEnabledForPluginsPage()) {
+            return '';
+        }
+
+        $whiteLabel = self::getSavedSettingsCategory('whiteLabel');
+
+        return !empty($whiteLabel['pluginName']) ? sanitize_text_field(trim($whiteLabel['pluginName'])) : '';
+    }
+
+    /**
+     * @return string
+     */
+    private static function getShortcodeBuilderBrandName()
+    {
+        if (!self::isWhiteLabelFeatureEnabledForPluginsPage()) {
+            return 'Amelia';
+        }
+
+        $pluginName = self::getWhiteLabelPluginNameForPluginsPage();
+
+        return $pluginName !== '' ? $pluginName : __('Booking', 'wpamelia');
+    }
+
+    /**
+     * @param string $pluginName
+     *
+     * @return string
+     */
+    private static function getWhiteLabelPluginDescription($pluginName)
+    {
+        return $pluginName
+            . ' is a simple yet powerful automated booking specialist, working 24/7 to make sure your customers can '
+            . 'make appointments and events even while you sleep!';
+    }
+
+    /**
+     * @return bool
+     */
+    private static function isWhiteLabelFeatureEnabledForPluginsPage()
+    {
+        $featuresIntegrations = self::getSavedSettingsCategory('featuresIntegrations');
+        $whiteLabelFeature = isset($featuresIntegrations['whiteLabel']) ? $featuresIntegrations['whiteLabel'] : null;
+
+        if (!self::isFeatureToggleEnabled($whiteLabelFeature)) {
+            return false;
+        }
+
+        return Licence\Licence::isFeatureEnabledWithLicense(
+            'whiteLabel',
+            $whiteLabelFeature
+        );
+    }
+
+    /**
+     * @param array|null $feature
+     *
+     * @return bool
+     */
+    private static function isFeatureToggleEnabled($feature)
+    {
+        return is_array($feature) &&
+            array_key_exists('enabled', $feature) &&
+            in_array($feature['enabled'], [true, 1, '1'], true);
+    }
+
+    /**
+     * Read persisted settings before licence modifiers are applied.
+     *
+     * @param string $category
+     *
+     * @return array
+     */
+    private static function getSavedSettingsCategory($category)
+    {
+        $settings = json_decode(get_option('amelia_settings'), true);
+
+        return isset($settings[$category]) && is_array($settings[$category]) ? $settings[$category] : [];
     }
 
     public static function enqueueAngieMcpServer()
@@ -861,6 +1241,12 @@ add_action('init', array('AmeliaBooking\Infrastructure\WP\WPMenu\AdminBarMenu', 
 add_action('init', array('AmeliaBooking\Plugin', 'initAdminBar'));
 
 add_action('admin_init', array('AmeliaBooking\Plugin', 'adminInit'));
+add_action('add_user_role', array(SuperAdminRoleService::class, 'removeSecondaryAmeliaRoles'), 10, 1);
+add_action('load-users.php', array(UserRoles::class, 'syncRoleLabels'));
+add_action('load-user-new.php', array(UserRoles::class, 'syncRoleLabels'));
+add_action('load-user-edit.php', array(UserRoles::class, 'syncRoleLabels'));
+add_action('admin_init', array(UserRoles::class, 'syncSuperAdminRoleAvailability'));
+add_filter('editable_roles', array(UserRoles::class, 'filterEditableRoles'));
 
 add_action('admin_menu', array('AmeliaBooking\Plugin', 'initMenu'));
 
@@ -868,6 +1254,7 @@ add_action('admin_menu', array('AmeliaBooking\Plugin', 'initMenu'));
 register_activation_hook(__FILE__, array('AmeliaBooking\Plugin', 'activation'));
 register_activation_hook(__FILE__, array('AmeliaBooking\Infrastructure\WP\InstallActions\ActivationRolesHook', 'init'));
 register_activation_hook(__FILE__, array('AmeliaBooking\Infrastructure\WP\InstallActions\ActivationSettingsHook', 'init'));
+register_deactivation_hook(__FILE__, array('AmeliaBooking\Plugin', 'deactivation'));
 register_uninstall_hook(__FILE__, array('AmeliaBooking\Plugin', 'deletion'));
 
 /** Activation hook for new site on multisite setup */
@@ -895,8 +1282,20 @@ add_filter('script_loader_tag', array('AmeliaBooking\Infrastructure\WP\Shortcode
 add_filter('style_loader_tag', array('AmeliaBooking\Infrastructure\WP\ShortcodeService\EventsListBookingShortcodeService', 'prepareStyles') , 10, 3);
 
 add_action('thrive_automator_init', array('AmeliaBooking\Infrastructure\WP\Integrations\ThriveAutomator\ThriveAutomatorService', 'init'));
+add_filter('all_plugins', array('AmeliaBooking\Plugin', 'applyPluginsPageWhiteLabel'));
 add_filter('plugin_row_meta', array('AmeliaBooking\Plugin', 'addPluginRowMeta'), 10, 4);
 add_filter('plugin_action_links_' . AMELIA_PLUGIN_BASENAME, array('AmeliaBooking\Plugin', 'addPluginActionLinks'));
+
+/** Re-apply branding to the header on disk — plugin updates ship the file with the default header */
+add_action('load-plugins.php', array('AmeliaBooking\Plugin', 'syncPluginHeader'));
+add_action('amelia_after_settings_updated', array('AmeliaBooking\Plugin', 'restoreActivePluginHeader'));
+add_action(
+    'amelia_after_settings_updated',
+    array(
+        'AmeliaBooking\Infrastructure\WP\InstallActions\ActivationSettingsHook',
+        'syncSmsAlphaSenderIdOnWhiteLabelChange',
+    )
+);
 
 add_action( 'wp_logout',  array('AmeliaBooking\Infrastructure\WP\UserService\UserService', 'logoutAmeliaUser'));
 add_action( 'profile_update',  array('AmeliaBooking\Infrastructure\WP\UserService\UserService', 'updateAmeliaUser'), 10, 3);

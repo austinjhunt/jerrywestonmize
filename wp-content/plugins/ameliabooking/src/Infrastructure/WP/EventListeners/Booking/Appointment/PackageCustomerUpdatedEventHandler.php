@@ -77,7 +77,16 @@ class PackageCustomerUpdatedEventHandler
 
         $params = $commandResult->getData();
 
-        $packageCustomerId = !empty($params['packageCustomerId']) ? $params['packageCustomerId'] : null;
+        $packageCustomerId = !empty($params['packageCustomer']['id']) ? $params['packageCustomer']['id'] : null;
+        $status            = !empty($params['packageCustomer']['status']) ? $params['packageCustomer']['status'] : null;
+
+        if ($status === 'active') {
+            $status = 'approved';
+        }
+
+        if (!$packageCustomerId || !$status) {
+            return;
+        }
 
         /** @var Collection $packageCustomerServices */
         $packageCustomerServices = $packageCustomerServiceRepository->getByCriteria(
@@ -136,12 +145,13 @@ class PackageCustomerUpdatedEventHandler
                 }
             }
 
+            $notificationStatus = $status === 'approved' ? 'purchased' : $status;
+
             $packageReservation = array_merge(
                 array_merge(
                     $package->toArray(),
                     [
-                        'status'            => $commandResult->getData()['status'] === 'approved' ?
-                            'purchased' : $commandResult->getData()['status'],
+                        'status'            => $notificationStatus,
                         'customer'          => $customer->toArray(),
                         'icsFiles'          => [],
                         'packageCustomerId' => $packageCustomerId,
@@ -161,7 +171,9 @@ class PackageCustomerUpdatedEventHandler
                 $whatsAppNotificationService->sendPackageNotifications($packageReservation, true);
             }
 
-            $webHookService->process(self::PACKAGE_CANCELED, $packageReservation, null);
+            if ($notificationStatus === 'canceled') {
+                $webHookService->process(self::PACKAGE_CANCELED, $packageReservation, null);
+            }
         }
     }
 }

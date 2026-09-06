@@ -43,20 +43,22 @@ class StripeValidateKeysCommandHandler extends CommandHandler
         $stripeService = $this->getContainer()->get('infrastructure.payment.stripe.service');
 
         $publishableKey = $command->getField('publishableKey');
-        $secretKey = $command->getField('secretKey');
-        $testMode = $command->getField('testMode');
+        $secretKey      = $command->getField('secretKey');
+        $rawTestMode    = $command->getField('testMode');
+        $testMode       = filter_var($rawTestMode, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+
+        if ($testMode === null) {
+            $result->setResult(CommandResult::RESULT_ERROR);
+            $result->setMessage('Invalid testMode value.');
+
+            return $result;
+        }
 
         $validation = $stripeService->validateKeys($publishableKey, $secretKey, $testMode);
 
-        if ($validation['valid']) {
-            $result->setResult(CommandResult::RESULT_SUCCESS);
-            $result->setMessage($validation['message']);
-            $result->setData($validation);
-        } else {
-            $result->setResult(CommandResult::RESULT_ERROR);
-            $result->setMessage($validation['message']);
-            $result->setData($validation);
-        }
+        $result->setResult(CommandResult::RESULT_SUCCESS);
+        $result->setMessage($validation['message']);
+        $result->setData($validation);
 
         return $result;
     }

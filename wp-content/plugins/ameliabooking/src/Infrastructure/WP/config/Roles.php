@@ -7,6 +7,10 @@
 
 namespace AmeliaBooking\Infrastructure\WP\config;
 
+use AmeliaBooking\Domain\Services\Settings\SettingsService;
+use AmeliaBooking\Infrastructure\WP\SettingsService\SettingsStorage;
+use AmeliaBooking\Infrastructure\WP\UserRoles\SuperAdminRoleService;
+
 /**
  * Class Roles
  *
@@ -38,6 +42,7 @@ class Roles
         'amelia_read_customize',
         'amelia_read_custom_fields',
         'amelia_read_settings',
+        'amelia_super_admin',
 
         'amelia_read_others_settings',
         'amelia_read_others_dashboard',
@@ -105,11 +110,13 @@ class Roles
      */
     public function __invoke()
     {
-        return [
+        $pluginName = $this->getPluginName();
+
+        $roles = [
             // Customer
             [
                 'name'         => 'wpamelia-customer',
-                'label'        => __('Amelia Customer', 'amelia'),
+                'label'        => sprintf(\__('%s Customer', 'amelia'), $pluginName),
                 'capabilities' => [
                     'read'                             => true,
                     'amelia_read_menu'                 => true,
@@ -123,7 +130,7 @@ class Roles
             // Provider
             [
                 'name'         => 'wpamelia-provider',
-                'label'        => __('Amelia Employee', 'amelia'),
+                'label'        => sprintf(\__('%s Employee', 'amelia'), $pluginName),
                 'capabilities' => [
                     'read'                             => true,
                     'amelia_delete_events'             => true,
@@ -149,7 +156,7 @@ class Roles
             // Manager
             [
                 'name'         => 'wpamelia-manager',
-                'label'        => __('Amelia Manager', 'amelia'),
+                'label'        => sprintf(\__('%s Manager', 'amelia'), $pluginName),
                 'capabilities' => [
                     'read' => true,
 
@@ -205,5 +212,43 @@ class Roles
                 ]
             ],
         ];
+
+        // SuperAdmin is Elite-only (protects White Label / Activation).
+        if (SuperAdminRoleService::isAvailable()) {
+            $roles[] = [
+                'name'         => SuperAdminRoleService::ROLE,
+                'label'        => sprintf(\__('%s Superadmin', 'amelia'), $pluginName),
+                'capabilities' => [
+                    'read'                  => true,
+                    'amelia_read_menu'      => true,
+                    'amelia_read_settings'  => true,
+                    'amelia_write_settings' => true,
+                    SuperAdminRoleService::CAPABILITY => true,
+                ]
+            ];
+        }
+
+        return $roles;
+    }
+
+    /**
+     * @return string
+     */
+    private function getPluginName()
+    {
+        try {
+            $settingsService = new SettingsService(new SettingsStorage());
+
+            if (!$settingsService->isFeatureEnabled('whiteLabel')) {
+                return 'Amelia';
+            }
+
+            $whiteLabel = $settingsService->getCategorySettings('whiteLabel');
+            $pluginName = !empty($whiteLabel['pluginName']) ? trim($whiteLabel['pluginName']) : '';
+
+            return $pluginName !== '' ? \wp_strip_all_tags($pluginName) : 'Amelia';
+        } catch (\Throwable $e) {
+            return 'Amelia';
+        }
     }
 }

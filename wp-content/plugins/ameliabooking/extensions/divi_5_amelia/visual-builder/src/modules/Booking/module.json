@@ -1,8 +1,8 @@
 {
   "name": "divi5-amelia/booking",
   "d4Shortcode": "divi_booking",
-  "title": "Amelia - Booking (Legacy)",
-  "titles": "Amelia Bookings (Legacy)",
+  "title": "{pluginName} - Booking (Legacy)",
+  "titles": "{pluginName} Bookings (Legacy)",
   "category": "module",
   "moduleClassName": "divi5_amelia_booking",
   "moduleOrderClassName": "divi5_amelia_booking",
@@ -15,7 +15,7 @@
         "meta": {
           "adminLabel": {
             "desktop": {
-              "value": "Amelia Booking"
+              "value": "{pluginName} Booking"
             }
           }
         }

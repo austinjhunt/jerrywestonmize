@@ -1,6 +1,6 @@
 <?php
 
-namespace Psr\Http\Server;
+namespace AmeliaVendor\Psr\Http\Server;
 
 use AmeliaVendor\Psr\Http\Message\ResponseInterface;
 use AmeliaVendor\Psr\Http\Message\ServerRequestInterface;

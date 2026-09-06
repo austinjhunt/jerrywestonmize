@@ -99,6 +99,16 @@ class Renderer {
  $this->content_renderer->restore_rendering_context( $previous_rendering_context );
  }
  }
+ public function render_from_content( string $content, string $template_slug, string $subject, string $pre_header, string $language = 'en', string $meta_robots = '' ): array {
+ $synthetic_post = new \WP_Post(
+ (object) array(
+ 'ID' => 0,
+ 'post_status' => 'publish',
+ 'post_content' => $content,
+ )
+ );
+ return $this->render( $synthetic_post, $subject, $pre_header, $language, $meta_robots, $template_slug );
+ }
  private function inline_css_styles( $template ) {
  return $this->css_inliner->from_html( $template )->inline_css()->render();
  }

@@ -89,6 +89,14 @@ class WooCommerceService
     /** @var array $processedAmeliaItems */
     protected static $processedAmeliaItems = [];
 
+    /**
+     * Amelia line items of the pending order WooCommerce is about to resume, as a positional list
+     * of ['itemId' => int, 'data' => array] entries in line item order. Populated before the order
+     * is rebuilt, consumed once its new line items exist.
+     *
+     * @var array $resumedAmeliaItems
+     */
+    protected static $resumedAmeliaItems = [];
     public const AMELIA = 'ameliabooking';
 
     /**
@@ -129,6 +137,12 @@ class WooCommerceService
 
         add_action('woocommerce_before_checkout_process', [self::class, 'beforeCheckoutProcess'], 10, 1);
         add_action('woocommerce_checkout_create_order', [self::class, 'beforeCheckoutProcess'], 10, 2);
+
+        // Store API (Checkout block) equivalent of the classic checkout validation above.
+        // The block checkout does not fire the hooks above, so validation is run here where
+        // errors are reported through the passed WP_Error instance instead of a thrown exception.
+        add_action('woocommerce_checkout_validate_order_before_payment', [self::class, 'validateOrderBeforePayment'], 10, 2);
+
         add_filter('woocommerce_before_calculate_totals', [self::class, 'beforeCalculateTotals'], 10);
 
         add_action('woocommerce_store_api_checkout_order_processed', [self::class, 'orderCreated'], 10, 1);
@@ -680,6 +694,9 @@ class WooCommerceService
                     'depositPayment'   => $package->getDepositPayment()->getValue(),
                     'deposit'          => $package->getDeposit()->getValue(),
                     'depositPerPerson' => null,
+                    'durationCount'    => $package->getDurationCount() ? $package->getDurationCount()->getValue() : null,
+                    'durationType'     => $package->getDurationType() ? $package->getDurationType()->getValue() : null,
+                    'endDate'          => $package->getEndDate() ? $package->getEndDate()->getValue()->format('Y-m-d') : null,
                 ],
                 'coupons'   => []
             ];
@@ -1271,63 +1288,95 @@ class WooCommerceService
      */
     public static function addCheckoutBlockValues(&$wc_item, $metaData)
     {
-        if ((is_cart() || is_checkout()) && !is_wc_endpoint_url()) {
-            $content = get_post(wc_get_page_id(is_checkout() ? 'checkout' : 'cart'))->post_content;
+        $isCartOrCheckoutPage = (is_cart() || is_checkout()) && !is_wc_endpoint_url();
+        $isWcRestApiRequest   = function_exists('WC')
+            && WC()
+            && method_exists(WC(), 'is_store_api_request')
+            && WC()->is_store_api_request();
 
-            if ($content && strpos($content, 'block') !== false) {
-                $checkoutData = apply_filters(
-                    'amelia_checkout_block_data',
-                    [
-                        'email'              => $wc_item[self::AMELIA]['bookings'][0]['customer']['email'],
-                        'billing-first_name' => $wc_item[self::AMELIA]['bookings'][0]['customer']['firstName'],
-                        'billing-last_name'  => $wc_item[self::AMELIA]['bookings'][0]['customer']['lastName'],
-                        'billing-phone'      => $wc_item[self::AMELIA]['bookings'][0]['customer']['phone'] ?: '',
-                    ],
-                    self::$container,
-                    $wc_item[self::AMELIA]
-                );
+        // Store API cart/checkout fetches do not set is_cart()/is_checkout(), so also handle those requests.
+        if (!$isCartOrCheckoutPage && !$isWcRestApiRequest) {
+            return false;
+        }
 
-                wp_enqueue_script(
-                    'amelia_wc_checkout_block',
-                    AMELIA_URL . 'public/js/wc/checkout.js',
-                    [],
-                    AMELIA_VERSION,
-                    true
-                );
+        $isBlockCartOrCheckout = false;
 
-                wp_localize_script(
-                    'amelia_wc_checkout_block',
-                    'ameliaCustomer',
-                    $checkoutData
-                );
+        if ($isCartOrCheckoutPage) {
+            $pageType = is_checkout() ? 'checkout' : 'cart';
+            $page     = get_post(wc_get_page_id($pageType));
 
-                $wooCommerceCart = self::getWooCommerceCart();
+            $isBlockCartOrCheckout = $page && has_block('woocommerce/' . $pageType, $page);
+        } else {
+            // Store API: detect block-based cart or checkout pages without relying on main query.
+            foreach (['checkout', 'cart'] as $pageType) {
+                $page = get_post(wc_get_page_id($pageType));
 
-                $index = null;
+                if ($page && has_block('woocommerce/' . $pageType, $page)) {
+                    $isBlockCartOrCheckout = true;
 
-                $i = 0;
-
-                foreach ($wooCommerceCart->get_cart() as $item_key => $item) {
-                    if (isset($wc_item['key']) ? $item_key === $wc_item['key'] : $item === $wc_item) {
-                        $index = $i;
-
-                        break;
-                    }
-
-                    $i++;
+                    break;
                 }
-
-                wp_localize_script(
-                    'amelia_wc_checkout_block',
-                    "ameliaNote$index",
-                    [$metaData]
-                );
-
-                return true;
             }
         }
 
-        return false;
+        if (!$isBlockCartOrCheckout) {
+            return false;
+        }
+
+        // On Store API requests only suppress native item_data; scripts are enqueued on page render.
+        if (!$isCartOrCheckoutPage) {
+            return true;
+        }
+
+        $checkoutData = apply_filters(
+            'amelia_checkout_block_data',
+            [
+                'email'              => $wc_item[self::AMELIA]['bookings'][0]['customer']['email'],
+                'billing-first_name' => $wc_item[self::AMELIA]['bookings'][0]['customer']['firstName'],
+                'billing-last_name'  => $wc_item[self::AMELIA]['bookings'][0]['customer']['lastName'],
+                'billing-phone'      => $wc_item[self::AMELIA]['bookings'][0]['customer']['phone'] ?: '',
+            ],
+            self::$container,
+            $wc_item[self::AMELIA]
+        );
+
+        wp_enqueue_script(
+            'amelia_wc_checkout_block',
+            AMELIA_URL . 'public/js/wc/checkout.js',
+            [],
+            AMELIA_VERSION,
+            true
+        );
+
+        wp_localize_script(
+            'amelia_wc_checkout_block',
+            'ameliaCustomer',
+            $checkoutData
+        );
+
+        $wooCommerceCart = self::getWooCommerceCart();
+
+        $index = null;
+
+        $i = 0;
+
+        foreach ($wooCommerceCart->get_cart() as $item_key => $item) {
+            if (isset($wc_item['key']) ? $item_key === $wc_item['key'] : $item === $wc_item) {
+                $index = $i;
+
+                break;
+            }
+
+            $i++;
+        }
+
+        wp_localize_script(
+            'amelia_wc_checkout_block',
+            "ameliaNote$index",
+            [$metaData]
+        );
+
+        return true;
     }
 
     /**
@@ -1996,6 +2045,9 @@ class WooCommerceService
                         'depositPerPerson' => $bookableData['bookable']['depositPerPerson'],
                         'calculatedPrice'  => $bookableData['bookable']['calculatedPrice'],
                         'discount'         => $bookableData['bookable']['discount'],
+                        'endDate'          => $bookableData['bookable']['endDate'],
+                        'durationCount'    => $bookableData['bookable']['durationCount'] ? $bookableData['bookable']['durationCount'] : null,
+                        'durationType'     => $bookableData['bookable']['durationType'] ? $bookableData['bookable']['durationType'] : null,
                     ]
                 );
 
@@ -2263,6 +2315,19 @@ class WooCommerceService
      */
     public static function beforeCheckoutProcess($array, $data = null)
     {
+        // Resolve this once, on the "woocommerce_before_checkout_process" pass, while the order
+        // being resumed still has the line items of the previous attempt.
+        if ($data === null) {
+            self::$resumedAmeliaItems = self::getResumedAmeliaItems();
+        }
+
+        // The slots in this cart are held by the customer's own bookings, made for the very order
+        // this checkout resumes, so there is nothing to validate — rebindResumedAmeliaItems()
+        // re-attaches those bookings once the rebuilt line items exist.
+        if (self::$resumedAmeliaItems) {
+            return;
+        }
+
         $wooCommerceCart = self::getWooCommerceCart();
 
         if (!$wooCommerceCart) {
@@ -2276,6 +2341,43 @@ class WooCommerceService
                     $removeAppointmentMessage = FrontendStrings::getCommonStrings()['wc_appointment_is_removed'];
 
                     throw new \Exception($errorMessage . "<a href='{$cartUrl}'>{$removeAppointmentMessage}</a>");
+                }
+            }
+        }
+    }
+
+    /**
+     * Validate Amelia bookings for the Store API (Checkout block) flow.
+     *
+     * The Checkout block uses the Store API and does not fire the classic
+     * "woocommerce_before_checkout_process" / "woocommerce_checkout_create_order" hooks,
+     * so a thrown exception there is never surfaced to the customer. Instead, validation
+     * errors must be reported through the provided WP_Error instance, which halts checkout
+     * and displays the messages to the customer.
+     *
+     * @param \WC_Order $order
+     * @param \WP_Error $errors
+     *
+     * @return void
+     */
+    public static function validateOrderBeforePayment($order, $errors)
+    {
+        $wooCommerceCart = self::getWooCommerceCart();
+
+        if (!$wooCommerceCart) {
+            return;
+        }
+
+        foreach ($wooCommerceCart->get_cart() as $wc_key => $wc_item) {
+            if (isset($wc_item[self::AMELIA]) && is_array($wc_item[self::AMELIA]) && empty($wc_item[self::AMELIA]['payment']['fromLink'])) {
+                if ($errorMessage = self::validateBooking($wc_item[self::AMELIA])) {
+                    $cartUrl = self::getPageUrl($wc_item[self::AMELIA]);
+                    $removeAppointmentMessage = FrontendStrings::getCommonStrings()['wc_appointment_is_removed'];
+
+                    $errors->add(
+                        'amelia_booking_invalid',
+                        $errorMessage . $removeAppointmentMessage
+                    );
                 }
             }
         }
@@ -2909,7 +3011,6 @@ class WooCommerceService
     {
         if (
             self::isAmeliaOrder($order) &&
-            self::isAmeliaOrderValidForBooking($order) &&
             !self::isAmeliaOrderFromPaymentLink($order)
         ) {
             /** @var PaymentRepository $paymentRepository */
@@ -2919,7 +3020,14 @@ class WooCommerceService
             $payments = $paymentRepository->getByEntityId($order->get_id(), 'wcOrderId');
 
             if (!$payments->length()) {
-                self::createBookings($order, false, false);
+                // Booking stays gated on the order status; re-binding below must not be, since
+                // WooCommerce resumes "failed" orders and create_order() leaves that status.
+                if (self::isAmeliaOrderValidForBooking($order)) {
+                    self::createBookings($order, false, false);
+                }
+            } elseif (self::$resumedAmeliaItems) {
+                // Resumed, not created: the bookings exist but the line items were rebuilt.
+                self::rebindResumedAmeliaItems($order);
             }
         }
     }
@@ -3570,6 +3678,221 @@ class WooCommerceService
                     } catch (\Exception $e) {
                     }
                 }
+            }
+        }
+    }
+
+    /**
+     * Whether the bookings these payments were made for still exist and still hold their slots.
+     *
+     * Only positive evidence that a booking is gone counts: a payment whose shape we cannot follow
+     * is left alone rather than treated as proof, so an unexpected payment type cannot quietly turn
+     * every resumed checkout back into the "time slot unavailable" failure this all exists to fix.
+     *
+     * @param Collection $payments
+     *
+     * @return bool
+     * @throws ContainerException
+     * @throws InvalidArgumentException
+     * @throws QueryExecutionException
+     */
+    private static function hasActiveBookings($payments)
+    {
+        /** @var CustomerBookingRepository $bookingRepository */
+        $bookingRepository = self::$container->get('domain.booking.customerBooking.repository');
+
+        /** @var PackageCustomerRepository $packageCustomerRepository */
+        $packageCustomerRepository = self::$container->get('domain.bookable.packageCustomer.repository');
+
+        /** @var Payment $payment */
+        foreach ($payments->getItems() as $payment) {
+            $booking = null;
+
+            try {
+                if ($payment->getPackageCustomerId()) {
+                    $booking = $packageCustomerRepository->getById($payment->getPackageCustomerId()->getValue());
+                } elseif ($payment->getCustomerBookingId()) {
+                    $booking = $bookingRepository->getById($payment->getCustomerBookingId()->getValue());
+                }
+            } catch (NotFoundException $e) {
+                // The booking was deleted outright.
+                return false;
+            }
+
+            // A cancelled or rejected booking no longer holds its slot, so the cart has to go
+            // through validation and be booked again.
+            if (
+                $booking &&
+                $booking->getStatus() &&
+                in_array(
+                    $booking->getStatus()->getValue(),
+                    [BookingStatus::CANCELED, BookingStatus::REJECTED],
+                    true
+                )
+            ) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Amelia line item data of the pending order that WooCommerce is about to resume.
+     *
+     * The booking is created (and the slot reserved) as soon as the WooCommerce order is created,
+     * before payment. Some gateways (e.g. iamport-for-woocommerce) leave the order in "pending"
+     * when the customer closes the payment popup instead of moving it to "cancelled"/"failed", so
+     * the booking keeps holding the slot. WC_Checkout::create_order() then resumes that same
+     * pending order on the retry — and re-validating the cart against a slot the customer's own
+     * booking is holding is what fails with "time slot unavailable".
+     *
+     * A non-empty return therefore means "these slots are already booked by this customer, for the
+     * very order being retried": validation must be skipped, and the existing bookings re-bound to
+     * the rebuilt line items rather than created again.
+     *
+     * Returns one entry per Amelia line item, in line item order. The new line items are built from
+     * the same cart in the same order — guaranteed by the cart hash matching — so position is what
+     * pairs them up; their ids are not, since WooCommerce deletes and re-adds them. (wcItemHash is
+     * not a per-item key: it is only set when "bookMultiple" is on, and a booking shares one token
+     * with all of its recurring siblings.)
+     *
+     * @return array
+     * @throws ContainerException
+     * @throws InvalidArgumentException
+     * @throws QueryExecutionException
+     */
+    private static function getResumedAmeliaItems()
+    {
+        if (!function_exists('WC') || !WC()->session || !WC()->cart) {
+            return [];
+        }
+
+        $pendingOrderId = absint(WC()->session->get('order_awaiting_payment'));
+
+        if (!$pendingOrderId) {
+            return [];
+        }
+
+        $order = wc_get_order($pendingOrderId);
+
+        // Exactly the resume condition in WC_Checkout::create_order(), and nothing more: under
+        // anything else WooCommerce builds a brand new order, which is validated and booked
+        // normally. Adding Amelia's own checks here would be wrong — WooCommerce would still
+        // resume, still delete the line items, and the previous attempt's payments would be left
+        // pointing at rows that no longer exist.
+        if (
+            !($order instanceof \WC_Order) ||
+            !$order->has_cart_hash(WC()->cart->get_cart_hash()) ||
+            !$order->has_status(['pending', 'failed'])
+        ) {
+            return [];
+        }
+
+        // Past this point WooCommerce *will* resume this order and rebuild its line items, so every
+        // branch below has to either return items for orderCreated() to re-bind, or stop the resume
+        // outright.
+
+        // Not an Amelia order, so it has no Amelia line items and nothing can be left dangling.
+        if (!self::isAmeliaOrder($order)) {
+            return [];
+        }
+
+        /** @var PaymentRepository $paymentRepository */
+        $paymentRepository = self::$container->get('domain.payment.repository');
+
+        /** @var Collection $payments */
+        $payments = $paymentRepository->getByEntityId($pendingOrderId, 'wcOrderId');
+
+        // The previous attempt never got as far as booking, so nothing holds these slots and no
+        // payment can be orphaned — the cart just needs booking from scratch. On a pending order
+        // orderCreated() does that on resume; on a failed one it cannot, because booking is gated on
+        // isAmeliaOrderValidForBooking(), so drop the session key to get a fresh order instead.
+        if (!$payments->length()) {
+            if (!$order->has_status('pending')) {
+                WC()->session->set('order_awaiting_payment', 0);
+            }
+
+            return [];
+        }
+
+        // Bookings exist, and orderCreated() re-binds them whatever the order's status. What it will
+        // not touch is a payment link order, and a booking that is gone leaves nothing to pay for.
+        // Both would strand these payments on deleted line items, so stop the resume: WooCommerce
+        // then builds a fresh order, validated and booked normally. Nothing is cancelled here —
+        // in the second case there is nothing left to cancel.
+        if (self::isAmeliaOrderFromPaymentLink($order) || !self::hasActiveBookings($payments)) {
+            WC()->session->set('order_awaiting_payment', 0);
+
+            return [];
+        }
+
+        $items = [];
+
+        foreach ($order->get_items() as $itemId => $orderItem) {
+            $itemData = wc_get_order_item_meta($itemId, self::AMELIA);
+
+            if ($itemData && is_array($itemData)) {
+                $items[] = ['itemId' => $itemId, 'data' => $itemData];
+            }
+        }
+
+        return $items;
+    }
+
+    /**
+     * Re-bind the bookings of a resumed order to its rebuilt line items.
+     *
+     * WooCommerce empties and re-creates the line items of an order it resumes, so every
+     * wcOrderItemId recorded on the previous attempt now points at a deleted row, and the fresh
+     * item meta written by checkoutCreateOrderLineItem() no longer carries the payment details
+     * that manageOrderUpdateStatus() and manageOrderCreationFailed() look for. Without this the
+     * booking would survive but never be marked paid, and never be cancelled with its order.
+     *
+     * @param $order
+     *
+     * @throws ContainerException
+     * @throws QueryExecutionException
+     */
+    private static function rebindResumedAmeliaItems($order)
+    {
+        /** @var PaymentRepository $paymentRepository */
+        $paymentRepository = self::$container->get('domain.payment.repository');
+
+        foreach ($order->get_items() as $itemId => $orderItem) {
+            $itemData = wc_get_order_item_meta($itemId, self::AMELIA);
+
+            if (!$itemData || !is_array($itemData) || !self::$resumedAmeliaItems) {
+                continue;
+            }
+
+            // Pair the line items up by position, consuming each entry so no two can claim the
+            // same booking. Both item sets come from the same cart, in the same order.
+            $previous = array_shift(self::$resumedAmeliaItems);
+
+            $previousItemId   = $previous['itemId'];
+            $previousItemData = $previous['data'];
+
+            // Move every payment recorded against the previous line item onto the new one. This
+            // must not be gated on the item meta: createBookings() processes only the first line
+            // item of a booking group, yet the recurring siblings it folds into $groupData each
+            // get their own payment carrying their own wcOrderItemId.
+            /** @var Collection $payments */
+            $payments = $paymentRepository->getByEntityId($previousItemId, 'wcOrderItemId');
+
+            /** @var Payment $payment */
+            foreach ($payments->getItems() as $payment) {
+                $paymentRepository->updateFieldById($payment->getId()->getValue(), $itemId, 'wcOrderItemId');
+            }
+
+            // Only that first line item carries the payment details manageOrderUpdateStatus() looks
+            // for, along with the "booked" marker that keeps createBookings() from booking it again.
+            // The siblings keep the untouched cart meta they had before.
+            if (isset($previousItemData['payment']['wcOrderId'])) {
+                $previousItemData['payment']['wcOrderItemId'] = $itemId;
+                $previousItemData['payment']['orderStatus']   = $order->get_status();
+
+                wc_update_order_item_meta($itemId, self::AMELIA, $previousItemData);
             }
         }
     }

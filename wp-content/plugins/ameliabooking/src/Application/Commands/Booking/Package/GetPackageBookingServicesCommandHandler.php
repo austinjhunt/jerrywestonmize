@@ -5,7 +5,7 @@ namespace AmeliaBooking\Application\Commands\Booking\Package;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
-use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
+use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageCustomerServiceRepository;
 
@@ -24,21 +24,14 @@ class GetPackageBookingServicesCommandHandler extends CommandHandler
      */
     public function handle(GetPackageBookingServicesCommand $command)
     {
-        $result = new CommandResult();
+        /** @var AbstractUser $user */
+        $user = $command->authorize();
 
-        try {
-            /** @var AbstractUser $user */
-            $user = $command->getUserApplicationService()->authorization(null, $command->getCabinetType());
-        } catch (AuthorizationException $e) {
-            $result->setResult(CommandResult::RESULT_ERROR);
-            $result->setData(
-                [
-                    'reauthorize' => true
-                ]
-            );
-
-            return $result;
+        if ($user->getType() === Entities::CUSTOMER || $user->getType() === Entities::PROVIDER) {
+            throw new AccessDeniedException('You are not allowed to read package booking services');
         }
+
+        $result = new CommandResult();
 
         $packageCustomerId = $command->getArg('id');
 

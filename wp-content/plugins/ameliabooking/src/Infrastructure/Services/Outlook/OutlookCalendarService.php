@@ -16,6 +16,7 @@ use AmeliaBooking\Domain\Factory\Booking\Appointment\AppointmentFactory;
 use AmeliaBooking\Domain\Factory\Outlook\OutlookCalendarFactory;
 use AmeliaBooking\Domain\Factory\User\ProviderFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
+use AmeliaBooking\Domain\Services\Logger\LoggerInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\String\Label;
 use AmeliaBooking\Infrastructure\Common\Container;
@@ -78,6 +79,9 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
     /** @var SettingsService */
     private $settings;
 
+    /** @var LoggerInterface */
+    private $logger;
+
     /**
      * OutlookCalendarService constructor.
      *
@@ -87,6 +91,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
     {
         $this->container = $container;
         $this->settings = $this->container->get('domain.settings.service');
+        $this->logger = $this->container->getLoggerService()->channel(LoggerInterface::CHANNEL_SYNC);
         $this->outlookCalendarSettings = $this->settings->getCategorySettings('outlookCalendar');
 
         $this->graph = new Graph();
@@ -214,7 +219,9 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
     {
         try {
             if (empty($token)) {
-                error_log('OutlookCalendar: Empty token provided to authorize()');
+                $this->logger->warning(
+                    'OutlookCalendar: Empty token provided to authorize()'
+                );
                 return '';
             }
 
@@ -222,7 +229,9 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                 $token = $this->refreshToken($token);
 
                 if (empty($token)) {
-                    error_log('OutlookCalendar: Failed to refresh expired token');
+                    $this->logger->warning(
+                        'OutlookCalendar: Failed to refresh expired token'
+                    );
                     return '';
                 }
             }
@@ -230,7 +239,9 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
             $tokenArray = json_decode($token, true);
 
             if (!$tokenArray || !isset($tokenArray['access_token'])) {
-                error_log('OutlookCalendar: Invalid token format - missing access_token');
+                $this->logger->warning(
+                    'OutlookCalendar: Invalid token format - missing access_token'
+                );
                 return '';
             }
 
@@ -238,7 +249,12 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
 
             return $expiredToken ? $token : '';
         } catch (\Exception $e) {
-            error_log('OutlookCalendar: Error in authorize() - ' . $e->getMessage());
+            $this->logger->error(
+                'OutlookCalendar: Error in authorize()',
+                [
+                    'exception' => $e,
+                ]
+            );
             return '';
         }
     }
@@ -297,7 +313,12 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                 $token = $provider->getOutlookCalendar()->getToken()->getValue();
 
                 if (empty($token)) {
-                    error_log('OutlookCalendar: Empty token for provider ' . $provider->getId()->getValue());
+                    $this->logger->warning(
+                        'OutlookCalendar: Empty token for provider',
+                        [
+                            'providerId' => $provider->getId()->getValue(),
+                        ]
+                    );
                     return false;
                 }
 
@@ -316,7 +337,13 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                 }
                 return true;
             } catch (\Exception $e) {
-                error_log('OutlookCalendar: Failed to authorize provider ' . $provider->getId()->getValue() . ': ' . $e->getMessage());
+                $this->logger->error(
+                    'OutlookCalendar: Failed to authorize provider',
+                    [
+                        'exception'  => $e,
+                        'providerId' => $provider->getId()->getValue(),
+                    ]
+                );
                 return false;
             }
         }
@@ -420,7 +447,13 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                 'email'   => $user->getMail() ?? $user->getUserPrincipalName(),
             ];
         } catch (GraphException $e) {
-            error_log('OutlookCalendar: Failed to fetch user info - ' . $e->getMessage());
+            $this->logger->error(
+                'OutlookCalendar: Failed to fetch user info',
+                [
+                    'exception'  => $e,
+                    'providerId' => $provider->getId()->getValue(),
+                ]
+            );
             return null;
         }
     }
@@ -836,11 +869,23 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                                           strpos($errorMessage, 'ErrorItemNotFound') !== false;
 
                             if ($isNotFound) {
-                                error_log('Outlook Calendar: Calendar not found (ID: ' . $outlookCalendarId .
-                                    ') for provider ' . $provider->getId()->getValue() .
-                                    '. The calendar may have been deleted or the connection needs to be re-established.');
+                                $this->container->getLoggerService()->channel('sync')->warning(
+                                    'Outlook Calendar: Calendar not found. The calendar may have been deleted or the connection needs to be re-established.',
+                                    [
+                                        'exception'         => $e,
+                                        'outlookCalendarId' => $outlookCalendarId,
+                                        'providerId'        => $provider->getId()->getValue(),
+                                    ]
+                                );
                             } else {
-                                error_log('Outlook Calendar: Failed to fetch events for calendar ' . $outlookCalendarId . ' - ' . $errorMessage);
+                                $this->logger->error(
+                                    'Outlook Calendar: Failed to fetch events for calendar',
+                                    [
+                                        'exception'         => $e,
+                                        'outlookCalendarId' => $outlookCalendarId,
+                                        'providerId'        => $provider->getId()->getValue(),
+                                    ]
+                                );
                             }
 
                             self::$providersOutlookEvents[$provider->getId()->getValue()] = [];
@@ -955,7 +1000,13 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                     $events = $request->getPage();
                     $this->processOutlookCalendarEvents($events, $provider, $excludeAppointmentId);
                 } catch (\Exception $e) {
-                    error_log('OutlookCalendar: Error fetching events from blocked calendar ' . $calendarId . ': ' . $e->getMessage());
+                    $this->logger->error(
+                        'OutlookCalendar: Error fetching events from blocked calendar',
+                        [
+                            'exception'  => $e,
+                            'calendarId' => $calendarId,
+                        ]
+                    );
                     continue;
                 }
             }
@@ -978,7 +1029,12 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                 $token = $this->refreshTokenForAccount($token, $account['id']);
 
                 if ($token === null) {
-                    error_log('OutlookCalendar: Failed to refresh token for account ID ' . $account['id']);
+                    $this->logger->warning(
+                        'OutlookCalendar: Failed to refresh token for account',
+                        [
+                            'accountId' => $account['id'],
+                        ]
+                    );
                     return null;
                 }
             }
@@ -990,7 +1046,13 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
 
             return $graph;
         } catch (\Exception $e) {
-            error_log('OutlookCalendar: Error creating graph for account - ' . $e->getMessage());
+            $this->logger->error(
+                'OutlookCalendar: Error creating graph for account',
+                [
+                    'exception' => $e,
+                    'accountId' => $account['id'],
+                ]
+            );
             return null;
         }
     }
@@ -1035,7 +1097,13 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
 
             return $newTokenJson;
         } catch (\Exception $e) {
-            error_log('OutlookCalendar: Error refreshing token for account - ' . $e->getMessage());
+            $this->logger->error(
+                'OutlookCalendar: Error refreshing token for account',
+                [
+                    'exception' => $e,
+                    'accountId' => $accountId,
+                ]
+            );
             return null;
         }
     }
@@ -1219,7 +1287,21 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
     {
         $entity = $period ?: $appointment;
         if ($entity->getOutlookCalendarEventId()) {
+            /** @var SettingsService $settingsService */
+            $settingsService = $this->container->get('domain.settings.service');
+            $enabledForEntity = $settingsService
+                ->getEntitySettings($period ? $appointment->getSettings() : $appointment->getService()->getSettings())
+                ->getMicrosoftTeamsSettings()
+                ->getEnabled();
+
             $event = $this->createEvent($appointment, $provider, $period);
+
+            if ($enabledForEntity) {
+                $event->setIsOnlineMeeting(true);
+                $event->setOnlineMeetingProvider(new OnlineMeetingProviderType('teamsForBusiness'));
+            } else {
+                $event->setIsOnlineMeeting(false);
+            }
 
             $eventId = $entity->getOutlookCalendarEventId()->getValue();
 
@@ -1271,7 +1353,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                 $provider->getOutlookCalendarId()->getValue();
 
             try {
-                $this->graph->createRequest(
+                $updatedEvent = $this->graph->createRequest(
                     'PATCH',
                     sprintf(
                         '/me/calendars/%s/events/%s',
@@ -1280,13 +1362,91 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                     )
                 )->attachBody($event)->setReturnType(get_class($event))->execute();
 
-                do_action('amelia_after_outlook_calendar_event_updated', $event, $appointment->toArray(), $provider->toArray());
-            } catch (GraphException $e) {
+                $this->syncMicrosoftTeamsUrl($appointment, $period, $enabledForEntity, $updatedEvent);
+
+                do_action('amelia_after_outlook_calendar_event_updated', $updatedEvent, $appointment->toArray(), $provider->toArray());
+            } catch (GraphException | QueryExecutionException $e) {
                 return false;
             }
         }
 
         return true;
+    }
+
+    /**
+     * Persist or clear Microsoft Teams URL after calendar create/update.
+     *
+     * @param Appointment|\AmeliaBooking\Domain\Entity\Booking\Event\Event $appointment
+     * @param EventPeriod|null $period
+     * @param bool $enabledForEntity
+     * @param Event|null $outlookEvent
+     *
+     * @return void
+     *
+     * @throws QueryExecutionException
+     */
+    private function syncMicrosoftTeamsUrl($appointment, $period, $enabledForEntity, $outlookEvent): void
+    {
+        $joinUrl = null;
+
+        if (
+            $enabledForEntity &&
+            $outlookEvent &&
+            $outlookEvent->getOnlineMeeting() &&
+            $outlookEvent->getOnlineMeeting()->getJoinUrl()
+        ) {
+            $joinUrl = $outlookEvent->getOnlineMeeting()->getJoinUrl();
+        }
+
+        if ($period) {
+            /** @var EventPeriodsRepository $eventPeriodsRepository */
+            $eventPeriodsRepository = $this->container->get('domain.booking.event.period.repository');
+
+            if (!$enabledForEntity) {
+                $period->setMicrosoftTeamsUrl(null);
+                $eventPeriodsRepository->updateFieldById(
+                    $period->getId()->getValue(),
+                    null,
+                    'microsoftTeamsUrl'
+                );
+
+                return;
+            }
+
+            if ($joinUrl) {
+                $period->setMicrosoftTeamsUrl($joinUrl);
+                $eventPeriodsRepository->updateFieldById(
+                    $period->getId()->getValue(),
+                    $joinUrl,
+                    'microsoftTeamsUrl'
+                );
+            }
+
+            return;
+        }
+
+        /** @var AppointmentRepository $appointmentRepository */
+        $appointmentRepository = $this->container->get('domain.booking.appointment.repository');
+
+        if (!$enabledForEntity) {
+            $appointment->setMicrosoftTeamsUrl(null);
+            $appointmentRepository->updateFieldById(
+                $appointment->getId()->getValue(),
+                null,
+                'microsoftTeamsUrl'
+            );
+
+            return;
+        }
+
+        if ($joinUrl) {
+            $appointment->setMicrosoftTeamsUrl($joinUrl);
+            $appointmentRepository->updateFieldById(
+                $appointment->getId()->getValue(),
+                $joinUrl,
+                'microsoftTeamsUrl'
+            );
+        }
     }
 
     /**
@@ -1934,7 +2094,13 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
 
                     $account['calendarList'] = $calendarList;
                 } catch (\Exception $e) {
-                    error_log('OutlookCalendar: Error fetching calendar list for account ' . $account['id'] . ': ' . $e->getMessage());
+                    $this->logger->error(
+                        'OutlookCalendar: Error fetching calendar list for account',
+                        [
+                            'exception' => $e,
+                            'accountId' => $account['id'],
+                        ]
+                    );
                     $account['calendarList'] = [];
                 }
             } else {

@@ -7,7 +7,6 @@
 
 namespace AmeliaBooking\Infrastructure\WP\GutenbergBlock;
 
-use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
 use AmeliaBooking\Infrastructure\Licence;
 
 /**
@@ -37,7 +36,7 @@ class AmeliaEventsCalendarBookingGutenbergBlock extends GutenbergBlock
     {
         $shortCode = $attributes['short_code'] ?? '[ameliaeventscalendarbooking]';
 
-        if (strpos($shortCode, '[ameliaeventscalendarbooking') !== 0) {
+        if (!self::isAllowedShortCode($shortCode, self::getAllowedShortcodeTags('eventscalendarbooking', 'ameliaeventscalendarbooking'))) {
             return '';
         }
 
@@ -74,10 +73,17 @@ class AmeliaEventsCalendarBookingGutenbergBlock extends GutenbergBlock
             'amelia_events_calendar_booking_gutenberg_block',
             'wpAmeliaLabels',
             array_merge(
-                BackendStrings::getAllStrings(),
+                self::getBlockStrings(),
                 self::getEntitiesData(),
                 array('isLite' => !Licence\Licence::isPremium())
             )
+        );
+
+        self::localizePreviewImages(
+            'amelia_events_calendar_booking_gutenberg_block',
+            'wpAmeliaEventsCalendarBookingPreview',
+            'ecf-preview.svg',
+            'ecf-mobile-preview.svg'
         );
     }
 }

@@ -1,8 +1,8 @@
 {
   "name": "divi5-amelia/eventscalendar",
   "d4Shortcode": "divi_events_calendar_booking",
-  "title": "Amelia - Events Calendar",
-  "titles": "Amelia - Events Calendars",
+  "title": "{pluginName} - Events Calendar",
+  "titles": "{pluginName} - Events Calendars",
   "category": "module",
   "moduleClassName": "divi5_amelia_events_calendar",
   "moduleOrderClassName": "divi5_amelia_events_calendar",
@@ -15,7 +15,7 @@
         "meta": {
           "adminLabel": {
             "desktop": {
-              "value": "Amelia Events Calendar"
+              "value": "{pluginName} Events Calendar"
             }
           }
         }

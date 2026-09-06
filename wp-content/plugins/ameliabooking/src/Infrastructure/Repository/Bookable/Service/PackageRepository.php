@@ -436,7 +436,7 @@ class PackageRepository extends AbstractRepository
     /**
      * @param $id
      *
-     * @return Collection
+     * @return Package
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      */

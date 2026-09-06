@@ -81,7 +81,11 @@ class ActivationSettingsHook
 
         self::initSocialLoginSettings();
 
+        self::initWhiteLabelSettings();
+
         self::initFeaturesIntegrationsSettings();
+
+        self::initLoggingSettings();
     }
 
     /**
@@ -284,6 +288,86 @@ class ActivationSettingsHook
 This message does not have an option for responding. If you need additional information about your booking, please contact us at %company_phone%',
             'whatsAppReplyToken'   => (new Token(null, 20))->getValue(),
         ];
+    }
+
+    /**
+     * Resolve SMS alpha sender ID from a plugin display name.
+     *
+     * @param string $pluginName
+     *
+     * @return string
+     */
+    public static function deriveSmsAlphaSenderIdFromPluginName($pluginName)
+    {
+        $defaultSenderId = 'Amelia';
+
+        // Alpha sender IDs must be 3-11 alphanumeric characters with at least one letter.
+        $senderId = preg_replace('/[^A-Za-z0-9]/', '', (string) $pluginName);
+        $senderId = substr((string) $senderId, 0, 11);
+
+        if (strlen($senderId) < 3 || !preg_match('/[A-Za-z]/', $senderId)) {
+            return $defaultSenderId;
+        }
+
+        return $senderId;
+    }
+
+    /**
+     * Sync smsAlphaSenderId when white label is toggled or its plugin name changes.
+     * Does nothing on plugin activation/deactivation.
+     *
+     * @param array $settingsFields
+     *
+     * @return void
+     */
+    public static function syncSmsAlphaSenderIdOnWhiteLabelChange($settingsFields = [])
+    {
+        if (
+            !is_array($settingsFields) ||
+            (
+                !array_key_exists('whiteLabel', $settingsFields) &&
+                !array_key_exists('featuresIntegrations', $settingsFields)
+            )
+        ) {
+            return;
+        }
+
+        self::syncSmsAlphaSenderIdFromWhiteLabel();
+    }
+
+    /**
+     * Apply white-label plugin name to smsAlphaSenderId when appropriate.
+     *
+     * @return void
+     */
+    public static function syncSmsAlphaSenderIdFromWhiteLabel()
+    {
+        $settingsService = new SettingsService(new SettingsStorage());
+        $whiteLabel = $settingsService->getCategorySettings('whiteLabel');
+        $pluginName = !empty($whiteLabel['pluginName']) ? trim($whiteLabel['pluginName']) : '';
+
+        if ($pluginName === '') {
+            return;
+        }
+
+        $derivedSenderId = self::deriveSmsAlphaSenderIdFromPluginName($pluginName);
+        $currentSenderId = $settingsService->getSetting('notifications', 'smsAlphaSenderId');
+
+        if ($settingsService->isFeatureEnabled('whiteLabel')) {
+            if (
+                ($currentSenderId === null || $currentSenderId === '' || $currentSenderId === 'Amelia') &&
+                $derivedSenderId !== 'Amelia'
+            ) {
+                $settingsService->setSetting('notifications', 'smsAlphaSenderId', $derivedSenderId);
+            }
+
+            return;
+        }
+
+        // White label disabled: restore Amelia only if still using the branded sender.
+        if ($currentSenderId === $derivedSenderId) {
+            $settingsService->setSetting('notifications', 'smsAlphaSenderId', 'Amelia');
+        }
     }
 
     /**
@@ -585,6 +669,20 @@ This message does not have an option for responding. If you need additional info
         ];
 
         self::initSettings('mailchimp', $settings);
+    }
+
+    /**
+     * Init Logging Settings
+     */
+    private static function initLoggingSettings()
+    {
+        $settings = [
+            'enabled'       => true,
+            'minLevel'      => 'debug',
+            'retentionDays' => 30,
+        ];
+
+        self::initSettings('logging', $settings);
     }
 
     /**
@@ -2158,6 +2256,7 @@ This message does not have an option for responding. If you need additional info
             'active'                        => false,
             'purchaseCodeStore'             => '',
             'envatoTokenEmail'              => '',
+            'licenseActivatorUserId'        => null,
             'version'                       => '',
             'deleteTables'                  => false,
             'showAmeliaPromoCustomizePopup' => true,
@@ -2180,15 +2279,16 @@ This message does not have an option for responding. If you need additional info
             'v3AsyncLoading'                => false,
             'premiumBannerVisibility'       => true,
             'dismissibleBannerVisibility'   => true,
+            'cronKey'                       => (new Token(null, 32))->getValue(),
         ];
 
-        self::initSettings('activation', $settings);
+        $mergedSettings = array_replace($settings, (array)$savedSettings);
 
-        $savedSettings['showAmeliaPromoCustomizePopup'] = true;
+        $mergedSettings['showAmeliaPromoCustomizePopup'] = true;
 
-        $savedSettings['isNewInstallation'] = $isNewInstallation;
+        $mergedSettings['isNewInstallation'] = $isNewInstallation;
 
-        self::initSettings('activation', $savedSettings, true);
+        self::initSettings('activation', $mergedSettings, true);
     }
 
     /**
@@ -2683,6 +2783,9 @@ This message does not have an option for responding. If you need additional info
             'apis'                  => [
                 'enabled' => Licence::getLicence() === 'Developer',
             ],
+            'whiteLabel'            => [
+                'enabled' => false,
+            ],
             'buddyboss'             => [
                 'enabled' => $basicAndUp && $old,
             ],
@@ -2710,5 +2813,20 @@ This message does not have an option for responding. If you need additional info
         ];
 
         self::initSettings('featuresIntegrations', $settings);
+    }
+
+    /**
+     * Init White Label Settings
+     */
+    private static function initWhiteLabelSettings()
+    {
+        $settings = [
+            'pluginName'        => '',
+            'hideExternalLinks' => false,
+            'pictureFullPath'   => '',
+            'pictureThumbPath'  => '',
+        ];
+
+        self::initSettings('whiteLabel', $settings);
     }
 }

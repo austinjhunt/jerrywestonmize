@@ -16,12 +16,50 @@ class NotificationsTableInsertRows extends AbstractDatabaseTable
     public const TABLE = 'notifications';
 
     /**
+     * Normalizes a notification row before SQL insert.
+     * Copy is translated in NotificationsStrings::notificationTxt() after loadNotificationTextdomain() in buildTable().
+     *
+     * @param array<string, mixed> $row
+     *
+     * @return array<string, mixed>
+     */
+    private static function localizeNotificationRow(array $row)
+    {
+        return $row;
+    }
+
+    /**
+     * Load Amelia translations for notification seeding.
+     * load_plugin_textdomain() does not load MO files during the activation hook.
+     */
+    private static function loadNotificationTextdomain()
+    {
+        if (!defined('AMELIA_PATH') || !defined('AMELIA_DOMAIN')) {
+            return;
+        }
+
+        $locale = get_locale();
+        $mo     = AMELIA_PATH . '/languages/' . $locale . '/wpamelia-' . $locale . '.mo';
+
+        if (!file_exists($mo)) {
+            return;
+        }
+
+        unload_textdomain(AMELIA_DOMAIN);
+        load_textdomain(AMELIA_DOMAIN, $mo);
+    }
+
+    /**
      * @return array
      * @throws InvalidArgumentException
      */
     public static function buildTable()
     {
         global $wpdb;
+
+        if (defined('AMELIA_PATH') && defined('AMELIA_DOMAIN')) {
+            self::loadNotificationTextdomain();
+        }
 
         $table = self::getTableName();
         $rows  = [];
@@ -234,7 +272,17 @@ class NotificationsTableInsertRows extends AbstractDatabaseTable
         $result = [];
 
         foreach ($rows as $row) {
-            $status   = !empty($row['status']) ? $row['status'] : 'enabled';
+            $row    = self::localizeNotificationRow($row);
+            $status = !empty($row['status']) ? $row['status'] : 'enabled';
+
+            $escapedName    = esc_sql($row['name']);
+            $escapedType    = esc_sql($row['type']);
+            $escapedSendTo  = esc_sql($row['sendTo']);
+            $escapedSubject = esc_sql($row['subject']);
+            $escapedContent = esc_sql($row['content']);
+            $escapedEntity  = esc_sql($row['entity']);
+            $escapedStatus  = esc_sql($status);
+
             $result[] = "INSERT INTO {$table} 
                         (
                             `name`,
@@ -250,16 +298,16 @@ class NotificationsTableInsertRows extends AbstractDatabaseTable
                         ) 
                         VALUES
                         (
-                            '{$row['name']}',
-                            '{$row['type']}',
+                            '{$escapedName}',
+                            '{$escapedType}',
                              {$row['time']},
                              {$row['timeBefore']},
                              {$row['timeAfter']},
-                            '{$row['sendTo']}',
-                            '{$row['subject']}',
-                            '{$row['content']}',
-                            '{$row['entity']}',
-                            '{$status}'
+                            '{$escapedSendTo}',
+                            '{$escapedSubject}',
+                            '{$escapedContent}',
+                            '{$escapedEntity}',
+                            '{$escapedStatus}'
                         )";
         }
 

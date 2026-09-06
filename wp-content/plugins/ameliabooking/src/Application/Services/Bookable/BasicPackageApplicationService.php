@@ -182,4 +182,14 @@ class BasicPackageApplicationService extends AbstractPackageApplicationService
     {
         return [];
     }
+
+    /**
+     * @param Package $package
+     *
+     * @return \DateTime|null
+     */
+    public function getPackageEndDate(Package $package)
+    {
+        return null;
+    }
 }

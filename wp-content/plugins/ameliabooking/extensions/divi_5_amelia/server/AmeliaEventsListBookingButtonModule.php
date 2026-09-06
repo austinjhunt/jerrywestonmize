@@ -2,6 +2,7 @@
 
 namespace Divi5Amelia;
 
+use AmeliaBooking\Infrastructure\WP\ShortcodeService\ShortcodeAliasService;
 use ET\Builder\Framework\DependencyManagement\Interfaces\DependencyInterface;
 use ET\Builder\FrontEnd\Module\Style;
 use ET\Builder\Packages\Module\Layout\Components\ModuleElements\ModuleElements;
@@ -105,7 +106,7 @@ class AmeliaEventsListBookingButtonModule implements DependencyInterface
     {
         $auto_trigger = wp_unique_id('amelia-eventslist-booking-btn-');
 
-        $shortcode  = '[ameliaeventslistbooking';
+        $shortcode  = '[' . ShortcodeAliasService::activeShortcodeTag('eventslistbooking', 'ameliaeventslistbooking');
         $shortcode .= ' trigger=' . sanitize_html_class($auto_trigger);
         $shortcode .= ' trigger_type=id';
         $shortcode .= ' in_dialog=1';
@@ -143,7 +144,7 @@ class AmeliaEventsListBookingButtonModule implements DependencyInterface
             if ($tag && count($tag) > 0) {
                 $shortcode .= ' tag="' . implode(',', array_map(function ($t) {
                         return '{' . sanitize_text_field($t) . '}';
-                    }, $tag)) . '"';
+                }, $tag)) . '"';
             }
 
             $recurring = $attrs['recurring']['innerContent']['desktop']['value'] ?? false;
@@ -181,4 +182,3 @@ class AmeliaEventsListBookingButtonModule implements DependencyInterface
         );
     }
 }
-

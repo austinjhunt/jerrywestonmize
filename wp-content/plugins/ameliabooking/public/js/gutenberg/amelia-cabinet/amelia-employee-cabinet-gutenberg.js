@@ -8,8 +8,8 @@
   // Registering the Block for employee cabinet shortcode
   wp.blocks.registerBlockType('amelia/employee-cabinet-gutenberg-block', {
     apiVersion: 3,
-    title: wpAmeliaLabels.employee_cabinet_gutenberg_block.title,
-    description: wpAmeliaLabels.employee_cabinet_gutenberg_block.description,
+    title: window.ameliaGutenbergLabel(wpAmeliaLabels.employee_cabinet_gutenberg_block.title),
+    description: window.ameliaGutenbergLabel(wpAmeliaLabels.employee_cabinet_gutenberg_block.description),
     icon: window.ameliaBlockIcon,
     category: 'amelia-blocks',
     keywords: [
@@ -23,7 +23,7 @@
     attributes: {
       short_code: {
         type: 'string',
-        default: '[ameliaemployeepanel]'
+        default: '[' + window.ameliaShortcodeTag('employee_panel', 'ameliaemployeepanel') + ']'
       },
       trigger: {
         type: 'string',
@@ -47,7 +47,7 @@
       var attributes = props.attributes
 
       function getShortCode (props, attributes) {
-        var shortCode = '[ameliaemployeepanel'
+        var shortCode = '[' + window.ameliaShortcodeTag('employee_panel', 'ameliaemployeepanel')
 
         if (!attributes.appointmentsPanel && !attributes.eventsPanel && attributes.profilePanel) {
           shortCode = 'Notice: Please select at least one panel.'
@@ -135,7 +135,7 @@
         el('div', {className: 'amelia-gutenberg-placeholder'},
           el('div', {className: 'amelia-gutenberg-placeholder__header'},
             el('div', {className: 'amelia-gutenberg-placeholder__icon'}, window.ameliaBlockIcon || ''),
-            el('div', {className: 'amelia-gutenberg-placeholder__title'}, 'Amelia - Employee Panel')
+            el('div', {className: 'amelia-gutenberg-placeholder__title'}, window.ameliaGutenbergLabel('{pluginName} - Employee Panel'))
           ),
           el('div', {className: 'amelia-gutenberg-placeholder__shortcode'},
             getShortCode(props, props.attributes)

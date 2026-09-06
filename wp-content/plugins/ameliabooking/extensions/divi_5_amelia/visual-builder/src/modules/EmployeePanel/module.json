@@ -1,8 +1,8 @@
 {
   "name": "divi5-amelia/employeepanel",
   "d4Shortcode": "divi_employee",
-  "title": "Amelia - Employee Panel",
-  "titles": "Amelia - Employee Panels",
+  "title": "{pluginName} - Employee Panel",
+  "titles": "{pluginName} - Employee Panels",
   "category": "module",
   "moduleClassName": "divi5_amelia_employee_panel",
   "moduleOrderClassName": "divi5_amelia_employee_panel",
@@ -15,7 +15,7 @@
         "meta": {
           "adminLabel": {
             "desktop": {
-              "value": "Amelia Employee Panel"
+              "value": "{pluginName} Employee Panel"
             }
           }
         }

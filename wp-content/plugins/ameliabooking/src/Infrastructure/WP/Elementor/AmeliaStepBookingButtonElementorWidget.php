@@ -35,12 +35,14 @@ class AmeliaStepBookingButtonElementorWidget extends Widget_Button
     {
         $widgetLabel = BackendStrings::get('step_booking_button_gutenberg_block');
 
-        return is_array($widgetLabel) ? $widgetLabel['title'] : BackendStrings::get('step_booking');
+        $title = is_array($widgetLabel) ? $widgetLabel['title'] : BackendStrings::get('step_booking');
+
+        return AmeliaElementorWhiteLabelHelper::label($title);
     }
 
     public function get_icon()
     {
-        return 'amelia-logo';
+        return AmeliaElementorWhiteLabelHelper::icon();
     }
 
     public function get_categories()
@@ -80,7 +82,7 @@ class AmeliaStepBookingButtonElementorWidget extends Widget_Button
         $this->start_controls_section(
             'amelia_booking_options',
             [
-                'label' => esc_html__('Amelia Booking Options', 'wpamelia'),
+                'label' => AmeliaElementorWhiteLabelHelper::label(esc_html__('Amelia Booking Options', 'wpamelia')),
             ]
         );
 
@@ -212,7 +214,7 @@ class AmeliaStepBookingButtonElementorWidget extends Widget_Button
         $autoTrigger   = 'amelia-step-booking-btn-' . substr(md5($this->get_id()), 0, 8);
 
         // ── Build shortcode ────────────────────────────────────────────────────
-        $shortcode  = '[ameliastepbooking';
+        $shortcode  = '[' . AmeliaElementorWhiteLabelHelper::shortcodeTag('stepbooking', 'ameliastepbooking');
         $shortcode .= ' trigger=' . $autoTrigger;
         $shortcode .= ' trigger_type=id';
         $shortcode .= ' in_dialog=1';

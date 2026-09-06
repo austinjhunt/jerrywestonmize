@@ -12,8 +12,8 @@ namespace Slim;
 
 use Closure;
 use AmeliaVendor\Psr\Container\ContainerInterface;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
+use AmeliaVendor\Psr\Http\Server\MiddlewareInterface;
+use AmeliaVendor\Psr\Http\Server\RequestHandlerInterface;
 use RuntimeException;
 use Slim\Interfaces\AdvancedCallableResolverInterface;
 

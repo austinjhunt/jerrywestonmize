@@ -5,7 +5,6 @@ use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
 
 class DIVI_Search extends ET_Builder_Module
 {
-
     public $slug       = 'divi_search';
     public $vb_support = 'on';
 
@@ -20,7 +19,7 @@ class DIVI_Search extends ET_Builder_Module
 
     public function init()
     {
-        $this->name = esc_html__(BackendStrings::get('search_divi'), 'divi-divi_amelia');
+        $this->name = esc_html__(DIVI_AmeliaWhiteLabelHelper::label(BackendStrings::get('search_divi')), 'divi-divi_amelia');
 
         if (!is_admin()) {
             return;
@@ -82,20 +81,19 @@ class DIVI_Search extends ET_Builder_Module
         );
 
         return $array;
-
     }
 
     public function render($attrs, $content = null, $render_slug = null)
     {
         $preselect =  $this->props['booking_params'];
-        $shortcode = '[ameliasearch';
+        $shortcode = '[' . DIVI_AmeliaWhiteLabelHelper::shortcodeTag('search', 'ameliasearch');
         $showAll   = isset($this->props['type']) ? $this->props['type'] : null;
         $trigger   = $this->props['trigger'];
         if ($showAll !== null && $showAll !== '' && $showAll !== '0') {
-            $shortcode .= ' show='.$showAll;
+            $shortcode .= ' show=' . $showAll;
         }
         if ($trigger !== null && $trigger !== '') {
-            $shortcode .= ' trigger='.$trigger;
+            $shortcode .= ' trigger=' . $trigger;
         }
         if ($preselect === 'on') {
             $shortcode .= ' today=1';
@@ -106,4 +104,4 @@ class DIVI_Search extends ET_Builder_Module
     }
 }
 
-new DIVI_Search;
+new DIVI_Search();

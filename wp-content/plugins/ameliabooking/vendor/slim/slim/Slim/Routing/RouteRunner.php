@@ -12,7 +12,7 @@ namespace Slim\Routing;
 
 use AmeliaVendor\Psr\Http\Message\ResponseInterface;
 use AmeliaVendor\Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
+use AmeliaVendor\Psr\Http\Server\RequestHandlerInterface;
 use Slim\Exception\HttpMethodNotAllowedException;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Interfaces\RouteCollectorProxyInterface;

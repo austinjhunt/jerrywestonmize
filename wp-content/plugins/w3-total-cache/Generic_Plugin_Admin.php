@@ -62,6 +62,7 @@ class Generic_Plugin_Admin {
 
 		add_filter( 'w3tc_save_options', array( $this, 'w3tc_save_options' ) );
 
+		add_action( 'admin_init', array( $this, 'maybe_execute_purge_action' ), 1 );
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
 		add_action( 'admin_init_w3tc_dashboard', array( '\W3TC\Generic_WidgetAccount', 'admin_init_w3tc_dashboard' ) );
 		add_action( 'admin_init_w3tc_dashboard', array( '\W3TC\Generic_WidgetSettings', 'admin_init_w3tc_dashboard' ) );
@@ -126,24 +127,21 @@ class Generic_Plugin_Admin {
 	}
 
 	/**
-	 * Load action
+	 * Detect a dispatchable admin-action key from the current request.
 	 *
-	 * @return void
+	 * @since 2.10.4
+	 *
+	 * @param Root_AdminActions $executor Action executor.
+	 *
+	 * @return string|false Handler key or false.
 	 */
-	public function load() {
-		$this->add_help_tabs();
-		$this->_page = Util_Admin::get_current_page();
-
-		// Run plugin action.
-		$action            = false;
+	private function detect_admin_action( Root_AdminActions $executor ) {
 		$display_only_keys = array(
 			'w3tc_note',
 			'w3tc_error',
 			'w3tc_message',
 			'w3tc_message_action',
 		);
-
-		$executor = new Root_AdminActions();
 
 		/**
 		 * Resolve the handler key from POST on form submissions so a stale
@@ -171,11 +169,62 @@ class Generic_Plugin_Admin {
 				}
 
 				if ( $executor->is_dispatchable( $w3tc_key ) ) {
-					$action = $w3tc_key;
-					break 2;
+					return $w3tc_key;
 				}
 			}
 		}
+
+		return false;
+	}
+
+	/**
+	 * Execute allowlisted purge actions on admin_init (no W3TC menu required).
+	 *
+	 * @since 2.10.4
+	 *
+	 * @return void
+	 */
+	public function maybe_execute_purge_action() {
+		$executor = new Root_AdminActions();
+		$action   = $this->detect_admin_action( $executor );
+
+		if ( ! $action || ! Util_Capability::is_purge_action( $action ) ) {
+			return;
+		}
+
+		if ( ! Util_Nonce::verify_admin( Util_Nonce::admin_action( $action ) ) ) {
+			wp_nonce_ays( Util_Nonce::admin_action( $action ) );
+		}
+
+		if ( ! Util_Capability::can_execute_purge( $action ) ) {
+			wp_die(
+				\esc_html__( 'You do not have sufficient permissions to perform this action.', 'w3-total-cache' ),
+				'',
+				array( 'response' => 403 )
+			);
+		}
+
+		try {
+			$executor->execute( $action );
+		} catch ( \Exception $e ) {
+			$w3tc_key = 'admin_action_failed_' . $action;
+			Util_Admin::redirect_with_custom_messages( array(), array( $w3tc_key => $e->getMessage() ) );
+		}
+
+		exit();
+	}
+
+	/**
+	 * Load action
+	 *
+	 * @return void
+	 */
+	public function load() {
+		$this->add_help_tabs();
+		$this->_page = Util_Admin::get_current_page();
+
+		$executor = new Root_AdminActions();
+		$action   = $this->detect_admin_action( $executor );
 
 		if ( $action ) {
 			/**
@@ -188,13 +237,21 @@ class Generic_Plugin_Admin {
 			}
 
 			/**
-			 * Defence-in-depth: enforce manage_options at the dispatcher
-			 * regardless of how the menu was registered or how
-			 * w3tc_capability_menu was filtered.
+			 * Purge allowlist uses filterable caps; all other admin actions
+			 * keep the manage_options floor.
 			 *
 			 * @since 2.10.0
+			 * @since 2.10.4 Purge allowlist exception.
 			 */
-			if ( ! \current_user_can( 'manage_options' ) ) {
+			if ( Util_Capability::is_purge_action( $action ) ) {
+				if ( ! Util_Capability::can_execute_purge( $action ) ) {
+					wp_die(
+						\esc_html__( 'You do not have sufficient permissions to perform this action.', 'w3-total-cache' ),
+						'',
+						array( 'response' => 403 )
+					);
+				}
+			} elseif ( ! \current_user_can( 'manage_options' ) ) {
 				wp_die(
 					\esc_html__( 'You do not have sufficient permissions to perform this action.', 'w3-total-cache' ),
 					'',
@@ -347,8 +404,8 @@ class Generic_Plugin_Admin {
 	/**
 	 * Forums API Callback
 	 *
-	 * This function reached out to the W3TC forums API to get the posts with the corresponding cache tag
-	 * on boldgrid.com/support.
+	 * Fetches help topics from the W3TC forums API and returns a
+	 * parsed topic list. The remote HTTP envelope is not echoed.
 	 *
 	 * @return void
 	 */
@@ -378,13 +435,11 @@ class Generic_Plugin_Admin {
 		 * effective request target. Restrict to a conservative alphabet
 		 * that matches the documented `tabId` shape.
 		 */
-		if ( '' === $tag || ! preg_match( '/^[A-Za-z0-9._-]+$/', $tag ) ) {
+		if ( ! Generic_Forums_Api::is_valid_tag( $tag ) ) {
 			wp_send_json_error( 'invalid tabId', 400 );
 		}
 
-		$posts = wp_remote_get( W3TC_BOLDGRID_FORUM_API . $tag, array( 'timeout' => 10 ) );
-
-		wp_send_json( $posts );
+		Generic_Forums_Api::send( Generic_Forums_Api::request( $tag ) );
 	}
 
 	/**
@@ -527,9 +582,11 @@ class Generic_Plugin_Admin {
 		wp_register_style( 'w3tc-widget', plugins_url( 'pub/css/widget.css', W3TC_FILE ), array(), W3TC_VERSION );
 
 		wp_register_script( 'w3tc-metadata', plugins_url( 'pub/js/metadata.js', W3TC_FILE ), array(), W3TC_VERSION, false );
+		wp_register_script( 'w3tc-cdn-admin-ui', plugins_url( 'pub/js/cdn-admin-ui.js', W3TC_FILE ), array(), W3TC_VERSION, false );
 		// Registered in load_scripts() so dependents can list w3tc-nonce; maps are localized in admin_print_scripts().
 		wp_register_script( 'w3tc-nonce', plugins_url( 'pub/js/w3tc-nonce.js', W3TC_FILE ), array( 'jquery' ), W3TC_VERSION, true );
-		wp_register_script( 'w3tc-options', plugins_url( 'pub/js/options.js', W3TC_FILE ), array( 'jquery', 'w3tc-nonce' ), W3TC_VERSION, false );
+		wp_register_script( 'w3tc-forums-api', plugins_url( 'pub/js/forums-api.js', W3TC_FILE ), array(), W3TC_VERSION, false );
+		wp_register_script( 'w3tc-options', plugins_url( 'pub/js/options.js', W3TC_FILE ), array( 'jquery', 'w3tc-nonce', 'w3tc-forums-api' ), W3TC_VERSION, false );
 		wp_register_script( 'w3tc-lightbox', plugins_url( 'pub/js/lightbox.js', W3TC_FILE ), array( 'jquery', 'w3tc-nonce' ), W3TC_VERSION, false );
 		wp_register_script( 'w3tc-widget', plugins_url( 'pub/js/widget.js', W3TC_FILE ), array( 'jquery', 'w3tc-nonce' ), W3TC_VERSION, false );
 		wp_register_script( 'w3tc-jquery-masonry', plugins_url( 'pub/js/jquery.masonry.min.js', W3TC_FILE ), array( 'jquery' ), W3TC_VERSION, false );
@@ -1155,26 +1212,17 @@ class Generic_Plugin_Admin {
 	 */
 	public function favorite_actions( $actions ) {
 		/**
-		 * Floor the filterable cap at manage_options so a downstream
-		 * filter cannot expose the "Empty Caches" favorite action to
-		 * non-admins.
+		 * Filterable purge-all capability (default manage_options).
 		 *
-		 * Early-return when the current user is not an admin: there is no
-		 * reason to compute or filter a capability for an action we would
-		 * never expose to them anyway.
-		 *
-		 * @since 2.10.0
+		 * @since 2.10.4
 		 */
-		if ( ! \current_user_can( 'manage_options' ) ) {
+		if ( ! Util_Capability::can_flush_all() ) {
 			return $actions;
 		}
 
-		$capability = apply_filters( 'w3tc_capability_favorite_action_flush_all', 'manage_options' );
-		if ( empty( $capability ) ) {
-			$capability = 'manage_options';
-		}
+		$capability = Util_Capability::flush_all_capability();
 
-		$actions[ Util_Nonce::admin_nonce_url( network_admin_url( 'admin.php?page=w3tc_dashboard&amp;w3tc_flush_all' ), 'w3tc_flush_all' ) ] = array(
+		$actions[ Util_Capability::purge_action_url( 'w3tc_flush_all' ) ] = array(
 			__( 'Empty Caches', 'w3-total-cache' ),
 			$capability,
 		);

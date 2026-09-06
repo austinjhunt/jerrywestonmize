@@ -9,7 +9,6 @@ use AmeliaBooking\Application\Services\Booking\EventApplicationService;
 use AmeliaBooking\Application\Services\Entity\EntityApplicationService;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
 use AmeliaBooking\Application\Services\Zoom\AbstractZoomApplicationService;
-use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Event\Event;
 use AmeliaBooking\Domain\Entity\Booking\Event\EventPeriod;
@@ -20,8 +19,6 @@ use AmeliaBooking\Domain\ValueObjects\DateTime\DateTimeValue;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
 use Exception;
-use Interop\Container\Exception\ContainerException;
-use Slim\Exception\ContainerValueNotFoundException;
 
 /**
  * Class UpdateEventCommandHandler
@@ -43,15 +40,16 @@ class UpdateEventCommandHandler extends CommandHandler
      * @param UpdateEventCommand $command
      *
      * @return CommandResult
-     * @throws ContainerValueNotFoundException
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      * @throws AccessDeniedException
-     * @throws ContainerException
      * @throws Exception
      */
     public function handle(UpdateEventCommand $command)
     {
+        /** @var AbstractUser $user */
+        $user = $command->authorize();
+
         $result = new CommandResult();
 
         $this->checkMandatoryFields($command);
@@ -68,23 +66,6 @@ class UpdateEventCommandHandler extends CommandHandler
         $settingsDS = $this->container->get('domain.settings.service');
         /** @var EntityApplicationService $entityService */
         $entityService = $this->container->get('application.entity.service');
-
-        try {
-            /** @var AbstractUser $user */
-            $user = $command->getUserApplicationService()->authorization(
-                $command->getPage() === 'cabinet' ? $command->getToken() : null,
-                $command->getCabinetType()
-            );
-        } catch (AuthorizationException $e) {
-            $result->setResult(CommandResult::RESULT_ERROR);
-            $result->setData(
-                [
-                    'reauthorize' => true
-                ]
-            );
-
-            return $result;
-        }
 
         if (
             $userAS->isCustomer($user) ||

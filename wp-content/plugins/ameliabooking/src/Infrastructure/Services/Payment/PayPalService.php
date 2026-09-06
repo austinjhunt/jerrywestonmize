@@ -57,17 +57,38 @@ class PayPalService extends AbstractPaymentService implements PaymentServiceInte
     {
         $currency = $this->settingsService->getCategorySettings('payments')['currency'];
 
-        $response = $this->getClient()->createOrder(
-            [
-                'amount'      => $data['amount'],
-                'currency'    => $currency,
-                'returnUrl'   => $data['returnUrl'],
-                'cancelUrl'   => $data['cancelUrl'],
-                'description' => !empty($data['description']) ? $data['description'] : '',
-            ]
-        );
+        try {
+            $response = $this->getClient()->createOrder(
+                [
+                    'amount'      => $data['amount'],
+                    'currency'    => $currency,
+                    'returnUrl'   => $data['returnUrl'],
+                    'cancelUrl'   => $data['cancelUrl'],
+                    'description' => !empty($data['description']) ? $data['description'] : '',
+                ]
+            );
+        } catch (Exception $e) {
+            $this->logger->error(
+                'PayPal order creation failed',
+                ['gateway' => 'paypal', 'exception' => $e]
+            );
 
-        return new PayPalResponse($response);
+            throw $e;
+        }
+
+        $payPalResponse = new PayPalResponse($response);
+
+        if (!$payPalResponse->isSuccessful()) {
+            $this->logger->error(
+                'PayPal order creation failed',
+                [
+                    'gateway' => 'paypal',
+                    'message' => $payPalResponse->getMessage(),
+                ]
+            );
+        }
+
+        return $payPalResponse;
     }
 
     /**
@@ -80,9 +101,30 @@ class PayPalService extends AbstractPaymentService implements PaymentServiceInte
      */
     public function complete($data)
     {
-        $response = $this->getClient()->captureOrder($data['transactionReference']);
+        try {
+            $response = $this->getClient()->captureOrder($data['transactionReference']);
+        } catch (Exception $e) {
+            $this->logger->error(
+                'PayPal order capture failed',
+                ['gateway' => 'paypal', 'exception' => $e]
+            );
 
-        return new PayPalResponse($response);
+            throw $e;
+        }
+
+        $payPalResponse = new PayPalResponse($response);
+
+        if (!$payPalResponse->isSuccessful()) {
+            $this->logger->error(
+                'PayPal order capture failed',
+                [
+                    'gateway' => 'paypal',
+                    'message' => $payPalResponse->getMessage(),
+                ]
+            );
+        }
+
+        return $payPalResponse;
     }
 
     /**
@@ -138,7 +180,23 @@ class PayPalService extends AbstractPaymentService implements PaymentServiceInte
                 $refundData['amount'] = $data['amount'];
             }
 
-            $response = new PayPalResponse($this->getClient()->refundCapture($captureId, $refundData));
+            try {
+                $response = new PayPalResponse($this->getClient()->refundCapture($captureId, $refundData));
+            } catch (Exception $e) {
+                $this->logger->error(
+                    'PayPal refund failed',
+                    ['gateway' => 'paypal', 'exception' => $e]
+                );
+
+                throw $e;
+            }
+
+            if (!$response->isSuccessful()) {
+                $this->logger->error(
+                    'PayPal refund failed',
+                    ['gateway' => 'paypal', 'message' => $response->getMessage()]
+                );
+            }
 
             return ['error' => !$response->isSuccessful() ? $response->getMessage() ?: 'Refund failed' : false];
         }

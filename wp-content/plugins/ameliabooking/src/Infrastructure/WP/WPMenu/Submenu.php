@@ -2,7 +2,9 @@
 
 namespace AmeliaBooking\Infrastructure\WP\WPMenu;
 
+use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Licence\Licence;
+use AmeliaBooking\Infrastructure\WP\SettingsService\SettingsStorage;
 
 /**
  * Class Submenu
@@ -67,6 +69,56 @@ class Submenu
 
         if (!Licence::isPremium() && current_user_can('manage_options')) {
             $this->addUpgradeMenuItem();
+        }
+
+        add_action('admin_menu', [$this, 'applyWhiteLabelMenuBranding'], 999);
+    }
+
+    /**
+     * Apply custom plugin name and logo to the top-level Amelia admin menu.
+     */
+    public function applyWhiteLabelMenuBranding()
+    {
+        $settingsService = new SettingsService(new SettingsStorage());
+
+        $featuresIntegrations = $settingsService->getCategorySettings('featuresIntegrations');
+
+        if (!$this->isWhiteLabelFeatureEnabled($featuresIntegrations)) {
+            return;
+        }
+
+        $whiteLabel = $settingsService->getCategorySettings('whiteLabel');
+
+        if (empty($whiteLabel['pluginName']) && empty($whiteLabel['pictureFullPath']) && empty($whiteLabel['pictureThumbPath'])) {
+            return;
+        }
+
+        global $menu;
+
+        foreach ($menu as $key => $item) {
+            if (!isset($item[2]) || $item[2] !== 'amelia') {
+                continue;
+            }
+
+            if (!empty($whiteLabel['pluginName'])) {
+                $menu[$key][0] = esc_html($whiteLabel['pluginName']);
+            }
+
+            $logoUrl = !empty($whiteLabel['pictureThumbPath'])
+                ? $whiteLabel['pictureThumbPath']
+                : ($whiteLabel['pictureFullPath'] ?? '');
+
+            if (!empty($logoUrl)) {
+                $menu[$key][6] = 'none';
+                add_action('admin_head', static function () use ($logoUrl) {
+                    echo '<style>#toplevel_page_amelia .wp-menu-image{background-image:url('
+                        . esc_url($logoUrl)
+                        . ')!important;background-size:20px 20px!important;background-position:center!important;'
+                        . 'background-repeat:no-repeat!important;}</style>';
+                }, 10, 0);
+            }
+
+            break;
         }
     }
 
@@ -140,6 +192,10 @@ class Submenu
             return;
         }
 
+        if ($menu['menuSlug'] === 'wpamelia-whats-new' && $this->shouldHideExternalLinks()) {
+            return;
+        }
+
         // Add diamond icon for locked features
         if ($menu['menuSlug'] === 'wpamelia-locations' && Licence::isFeatureLocked('locations')) {
             $menu['menuTitle'] = '<span style="display: inline-flex; align-items: center;">'
@@ -183,5 +239,50 @@ class Submenu
             $menuSlug,
             $function
         );
+    }
+
+    /**
+     * Check whether white label settings hide external Amelia links.
+     *
+     * @return bool
+     */
+    private function shouldHideExternalLinks()
+    {
+        $settingsService = new SettingsService(new SettingsStorage());
+
+        $featuresIntegrations = $settingsService->getCategorySettings('featuresIntegrations');
+
+        if (!$this->isWhiteLabelFeatureEnabled($featuresIntegrations)) {
+            return false;
+        }
+
+        $whiteLabel = $settingsService->getCategorySettings('whiteLabel');
+
+        return !empty($whiteLabel['hideExternalLinks']);
+    }
+
+    /**
+     * Check whether white label is enabled in settings and available in the current licence.
+     *
+     * @param array|null $featuresIntegrations
+     *
+     * @return bool
+     */
+    private function isWhiteLabelFeatureEnabled($featuresIntegrations)
+    {
+        $whiteLabelFeature = isset($featuresIntegrations['whiteLabel']) ? $featuresIntegrations['whiteLabel'] : null;
+
+        return $this->isFeatureToggleEnabled($whiteLabelFeature) &&
+            Licence::isFeatureEnabledWithLicense('whiteLabel', $whiteLabelFeature);
+    }
+
+    /**
+     * @param array|null $feature
+     */
+    private function isFeatureToggleEnabled(?array $feature): bool
+    {
+        return is_array($feature) &&
+            array_key_exists('enabled', $feature) &&
+            in_array($feature['enabled'], [true, 1, '1'], true);
     }
 }

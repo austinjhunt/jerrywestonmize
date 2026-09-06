@@ -2,8 +2,8 @@
 Contributors: WPMUDEV
 Tags: contact form, custom form, forms, payment form, WordPress form plugin
 Requires at least: 6.4
-Tested up to: 7.0
-Stable tag: 1.56.0
+Tested up to: 7.1
+Stable tag: 1.57.1
 Requires PHP: 7.4
 License: GPL v3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -231,6 +231,108 @@ We take plugin security incredibly seriously; if you have a bug or vulnerability
 
 == Changelog ==
 
+= 1.57.2 ( 2026-08-27 ) =
+
+- Fix: Security improvements
+
+
+= 1.57.1.1 ( 2026-08-27 ) =
+
+- Fix: Security improvements (props: Badr Azeez)
+
+
+= 1.57.1 ( 2026-08-18 ) =
+
+- Fix: Security issue affecting Multisite site registration (props: Jakub Herman)
+
+
+= 1.57.0.8 ( 2026-08-18 ) =
+
+- Fix: Security issue affecting payment processing (props: Jakub Herman)
+
+
+= 1.57.0.7 ( 2026-08-18 ) =
+
+- Fix: Privilege escalation vulnerability
+
+
+= 1.57.0.6 ( 2026-08-18 ) =
+
+- Fix: Vulnerability - PHP Object Injection
+
+
+= 1.57.0.5 ( 2026-08-18 ) =
+
+- Fix: Security improvements on Hub-Connector (props: Jakub Herman)
+
+
+= 1.57.0.4 ( 2026-08-18 ) =
+
+- Fix: Cross-Site Scripting (XSS) vulnerability
+
+
+= 1.57.0.3 ( 2026-08-18 ) =
+
+- Fix: Cross-Site Scripting (XSS) vulnerability
+
+
+= 1.57.0.2 ( 2026-08-18 ) =
+
+- Fix: Cross-Site Scripting (XSS) vulnerability
+
+
+= 1.57.0.1 ( 2026-08-18 ) =
+
+- Fix: Cross-Site Scripting (XSS) vulnerability
+
+
+= 1.57.0 (2026-08-12) =
+
+- Enhancement: Added an option to set a custom Submission ID for each form
+- Enhancement: Added Submission ID prefix setting
+- Enhancement: Exporting/Importing quizzes that include a lead generation form
+- Enhancement: Added an option to fill empty fields with "N/A" in email notifications
+- Enhancement: Datepicker field now includes an offset setting for Today date
+- Enhancement: Improved Stripe error logging and parameter handling
+- Enhancement: Improved Mailchimp integration member deletion and status validation
+- Enhancement: Added country prefix support for phone field merge tags
+- Enhancement: Added more supported languages for Stripe field
+- Enhancement: Stripe currency dropdowns are now sorted alphabetically by currency code
+- Enhancement: Added deprecation warnings for the legacy Stripe card element field
+- Enhancement: Stripe field now reloads only for the last amount change instead of refreshing on every quick change
+- Enhancement: Form submission is no longer blocked when mapped billing phone or email fields are hidden by visibility conditions
+- Enhancement: Added a notice for Divi 5 Visual Builder shortcode-render incompatibility
+- Enhancement: Notification data is now passed to the forminator_custom_form_mail_admin_message filter
+- Fix: PayPal payments now work correctly with more than one repeater field
+- Fix: Draft saving no longer fails when a Stripe variable amount is invalid
+- Fix: Integration settings validation messages are now translatable
+- Fix: Resolved JavaScript error when switching between Visual and Code editor in Rich Textarea and Post Data fields
+- Fix: Shortcode generator modal no longer leaves blank space on the page on load
+- Fix: Defender 2FA options are now selectable in Safari browser when using a Forminator login form
+- Fix: Name fields with a single subfield now use the full-width layout correctly
+- Fix: Poll results no longer jump-scroll after each vote
+- Fix: Pagination in the form preview modal now scrolls instead of overflowing
+- Fix: Gutenberg block preview now works correctly with plain permalinks
+- Fix: Polls now load correctly on the front end when using the Reload Page submission method
+- Fix: Resolved JavaScript error when closing the Forminator modal in the Classic Editor
+- Fix: Signature field placeholder now displays correctly
+- Fix: Corrected phone number validation for Benin (BJ) 10-digit numbers
+- Fix: Added missing color customization controls for Post Data sub-fields
+- Fix: Clearer error when Mailchimp rejects an incomplete Address field
+- Fix: Draft submissions are now visible on the Submissions page when no prior entries exist
+- Fix: Publish header no longer stays sticky after closing form preview
+- Fix: Custom CSS styles now apply correctly to Select2 dropdowns
+- Fix: Searching for a form while the page is still loading no longer causes an error
+- Fix: Resolved undefined array key warning for Signature fields in Lead Forms
+- Fix: File attachment settings are now imported correctly from Contact Form 7
+- Fix: Radio, Checkbox, and Select values now appear correctly in Resend Draft emails
+- Fix: TinyMCE Visual and Code modes now switch correctly inside Hustle popups
+- Fix: Clicking submission-settings checkboxes no longer triggers unwanted page auto-scroll
+- Fix: Three-dot dropdown now opens correctly in Gujarati and Hindi locales
+- Fix: Resolved critical error when empty HTML and Number fields are repeated inside a Field Group
+- Fix: Trello due date format is now validated with clearer error handling for invalid dates
+
+
 = 1.56.2 (2026-07-30) =
 
 - Fix: Arbitrary file upload vulnerability
@@ -431,56 +533,6 @@ We take plugin security incredibly seriously; if you have a bug or vulnerability
 - Fix: Field UI issues such as Rating reset, Select limits, and preview Select dropdown problems
 - Fix: UI rendering issues including hover effects, Sliders, and pagination glitches
 - Fix: Long labels not displaying correctly in Poll results
-
-
-= 1.52.2 ( 2026-04-07 ) =
-
-- Fix: Security improvements
-
-
-= 1.52.1 ( 2026-04-07 ) =
-
-- Fix: Security improvements
-
-
-= 1.52.0 ( 2026-03-18 ) =
-
-- Enhancement: Show notification when an unsupported PHP version is detected and deactivate the plugin
-- Enhancement: Improve plugin architecture by removing unnecessary PHP version checks and legacy compatibility logic
-- Enhancement: Improve wp.org guidelines compliance across the plugin
-- Enhancement: Compatibility with PHP 8.5
-- Enhancement: Improve email notifications by skipping attachments larger than 15MB
-- Enhancement: Improve minimum version comparison logic across Add-ons
-- Enhancement: Add default values validation for Slider field
-- Enhancement: Improve Material Design accessibility by highlighting required field indicators
-- Enhancement: Improve permission handling when accessing Registration form editing
-- Enhancement: Auto-populate submissions when only one form exists
-- Enhancement: Display Group fields in the main table on Submissions page
-- Enhancement: Add pagination in form search results
-- Enhancement: Update HubSpot Contact Lists API to v3
-- Enhancement: Update successful submission messages for different templates
-- Fix: Stripe and PayPal fields not working together when added without conditions
-- Fix: Users able to proceed after uploading forbidden file types
-- Fix: Fatal error occurs when uploading PDF files and submit button visibility condition is set
-- Fix: Submission data missing Group field values
-- Fix: Resend Email Notification is not working correctly for routed email notifications
-- Fix: PayPal button is incorrectly active in Instant Preview
-- Fix: Datepicker positioning issues in popups
-- Fix: Group visibility condition is not working correctly for draft forms
-- Fix: Extra paragraph tags added when editing Consent field descriptions
-- Fix: Some placeholders aren't replaced in the admin area
-- Fix: HTTP Referer URL missing when resending notification emails
-- Fix: Incorrect color displayed in Mailjet connection status message
-- Fix: reCAPTCHA v3 not displaying on the frontend when configured inline
-- Fix: Calculation errors when processing extremely large numeric values
-- Fix: European numeric format not processed correctly in certain cases
-- Fix: Placeholder visibility issue in Stripe fixed amount field
-- Fix: Remove unsupported option to assign Variable Quantity to Currency field
-- Fix: Invalid label validation on the Consent field
-- Fix: CSS selector issues affecting Group fields in generated PDFs
-- Fix: Forms could be published with an empty name after autosave
-- Fix: Translation issue with the "Select" string
-- Fix: PDF output font weight adjusted to allow proper HTML formatting in textareas
 
 
 **Full changelog can be found here – [Forminator changelog](https://wpmudev.com/project/forminator-pro/#changelog_all?utm_source=wordpress.org&utm_medium=readme&utm_campaign=forminator-readme&utm_content=wpmu_dev_changelog_link).**

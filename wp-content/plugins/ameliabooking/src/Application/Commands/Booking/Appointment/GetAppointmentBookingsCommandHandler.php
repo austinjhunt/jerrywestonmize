@@ -10,7 +10,6 @@ use AmeliaBooking\Application\Services\Helper\HelperService;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Application\Services\User\ProviderApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
-use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
@@ -43,6 +42,9 @@ class GetAppointmentBookingsCommandHandler extends CommandHandler
      */
     public function handle(GetAppointmentBookingsCommand $command)
     {
+        /** @var AbstractUser $user */
+        $user = $command->authorize();
+
         $result = new CommandResult();
 
         /** @var HelperService $helperService */
@@ -76,23 +78,10 @@ class GetAppointmentBookingsCommandHandler extends CommandHandler
             unset($params['dates']);
         }
 
-        try {
-            /** @var AbstractUser $user */
-            $user = $command->getUserApplicationService()->authorization(null, $command->getCabinetType());
-        } catch (AuthorizationException $e) {
-            $result->setResult(CommandResult::RESULT_ERROR);
-            $result->setData(
-                [
-                    'reauthorize' => true
-                ]
-            );
-
-            return $result;
-        }
-
         $readOthers = $this->container->getPermissionsService()->currentUserCanReadOthers(Entities::APPOINTMENTS);
 
         $providerCountParams = [];
+
         if (
             (!$readOthers) &&
             $user && $user->getType() === Entities::PROVIDER
@@ -102,6 +91,7 @@ class GetAppointmentBookingsCommandHandler extends CommandHandler
         }
 
         $customerCountParams = [];
+
         if ($user && $user->getType() === Entities::CUSTOMER) {
             $customerCountParams['customers'] = [$user->getId()->getValue()];
             $params['customers'] = [$user->getId()->getValue()];

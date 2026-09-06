@@ -1,8 +1,8 @@
 {
   "name": "divi5-amelia/search",
   "d4Shortcode": "divi_search",
-  "title": "Amelia - Search (Legacy)",
-  "titles": "Amelia Searches",
+  "title": "{pluginName} - Search (Legacy)",
+  "titles": "{pluginName} Searches",
   "category": "module",
   "moduleClassName": "divi5_amelia_search",
   "moduleOrderClassName": "divi5_amelia_search",
@@ -15,7 +15,7 @@
         "meta": {
           "adminLabel": {
             "desktop": {
-              "value": "Amelia Search"
+              "value": "{pluginName} Search"
             }
           }
         }

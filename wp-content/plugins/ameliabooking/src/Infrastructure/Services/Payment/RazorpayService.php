@@ -9,7 +9,10 @@ namespace AmeliaBooking\Infrastructure\Services\Payment;
 
 use AmeliaBooking\Domain\Services\Payment\AbstractPaymentService;
 use AmeliaBooking\Domain\Services\Payment\PaymentServiceInterface;
+use AmeliaBooking\Domain\ValueObjects\Number\Float\Price;
 use Exception;
+use Money\Currencies\ISOCurrencies;
+use Money\Currency;
 use Razorpay\Api\Api;
 
 /**
@@ -60,11 +63,57 @@ class RazorpayService extends AbstractPaymentService implements PaymentServiceIn
     public function execute($data, &$transfers)
     {
         $orderData = [
-            'amount'     => $data['amount'],
-            'currency'   => $this->settingsService->getCategorySettings('payments')['currency'],
+            'amount'   => $data['amount'],
+            'currency' => $this->settingsService->getCategorySettings('payments')['currency'],
         ];
 
-        return $this->getApi()->order->create($orderData);
+        if (!empty($data['notes']) && is_array($data['notes'])) {
+            $orderData['notes'] = $data['notes'];
+        }
+
+        try {
+            return $this->getApi()->order->create($orderData);
+        } catch (Exception $e) {
+            $this->logger->error('Razorpay order create failed', ['gateway' => 'razorpay', 'exception' => $e]);
+
+            throw $e;
+        }
+    }
+
+    /**
+     * @param string $orderId
+     *
+     * @return array
+     * @throws Exception
+     */
+    public function fetchOrder($orderId)
+    {
+        $order = $this->getApi()->order->fetch($orderId);
+
+        return $order ? $order->toArray() : [];
+    }
+
+    /**
+     * @param string $orderId
+     *
+     * @return array
+     * @throws Exception
+     */
+    public function fetchOrderPayments($orderId)
+    {
+        $payments = $this->getApi()->order->fetch($orderId)->payments();
+
+        if (!$payments) {
+            return [];
+        }
+
+        $items = [];
+
+        foreach ($payments->items as $payment) {
+            $items[] = is_array($payment) ? $payment : $payment->toArray();
+        }
+
+        return $items;
     }
 
 
@@ -85,6 +134,13 @@ class RazorpayService extends AbstractPaymentService implements PaymentServiceIn
             !empty($paymentData['status']) &&
             $paymentData['status'] === 'captured'
         ) {
+            if (!$this->amountMatches($paymentData['amount'] ?? 0, $paymentAmount)) {
+                return [
+                    'error_code'        => 1,
+                    'error_description' => 'Captured amount does not match the expected booking amount',
+                ];
+            }
+
             return [
                 'error_code' => 0,
             ];
@@ -92,10 +148,64 @@ class RazorpayService extends AbstractPaymentService implements PaymentServiceIn
 
         return $payment->capture(
             [
-                'amount'   => intval($paymentAmount * 100),
+                'amount'   => $this->toPaise($paymentAmount),
                 'currency' => $this->settingsService->getCategorySettings('payments')['currency']
             ]
         );
+    }
+
+    /**
+     * Convert a major-unit amount into the payment currency's smallest unit.
+     *
+     * @param float $amount
+     *
+     * @return int
+     */
+    public function toPaise($amount)
+    {
+        return (int) $this->currencyService->getAmountInFractionalUnit(new Price($amount));
+    }
+
+    /**
+     * Convert a smallest-unit amount into major currency units.
+     *
+     * @param int|float $minorAmount
+     *
+     * @return float
+     */
+    public function fromPaise($minorAmount)
+    {
+        $exponent = $this->getCurrencySubunitExponent();
+
+        if ($exponent <= 0) {
+            return (float) $minorAmount;
+        }
+
+        return ((int) $minorAmount) / (10 ** $exponent);
+    }
+
+    /**
+     * @return int
+     */
+    private function getCurrencySubunitExponent()
+    {
+        $currencies = new ISOCurrencies();
+        $currency = new Currency(
+            $this->settingsService->getCategorySettings('payments')['currency']
+        );
+
+        return $currencies->subunitFor($currency);
+    }
+
+    /**
+     * @param int   $actualPaise
+     * @param float $expectedAmount
+     *
+     * @return bool
+     */
+    public function amountMatches($actualPaise, $expectedAmount)
+    {
+        return (int) $actualPaise === $this->toPaise($expectedAmount);
     }
 
     /**
@@ -106,7 +216,16 @@ class RazorpayService extends AbstractPaymentService implements PaymentServiceIn
      */
     public function verify($attributes)
     {
-        return $this->getApi()->utility->verifyPaymentSignature($attributes);
+        try {
+            return $this->getApi()->utility->verifyPaymentSignature($attributes);
+        } catch (Exception $e) {
+            $this->logger->error(
+                'Razorpay signature verification failed',
+                ['gateway' => 'razorpay', 'exception' => $e]
+            );
+
+            throw $e;
+        }
     }
 
     /**
@@ -134,12 +253,24 @@ class RazorpayService extends AbstractPaymentService implements PaymentServiceIn
         $props = [];
 
         if (!empty($data['amount'])) {
-            $props['amount'] = intval($data['amount'] * 100);
+            $props['amount'] = $this->toPaise($data['amount']);
         }
 
-        $refund = $this->getApi()->payment->fetch($data['id'])->refund($props);
+        try {
+            $refund = $this->getApi()->payment->fetch($data['id'])->refund($props);
 
-        return ['error' => $refund->toArray()['status'] !== 'processed'];
+            $result = ['error' => $refund->toArray()['status'] !== 'processed'];
+
+            if ($result['error']) {
+                $this->logger->error('Razorpay refund failed', ['gateway' => 'razorpay']);
+            }
+
+            return $result;
+        } catch (Exception $e) {
+            $this->logger->error('Razorpay refund failed', ['gateway' => 'razorpay', 'exception' => $e]);
+
+            throw $e;
+        }
     }
 
     /**
@@ -152,6 +283,6 @@ class RazorpayService extends AbstractPaymentService implements PaymentServiceIn
     public function getTransactionAmount($id, $transfers)
     {
         $payment = $this->getApi()->payment->fetch($id);
-        return $payment ? intval($payment->amount / 100) : null;
+        return $payment ? $this->fromPaise($payment->amount) : null;
     }
 }

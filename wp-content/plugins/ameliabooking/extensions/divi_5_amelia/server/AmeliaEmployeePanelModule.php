@@ -2,6 +2,7 @@
 
 namespace Divi5Amelia;
 
+use AmeliaBooking\Infrastructure\WP\ShortcodeService\ShortcodeAliasService;
 use ET\Builder\Framework\DependencyManagement\Interfaces\DependencyInterface;
 use ET\Builder\Packages\ModuleLibrary\ModuleRegistration;
 
@@ -53,7 +54,7 @@ class AmeliaEmployeePanelModule implements DependencyInterface
      */
     public static function renderCallback(array $attrs): string
     {
-        $shortcode = '[ameliaemployeepanel version=2';
+        $shortcode = '[' . ShortcodeAliasService::activeShortcodeTag('employee_panel', 'ameliaemployeepanel') . ' version=2';
 
         $trigger = $attrs['trigger']['innerContent']['desktop']['value'] ?? '';
         if (self::checkValue($trigger)) {

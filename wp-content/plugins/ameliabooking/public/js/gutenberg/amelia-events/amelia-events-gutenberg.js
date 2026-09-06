@@ -37,11 +37,11 @@
   // Registering the Block for events shortcode
   wp.blocks.registerBlockType('amelia/events-gutenberg-block', {
     apiVersion: 3,
-    title: wpAmeliaLabels.events_gutenberg_block.title,
-    description: el('div', {className: 'amelia-gutenberg-desc'}, wpAmeliaLabels.events_gutenberg_block.description,
+    title: window.ameliaGutenbergLabel(wpAmeliaLabels.events_gutenberg_block.title),
+    description: el('div', {className: 'amelia-gutenberg-desc'}, window.ameliaGutenbergLabel(wpAmeliaLabels.events_gutenberg_block.description),
       el('div', {className: 'amelia-gutenberg-outdated'}, wpAmeliaLabels.outdated_booking_gutenberg_block)
     ),
-    icon: el('svg', {width: '59', height: '27', viewBox: '0 0 59 27', fill: 'none', xmlns: 'http://www.w3.org/2000/svg', className: 'amelia-booking-gutenberg-outdated'},
+    icon: window.wpAmeliaUseNeutralShortcodes ? null : el('svg', {width: '59', height: '27', viewBox: '0 0 59 27', fill: 'none', xmlns: 'http://www.w3.org/2000/svg', className: 'amelia-booking-gutenberg-outdated'},
       el('g', {clipPath: 'url(#clip0_4557_119)'},
         el('path', {
           d: 'M11.5035 10.8582V2.03134C11.5035 0.469951 9.84273 -0.505952 8.51417 0.274788L0.996444 4.69241C0.379839 5.05468 0 5.72434 0 6.44897V15.2339C0 16.7916 1.65361 17.768 2.98218 16.9947L10.5 12.6191C11.1206 12.2578 11.5035 11.5859 11.5035 10.8582Z',
@@ -80,7 +80,7 @@
     attributes: {
       short_code: {
         type: 'string',
-        default: '[ameliaevents]'
+        default: '[' + window.ameliaShortcodeTag('events', 'ameliaevents') + ']'
       },
       trigger: {
         type: 'string',
@@ -178,7 +178,7 @@
             }
           }
 
-          shortCode += '[ameliaevents' + shortCodeString
+          shortCode += '[' + window.ameliaShortcodeTag('events', 'ameliaevents') + shortCodeString
 
           if (attributes.trigger) {
             shortCode += ' trigger=' + attributes.trigger + ''
@@ -290,7 +290,7 @@
           el('div', {className: 'amelia-gutenberg-placeholder'},
             el('div', {className: 'amelia-gutenberg-placeholder__header'},
               el('div', {className: 'amelia-gutenberg-placeholder__icon'}, window.ameliaBlockIcon || ''),
-              el('div', {className: 'amelia-gutenberg-placeholder__title'}, 'Amelia - Events (Legacy)')
+              el('div', {className: 'amelia-gutenberg-placeholder__title'}, window.ameliaGutenbergLabel('{pluginName} - Events (Legacy)'))
             ),
             el('div', {className: 'amelia-gutenberg-placeholder__shortcode'},
               getShortCode(props, props.attributes)
@@ -298,8 +298,13 @@
           )
         )
       } else {
-        inspectorElements.push(el('p', {style: {marginBottom: '1em'}}, 'Please create event first. You can find instructions in our documentation on link below.'));
-        inspectorElements.push(el('a', {href: 'https://wpamelia.com/documentation/service-quick-start/', target: '_blank', style: {marginBottom: '1em'}}, 'Start working with Amelia WordPress Appointment Booking plugin'));
+        var helpLink = window.ameliaGutenbergHelpLink('https://wpamelia.com/documentation/service-quick-start/', {marginBottom: '1em'})
+        inspectorElements.push(el('p', {style: {marginBottom: '1em'}}, helpLink
+          ? 'Please create event first. You can find instructions in our documentation on the link below.'
+          : 'Please create event first.'));
+        if (helpLink) {
+          inspectorElements.push(helpLink)
+        }
 
         return el('div', blockProps,
           el(blockControls, {key: 'controls'}),
@@ -311,7 +316,7 @@
           el('div', {className: 'amelia-gutenberg-placeholder'},
             el('div', {className: 'amelia-gutenberg-placeholder__header'},
               el('div', {className: 'amelia-gutenberg-placeholder__icon'}, window.ameliaBlockIcon || ''),
-              el('div', {className: 'amelia-gutenberg-placeholder__title'}, 'Amelia - Events (Legacy)')
+              el('div', {className: 'amelia-gutenberg-placeholder__title'}, window.ameliaGutenbergLabel('{pluginName} - Events (Legacy)'))
             ),
             el('div', {className: 'amelia-gutenberg-placeholder__shortcode'},
               getShortCode(props, props.attributes)

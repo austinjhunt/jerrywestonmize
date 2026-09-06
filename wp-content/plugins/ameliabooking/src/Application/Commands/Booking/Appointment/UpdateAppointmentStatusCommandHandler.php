@@ -9,7 +9,6 @@ use AmeliaBooking\Application\Services\Bookable\BookableApplicationService;
 use AmeliaBooking\Application\Services\Booking\AppointmentApplicationService;
 use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
-use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
@@ -26,7 +25,6 @@ use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingR
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
-use Interop\Container\Exception\ContainerException;
 
 /**
  * Class UpdateAppointmentStatusCommandHandler
@@ -50,34 +48,14 @@ class UpdateAppointmentStatusCommandHandler extends CommandHandler
      * @throws AccessDeniedException
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
-     * @throws ContainerException
      * @throws NotFoundException
      */
     public function handle(UpdateAppointmentStatusCommand $command)
     {
+        /** @var AbstractUser $user */
+        $user = $command->authorizeAppointmentStatusWrite();
+
         $result = new CommandResult();
-
-        if (!$command->getPermissionService()->currentUserCanWriteStatus(Entities::APPOINTMENTS)) {
-            try {
-                /** @var AbstractUser $user */
-                $user = $command->getUserApplicationService()->authorization(
-                    $command->getPage() === 'cabinet' ? $command->getToken() : null,
-                    $command->getCabinetType()
-                );
-            } catch (AuthorizationException $e) {
-                $result->setResult(CommandResult::RESULT_ERROR);
-                $result->setData(
-                    [
-                        'reauthorize' => true
-                    ]
-                );
-
-                return $result;
-            }
-        } else {
-            /** @var AbstractUser $user */
-            $user = $this->container->get('logged.in.user');
-        }
 
         $this->checkMandatoryFields($command);
 
@@ -102,16 +80,8 @@ class UpdateAppointmentStatusCommandHandler extends CommandHandler
         /** @var Appointment $appointment */
         $appointment = $appointmentRepo->getById($appointmentId);
 
-        if ($userAS->isCustomer($user)) {
-            /** @var CustomerBooking $booking */
-            foreach ($appointment->getBookings()->getItems() as $booking) {
-                if (
-                    $booking->getCustomerId()->getValue() !== $user->getId()->getValue() &&
-                    !$bookingAS->isBookingCanceledOrRejectedOrNoShow($booking->getStatus()->getValue())
-                ) {
-                    throw new AccessDeniedException('You are not allowed to update appointment');
-                }
-            }
+        if ($userAS->isProvider($user) && $user->getId()->getValue() !== $appointment->getProviderId()->getValue()) {
+            throw new AccessDeniedException('You are not allowed to update appointment');
         }
 
         $oldStatus = $appointment->getStatus()->getValue();

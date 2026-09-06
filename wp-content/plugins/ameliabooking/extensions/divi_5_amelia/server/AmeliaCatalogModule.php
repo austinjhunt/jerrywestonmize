@@ -2,6 +2,7 @@
 
 namespace Divi5Amelia;
 
+use AmeliaBooking\Infrastructure\WP\ShortcodeService\ShortcodeAliasService;
 use ET\Builder\Framework\DependencyManagement\Interfaces\DependencyInterface;
 use ET\Builder\Packages\ModuleLibrary\ModuleRegistration;
 
@@ -39,10 +40,12 @@ class AmeliaCatalogModule implements DependencyInterface
      */
     public static function renderCallback($attrs, $content, $block, $elements)
     {
-        $shortcode = '[ameliacatalogbooking';
-
         $catalogView = $attrs['catalog_view']['innerContent']['desktop']['value'] ?? '0';
-        
+        $type        = $attrs['type']['innerContent']['desktop']['value'] ?? null;
+
+        $shortcode = '[' . ShortcodeAliasService::activeShortcodeTag('catalogbooking', 'ameliacatalogbooking');
+        $shortcode .= AmeliaCatalogShortcodeHelper::buildCatalogBookingShowAttribute($catalogView, $type);
+
         // Handle catalog view
         if ($catalogView && $catalogView !== '0') {
             // Map the categories/services/packages based on view
@@ -62,12 +65,6 @@ class AmeliaCatalogModule implements DependencyInterface
                     $shortcode .= ' package=' . implode(',', $packages);
                 }
             }
-        }
-
-        // Type
-        $type = $attrs['type']['innerContent']['desktop']['value'] ?? null;
-        if ($type !== null && $type !== '0') {
-            $shortcode .= ' show=' . $type;
         }
 
         // Trigger

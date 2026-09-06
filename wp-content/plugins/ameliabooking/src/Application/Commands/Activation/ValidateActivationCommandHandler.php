@@ -9,10 +9,12 @@ namespace AmeliaBooking\Application\Commands\Activation;
 
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
+use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Licence\Licence;
 use AmeliaBooking\Infrastructure\Licence\LicenceConstants;
 use AmeliaBooking\Infrastructure\WP\InstallActions\AutoUpdateHook;
+use AmeliaBooking\Infrastructure\WP\UserRoles\SuperAdminRoleService;
 
 /**
  * Class ValidateActivationCommandHandler
@@ -21,9 +23,16 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\AutoUpdateHook;
  */
 class ValidateActivationCommandHandler extends CommandHandler
 {
+    /**
+     * @throws AccessDeniedException
+     */
     public function handle(): CommandResult
     {
         $result = new CommandResult();
+
+        if (!(new SuperAdminRoleService())->canAccessActivationSettings()) {
+            throw new AccessDeniedException('You are not allowed to manage activation settings.');
+        }
 
         if (Licence::getLicence() === LicenceConstants::LITE) {
             $result->setResult(CommandResult::RESULT_SUCCESS);

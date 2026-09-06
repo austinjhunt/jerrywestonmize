@@ -362,16 +362,11 @@ class GetTimeSlotsCommandHandler extends CommandHandler
             }
         }
 
-        $busyness = [];
-
-        foreach ($freeSlots['available'] as $slotDate => $slotTimes) {
-            $busyness[$slotDate] = round(
-                count(!empty($freeSlots['occupied'][$slotDate]) ? $freeSlots['occupied'][$slotDate] : []) /
-                (count(!empty($freeSlots['available'][$slotDate]) ? $freeSlots['available'][$slotDate] : []) +
-                    count(!empty($freeSlots['occupied'][$slotDate]) ? $freeSlots['occupied'][$slotDate] : []))
-                * 100
-            );
-        }
+        $busyness = $applicationTimeSlotService->getBusynessFromSlots(
+            $freeSlots,
+            (int) $props['serviceId'],
+            !empty($props['structured'])
+        );
 
         $converted = ['available' => [], 'occupied' => []];
 

@@ -64,14 +64,7 @@ class PackageApplicationService extends AbstractPackageApplicationService
         /** @var ReservationServiceInterface $reservationService */
         $reservationService = $this->container->get('application.reservation.service')->get(Entities::PACKAGE);
 
-        $endDateTime = null;
-
-        if ($package->getEndDate()) {
-            $endDateTime = $package->getEndDate()->getValue();
-        } elseif ($package->getDurationCount()) {
-            $endDateTime = DateTimeService::getNowDateTimeObject()
-                ->modify("+{$package->getDurationCount()->getValue()} {$package->getDurationType()->getValue()}");
-        }
+        $endDateTime = $this->getPackageEndDate($package);
 
         $startDateTimeString = DateTimeService::getNowDateTimeInUtc();
 
@@ -1143,5 +1136,24 @@ class PackageApplicationService extends AbstractPackageApplicationService
         }
 
         return $parsedResult;
+    }
+    /**
+     * @param Package $package
+     *
+     * @return \DateTime|null
+     * @throws InvalidArgumentException
+     */
+    public function getPackageEndDate(Package $package)
+    {
+        if ($package->getEndDate()) {
+            return $package->getEndDate()->getValue();
+        } elseif ($package->getDurationCount() && $package->getDurationType()) {
+            $endDate = DateTimeService::getNowDateTimeObject()
+                ->modify("+{$package->getDurationCount()->getValue()} {$package->getDurationType()->getValue()}");
+
+            return $endDate instanceof \DateTime ? $endDate : null;
+        }
+
+        return null;
     }
 }

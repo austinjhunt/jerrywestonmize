@@ -8,6 +8,7 @@ if (!defined('ABSPATH')) exit;
 use Automattic\WooCommerce\EmailEditor\Email_Editor_Container;
 use Automattic\WooCommerce\EmailEditor\Engine\Personalizer;
 use MailPoet\EmailEditor\Integrations\MailPoet\PersonalizationTagManager;
+use MailPoet\EmailEditor\Integrations\MailPoet\PersonalizationTags\PersonalizationTagLinkResolver;
 use MailPoet\Entities\NewsletterEntity;
 use MailPoet\Entities\SubscriberEntity;
 use MailPoet\Mailer\MailerFactory;
@@ -45,6 +46,8 @@ class SendPreviewController {
   /** @var WooCommerceDummyData */
   private $wooCommerceDummyData;
 
+  private PersonalizationTagLinkResolver $personalizationTagLinkResolver;
+
   public function __construct(
     MailerFactory $mailerFactory,
     MetaInfo $mailerMetaInfo,
@@ -53,7 +56,8 @@ class SendPreviewController {
     SubscribersRepository $subscribersRepository,
     Shortcodes $shortcodes,
     PersonalizationTagManager $personalizationTagManager,
-    WooCommerceDummyData $wooCommerceDummyData
+    WooCommerceDummyData $wooCommerceDummyData,
+    PersonalizationTagLinkResolver $personalizationTagLinkResolver
   ) {
     $this->mailerFactory = $mailerFactory;
     $this->mailerMetaInfo = $mailerMetaInfo;
@@ -64,6 +68,7 @@ class SendPreviewController {
     $this->personalizer = Email_Editor_Container::container()->get(Personalizer::class);
     $this->personalizationTagManager = $personalizationTagManager;
     $this->wooCommerceDummyData = $wooCommerceDummyData;
+    $this->personalizationTagLinkResolver = $personalizationTagLinkResolver;
   }
 
   public function sendPreview(NewsletterEntity $newsletter, string $emailAddress) {
@@ -109,9 +114,8 @@ class SendPreviewController {
       $this->personalizer->set_context($context);
       $renderedNewsletter['subject'] = $this->personalizer->personalize_content($renderedNewsletter['subject']);
       $renderedNewsletter['body']['html'] = $this->personalizer->personalize_content($renderedNewsletter['body']['html']);
-      $renderedNewsletter['body']['html'] = $this->personalizationTagManager->restorePersonalizedLinkHrefs($renderedNewsletter['body']['html'], $context);
       $renderedNewsletter['body']['text'] = $this->personalizer->personalize_content($renderedNewsletter['body']['text']);
-      $renderedNewsletter['body']['text'] = $this->personalizationTagManager->restorePersonalizedLinkUrls($renderedNewsletter['body']['text'], $context);
+      $renderedNewsletter['body']['text'] = $this->personalizationTagLinkResolver->resolveMarkdownLinks($renderedNewsletter['body']['text'], $context);
     }
 
     $renderedNewsletter['id'] = $newsletter->getId();

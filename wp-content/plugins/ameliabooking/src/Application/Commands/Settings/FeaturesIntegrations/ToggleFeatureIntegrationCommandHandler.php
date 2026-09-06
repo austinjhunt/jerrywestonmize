@@ -64,6 +64,10 @@ class ToggleFeatureIntegrationCommandHandler extends CommandHandler
         $featuresIntegrations[$code]['enabled'] = !$featuresIntegrations[$code]['enabled'];
         $settingsService->setCategorySettings('featuresIntegrations', $featuresIntegrations);
 
+        if ($code === 'whiteLabel') {
+            do_action('amelia_after_settings_updated', ['featuresIntegrations' => $featuresIntegrations]);
+        }
+
         if (
             isset($payments[$code]['enabled'], $featuresIntegrations[$code]) &&
             !$featuresIntegrations[$code]['enabled'] &&

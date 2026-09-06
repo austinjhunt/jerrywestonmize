@@ -23,12 +23,12 @@ class AmeliaEmployeePanelElementorWidget extends Widget_Base
 
     public function get_title()
     {
-        return BackendStrings::get('employee_cabinet_gutenberg_block')['title'];
+        return AmeliaElementorWhiteLabelHelper::label(BackendStrings::get('employee_cabinet_gutenberg_block')['title']);
     }
 
     public function get_icon()
     {
-        return 'amelia-logo';
+        return AmeliaElementorWhiteLabelHelper::icon();
     }
 
     public function get_categories()
@@ -42,9 +42,9 @@ class AmeliaEmployeePanelElementorWidget extends Widget_Base
             'amelia_employee_panel_section',
             [
                 'label' => '<div class="amelia-elementor-content"><p class="amelia-elementor-content-title">'
-                    . BackendStrings::get('employee_cabinet_gutenberg_block')['title']
+                    . AmeliaElementorWhiteLabelHelper::label(BackendStrings::get('employee_cabinet_gutenberg_block')['title'])
                     . '</p><br><p class="amelia-elementor-content-p">'
-                    . BackendStrings::get('employee_cabinet_gutenberg_block')['description']
+                    . AmeliaElementorWhiteLabelHelper::label(BackendStrings::get('employee_cabinet_gutenberg_block')['description'])
                     . '</p>',
             ]
         );
@@ -99,7 +99,8 @@ class AmeliaEmployeePanelElementorWidget extends Widget_Base
         $events       = $settings['events'] ? ' events=1' : '';
         $profile      = $settings['profile'] ? ' profile-hidden=1' : '';
         if ($settings['appointments'] || $settings['events'] || !$settings['profile']) {
-            echo esc_html('[ameliaemployeepanel' . $trigger . $appointments . $events . $profile . ']');
+            echo esc_html('[' . AmeliaElementorWhiteLabelHelper::shortcodeTag('employee_panel', 'ameliaemployeepanel') .
+                $trigger . $appointments . $events . $profile . ']');
         } else {
             echo esc_html(BackendStrings::get('notice_panel'));
         }

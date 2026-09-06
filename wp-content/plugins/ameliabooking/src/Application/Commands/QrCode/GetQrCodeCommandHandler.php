@@ -12,8 +12,6 @@ use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Booking\EventApplicationService;
 use AmeliaBooking\Application\Services\QrCode\QrCodeApplicationService;
-use AmeliaBooking\Domain\Collection\Collection;
-use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Booking\Event\Event;
@@ -22,8 +20,6 @@ use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
-use Interop\Container\Exception\ContainerException;
-use Slim\Exception\ContainerValueNotFoundException;
 
 /**
  * Class GetQrCodeCommandHandler
@@ -38,31 +34,15 @@ class GetQrCodeCommandHandler extends CommandHandler
      * @return CommandResult
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
-     * @throws ContainerException
-     * @throws ContainerValueNotFoundException
      * @throws NotFoundException|AccessDeniedException
      */
 
     public function handle(GetQrCodeCommand $command)
     {
+        /** @var AbstractUser $user */
+        $user = $command->authorize(Entities::CUSTOMER);
+
         $result = new CommandResult();
-
-        try {
-            /** @var AbstractUser $user */
-            $user = $command->getUserApplicationService()->authorization(
-                $command->getToken(),
-                Entities::CUSTOMER
-            );
-        } catch (AuthorizationException $e) {
-            $result->setResult(CommandResult::RESULT_ERROR);
-            $result->setData(
-                [
-                    'reauthorize' => true
-                ]
-            );
-
-            return $result;
-        }
 
         /** @var EventApplicationService $eventApplicationService */
         $eventApplicationService = $this->container->get('application.booking.event.service');

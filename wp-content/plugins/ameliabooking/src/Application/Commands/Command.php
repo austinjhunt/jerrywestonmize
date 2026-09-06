@@ -2,12 +2,14 @@
 
 namespace AmeliaBooking\Application\Commands;
 
+use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Commands\Booking\Appointment\AddBookingCommand;
 use AmeliaBooking\Application\Commands\Booking\Appointment\DeleteBookingRemotelyCommand;
 use AmeliaBooking\Application\Commands\Booking\Appointment\SuccessfulBookingCommand;
 use AmeliaBooking\Application\Commands\Coupon\GetValidCouponCommand;
 use AmeliaBooking\Application\Commands\Google\FetchAccessTokenWithAuthCodeCommand;
 use AmeliaBooking\Application\Commands\Google\GetGoogleAuthURLCommand;
+use AmeliaBooking\Application\Commands\Notification\SendUndeliveredNotificationsCommand;
 use AmeliaBooking\Application\Commands\Notification\UpdateSMSNotificationHistoryCommand;
 use AmeliaBooking\Application\Commands\Notification\WhatsAppWebhookCommand;
 use AmeliaBooking\Application\Commands\Notification\WhatsAppWebhookRegisterCommand;
@@ -23,13 +25,21 @@ use AmeliaBooking\Application\Commands\PaymentGateway\PayPalPaymentCallbackComma
 use AmeliaBooking\Application\Commands\PaymentGateway\PayPalPaymentCommand;
 use AmeliaBooking\Application\Commands\PaymentGateway\WooCommercePaymentCommand;
 use AmeliaBooking\Application\Commands\PaymentGateway\RazorpayPaymentCommand;
+use AmeliaBooking\Application\Commands\PaymentGateway\RazorpayPaymentNotifyCommand;
 use AmeliaBooking\Application\Commands\Square\DisconnectFromSquareAccountCommand;
 use AmeliaBooking\Application\Commands\Square\SquareRefundWebhookCommand;
+use AmeliaBooking\Application\Commands\Stripe\CancelStripePaymentIntentCommand;
+use AmeliaBooking\Application\Commands\Stripe\CompleteStripePaymentIntentCommand;
+use AmeliaBooking\Application\Commands\Stripe\CreateStripePaymentIntentCommand;
+use AmeliaBooking\Application\Commands\Stripe\StripePaymentCallbackCommand;
 use AmeliaBooking\Application\Commands\User\Customer\ReauthorizeCommand;
 use AmeliaBooking\Application\Commands\User\LoginCabinetCommand;
 use AmeliaBooking\Application\Commands\User\LogoutCabinetCommand;
 use AmeliaBooking\Application\Commands\User\SocialLoginCommand;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
+use AmeliaBooking\Domain\Entity\Entities;
+use AmeliaBooking\Domain\Entity\User\AbstractUser;
+use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Services\Permissions\PermissionsService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\WP\SettingsService\SettingsStorage;
@@ -133,7 +143,7 @@ abstract class Command
      *
      * @param Request $request
      */
-    public function setToken($request)
+    public function setToken($request): void
     {
         $token = null;
 
@@ -146,6 +156,7 @@ abstract class Command
             $authorization !== '' &&
             ($values = explode(' ', $authorization)) &&
             sizeof($values) === 2 &&
+            strcasecmp($values[0], 'Bearer') === 0 &&
             $settingsService->getSetting('roles', 'enabledHttpAuthorization')
         ) {
             $token = $values[1];
@@ -193,9 +204,9 @@ abstract class Command
 
     /**
      * @param $request
-     * @return int|boolean
+     * @return bool
      */
-    public function validateNonce($request)
+    public function validateNonce($request): bool
     {
         if (
             $request->getMethod() === 'POST' &&
@@ -206,19 +217,20 @@ abstract class Command
             !($this instanceof LogoutCabinetCommand) &&
             !($this instanceof AddBookingCommand) &&
             !($this instanceof DeleteBookingRemotelyCommand) &&
+            !($this instanceof SuccessfulBookingCommand) &&
             !($this instanceof GetValidCouponCommand) &&
             !($this instanceof MolliePaymentCommand) &&
             !($this instanceof MolliePaymentNotifyCommand) &&
             !($this instanceof PayPalPaymentCommand) &&
             !($this instanceof PayPalPaymentCallbackCommand) &&
             !($this instanceof RazorpayPaymentCommand) &&
+            !($this instanceof RazorpayPaymentNotifyCommand) &&
             !($this instanceof BarionPaymentCommand) &&
             !($this instanceof BarionPaymentCallbackCommand) &&
             !($this instanceof SquareRefundWebhookCommand) &&
             !($this instanceof DisconnectFromSquareAccountCommand) &&
             !($this instanceof WooCommercePaymentCommand) &&
             !($this instanceof PaymentCallbackCommand) &&
-            !($this instanceof SuccessfulBookingCommand) &&
             !($this instanceof GetGoogleAuthURLCommand) &&
             !($this instanceof FetchAccessTokenWithAuthCodeOutlookCommand) &&
             !($this instanceof FetchAccessTokenWithAuthCodeCommand) &&
@@ -226,17 +238,53 @@ abstract class Command
             !($this instanceof WhatsAppWebhookCommand) &&
             !($this instanceof PaymentLinkCommand) &&
             !($this instanceof SocialLoginCommand) &&
+            !($this instanceof CreateStripePaymentIntentCommand) &&
+            !($this instanceof CancelStripePaymentIntentCommand) &&
+            !($this instanceof CompleteStripePaymentIntentCommand) &&
+            !($this instanceof StripePaymentCallbackCommand) &&
             !($this instanceof UpdateSMSNotificationHistoryCommand)
         ) {
             $queryParams = $request->getQueryParams();
+            $nonce = !empty($queryParams['wpAmeliaNonce'])
+                ? $queryParams['wpAmeliaNonce']
+                : ($queryParams['ameliaNonce'] ?? '');
 
-            return wp_verify_nonce(
-                !empty($queryParams['wpAmeliaNonce']) ? $queryParams['wpAmeliaNonce'] : $queryParams['ameliaNonce'],
+            return (bool) wp_verify_nonce(
+                $nonce,
                 'ajax-nonce'
             );
         }
 
         return true;
+    }
+
+    /**
+     * Commands listed here are meant to be run from an external cron job, so they are reached with a GET request that
+     * carries neither a nonce nor a logged in user. They are protected with a secret key, generated per site and
+     * stored in the "activation" settings, that has to be passed as a "cronKey" query parameter.
+     *
+     * @param $request
+     * @return boolean
+     */
+    public function validateCron($request)
+    {
+        if (!($this instanceof SendUndeliveredNotificationsCommand)) {
+            return true;
+        }
+
+        $settingsService = new SettingsService(new SettingsStorage());
+
+        $cronKey = $settingsService->getSetting('activation', 'cronKey');
+
+        if (empty($cronKey)) {
+            return false;
+        }
+
+        $queryParams = $request->getQueryParams();
+
+        $givenKey = !empty($queryParams['cronKey']) ? $queryParams['cronKey'] : '';
+
+        return is_string($givenKey) && hash_equals((string)$cronKey, $givenKey);
     }
 
     /**
@@ -279,5 +327,136 @@ abstract class Command
     public function setUserApplicationService($userApplicationService)
     {
         $this->userApplicationService = $userApplicationService;
+    }
+
+    /**
+     * Authorize user
+     *
+     * @return AbstractUser
+     * @throws AuthorizationException
+     * @throws AccessDeniedException
+     */
+    public function authorize($type = null): AbstractUser
+    {
+        if ($type === AbstractUser::USER_ROLE_PROVIDER || $type === AbstractUser::USER_ROLE_CUSTOMER) {
+            /** @var AbstractUser $user */
+            $user = $this->getUserApplicationService()->authorization(
+                $this->getToken(),
+                $type
+            );
+
+            // If user is admin or manager, return user
+            if (
+                $user && (
+                    $user->getType() === AbstractUser::USER_ROLE_ADMIN ||
+                    $user->getType() === AbstractUser::USER_ROLE_MANAGER
+                )
+            ) {
+                return $user;
+            }
+
+            // If user is not admin or manager, check if user is of the given type
+            if (!$user || $user->getType() !== $type) {
+                throw new AccessDeniedException('You are not allowed');
+            }
+
+            return $user;
+        }
+
+        return $this->getUserApplicationService()->authorization(
+            $this->getPage() === 'cabinet' ? $this->getToken() : null,
+            $this->getCabinetType()
+        );
+    }
+
+    /**
+     * Authorize provider read permission
+     *
+     * @param int    $userId
+     * @param string $entity
+     *
+     * @return AbstractUser
+     *
+     * @throws AuthorizationException
+     * @throws AccessDeniedException
+     */
+    public function authorizeProviderReadPermission(int $userId, string $entity = Entities::EMPLOYEES): AbstractUser
+    {
+        // if logged in user is not WP admin, WP Amelia manager or WP Amelia provider, try to authorize as non WP Amelia provider
+        if (
+            !$this->getPermissionService()->currentUserCanRead($entity) ||
+            !$this->getPermissionService()->currentUserCanReadOthers($entity)
+        ) {
+            /** @var AbstractUser $user */
+            $user = $this->authorize(Entities::PROVIDER);
+
+            // if authorized as non WP Amelia provider, check if user ID is the same as the requested user ID
+            if (
+                $user->getType() === AbstractUser::USER_ROLE_PROVIDER &&
+                $user->getId()->getValue() !== $userId
+            ) {
+                throw new AccessDeniedException('You are not allowed');
+            }
+
+            return $user;
+        }
+
+        return $this->getUserApplicationService()->authorization(null, null);
+    }
+
+    /**
+     * Authorize provider write permission
+     *
+     * @param int    $userId
+     * @param string $entity
+     *
+     * @return AbstractUser
+     *
+     * @throws AuthorizationException
+     * @throws AccessDeniedException
+     */
+    public function authorizeProviderWritePermission(int $userId, string $entity = Entities::EMPLOYEES): AbstractUser
+    {
+        // if logged in user is not WP admin, WP Amelia manager or WP Amelia provider, try to authorize as non WP Amelia provider
+        if (
+            !$this->getPermissionService()->currentUserCanWrite($entity) ||
+            !$this->getPermissionService()->currentUserCanWriteOthers($entity)
+        ) {
+            /** @var AbstractUser $user */
+            $user = $this->authorize(Entities::PROVIDER);
+
+            // if authorized as non WP Amelia provider, check if user ID is the same as the requested user ID
+            if (
+                $user->getType() === AbstractUser::USER_ROLE_PROVIDER &&
+                $user->getId()->getValue() !== $userId
+            ) {
+                throw new AccessDeniedException('You are not allowed');
+            }
+
+            return $user;
+        }
+
+        return $this->getUserApplicationService()->authorization(null, null);
+    }
+
+    /**
+     * Authorize appointment status write: require write_status capability, or fall
+     * through to provider cabinet JWT auth (mobile/employee panel path).
+     *
+     * @return AbstractUser
+     *
+     * @throws AuthorizationException
+     * @throws AccessDeniedException
+     */
+    public function authorizeAppointmentStatusWrite(): AbstractUser
+    {
+        if ($this->getPermissionService()->currentUserCanWriteStatus(Entities::APPOINTMENTS)) {
+            return $this->getUserApplicationService()->authorization(
+                $this->getPage() === 'cabinet' ? $this->getToken() : null,
+                $this->getCabinetType()
+            );
+        }
+
+        return $this->authorize(Entities::PROVIDER);
     }
 }

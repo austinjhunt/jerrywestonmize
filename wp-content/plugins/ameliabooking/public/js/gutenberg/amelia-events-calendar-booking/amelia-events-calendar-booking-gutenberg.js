@@ -6,6 +6,7 @@
   var blockControls = wp.blockEditor.BlockControls
   var inspectorControls = wp.blockEditor.InspectorControls
   var useBlockProps = wp.blockEditor.useBlockProps
+  var useEffect = wp.element.useEffect
   var data = wpAmeliaLabels.data
 
   var entityNames = ['events', 'tags', 'locations']
@@ -28,8 +29,8 @@
   // Registering the Block for events shortcode
   wp.blocks.registerBlockType('amelia/events-calendar-booking-gutenberg-block', {
     apiVersion: 3,
-    title: wpAmeliaLabels.events_calendar_booking_gutenberg_block.title,
-    description: wpAmeliaLabels.events_calendar_booking_gutenberg_block.description,
+    title: window.ameliaGutenbergLabel(wpAmeliaLabels.events_calendar_booking_gutenberg_block.title),
+    description: window.ameliaGutenbergLabel(wpAmeliaLabels.events_calendar_booking_gutenberg_block.description),
     icon: window.ameliaBlockIcon,
     category: 'amelia-blocks',
     keywords: [
@@ -40,10 +41,11 @@
       customClassName: false,
       html: false
     },
+    example: window.ameliaGutenbergShared.getBlockExample(),
     attributes: Object.assign({
       short_code: {
         type: 'string',
-        default: '[ameliaeventscalendarbooking]'
+        default: '[' + window.ameliaShortcodeTag('eventscalendarbooking', 'ameliaeventscalendarbooking') + ']'
       },
       event: {
         type: 'array',
@@ -66,6 +68,10 @@
         default: ''
       },
       parametars: {
+        type: 'boolean',
+        default: false
+      },
+      ameliaInserterPreview: {
         type: 'boolean',
         default: false
       }
@@ -120,7 +126,7 @@
           })
       })
 
-      function getShortCode (props, attributes) {
+      function getShortCode (attributes) {
         let shortCodeString = ''
         let shortCode = ''
 
@@ -151,7 +157,7 @@
             }
           }
 
-          shortCode += '[ameliaeventscalendarbooking' + shortCodeString
+          shortCode += '[' + window.ameliaShortcodeTag('eventscalendarbooking', 'ameliaeventscalendarbooking') + shortCodeString
 
           shortCode += window.ameliaGutenbergShared.getSharedShortcodeString(attributes)
 
@@ -160,12 +166,26 @@
           shortCode = 'Notice: Please create event first.'
         }
 
-        props.setAttributes({short_code: shortCode})
-
         return shortCode
       }
 
       var blockProps = useBlockProps()
+
+      useEffect(function () {
+        if (window.ameliaGutenbergShared.isInserterPreview(props.attributes)) {
+          return
+        }
+
+        var shortCode = getShortCode(props.attributes)
+
+        if (props.attributes.short_code !== shortCode) {
+          props.setAttributes({short_code: shortCode})
+        }
+      })
+
+      if (window.ameliaGutenbergShared.isInserterPreview(props.attributes)) {
+        return window.ameliaGutenbergShared.getBlockPreview(window.wpAmeliaEventsCalendarBookingPreview)
+      }
 
       if (entities.events.length !== 0) {
         inspectorElements.push(el(components.PanelRow,
@@ -256,19 +276,16 @@
               inspectorElements
             )
           ),
-          el('div', {className: 'amelia-gutenberg-placeholder'},
-            el('div', {className: 'amelia-gutenberg-placeholder__header'},
-              el('div', {className: 'amelia-gutenberg-placeholder__icon'}, window.ameliaBlockIcon || ''),
-              el('div', {className: 'amelia-gutenberg-placeholder__title'}, 'Amelia - Events Calendar Booking')
-            ),
-            el('div', {className: 'amelia-gutenberg-placeholder__shortcode'},
-              getShortCode(props, props.attributes)
-            )
-          )
+          window.ameliaGutenbergShared.getBlockPreview(window.wpAmeliaEventsCalendarBookingPreview)
         )
       } else {
-        inspectorElements.push(el('p', {style: {marginBottom: '1em'}}, 'Please create event first. You can find instructions in our documentation on link below.'))
-        inspectorElements.push(el('a', {href: 'https://wpamelia.com/documentation/service-quick-start/', target: '_blank', style: {marginBottom: '1em'}}, 'Start working with Amelia WordPress Appointment Booking plugin'))
+        var helpLink = window.ameliaGutenbergHelpLink('https://wpamelia.com/documentation/service-quick-start/', {marginBottom: '1em'})
+        inspectorElements.push(el('p', {style: {marginBottom: '1em'}}, helpLink
+          ? 'Please create event first. You can find instructions in our documentation on the link below.'
+          : 'Please create event first.'))
+        if (helpLink) {
+          inspectorElements.push(helpLink)
+        }
 
         return el('div', blockProps,
           el(blockControls, {key: 'controls'}),
@@ -277,15 +294,7 @@
               inspectorElements
             )
           ),
-          el('div', {className: 'amelia-gutenberg-placeholder'},
-            el('div', {className: 'amelia-gutenberg-placeholder__header'},
-              el('div', {className: 'amelia-gutenberg-placeholder__icon'}, window.ameliaBlockIcon || ''),
-              el('div', {className: 'amelia-gutenberg-placeholder__title'}, 'Amelia - Events Calendar Booking')
-            ),
-            el('div', {className: 'amelia-gutenberg-placeholder__shortcode'},
-              getShortCode(props, props.attributes)
-            )
-          )
+          window.ameliaGutenbergShared.getBlockPreview(window.wpAmeliaEventsCalendarBookingPreview)
         )
       }
     },

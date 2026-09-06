@@ -133,7 +133,7 @@
     var shortCode
 
     if (entities.events.length !== 0) {
-      shortCode = '[ameliaeventslistbooking'
+      shortCode = '[' + window.ameliaShortcodeTag('eventslistbooking', 'ameliaeventslistbooking')
 
       if (attributes.parametars) {
         if (hasSpecificEventSelected(attributes)) {
@@ -392,7 +392,7 @@
           el(inspectorControls, {},
             el(
               components.PanelBody,
-              {title: getLabel('events_list_button_shortcode', 'Amelia Events List Booking Shortcode'), initialOpen: true},
+              {title: window.ameliaGutenbergLabel(getLabel('events_list_button_shortcode', 'Amelia Events List Booking Shortcode')), initialOpen: true},
               renderShortcodeSettingsControls(targetAttributes, setAttrs, options, startDatePickerRef, endDatePickerRef)
             )
           )
@@ -403,8 +403,8 @@
 
   wp.blocks.registerBlockType('amelia/events-list-booking-button-gutenberg-block', {
     apiVersion: 3,
-    title: getBlockLabel('events_list_booking_button_gutenberg_block', 'title', 'Amelia - Events List Button'),
-    description: getBlockLabel('events_list_booking_button_gutenberg_block', 'description', 'Add an Amelia events list booking trigger button.'),
+    title: window.ameliaGutenbergLabel(getBlockLabel('events_list_booking_button_gutenberg_block', 'title', '{pluginName} - Events List Button')),
+    description: window.ameliaGutenbergLabel(getBlockLabel('events_list_booking_button_gutenberg_block', 'description', 'Add an Amelia events list booking trigger button.')),
     icon: window.ameliaBlockIcon,
     category: 'amelia-blocks',
     keywords: [
@@ -418,7 +418,7 @@
     attributes: {
       short_code: {
         type: 'string',
-        default: '[ameliaeventslistbooking]'
+        default: '[' + window.ameliaShortcodeTag('eventslistbooking', 'ameliaeventslistbooking') + ']'
       },
       trigger: {
         type: 'string',
@@ -692,8 +692,13 @@
         ]
       }
 
-      inspectorElements.push(el('p', {style: {'margin-bottom': '1em'}}, 'Please create event first. You can find instructions in our documentation on link below.'))
-      inspectorElements.push(el('a', {href: 'https://wpamelia.com/documentation/service-quick-start/', target: '_blank', style: {'margin-bottom': '1em'}}, 'Start working with Amelia WordPress Appointment Booking plugin'))
+      var helpLink = window.ameliaGutenbergHelpLink('https://wpamelia.com/documentation/service-quick-start/', {'margin-bottom': '1em'})
+      inspectorElements.push(el('p', {style: {'margin-bottom': '1em'}}, helpLink
+        ? 'Please create event first. You can find instructions in our documentation on the link below.'
+        : 'Please create event first.'))
+      if (helpLink) {
+        inspectorElements.push(helpLink)
+      }
 
       return [
         el(blockControls, {key: 'controls'}),

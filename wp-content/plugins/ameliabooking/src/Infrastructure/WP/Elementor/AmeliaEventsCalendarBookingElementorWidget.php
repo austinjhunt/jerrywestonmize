@@ -15,7 +15,7 @@ use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
  *
  * @package AmeliaBooking\Infrastructure\WP\Elementor
  */
-class AmeliaEventsCalendarBookingElementorWidget extends Widget_Base
+class AmeliaEventsCalendarBookingElementorWidget extends ElementorSharedShortcodeWidget
 {
     public function get_name()
     {
@@ -24,12 +24,12 @@ class AmeliaEventsCalendarBookingElementorWidget extends Widget_Base
 
     public function get_title()
     {
-        return BackendStrings::get('events_calendar_booking_gutenberg_block')['title'];
+        return AmeliaElementorWhiteLabelHelper::label(BackendStrings::get('events_calendar_booking_gutenberg_block')['title']);
     }
 
     public function get_icon()
     {
-        return 'amelia-logo';
+        return AmeliaElementorWhiteLabelHelper::icon();
     }
 
     public function get_categories()
@@ -46,9 +46,9 @@ class AmeliaEventsCalendarBookingElementorWidget extends Widget_Base
             'amelia_events_section',
             [
                 'label' => '<div class="amelia-elementor-content"><p class="amelia-elementor-content-title">'
-                    . BackendStrings::get('events_calendar_booking_gutenberg_block')['title']
+                    . AmeliaElementorWhiteLabelHelper::label(BackendStrings::get('events_calendar_booking_gutenberg_block')['title'])
                     . '</p><br><p class="amelia-elementor-content-p">'
-                    . BackendStrings::get('events_calendar_booking_gutenberg_block')['description']
+                    . AmeliaElementorWhiteLabelHelper::label(BackendStrings::get('events_calendar_booking_gutenberg_block')['description'])
                     . '</p>',
             ]
         );
@@ -144,7 +144,7 @@ class AmeliaEventsCalendarBookingElementorWidget extends Widget_Base
         $this->add_control(
             'in_dialog',
             [
-                'label' => BackendStrings::get('in_dialog'),
+                'label' => AmeliaElementorWhiteLabelHelper::label(BackendStrings::get('in_dialog')),
                 'type' => Controls_Manager::SWITCHER,
                 'default' => false,
                 'label_on' => BackendStrings::get('yes'),
@@ -174,8 +174,21 @@ class AmeliaEventsCalendarBookingElementorWidget extends Widget_Base
         $this->end_controls_section();
     }
 
-    protected function render()
+    protected function render(): void
     {
+        if (Plugin::$instance->editor->is_edit_mode()) {
+            $alt = esc_attr(BackendStrings::get('events_calendar_booking_gutenberg_block')['title']);
+            printf(
+                '<picture>' .
+                '<source media="(max-width: 360px)" srcset="%s" />' .
+                '<img class="amelia-elementor-preview" src="%s" alt="%s" style="max-width:100%%;height:auto;display:block;margin:0 auto;" />' .
+                '</picture>',
+                esc_url(AMELIA_URL . 'public/img/shortcode/ecf-mobile-preview.svg'),
+                esc_url(AMELIA_URL . 'public/img/shortcode/ecf-preview.svg'),
+                $alt
+            );
+            return;
+        }
 
         $settings = $this->get_settings_for_display();
 
@@ -209,7 +222,10 @@ class AmeliaEventsCalendarBookingElementorWidget extends Widget_Base
                 $selected_tag .= '"';
             }
 
-            echo '[ameliaeventscalendarbooking' .
+            echo do_shortcode('[' . AmeliaElementorWhiteLabelHelper::shortcodeTag(
+                'eventscalendarbooking',
+                'ameliaeventscalendarbooking'
+            ) .
                 $trigger .
                 $trigger_type .
                 $in_dialog .
@@ -217,14 +233,17 @@ class AmeliaEventsCalendarBookingElementorWidget extends Widget_Base
                 $selected_location .
                 $selected_tag .
                 $ivy .
-                $show_recurring . ']';
+                $show_recurring . ']');
         } else {
-            echo '[ameliaeventscalendarbooking' .
+            echo do_shortcode('[' . AmeliaElementorWhiteLabelHelper::shortcodeTag(
+                'eventscalendarbooking',
+                'ameliaeventscalendarbooking'
+            ) .
                 $trigger .
                 $trigger_type .
                 $in_dialog .
                 $ivy .
-                ']';
+                ']');
         }
     }
 

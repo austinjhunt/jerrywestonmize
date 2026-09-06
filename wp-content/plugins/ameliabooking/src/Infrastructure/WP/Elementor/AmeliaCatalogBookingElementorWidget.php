@@ -26,12 +26,12 @@ class AmeliaCatalogBookingElementorWidget extends ElementorSharedShortcodeWidget
 
     public function get_title()
     {
-        return BackendStrings::get('catalog_booking_gutenberg_block')['title'];
+        return AmeliaElementorWhiteLabelHelper::label(BackendStrings::get('catalog_booking_gutenberg_block')['title']);
     }
 
     public function get_icon()
     {
-        return 'amelia-logo';
+        return AmeliaElementorWhiteLabelHelper::icon();
     }
 
     public function get_categories()
@@ -48,9 +48,9 @@ class AmeliaCatalogBookingElementorWidget extends ElementorSharedShortcodeWidget
             'amelia_catalog_section',
             [
                 'label' => '<div class="amelia-elementor-content"><p class="amelia-elementor-content-title">'
-                    . BackendStrings::get('catalog_booking_gutenberg_block')['title']
+                    . AmeliaElementorWhiteLabelHelper::label(BackendStrings::get('catalog_booking_gutenberg_block')['title'])
                     . '</p><br><p class="amelia-elementor-content-p">'
-                    . BackendStrings::get('catalog_booking_gutenberg_block')['description']
+                    . AmeliaElementorWhiteLabelHelper::label(BackendStrings::get('catalog_booking_gutenberg_block')['description'])
                     . '</p>',
             ]
         );
@@ -186,8 +186,22 @@ class AmeliaCatalogBookingElementorWidget extends ElementorSharedShortcodeWidget
         $this->end_controls_section();
     }
 
-    protected function render()
+    protected function render(): void
     {
+        if (Plugin::$instance->editor->is_edit_mode()) {
+            $alt = esc_attr(BackendStrings::get('catalog_booking_gutenberg_block')['title']);
+            printf(
+                '<picture>' .
+                '<source media="(max-width: 360px)" srcset="%s" />' .
+                '<img class="amelia-elementor-preview" src="%s" alt="%s" style="max-width:100%%;height:auto;display:block;margin:0 auto;" />' .
+                '</picture>',
+                esc_url(AMELIA_URL . 'public/img/shortcode/cbf-mobile-preview.svg'),
+                esc_url(AMELIA_URL . 'public/img/shortcode/cbf-preview.svg'),
+                $alt
+            );
+            return;
+        }
+
         $settings = $this->get_settings_for_display();
 
         if ($settings['select_catalog'] === 'show_package') {
@@ -228,16 +242,15 @@ class AmeliaCatalogBookingElementorWidget extends ElementorSharedShortcodeWidget
             $employee = '';
             $location = '';
         }
-
         $sharedSortcode = $this->getSharedShortcodeString($settings);
 
-        echo '[ameliacatalogbooking' .
+        echo do_shortcode('[' . AmeliaElementorWhiteLabelHelper::shortcodeTag('catalogbooking', 'ameliacatalogbooking') .
             $show .
             $sharedSortcode .
             $category_service .
             $employee .
             $location .
-            $skip_categories . ']';
+            $skip_categories . ']');
     }
 
     public static function amelia_elementor_get_data()

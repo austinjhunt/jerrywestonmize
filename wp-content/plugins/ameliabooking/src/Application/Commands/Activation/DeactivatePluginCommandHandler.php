@@ -9,8 +9,10 @@ namespace AmeliaBooking\Application\Commands\Activation;
 
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
+use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\WP\InstallActions\AutoUpdateHook;
+use AmeliaBooking\Infrastructure\WP\UserRoles\SuperAdminRoleService;
 
 /**
  * Class DeactivatePluginCommandHandler
@@ -23,11 +25,16 @@ class DeactivatePluginCommandHandler extends CommandHandler
      * @param DeactivatePluginCommand $command
      *
      * @return CommandResult
+     * @throws AccessDeniedException
      *
      */
     public function handle(DeactivatePluginCommand $command)
     {
         $result = new CommandResult();
+
+        if (!(new SuperAdminRoleService())->isCurrentUserSuperAdmin()) {
+            throw new AccessDeniedException('You are not allowed to manage activation settings.');
+        }
 
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');

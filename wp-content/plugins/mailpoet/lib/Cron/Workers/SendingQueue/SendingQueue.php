@@ -461,6 +461,7 @@ class SendingQueue {
       if ($campaignId) {
         $metasForSubscriber['campaign_id'] = $campaignId;
       }
+      $metasForSubscriber['tracking_consent'] = $subscriber->getTrackingConsent();
       $metas[] = $metasForSubscriber;
 
       // keep track of values for statistics purposes

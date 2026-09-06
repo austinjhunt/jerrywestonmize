@@ -9,8 +9,10 @@ namespace AmeliaBooking\Application\Commands\Activation;
 
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
+use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\WP\InstallActions\AutoUpdateHook;
+use AmeliaBooking\Infrastructure\WP\UserRoles\SuperAdminRoleService;
 
 /**
  * Class ActivatePluginCommandHandler
@@ -23,11 +25,18 @@ class ActivatePluginCommandHandler extends CommandHandler
      * @param ActivatePluginCommand $command
      *
      * @return CommandResult
+     * @throws AccessDeniedException
      *
      */
     public function handle(ActivatePluginCommand $command)
     {
         $result = new CommandResult();
+
+        $superAdminService = new SuperAdminRoleService();
+
+        if (!$superAdminService->canAccessActivationSettings()) {
+            throw new AccessDeniedException('You are not allowed to manage activation settings.');
+        }
 
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
@@ -78,6 +87,28 @@ class ActivatePluginCommandHandler extends CommandHandler
 
         if ($response->valid && $response->domainRegistered) {
             $settingsService->setSetting('activation', 'purchaseCodeStore', $purchaseCode);
+
+            $currentUserId = get_current_user_id();
+
+            if ($currentUserId) {
+                if (!$settingsService->getSetting('activation', 'licenseActivatorUserId')) {
+                    $settingsService->setSetting('activation', 'licenseActivatorUserId', $currentUserId);
+                }
+
+                if (!$superAdminService->grant($currentUserId)) {
+                    $result->setResult(CommandResult::RESULT_ERROR);
+                    $result->setMessage('Failed to assign Superadmin to the activating user.');
+                    $result->setData(
+                        [
+                        'valid'              => $response->valid,
+                        'domainRegistered'   => $response->domainRegistered,
+                        'superAdminAssigned' => false,
+                        ]
+                    );
+
+                    return $result;
+                }
+            }
         }
 
         $result->setResult(CommandResult::RESULT_SUCCESS);

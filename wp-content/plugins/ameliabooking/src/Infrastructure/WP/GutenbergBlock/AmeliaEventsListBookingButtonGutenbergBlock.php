@@ -7,7 +7,6 @@
 
 namespace AmeliaBooking\Infrastructure\WP\GutenbergBlock;
 
-use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
 use AmeliaBooking\Infrastructure\Licence;
 
 /**
@@ -44,7 +43,7 @@ class AmeliaEventsListBookingButtonGutenbergBlock extends GutenbergBlock
             'amelia_events_list_booking_button_gutenberg_block',
             'wpAmeliaLabels',
             array_merge(
-                BackendStrings::getAllStrings(),
+                self::getBlockStrings(),
                 self::getEntitiesData(),
                 array('isLite' => !Licence\Licence::isPremium())
             )

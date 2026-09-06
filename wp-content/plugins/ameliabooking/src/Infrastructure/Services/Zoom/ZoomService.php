@@ -7,6 +7,7 @@
 
 namespace AmeliaBooking\Infrastructure\Services\Zoom;
 
+use AmeliaBooking\Domain\Services\Logger\LoggerInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 
 /**
@@ -16,9 +17,13 @@ use AmeliaBooking\Domain\Services\Settings\SettingsService;
  */
 class ZoomService extends AbstractZoomService
 {
-    public function __construct(SettingsService $settingsService)
+    /** @var LoggerInterface */
+    private $logger;
+
+    public function __construct(SettingsService $settingsService, LoggerInterface $logger)
     {
         $this->settingsService = $settingsService;
+        $this->logger          = $logger->channel(LoggerInterface::CHANNEL_ZOOM);
     }
 
     /**
@@ -63,6 +68,11 @@ class ZoomService extends AbstractZoomService
         $result = curl_exec($ch);
 
         if ($result === false) {
+            $this->logger->error(
+                'Zoom getAccessToken curl request failed',
+                ['accountId' => $accountId, 'curlError' => curl_error($ch)]
+            );
+
             return null;
         }
 
@@ -118,6 +128,18 @@ class ZoomService extends AbstractZoomService
         $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
         if ($result === false || $code === 401) {
+            if ($code === 401) {
+                $this->logger->warning(
+                    'Zoom API request returned 401, will retry with a new access token',
+                    ['requestUrl' => $requestUrl, 'code' => $code]
+                );
+            } else {
+                $this->logger->error(
+                    'Zoom API request failed',
+                    ['requestUrl' => $requestUrl, 'code' => $code, 'curlError' => curl_error($ch)]
+                );
+            }
+
             return ['message' => curl_error($ch), 'code' => curl_getinfo($ch, CURLINFO_HTTP_CODE), 'users' => null];
         }
 

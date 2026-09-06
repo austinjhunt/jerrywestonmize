@@ -77,8 +77,8 @@
   // Registering the Block for booking shotcode
   wp.blocks.registerBlockType('amelia/booking-gutenberg-block', {
     apiVersion: 3,
-    title: wpAmeliaLabels.booking_gutenberg_block.title,
-    description: el('div', {className: 'amelia-gutenberg-desc'}, wpAmeliaLabels.booking_gutenberg_block.description,
+    title: window.ameliaGutenbergLabel(wpAmeliaLabels.booking_gutenberg_block.title),
+    description: el('div', {className: 'amelia-gutenberg-desc'}, window.ameliaGutenbergLabel(wpAmeliaLabels.booking_gutenberg_block.description),
       el('div', {className: 'amelia-gutenberg-outdated'}, wpAmeliaLabels.outdated_booking_gutenberg_block)
     ),
     icon: window.ameliaBlockIcon,
@@ -95,7 +95,7 @@
     attributes: {
       short_code: {
         type: 'string',
-        default: '[ameliabooking]'
+        default: '[' + window.ameliaShortcodeTag('booking', 'ameliabooking') + ']'
       },
       trigger: {
         type: 'string',
@@ -183,7 +183,7 @@
         var shortCode = ''
         if (categories.length !== 0 && services.length !== 0 && employees.length !== 0) {
           if (attributes.parametars) {
-            shortCode = '[ameliabooking'
+            shortCode = '[' + window.ameliaShortcodeTag('booking', 'ameliabooking')
 
             if (attributes.show) {
               shortCode += ' show=' + attributes.show + ''
@@ -206,7 +206,7 @@
             }
             shortCode += ']'
           } else {
-            shortCode = '[ameliabooking]'
+            shortCode = '[' + window.ameliaShortcodeTag('booking', 'ameliabooking') + ']'
           }
         } else {
           shortCode = "Notice: Please create category, service and employee first."
@@ -320,7 +320,7 @@
           el('div', {className: 'amelia-gutenberg-placeholder'},
             el('div', {className: 'amelia-gutenberg-placeholder__header'},
               el('div', {className: 'amelia-gutenberg-placeholder__icon'}, window.ameliaBlockIcon || ''),
-              el('div', {className: 'amelia-gutenberg-placeholder__title'}, 'Amelia - Booking (Legacy)')
+              el('div', {className: 'amelia-gutenberg-placeholder__title'}, window.ameliaGutenbergLabel('{pluginName} - Booking (Legacy)'))
             ),
             el('div', {className: 'amelia-gutenberg-placeholder__shortcode'},
               getShortCode(props, props.attributes)
@@ -330,7 +330,10 @@
 
       } else {
         inspectorElements.push(el('p', {style: {marginBottom: '1em'}}, 'Please create category, services and employee first. You can find instructions in our documentation on link below.'));
-        inspectorElements.push(el('a', {href: 'https://wpamelia.com/documentation/service-quick-start/', target: '_blank', style: {marginBottom: '1em'}}, 'Start working with Amelia WordPress Appointment Booking plugin'));
+        var helpLink = window.ameliaGutenbergHelpLink('https://wpamelia.com/documentation/service-quick-start/', {marginBottom: '1em'})
+        if (helpLink) {
+          inspectorElements.push(helpLink)
+        }
 
         return el('div', blockProps,
           el(blockControls, {key: 'controls'}),
@@ -342,7 +345,7 @@
           el('div', {className: 'amelia-gutenberg-placeholder'},
             el('div', {className: 'amelia-gutenberg-placeholder__header'},
               el('div', {className: 'amelia-gutenberg-placeholder__icon'}, window.ameliaBlockIcon || ''),
-              el('div', {className: 'amelia-gutenberg-placeholder__title'}, 'Amelia - Booking (Legacy)')
+              el('div', {className: 'amelia-gutenberg-placeholder__title'}, window.ameliaGutenbergLabel('{pluginName} - Booking (Legacy)'))
             ),
             el('div', {className: 'amelia-gutenberg-placeholder__shortcode'},
               getShortCode(props, props.attributes)

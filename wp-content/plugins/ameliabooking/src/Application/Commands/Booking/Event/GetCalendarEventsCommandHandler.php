@@ -7,7 +7,6 @@ use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
-use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Event\EventPeriod;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
@@ -24,8 +23,6 @@ use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
 use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 use Exception;
-use Interop\Container\Exception\ContainerException;
-use Slim\Exception\ContainerValueNotFoundException;
 
 /**
  * Class GetCalendarEventsCommandHandler
@@ -46,13 +43,14 @@ class GetCalendarEventsCommandHandler extends CommandHandler
      *
      * @return CommandResult
      * @throws QueryExecutionException
-     * @throws ContainerValueNotFoundException
      * @throws InvalidArgumentException
-     * @throws ContainerException
      * @throws Exception
      */
     public function handle(GetCalendarEventsCommand $command)
     {
+        /** @var AbstractUser $user */
+        $user = $command->authorize();
+
         $result = new CommandResult();
 
         $this->checkMandatoryFields($command);
@@ -71,21 +69,6 @@ class GetCalendarEventsCommandHandler extends CommandHandler
         $eventRepository = $this->container->get('domain.booking.event.repository');
         /** @var ProviderRepository $providerRepository */
         $providerRepository = $this->container->get('domain.users.providers.repository');
-
-        try {
-            /** @var AbstractUser $user */
-            $user = $command->getUserApplicationService()->authorization(
-                $command->getPage() === 'cabinet' ? $command->getToken() : null,
-                $command->getCabinetType()
-            );
-        } catch (AuthorizationException $e) {
-            $result->setResult(CommandResult::RESULT_ERROR);
-            $result->setData(
-                ['reauthorize' => true]
-            );
-
-            return $result;
-        }
 
         if (
             $userAS->isCustomer($user) ||

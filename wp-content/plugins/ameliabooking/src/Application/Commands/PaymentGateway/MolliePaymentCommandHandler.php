@@ -4,7 +4,6 @@ namespace AmeliaBooking\Application\Commands\PaymentGateway;
 
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
-use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Application\Services\Reservation\AbstractReservationService;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
@@ -25,8 +24,6 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Cache\CacheRepository;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
 use Exception;
-use Interop\Container\Exception\ContainerException;
-use Slim\Exception\ContainerValueNotFoundException;
 
 /**
  * Class MolliePaymentCommandHandler
@@ -45,10 +42,8 @@ class MolliePaymentCommandHandler extends CommandHandler
      *
      * @return CommandResult
      * @throws QueryExecutionException
-     * @throws ContainerValueNotFoundException
      * @throws InvalidArgumentException
      * @throws Exception
-     * @throws ContainerException
      */
     public function handle(MolliePaymentCommand $command)
     {
@@ -56,13 +51,12 @@ class MolliePaymentCommandHandler extends CommandHandler
 
         $this->checkMandatoryFields($command);
 
+        $requestData = $this->getAppointmentData($command->getFields(), [PaymentType::MOLLIE]);
+
         $type = $command->getField('type') ?: Entities::APPOINTMENT;
 
         /** @var AbstractReservationService $reservationService */
         $reservationService = $this->container->get('application.reservation.service')->get($type);
-
-        /** @var BookingApplicationService $bookingAS */
-        $bookingAS = $this->container->get('application.booking.booking.service');
 
         /** @var PaymentApplicationService $paymentAS */
         $paymentAS = $this->container->get('application.payment.service');
@@ -76,9 +70,7 @@ class MolliePaymentCommandHandler extends CommandHandler
         /** @var CacheRepository $cacheRepository */
         $cacheRepository = $this->container->get('domain.cache.repository');
 
-        $bookingData = $bookingAS->getAppointmentData($command->getFields());
-
-        $bookingData = apply_filters('amelia_before_mollie_redirect_filter', $bookingData);
+        $bookingData = apply_filters('amelia_before_mollie_redirect_filter', $requestData);
 
         do_action('amelia_before_mollie_redirect', $bookingData);
 
@@ -136,7 +128,7 @@ class MolliePaymentCommandHandler extends CommandHandler
         $reservation = $reservationService->getNew(true, true, true);
 
         $result = $reservationService->processRequest(
-            $bookingAS->getAppointmentData($command->getFields()),
+            $bookingData,
             $reservation,
             true
         );

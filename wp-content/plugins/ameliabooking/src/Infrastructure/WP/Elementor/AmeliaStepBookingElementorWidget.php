@@ -26,12 +26,12 @@ class AmeliaStepBookingElementorWidget extends ElementorSharedShortcodeWidget
 
     public function get_title()
     {
-        return BackendStrings::get('step_booking_gutenberg_block')['title'];
+        return AmeliaElementorWhiteLabelHelper::label(BackendStrings::get('step_booking_gutenberg_block')['title']);
     }
 
     public function get_icon()
     {
-        return 'amelia-logo';
+        return AmeliaElementorWhiteLabelHelper::icon();
     }
 
     public function get_categories()
@@ -48,9 +48,9 @@ class AmeliaStepBookingElementorWidget extends ElementorSharedShortcodeWidget
             'amelia_booking_section',
             [
                 'label' => '<div class="amelia-elementor-content"><p class="amelia-elementor-content-title">'
-                    . BackendStrings::get('step_booking_gutenberg_block')['title']
+                    . AmeliaElementorWhiteLabelHelper::label(BackendStrings::get('step_booking_gutenberg_block')['title'])
                     . '</p><br><p class="amelia-elementor-content-p">'
-                    . BackendStrings::get('step_booking_gutenberg_block')['description']
+                    . AmeliaElementorWhiteLabelHelper::label(BackendStrings::get('step_booking_gutenberg_block')['description'])
                     . '</p>',
             ]
         );
@@ -164,8 +164,22 @@ class AmeliaStepBookingElementorWidget extends ElementorSharedShortcodeWidget
 
         $this->end_controls_section();
     }
-    protected function render()
+    protected function render(): void
     {
+        if (Plugin::$instance->editor->is_edit_mode()) {
+            $alt = esc_attr(BackendStrings::get('step_booking_gutenberg_block')['title']);
+            printf(
+                '<picture>' .
+                '<source media="(max-width: 360px)" srcset="%s" />' .
+                '<img class="amelia-elementor-preview" src="%s" alt="%s" style="max-width:100%%;height:auto;display:block;margin:0 auto;" />' .
+                '</picture>',
+                esc_url(AMELIA_URL . 'public/img/shortcode/sbs-mobile-preview.svg'),
+                esc_url(AMELIA_URL . 'public/img/shortcode/sbs-preview.svg'),
+                $alt
+            );
+            return;
+        }
+
         $settings = $this->get_settings_for_display();
 
         $category = empty($settings['select_category']) ? '' : ' category=' . (is_array($settings['select_category']) ?
@@ -188,7 +202,7 @@ class AmeliaStepBookingElementorWidget extends ElementorSharedShortcodeWidget
 
         $sharedSortcode = $this->getSharedShortcodeString($settings);
 
-        $shortcode = '[ameliastepbooking' . $layout . $sharedSortcode;
+        $shortcode = '[' . AmeliaElementorWhiteLabelHelper::shortcodeTag('stepbooking', 'ameliastepbooking') . $layout . $sharedSortcode;
         if ($settings['preselect']) {
             echo $shortcode . $show . $category_service . $employee . $location . $package . ']';
         } else {

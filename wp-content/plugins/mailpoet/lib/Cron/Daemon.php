@@ -7,6 +7,7 @@ if (!defined('ABSPATH')) exit;
 
 use MailPoet\Cron\Workers\WorkersFactory;
 use MailPoet\Logging\LoggerFactory;
+use MailPoet\Mailer\SendingLimitReachedException;
 use MailPoet\Util\Helpers;
 use MailPoetVendor\Doctrine\ORM\EntityManager;
 
@@ -70,6 +71,13 @@ class Daemon {
         $workerClass = is_object($worker) ? get_class($worker) : '';
         $workerClassNameParts = explode('\\', $workerClass);
         $workerName = end($workerClassNameParts);
+
+        // Expected sending state, not an error — sending resumes once the frequency interval passes.
+        if ($e instanceof SendingLimitReachedException) {
+          $this->loggerFactory->getLogger(LoggerFactory::TOPIC_CRON)->info($e->getMessage(), ['worker' => $workerName]);
+          continue;
+        }
+
         $errors[] = [
           'worker' => $workerName,
           'message' => $e->getMessage(),

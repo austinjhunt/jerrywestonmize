@@ -842,7 +842,6 @@ class TimeSlotService
                         $nextDateString = $nextDate->format('Y-m-d');
 
                         if (
-                            $nextDate->format('j') !== '1' &&
                             isset($freeIntervals[$nextDateString][$providerKey]['intervals'][0]) &&
                             $freeIntervals[$nextDateString][$providerKey]['intervals'][0][0] === 0
                         ) {
@@ -856,6 +855,10 @@ class TimeSlotService
                                 : $nextDayInterval);
 
                             $freeIntervalEnd = $timePeriod[1];
+                        }
+
+                        if ($nextDate->format('j') === '1') {
+                            $isContinuousTime = false;
                         }
                     }
 

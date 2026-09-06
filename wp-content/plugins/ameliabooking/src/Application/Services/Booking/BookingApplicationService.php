@@ -72,6 +72,12 @@ class BookingApplicationService
      */
     public function delete($booking)
     {
+        // a booking that was never persisted has nothing to delete - rollbacks hand this method whatever
+        // a failed save left behind, so an id-less booking has to be a no-op rather than a dereference
+        if (!$booking || !$booking->getId() || !$booking->getId()->getValue()) {
+            return true;
+        }
+
         /** @var CustomerBookingRepository $bookingRepository */
         $bookingRepository = $this->container->get('domain.booking.customerBooking.repository');
 

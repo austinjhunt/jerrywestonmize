@@ -3,6 +3,7 @@
 namespace AmeliaBooking\Infrastructure\WP\Translations;
 
 use AmeliaBooking\Infrastructure\Licence;
+use AmeliaBooking\Infrastructure\WP\ShortcodeService\ShortcodeAliasService;
 
 /**
  * Class BackendStrings
@@ -25,7 +26,7 @@ class BackendStrings
      *
      * @param string $key
      *
-     * @return string
+     * @return string|array
      */
     public static function get($key)
     {
@@ -33,7 +34,42 @@ class BackendStrings
             self::$allStrings = self::getAllStrings();
         }
 
-        return self::$allStrings[$key] ?? '';
+        $value = self::$allStrings[$key] ?? '';
+
+        return LiteBackendStrings::replacePluginNamePlaceholder($value);
+    }
+
+    /**
+     * Swap legacy panel shortcodes for white-label neutral tags when applicable.
+     *
+     * @param array $labels
+     *
+     * @return array
+     */
+    private static function replacePanelShortcodes(array $labels)
+    {
+        if (!ShortcodeAliasService::shouldUseNeutralShortcodes()) {
+            return $labels;
+        }
+
+        $replacements = [
+            'ameliacustomerpanel' => ShortcodeAliasService::shortcodeTag('customer_panel', 'ameliacustomerpanel'),
+            'ameliaemployeepanel' => ShortcodeAliasService::shortcodeTag('employee_panel', 'ameliaemployeepanel'),
+        ];
+
+        foreach (['customer_cabinet_tooltip', 'employee_cabinet_tooltip'] as $key) {
+            if (!isset($labels[$key]) || !is_string($labels[$key])) {
+                continue;
+            }
+
+            $labels[$key] = str_replace(
+                array_keys($replacements),
+                array_values($replacements),
+                $labels[$key]
+            );
+        }
+
+        return $labels;
     }
 
     /**
@@ -152,7 +188,7 @@ class BackendStrings
             'months6'                                         => __('6 months', 'wpamelia'),
             'name'                                            => __('Name', 'wpamelia'),
             'number_of_appointments'                          => __('Number of appointments', 'wpamelia'),
-            'number_of_events_returned_tooltip'               => __('Set the maximum number of busy events retrieved from calendar to block bookings in Amelia.', 'wpamelia'),
+            'number_of_events_returned_tooltip'               => __('Set the maximum number of busy events retrieved from calendar to block bookings in {pluginName}.', 'wpamelia'),
             'number_of_packages'                              => __('Number of packages', 'wpamelia'),
             'outlook_email_warning'                           => __('Outlook Mailer is not fully configured. Please complete the account setup in the Outlook Integration settings.', 'wpamelia'),
             'payment_links_change_status'                     => __('Auto-approve booking after payment', 'wpamelia'),
@@ -302,6 +338,7 @@ class BackendStrings
             'payment_history_error'                           => __('Unable to retrieve payments results', 'wpamelia'),
             'payment_id'                                      => __('Payment ID', 'wpamelia'),
             'payPal'                                          => __('PayPal', 'wpamelia'),
+            'ph_appointment_confirm_url'                      => __('Confirm My Appointment', 'wpamelia'),
             'ph_appointment_cancel_url'                       => __('Cancel appointment link', 'wpamelia'),
             'ph_appointment_approve_url'                      => __('Approve appointment link', 'wpamelia'),
             'ph_appointment_reject_url'                       => __('Reject appointment link', 'wpamelia'),
@@ -1289,19 +1326,19 @@ class BackendStrings
             'view_in_package_buttons'                         => __('\'View in package\' button', 'wpamelia'),
             'notice_panel'                                    => __('Notice: Please select at least one panel.', 'wpamelia'),
             'search_date'                                     => __('Preselect Current Date', 'wpamelia'),
-            'search_divi'                                     => __('AM - Search view', 'wpamelia'),
-            'customer_cabinet_divi'                           => __('AM - Customer Panel', 'wpamelia'),
-            'employee_cabinet_divi'                           => __('AM - Employee Panel', 'wpamelia'),
+            'search_divi'                                     => __('{pluginName} - Search view', 'wpamelia'),
+            'customer_cabinet_divi'                           => __('{pluginName} - Customer Panel', 'wpamelia'),
+            'employee_cabinet_divi'                           => __('{pluginName} - Employee Panel', 'wpamelia'),
             'search_gutenberg_block'                          => [
                 'title'       => __('Amelia - Search view', 'wpamelia'),
                 'description' => __('Front-end Booking Search is shortcode that give your customers the possibility to search for appointment by selecting several filters so that they could find the best time slots and services for their needs.', 'wpamelia'),
             ],
             'customer_cabinet_gutenberg_block'                => [
-                'title'       => __('Amelia - Customer Panel', 'wpamelia'),
+                'title'       => __('{pluginName} - Customer Panel', 'wpamelia'),
                 'description' => __('Front-end Customer Panel is a shortcode that gives your customers the possibility to manage their bookings and profile information.', 'wpamelia'),
             ],
             'employee_cabinet_gutenberg_block'                => [
-                'title'       => __('Amelia - Employee Panel', 'wpamelia'),
+                'title'       => __('{pluginName} - Employee Panel', 'wpamelia'),
                 'description' => __('Front-end Employee Panel is a shortcode that gives your employees the possibility to manage their bookings, working hours, days off, assigned services and profile information.', 'wpamelia'),
             ],
             'amelia_settings_profile'                         => __('Amelia Profile Settings', 'wpamelia'),
@@ -1407,6 +1444,9 @@ class BackendStrings
             'red_max'                                         => __('Max', 'wpamelia'),
             'red_missing_required_fields'                     => __('Missing required fields:', 'wpamelia'),
             'red_mollie_key_validation_error'                 => __('Invalid Mollie API key.', 'wpamelia'),
+            'red_stripe_keys_validation_error'                => __('Invalid Stripe API keys.', 'wpamelia'),
+            'red_stripe_publishable_key_validation_error'   => __('Invalid Stripe publishable key.', 'wpamelia'),
+            'red_stripe_secret_key_validation_error'          => __('Invalid Stripe secret key.', 'wpamelia'),
             'red_month_count'                                 => __('{count} Month | {count} Months', 'wpamelia'),
             'red_multiple'                                    => __('Multiple', 'wpamelia'),
             'red_new_package_booking'                         => __('New package booking', 'wpamelia'),
@@ -1718,8 +1758,9 @@ class BackendStrings
             'add_another_account'                             => __('Add another account', 'wpamelia'),
             'block_time_from_calendars'                       => __('Block time from calendars', 'wpamelia'),
             'add_calendar'                                    => __('Add calendar', 'wpamelia'),
+            'white_label_information'                         => __('This image will replace the Amelia logo across all plugin pages.', 'wpamelia'),
         ];
 
-        return array_merge(LiteBackendStrings::getAllStrings(), $labels);
+        return self::replacePanelShortcodes(array_merge(LiteBackendStrings::getAllStrings(), $labels));
     }
 }

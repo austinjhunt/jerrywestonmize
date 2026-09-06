@@ -17,6 +17,7 @@ use AmeliaBooking\Domain\Factory\Booking\Appointment\AppointmentFactory;
 use AmeliaBooking\Domain\Factory\Google\GoogleCalendarFactory;
 use AmeliaBooking\Domain\Factory\User\ProviderFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
+use AmeliaBooking\Domain\Services\Logger\LoggerInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\String\Name;
 use AmeliaBooking\Domain\ValueObjects\String\Token;
@@ -42,6 +43,7 @@ use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Event\EventAddedEvent
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Event\EventEditedEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Event\EventStatusUpdatedEventHandler;
 use AmeliaVendor\Google\Client;
+use AmeliaVendor\Google\Model;
 use AmeliaVendor\Google\Service\Calendar;
 use AmeliaVendor\Google\Service\Calendar\CalendarListEntry;
 use Exception;
@@ -68,6 +70,9 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
     /** @var SettingsService */
     private $settings;
 
+    /** @var LoggerInterface */
+    private $logger;
+
     /**
      * GoogleClientService constructor.
      *
@@ -79,6 +84,7 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
         $this->container = $container;
 
         $this->settings = $this->container->get('domain.settings.service');
+        $this->logger = $this->container->getLoggerService()->channel(LoggerInterface::CHANNEL_SYNC);
         $this->googleCalendarSettings = $this->settings->getCategorySettings('googleCalendar');
         $this->client = new Client();
         $this->client->setClientId($this->googleCalendarSettings['clientID']);
@@ -220,7 +226,13 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
 
                     $account['calendarList'] = $calendars;
                 } catch (\Exception $e) {
-                    error_log('GoogleCalendar: Error fetching calendar list for account ' . $account['id'] . ': ' . $e->getMessage());
+                    $this->logger->error(
+                        'GoogleCalendar: Error fetching calendar list for account',
+                        [
+                            'exception' => $e,
+                            'accountId' => $account['id'],
+                        ]
+                    );
                     $account['calendarList'] = [];
                 }
             } else {
@@ -828,7 +840,13 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
 
             return new Calendar($client);
         } catch (\Exception $e) {
-            error_log('GoogleCalendar: Error creating service for account - ' . $e->getMessage());
+            $this->logger->error(
+                'GoogleCalendar: Error creating service for account',
+                [
+                    'exception' => $e,
+                    'accountId' => $account['id'],
+                ]
+            );
             return null;
         }
     }
@@ -989,6 +1007,13 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
      */
     private function updateEvent($appointment, $provider, $period = null, $providers = null, $providersRemove = null)
     {
+        /** @var SettingsService $settingsService */
+        $settingsService  = $this->container->get('domain.settings.service');
+        $enabledForEntity = $settingsService
+            ->getEntitySettings($period ? $appointment->getSettings() : $appointment->getService()->getSettings())
+            ->getGoogleMeetSettings()
+            ->getEnabled();
+
         $event = $this->createEvent($appointment, $provider, $period, $providers, $providersRemove);
 
         $entity = $period ?: $appointment;
@@ -1001,14 +1026,93 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
                 $provider->getGoogleCalendar()->getCalendarId()->getValue() :
                 $provider->getGoogleCalendarId()->getValue();
 
-            $this->service->events->update(
+            $queryParams = [
+                'sendUpdates' => $this->googleCalendarSettings['sendEventInvitationEmail'] ? 'all' : 'none',
+            ];
+
+            // conferenceDataVersion is required both to create and to clear Meet on the remote event.
+            $queryParams['conferenceDataVersion'] = 1;
+            if (!$enabledForEntity) {
+                // null is stripped by the Google client; NULL_VALUE sends conferenceData: null.
+                // Use ArrayAccess — setConferenceData() type-hints ConferenceData and rejects the sentinel.
+                $event['conferenceData'] = Model::NULL_VALUE;
+            }
+
+            $updatedEvent = $this->service->events->update(
                 $googleCalendarId,
                 $entity->getGoogleCalendarEventId()->getValue(),
                 $event,
-                ['sendUpdates' => $this->googleCalendarSettings['sendEventInvitationEmail'] ? 'all' : 'none']
+                $queryParams
             );
 
-            do_action('amelia_after_google_calendar_event_updated', $event, $appointment->toArray(), $provider->toArray());
+            $this->syncGoogleMeetUrl($appointment, $period, $enabledForEntity, $updatedEvent);
+
+            do_action('amelia_after_google_calendar_event_updated', $updatedEvent, $appointment->toArray(), $provider->toArray());
+        }
+    }
+
+    /**
+     * Persist or clear Google Meet URL after calendar create/update.
+     *
+     * @param Appointment|Event $appointment
+     * @param EventPeriod|null $period
+     * @param bool $enabledForEntity
+     * @param Calendar\Event $googleEvent
+     *
+     * @return void
+     *
+     * @throws QueryExecutionException
+     */
+    private function syncGoogleMeetUrl($appointment, $period, $enabledForEntity, $googleEvent): void
+    {
+        if ($period) {
+            /** @var EventPeriodsRepository $eventPeriodsRepository */
+            $eventPeriodsRepository = $this->container->get('domain.booking.event.period.repository');
+
+            if (!$enabledForEntity) {
+                $period->setGoogleMeetUrl(null);
+                $eventPeriodsRepository->updateFieldById(
+                    $period->getId()->getValue(),
+                    null,
+                    'googleMeetUrl'
+                );
+
+                return;
+            }
+
+            if ($googleEvent && $googleEvent->getHangoutLink()) {
+                $period->setGoogleMeetUrl($googleEvent->getHangoutLink());
+                $eventPeriodsRepository->updateFieldById(
+                    $period->getId()->getValue(),
+                    $period->getGoogleMeetUrl(),
+                    'googleMeetUrl'
+                );
+            }
+
+            return;
+        }
+
+        /** @var AppointmentRepository $appointmentRepository */
+        $appointmentRepository = $this->container->get('domain.booking.appointment.repository');
+
+        if (!$enabledForEntity) {
+            $appointment->setGoogleMeetUrl(null);
+            $appointmentRepository->updateFieldById(
+                $appointment->getId()->getValue(),
+                null,
+                'googleMeetUrl'
+            );
+
+            return;
+        }
+
+        if ($googleEvent && $googleEvent->getHangoutLink()) {
+            $appointment->setGoogleMeetUrl($googleEvent->getHangoutLink());
+            $appointmentRepository->updateFieldById(
+                $appointment->getId()->getValue(),
+                $appointment->getGoogleMeetUrl(),
+                'googleMeetUrl'
+            );
         }
     }
 
@@ -1389,7 +1493,12 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
                 : null;
 
             if (empty($token)) {
-                error_log('GoogleCalendar: Provider has no valid token for legacy auth');
+                $this->logger->warning(
+                    'GoogleCalendar: Provider has no valid token for legacy auth',
+                    [
+                        'providerId' => $provider->getId()->getValue(),
+                    ]
+                );
                 $this->client = null;
                 $this->service = null;
                 return false;
@@ -1406,7 +1515,13 @@ class GoogleCalendarService extends AbstractGoogleCalendarService
                     $this->refreshToken($provider);
                 }
             } catch (Exception $e) {
-                error_log('GoogleCalendar: Failed to refresh provider token - ' . $e->getMessage());
+                $this->logger->error(
+                    'GoogleCalendar: Failed to refresh provider token',
+                    [
+                        'exception'  => $e,
+                        'providerId' => $provider->getId()->getValue(),
+                    ]
+                );
                 $this->client = null;
                 $this->service = null;
                 return false;

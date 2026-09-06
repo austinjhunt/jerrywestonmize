@@ -2,6 +2,7 @@
 
 namespace AmeliaBooking\Application\Commands\PaymentGateway;
 
+use AmeliaBooking\Domain\Services\Logger\LoggerInterface;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
@@ -55,6 +56,17 @@ class MolliePaymentNotifyCommandHandler extends CommandHandler
             $cacheRepository->getByIdAndName($data[0], $data[1]) : null;
 
         if (!$cache || !$cache->getPaymentId()) {
+            $this->container->getLoggerService()->channel(LoggerInterface::CHANNEL_PAYMENT)->error(
+                'Mollie payment webhook processing failed',
+                [
+                    'paymentId' => $command->getField('id'),
+                    'name'      => $command->getField('name'),
+                    'reason'    => !$cache
+                        ? 'Cache object not found'
+                        : 'Cache object missing payment ID',
+                ]
+            );
+
             $result = new CommandResult();
             $result->setResult(CommandResult::RESULT_ERROR);
             $result->setMessage(FrontendStrings::getCommonStrings()['payment_error']);

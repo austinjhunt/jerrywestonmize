@@ -52,7 +52,7 @@ class CacheApplicationService
         if ($cache && $cache->getData()) {
             $cacheData = json_decode($cache->getData()->getValue(), true);
 
-            return apply_filters('amelia_mollie_cache_data_filter', $cacheData);
+            return $this->withNonce(apply_filters('amelia_mollie_cache_data_filter', $cacheData));
         }
 
         return null;
@@ -70,6 +70,26 @@ class CacheApplicationService
     {
         $cacheData = ($data = explode('_', $name)) && isset($data[0], $data[1]) ?
             WooCommerceService::getCacheData($data[0]) : null;
-        return apply_filters('amelia_woocommerce_cache_data_filter', $cacheData);
+        return $this->withNonce(apply_filters('amelia_woocommerce_cache_data_filter', $cacheData));
+    }
+
+    /**
+     * The page that restores the cache is reached after a redirect from the payment gateway, so the nonce the
+     * booking request handed back is long gone. Mint a new one here - this runs while rendering the page for the
+     * returning visitor, so it is valid for the requests the restored form fires (i.e. "/bookings/success").
+     *
+     * @param array|null $cacheData
+     *
+     * @return array|null
+     */
+    private function withNonce($cacheData)
+    {
+        if (!is_array($cacheData)) {
+            return $cacheData;
+        }
+
+        $cacheData['wpAmeliaNonce'] = wp_create_nonce('ajax-nonce');
+
+        return $cacheData;
     }
 }

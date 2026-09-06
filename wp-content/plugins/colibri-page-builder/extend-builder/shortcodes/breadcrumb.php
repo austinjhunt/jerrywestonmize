@@ -6,10 +6,7 @@ add_shortcode( 'colibri_breadcrumb_element', '\ExtendBuilder\colibri_breadcrumb_
 
 
 function colibri_breadcrumb_element_shortcode( $atts ) {
-    $colibri_breadcrumb_index = 0;
-    $colibri_breadcrumb_index = intval( get_theme_mod( 'colibri_breadcrumb_element_index', 0 ) );
-    set_theme_mod( 'colibri_breadcrumb_element_index',
-        $colibri_breadcrumb_index === PHP_INT_MAX ? 0 : $colibri_breadcrumb_index + 1 );
+    $colibri_breadcrumb_index = random_int( 1, PHP_INT_MAX );
     $atts = shortcode_atts(
         array(
             'id'               => 'colibri-breadcrumb-' . ( $colibri_breadcrumb_index ),

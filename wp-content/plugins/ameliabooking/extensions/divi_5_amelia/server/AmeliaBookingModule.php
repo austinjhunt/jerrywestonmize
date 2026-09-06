@@ -2,6 +2,7 @@
 
 namespace Divi5Amelia;
 
+use AmeliaBooking\Infrastructure\WP\ShortcodeService\ShortcodeAliasService;
 use ET\Builder\Framework\DependencyManagement\Interfaces\DependencyInterface;
 use ET\Builder\Packages\ModuleLibrary\ModuleRegistration;
 
@@ -38,7 +39,7 @@ class AmeliaBookingModule implements DependencyInterface
      */
     public static function renderCallback($attrs, $content, $block, $elements)
     {
-        $shortcode = '[ameliastepbooking';
+        $shortcode = '[' . ShortcodeAliasService::activeShortcodeTag('stepbooking', 'ameliastepbooking');
 
         $show_all = $attrs['type']['innerContent']['desktop']['value'] ?? null;
         if ($show_all !== null && $show_all !== '0') {

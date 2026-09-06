@@ -8,6 +8,7 @@
 namespace AmeliaBooking\Infrastructure\Services\Payment;
 
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
+use AmeliaBooking\Domain\Services\Logger\LoggerInterface;
 use AmeliaBooking\Domain\Services\Payment\AbstractPaymentService;
 use AmeliaBooking\Domain\Services\Payment\PaymentServiceInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
@@ -48,13 +49,15 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
      *
      * @param SettingsService $settingsService
      * @param CurrencyService $currencyService
+     * @param LoggerInterface $logger
      */
     public function __construct(
         SettingsService $settingsService,
-        CurrencyService $currencyService
+        CurrencyService $currencyService,
+        LoggerInterface $logger
     ) {
-        parent::__construct($settingsService, $currencyService);
-        $this->middlewareService = new SquareMiddlewareService($settingsService);
+        parent::__construct($settingsService, $currencyService, $logger);
+        $this->middlewareService = new SquareMiddlewareService($settingsService, $logger);
     }
 
     /**
@@ -237,7 +240,25 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
             $paymentLinkRequest->setPrePopulatedData($prePopulatedData);
         }
 
-        return $this->getApiResponse('getCheckoutApi', 'createPaymentLink', [$paymentLinkRequest]);
+        try {
+            $response = $this->getApiResponse('getCheckoutApi', 'createPaymentLink', [$paymentLinkRequest]);
+        } catch (Exception $e) {
+            $this->logger->error('Square payment link creation failed', ['gateway' => 'square', 'exception' => $e]);
+
+            throw $e;
+        }
+
+        if (!($response && $response->isSuccess())) {
+            $this->logger->error(
+                'Square payment link creation failed',
+                [
+                    'gateway' => 'square',
+                    'error'   => $response ? $this->getErrorMessage($response) : 'empty_response',
+                ]
+            );
+        }
+
+        return $response;
     }
 
 
@@ -345,7 +366,17 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
         $body = new RefundPaymentRequest(uniqid(), $money);
         $body->setPaymentId($data['id']);
 
-        $apiResponse =  $this->getApiResponse('getRefundsApi', 'refundPayment', [$body]);
+        try {
+            $apiResponse = $this->getApiResponse('getRefundsApi', 'refundPayment', [$body]);
+        } catch (Exception $e) {
+            $this->logger->error('Square refund failed', ['gateway' => 'square', 'exception' => $e]);
+
+            throw $e;
+        }
+
+        if (!$apiResponse->isSuccess()) {
+            $this->logger->error('Square refund failed', ['gateway' => 'square', 'error' => $this->getErrorMessage($apiResponse)]);
+        }
 
         return ['error' => $apiResponse->isSuccess() ? false : $this->getErrorMessage($apiResponse)];
     }

@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 namespace Slim\Interfaces;
 
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
+use AmeliaVendor\Psr\Http\Server\MiddlewareInterface;
+use AmeliaVendor\Psr\Http\Server\RequestHandlerInterface;
 
 /** @api */
 interface MiddlewareDispatcherInterface extends RequestHandlerInterface

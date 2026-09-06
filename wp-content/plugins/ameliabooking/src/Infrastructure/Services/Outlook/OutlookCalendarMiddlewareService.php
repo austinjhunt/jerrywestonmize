@@ -2,6 +2,7 @@
 
 namespace AmeliaBooking\Infrastructure\Services\Outlook;
 
+use AmeliaBooking\Domain\Services\Logger\LoggerInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaVendor\GuzzleHttp\Exception\GuzzleException;
 use Exception;
@@ -19,18 +20,22 @@ class OutlookCalendarMiddlewareService extends AbstractOutlookCalendarMiddleware
     private $outlookCalendarSettings;
     private $service;
     private $outlookUserInfoUrl;
+    /** @var LoggerInterface */
+    private $logger;
 
     /**
      * OutlookCalendarMiddlewareService constructor.
      *
      * @param SettingsService $settingsService
+     * @param LoggerInterface $logger
      */
-    public function __construct(SettingsService $settingsService)
+    public function __construct(SettingsService $settingsService, LoggerInterface $logger)
     {
         $this->service = $settingsService;
         $this->outlookCalendarSettings = $settingsService->getCategorySettings('outlookCalendar');
         $this->graph = new Graph();
         $this->outlookUserInfoUrl = self::OUTLOOK_USER_INFO_URL;
+        $this->logger = $logger->channel(LoggerInterface::CHANNEL_SYNC);
     }
 
     public function getAuthUrl(?int $providerId, ?string $returnUrl, bool $isBackend): ?string
@@ -49,7 +54,13 @@ class OutlookCalendarMiddlewareService extends AbstractOutlookCalendarMiddleware
 
         // Check if curl initialization failed
         if ($ch === false) {
-            error_log('OutlookCalendar: Failed to initialize curl for URL: ' . $url);
+            $this->logger->error(
+                'OutlookCalendar: Failed to initialize curl for authorization URL',
+                [
+                    'endpoint'   => 'outlook/authorization/url',
+                    'providerId' => $providerId,
+                ]
+            );
             return null;
         }
 
@@ -93,6 +104,10 @@ class OutlookCalendarMiddlewareService extends AbstractOutlookCalendarMiddleware
                 }
             }
         } catch (GraphException $e) {
+            $this->logger->error(
+                'OutlookCalendar: Failed to fetch calendar list',
+                ['exception' => $e]
+            );
             throw new Exception('Failed to fetch Outlook calendars: ' . $e->getMessage());
         }
 
@@ -146,13 +161,17 @@ class OutlookCalendarMiddlewareService extends AbstractOutlookCalendarMiddleware
         $accessTokenJson = $this->normalizeAccessToken($accessTokenJson);
 
         if (!$accessTokenJson) {
-            error_log('OutlookCalendar: No access token available');
+            $this->logger->warning(
+                'OutlookCalendar: No access token available'
+            );
             return null;
         }
 
         $accessToken = json_decode($accessTokenJson, true);
-        if (!$accessToken) {
-            error_log('OutlookCalendar: Failed to decode access token');
+        if (!is_array($accessToken) || empty($accessToken['access_token'])) {
+            $this->logger->error(
+                'OutlookCalendar: Invalid access token format'
+            );
             return null;
         }
 
@@ -163,7 +182,9 @@ class OutlookCalendarMiddlewareService extends AbstractOutlookCalendarMiddleware
             $newAccessToken = $refreshToken ? $this->getRefreshAccessToken($refreshToken) : null;
 
             if (!$newAccessToken) {
-                error_log('OutlookCalendar: Failed to refresh access token');
+                $this->logger->error(
+                    'OutlookCalendar: Failed to refresh access token'
+                );
                 return null;
             }
 
@@ -271,7 +292,10 @@ class OutlookCalendarMiddlewareService extends AbstractOutlookCalendarMiddleware
                     $email = $me->getMail() ?? $me->getUserPrincipalName();
                 }
             } catch (\Exception $e) {
-                error_log('OutlookCalendar: /me failed (token may lack User.Read), trying /me/calendars - ' . $e->getMessage());
+                $this->logger->warning(
+                    'OutlookCalendar: /me failed (token may lack User.Read), trying /me/calendars',
+                    ['exception' => $e]
+                );
             }
 
             // Attempt 2: /me/calendars — works with Calendars.ReadWrite scope alone.
@@ -297,7 +321,10 @@ class OutlookCalendarMiddlewareService extends AbstractOutlookCalendarMiddleware
                         }
                     }
                 } catch (\Exception $e) {
-                    error_log('OutlookCalendar: Failed to get user info from /me/calendars - ' . $e->getMessage());
+                    $this->logger->error(
+                        'OutlookCalendar: Failed to get user info from /me/calendars',
+                        ['exception' => $e]
+                    );
                 }
             }
         }
@@ -425,7 +452,10 @@ class OutlookCalendarMiddlewareService extends AbstractOutlookCalendarMiddleware
                 )
                 ->execute();
         } catch (\Exception $e) {
-            error_log('OutlookCalendar: Failed to send email - ' . $e->getMessage());
+            $this->logger->error(
+                'OutlookCalendar: Failed to send email',
+                ['exception' => $e]
+            );
             throw new Exception('Failed to send email via Outlook: ' . $e->getMessage());
         }
     }

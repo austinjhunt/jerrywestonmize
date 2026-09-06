@@ -77,8 +77,8 @@
   // Registering the Block for catalog shortcode
   wp.blocks.registerBlockType('amelia/catalog-gutenberg-block', {
     apiVersion: 3,
-    title: wpAmeliaLabels.catalog_gutenberg_block.title,
-    description: el('div', {className: 'amelia-gutenberg-desc'}, wpAmeliaLabels.catalog_gutenberg_block.description,
+    title: window.ameliaGutenbergLabel(wpAmeliaLabels.catalog_gutenberg_block.title),
+    description: el('div', {className: 'amelia-gutenberg-desc'}, window.ameliaGutenbergLabel(wpAmeliaLabels.catalog_gutenberg_block.description),
       el('div', {className: 'amelia-gutenberg-outdated'}, wpAmeliaLabels.outdated_booking_gutenberg_block)
     ),
     icon: window.ameliaBlockIcon,
@@ -95,7 +95,7 @@
     attributes: {
       short_code: {
         type: 'string',
-        default: '[ameliacatalog]'
+        default: '[' + window.ameliaShortcodeTag('catalog', 'ameliacatalog') + ']'
       },
       trigger: {
         type: 'string',
@@ -217,13 +217,13 @@
           }
 
           if (attributes.categoryOptions === 'categories') {
-            shortCode += '[ameliacatalog category=' + attributes.category + short_code_string
+            shortCode += '[' + window.ameliaShortcodeTag('catalog', 'ameliacatalog') + ' category=' + attributes.category + short_code_string
           } else if (attributes.categoryOptions === 'services') {
-            shortCode += '[ameliacatalog service=' + attributes.service + short_code_string
+            shortCode += '[' + window.ameliaShortcodeTag('catalog', 'ameliacatalog') + ' service=' + attributes.service + short_code_string
           } else if (attributes.categoryOptions === 'packages') {
-            shortCode += '[ameliacatalog package=' + attributes.package + short_code_string
+            shortCode += '[' + window.ameliaShortcodeTag('catalog', 'ameliacatalog') + ' package=' + attributes.package + short_code_string
           } else {
-            shortCode += '[ameliacatalog' + short_code_string
+            shortCode += '[' + window.ameliaShortcodeTag('catalog', 'ameliacatalog') + short_code_string
           }
 
           if (attributes.show && attributes.categoryOptions !== 'packages' && attributes.categoryOptions !== 'services') {
@@ -394,7 +394,7 @@
           el('div', {className: 'amelia-gutenberg-placeholder'},
             el('div', {className: 'amelia-gutenberg-placeholder__header'},
               el('div', {className: 'amelia-gutenberg-placeholder__icon'}, window.ameliaBlockIcon || ''),
-              el('div', {className: 'amelia-gutenberg-placeholder__title'}, 'Amelia - Catalog (Legacy)')
+              el('div', {className: 'amelia-gutenberg-placeholder__title'}, window.ameliaGutenbergLabel('{pluginName} - Catalog (Legacy)'))
             ),
             el('div', {className: 'amelia-gutenberg-placeholder__shortcode'},
               getShortCode(props, props.attributes)
@@ -403,7 +403,10 @@
         )
       } else {
         inspectorElements.push(el('p', {style: {marginBottom: '1em'}}, 'Please create category, services and employee first. You can find instructions in our documentation on link below.'));
-        inspectorElements.push(el('a', {href: 'https://wpamelia.com/documentation/service-quick-start/', target: '_blank', style: {marginBottom: '1em'}}, 'Start working with Amelia WordPress Appointment Booking plugin'));
+        var helpLink = window.ameliaGutenbergHelpLink('https://wpamelia.com/documentation/service-quick-start/', {marginBottom: '1em'})
+        if (helpLink) {
+          inspectorElements.push(helpLink)
+        }
 
         return el('div', blockProps,
           el(blockControls, {key: 'controls'}),
@@ -415,7 +418,7 @@
           el('div', {className: 'amelia-gutenberg-placeholder'},
             el('div', {className: 'amelia-gutenberg-placeholder__header'},
               el('div', {className: 'amelia-gutenberg-placeholder__icon'}, window.ameliaBlockIcon || ''),
-              el('div', {className: 'amelia-gutenberg-placeholder__title'}, 'Amelia - Catalog (Legacy)')
+              el('div', {className: 'amelia-gutenberg-placeholder__title'}, window.ameliaGutenbergLabel('{pluginName} - Catalog (Legacy)'))
             ),
             el('div', {className: 'amelia-gutenberg-placeholder__shortcode'},
               getShortCode(props, props.attributes)

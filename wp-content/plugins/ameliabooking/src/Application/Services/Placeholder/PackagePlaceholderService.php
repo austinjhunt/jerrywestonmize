@@ -8,6 +8,7 @@
 namespace AmeliaBooking\Application\Services\Placeholder;
 
 use AmeliaBooking\Application\Services\Helper\HelperService;
+use AmeliaBooking\Application\Services\Bookable\AbstractPackageApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Package;
 use AmeliaBooking\Domain\Entity\Bookable\Service\PackageCustomer;
@@ -31,6 +32,7 @@ use AmeliaBooking\Infrastructure\Repository\Coupon\CouponRepository;
 use AmeliaBooking\Infrastructure\Repository\CustomField\CustomFieldRepository;
 use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
+use DateTime;
 use Exception;
 use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
@@ -339,9 +341,22 @@ class PackagePlaceholderService extends AppointmentPlaceholderService
                 'price'           => $packagePrice,
                 'calculatedPrice' => $hasBookedPackagePrice || empty($package['calculatedPrice']) ? false : $package['calculatedPrice'],
                 'discount'        => $hasBookedPackagePrice || empty($package['discount']) ? 0 : $package['discount'],
+                'endDate'         => !empty($package['endDate']) ? $package['endDate'] : null,
+                'durationCount'   => !empty($package['durationCount']) ? $package['durationCount'] : null,
+                'durationType'    => !empty($package['durationType']) ? $package['durationType'] : null,
             ]
         );
 
+        if (empty($endDate)) {
+            /** @var AbstractPackageApplicationService $packageApplicationService */
+            $packageApplicationService = $this->container->get('application.bookable.package');
+
+            $endDate = $packageApplicationService->getPackageEndDate($bookable);
+        }
+
+        if ($endDate) {
+            $endDate = DateTime::createFromFormat('Y-m-d H:i:s', $endDate->format('Y-m-d H:i:s'));
+        }
 
         // get coupon for WC description
         if ($packageCustomer && $packageCustomer->getCouponId() && $packageCustomer->getCouponId()->getValue()) {

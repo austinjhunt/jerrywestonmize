@@ -9456,6 +9456,17 @@ figure {
   font-weight: inherit;
   color: inherit; }
 
+.colibri_logo_fancybox .fancybox-slide {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center; }
+
 .h-section > div {
   z-index: 1; }
   .h-section > div.h-separator {
@@ -12824,6 +12835,8 @@ p.has-fit-text {
   outline: none; }
 
 /*end*/
+.wp-block-tab-list button {
+  padding: var(--wp--preset--spacing--20, 0.5em) var(--wp--preset--spacing--30, 1em); }
 
 .colibri-video-background:before {
   content: " ";
@@ -29007,6 +29020,17 @@ to {
   font-weight: inherit;
   color: inherit;
 }
+.colibri_logo_fancybox .fancybox-slide {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
 .h-section > div {
   z-index: 1;
 }
@@ -32744,6 +32768,9 @@ p.has-fit-text {
 }
 
 /*end*/
+.wp-block-tab-list button {
+  padding: var(--wp--preset--spacing--20, 0.5em) var(--wp--preset--spacing--30, 1em);
+}
 .svg-icon {
   display: inline-block;
   width: 16px;

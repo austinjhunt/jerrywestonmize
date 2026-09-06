@@ -134,6 +134,29 @@ class ZoomApplicationService extends AbstractZoomApplicationService
             );
 
         if (
+            (!$zoomEnabled || !$reservation->getProvider()->getZoomUserId()) &&
+            $reservation->getZoomMeeting() &&
+            $commandSlug !== AppointmentDeletedEventHandler::APPOINTMENT_DELETED
+        ) {
+            if (
+                $zoomSettings['accountId'] &&
+                $zoomSettings['clientId'] &&
+                $zoomSettings['clientSecret']
+            ) {
+                $this->removeMeeting($reservation, $appointmentRepository);
+            } else {
+                $reservation->setZoomMeeting(ZoomFactory::create([]));
+                $appointmentRepository->updateFieldById(
+                    $reservation->getId()->getValue(),
+                    null,
+                    'zoomMeeting'
+                );
+            }
+
+            return;
+        }
+
+        if (
             $zoomSettings['accountId'] && $zoomSettings['clientId'] && $zoomSettings['clientSecret'] &&
             $reservation->getProvider()->getZoomUserId() &&
             $zoomEnabled
@@ -225,10 +248,37 @@ class ZoomApplicationService extends AbstractZoomApplicationService
 
         $zoomSettings = $settingsService->getCategorySettings('zoom');
 
+        $zoomEnabled = $settingsService
+            ->getEntitySettings($reservation->getSettings())
+            ->getZoomSettings()
+            ->getEnabled();
+
         /** @var EventPeriodsRepository $eventPeriodsRepository */
         $eventPeriodsRepository = $this->container->get('domain.booking.event.period.repository');
 
-        if ($reservation->getZoomUserId() && $zoomSettings['accountId'] && $zoomSettings['clientId'] && $zoomSettings['clientSecret']) {
+        if (!$zoomEnabled || !$reservation->getZoomUserId()) {
+            /** @var EventPeriod $period */
+            foreach ($periods->getItems() as $period) {
+                if (
+                    $zoomSettings['accountId'] &&
+                    $zoomSettings['clientId'] &&
+                    $zoomSettings['clientSecret']
+                ) {
+                    $this->removeMeeting($period, $eventPeriodsRepository);
+                } elseif ($period->getZoomMeeting()) {
+                    $period->setZoomMeeting(ZoomFactory::create([]));
+                    $eventPeriodsRepository->updateFieldById(
+                        $period->getId()->getValue(),
+                        null,
+                        'zoomMeeting'
+                    );
+                }
+            }
+
+            return;
+        }
+
+        if ($reservation->getZoomUserId() && $zoomSettings['accountId'] && $zoomSettings['clientId'] && $zoomSettings['clientSecret'] && $zoomEnabled) {
             switch ($commandSlug) {
                 case EventEditedEventHandler::EVENT_ADDED:
                 case EventAddedEventHandler::EVENT_ADDED:

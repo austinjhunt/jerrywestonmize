@@ -17,7 +17,7 @@ class AdminNoticesController {
 	 *
 	 * @var array
 	 */
-	private static $allowed = array( 'auto-update', 'https-recommended', 'https-recommended-mfa', 'debug-foreign-auth-hooks', 'flash', 'mfa-recovery-links-expired' );
+	private static $allowed = array( 'auto-update', 'https-recommended', 'https-recommended-mfa', 'debug-foreign-auth-hooks', 'flash', 'mfa-recovery-links-expired', 'leave-review' );
 
 	/**
 	 * Get type, CSS class and HTML content for a notice key.
@@ -122,6 +122,20 @@ class AdminNoticesController {
 					'class'   => 'llar-options-notice llar-flash-notice',
 					'content' => $msg,
 				);
+			case 'leave-review':
+				ob_start();
+				$path_review = LLA_PLUGIN_DIR . 'views/admin-notice-leave-review.php';
+				if ( is_readable( $path_review ) ) {
+					include $path_review;
+				}
+				$content = ob_get_clean();
+				return array(
+					'type'    => 'notice-success',
+					'class'   => 'llar-notice-review-wrap',
+					'content' => $content,
+					// The view is a fully rendered trusted notice (own wrapper markup, inline JS).
+					'raw'     => true,
+				);
 			case 'mfa-recovery-links-expired':
 				$mfa_url = isset( $args['mfa_url'] ) ? (string) $args['mfa_url'] : '';
 				if ( '' === $mfa_url ) {
@@ -163,6 +177,7 @@ class AdminNoticesController {
 		$notice_type    = $config['type'];
 		$notice_class   = $config['class'];
 		$notice_content = $config['content'];
+		$notice_raw     = ! empty( $config['raw'] );
 		include $path;
 	}
 }

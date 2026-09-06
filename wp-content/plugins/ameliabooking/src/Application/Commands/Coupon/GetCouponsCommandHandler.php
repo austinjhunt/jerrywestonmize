@@ -11,9 +11,7 @@ use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Commands\SortParamsTrait;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
-use AmeliaBooking\Application\Services\User\UserApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
-use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Coupon\Coupon;
 use AmeliaBooking\Domain\Entity\Entities;
@@ -39,40 +37,15 @@ class GetCouponsCommandHandler extends CommandHandler
      * @param GetCouponsCommand $command
      *
      * @return CommandResult
-     * @throws \Slim\Exception\ContainerException
-     * @throws \InvalidArgumentException
-     * @throws \Slim\Exception\ContainerValueNotFoundException
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      * @throws AccessDeniedException
      */
     public function handle(GetCouponsCommand $command)
     {
-        /** @var UserApplicationService $userAS */
-        $userAS = $this->getContainer()->get('application.user.service');
-
         if (!$command->getPermissionService()->currentUserCanRead(Entities::COUPONS)) {
-            try {
-                /** @var AbstractUser $user */
-                $user = $userAS->authorization(
-                    null,
-                    Entities::PROVIDER
-                );
-            } catch (AuthorizationException $e) {
-                $result = new CommandResult();
-                $result->setResult(CommandResult::RESULT_ERROR);
-                $result->setData(
-                    [
-                        'reauthorize' => true
-                    ]
-                );
-
-                return $result;
-            }
-
-            if ($userAS->isCustomer($user)) {
-                throw new AccessDeniedException('You are not allowed to read coupons.');
-            }
+            /** @var AbstractUser $user */
+            $user = $command->authorize(Entities::PROVIDER);
         }
 
         $result = new CommandResult();

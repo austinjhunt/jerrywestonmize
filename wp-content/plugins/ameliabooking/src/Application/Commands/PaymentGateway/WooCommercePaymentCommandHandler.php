@@ -4,18 +4,16 @@ namespace AmeliaBooking\Application\Commands\PaymentGateway;
 
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
-use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\CustomField\AbstractCustomFieldApplicationService;
 use AmeliaBooking\Domain\Common\Exceptions\ForbiddenFileUploadException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
+use AmeliaBooking\Domain\ValueObjects\String\PaymentType;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\WP\Integrations\WooCommerce\WooCommerceService;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
 use Exception;
-use Interop\Container\Exception\ContainerException;
-use Slim\Exception\ContainerValueNotFoundException;
 
 /**
  * Class WooCommercePaymentCommandHandler
@@ -37,10 +35,8 @@ class WooCommercePaymentCommandHandler extends CommandHandler
      *
      * @return CommandResult
      * @throws ForbiddenFileUploadException
-     * @throws ContainerValueNotFoundException
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
-     * @throws ContainerException
      * @throws Exception
      */
     public function handle(WooCommercePaymentCommand $command)
@@ -49,23 +45,16 @@ class WooCommercePaymentCommandHandler extends CommandHandler
 
         $this->checkMandatoryFields($command);
 
-        $type = $command->getField('type') ?: Entities::APPOINTMENT;
+        $appointmentData = $this->getAppointmentData($command->getFields(), [PaymentType::WC]);
 
-        /** @var BookingApplicationService $bookingAS */
-        $bookingAS = $this->container->get('application.booking.booking.service');
+        $type = $command->getField('type') ?: Entities::APPOINTMENT;
 
         /** @var ReservationServiceInterface $reservationService */
         $reservationService = $this->container->get('application.reservation.service')->get($type);
 
         WooCommerceService::setContainer($this->container);
 
-        $data = $command->getFields();
-
-        $data['isCart'] = !empty($data['isCart']) && !!$data['isCart'];
-
         $reservation = $reservationService->getNew(true, true, true);
-
-        $appointmentData = $bookingAS->getAppointmentData($data);
 
         $reservationService->processBooking(
             $result,
@@ -97,7 +86,7 @@ class WooCommercePaymentCommandHandler extends CommandHandler
 
         $appointmentData = $reservationService->getWooCommerceData(
             $reservation,
-            $data['payment']['gateway'],
+            $appointmentData['payment']['gateway'],
             $appointmentData
         );
 

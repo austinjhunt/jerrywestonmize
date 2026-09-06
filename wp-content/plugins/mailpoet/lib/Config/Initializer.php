@@ -444,7 +444,24 @@ class Initializer {
       $this->setupAutomaticEmails();
       $this->setupWoocommerceBlocksIntegration();
       $this->setupDeactivationPoll();
-      $this->subscriberActivityTracker->trackActivity();
+      try {
+        $this->subscriberActivityTracker->trackActivity();
+      } catch (\Throwable $e) {
+        // Page-view tracking failing must never stop the rest of initialize(), which
+        // includes registering the mailpoet/v1 REST namespace. One throw here took the
+        // whole namespace down for a customer, twice over: it aborted the remaining
+        // calls in this block AND left INITIALIZED undefined, so postInitialize()
+        // skipped restApi->init() as well.
+        //
+        // Log to the PHP error log, not the MailPoet logger: the logger writes to the
+        // database, and a database that is missing, unmigrated or unreachable is exactly
+        // the kind of failure this catch exists to survive.
+        if (function_exists('error_log')) {
+          // phpcs:disable QITStandard.PHP.DebugCode.DebugFunctionFound
+          error_log('[MailPoet] Subscriber activity tracking failed: ' . (string)$e); // phpcs:ignore Squiz.PHP.DiscouragedFunctions
+          // phpcs:enable QITStandard.PHP.DebugCode.DebugFunctionFound
+        }
+      }
       $this->postEditorBlock->init();
       $this->automationEngine->initialize();
       $this->tagsRestApi->initialize();

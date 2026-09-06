@@ -7,6 +7,7 @@
 
 namespace AmeliaBooking\Application\Services\Notification;
 
+use AmeliaBooking\Domain\Services\Logger\LoggerInterface;
 use AmeliaBooking\Application\Services\Helper\HelperService;
 use AmeliaBooking\Application\Services\Placeholder\PlaceholderService;
 use AmeliaBooking\Application\Services\QrCode\QrCodeApplicationService;
@@ -315,6 +316,16 @@ class EmailNotificationService extends AbstractNotificationService
                     }
                 }
             } catch (Exception $e) {
+                $this->container->getLoggerService()->channel(LoggerInterface::CHANNEL_NOTIFICATION)->error(
+                    'Failed to send email notification',
+                    [
+                        'exception'        => $e,
+                        'notificationType' => $notification->getName()->getValue(),
+                        'userId'           => $user['id'],
+                        'email'            => $user['email'],
+                        'appointmentId'    => isset($appointmentId) ? $appointmentId : null,
+                    ]
+                );
             }
         }
     }

@@ -13,7 +13,6 @@ use AmeliaBooking\Application\Services\User\CustomerApplicationService;
 use AmeliaBooking\Application\Services\User\ProviderApplicationService;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
-use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
@@ -33,7 +32,6 @@ use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
 use AmeliaBooking\Infrastructure\Services\LessonSpace\AbstractLessonSpaceService;
 use AmeliaBooking\Infrastructure\WP\Integrations\IvyForms\IvyFormsService;
 use DateTimeZone;
-use Slim\Exception\ContainerValueNotFoundException;
 
 /**
  * Class GetAppointmentCommandHandler
@@ -46,7 +44,6 @@ class GetAppointmentCommandHandler extends CommandHandler
      * @param GetAppointmentCommand $command
      *
      * @return CommandResult
-     * @throws ContainerValueNotFoundException
      * @throws AccessDeniedException
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
@@ -54,6 +51,9 @@ class GetAppointmentCommandHandler extends CommandHandler
      */
     public function handle(GetAppointmentCommand $command)
     {
+        /** @var AbstractUser $user */
+        $user = $command->authorize();
+
         $result = new CommandResult();
 
         /** @var UserApplicationService $userAS */
@@ -67,23 +67,6 @@ class GetAppointmentCommandHandler extends CommandHandler
 
         /** @var PackageCustomerServiceRepository $packageCustomerServiceRepository */
         $packageCustomerServiceRepository = $this->container->get('domain.bookable.packageCustomerService.repository');
-
-        try {
-            /** @var AbstractUser $user */
-            $user = $command->getUserApplicationService()->authorization(
-                $command->getPage() === 'cabinet' ? $command->getToken() : null,
-                $command->getCabinetType()
-            );
-        } catch (AuthorizationException $e) {
-            $result->setResult(CommandResult::RESULT_ERROR);
-            $result->setData(
-                [
-                    'reauthorize' => true
-                ]
-            );
-
-            return $result;
-        }
 
         /** @var AppointmentRepository $appointmentRepo */
         $appointmentRepo = $this->container->get('domain.booking.appointment.repository');
@@ -102,6 +85,10 @@ class GetAppointmentCommandHandler extends CommandHandler
 
         /** @var Appointment $appointment */
         $appointment = $appointmentRepo->getById((int)$command->getField('id'));
+
+        if ($userAS->isProvider($user) && $user->getId()->getValue() !== $appointment->getProviderId()->getValue()) {
+            throw new AccessDeniedException('You are not allowed to read appointment');
+        }
 
         // TODO: Redesign - check if could be removed, if every appointment call needs the same data returned
         $getDrawerInfo = !empty($command->getField('params')['drawer']);

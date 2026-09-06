@@ -7,6 +7,7 @@
 
 namespace AmeliaBooking\Domain\Services\Payment;
 
+use AmeliaBooking\Domain\Services\Logger\LoggerInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Services\Payment\CurrencyService;
 
@@ -28,17 +29,25 @@ class AbstractPaymentService
     protected $currencyService;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * AbstractPaymentService constructor.
      *
      * @param SettingsService $settingsService
      * @param CurrencyService $currencyService
+     * @param LoggerInterface $logger
      */
     public function __construct(
         SettingsService $settingsService,
-        CurrencyService $currencyService
+        CurrencyService $currencyService,
+        LoggerInterface $logger
     ) {
         $this->settingsService = $settingsService;
         $this->currencyService = $currencyService;
+        $this->logger          = $logger->channel(LoggerInterface::CHANNEL_PAYMENT);
     }
 
     /**

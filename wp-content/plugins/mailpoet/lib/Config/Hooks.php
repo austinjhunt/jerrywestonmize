@@ -392,6 +392,11 @@ class Hooks {
       6
     );
     $this->wp->addAction(
+      'user_register',
+      [$this->subscriptionRegistration, 'applyTrackingConsentOnUserRegister'],
+      7
+    );
+    $this->wp->addAction(
       'added_existing_user',
       [$this->wpSegment, 'synchronizeUser'],
       6

@@ -4,7 +4,6 @@ namespace AmeliaBooking\Application\Commands\Booking\Appointment;
 
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
-use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\Helper\HelperService;
 use AmeliaBooking\Application\Services\Reservation\AbstractReservationService;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
@@ -14,10 +13,9 @@ use AmeliaBooking\Domain\Entity\Booking\Reservation;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
+use AmeliaBooking\Domain\ValueObjects\String\PaymentType;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use Exception;
-use Interop\Container\Exception\ContainerException;
-use Slim\Exception\ContainerValueNotFoundException;
 
 /**
  * Class AddBookingCommandHandler
@@ -37,25 +35,31 @@ class AddBookingCommandHandler extends CommandHandler
      * @param AddBookingCommand $command
      *
      * @return CommandResult
-     * @throws ContainerValueNotFoundException
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
-     * @throws ContainerException
      * @throws Exception
      */
-    public function handle(AddBookingCommand $command)
+    public function handle(AddBookingCommand $command): CommandResult
     {
         $this->checkMandatoryFields($command);
+
+        $appointmentData = $this->getAppointmentData(
+            $command->getFields(),
+            empty($command->getFields()['bookings'][0]['packageCustomerService']['id'])
+                ? [
+                    PaymentType::ON_SITE,
+                    PaymentType::PAY_PAL,
+                    PaymentType::STRIPE,
+                    PaymentType::SQUARE,
+                    PaymentType::RAZORPAY,
+                ]
+                : null
+        );
 
         /** @var AbstractReservationService $reservationService */
         $reservationService = $this->container->get('application.reservation.service')->get(
             $command->getField('type') ?: Entities::APPOINTMENT
         );
-
-        /** @var BookingApplicationService $bookingAS */
-        $bookingAS = $this->container->get('application.booking.booking.service');
-
-        $appointmentData = $bookingAS->getAppointmentData($command->getFields());
 
         $appointmentData = apply_filters('amelia_before_booking_added_filter', $appointmentData);
 
@@ -77,82 +81,51 @@ class AddBookingCommandHandler extends CommandHandler
             true
         );
 
-        /** @var UserApplicationService $userAS */
-        $userAS = $this->container->get('application.user.service');
+        // package appointment booking is available only for logged in users (WP dashboard or panel)
+        if (!empty($appointmentData['bookings'][0]['packageCustomerService']['id'])) {
+            if ($command->getToken()) {
+                /** @var UserApplicationService $userAS */
+                $userAS = $this->container->get('application.user.service');
 
-        if (
-            $command->getToken() &&
-            $command->getPage() === 'cabinet' &&
-            $command->getCabinetType() === Entities::PROVIDER
-        ) {
-            try {
+                try {
+                    /** @var AbstractUser $user */
+                    $user = $userAS->authorization(
+                        $command->getToken(),
+                        Entities::CUSTOMER
+                    );
+                } catch (AuthorizationException $e) {
+                    $result = new CommandResult();
+
+                    $result->setResult(CommandResult::RESULT_ERROR);
+                    $result->setData(
+                        [
+                            'reauthorize' => true
+                        ]
+                    );
+
+                    return $result;
+                }
+            } else {
                 /** @var AbstractUser $user */
-                $user = $userAS->authorization(
-                    $command->getToken(),
-                    Entities::PROVIDER
-                );
-
-                $reservation->setLoggedInUser($user);
-            } catch (AuthorizationException $e) {
-                $result = new CommandResult();
-
-                $result->setResult(CommandResult::RESULT_ERROR);
-                $result->setData(
-                    [
-                        'reauthorize' => true
-                    ]
-                );
-
-                return $result;
-            }
-        }
-
-        if ($command->getToken() && !empty($appointmentData['bookings'][0]['packageCustomerService']['id'])) {
-            try {
-                /** @var AbstractUser $user */
-                $user = $userAS->authorization(
-                    $command->getToken(),
-                    Entities::CUSTOMER
-                );
-
-                $reservation->setLoggedInUser($user);
-            } catch (AuthorizationException $e) {
-                $result = new CommandResult();
-
-                $result->setResult(CommandResult::RESULT_ERROR);
-                $result->setData(
-                    [
-                        'reauthorize' => true
-                    ]
-                );
-
-                return $result;
+                $user = $this->container->get('logged.in.user');
             }
 
-            if ($user->getId()->getValue() !== (int)$appointmentData['bookings'][0]['customer']['id']) {
+            // user must be admin, manager or customer (same as the customer in the booking)
+            if (
+                !$user ||
+                (
+                    $user->getType() !== AbstractUser::USER_ROLE_ADMIN &&
+                    $user->getType() !== AbstractUser::USER_ROLE_MANAGER &&
+                    $user->getId()->getValue() !== (int)$appointmentData['bookings'][0]['customer']['id']
+                )
+            ) {
                 $result = new CommandResult();
 
                 $result->setResult(CommandResult::RESULT_ERROR);
 
                 return $result;
             }
-
             $appointmentData['payment'] = null;
-
-            $appointmentData['isCabinetBooking'] = true;
-        } elseif (!empty($appointmentData['bookings'][0]['packageCustomerService']['id'])) {
-            /** @var AbstractUser $user */
-            $user = $this->container->get('logged.in.user');
-
-            if ($user && $user->getType() === AbstractUser::USER_ROLE_ADMIN) {
-                $appointmentData['payment'] = null;
-
-                $appointmentData['isCabinetBooking'] = true;
-            }
-        } else {
-            $appointmentData['isCabinetBooking'] = false;
-
-            unset($appointmentData['bookings'][0]['packageCustomerService']['id']);
         }
 
         $result = $reservationService->processRequest($appointmentData, $reservation, true);
@@ -165,6 +138,9 @@ class AddBookingCommandHandler extends CommandHandler
         }
 
         if ($result->getResult() === CommandResult::RESULT_SUCCESS && $reservation) {
+            $data = $result->getData();
+            $data['wpAmeliaNonce'] = wp_create_nonce('ajax-nonce');
+
             /** @var HelperService $helperService */
             $helperService = $this->container->get('application.helper.service');
 
@@ -172,8 +148,6 @@ class AddBookingCommandHandler extends CommandHandler
             $customer = $reservation->getCustomer();
 
             if ($customer && $customer->getEmail() && $customer->getEmail()->getValue()) {
-                $data = $result->getData();
-
                 $data['customerCabinetUrl'] = $helperService->getCustomerCabinetUrl(
                     $customer->getEmail()->getValue(),
                     $reservation->isNewUser()->getValue() ? 'email' : null,
@@ -186,9 +160,9 @@ class AddBookingCommandHandler extends CommandHandler
                 if (!empty($appointmentData['packageBookingFromBackend'])) {
                     $data['packageBookingFromBackend'] = $appointmentData['packageBookingFromBackend'];
                 }
-
-                $result->setData($data);
             }
+
+            $result->setData($data);
 
             do_action('amelia_after_booking_added', $result ? $result->getData() : null);
         }

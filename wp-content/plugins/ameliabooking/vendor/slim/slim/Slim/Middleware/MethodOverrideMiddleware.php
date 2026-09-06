@@ -12,8 +12,8 @@ namespace Slim\Middleware;
 
 use AmeliaVendor\Psr\Http\Message\ResponseInterface;
 use AmeliaVendor\Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
+use AmeliaVendor\Psr\Http\Server\MiddlewareInterface;
+use AmeliaVendor\Psr\Http\Server\RequestHandlerInterface;
 
 use function is_array;
 use function strtoupper;

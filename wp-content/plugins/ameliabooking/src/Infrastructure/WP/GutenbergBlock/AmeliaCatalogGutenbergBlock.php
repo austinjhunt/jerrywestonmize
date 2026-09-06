@@ -34,7 +34,7 @@ class AmeliaCatalogGutenbergBlock extends GutenbergBlock
     {
         $shortCode = $attributes['short_code'] ?? '[ameliacatalog]';
 
-        if (strpos($shortCode, '[ameliacatalog') !== 0) {
+        if (!self::isAllowedShortCode($shortCode, self::getAllowedShortcodeTags('catalog', 'ameliacatalog'))) {
             return '';
         }
 

@@ -2,6 +2,7 @@
 
 namespace AmeliaBooking\Infrastructure\Services\Google;
 
+use AmeliaBooking\Domain\Services\Logger\LoggerInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaVendor\Google\Client;
 use AmeliaVendor\Google\Service\Calendar;
@@ -12,12 +13,15 @@ class GoogleCalendarMiddlewareService extends AbstractGoogleCalendarMiddlewareSe
     private $settingsService;
     private $googleCalendarSettings;
     private $googleUserInfoUrl;
+    /** @var LoggerInterface */
+    private $logger;
 
-    public function __construct(SettingsService $settingsService)
+    public function __construct(SettingsService $settingsService, LoggerInterface $logger)
     {
         $this->settingsService = $settingsService;
         $this->googleCalendarSettings = $settingsService->getCategorySettings('googleCalendar');
         $this->googleUserInfoUrl = self::GOOGLE_USER_INFO_URL;
+        $this->logger = $logger->channel(LoggerInterface::CHANNEL_SYNC);
     }
 
     public function getAuthUrl($providerId, $returnUrl, $isBackend)
@@ -35,7 +39,13 @@ class GoogleCalendarMiddlewareService extends AbstractGoogleCalendarMiddlewareSe
 
         // Check if curl initialization failed
         if ($ch === false) {
-            error_log('GoogleCalendar: Failed to initialize curl for URL: ' . $url);
+            $this->logger->error(
+                'GoogleCalendar: Failed to initialize curl for authorization URL',
+                [
+                    'endpoint'   => 'google/authorization/url',
+                    'providerId' => $providerId,
+                ]
+            );
             return null;
         }
 
@@ -69,7 +79,9 @@ class GoogleCalendarMiddlewareService extends AbstractGoogleCalendarMiddlewareSe
 
         // Check if JSON encoding failed
         if ($payload === false) {
-            error_log('GoogleCalendar: Failed to encode refresh token payload');
+            $this->logger->error(
+                'GoogleCalendar: Failed to encode refresh token payload'
+            );
             return null;
         }
 
@@ -110,7 +122,9 @@ class GoogleCalendarMiddlewareService extends AbstractGoogleCalendarMiddlewareSe
 
             // Check if client creation failed
             if ($client === null) {
-                error_log('GoogleCalendar: Failed to get Google Client in getCalendarList');
+                $this->logger->error(
+                    'GoogleCalendar: Failed to get Google Client in getCalendarList'
+                );
                 return $calendars;
             }
 
@@ -127,7 +141,10 @@ class GoogleCalendarMiddlewareService extends AbstractGoogleCalendarMiddlewareSe
                     ];
                 }
             } catch (\Exception $e) {
-                error_log('GoogleCalendar: Error fetching calendar list - ' . $e->getMessage());
+                $this->logger->error(
+                    'GoogleCalendar: Error fetching calendar list',
+                    ['exception' => $e]
+                );
             }
         }
 
@@ -152,7 +169,9 @@ class GoogleCalendarMiddlewareService extends AbstractGoogleCalendarMiddlewareSe
         }
 
         if (!is_array($accessToken) || empty($accessToken['access_token'])) {
-            error_log('GoogleCalendar: Unable to decode access token for user info');
+            $this->logger->warning(
+                'GoogleCalendar: Unable to decode access token for user info'
+            );
 
             return [
                 'email'     => null,
@@ -205,7 +224,9 @@ class GoogleCalendarMiddlewareService extends AbstractGoogleCalendarMiddlewareSe
         $accessToken = $this->normalizeAccessToken($accessToken);
 
         if (!$accessToken) {
-            error_log('GoogleCalendar: No access token available');
+            $this->logger->warning(
+                'GoogleCalendar: No access token available'
+            );
             return null;
         }
 
@@ -217,14 +238,18 @@ class GoogleCalendarMiddlewareService extends AbstractGoogleCalendarMiddlewareSe
             $refreshToken = $tokenData['refresh_token'] ?? null;
 
             if (!$refreshToken) {
-                error_log('GoogleCalendar: No refresh token available');
+                $this->logger->warning(
+                    'GoogleCalendar: No refresh token available'
+                );
                 return null;
             }
 
             $newAccessToken = $this->refreshAccessToken($refreshToken);
 
             if ($newAccessToken === null) {
-                error_log('GoogleCalendar: Failed to refresh access token');
+                $this->logger->error(
+                    'GoogleCalendar: Failed to refresh access token'
+                );
                 return null;
             }
 

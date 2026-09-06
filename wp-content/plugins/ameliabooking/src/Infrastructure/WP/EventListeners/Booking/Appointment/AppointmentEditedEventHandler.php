@@ -150,12 +150,7 @@ class AppointmentEditedEventHandler
         $applicationIntegrationService->handleAppointment(
             $reservationObject,
             $appointment,
-            $commandSlug,
-            [
-                ApplicationIntegrationService::SKIP_GOOGLE_CALENDAR  => true,
-                ApplicationIntegrationService::SKIP_OUTLOOK_CALENDAR => true,
-                ApplicationIntegrationService::SKIP_APPLE_CALENDAR => true
-            ]
+            $commandSlug
         );
 
         $applicationIntegrationService->handleAppointmentEmployeeChange(

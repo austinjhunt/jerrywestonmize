@@ -16,7 +16,12 @@ use AmeliaBooking\Application\Controller\PaymentGateway\MollieValidateKeyControl
 use AmeliaBooking\Application\Controller\PaymentGateway\PayPalPaymentCallbackController;
 use AmeliaBooking\Application\Controller\PaymentGateway\PayPalPaymentController;
 use AmeliaBooking\Application\Controller\PaymentGateway\RazorpayPaymentController;
+use AmeliaBooking\Application\Controller\PaymentGateway\RazorpayPaymentNotifyController;
 use AmeliaBooking\Application\Controller\PaymentGateway\StripeValidateKeysController;
+use AmeliaBooking\Application\Controller\Stripe\CancelStripePaymentIntentController;
+use AmeliaBooking\Application\Controller\Stripe\CompleteStripePaymentIntentController;
+use AmeliaBooking\Application\Controller\Stripe\CreateStripePaymentIntentController;
+use AmeliaBooking\Application\Controller\Stripe\StripePaymentCallbackController;
 use AmeliaBooking\Application\Controller\PaymentGateway\WooCommercePaymentController;
 use AmeliaBooking\Application\Controller\PaymentGateway\WooCommerceProductsController;
 use Slim\App;
@@ -47,6 +52,8 @@ class PaymentGateway
 
         $app->post('/payment/razorpay', RazorpayPaymentController::class);
 
+        $app->post('/payment/razorpay/notify', RazorpayPaymentNotifyController::class);
+
         $app->post('/payment/barion', BarionPaymentController::class);
 
         $app->get('/payment/barion/notify', BarionPaymentNotifyController::class);
@@ -58,5 +65,13 @@ class PaymentGateway
         $app->post('/payment/stripe/validate', StripeValidateKeysController::class);
 
         $app->post('/payment/mollie/validate', MollieValidateKeyController::class);
+
+        $app->post('/payment/stripe/intent', CreateStripePaymentIntentController::class);
+
+        $app->post('/payment/stripe/cancel', CancelStripePaymentIntentController::class);
+
+        $app->post('/payment/stripe/complete', CompleteStripePaymentIntentController::class);
+
+        $app->get('/payment/stripe/callback', StripePaymentCallbackController::class);
     }
 }

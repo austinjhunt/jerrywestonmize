@@ -9,8 +9,8 @@
   // Registering the Block for customer cabinet shortcode
   wp.blocks.registerBlockType('amelia/customer-cabinet-gutenberg-block', {
     apiVersion: 3,
-    title: wpAmeliaLabels.customer_cabinet_gutenberg_block.title,
-    description: wpAmeliaLabels.customer_cabinet_gutenberg_block.description,
+    title: window.ameliaGutenbergLabel(wpAmeliaLabels.customer_cabinet_gutenberg_block.title),
+    description: window.ameliaGutenbergLabel(wpAmeliaLabels.customer_cabinet_gutenberg_block.description),
     icon: window.ameliaBlockIcon,
     category: 'amelia-blocks',
     keywords: [
@@ -24,7 +24,7 @@
     attributes: {
       short_code: {
         type: 'string',
-        default: '[ameliacustomerpanel]'
+        default: '[' + window.ameliaShortcodeTag('customer_panel', 'ameliacustomerpanel') + ']'
       },
       trigger: {
         type: 'string',
@@ -44,7 +44,7 @@
       var attributes = props.attributes
 
       function getShortCode (props, attributes) {
-        var shortCode = '[ameliacustomerpanel'
+        var shortCode = '[' + window.ameliaShortcodeTag('customer_panel', 'ameliacustomerpanel')
 
         if (!attributes.appointmentsPanel && !attributes.eventsPanel) {
           shortCode = 'Notice: Please select at least one panel.'
@@ -116,7 +116,7 @@
         el('div', {className: 'amelia-gutenberg-placeholder'},
           el('div', {className: 'amelia-gutenberg-placeholder__header'},
             el('div', {className: 'amelia-gutenberg-placeholder__icon'}, window.ameliaBlockIcon || ''),
-            el('div', {className: 'amelia-gutenberg-placeholder__title'}, 'Amelia - Customer Panel')
+            el('div', {className: 'amelia-gutenberg-placeholder__title'}, window.ameliaGutenbergLabel('{pluginName} - Customer Panel'))
           ),
           el('div', {className: 'amelia-gutenberg-placeholder__shortcode'},
             getShortCode(props, props.attributes)

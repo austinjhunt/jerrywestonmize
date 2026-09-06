@@ -2,6 +2,7 @@
 
 namespace AmeliaBooking\Infrastructure\WP\UserService;
 
+use AmeliaBooking\Infrastructure\WP\UserRoles\SuperAdminRoleService;
 use WP_Error;
 
 /**
@@ -25,14 +26,14 @@ class CreateWPUser
         if (username_exists($email)) {
             $user = get_user_by('login', $email);
             if ($user) {
-                $user->add_role($role);
+                $this->addRole($role, $user->ID);
                 return $user->ID;
             }
             return null;
         } elseif (email_exists($email)) {
             $user = get_user_by('email', $email);
             if ($user) {
-                $user->add_role($role);
+                $this->addRole($role, $user->ID);
                 return $user->ID;
             }
             return null;
@@ -86,6 +87,10 @@ class CreateWPUser
     {
         if ($role) {
             $user = new \WP_User($userId);
+            if ($this->isSuperAdminConflict($role, $user)) {
+                return;
+            }
+
             if (get_role($role)) {
                 $user->set_role($role);
             }
@@ -100,9 +105,25 @@ class CreateWPUser
     {
         if ($role) {
             $user = new \WP_User($userId);
+            if ($this->isSuperAdminConflict($role, $user)) {
+                return;
+            }
+
             if (get_role($role)) {
                 $user->add_role($role);
             }
         }
+    }
+
+    /**
+     * @param string   $role
+     * @param \WP_User $user
+     *
+     * @return bool
+     */
+    private function isSuperAdminConflict($role, $user)
+    {
+        return in_array(SuperAdminRoleService::ROLE, (array)$user->roles, true) &&
+            in_array($role, ['wpamelia-customer', 'wpamelia-provider', 'wpamelia-manager'], true);
     }
 }

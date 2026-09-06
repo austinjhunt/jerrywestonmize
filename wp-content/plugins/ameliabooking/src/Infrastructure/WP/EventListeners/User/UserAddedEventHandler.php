@@ -3,6 +3,7 @@
 namespace AmeliaBooking\Infrastructure\WP\EventListeners\User;
 
 use AmeliaBooking\Application\Commands\CommandResult;
+use AmeliaBooking\Infrastructure\WP\UserRoles\SuperAdminRoleService;
 
 /**
  * Class UserAddedEventHandler
@@ -22,6 +23,10 @@ class UserAddedEventHandler
             $commandData = $commandResult->getData();
             if (!empty($commandData['user']['externalId'])) {
                 $wpUser = new \WP_User((int)$commandData['user']['externalId']);
+                if (in_array(SuperAdminRoleService::ROLE, (array)$wpUser->roles, true)) {
+                    return;
+                }
+
                 // Set the user role
                 $wpUser->set_role('wpamelia-' . $commandData['user']['type']);
                 // Persist the changes

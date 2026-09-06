@@ -1,8 +1,8 @@
 {
   "name": "divi5-amelia/stepbooking",
   "d4Shortcode": "divi_step_booking",
-  "title": "Amelia - Step Booking",
-  "titles": "Amelia Step Bookings",
+  "title": "{pluginName} - Step Booking",
+  "titles": "{pluginName} Step Bookings",
   "category": "module",
   "moduleClassName": "divi5_amelia_booking",
   "moduleOrderClassName": "divi5_amelia_booking",
@@ -15,7 +15,7 @@
         "meta": {
           "adminLabel": {
             "desktop": {
-              "value": "Amelia Booking"
+              "value": "{pluginName} Booking"
             }
           }
         }

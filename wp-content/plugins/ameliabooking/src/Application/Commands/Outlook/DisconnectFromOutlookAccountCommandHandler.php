@@ -5,10 +5,7 @@ namespace AmeliaBooking\Application\Commands\Outlook;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
-use AmeliaBooking\Application\Services\User\UserApplicationService;
-use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
-use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
@@ -33,33 +30,8 @@ class DisconnectFromOutlookAccountCommandHandler extends CommandHandler
      */
     public function handle(DisconnectFromOutlookAccountCommand $command)
     {
-
-        /** @var UserApplicationService $userAS */
-        $userAS = $this->getContainer()->get('application.user.service');
-
-        if (!$command->getPermissionService()->currentUserCanRead(Entities::EMPLOYEES)) {
-            try {
-                /** @var AbstractUser $user */
-                $user = $userAS->authorization(
-                    $command->getToken(),
-                    Entities::PROVIDER
-                );
-            } catch (AuthorizationException $e) {
-                $result = new CommandResult();
-                $result->setResult(CommandResult::RESULT_ERROR);
-                $result->setData(
-                    [
-                        'reauthorize' => true
-                    ]
-                );
-
-                return $result;
-            }
-
-            if ($userAS->isCustomer($user)) {
-                throw new AccessDeniedException('You are not allowed');
-            }
-        }
+        /** @var AbstractUser $user */
+        $user = $command->authorizeProviderWritePermission((int)$command->getArg('id'));
 
         $result = new CommandResult();
 

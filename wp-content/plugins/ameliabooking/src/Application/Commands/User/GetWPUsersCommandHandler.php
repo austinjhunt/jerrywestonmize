@@ -9,6 +9,7 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Infrastructure\Repository\User\WPUserRepository;
 use AmeliaBooking\Infrastructure\WP\UserService\UserService;
+use AmeliaBooking\Infrastructure\WP\UserRoles\SuperAdminRoleService;
 
 /**
  * Class GetWPUsersCommandHandler
@@ -43,11 +44,15 @@ class GetWPUsersCommandHandler extends CommandHandler
         $userService = $this->container->get('users.service');
 
         $adminIds = $userService->getWpUserIdsByRoles(['administrator']);
+        $superAdminIds = $userService->getWpUserIdsByRoles([SuperAdminRoleService::ROLE]);
 
         /** @var WPUserRepository $wpUserRepository */
         $wpUserRepository = $this->getContainer()->get('domain.wpUsers.repository');
 
-        $wpUsers = $wpUserRepository->getAllNonRelatedWPUsers($command->getFields(), $adminIds);
+        $wpUsers = $wpUserRepository->getAllNonRelatedWPUsers(
+            $command->getFields(),
+            array_unique(array_merge($adminIds, $superAdminIds))
+        );
 
         $wpUsers = apply_filters('amelia_get_wp_users_filter', $wpUsers);
 

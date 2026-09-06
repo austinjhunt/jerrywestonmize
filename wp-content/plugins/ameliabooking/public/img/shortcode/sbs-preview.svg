@@ -1,0 +1,26 @@
+<svg width="760" height="560" viewBox="0 0 760 560" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_5498_51467)">
+<rect width="760" height="560" fill="white"/>
+<rect width="240" height="560" fill="#81A5D4" fill-opacity="0.1"/>
+<rect x="16" y="16" width="208" height="30" rx="4" fill="#81A5D4" fill-opacity="0.2"/>
+<rect x="16" y="70" width="208" height="33" rx="4" fill="#81A5D4" fill-opacity="0.2"/>
+<rect x="16" y="111" width="208" height="33" rx="4" fill="#81A5D4" fill-opacity="0.2"/>
+<rect x="16" y="152" width="208" height="33" rx="4" fill="#81A5D4" fill-opacity="0.2"/>
+<path d="M24 508H216" stroke="#81A5D4" stroke-opacity="0.9"/>
+<rect x="24" y="520" width="192" height="16" rx="4" fill="#81A5D4" fill-opacity="0.2"/>
+<rect x="264" y="16" width="140" height="20" rx="4" fill="#81A5D4" fill-opacity="0.1"/>
+<rect x="264" y="70" width="60" height="16" rx="4" fill="#81A5D4" fill-opacity="0.1"/>
+<rect x="264" y="96" width="472" height="40" rx="4" fill="#81A5D4" fill-opacity="0.1"/>
+<rect x="264" y="152" width="60" height="16" rx="4" fill="#81A5D4" fill-opacity="0.1"/>
+<rect x="264" y="178" width="472" height="40" rx="4" fill="#81A5D4" fill-opacity="0.1"/>
+<rect x="264" y="234" width="60" height="16" rx="4" fill="#81A5D4" fill-opacity="0.1"/>
+<rect x="264" y="260" width="472" height="40" rx="4" fill="#81A5D4" fill-opacity="0.1"/>
+<rect x="264" y="506" width="89" height="30" rx="4" fill="#81A5D4" fill-opacity="0.1"/>
+<rect x="647" y="506" width="89" height="30" rx="4" fill="#81A5D4" fill-opacity="0.1"/>
+</g>
+<defs>
+<clipPath id="clip0_5498_51467">
+<rect width="760" height="560" fill="white"/>
+</clipPath>
+</defs>
+</svg>

@@ -58,6 +58,13 @@ class WooCommercePaymentController extends Controller
         $command = new WooCommercePaymentCommand($args);
 
         $requestBody = $request->getParsedBody();
+
+        if (is_array($requestBody) && array_key_exists('isCart', $requestBody)) {
+            $requestBody['isCart'] = is_string($requestBody['isCart'])
+                ? filter_var($requestBody['isCart'], FILTER_VALIDATE_BOOLEAN)
+                : !empty($requestBody['isCart']);
+        }
+
         $this->setCommandFields($command, $requestBody);
 
         return $command;

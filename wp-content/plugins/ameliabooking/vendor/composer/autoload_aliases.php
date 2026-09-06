@@ -14929,6 +14929,26 @@ namespace AmeliaVendor {
       0 => 'AmeliaVendor\\Psr\\Http\\Client\\RequestExceptionInterface',
     ),
   ),
+  'Psr\\Http\\Server\\RequestHandlerInterface' => 
+  array (
+    'type' => 'interface',
+    'interfacename' => 'RequestHandlerInterface',
+    'namespace' => 'Psr\\Http\\Server',
+    'extends' => 
+    array (
+      0 => 'AmeliaVendor\\Psr\\Http\\Server\\RequestHandlerInterface',
+    ),
+  ),
+  'Psr\\Http\\Server\\MiddlewareInterface' => 
+  array (
+    'type' => 'interface',
+    'interfacename' => 'MiddlewareInterface',
+    'namespace' => 'Psr\\Http\\Server',
+    'extends' => 
+    array (
+      0 => 'AmeliaVendor\\Psr\\Http\\Server\\MiddlewareInterface',
+    ),
+  ),
   'Psr\\Log\\LoggerAwareInterface' => 
   array (
     'type' => 'interface',

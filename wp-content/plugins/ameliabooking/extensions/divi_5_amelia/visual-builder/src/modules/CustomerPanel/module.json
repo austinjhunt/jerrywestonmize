@@ -1,8 +1,8 @@
 {
   "name": "divi5-amelia/customerpanel",
   "d4Shortcode": "divi_customer",
-  "title": "Amelia - Customer Panel",
-  "titles": "Amelia - Customer Panels",
+  "title": "{pluginName} - Customer Panel",
+  "titles": "{pluginName} - Customer Panels",
   "category": "module",
   "moduleClassName": "divi5_amelia_customer_panel",
   "moduleOrderClassName": "divi5_amelia_customer_panel",
@@ -15,7 +15,7 @@
         "meta": {
           "adminLabel": {
             "desktop": {
-              "value": "Amelia Customer Panel"
+              "value": "{pluginName} Customer Panel"
             }
           }
         }

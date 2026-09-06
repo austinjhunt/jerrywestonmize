@@ -33,6 +33,7 @@ use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
 use AmeliaBooking\Infrastructure\Repository\Payment\PaymentRepository;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 use AmeliaBooking\Infrastructure\Services\Mailchimp\AbstractMailchimpService;
+use AmeliaBooking\Infrastructure\WP\UserRoles\SuperAdminRoleService;
 use Exception;
 use Slim\Exception\ContainerValueNotFoundException;
 
@@ -87,6 +88,14 @@ class CustomerApplicationService extends UserApplicationService
             $result->setResult(CommandResult::RESULT_CONFLICT);
             $result->setMessage('Email already exist.');
             $result->setData('This email is already in use.');
+
+            return $result;
+        }
+
+        if (!empty($fields['externalId']) && SuperAdminRoleService::userHasRole((int)$fields['externalId'])) {
+            $result->setResult(CommandResult::RESULT_CONFLICT);
+            $result->setMessage('Superadmin users cannot be assigned Amelia roles.');
+            $result->setData([]);
 
             return $result;
         }
@@ -149,13 +158,14 @@ class CustomerApplicationService extends UserApplicationService
      * @param array         $userData
      * @param CommandResult $result
      * @param bool          $validateUserName
+     * @param bool          $updateExisting
      *
      * @return Customer
      *
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      */
-    public function getNewOrExistingCustomer($userData, $result, $validateUserName)
+    public function getNewOrExistingCustomer($userData, $result, $validateUserName, $updateExisting = true)
     {
         /** @var AbstractUser $loggedInUser */
         $loggedInUser = $this->container->get('logged.in.user');
@@ -218,37 +228,39 @@ class CustomerApplicationService extends UserApplicationService
                 $result->setResult(CommandResult::RESULT_ERROR);
                 $result->setData($userWithSameMail ? ['emailError' => true] : ['phoneError' => true]);
             } else {
-                if (empty($userWithSameValue->getEmail()->getValue()) && !empty($user->getEmail())) {
-                    $userRepository->updateFieldById(
-                        $userWithSameValue->getId()->getValue(),
-                        $user->getEmail()->getValue(),
-                        'email'
-                    );
-                    $userWithSameValue->setEmail($user->getEmail());
-                }
-
-                if (
-                    empty($userWithSameValue->getPhone() ? $userWithSameValue->getPhone()->getValue() : null) &&
-                    !empty($user->getPhone() ? $user->getPhone()->getValue() : null)
-                ) {
-                    $userRepository->updateFieldById(
-                        $userWithSameValue->getId()->getValue(),
-                        $user->getPhone()->getValue(),
-                        'phone'
-                    );
-                    $userWithSameValue->setPhone(new Phone($user->getPhone()->getValue()));
+                if ($updateExisting) {
+                    if (empty($userWithSameValue->getEmail()->getValue()) && !empty($user->getEmail())) {
+                        $userRepository->updateFieldById(
+                            $userWithSameValue->getId()->getValue(),
+                            $user->getEmail()->getValue(),
+                            'email'
+                        );
+                        $userWithSameValue->setEmail($user->getEmail());
+                    }
 
                     if (
-                        empty($userWithSameValue->getCountryPhoneIso() ? $userWithSameValue->getCountryPhoneIso()->getValue() : null) &&
-                        !empty($user->getCountryPhoneIso() ? $user->getCountryPhoneIso()->getValue() : null)
+                        empty($userWithSameValue->getPhone() ? $userWithSameValue->getPhone()->getValue() : null) &&
+                        !empty($user->getPhone() ? $user->getPhone()->getValue() : null)
                     ) {
                         $userRepository->updateFieldById(
                             $userWithSameValue->getId()->getValue(),
-                            $user->getCountryPhoneIso()->getValue(),
-                            'countryPhoneIso'
+                            $user->getPhone()->getValue(),
+                            'phone'
                         );
+                        $userWithSameValue->setPhone(new Phone($user->getPhone()->getValue()));
 
-                        $userWithSameValue->setCountryPhoneIso(new Name($user->getCountryPhoneIso()->getValue()));
+                        if (
+                            empty($userWithSameValue->getCountryPhoneIso() ? $userWithSameValue->getCountryPhoneIso()->getValue() : null) &&
+                            !empty($user->getCountryPhoneIso() ? $user->getCountryPhoneIso()->getValue() : null)
+                        ) {
+                            $userRepository->updateFieldById(
+                                $userWithSameValue->getId()->getValue(),
+                                $user->getCountryPhoneIso()->getValue(),
+                                'countryPhoneIso'
+                            );
+
+                            $userWithSameValue->setCountryPhoneIso(new Name($user->getCountryPhoneIso()->getValue()));
+                        }
                     }
                 }
             }
@@ -289,10 +301,11 @@ class CustomerApplicationService extends UserApplicationService
      * @param Customer $customer
      * @param bool     $isNewCustomer
      * @param bool     $sendNewUserNotification
+     * @param bool     $isImport
      *
      * @return void
      */
-    public function setWPUserForCustomer($customer, $isNewCustomer, $sendNewUserNotification = true)
+    public function setWPUserForCustomer($customer, $isNewCustomer, $sendNewUserNotification = true, $isImport = false)
     {
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
@@ -306,9 +319,25 @@ class CustomerApplicationService extends UserApplicationService
             try {
                 if ($customer->getExternalId()) {
                     $userAS->setWpUserIdForExistingUser($customer->getId()->getValue(), $customer, Entities::CUSTOMER);
-                } elseif ($userAS->setWpUserIdForNewUser($customer->getId()->getValue(), $customer, Entities::CUSTOMER, null, $sendNewUserNotification)) {
-                    do_action('AmeliaCustomerWPCreated', $customer->toArray(), $this->container);
-                    do_action('amelia_customer_wp_created', $customer->toArray(), $this->container);
+                } else {
+                    $wpUserCreated = $isImport
+                        ? $userAS->setWpUserIdForNewUserImported(
+                            $customer->getId()->getValue(),
+                            $customer,
+                            Entities::CUSTOMER
+                        )
+                        : $userAS->setWpUserIdForNewUser(
+                            $customer->getId()->getValue(),
+                            $customer,
+                            Entities::CUSTOMER,
+                            null,
+                            $sendNewUserNotification
+                        );
+
+                    if ($wpUserCreated) {
+                        do_action('AmeliaCustomerWPCreated', $customer->toArray(), $this->container);
+                        do_action('amelia_customer_wp_created', $customer->toArray(), $this->container);
+                    }
                 }
             } catch (Exception $e) {
             }

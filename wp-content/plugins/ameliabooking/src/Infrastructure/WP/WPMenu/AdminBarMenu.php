@@ -37,14 +37,16 @@ class AdminBarMenu
             return;
         }
 
-        $icon = $this->getAmeliaIcon();
+        $pluginName = $this->getPluginName();
+        $icon       = $this->getMenuIcon();
 
         $wpAdminBar->add_menu([
             'id'    => 'amelia-menu',
-            'title' => '<span class="ab-icon">' . $icon . '</span><span class="ab-label">Amelia</span>',
+            'title' => '<span class="ab-icon">' . $icon . '</span><span class="ab-label">'
+                . esc_html($pluginName) . '</span>',
             'href'  => admin_url('admin.php?page=wpamelia-dashboard'),
             'meta'  => [
-                'title' => 'Amelia Booking',
+                'title' => $pluginName,
                 'class' => 'amelia-admin-bar-menu'
             ]
         ]);
@@ -135,6 +137,56 @@ class AdminBarMenu
     }
 
     /**
+     * Get the display name for the admin bar menu (white label plugin name when enabled).
+     */
+    private function getPluginName(): string
+    {
+        if (!$this->settingsService->isFeatureEnabled('whiteLabel')) {
+            return 'Amelia';
+        }
+
+        $whiteLabel = $this->settingsService->getCategorySettings('whiteLabel');
+        $pluginName = !empty($whiteLabel['pluginName'])
+            ? sanitize_text_field(trim($whiteLabel['pluginName']))
+            : '';
+
+        return $pluginName !== '' ? $pluginName : 'Amelia';
+    }
+
+    /**
+     * Get the admin bar icon — white label logo when set, otherwise the default Amelia SVG.
+     */
+    private function getMenuIcon(): string
+    {
+        $logoUrl = $this->getWhiteLabelLogoUrl();
+
+        if ($logoUrl !== '') {
+            return '<img src="' . esc_url($logoUrl) . '" alt="" width="20" height="20" '
+                . 'style="vertical-align: middle; position: relative; top: 2px;" />';
+        }
+
+        return $this->getAmeliaIcon();
+    }
+
+    /**
+     * Resolve white label logo URL (thumb preferred, full as fallback).
+     */
+    private function getWhiteLabelLogoUrl(): string
+    {
+        if (!$this->settingsService->isFeatureEnabled('whiteLabel')) {
+            return '';
+        }
+
+        $whiteLabel = $this->settingsService->getCategorySettings('whiteLabel');
+
+        if (!empty($whiteLabel['pictureThumbPath'])) {
+            return $whiteLabel['pictureThumbPath'];
+        }
+
+        return !empty($whiteLabel['pictureFullPath']) ? $whiteLabel['pictureFullPath'] : '';
+    }
+
+    /**
      * Get the inline SVG icon for Amelia
      */
     private function getAmeliaIcon(): string
@@ -202,6 +254,13 @@ class AdminBarMenu
 
         #wpadminbar #wp-admin-bar-amelia-menu:hover > .ab-item svg {
             color: #72aee6;
+        }
+
+        #wpadminbar #wp-admin-bar-amelia-menu > .ab-item .ab-icon img {
+            width: 20px;
+            height: 20px;
+            padding: 0;
+            object-fit: contain;
         }
         ';
 

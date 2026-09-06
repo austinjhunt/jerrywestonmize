@@ -7,8 +7,6 @@
 
 namespace AmeliaBooking\Infrastructure\WP\GutenbergBlock;
 
-use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
-
 /**
  * Class AmeliaCatalogBookingGutenbergBlock
  *
@@ -39,7 +37,7 @@ class AmeliaCatalogBookingGutenbergBlock extends GutenbergBlock
     {
         $shortCode = $attributes['short_code'] ?? '[ameliacatalogbooking]';
 
-        if (strpos($shortCode, '[ameliacatalogbooking') !== 0) {
+        if (!self::isAllowedShortCode($shortCode, self::getAllowedShortcodeTags('catalogbooking', 'ameliacatalogbooking'))) {
             return '';
         }
 
@@ -76,9 +74,16 @@ class AmeliaCatalogBookingGutenbergBlock extends GutenbergBlock
             'amelia_catalog_booking_gutenberg_block',
             'wpAmeliaLabels',
             array_merge(
-                BackendStrings::getAllStrings(),
+                self::getBlockStrings(),
                 self::getEntitiesData()
             )
+        );
+
+        self::localizePreviewImages(
+            'amelia_catalog_booking_gutenberg_block',
+            'wpAmeliaCatalogBookingPreview',
+            'cbf-preview.svg',
+            'cbf-mobile-preview.svg'
         );
     }
 }

@@ -14,7 +14,6 @@ use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Application\Services\Reservation\AppointmentReservationService;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
-use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
@@ -39,7 +38,6 @@ use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
 use Exception;
-use Interop\Container\Exception\ContainerException;
 
 /**
  * Class UpdateAppointmentCommandHandler
@@ -68,14 +66,14 @@ class UpdateAppointmentCommandHandler extends CommandHandler
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      * @throws NotFoundException
-     * @throws ContainerException
      * @throws Exception
      */
     public function handle(UpdateAppointmentCommand $command)
     {
-        $result = new CommandResult();
+        /** @var AbstractUser $user */
+        $user = $command->authorize();
 
-        $params = $command->getField('params');
+        $result = new CommandResult();
 
         /** @var AppointmentRepository $appointmentRepo */
         $appointmentRepo = $this->container->get('domain.booking.appointment.repository');
@@ -97,23 +95,6 @@ class UpdateAppointmentCommandHandler extends CommandHandler
         $paymentAS = $this->container->get('application.payment.service');
         /** @var AppointmentReservationService $reservationService */
         $reservationService = $this->container->get('application.reservation.service')->get(Entities::APPOINTMENT);
-
-        try {
-            /** @var AbstractUser $user */
-            $user = $command->getUserApplicationService()->authorization(
-                $command->getPage() === 'cabinet' ? $command->getToken() : null,
-                $command->getCabinetType()
-            );
-        } catch (AuthorizationException $e) {
-            $result->setResult(CommandResult::RESULT_ERROR);
-            $result->setData(
-                [
-                    'reauthorize' => true
-                ]
-            );
-
-            return $result;
-        }
 
         if ($userAS->isCustomer($user)) {
             throw new AccessDeniedException('You are not allowed to update appointment');
@@ -165,6 +146,10 @@ class UpdateAppointmentCommandHandler extends CommandHandler
         /** @var Appointment $oldAppointment */
         $oldAppointment = $appointmentRepo->getById($appointment->getId()->getValue());
 
+        if ($userAS->isProvider($user) && $user->getId()->getValue() !== $oldAppointment->getProviderId()->getValue()) {
+            throw new AccessDeniedException('You are not allowed to update appointment');
+        }
+
         $appointment->setInitialBookingStart(
             new DateTimeValue(clone $oldAppointment->getBookingStart()->getValue())
         );
@@ -208,6 +193,8 @@ class UpdateAppointmentCommandHandler extends CommandHandler
                             )
                         );
                     }
+
+                    $newBooking->setAggregatedPrice($oldBooking->getAggregatedPrice());
                 }
             }
         }
@@ -231,22 +218,18 @@ class UpdateAppointmentCommandHandler extends CommandHandler
 
         if (
             $bookingAS->isBookingApprovedOrPending($appointment->getStatus()->getValue()) &&
-            $bookingAS->isBookingCanceledOrRejectedOrNoShow($oldAppointment->getStatus()->getValue())
+            $bookingAS->isBookingCanceledOrRejectedOrNoShow($oldAppointment->getStatus()->getValue()) &&
+            !$appointmentAS->canBeBooked($appointment, false, null, null)
         ) {
-            /** @var AbstractUser $user */
-            $user = $this->container->get('logged.in.user');
+            $result->setResult(CommandResult::RESULT_ERROR);
+            $result->setMessage(FrontendStrings::getCommonStrings()['time_slot_unavailable']);
+            $result->setData(
+                [
+                    'timeSlotUnavailable' => true
+                ]
+            );
 
-            if (!$appointmentAS->canBeBooked($appointment, $userAS->isCustomer($user), null, null)) {
-                $result->setResult(CommandResult::RESULT_ERROR);
-                $result->setMessage(FrontendStrings::getCommonStrings()['time_slot_unavailable']);
-                $result->setData(
-                    [
-                        'timeSlotUnavailable' => true
-                    ]
-                );
-
-                return $result;
-            }
+            return $result;
         }
 
         $appointment->setGoogleCalendarEventId($oldAppointment->getGoogleCalendarEventId());

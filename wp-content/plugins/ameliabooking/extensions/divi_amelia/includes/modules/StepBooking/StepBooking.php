@@ -5,7 +5,6 @@ use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
 
 class DIVI_StepBooking extends ET_Builder_Module
 {
-
     public $slug       = 'divi_step_booking';
     public $vb_support = 'on';
 
@@ -28,7 +27,7 @@ class DIVI_StepBooking extends ET_Builder_Module
 
     public function init()
     {
-        $this->name = esc_html__(BackendStrings::get('step_booking_divi'), 'divi-divi_amelia');
+        $this->name = esc_html__(DIVI_AmeliaWhiteLabelHelper::label(BackendStrings::get('step_booking_divi')), 'divi-divi_amelia');
 
         $this->type['0']        = BackendStrings::get('show_all');
         $this->type['services'] = BackendStrings::get('services');
@@ -54,21 +53,21 @@ class DIVI_StepBooking extends ET_Builder_Module
 
 //        $this->categories['0'] = BackendStrings::get('show_all_categories');
         foreach ($data['categories'] as $category) {
-            $this->categories[$category['id']] = $category['name']. ' (id: ' . $category['id'] . ')';
+            $this->categories[$category['id']] = $category['name'] . ' (id: ' . $category['id'] . ')';
         }
         foreach ($data['servicesList'] as $service) {
             if ($service) {
-                $this->services[$service['id']] = $service['name']. ' (id: ' . $service['id'] . ')';
+                $this->services[$service['id']] = $service['name'] . ' (id: ' . $service['id'] . ')';
             }
         }
         foreach ($data['employees'] as $employee) {
             $this->employees[$employee['id']] = $employee['firstName'] . ' ' . $employee['lastName'] . ' (id: ' . $employee['id'] . ')';
         }
         foreach ($data['locations'] as $location) {
-            $this->locations[$location['id']] = $location['name']. ' (id: ' . $location['id'] . ')';
+            $this->locations[$location['id']] = $location['name'] . ' (id: ' . $location['id'] . ')';
         }
         foreach ($data['packages'] as $package) {
-            $this->packages[$package['id']] = $package['name']. ' (id: ' . $package['id'] . ')';
+            $this->packages[$package['id']] = $package['name'] . ' (id: ' . $package['id'] . ')';
         }
     }
 
@@ -199,7 +198,7 @@ class DIVI_StepBooking extends ET_Builder_Module
         );
 
         $array['in_dialog'] = array(
-            'label'             => esc_html__(BackendStrings::get('in_dialog'), 'divi-divi_amelia'),
+            'label'             => esc_html__(DIVI_AmeliaWhiteLabelHelper::label(BackendStrings::get('in_dialog')), 'divi-divi_amelia'),
             'type'              => 'yes_no_button',
             'options'           => array(
                 'on'  => esc_html__(BackendStrings::get('yes'), 'divi-divi_amelia'),
@@ -233,7 +232,7 @@ class DIVI_StepBooking extends ET_Builder_Module
     public function render($attrs, $content = null, $render_slug = null)
     {
         $preselect    =  $this->props['booking_params'];
-        $shortcode    = '[ameliastepbooking';
+        $shortcode    = '[' . DIVI_AmeliaWhiteLabelHelper::shortcodeTag('stepbooking', 'ameliastepbooking');
         $showAll      = isset($this->props['type']) ? $this->props['type'] : null;
         $trigger      = $this->props['trigger'];
         $trigger_type = $this->props['trigger_type'];
@@ -241,20 +240,20 @@ class DIVI_StepBooking extends ET_Builder_Module
         $layout       = isset($this->props['layout']) ? $this->props['layout'] : '1'; // Default to dropdown layout
 
         if ($showAll !== null && $showAll !== '' && $showAll !== '0') {
-            $shortcode .= ' show='.$showAll;
+            $shortcode .= ' show=' . $showAll;
         }
         if ($trigger !== null && $trigger !== '') {
-            $shortcode .= ' trigger='.$trigger;
+            $shortcode .= ' trigger=' . $trigger;
         }
         if (!empty($trigger) && !empty($trigger_type)) {
-            $shortcode .= ' trigger_type='.$trigger_type;
+            $shortcode .= ' trigger_type=' . $trigger_type;
         }
         if (!empty($trigger) && $in_dialog === 'on') {
             $shortcode .= ' in_dialog=1';
         }
 
         // Add layout parameter to the shortcode
-        $shortcode .= ' layout='.$layout;
+        $shortcode .= ' layout=' . $layout;
 
         if ($preselect === 'on') {
             $category = !empty($this->props['categories']) ? $this->checkValues($this->props['categories']) : null;
@@ -265,7 +264,7 @@ class DIVI_StepBooking extends ET_Builder_Module
 
             if ($service && count($service) > 0) {
                 $shortcode .= ' service=' . implode(',', $service);
-            } else if ($category && count($category) > 0) {
+            } elseif ($category && count($category) > 0) {
                 $shortcode .= ' category=' . implode(',', $category);
             }
             if ($employee && count($employee) > 0) {
@@ -284,4 +283,4 @@ class DIVI_StepBooking extends ET_Builder_Module
     }
 }
 
-new DIVI_StepBooking;
+new DIVI_StepBooking();

@@ -2,6 +2,7 @@
 
 namespace Divi5Amelia;
 
+use AmeliaBooking\Infrastructure\WP\ShortcodeService\ShortcodeAliasService;
 use ET\Builder\Packages\ModuleLibrary\ModuleRegistration;
 
 /**
@@ -37,16 +38,13 @@ class AmeliaCatalogBookingModule extends SharedShortcodeModule
      */
     public static function renderCallback($attrs, $content, $block, $elements)
     {
-        $shortcode = '[ameliacatalogbooking';
+        $catalog_view = $attrs['catalog_view']['innerContent']['desktop']['value'] ?? '0';
+        $type_value   = $attrs['type']['innerContent']['desktop']['value'] ?? '0';
 
-        $type_value = $attrs['type']['innerContent']['desktop']['value'] ?? '0';
-        if ($type_value !== null && $type_value !== '0') {
-            $shortcode .= ' show=' . $type_value;
-        }
+        $shortcode = '[' . ShortcodeAliasService::activeShortcodeTag('catalogbooking', 'ameliacatalogbooking');
+        $shortcode .= AmeliaCatalogShortcodeHelper::buildCatalogBookingShowAttribute($catalog_view, $type_value);
 
         $shortcode .= self::getSharedShortcodeString($attrs);
-
-        $catalog_view = $attrs['catalog_view']['innerContent']['desktop']['value'] ?? '0';
 
         if ($catalog_view !== '0') {
             $category = $attrs['categories_catalog']['innerContent']['desktop']['value'] ?? [];

@@ -6,9 +6,7 @@ use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
-use AmeliaBooking\Application\Services\User\ProviderApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
-use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Entities;
@@ -20,7 +18,6 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageCustomerRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
-use Interop\Container\Exception\ContainerException;
 
 /**
  * Class GetPackageBookingCommandHandler
@@ -35,7 +32,6 @@ class GetPackageBookingCommandHandler extends CommandHandler
      * @return CommandResult
      *
      * @throws AccessDeniedException
-     * @throws ContainerException
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      * @throws \DateInvalidTimeZoneException
@@ -43,6 +39,9 @@ class GetPackageBookingCommandHandler extends CommandHandler
      */
     public function handle(GetPackageBookingCommand $command)
     {
+        /** @var AbstractUser $user */
+        $user = $command->authorize();
+
         $result = new CommandResult();
 
         /** @var PackageCustomerRepository $packageCustomerRepository */
@@ -57,26 +56,13 @@ class GetPackageBookingCommandHandler extends CommandHandler
         /** @var AppointmentRepository $appointmentRepo */
         $appointmentRepo = $this->container->get('domain.booking.appointment.repository');
 
-        try {
-            /** @var AbstractUser $user */
-            $user = $command->getUserApplicationService()->authorization(null, $command->getCabinetType());
-        } catch (AuthorizationException $e) {
-            $result->setResult(CommandResult::RESULT_ERROR);
-            $result->setData(
-                [
-                    'reauthorize' => true
-                ]
-            );
-
-            return $result;
-        }
-
         $packageBookingId = $command->getArg('id');
 
         /** @var CustomerBookingRepository $bookingRepository */
         $bookingRepository = $this->container->get('domain.booking.customerBooking.repository');
 
         $appointmentBooking = [];
+
         try {
             $bookingRows = $bookingRepository->getByPackageCustomerId($packageBookingId);
 

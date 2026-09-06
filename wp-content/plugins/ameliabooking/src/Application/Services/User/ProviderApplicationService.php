@@ -69,6 +69,7 @@ use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarMiddlewar
 use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
 use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarMiddlewareService;
 use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
+use AmeliaBooking\Infrastructure\WP\UserRoles\SuperAdminRoleService;
 use Interop\Container\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
 
@@ -318,6 +319,14 @@ class ProviderApplicationService
             $result->setResult(CommandResult::RESULT_CONFLICT);
             $result->setMessage('Email already exist.');
             $result->setData('This email is already in use.');
+
+            return $result;
+        }
+
+        if (!empty($fields['externalId']) && SuperAdminRoleService::userHasRole((int)$fields['externalId'])) {
+            $result->setResult(CommandResult::RESULT_CONFLICT);
+            $result->setMessage('Superadmin users cannot be assigned Amelia roles.');
+            $result->setData([]);
 
             return $result;
         }

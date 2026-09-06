@@ -11,6 +11,7 @@ use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Entity\Bookable\AbstractBookable;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Location\Location;
+use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Domain\ValueObjects\BooleanValueObject;
 use AmeliaBooking\Domain\ValueObjects\DateTime\DateTimeValue;
@@ -550,6 +551,29 @@ class Event extends AbstractBookable
         $this->organizer = $organizer;
     }
 
+    /**
+     * @param AbstractUser $user
+     *
+     * @return bool
+     */
+    public function isOrganizer(AbstractUser $user): bool
+    {
+        return $this->organizerId
+            && $user->getId()
+            && $this->organizerId->getValue() === $user->getId()->getValue();
+    }
+
+    /**
+     * @param AbstractUser $user
+     *
+     * @return bool
+     */
+    public function hasProvider(AbstractUser $user): bool
+    {
+        return $this->providers
+            && $user->getId()
+            && $this->providers->keyExists($user->getId()->getValue());
+    }
 
     /**
      * @return BookableType

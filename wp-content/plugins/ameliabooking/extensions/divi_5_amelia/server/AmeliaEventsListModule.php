@@ -2,6 +2,7 @@
 
 namespace Divi5Amelia;
 
+use AmeliaBooking\Infrastructure\WP\ShortcodeService\ShortcodeAliasService;
 use ET\Builder\Packages\ModuleLibrary\ModuleRegistration;
 
 /**
@@ -37,7 +38,7 @@ class AmeliaEventsListModule extends SharedShortcodeModule
      */
     public static function renderCallback($attrs, $content, $block, $elements)
     {
-        $shortcode = '[ameliaeventslistbooking';
+        $shortcode = '[' . ShortcodeAliasService::activeShortcodeTag('eventslistbooking', 'ameliaeventslistbooking');
 
         $shortcode .= self::getSharedShortcodeString($attrs);
 

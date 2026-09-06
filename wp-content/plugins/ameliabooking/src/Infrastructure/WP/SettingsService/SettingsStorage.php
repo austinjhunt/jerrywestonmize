@@ -6,7 +6,9 @@ use AmeliaBooking\Application\Services\Location\AbstractCurrentLocation;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsStorageInterface;
 use AmeliaBooking\Infrastructure\Licence;
+use AmeliaBooking\Plugin;
 use AmeliaBooking\Infrastructure\WP\Integrations\PluginInstaller;
+use AmeliaBooking\Infrastructure\WP\UserRoles\SuperAdminRoleService;
 
 /**
  * Class SettingsStorage
@@ -140,10 +142,15 @@ class SettingsStorage implements SettingsStorageInterface
         }
 
         $wpUser = wp_get_current_user();
+        $superAdminService = new SuperAdminRoleService();
 
         $userType = 'customer';
 
-        if (in_array('administrator', $wpUser->roles, true) || is_super_admin($wpUser->ID)) {
+        if (
+            in_array('administrator', $wpUser->roles, true) ||
+            in_array(SuperAdminRoleService::ROLE, $wpUser->roles, true) ||
+            is_super_admin($wpUser->ID)
+        ) {
             $userType = 'admin';
         } elseif (in_array('wpamelia-manager', $wpUser->roles, true)) {
             $userType = 'manager';
@@ -581,10 +588,15 @@ class SettingsStorage implements SettingsStorageInterface
         $ipLocateApyKey   = $this->getSetting('general', 'ipLocateApiKey');
 
         $wpUser = wp_get_current_user();
+        $superAdminService = new SuperAdminRoleService();
 
         $userType = 'customer';
 
-        if (in_array('administrator', $wpUser->roles, true) || is_super_admin($wpUser->ID)) {
+        if (
+            in_array('administrator', $wpUser->roles, true) ||
+            in_array(SuperAdminRoleService::ROLE, $wpUser->roles, true) ||
+            is_super_admin($wpUser->ID)
+        ) {
             $userType = 'admin';
         } elseif (in_array('wpamelia-manager', $wpUser->roles, true)) {
             $userType = 'manager';
@@ -592,13 +604,28 @@ class SettingsStorage implements SettingsStorageInterface
             $userType = 'provider';
         }
 
+        $isCurrentUserSuperAdmin = $superAdminService->isCurrentUserSuperAdmin();
+        $canAccessActivation = $superAdminService->canAccessActivationSettings();
+
         return [
             'capabilities'         => $capabilities,
+            'isSuperAdmin'         => $isCurrentUserSuperAdmin,
+            'isSuperAdminRoleAvailable' => SuperAdminRoleService::isAvailable(),
+            'superAdminCount'      => $superAdminService->countSuperAdmins(),
             'activation'           => [
-                'licence' => $this->getSetting('activation', 'licence'),
-                'stash'   => $this->getSetting('activation', 'stash'),
-                'hideUnavailableFeatures' => $this->getSetting('activation', 'hideUnavailableFeatures'),
-                'hideTipsAndSuggestions'  => $this->getSetting('activation', 'hideTipsAndSuggestions'),
+                'active'  => (bool)$this->getSetting('activation', 'active'),
+                'licence' => $canAccessActivation ? $this->getSetting('activation', 'licence') : null,
+                'stash'   => $canAccessActivation ? $this->getSetting('activation', 'stash') : false,
+                'hideUnavailableFeatures' => $canAccessActivation ?
+                    $this->getSetting('activation', 'hideUnavailableFeatures') : false,
+                'hideTipsAndSuggestions'  => $canAccessActivation ?
+                    $this->getSetting('activation', 'hideTipsAndSuggestions') : false,
+            ],
+            'whiteLabel'           => [
+                'pluginName'        => $this->getSetting('whiteLabel', 'pluginName'),
+                'hideExternalLinks' => $this->getSetting('whiteLabel', 'hideExternalLinks'),
+                'pictureFullPath'   => $this->getSetting('whiteLabel', 'pictureFullPath'),
+                'pictureThumbPath'  => $this->getSetting('whiteLabel', 'pictureThumbPath'),
             ],
             'appleCalendar'        => [
                 'active' => Licence\Licence::isFeatureEnabledWithLicense(

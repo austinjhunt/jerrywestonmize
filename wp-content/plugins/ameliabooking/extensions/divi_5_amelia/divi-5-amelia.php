@@ -14,7 +14,7 @@ phpcs:disable PSR1.Files.SideEffects
 
 use AmeliaBooking\Infrastructure\Licence\Licence;
 use AmeliaBooking\Infrastructure\WP\GutenbergBlock\GutenbergBlock;
-use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
+use AmeliaBooking\Infrastructure\WP\ShortcodeService\ShortcodeAliasService;
 
 if (!defined('ABSPATH')) {
     die('Direct access forbidden.');
@@ -178,9 +178,30 @@ function divi5_amelia_add_inline_data()
         ?>
         <script type="text/javascript">
             window.ameliaDivi5Data = <?php echo wp_json_encode($ameliaOptions); ?>;
-            window.wpAmeliaLabels = <?php echo wp_json_encode(BackendStrings::getAllStrings()); ?>;
+            window.wpAmeliaLabels = <?php echo wp_json_encode(GutenbergBlock::getBlockStrings()); ?>;
+            window.wpAmeliaUseNeutralShortcodes = <?php echo wp_json_encode(ShortcodeAliasService::shouldUseNeutralShortcodes()); ?>;
+            window.wpAmeliaShortcodeAliases = <?php echo wp_json_encode(ShortcodeAliasService::getAliases()); ?>;
+            window.wpAmeliaPluginName = <?php echo wp_json_encode(ShortcodeAliasService::getWhiteLabelPluginName()); ?>;
+            window.wpAmeliaBuilderBrandName = <?php echo wp_json_encode(ShortcodeAliasService::getBuilderBrandName()); ?>;
+            window.wpAmeliaPluginImage = <?php echo wp_json_encode(ShortcodeAliasService::getWhiteLabelPluginImage()); ?>;
             window.isAmeliaLite = <?php echo wp_json_encode(!Licence::$premium); ?>;
             window.ameliaLicence = <?php echo wp_json_encode(Licence::getLicence()); ?>;
+            window.ameliaStepBookingPreview = <?php echo wp_json_encode([
+                'desktop' => AMELIA_URL . 'public/img/shortcode/sbs-preview.svg',
+                'mobile'  => AMELIA_URL . 'public/img/shortcode/sbs-mobile-preview.svg',
+            ]); ?>;
+            window.ameliaCatalogBookingPreview = <?php echo wp_json_encode([
+                'desktop' => AMELIA_URL . 'public/img/shortcode/cbf-preview.svg',
+                'mobile'  => AMELIA_URL . 'public/img/shortcode/cbf-mobile-preview.svg',
+            ]); ?>;
+            window.ameliaEventsListBookingPreview = <?php echo wp_json_encode([
+                'desktop' => AMELIA_URL . 'public/img/shortcode/elf-preview.svg',
+                'mobile'  => AMELIA_URL . 'public/img/shortcode/elf-mobile-preview.svg',
+            ]); ?>;
+            window.ameliaEventsCalendarBookingPreview = <?php echo wp_json_encode([
+                'desktop' => AMELIA_URL . 'public/img/shortcode/ecf-preview.svg',
+                'mobile'  => AMELIA_URL . 'public/img/shortcode/ecf-mobile-preview.svg',
+            ]); ?>;
         </script>
         <?php
     }

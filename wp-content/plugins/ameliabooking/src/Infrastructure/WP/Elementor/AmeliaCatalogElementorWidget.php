@@ -32,11 +32,11 @@ class AmeliaCatalogElementorWidget extends Widget_Base
             'amelia_catalog_section',
             [
                 'label' => '<div class="amelia-elementor-content-outdated"><p class="amelia-elementor-content-title">'
-                    . BackendStrings::get('catalog_gutenberg_block')['title']
+                    . AmeliaElementorWhiteLabelHelper::label(BackendStrings::get('catalog_gutenberg_block')['title'])
                     . '</p><br><p class="amelia-elementor-content-p">'
-                    . BackendStrings::get('catalog_gutenberg_block')['description']
+                    . AmeliaElementorWhiteLabelHelper::label(BackendStrings::get('catalog_gutenberg_block')['description'])
                     . '</p><br><p class="amelia-elementor-content-p amelia-elementor-content-p-outdated">'
-                    . BackendStrings::get('outdated_booking_gutenberg_block')
+                    . AmeliaElementorWhiteLabelHelper::label(BackendStrings::get('outdated_booking_gutenberg_block'))
                     . '</p>',
             ]
         );
@@ -196,7 +196,8 @@ class AmeliaCatalogElementorWidget extends Widget_Base
             $location = '';
             $trigger  = '';
         }
-        echo esc_html('[ameliacatalog' . $show . $trigger . $category_service . $employee . $location . ']');
+        echo esc_html('[' . AmeliaElementorWhiteLabelHelper::shortcodeTag('catalog', 'ameliacatalog') .
+            $show . $trigger . $category_service . $employee . $location . ']');
     }
 
 

@@ -6,6 +6,8 @@ if (!class_exists('ET_Builder_Element')) {
 
 $module_files = glob(__DIR__ . '/modules/*/*.php');
 
+require_once __DIR__ . '/DiviAmeliaWhiteLabelHelper.php';
+
 $hidden_modules = ['Search', 'Events', 'Booking', 'Catalog'];
 
 // Check if we're in Divi builder context (admin or visual builder)

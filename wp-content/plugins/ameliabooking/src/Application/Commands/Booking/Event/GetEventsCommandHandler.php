@@ -78,21 +78,8 @@ class GetEventsCommandHandler extends CommandHandler
         $isCalendarPage = $isFrontEnd && (int)$params['page'] === 0;
 
         if (!$isFrontEnd) {
-            try {
-                $user = $command->getUserApplicationService()->authorization(
-                    $isCabinetPage ? $command->getToken() : null,
-                    $command->getCabinetType()
-                );
-            } catch (AuthorizationException $e) {
-                $result->setResult(CommandResult::RESULT_ERROR);
-                $result->setData(
-                    [
-                        'reauthorize' => true
-                    ]
-                );
-
-                return $result;
-            }
+            /** @var AbstractUser $user */
+            $user = $command->authorize();
 
             if ($userAS->isAmeliaUser($user) && $userAS->isCustomer($user)) {
                 $params['customerId'] = $user->getId()->getValue();

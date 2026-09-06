@@ -31,7 +31,7 @@ class AmeliaSearchGutenbergBlock extends GutenbergBlock
     {
         $shortCode = $attributes['short_code'] ?? '[ameliasearch]';
 
-        if (strpos($shortCode, '[ameliasearch') !== 0) {
+        if (!self::isAllowedShortCode($shortCode, self::getAllowedShortcodeTags('search', 'ameliasearch'))) {
             return '';
         }
 

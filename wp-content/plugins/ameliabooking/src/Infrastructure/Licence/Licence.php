@@ -29,6 +29,7 @@ class Licence extends Pro\Licence
      */
     private static $featureLicenseRequirements = [
         'apis' => LicenceConstants::DEVELOPER,
+        'whiteLabel' => LicenceConstants::DEVELOPER,
         'appleCalendar' => LicenceConstants::BASIC,
         'barion' => LicenceConstants::BASIC,
         'buddyboss' => LicenceConstants::BASIC,

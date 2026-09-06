@@ -12,7 +12,6 @@ use AmeliaBooking\Application\Services\Helper\HelperService;
 use AmeliaBooking\Application\Services\User\ProviderApplicationService;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
-use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
@@ -27,7 +26,6 @@ use AmeliaBooking\Infrastructure\Repository\Bookable\Service\ServiceRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
 use DateTimeZone;
-use Interop\Container\Exception\ContainerException;
 
 /**
  * Class GetAppointmentsCommandHandler
@@ -44,10 +42,12 @@ class GetAppointmentsCommandHandler extends CommandHandler
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      * @throws AccessDeniedException
-     * @throws ContainerException
      */
     public function handle(GetAppointmentsCommand $command)
     {
+        /** @var AbstractUser $user */
+        $user = $command->authorize();
+
         $result = new CommandResult();
 
         /** @var HelperService $helperService */
@@ -86,20 +86,6 @@ class GetAppointmentsCommandHandler extends CommandHandler
         $isCabinetPackageRequest = $isCabinetPage && isset($params['activePackages']);
 
         $isDashboardPackageRequest = !$isCabinetPage && (isset($params['packageId']) || !empty($params['packageBookings']));
-
-        try {
-            /** @var AbstractUser $user */
-            $user = $command->getUserApplicationService()->authorization($isCabinetPage ? $command->getToken() : null, $command->getCabinetType());
-        } catch (AuthorizationException $e) {
-            $result->setResult(CommandResult::RESULT_ERROR);
-            $result->setData(
-                [
-                    'reauthorize' => true
-                ]
-            );
-
-            return $result;
-        }
 
         $readOthers = $this->container->getPermissionsService()->currentUserCanReadOthers(Entities::APPOINTMENTS);
 

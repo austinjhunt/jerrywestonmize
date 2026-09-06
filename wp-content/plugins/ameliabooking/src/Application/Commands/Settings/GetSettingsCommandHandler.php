@@ -9,6 +9,7 @@ use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Services\Mailchimp\AbstractMailchimpService;
 use AmeliaBooking\Infrastructure\WP\Integrations\IvyForms\IvyFormsService;
+use AmeliaBooking\Infrastructure\WP\UserRoles\SuperAdminRoleService;
 use AmeliaVendor\Melograno\UsageTracker\Core\UsageTracker;
 use Interop\Container\Exception\ContainerException;
 use AmeliaVendor\Melograno\UsageTracker\Collectors\Plugin\AmeliaCollector;
@@ -38,8 +39,20 @@ class GetSettingsCommandHandler extends CommandHandler
 
         $settings = $settingsService->getAllSettingsCategorized();
 
+        $superAdminService = new SuperAdminRoleService();
+        $settings['isSuperAdmin'] = $superAdminService->isCurrentUserSuperAdmin();
+        $settings['isSuperAdminRoleAvailable'] = SuperAdminRoleService::isAvailable();
+        $settings['superAdminCount'] = $superAdminService->countSuperAdmins();
+
         if ($settings['activation']['purchaseCodeStore'] !== '' && $settings['activation']['active']) {
             $settings['activation']['purchaseCodeStore'] = null;
+        }
+
+        if (!$superAdminService->canAccessActivationSettings()) {
+            $settings['activation']['purchaseCodeStore'] = null;
+            $settings['activation']['envatoTokenEmail'] = '';
+            $settings['activation']['licence'] = null;
+            $settings['activation']['licenseActivatorUserId'] = null;
         }
 
         if (!empty($settings['payments']['square'])) {

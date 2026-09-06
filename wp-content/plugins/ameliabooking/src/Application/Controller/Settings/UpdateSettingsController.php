@@ -48,6 +48,7 @@ class UpdateSettingsController extends Controller
         'pageColumnSettings',
         'socialLogin',
         'mailchimp',
+        'whiteLabel',
         'armUsageTrackingNoticeOnDisable',
     ];
 

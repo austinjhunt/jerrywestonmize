@@ -8,7 +8,6 @@ use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Application\Services\User\ProviderApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
-use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
@@ -18,7 +17,6 @@ use AmeliaBooking\Domain\ValueObjects\String\BookableType;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageCustomerRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
-use Interop\Container\Exception\ContainerException;
 
 /**
  * Class GetPackageBookingsCommandHandler
@@ -33,7 +31,6 @@ class GetPackageBookingsCommandHandler extends CommandHandler
      * @return CommandResult
      *
      * @throws AccessDeniedException
-     * @throws ContainerException
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      * @throws \DateInvalidTimeZoneException
@@ -41,6 +38,9 @@ class GetPackageBookingsCommandHandler extends CommandHandler
      */
     public function handle(GetPackageBookingsCommand $command)
     {
+        /** @var AbstractUser $user */
+        $user = $command->authorize();
+
         $result = new CommandResult();
 
         /** @var PackageCustomerRepository $packageCustomerRepository */
@@ -63,20 +63,6 @@ class GetPackageBookingsCommandHandler extends CommandHandler
 
         if (!empty($params['dates'][1])) {
             $params['dates'][1] .= ' 23:59:59';
-        }
-
-        try {
-            /** @var AbstractUser $user */
-            $user = $command->getUserApplicationService()->authorization(null, $command->getCabinetType());
-        } catch (AuthorizationException $e) {
-            $result->setResult(CommandResult::RESULT_ERROR);
-            $result->setData(
-                [
-                    'reauthorize' => true
-                ]
-            );
-
-            return $result;
         }
 
         if ($user && $user->getType() === Entities::PROVIDER) {
@@ -114,6 +100,7 @@ class GetPackageBookingsCommandHandler extends CommandHandler
         $bookingRepository = $this->container->get('domain.booking.customerBooking.repository');
 
         $allBookingStatuses = [];
+
         foreach ($packageCustomerIds as $packageCustomerId) {
             try {
                 $bookingRows = $bookingRepository->getByPackageCustomerId($packageCustomerId);
@@ -162,6 +149,7 @@ class GetPackageBookingsCommandHandler extends CommandHandler
 
             // Calculate booked count using actual booking statuses for this package customer
             $bookedCount = 0;
+
             if (!empty($allBookingStatuses[$packagePurchase['id']])) {
                 foreach ($allBookingStatuses[$packagePurchase['id']] as $appointmentId => $bookingStatus) {
                     if (in_array($bookingStatus, ['approved', 'pending'], true)) {

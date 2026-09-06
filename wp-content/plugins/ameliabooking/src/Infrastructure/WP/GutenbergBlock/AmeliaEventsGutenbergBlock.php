@@ -7,7 +7,6 @@
 
 namespace AmeliaBooking\Infrastructure\WP\GutenbergBlock;
 
-use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
 use AmeliaBooking\Infrastructure\Licence;
 
 /**
@@ -35,7 +34,7 @@ class AmeliaEventsGutenbergBlock extends GutenbergBlock
     {
         $shortCode = $attributes['short_code'] ?? '[ameliaevents]';
 
-        if (strpos($shortCode, '[ameliaevents') !== 0) {
+        if (!self::isAllowedShortCode($shortCode, self::getAllowedShortcodeTags('events', 'ameliaevents'))) {
             return '';
         }
 
@@ -72,7 +71,7 @@ class AmeliaEventsGutenbergBlock extends GutenbergBlock
             'amelia_events_gutenberg_block',
             'wpAmeliaLabels',
             array_merge(
-                BackendStrings::getAllStrings(),
+                self::getBlockStrings(),
                 self::getEntitiesData(),
                 array('isLite' => !Licence\Licence::isPremium())
             )

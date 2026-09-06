@@ -9,7 +9,6 @@ use AmeliaBooking\Application\Services\Bookable\BookableApplicationService;
 use AmeliaBooking\Application\Services\Booking\AppointmentApplicationService;
 use AmeliaBooking\Application\Services\Entity\EntityApplicationService;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
-use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\BookingUnavailableException;
 use AmeliaBooking\Domain\Common\Exceptions\CustomerBookedException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
@@ -30,8 +29,6 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\Coupon\CouponRepository;
 use Exception;
-use Interop\Container\Exception\ContainerException;
-use Slim\Exception\ContainerValueNotFoundException;
 
 /**
  * Class AddAppointmentCommandHandler
@@ -55,15 +52,17 @@ class AddAppointmentCommandHandler extends CommandHandler
      * @param AddAppointmentCommand $command
      *
      * @return CommandResult
+     * @throws AccessDeniedException
      * @throws NotFoundException
-     * @throws ContainerValueNotFoundException
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
-     * @throws ContainerException
      * @throws Exception
      */
     public function handle(AddAppointmentCommand $command)
     {
+        /** @var AbstractUser $user */
+        $user = $command->authorize();
+
         $result = new CommandResult();
 
         $this->checkMandatoryFields($command);
@@ -85,23 +84,6 @@ class AddAppointmentCommandHandler extends CommandHandler
 
         if ($missingEntity = $entityService->getMissingEntityForAppointment($command->getFields())) {
             return $entityService->getMissingEntityResponse($missingEntity);
-        }
-
-        try {
-            /** @var AbstractUser $user */
-            $user = $command->getUserApplicationService()->authorization(
-                $command->getPage() === 'cabinet' ? $command->getToken() : null,
-                $command->getCabinetType()
-            );
-        } catch (AuthorizationException $e) {
-            $result->setResult(CommandResult::RESULT_ERROR);
-            $result->setData(
-                [
-                    'reauthorize' => true
-                ]
-            );
-
-            return $result;
         }
 
         if ($userAS->isCustomer($user)) {

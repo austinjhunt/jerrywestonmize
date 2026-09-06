@@ -733,6 +733,10 @@ class Functions {
     return wp_safe_redirect($location, $status);
   }
 
+  public function wpValidateRedirect($location, $fallbackUrl = '') {
+    return wp_validate_redirect($location, $fallbackUrl);
+  }
+
   public function wpStaticizeEmoji($text) {
     return wp_staticize_emoji($text);
   }
@@ -760,6 +764,24 @@ class Functions {
 
   public function wpautop($pee, $br = true) {
     return wpautop($pee, $br);
+  }
+
+  /**
+   * @param int|string|\WP_Post|null $post
+   */
+  public function hasBlocks($post = null): bool {
+    return has_blocks($post);
+  }
+
+  /**
+   * @param int|\WP_Post|null $post
+   */
+  public function postPasswordRequired($post = null): bool {
+    return post_password_required($post);
+  }
+
+  public function stripShortcodes(string $content): string {
+    return strip_shortcodes($content);
   }
 
   public function inTheLoop(): bool {

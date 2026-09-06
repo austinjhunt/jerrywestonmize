@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit35c29752d476546fd6446d31130b3dfc
+class ComposerStaticInit4f3a4ba43b28f64142dd326da0b0260d
 {
     public static $files = array (
         '7b11c4dc42b3b3023073cb14e519683c_am' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
@@ -50,10 +50,6 @@ class ComposerStaticInit35c29752d476546fd6446d31130b3dfc
         array (
             'Razorpay\\Tests\\' => 15,
             'Razorpay\\Api\\' => 13,
-        ),
-        'P' => 
-        array (
-            'Psr\\Http\\Server\\' => 16,
         ),
         'O' => 
         array (
@@ -104,6 +100,7 @@ class ComposerStaticInit35c29752d476546fd6446d31130b3dfc
             'AmeliaVendor\\Sabre\\Uri\\' => 23,
             'AmeliaVendor\\Sabberworm\\CSS\\' => 28,
             'AmeliaVendor\\Psr\\Log\\' => 21,
+            'AmeliaVendor\\Psr\\Http\\Server\\' => 29,
             'AmeliaVendor\\Psr\\Http\\Message\\' => 30,
             'AmeliaVendor\\Psr\\Http\\Client\\' => 29,
             'AmeliaVendor\\Psr\\Container\\' => 27,
@@ -171,11 +168,6 @@ class ComposerStaticInit35c29752d476546fd6446d31130b3dfc
         'Razorpay\\Api\\' => 
         array (
             0 => __DIR__ . '/..' . '/razorpay/razorpay/src',
-        ),
-        'Psr\\Http\\Server\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/http-server-handler/src',
-            1 => __DIR__ . '/..' . '/psr/http-server-middleware/src',
         ),
         'OpenSpout\\' => 
         array (
@@ -268,6 +260,11 @@ class ComposerStaticInit35c29752d476546fd6446d31130b3dfc
         'AmeliaVendor\\Psr\\Log\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
+        ),
+        'AmeliaVendor\\Psr\\Http\\Server\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-server-handler/src',
+            1 => __DIR__ . '/..' . '/psr/http-server-middleware/src',
         ),
         'AmeliaVendor\\Psr\\Http\\Message\\' => 
         array (
@@ -710,6 +707,8 @@ class ComposerStaticInit35c29752d476546fd6446d31130b3dfc
         'AmeliaBooking\\Application\\Commands\\PaymentGateway\\PayPalPaymentCommandHandler' => __DIR__ . '/../..' . '/src/Application/Commands/PaymentGateway/PayPalPaymentCommandHandler.php',
         'AmeliaBooking\\Application\\Commands\\PaymentGateway\\RazorpayPaymentCommand' => __DIR__ . '/../..' . '/src/Application/Commands/PaymentGateway/RazorpayPaymentCommand.php',
         'AmeliaBooking\\Application\\Commands\\PaymentGateway\\RazorpayPaymentCommandHandler' => __DIR__ . '/../..' . '/src/Application/Commands/PaymentGateway/RazorpayPaymentCommandHandler.php',
+        'AmeliaBooking\\Application\\Commands\\PaymentGateway\\RazorpayPaymentNotifyCommand' => __DIR__ . '/../..' . '/src/Application/Commands/PaymentGateway/RazorpayPaymentNotifyCommand.php',
+        'AmeliaBooking\\Application\\Commands\\PaymentGateway\\RazorpayPaymentNotifyCommandHandler' => __DIR__ . '/../..' . '/src/Application/Commands/PaymentGateway/RazorpayPaymentNotifyCommandHandler.php',
         'AmeliaBooking\\Application\\Commands\\PaymentGateway\\StripeValidateKeysCommand' => __DIR__ . '/../..' . '/src/Application/Commands/PaymentGateway/StripeValidateKeysCommand.php',
         'AmeliaBooking\\Application\\Commands\\PaymentGateway\\StripeValidateKeysCommandHandler' => __DIR__ . '/../..' . '/src/Application/Commands/PaymentGateway/StripeValidateKeysCommandHandler.php',
         'AmeliaBooking\\Application\\Commands\\PaymentGateway\\WooCommercePaymentCommand' => __DIR__ . '/../..' . '/src/Application/Commands/PaymentGateway/WooCommercePaymentCommand.php',
@@ -785,6 +784,12 @@ class ComposerStaticInit35c29752d476546fd6446d31130b3dfc
         'AmeliaBooking\\Application\\Commands\\Stash\\UpdateStashCommandHandler' => __DIR__ . '/../..' . '/src/Application/Commands/Stash/UpdateStashCommandHandler.php',
         'AmeliaBooking\\Application\\Commands\\Stats\\GetStatsCommand' => __DIR__ . '/../..' . '/src/Application/Commands/Stats/GetStatsCommand.php',
         'AmeliaBooking\\Application\\Commands\\Stats\\GetStatsCommandHandler' => __DIR__ . '/../..' . '/src/Application/Commands/Stats/GetStatsCommandHandler.php',
+        'AmeliaBooking\\Application\\Commands\\Stripe\\CancelStripePaymentIntentCommand' => __DIR__ . '/../..' . '/src/Application/Commands/Stripe/CancelStripePaymentIntentCommand.php',
+        'AmeliaBooking\\Application\\Commands\\Stripe\\CancelStripePaymentIntentCommandHandler' => __DIR__ . '/../..' . '/src/Application/Commands/Stripe/CancelStripePaymentIntentCommandHandler.php',
+        'AmeliaBooking\\Application\\Commands\\Stripe\\CompleteStripePaymentIntentCommand' => __DIR__ . '/../..' . '/src/Application/Commands/Stripe/CompleteStripePaymentIntentCommand.php',
+        'AmeliaBooking\\Application\\Commands\\Stripe\\CompleteStripePaymentIntentCommandHandler' => __DIR__ . '/../..' . '/src/Application/Commands/Stripe/CompleteStripePaymentIntentCommandHandler.php',
+        'AmeliaBooking\\Application\\Commands\\Stripe\\CreateStripePaymentIntentCommand' => __DIR__ . '/../..' . '/src/Application/Commands/Stripe/CreateStripePaymentIntentCommand.php',
+        'AmeliaBooking\\Application\\Commands\\Stripe\\CreateStripePaymentIntentCommandHandler' => __DIR__ . '/../..' . '/src/Application/Commands/Stripe/CreateStripePaymentIntentCommandHandler.php',
         'AmeliaBooking\\Application\\Commands\\Stripe\\GetStripeAccountCommand' => __DIR__ . '/../..' . '/src/Application/Commands/Stripe/GetStripeAccountCommand.php',
         'AmeliaBooking\\Application\\Commands\\Stripe\\GetStripeAccountCommandHandler' => __DIR__ . '/../..' . '/src/Application/Commands/Stripe/GetStripeAccountCommandHandler.php',
         'AmeliaBooking\\Application\\Commands\\Stripe\\GetStripeAccountDashboardUrlCommand' => __DIR__ . '/../..' . '/src/Application/Commands/Stripe/GetStripeAccountDashboardUrlCommand.php',
@@ -795,6 +800,8 @@ class ComposerStaticInit35c29752d476546fd6446d31130b3dfc
         'AmeliaBooking\\Application\\Commands\\Stripe\\StripeAccountDisconnectCommandHandler' => __DIR__ . '/../..' . '/src/Application/Commands/Stripe/StripeAccountDisconnectCommandHandler.php',
         'AmeliaBooking\\Application\\Commands\\Stripe\\StripeOnboardRedirectCommand' => __DIR__ . '/../..' . '/src/Application/Commands/Stripe/StripeOnboardRedirectCommand.php',
         'AmeliaBooking\\Application\\Commands\\Stripe\\StripeOnboardRedirectCommandHandler' => __DIR__ . '/../..' . '/src/Application/Commands/Stripe/StripeOnboardRedirectCommandHandler.php',
+        'AmeliaBooking\\Application\\Commands\\Stripe\\StripePaymentCallbackCommand' => __DIR__ . '/../..' . '/src/Application/Commands/Stripe/StripePaymentCallbackCommand.php',
+        'AmeliaBooking\\Application\\Commands\\Stripe\\StripePaymentCallbackCommandHandler' => __DIR__ . '/../..' . '/src/Application/Commands/Stripe/StripePaymentCallbackCommandHandler.php',
         'AmeliaBooking\\Application\\Commands\\Tax\\AddTaxCommand' => __DIR__ . '/../..' . '/src/Application/Commands/Tax/AddTaxCommand.php',
         'AmeliaBooking\\Application\\Commands\\Tax\\AddTaxCommandHandler' => __DIR__ . '/../..' . '/src/Application/Commands/Tax/AddTaxCommandHandler.php',
         'AmeliaBooking\\Application\\Commands\\Tax\\DeleteTaxCommand' => __DIR__ . '/../..' . '/src/Application/Commands/Tax/DeleteTaxCommand.php',
@@ -1022,6 +1029,7 @@ class ComposerStaticInit35c29752d476546fd6446d31130b3dfc
         'AmeliaBooking\\Application\\Controller\\PaymentGateway\\PayPalPaymentCallbackController' => __DIR__ . '/../..' . '/src/Application/Controller/PaymentGateway/PayPalPaymentCallbackController.php',
         'AmeliaBooking\\Application\\Controller\\PaymentGateway\\PayPalPaymentController' => __DIR__ . '/../..' . '/src/Application/Controller/PaymentGateway/PayPalPaymentController.php',
         'AmeliaBooking\\Application\\Controller\\PaymentGateway\\RazorpayPaymentController' => __DIR__ . '/../..' . '/src/Application/Controller/PaymentGateway/RazorpayPaymentController.php',
+        'AmeliaBooking\\Application\\Controller\\PaymentGateway\\RazorpayPaymentNotifyController' => __DIR__ . '/../..' . '/src/Application/Controller/PaymentGateway/RazorpayPaymentNotifyController.php',
         'AmeliaBooking\\Application\\Controller\\PaymentGateway\\StripeValidateKeysController' => __DIR__ . '/../..' . '/src/Application/Controller/PaymentGateway/StripeValidateKeysController.php',
         'AmeliaBooking\\Application\\Controller\\PaymentGateway\\WooCommercePaymentController' => __DIR__ . '/../..' . '/src/Application/Controller/PaymentGateway/WooCommercePaymentController.php',
         'AmeliaBooking\\Application\\Controller\\PaymentGateway\\WooCommerceProductsController' => __DIR__ . '/../..' . '/src/Application/Controller/PaymentGateway/WooCommerceProductsController.php',
@@ -1059,11 +1067,15 @@ class ComposerStaticInit35c29752d476546fd6446d31130b3dfc
         'AmeliaBooking\\Application\\Controller\\Square\\SquareRefundWebhookController' => __DIR__ . '/../..' . '/src/Application/Controller/Square/SquareRefundWebhookController.php',
         'AmeliaBooking\\Application\\Controller\\Stash\\UpdateStashController' => __DIR__ . '/../..' . '/src/Application/Controller/Stash/UpdateStashController.php',
         'AmeliaBooking\\Application\\Controller\\Stats\\GetStatsController' => __DIR__ . '/../..' . '/src/Application/Controller/Stats/GetStatsController.php',
+        'AmeliaBooking\\Application\\Controller\\Stripe\\CancelStripePaymentIntentController' => __DIR__ . '/../..' . '/src/Application/Controller/Stripe/CancelStripePaymentIntentController.php',
+        'AmeliaBooking\\Application\\Controller\\Stripe\\CompleteStripePaymentIntentController' => __DIR__ . '/../..' . '/src/Application/Controller/Stripe/CompleteStripePaymentIntentController.php',
+        'AmeliaBooking\\Application\\Controller\\Stripe\\CreateStripePaymentIntentController' => __DIR__ . '/../..' . '/src/Application/Controller/Stripe/CreateStripePaymentIntentController.php',
         'AmeliaBooking\\Application\\Controller\\Stripe\\GetStripeAccountController' => __DIR__ . '/../..' . '/src/Application/Controller/Stripe/GetStripeAccountController.php',
         'AmeliaBooking\\Application\\Controller\\Stripe\\GetStripeAccountDashboardUrlController' => __DIR__ . '/../..' . '/src/Application/Controller/Stripe/GetStripeAccountDashboardUrlController.php',
         'AmeliaBooking\\Application\\Controller\\Stripe\\GetStripeAccountsController' => __DIR__ . '/../..' . '/src/Application/Controller/Stripe/GetStripeAccountsController.php',
         'AmeliaBooking\\Application\\Controller\\Stripe\\StripeAccountDisconnectController' => __DIR__ . '/../..' . '/src/Application/Controller/Stripe/StripeAccountDisconnectController.php',
         'AmeliaBooking\\Application\\Controller\\Stripe\\StripeOnboardRedirectController' => __DIR__ . '/../..' . '/src/Application/Controller/Stripe/StripeOnboardRedirectController.php',
+        'AmeliaBooking\\Application\\Controller\\Stripe\\StripePaymentCallbackController' => __DIR__ . '/../..' . '/src/Application/Controller/Stripe/StripePaymentCallbackController.php',
         'AmeliaBooking\\Application\\Controller\\Tax\\AddTaxController' => __DIR__ . '/../..' . '/src/Application/Controller/Tax/AddTaxController.php',
         'AmeliaBooking\\Application\\Controller\\Tax\\DeleteTaxController' => __DIR__ . '/../..' . '/src/Application/Controller/Tax/DeleteTaxController.php',
         'AmeliaBooking\\Application\\Controller\\Tax\\GetTaxController' => __DIR__ . '/../..' . '/src/Application/Controller/Tax/GetTaxController.php',
@@ -1194,6 +1206,7 @@ class ComposerStaticInit35c29752d476546fd6446d31130b3dfc
         'AmeliaBooking\\Domain\\Common\\Exceptions\\ForbiddenFileUploadException' => __DIR__ . '/../..' . '/src/Domain/Common/Exceptions/ForbiddenFileUploadException.php',
         'AmeliaBooking\\Domain\\Common\\Exceptions\\InvalidArgumentException' => __DIR__ . '/../..' . '/src/Domain/Common/Exceptions/InvalidArgumentException.php',
         'AmeliaBooking\\Domain\\Common\\Exceptions\\PackageBookingUnavailableException' => __DIR__ . '/../..' . '/src/Domain/Common/Exceptions/PackageBookingUnavailableException.php',
+        'AmeliaBooking\\Domain\\Common\\Exceptions\\PaymentValidationException' => __DIR__ . '/../..' . '/src/Domain/Common/Exceptions/PaymentValidationException.php',
         'AmeliaBooking\\Domain\\Entity\\Bookable\\AbstractBookable' => __DIR__ . '/../..' . '/src/Domain/Entity/Bookable/AbstractBookable.php',
         'AmeliaBooking\\Domain\\Entity\\Bookable\\AbstractCategory' => __DIR__ . '/../..' . '/src/Domain/Entity/Bookable/AbstractCategory.php',
         'AmeliaBooking\\Domain\\Entity\\Bookable\\AbstractExtra' => __DIR__ . '/../..' . '/src/Domain/Entity/Bookable/AbstractExtra.php',
@@ -1435,6 +1448,7 @@ class ComposerStaticInit35c29752d476546fd6446d31130b3dfc
         'AmeliaBooking\\Infrastructure\\API\\ApiRoutes\\Stats\\Stats' => __DIR__ . '/../..' . '/src/Infrastructure/API/ApiRoutes/Stats/Stats.php',
         'AmeliaBooking\\Infrastructure\\API\\ApiRoutes\\TimeSlots\\TimeSlots' => __DIR__ . '/../..' . '/src/Infrastructure/API/ApiRoutes/TimeSlots/TimeSlots.php',
         'AmeliaBooking\\Infrastructure\\API\\ApiRoutes\\User\\User' => __DIR__ . '/../..' . '/src/Infrastructure/API/ApiRoutes/User/User.php',
+        'AmeliaBooking\\Infrastructure\\CommandBus\\LoggingMiddleware' => __DIR__ . '/../..' . '/src/Infrastructure/CommandBus/LoggingMiddleware.php',
         'AmeliaBooking\\Infrastructure\\Common\\AmeliaErrorHandler' => __DIR__ . '/../..' . '/src/Infrastructure/Common/AmeliaErrorHandler.php',
         'AmeliaBooking\\Infrastructure\\Common\\Container' => __DIR__ . '/../..' . '/src/Infrastructure/Common/Container.php',
         'AmeliaBooking\\Infrastructure\\Common\\Exceptions\\NotFoundException' => __DIR__ . '/../..' . '/src/Infrastructure/Common/Exceptions/NotFoundException.php',
@@ -1601,7 +1615,13 @@ class ComposerStaticInit35c29752d476546fd6446d31130b3dfc
         'AmeliaBooking\\Infrastructure\\Services\\LessonSpace\\AbstractLessonSpaceService' => __DIR__ . '/../..' . '/src/Infrastructure/Services/LessonSpace/AbstractLessonSpaceService.php',
         'AmeliaBooking\\Infrastructure\\Services\\LessonSpace\\LessonSpaceService' => __DIR__ . '/../..' . '/src/Infrastructure/Services/LessonSpace/LessonSpaceService.php',
         'AmeliaBooking\\Infrastructure\\Services\\LessonSpace\\LiteLessonSpaceService' => __DIR__ . '/../..' . '/src/Infrastructure/Services/LessonSpace/LiteLessonSpaceService.php',
-        'AmeliaBooking\\Infrastructure\\Services\\Logger\\WPLogger' => __DIR__ . '/../..' . '/src/Infrastructure/Services/Logger/WPLogger.php',
+        'AmeliaBooking\\Infrastructure\\Services\\Logger\\JsonLineFormatter' => __DIR__ . '/../..' . '/src/Infrastructure/Services/Logger/JsonLineFormatter.php',
+        'AmeliaBooking\\Infrastructure\\Services\\Logger\\LogDirectoryManager' => __DIR__ . '/../..' . '/src/Infrastructure/Services/Logger/LogDirectoryManager.php',
+        'AmeliaBooking\\Infrastructure\\Services\\Logger\\LogRetentionCleanupService' => __DIR__ . '/../..' . '/src/Infrastructure/Services/Logger/LogRetentionCleanupService.php',
+        'AmeliaBooking\\Infrastructure\\Services\\Logger\\LogSanitizer' => __DIR__ . '/../..' . '/src/Infrastructure/Services/Logger/LogSanitizer.php',
+        'AmeliaBooking\\Infrastructure\\Services\\Logger\\MonologChannelLogger' => __DIR__ . '/../..' . '/src/Infrastructure/Services/Logger/MonologChannelLogger.php',
+        'AmeliaBooking\\Infrastructure\\Services\\Logger\\MonologLoggerFactory' => __DIR__ . '/../..' . '/src/Infrastructure/Services/Logger/MonologLoggerFactory.php',
+        'AmeliaBooking\\Infrastructure\\Services\\Logger\\RequestIdProcessor' => __DIR__ . '/../..' . '/src/Infrastructure/Services/Logger/RequestIdProcessor.php',
         'AmeliaBooking\\Infrastructure\\Services\\Mailchimp\\AbstractMailchimpService' => __DIR__ . '/../..' . '/src/Infrastructure/Services/Mailchimp/AbstractMailchimpService.php',
         'AmeliaBooking\\Infrastructure\\Services\\Mailchimp\\MailchimpNotFoundException' => __DIR__ . '/../..' . '/src/Infrastructure/Services/Mailchimp/MailchimpNotFoundException.php',
         'AmeliaBooking\\Infrastructure\\Services\\Mailchimp\\MailchimpRequestException' => __DIR__ . '/../..' . '/src/Infrastructure/Services/Mailchimp/MailchimpRequestException.php',
@@ -1900,12 +1920,14 @@ class ComposerStaticInit35c29752d476546fd6446d31130b3dfc
         'AmeliaBooking\\Infrastructure\\WP\\ShortcodeService\\EventsListBookingShortcodeService' => __DIR__ . '/../..' . '/src/Infrastructure/WP/ShortcodeService/EventsListBookingShortcodeService.php',
         'AmeliaBooking\\Infrastructure\\WP\\ShortcodeService\\EventsShortcodeService' => __DIR__ . '/../..' . '/src/Infrastructure/WP/ShortcodeService/EventsShortcodeService.php',
         'AmeliaBooking\\Infrastructure\\WP\\ShortcodeService\\SearchShortcodeService' => __DIR__ . '/../..' . '/src/Infrastructure/WP/ShortcodeService/SearchShortcodeService.php',
+        'AmeliaBooking\\Infrastructure\\WP\\ShortcodeService\\ShortcodeAliasService' => __DIR__ . '/../..' . '/src/Infrastructure/WP/ShortcodeService/ShortcodeAliasService.php',
         'AmeliaBooking\\Infrastructure\\WP\\ShortcodeService\\StepBookingShortcodeService' => __DIR__ . '/../..' . '/src/Infrastructure/WP/ShortcodeService/StepBookingShortcodeService.php',
         'AmeliaBooking\\Infrastructure\\WP\\Translations\\BackendStrings' => __DIR__ . '/../..' . '/src/Infrastructure/WP/Translations/BackendStrings.php',
         'AmeliaBooking\\Infrastructure\\WP\\Translations\\FrontendStrings' => __DIR__ . '/../..' . '/src/Infrastructure/WP/Translations/FrontendStrings.php',
         'AmeliaBooking\\Infrastructure\\WP\\Translations\\LiteBackendStrings' => __DIR__ . '/../..' . '/src/Infrastructure/WP/Translations/LiteBackendStrings.php',
         'AmeliaBooking\\Infrastructure\\WP\\Translations\\LiteFrontendStrings' => __DIR__ . '/../..' . '/src/Infrastructure/WP/Translations/LiteFrontendStrings.php',
         'AmeliaBooking\\Infrastructure\\WP\\Translations\\NotificationsStrings' => __DIR__ . '/../..' . '/src/Infrastructure/WP/Translations/NotificationsStrings.php',
+        'AmeliaBooking\\Infrastructure\\WP\\UserRoles\\SuperAdminRoleService' => __DIR__ . '/../..' . '/src/Infrastructure/WP/UserRoles/SuperAdminRoleService.php',
         'AmeliaBooking\\Infrastructure\\WP\\UserRoles\\UserRoles' => __DIR__ . '/../..' . '/src/Infrastructure/WP/UserRoles/UserRoles.php',
         'AmeliaBooking\\Infrastructure\\WP\\UserService\\CreateWPUser' => __DIR__ . '/../..' . '/src/Infrastructure/WP/UserService/CreateWPUser.php',
         'AmeliaBooking\\Infrastructure\\WP\\UserService\\UserAvatar' => __DIR__ . '/../..' . '/src/Infrastructure/WP/UserService/UserAvatar.php',
@@ -2526,6 +2548,8 @@ class ComposerStaticInit35c29752d476546fd6446d31130b3dfc
         'AmeliaVendor\\Psr\\Http\\Message\\UploadedFileInterface' => __DIR__ . '/..' . '/psr/http-message/src/UploadedFileInterface.php',
         'AmeliaVendor\\Psr\\Http\\Message\\UriFactoryInterface' => __DIR__ . '/..' . '/psr/http-factory/src/UriFactoryInterface.php',
         'AmeliaVendor\\Psr\\Http\\Message\\UriInterface' => __DIR__ . '/..' . '/psr/http-message/src/UriInterface.php',
+        'AmeliaVendor\\Psr\\Http\\Server\\MiddlewareInterface' => __DIR__ . '/..' . '/psr/http-server-middleware/src/MiddlewareInterface.php',
+        'AmeliaVendor\\Psr\\Http\\Server\\RequestHandlerInterface' => __DIR__ . '/..' . '/psr/http-server-handler/src/RequestHandlerInterface.php',
         'AmeliaVendor\\Psr\\Log\\AbstractLogger' => __DIR__ . '/..' . '/psr/log/Psr/Log/AbstractLogger.php',
         'AmeliaVendor\\Psr\\Log\\InvalidArgumentException' => __DIR__ . '/..' . '/psr/log/Psr/Log/InvalidArgumentException.php',
         'AmeliaVendor\\Psr\\Log\\LogLevel' => __DIR__ . '/..' . '/psr/log/Psr/Log/LogLevel.php',
@@ -9359,8 +9383,6 @@ class ComposerStaticInit35c29752d476546fd6446d31130b3dfc
         'Pimple\\Tests\\Psr11\\ContainerTest' => __DIR__ . '/..' . '/pimple/pimple/src/Pimple/Tests/Psr11/ContainerTest.php',
         'Pimple\\Tests\\Psr11\\ServiceLocatorTest' => __DIR__ . '/..' . '/pimple/pimple/src/Pimple/Tests/Psr11/ServiceLocatorTest.php',
         'Pimple\\Tests\\ServiceIteratorTest' => __DIR__ . '/..' . '/pimple/pimple/src/Pimple/Tests/ServiceIteratorTest.php',
-        'Psr\\Http\\Server\\MiddlewareInterface' => __DIR__ . '/..' . '/psr/http-server-middleware/src/MiddlewareInterface.php',
-        'Psr\\Http\\Server\\RequestHandlerInterface' => __DIR__ . '/..' . '/psr/http-server-handler/src/RequestHandlerInterface.php',
         'Razorpay\\Api\\Account' => __DIR__ . '/..' . '/razorpay/razorpay/src/Account.php',
         'Razorpay\\Api\\Addon' => __DIR__ . '/..' . '/razorpay/razorpay/src/Addon.php',
         'Razorpay\\Api\\Api' => __DIR__ . '/..' . '/razorpay/razorpay/src/Api.php',
@@ -11906,10 +11928,10 @@ class ComposerStaticInit35c29752d476546fd6446d31130b3dfc
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit35c29752d476546fd6446d31130b3dfc::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit35c29752d476546fd6446d31130b3dfc::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit35c29752d476546fd6446d31130b3dfc::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit35c29752d476546fd6446d31130b3dfc::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit4f3a4ba43b28f64142dd326da0b0260d::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit4f3a4ba43b28f64142dd326da0b0260d::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit4f3a4ba43b28f64142dd326da0b0260d::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit4f3a4ba43b28f64142dd326da0b0260d::$classMap;
 
         }, null, ClassLoader::class);
     }

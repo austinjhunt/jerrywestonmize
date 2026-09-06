@@ -32,11 +32,11 @@ class AmeliaBookingElementorWidget extends Widget_Base
             'amelia_booking_section',
             [
                 'label' => '<div class="amelia-elementor-content-outdated"><p class="amelia-elementor-content-title">'
-                    . BackendStrings::get('booking_gutenberg_block')['title']
+                    . esc_html(AmeliaElementorWhiteLabelHelper::label(BackendStrings::get('booking_gutenberg_block')['title']))
                     . '</p><br><p class="amelia-elementor-content-p">'
-                    . BackendStrings::get('booking_gutenberg_block')['description']
+                    . esc_html(AmeliaElementorWhiteLabelHelper::label(BackendStrings::get('booking_gutenberg_block')['description']))
                     . '</p><br><p class="amelia-elementor-content-p amelia-elementor-content-p-outdated">'
-                    . BackendStrings::get('outdated_booking_gutenberg_block')
+                    . esc_html(AmeliaElementorWhiteLabelHelper::label(BackendStrings::get('outdated_booking_gutenberg_block')))
                     . '</p>',
             ]
         );
@@ -140,9 +140,10 @@ class AmeliaBookingElementorWidget extends Widget_Base
         $show = empty($settings['select_show']) ? '' : ' show=' . $settings['select_show'];
 
         if ($settings['preselect']) {
-            echo esc_html('[ameliabooking' . $show . $trigger . $category_service . $employee_location . ']');
+            echo esc_html('[' . AmeliaElementorWhiteLabelHelper::shortcodeTag('booking', 'ameliabooking') .
+                $show . $trigger . $category_service . $employee_location . ']');
         } else {
-            echo '[ameliabooking]';
+            echo '[' . esc_html(AmeliaElementorWhiteLabelHelper::shortcodeTag('booking', 'ameliabooking')) . ']';
         }
     }
 

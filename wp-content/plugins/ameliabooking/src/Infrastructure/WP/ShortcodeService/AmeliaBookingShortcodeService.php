@@ -36,7 +36,7 @@ class AmeliaBookingShortcodeService
      * Prepare scripts and styles
      * @throws InvalidArgumentException
      */
-    public static function prepareScriptsAndStyles()
+    public static function prepareScriptsAndStyles(): void
     {
         self::$container = self::$container ?: require AMELIA_PATH . '/src/Infrastructure/ContainerConfig/container.php';
 
@@ -176,6 +176,12 @@ class AmeliaBookingShortcodeService
                 'wpAmeliaPluginURL'            => $ameliaUrl,
                 'wpAmeliaPluginAjaxURL'        => $ameliaActionUrl,
             ]
+        );
+
+        wp_add_inline_script(
+            AMELIA_DEV ? 'amelia_booking_scripts_dev_main' : $scriptId,
+            'window.wpAmeliaNonce = ' . wp_json_encode(wp_create_nonce('ajax-nonce')) . ';',
+            'before'
         );
 
         if (!empty($_GET['ameliaCache']) || !empty($_GET['ameliaWcCache'])) {

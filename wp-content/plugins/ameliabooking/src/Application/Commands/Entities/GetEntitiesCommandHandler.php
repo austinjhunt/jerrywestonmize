@@ -8,7 +8,6 @@ use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Bookable\BookableApplicationService;
 use AmeliaBooking\Application\Services\Bookable\AbstractPackageApplicationService;
 use AmeliaBooking\Application\Services\Booking\EventApplicationService;
-use AmeliaBooking\Application\Services\Coupon\AbstractCouponApplicationService;
 use AmeliaBooking\Application\Services\CustomField\AbstractCustomFieldApplicationService;
 use AmeliaBooking\Application\Services\Helper\HelperService;
 use AmeliaBooking\Application\Services\Location\AbstractLocationApplicationService;
@@ -77,18 +76,12 @@ class GetEntitiesCommandHandler extends CommandHandler
         /** @var AbstractLocationApplicationService $locationAS */
         $locationAS = $this->container->get('application.location.service');
 
-        /** @var AbstractCouponApplicationService $couponAS */
-        $couponAS = $this->container->get('application.coupon.service');
-
         /** @var ProviderService $providerService */
         $providerService = $this->container->get('domain.user.provider.service');
 
         try {
             /** @var AbstractUser $currentUser */
-            $currentUser = $command->getUserApplicationService()->authorization(
-                $command->getPage() === 'cabinet' ? $command->getToken() : null,
-                $command->getCabinetType()
-            );
+            $currentUser = $command->authorize();
         } catch (AuthorizationException $e) {
             $currentUser =  null;
         }

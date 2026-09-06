@@ -179,4 +179,11 @@ abstract class AbstractPackageApplicationService
      * @return array
      */
     abstract public function getOnlyOneEmployee($package);
+
+    /**
+     * @param Package $package
+     *
+     * @return \DateTime|null
+     */
+    abstract public function getPackageEndDate(Package $package);
 }

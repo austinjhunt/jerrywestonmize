@@ -303,8 +303,9 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
     }
 
     /**
-     * Returns Collection of all users that have no bookings (neither appointment nor event),
-     * or whose bookings belong to appointments/events of the given provider.
+     * Returns Collection of customers that have no bookings,
+     * whose appointment bookings belong to the given provider,
+     * or whose event bookings belong to events managed by the given provider.
      *
      * @param int $providerId
      *
@@ -360,7 +361,7 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
                 )
             );
 
-            // 3) User IDs from the provider's events (organizer or assigned provider)
+            // 3) User IDs from events managed by the provider (organizer or assigned provider)
             $statement = $this->connection->prepare(
                 "
                     SELECT DISTINCT cb.customerId AS id
@@ -369,7 +370,7 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
                     INNER JOIN {$eventsPeriodsTable} ep ON ep.id = cbep.eventPeriodId
                     INNER JOIN {$eventsTable} ev ON ev.id = ep.eventId
                     LEFT JOIN {$eventsProvidersTable} evpr ON evpr.eventId = ev.id
-                    WHERE evpr.userId = :providerId OR evpr.userId IS NULL
+                    WHERE ev.organizerId = :providerId OR evpr.userId = :providerId
                     "
             );
 

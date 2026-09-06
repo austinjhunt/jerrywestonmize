@@ -14,9 +14,13 @@ use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Services\Api\BasicApiService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Services\Apple\AbstractAppleCalendarService;
+use AmeliaBooking\Infrastructure\Licence\Licence;
+use AmeliaBooking\Infrastructure\Licence\LicenceConstants;
 use AmeliaBooking\Infrastructure\Services\LessonSpace\AbstractLessonSpaceService;
 use AmeliaBooking\Infrastructure\Services\Outlook\OutlookCredentialsValidatorService;
 use AmeliaBooking\Infrastructure\WP\Integrations\WooCommerce\WooCommerceService;
+use AmeliaBooking\Infrastructure\WP\UserRoles\SuperAdminRoleService;
+use AmeliaBooking\Infrastructure\WP\UserRoles\UserRoles;
 use AmeliaVendor\Melograno\UsageTracker\Core\UsageTracker;
 use Exception;
 use Interop\Container\Exception\ContainerException;
@@ -60,10 +64,21 @@ class UpdateSettingsCommandHandler extends CommandHandler
         /** @var SettingsService $settingsService */
         $settingsService = $this->getContainer()->get('domain.settings.service');
 
+        $superAdminService = new SuperAdminRoleService();
+
         /** @var AbstractCurrentLocation $locationService */
         $locationService = $this->getContainer()->get('application.currentLocation.service');
 
-        $settingsFields = $command->getFields();
+        $commandFields = $command->getFields();
+        $activationWasSubmitted = array_key_exists('activation', $commandFields) && is_array($commandFields['activation']);
+        $activationActiveWasSubmitted = $activationWasSubmitted && array_key_exists('active', $commandFields['activation']);
+        $savedActivationSettings = $settingsService->getCategorySettings('activation');
+        $settingsFields = $commandFields;
+        unset($settingsFields['isSuperAdmin'], $settingsFields['isSuperAdminRoleAvailable'], $settingsFields['superAdminCount']);
+
+        if (isset($settingsFields['activation']) && !$superAdminService->canAccessActivationSettings()) {
+            unset($settingsFields['activation']);
+        }
 
         if (
             WooCommerceService::isEnabled() &&
@@ -142,6 +157,7 @@ class UpdateSettingsCommandHandler extends CommandHandler
 
         if (
             !$settingsService->getCategorySettings('activation')['stash'] &&
+            isset($settingsFields['activation']) &&
             !empty($settingsFields['activation']['stash'])
         ) {
             /** @var StashApplicationService $stashApplicationService */
@@ -217,6 +233,42 @@ class UpdateSettingsCommandHandler extends CommandHandler
             ] : []
         );
 
+        if (
+            $activationActiveWasSubmitted &&
+            empty($savedActivationSettings['active']) &&
+            !empty($settingsFields['activation']['active']) &&
+            empty($savedActivationSettings['licenseActivatorUserId']) &&
+            get_current_user_id() &&
+            (current_user_can('manage_options') || is_super_admin())
+        ) {
+            $currentUserId = get_current_user_id();
+
+            // Persist licence first so isAvailable()/grant() see the new Elite state,
+            // then sync role registration before assigning SuperAdmin.
+            if (array_key_exists('licence', $settingsFields['activation'])) {
+                $settingsService->setSetting(
+                    'activation',
+                    'licence',
+                    $settingsFields['activation']['licence']
+                );
+            }
+
+            UserRoles::syncSuperAdminRoleAvailability();
+
+            if (!$superAdminService->grant($currentUserId)) {
+                $settingsService->setCategorySettings('activation', $savedActivationSettings);
+                UserRoles::syncSuperAdminRoleAvailability();
+
+                $result->setResult(CommandResult::RESULT_ERROR);
+                $result->setMessage('Failed to assign Superadmin to the activating user.');
+                $result->setData([]);
+
+                return $result;
+            }
+
+            $settingsFields['activation']['licenseActivatorUserId'] = $currentUserId;
+        }
+
         if ($command->getField('usedLanguages') !== null) {
             $generalSettings = $settingsService->getCategorySettings('general');
 
@@ -289,6 +341,45 @@ class UpdateSettingsCommandHandler extends CommandHandler
             $settingsFields['customizedData'] = $customizedData;
         }
 
+        if ($command->getField('whiteLabel') !== null) {
+            $savedWhiteLabelSettings = $settingsService->getCategorySettings('whiteLabel');
+
+            // Older installs may lack the whiteLabel category; create defaults so the
+            // unchanged-payload check below does not treat empty frontend values as a change.
+            if (!is_array($savedWhiteLabelSettings)) {
+                $savedWhiteLabelSettings = [
+                    'pluginName'        => '',
+                    'hideExternalLinks' => false,
+                    'pictureFullPath'   => '',
+                    'pictureThumbPath'  => '',
+                ];
+
+                $settingsService->setCategorySettings('whiteLabel', $savedWhiteLabelSettings);
+            }
+
+            $canManageWhiteLabel = $superAdminService->isCurrentUserSuperAdmin() &&
+                Licence::getLicence() === LicenceConstants::DEVELOPER;
+
+            if (!$canManageWhiteLabel) {
+                $submittedWhiteLabelSettings = array_replace(
+                    $savedWhiteLabelSettings,
+                    $settingsFields['whiteLabel']
+                );
+
+                // The settings page always submits the full payload, so ignore an unchanged
+                // whiteLabel category and only reject actual modification attempts
+                if ($submittedWhiteLabelSettings != $savedWhiteLabelSettings) {
+                    if (!$superAdminService->isCurrentUserSuperAdmin()) {
+                        throw new AccessDeniedException('Only SuperAdmins can update white label settings.');
+                    }
+
+                    throw new AccessDeniedException('White label settings are only available on the Developer licence.');
+                }
+
+                unset($settingsFields['whiteLabel']);
+            }
+        }
+
         if (isset($settingsFields['general'])) {
             $armUsageTrackingNoticeOnDisable = (bool) $command->getField('armUsageTrackingNoticeOnDisable');
             UsageTracker::updateSettings(
@@ -304,7 +395,28 @@ class UpdateSettingsCommandHandler extends CommandHandler
 
         $settingsService->setAllSettings($settingsFields);
 
+        if (
+            array_key_exists('whiteLabel', $settingsFields) ||
+            array_key_exists('featuresIntegrations', $settingsFields)
+        ) {
+            UserRoles::syncRoleLabels();
+        }
+
+        if (array_key_exists('activation', $settingsFields)) {
+            UserRoles::syncSuperAdminRoleAvailability();
+        }
+
         $settings = $settingsService->getAllSettingsCategorized();
+        $settings['isSuperAdmin'] = $superAdminService->isCurrentUserSuperAdmin();
+        $settings['isSuperAdminRoleAvailable'] = SuperAdminRoleService::isAvailable();
+        $settings['superAdminCount'] = $superAdminService->countSuperAdmins();
+        if (!$superAdminService->canAccessActivationSettings()) {
+            $settings['activation']['purchaseCodeStore'] = null;
+            $settings['activation']['envatoTokenEmail'] = '';
+            $settings['activation']['licence'] = null;
+            $settings['activation']['licenseActivatorUserId'] = null;
+        }
+
         $settings['general']['phoneDefaultCountryCode'] = $settings['general']['phoneDefaultCountryCode'] === 'auto' ?
             $locationService->getCurrentLocationCountryIso($settings['general']['ipLocateApiKey']) : $settings['general']['phoneDefaultCountryCode'];
 

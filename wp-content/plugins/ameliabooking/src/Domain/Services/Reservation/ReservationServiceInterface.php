@@ -81,6 +81,9 @@ interface ReservationServiceInterface
      * @param array       $data
      * @param Reservation $reservation
      * @param bool        $save
+     * @param bool        $paymentVerified Server-only: set by callers that already validated reCAPTCHA and
+     *                                     then confirmed the payment with the gateway. Never derive this
+     *                                     from the request payload.
      *
      * @return CommandResult
      *
@@ -90,7 +93,7 @@ interface ReservationServiceInterface
      * @throws ContainerException
      * @throws Exception
      */
-    public function processRequest($data, $reservation, $save);
+    public function processRequest($data, $reservation, $save, $paymentVerified = false);
 
     /**
      * @param CommandResult $result

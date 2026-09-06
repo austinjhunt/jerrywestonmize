@@ -20,6 +20,30 @@
       let tags = null
       let ivy = null
       let catalogView = null
+      let useNeutralShortcodes = Boolean(window.wpAmeliaUseNeutralShortcodes)
+      let shortcodeAliases = window.wpAmeliaShortcodeAliases || {}
+      let builderBrandName = useNeutralShortcodes
+        ? (window.wpAmeliaBuilderBrandName || window.wpAmeliaPluginName || 'Booking')
+        : 'Amelia'
+
+      let getNeutralLabel = function (label) {
+        if (!useNeutralShortcodes) {
+          return label
+        }
+
+        return label
+          .replace(/^Amelia\s-\s/i, '')
+          .replace(/\bAmelia\s+/gi, '')
+          .replace(/\s\(Legacy\)$/, '')
+      }
+
+      let getShortcodeTag = function (view, legacyTag) {
+        return useNeutralShortcodes && shortcodeAliases[view] ? shortcodeAliases[view] : legacyTag
+      }
+
+      let createShortcode = function (view, legacyTag, params) {
+        return '[' + getShortcodeTag(view, legacyTag) + (params || '') + ']'
+      }
 
       let setSharedShortcodeElements = function (viewBody, data) {
         viewBody.push({
@@ -487,6 +511,7 @@
               visible: false,
             })
 
+
             if (view === 'events' && !parseInt(wpAmeliaLabels.isLite)) {
               viewBody.push({
                 type: 'listbox',
@@ -535,7 +560,7 @@
 
         // open editor
         win = editor.windowManager.open({
-          title: 'Amelia Booking',
+          title: useNeutralShortcodes ? builderBrandName : 'Amelia Booking',
           width: 500,
           height: 435,
           body: viewBody,
@@ -571,7 +596,13 @@
                   shortCodeString += ' layout=' + e.data.am_layout
                 }
 
-                editor.insertContent((view === 'stepbooking' ? '[ameliastepbooking' : '[ameliabooking') + shortCodeString + ']')
+                editor.insertContent(
+                  createShortcode(
+                    view,
+                    view === 'stepbooking' ? 'ameliastepbooking' : 'ameliabooking',
+                    shortCodeString
+                  )
+                )
 
                 break
 
@@ -588,7 +619,7 @@
                   shortCodeString += ' show=' + e.data.am_show
                 }
 
-                editor.insertContent('[ameliasearch' + shortCodeString + ']')
+                editor.insertContent(createShortcode(view, 'ameliasearch', shortCodeString))
 
                 break
 
@@ -608,13 +639,13 @@
                 }
 
                 if (catalogView === 'category') {
-                  editor.insertContent('[ameliacatalog category=' + e.data.am_category + shortCodeString + ']')
+                  editor.insertContent(createShortcode(view, 'ameliacatalog', ' category=' + e.data.am_category + shortCodeString))
                 } else if (catalogView === 'service') {
-                  editor.insertContent('[ameliacatalog service=' + e.data.am_service + shortCodeString + ']')
+                  editor.insertContent(createShortcode(view, 'ameliacatalog', ' service=' + e.data.am_service + shortCodeString))
                 } else if (catalogView === 'package') {
-                  editor.insertContent('[ameliacatalog package=' + e.data.am_package + shortCodeString + ']')
+                  editor.insertContent(createShortcode(view, 'ameliacatalog', ' package=' + e.data.am_package + shortCodeString))
                 } else {
-                  editor.insertContent('[ameliacatalog' + shortCodeString + ']')
+                  editor.insertContent(createShortcode(view, 'ameliacatalog', shortCodeString))
                 }
 
                 break
@@ -638,19 +669,19 @@
                   if (e.data.am_show) {
                     shortCodeString += ' show=' + e.data.am_show
                   }
-                  editor.insertContent('[ameliacatalogbooking category=' + e.data.am_category + shortCodeString + ']')
+                  editor.insertContent(createShortcode(view, 'ameliacatalogbooking', ' category=' + e.data.am_category + shortCodeString))
                 } else if (catalogView === 'service') {
                   if (e.data.am_show && e.data.am_show !== 'packages') {
                     shortCodeString += ' show=' + e.data.am_show
                   }
-                  editor.insertContent('[ameliacatalogbooking service=' + e.data.am_service + shortCodeString + ']')
+                  editor.insertContent(createShortcode(view, 'ameliacatalogbooking', ' service=' + e.data.am_service + shortCodeString))
                 } else if (catalogView === 'package') {
-                  editor.insertContent('[ameliacatalogbooking package=' + e.data.am_package + shortCodeString + ']')
+                  editor.insertContent(createShortcode(view, 'ameliacatalogbooking', ' package=' + e.data.am_package + shortCodeString))
                 } else {
                   if (e.data.am_show) {
                     shortCodeString += ' show=' + e.data.am_show
                   }
-                  editor.insertContent('[ameliacatalogbooking' + shortCodeString + ']')
+                  editor.insertContent(createShortcode(view, 'ameliacatalogbooking', shortCodeString))
                 }
 
                 break
@@ -681,11 +712,11 @@
                 }
 
                 if (view === 'eventslistbooking') {
-                  editor.insertContent('[ameliaeventslistbooking' + shortCodeString + ']')
+                  editor.insertContent(createShortcode(view, 'ameliaeventslistbooking', shortCodeString))
                 } else if (view === 'eventscalendarbooking') {
-                  editor.insertContent('[ameliaeventscalendarbooking' + shortCodeString + ']')
+                  editor.insertContent(createShortcode(view, 'ameliaeventscalendarbooking', shortCodeString))
                 } else {
-                  editor.insertContent('[ameliaevents' + shortCodeString + ']')
+                  editor.insertContent(createShortcode(view, 'ameliaevents', shortCodeString))
                 }
 
                 break
@@ -708,7 +739,11 @@
                   shortCodeString += ' trigger=' + e.data.am_trigger
                 }
 
-                editor.insertContent(view === 'customer_panel' ? '[ameliacustomerpanel' + shortCodeString + ']' : '[ameliaemployeepanel' + shortCodeString + ']')
+                editor.insertContent(
+                  view === 'customer_panel'
+                    ? createShortcode(view, 'ameliacustomerpanel', shortCodeString)
+                    : createShortcode(view, 'ameliaemployeepanel', shortCodeString)
+                )
 
                 break
             }
@@ -733,11 +768,18 @@
       }
 
       // Add new button
-      editor.addButton('ameliaButton', {
-        title: wpAmeliaLabels.insert_amelia_shortcode,
-        cmd: 'ameliaButtonCommand',
-        image: window.wpAmeliaPluginURL + 'public/img/amelia-logo-admin-icon.svg'
-      })
+      let buttonOptions = {
+        title: useNeutralShortcodes ? 'Insert booking shortcode' : wpAmeliaLabels.insert_amelia_shortcode,
+        cmd: 'ameliaButtonCommand'
+      }
+
+      if (useNeutralShortcodes) {
+        buttonOptions.text = builderBrandName
+      } else {
+        buttonOptions.image = window.wpAmeliaPluginURL + 'public/img/amelia-logo-admin-icon.svg'
+      }
+
+      editor.addButton('ameliaButton', buttonOptions)
 
       // Button functionality
       editor.addCommand('ameliaButtonCommand', function () {

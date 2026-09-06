@@ -29,7 +29,7 @@ class AmeliaEmployeeCabinetGutenbergBlock extends GutenbergBlock
     {
         $shortCode = $attributes['short_code'] ?? '[ameliaemployeepanel]';
 
-        if (strpos($shortCode, '[ameliaemployeepanel') !== 0) {
+        if (!self::isAllowedShortCode($shortCode, self::getAllowedShortcodeTags('employee_panel', 'ameliaemployeepanel'))) {
             return '';
         }
 

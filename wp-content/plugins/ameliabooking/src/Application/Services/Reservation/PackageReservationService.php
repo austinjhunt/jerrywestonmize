@@ -48,8 +48,7 @@ use AmeliaBooking\Infrastructure\Repository\Location\LocationRepository;
 use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
 use Exception;
-use Interop\Container\Exception\ContainerException;
-use Slim\Exception\ContainerValueNotFoundException;
+use Throwable;
 
 /**
  * Class PackageReservationService
@@ -73,11 +72,11 @@ class PackageReservationService extends AppointmentReservationService
      *
      * @return void
      *
-     * @throws ContainerValueNotFoundException
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      * @throws Exception
-     * @throws ContainerException
+     * @throws Throwable Rolling back a partially booked package rethrows whatever bookSingle() raised,
+     *                   so errors propagate out of here as well as exceptions.
      */
     public function book($appointmentData, $reservation, $save)
     {
@@ -247,9 +246,6 @@ class PackageReservationService extends AppointmentReservationService
                     'recurring'          => [],
                     'package'            => [],
                     'payment'            => null,
-                    'isMollie'           =>
-                        !empty($appointmentData['payment']['gateway']) &&
-                        $appointmentData['payment']['gateway'] === PaymentType::MOLLIE
                 ]
             );
 
@@ -277,6 +273,12 @@ class PackageReservationService extends AppointmentReservationService
             /** @var Reservation $packageReservation */
             $packageReservation = new Reservation();
 
+            $packageReservation->setMandatoryPendingStatus(
+                new BooleanValueObject(
+                    $this->isDeferredPaymentGateway($appointmentData['payment'])
+                )
+            );
+
             try {
                 $this->bookSingle(
                     $packageReservation,
@@ -286,7 +288,7 @@ class PackageReservationService extends AppointmentReservationService
                     $reservation->hasAvailabilityValidation()->getValue(),
                     $save
                 );
-            } catch (Exception $e) {
+            } catch (Throwable $e) {
                 if ($save) {
                     /** @var Reservation $packageReservation */
                     foreach ($packageReservations->getItems() as $packageReservation) {
@@ -360,21 +362,23 @@ class PackageReservationService extends AppointmentReservationService
     }
 
     /**
+     * The entity a package reservation books, which is the package itself - the same entity book() sets as
+     * the bookable of the reservation.
+     *
      * @param array $data
      *
      * @return AbstractBookable
      *
      * @throws InvalidArgumentException
-     * @throws ContainerValueNotFoundException
      * @throws QueryExecutionException
      * @throws NotFoundException
      */
     public function getBookableEntity($data)
     {
-        /** @var BookableApplicationService $bookableAS */
-        $bookableAS = $this->container->get('application.bookable.service');
+        /** @var PackageRepository $packageRepository */
+        $packageRepository = $this->container->get('domain.bookable.package.repository');
 
-        return $bookableAS->getAppointmentService($data['serviceId'], $data['providerId']);
+        return $packageRepository->getById($data['packageId']);
     }
 
     /**
@@ -451,6 +455,7 @@ class PackageReservationService extends AppointmentReservationService
                         'phone'           => $customer->getPhone()->getValue(),
                         'countryPhoneIso' => $customer->getCountryPhoneIso() ?
                             $customer->getCountryPhoneIso()->getValue() : null,
+                        'subscribeToMailchimp' => $this->isMailchimpSubscriptionRequested($requestData),
                     ],
                     'persons'      => 1,
                     'extras'       => [],
@@ -500,7 +505,6 @@ class PackageReservationService extends AppointmentReservationService
 
         $customerInfo = !empty($booking['info']) ? json_decode($booking['info'], true) : null;
 
-        /** @var Reservation $packageReservation */
         foreach ($reservation['packageReservations'] as $key => $packageReservation) {
             $packageAppointmentData = [
                 'serviceId'          => $packageReservation['serviceId'],
@@ -881,6 +885,17 @@ class PackageReservationService extends AppointmentReservationService
             );
         }
 
+        /** @var PackageCustomerRepository $packageCustomerRepository */
+        $packageCustomerRepository = $this->container->get('domain.bookable.packageCustomer.repository');
+
+        $packageCustomerToken = null;
+
+        if ($packageCustomerId) {
+            $packageToken = $packageCustomerRepository->getToken($packageCustomerId);
+
+            $packageCustomerToken = !empty($packageToken['token']) ? $packageToken['token'] : null;
+        }
+
         $result->setData(
             [
                 'type'                     => Entities::APPOINTMENT,
@@ -901,6 +916,7 @@ class PackageReservationService extends AppointmentReservationService
                 'paymentId'                => $payment->getId()->getValue(),
                 'packageCustomer'          => $packageCustomer->toArray(),
                 'packageCustomerId'        => $packageCustomerId,
+                'packageCustomerToken'     => $packageCustomerToken,
                 'payment'                  => [
                     'id'           => $payment->getId()->getValue(),
                     'amount'       => $payment->getAmount()->getValue(),

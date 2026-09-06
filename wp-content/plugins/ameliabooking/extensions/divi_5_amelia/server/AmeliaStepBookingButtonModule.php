@@ -2,6 +2,7 @@
 
 namespace Divi5Amelia;
 
+use AmeliaBooking\Infrastructure\WP\ShortcodeService\ShortcodeAliasService;
 use ET\Builder\Framework\DependencyManagement\Interfaces\DependencyInterface;
 use ET\Builder\FrontEnd\Module\Style;
 use ET\Builder\Packages\Module\Layout\Components\ModuleElements\ModuleElements;
@@ -126,7 +127,7 @@ class AmeliaStepBookingButtonModule implements DependencyInterface
     {
         $auto_trigger = wp_unique_id('amelia-step-booking-btn-');
 
-        $shortcode  = '[ameliastepbooking';
+        $shortcode  = '[' . ShortcodeAliasService::activeShortcodeTag('stepbooking', 'ameliastepbooking');
         $shortcode .= ' trigger=' . sanitize_html_class($auto_trigger);
         $shortcode .= ' trigger_type=id';
         $shortcode .= ' in_dialog=1';

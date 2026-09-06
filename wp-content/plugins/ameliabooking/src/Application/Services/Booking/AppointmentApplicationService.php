@@ -1135,12 +1135,16 @@ class AppointmentApplicationService
             /** @var ReservationServiceInterface $reservationService */
             $reservationService = $this->container->get('application.reservation.service')->get(Entities::APPOINTMENT);
 
+            $paymentStatus = $reservationService->getPaymentAmount($booking, $service)['price'] >
+                $payment->getAmount()->getValue() ?
+                PaymentStatus::PARTIALLY_PAID : PaymentStatus::PAID;
+
             $paymentRepository->updateFieldById(
                 $payment->getId()->getValue(),
-                $reservationService->getPaymentAmount($booking, $service)['price'] > $payment->getAmount()->getValue() ?
-                    PaymentStatus::PARTIALLY_PAID : PaymentStatus::PAID,
+                $paymentStatus,
                 'status'
             );
+            $payment->setStatus(new PaymentStatus($paymentStatus));
         }
 
         if (

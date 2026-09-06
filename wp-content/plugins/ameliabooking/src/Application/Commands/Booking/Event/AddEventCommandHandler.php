@@ -9,7 +9,6 @@ use AmeliaBooking\Application\Services\Booking\EventApplicationService;
 use AmeliaBooking\Application\Services\Entity\EntityApplicationService;
 use AmeliaBooking\Application\Services\User\UserApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
-use AmeliaBooking\Domain\Common\Exceptions\AuthorizationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Event\Event;
 use AmeliaBooking\Domain\Entity\Entities;
@@ -18,8 +17,6 @@ use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
 use Exception;
-use Interop\Container\Exception\ContainerException;
-use Slim\Exception\ContainerValueNotFoundException;
 
 /**
  * Class AddEventCommandHandler
@@ -41,13 +38,14 @@ class AddEventCommandHandler extends CommandHandler
      *
      * @return CommandResult
      * @throws QueryExecutionException
-     * @throws ContainerValueNotFoundException
      * @throws InvalidArgumentException
-     * @throws ContainerException
      * @throws Exception
      */
     public function handle(AddEventCommand $command)
     {
+        /** @var AbstractUser $user */
+        $user = $command->authorize();
+
         $result = new CommandResult();
 
         $this->checkMandatoryFields($command);
@@ -64,21 +62,6 @@ class AddEventCommandHandler extends CommandHandler
         $settingsDS = $this->container->get('domain.settings.service');
         /** @var EntityApplicationService $entityService */
         $entityService = $this->container->get('application.entity.service');
-
-        try {
-            /** @var AbstractUser $user */
-            $user = $command->getUserApplicationService()->authorization(
-                $command->getPage() === 'cabinet' ? $command->getToken() : null,
-                $command->getCabinetType()
-            );
-        } catch (AuthorizationException $e) {
-            $result->setResult(CommandResult::RESULT_ERROR);
-            $result->setData(
-                ['reauthorize' => true]
-            );
-
-            return $result;
-        }
 
         if (
             $userAS->isCustomer($user) ||

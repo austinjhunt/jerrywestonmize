@@ -46,11 +46,27 @@ class SubscriberEntity {
   const TRACKING_CONSENT_GRANTED = 'granted';
   const TRACKING_CONSENT_DENIED = 'denied';
 
+  const TRACKING_CONSENT_VALUES = [
+    self::TRACKING_CONSENT_UNKNOWN,
+    self::TRACKING_CONSENT_GRANTED,
+    self::TRACKING_CONSENT_DENIED,
+  ];
+
   const TRACKING_CONSENT_METHOD_FOOTER_LINK = 'footer_link';
   const TRACKING_CONSENT_METHOD_MANAGE_PAGE = 'manage_page';
   const TRACKING_CONSENT_METHOD_FORM = 'form';
   const TRACKING_CONSENT_METHOD_ADMIN = 'admin';
   const TRACKING_CONSENT_METHOD_IMPORT = 'import';
+  const TRACKING_CONSENT_METHOD_WOOCOMMERCE_CHECKOUT = 'woocommerce_checkout';
+  const TRACKING_CONSENT_METHOD_REGISTRATION = 'registration';
+  const TRACKING_CONSENT_METHOD_COMMENT = 'comment';
+  /**
+   * A caller of the public PHP API is itself the collection point: it rendered
+   * its own consent control, so only it knows what the subscriber was shown.
+   * Kept separate from METHOD_ADMIN so a consent record can tell "recorded by
+   * an integration" apart from "changed by a person in wp-admin".
+   */
+  const TRACKING_CONSENT_METHOD_API = 'api';
 
   public const OBSOLETE_LINK_TOKEN_LENGTH = 6;
   public const LINK_TOKEN_LENGTH = 32;
@@ -88,8 +104,14 @@ class SubscriberEntity {
    * treated as consent. How `unknown` is handled is a site setting; see
    * TrackingConsentController.
    *
+   * Validated in setTrackingConsent(), not by a validation constraint on this
+   * property. A constraint runs at flush, so a row that already holds a bad value —
+   * hand-edited column, incomplete migration, restored backup — would throw the moment
+   * anything flushed it, even an unrelated field. That took the whole mailpoet/v1
+   * namespace down for one customer. A caller trying to WRITE a bad value still fails,
+   * immediately, in the setter.
+   *
    * @ORM\Column(type="string", length=20)
-   * @Assert\Choice({"unknown", "granted", "denied"})
    * @var string
    */
   private $trackingConsent = self::TRACKING_CONSENT_UNKNOWN;
@@ -366,7 +388,16 @@ class SubscriberEntity {
    * Setting the state also stamps when, how, and against what wording it
    * changed (CNIL/Garante record-keeping).
    */
+
+  /**
+   * @throws \InvalidArgumentException if $consent is not one of the three
+   *   TRACKING_CONSENT_* constants. This is the only place the value is validated;
+   *   see the property docblock for why it is not a flush-time constraint.
+   */
   public function setTrackingConsent(string $consent, ?string $method = null, ?string $copy = null): void {
+    if (!in_array($consent, [self::TRACKING_CONSENT_UNKNOWN, self::TRACKING_CONSENT_GRANTED, self::TRACKING_CONSENT_DENIED], true)) {
+      throw new \InvalidArgumentException("Invalid tracking consent value: {$consent}");
+    }
     if ($this->trackingConsent === $consent) {
       return;
     }

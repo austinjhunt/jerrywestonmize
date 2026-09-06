@@ -31,15 +31,17 @@ class LessonSpaceService extends AbstractLessonSpaceService
      */
     public function handle($appointment, $entity, $periods = null)
     {
-        if (!$this->isLessonSpaceEnabled()) {
-            return;
-        }
-
         /** @var AppointmentRepository $appointmentRepository */
         $appointmentRepository = $this->container->get("domain.booking.appointment.repository");
 
         /** @var EventPeriodsRepository $eventPeriodsRepository */
         $eventPeriodsRepository = $this->container->get('domain.booking.event.period.repository');
+
+        if (!$this->isLessonSpaceEnabled()) {
+            $this->clearLessonSpace($appointment, $entity, $periods, $appointmentRepository, $eventPeriodsRepository);
+
+            return;
+        }
 
         /** @var PlaceholderService $placeholderService */
         $placeholderService = $this->container->get('application.placeholder.' . $entity . '.service');
@@ -52,6 +54,8 @@ class LessonSpaceService extends AbstractLessonSpaceService
             ->getEnabled();
 
         if (empty($lessonSpaceApiKey) || !$enabledForEntity) {
+            $this->clearLessonSpace($appointment, $entity, $periods, $appointmentRepository, $eventPeriodsRepository);
+
             return;
         }
 
@@ -292,6 +296,48 @@ class LessonSpaceService extends AbstractLessonSpaceService
         }
 
         return $inviteUrl ?: $resultArray['client_url'];
+    }
+
+    /**
+     * @param Appointment|Event $appointment
+     * @param string $entity
+     * @param Collection|null $periods
+     * @param AppointmentRepository $appointmentRepository
+     * @param EventPeriodsRepository $eventPeriodsRepository
+     *
+     * @return void
+     *
+     * @throws QueryExecutionException
+     */
+    private function clearLessonSpace($appointment, $entity, $periods, $appointmentRepository, $eventPeriodsRepository): void
+    {
+        if ($entity === Entities::APPOINTMENT) {
+            if ($appointment->getLessonSpace()) {
+                $appointment->setLessonSpace(null);
+                $appointmentRepository->updateFieldById(
+                    $appointment->getId()->getValue(),
+                    null,
+                    'lessonSpace'
+                );
+            }
+
+            return;
+        }
+
+        if ($entity === Entities::EVENT && $periods) {
+            /** @var EventPeriod $period */
+            foreach ($periods->getItems() as $period) {
+                if ($period->getLessonSpace()) {
+                    $period->setLessonSpace(null);
+                    $eventPeriodsRepository->updateFieldById(
+                        $period->getId()->getValue(),
+                        null,
+                        'lessonSpace'
+                    );
+                }
+            }
+            $appointment->setPeriods($periods);
+        }
     }
 
     /**

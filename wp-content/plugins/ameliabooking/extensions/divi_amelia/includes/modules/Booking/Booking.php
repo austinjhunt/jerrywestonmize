@@ -5,7 +5,6 @@ use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
 
 class DIVI_Booking extends ET_Builder_Module
 {
-
     public $slug       = 'divi_booking';
     public $vb_support = 'on';
 
@@ -26,7 +25,7 @@ class DIVI_Booking extends ET_Builder_Module
 
     public function init()
     {
-        $this->name = esc_html__(BackendStrings::get('booking_divi'), 'divi-divi_amelia');
+        $this->name = esc_html__(DIVI_AmeliaWhiteLabelHelper::label(BackendStrings::get('booking_divi')), 'divi-divi_amelia');
 
         $this->type['0']        = BackendStrings::get('show_all');
         $this->type['services'] = BackendStrings::get('services');
@@ -41,12 +40,12 @@ class DIVI_Booking extends ET_Builder_Module
 
         $this->categories['0'] = BackendStrings::get('show_all_categories');
         foreach ($data['categories'] as $category) {
-            $this->categories[$category['id']] = $category['name']. ' (id: ' . $category['id'] . ')';
+            $this->categories[$category['id']] = $category['name'] . ' (id: ' . $category['id'] . ')';
         }
         $this->services['0'] = BackendStrings::get('show_all_services');
         foreach ($data['servicesList'] as $service) {
             if ($service) {
-                $this->services[$service['id']] = $service['name']. ' (id: ' . $service['id'] . ')';
+                $this->services[$service['id']] = $service['name'] . ' (id: ' . $service['id'] . ')';
             }
         }
         $this->employees['0'] = BackendStrings::get('show_all_employees');
@@ -55,7 +54,7 @@ class DIVI_Booking extends ET_Builder_Module
         }
         $this->locations['0'] = BackendStrings::get('show_all_locations');
         foreach ($data['locations'] as $location) {
-            $this->locations[$location['id']] = $location['name']. ' (id: ' . $location['id'] . ')';
+            $this->locations[$location['id']] = $location['name'] . ' (id: ' . $location['id'] . ')';
         }
     }
 
@@ -161,14 +160,14 @@ class DIVI_Booking extends ET_Builder_Module
     public function render($attrs, $content = null, $render_slug = null)
     {
         $preselect =  $this->props['booking_params'];
-        $shortcode = '[ameliabooking';
+        $shortcode = '[' . DIVI_AmeliaWhiteLabelHelper::shortcodeTag('booking', 'ameliabooking');
         $showAll   = isset($this->props['type']) ? $this->props['type'] : null;
         $trigger   = $this->props['trigger'];
         if ($showAll !== null && $showAll !== '' && $showAll !== '0') {
-            $shortcode .= ' show='.$showAll;
+            $shortcode .= ' show=' . $showAll;
         }
         if ($trigger !== null && $trigger !== '') {
-            $shortcode .= ' trigger='.$trigger;
+            $shortcode .= ' trigger=' . $trigger;
         }
         if ($preselect === 'on') {
             $category = $this->checkValues($this->props['categories']);
@@ -178,7 +177,7 @@ class DIVI_Booking extends ET_Builder_Module
 
             if ($service !== '0') {
                 $shortcode .= ' service=' . $service;
-            } else if ($category !== '0') {
+            } elseif ($category !== '0') {
                 $shortcode .= ' category=' . $category;
             }
             if ($employee !== '0') {
@@ -193,4 +192,4 @@ class DIVI_Booking extends ET_Builder_Module
     }
 }
 
-new DIVI_Booking;
+new DIVI_Booking();

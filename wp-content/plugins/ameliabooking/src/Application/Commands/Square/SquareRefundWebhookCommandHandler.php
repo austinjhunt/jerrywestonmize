@@ -2,6 +2,7 @@
 
 namespace AmeliaBooking\Application\Commands\Square;
 
+use AmeliaBooking\Domain\Services\Logger\LoggerInterface;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
@@ -43,11 +44,18 @@ class SquareRefundWebhookCommandHandler extends CommandHandler
 
         $result = new CommandResult();
 
-
         if ($data && !empty($data['object']['refund']['payment_id'])) {
             $payments = $paymentRepository->getByEntityId($data['object']['refund']['payment_id'], 'transactionId');
 
             if ($payments->length() === 0) {
+                $this->container->getLoggerService()->channel(LoggerInterface::CHANNEL_PAYMENT)->error(
+                    'Square refund webhook processing failed',
+                    [
+                        'paymentId' => $data['object']['refund']['payment_id'],
+                        'reason'    => 'Cannot find payment',
+                    ]
+                );
+
                 $result->setResult(CommandResult::RESULT_ERROR);
                 $result->setMessage('Cannot find payment');
                 $result->setData(['success' => false]);
@@ -56,9 +64,7 @@ class SquareRefundWebhookCommandHandler extends CommandHandler
             }
 
             foreach ($payments->toArray() as $payment) {
-//                if (floatval($payment['amount']) <= floatval($data['object']['refund']['amount_money']['amount']/100)) {
-                    $paymentRepository->updateFieldById($payment['id'], 'refunded', 'status');
-//                }
+                $paymentRepository->updateFieldById($payment['id'], 'refunded', 'status');
             }
         }
 

@@ -4,7 +4,6 @@ namespace AmeliaBooking\Application\Commands\PaymentGateway;
 
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
-use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Application\Services\Reservation\AbstractReservationService;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
@@ -20,7 +19,6 @@ use AmeliaBooking\Infrastructure\Repository\Cache\CacheRepository;
 use AmeliaBooking\Infrastructure\Services\Payment\BarionService;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
 use Exception;
-use Interop\Container\Exception\ContainerException;
 
 class BarionPaymentCommandHandler extends CommandHandler
 {
@@ -30,7 +28,6 @@ class BarionPaymentCommandHandler extends CommandHandler
     ];
 
     /**
-     * @throws ContainerException
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      * @throws Exception
@@ -41,6 +38,8 @@ class BarionPaymentCommandHandler extends CommandHandler
 
         $this->checkMandatoryFields($command);
 
+        $requestData = $this->getAppointmentData($command->getFields(), [PaymentType::BARION]);
+
         $type = $command->getField('type') ?: Entities::APPOINTMENT;
 
         /** @var AbstractReservationService $reservationService */
@@ -49,18 +48,13 @@ class BarionPaymentCommandHandler extends CommandHandler
         /** @var PaymentApplicationService $paymentAS */
         $paymentAS = $this->container->get('application.payment.service');
 
-        /** @var BookingApplicationService $bookingAS */
-        $bookingAS = $this->container->get('application.booking.booking.service');
-
         /** @var BarionService $paymentServiceBarion */
         $paymentServiceBarion = $this->container->get('infrastructure.payment.barion.service');
 
         /** @var CacheRepository $cacheRepository */
         $cacheRepository = $this->container->get('domain.cache.repository');
 
-        $bookingData = $bookingAS->getAppointmentData($command->getFields());
-
-        $bookingData = apply_filters('amelia_before_barion_redirect_filter', $bookingData);
+        $bookingData = apply_filters('amelia_before_barion_redirect_filter', $requestData);
 
         do_action('amelia_before_barion_redirect', $bookingData);
 
@@ -69,7 +63,7 @@ class BarionPaymentCommandHandler extends CommandHandler
 
         $reservationService->processBooking(
             $result,
-            $bookingAS->getAppointmentData($command->getFields()),
+            $bookingData,
             $reservation,
             false
         );
@@ -117,7 +111,7 @@ class BarionPaymentCommandHandler extends CommandHandler
         $reservation = $reservationService->getNew(true, true, true);
 
         $result = $reservationService->processRequest(
-            $bookingAS->getAppointmentData($command->getFields()),
+            $bookingData,
             $reservation,
             true
         );

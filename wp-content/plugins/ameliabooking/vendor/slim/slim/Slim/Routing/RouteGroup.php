@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace Slim\Routing;
 
-use Psr\Http\Server\MiddlewareInterface;
+use AmeliaVendor\Psr\Http\Server\MiddlewareInterface;
 use Slim\Interfaces\AdvancedCallableResolverInterface;
 use Slim\Interfaces\CallableResolverInterface;
 use Slim\Interfaces\RouteCollectorProxyInterface;

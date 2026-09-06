@@ -76,6 +76,9 @@ class Reservation
     private $packageCustomer;
 
     /** @var BooleanValueObject  */
+    private $mandatoryPendingStatus;
+
+    /** @var BooleanValueObject  */
     private $couponValidation;
 
     /** @var BooleanValueObject  */
@@ -83,9 +86,6 @@ class Reservation
 
     /** @var BooleanValueObject  */
     private $availabilityValidation;
-
-    /** @var AbstractUser $user */
-    private $loggedInUser;
 
     /**
      * @return BooleanValueObject
@@ -298,6 +298,22 @@ class Reservation
     /**
      * @return BooleanValueObject
      */
+    public function hasMandatoryPendingStatus()
+    {
+        return $this->mandatoryPendingStatus;
+    }
+
+    /**
+     * @param BooleanValueObject $mandatoryPendingStatus
+     */
+    public function setMandatoryPendingStatus(BooleanValueObject $mandatoryPendingStatus)
+    {
+        $this->mandatoryPendingStatus = $mandatoryPendingStatus;
+    }
+
+    /**
+     * @return BooleanValueObject
+     */
     public function isNewUser()
     {
         return $this->isNewUser;
@@ -389,21 +405,5 @@ class Reservation
     public function setApplyDeposit(BooleanValueObject $applyDeposit)
     {
         $this->applyDeposit = $applyDeposit;
-    }
-
-    /**
-     * @return AbstractUser
-     */
-    public function getLoggedInUser()
-    {
-        return $this->loggedInUser;
-    }
-
-    /**
-     * @param AbstractUser $loggedInUser
-     */
-    public function setLoggedInUser(AbstractUser $loggedInUser)
-    {
-        $this->loggedInUser = $loggedInUser;
     }
 }

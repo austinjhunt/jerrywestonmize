@@ -4,7 +4,6 @@ namespace AmeliaBooking\Application\Commands\PaymentGateway;
 
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
-use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Entities;
@@ -14,8 +13,6 @@ use AmeliaBooking\Domain\ValueObjects\String\PaymentType;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
 use Exception;
-use Interop\Container\Exception\ContainerException;
-use Slim\Exception\ContainerValueNotFoundException;
 
 /**
  * Class PayPalPaymentCommandHandler
@@ -34,10 +31,8 @@ class PayPalPaymentCommandHandler extends CommandHandler
      *
      * @return CommandResult
      * @throws QueryExecutionException
-     * @throws ContainerValueNotFoundException
      * @throws InvalidArgumentException
      * @throws Exception
-     * @throws ContainerException
      */
     public function handle(PayPalPaymentCommand $command)
     {
@@ -45,12 +40,12 @@ class PayPalPaymentCommandHandler extends CommandHandler
 
         $this->checkMandatoryFields($command);
 
+        $requestData = $this->getAppointmentData($command->getFields(), [PaymentType::PAY_PAL]);
+
         $type = $command->getField('type') ?: Entities::APPOINTMENT;
 
         /** @var ReservationServiceInterface $reservationService */
         $reservationService = $this->container->get('application.reservation.service')->get($type);
-        /** @var BookingApplicationService $bookingAS */
-        $bookingAS = $this->container->get('application.booking.booking.service');
         /** @var PaymentApplicationService $paymentAS */
         $paymentAS = $this->container->get('application.payment.service');
 
@@ -58,7 +53,7 @@ class PayPalPaymentCommandHandler extends CommandHandler
 
         $reservationService->processBooking(
             $result,
-            $bookingAS->getAppointmentData($command->getFields()),
+            $requestData,
             $reservation,
             false
         );

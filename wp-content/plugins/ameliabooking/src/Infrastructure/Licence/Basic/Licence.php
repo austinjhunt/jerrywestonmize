@@ -78,6 +78,7 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Starter\Licence
                 Commands\PaymentGateway\MolliePaymentNotifyCommand::class          => new Commands\PaymentGateway\MolliePaymentNotifyCommandHandler($c),
                 Commands\PaymentGateway\MolliePaymentCommand::class                => new Commands\PaymentGateway\MolliePaymentCommandHandler($c),
                 Commands\PaymentGateway\RazorpayPaymentCommand::class              => new Commands\PaymentGateway\RazorpayPaymentCommandHandler($c),
+                Commands\PaymentGateway\RazorpayPaymentNotifyCommand::class        => new Commands\PaymentGateway\RazorpayPaymentNotifyCommandHandler($c),
                 Commands\Payment\PaymentCallbackCommand::class                     => new Commands\Payment\PaymentCallbackCommandHandler($c),
                 Commands\Payment\PaymentLinkCommand::class                         => new Commands\Payment\PaymentLinkCommandHandler($c),
                 Commands\PaymentGateway\BarionPaymentCommand::class                => new Commands\PaymentGateway\BarionPaymentCommandHandler($c),
@@ -85,6 +86,10 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Starter\Licence
                 Commands\PaymentGateway\BarionPaymentCallbackCommand::class        => new Commands\PaymentGateway\BarionPaymentCallbackCommandHandler($c),
                 Commands\PaymentGateway\StripeValidateKeysCommand::class           => new Commands\PaymentGateway\StripeValidateKeysCommandHandler($c),
                 Commands\PaymentGateway\MollieValidateKeyCommand::class            => new Commands\PaymentGateway\MollieValidateKeyCommandHandler($c),
+                Commands\Stripe\CreateStripePaymentIntentCommand::class            => new Commands\Stripe\CreateStripePaymentIntentCommandHandler($c),
+                Commands\Stripe\CancelStripePaymentIntentCommand::class            => new Commands\Stripe\CancelStripePaymentIntentCommandHandler($c),
+                Commands\Stripe\CompleteStripePaymentIntentCommand::class          => new Commands\Stripe\CompleteStripePaymentIntentCommandHandler($c),
+                Commands\Stripe\StripePaymentCallbackCommand::class                => new Commands\Stripe\StripePaymentCallbackCommandHandler($c),
 
                 // Tax
                 Commands\Tax\AddTaxCommand::class                                  => new Commands\Tax\AddTaxCommandHandler($c),

@@ -30,11 +30,11 @@ class AmeliaSearchElementorWidget extends Widget_Base
             'amelia_search_section',
             [
                 'label' => '<div class="amelia-elementor-content-outdated"><p class="amelia-elementor-content-title">'
-                    . BackendStrings::get('search_gutenberg_block')['title']
+                    . AmeliaElementorWhiteLabelHelper::label(BackendStrings::get('search_gutenberg_block')['title'])
                     . '</p><br><p class="amelia-elementor-content-p">'
-                    . BackendStrings::get('search_gutenberg_block')['description']
+                    . AmeliaElementorWhiteLabelHelper::label(BackendStrings::get('search_gutenberg_block')['description'])
                     . '</p><br><p class="amelia-elementor-content-p amelia-elementor-content-p-outdated">'
-                    . BackendStrings::get('outdated_booking_gutenberg_block')
+                    . AmeliaElementorWhiteLabelHelper::label(BackendStrings::get('outdated_booking_gutenberg_block'))
                     . '</p>',
             ]
         );
@@ -81,7 +81,8 @@ class AmeliaSearchElementorWidget extends Widget_Base
 
         $show = empty($settings['select_show']) ? '' : ' show=' . $settings['select_show'];
 
-        echo esc_html('[ameliasearch' . $trigger . $show . $preselect_today . ']');
+        echo esc_html('[' . AmeliaElementorWhiteLabelHelper::shortcodeTag('search', 'ameliasearch') .
+            $trigger . $show . $preselect_today . ']');
     }
 
     public static function amelia_elementor_get_data()

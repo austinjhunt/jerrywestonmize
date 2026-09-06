@@ -17,6 +17,13 @@ $entries['request'] = function (Container $c) {
         $curUri->getQuery()
     );
 
+    // fix callback url for Stripe redirect payment methods since Stripe encodes callback urls
+    $queryWithPlaceholderFixes = str_replace(
+        '__payment__stripe__callback',
+        '/payment/stripe/callback',
+        $queryWithPlaceholderFixes
+    );
+
     // fix callback url for whatsapp webhooks
     $queryWithPlaceholderFixes = str_replace(
         '__notifications__whatsapp__webhook',
@@ -30,6 +37,11 @@ $entries['request'] = function (Container $c) {
                 '__payments__callback',
                 '/payments/callback',
                 $get['call']
+            );
+            $callPath = str_replace(
+                '__payment__stripe__callback',
+                '/payment/stripe/callback',
+                $callPath
             );
             $callPath = str_replace(
                 '__notifications__whatsapp__webhook',
