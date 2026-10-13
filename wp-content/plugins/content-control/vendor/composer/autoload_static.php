@@ -7,7 +7,7 @@ namespace Composer\Autoload;
 class ComposerStaticInit95476bf9f66381089c698682c0f97a82
 {
     public static $prefixLengthsPsr4 = array (
-        'C' => 
+        'C' =>
         array (
             'ContentControl\\' => 15,
             'Composer\\Installers\\' => 20,
@@ -15,11 +15,11 @@ class ComposerStaticInit95476bf9f66381089c698682c0f97a82
     );
 
     public static $prefixDirsPsr4 = array (
-        'ContentControl\\' => 
+        'ContentControl\\' =>
         array (
             0 => __DIR__ . '/../..' . '/classes',
         ),
-        'Composer\\Installers\\' => 
+        'Composer\\Installers\\' =>
         array (
             0 => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers',
         ),
@@ -157,9 +157,6 @@ class ComposerStaticInit95476bf9f66381089c698682c0f97a82
         'ContentControl\\Controllers\\RestAPI' => __DIR__ . '/../..' . '/classes/Controllers/RestAPI.php',
         'ContentControl\\Controllers\\Shortcodes' => __DIR__ . '/../..' . '/classes/Controllers/Shortcodes.php',
         'ContentControl\\Controllers\\TrustedLogin' => __DIR__ . '/../..' . '/classes/Controllers/TrustedLogin.php',
-        'ContentControl\\Installers\\Install_Skin' => __DIR__ . '/../..' . '/classes/Installers/Install_Skin.php',
-        'ContentControl\\Installers\\PluginSilentUpgrader' => __DIR__ . '/../..' . '/classes/Installers/PluginSilentUpgrader.php',
-        'ContentControl\\Installers\\PluginSilentUpgraderSkin' => __DIR__ . '/../..' . '/classes/Installers/PluginSilentUpgraderSkin.php',
         'ContentControl\\Interfaces\\Controller' => __DIR__ . '/../..' . '/classes/Interfaces/Controller.php',
         'ContentControl\\Interfaces\\Upgrade' => __DIR__ . '/../..' . '/classes/Interfaces/Upgrade.php',
         'ContentControl\\Models\\Restriction' => __DIR__ . '/../..' . '/classes/Models/Restriction.php',
@@ -169,14 +166,12 @@ class ComposerStaticInit95476bf9f66381089c698682c0f97a82
         'ContentControl\\Models\\RuleEngine\\Rule' => __DIR__ . '/../..' . '/classes/Models/RuleEngine/Rule.php',
         'ContentControl\\Models\\RuleEngine\\Set' => __DIR__ . '/../..' . '/classes/Models/RuleEngine/Set.php',
         'ContentControl\\Plugin\\Autoloader' => __DIR__ . '/../..' . '/classes/Plugin/Autoloader.php',
-        'ContentControl\\Plugin\\Connect' => __DIR__ . '/../..' . '/classes/Plugin/Connect.php',
         'ContentControl\\Plugin\\Core' => __DIR__ . '/../..' . '/classes/Plugin/Core.php',
         'ContentControl\\Plugin\\Install' => __DIR__ . '/../..' . '/classes/Plugin/Install.php',
         'ContentControl\\Plugin\\License' => __DIR__ . '/../..' . '/classes/Plugin/License.php',
         'ContentControl\\Plugin\\Logging' => __DIR__ . '/../..' . '/classes/Plugin/Logging.php',
         'ContentControl\\Plugin\\Options' => __DIR__ . '/../..' . '/classes/Plugin/Options.php',
         'ContentControl\\Plugin\\Prerequisites' => __DIR__ . '/../..' . '/classes/Plugin/Prerequisites.php',
-        'ContentControl\\Plugin\\Upgrader' => __DIR__ . '/../..' . '/classes/Plugin/Upgrader.php',
         'ContentControl\\QueryMonitor\\Collector' => __DIR__ . '/../..' . '/classes/QueryMonitor/Collector.php',
         'ContentControl\\QueryMonitor\\Data' => __DIR__ . '/../..' . '/classes/QueryMonitor/Data.php',
         'ContentControl\\QueryMonitor\\Output' => __DIR__ . '/../..' . '/classes/QueryMonitor/Output.php',

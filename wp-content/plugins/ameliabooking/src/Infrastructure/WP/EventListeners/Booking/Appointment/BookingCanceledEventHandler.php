@@ -10,8 +10,9 @@ namespace AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\Integration\ApplicationIntegrationService;
-use AmeliaBooking\Application\Services\Notification\ApplicationNotificationService;
+use AmeliaBooking\Application\Services\Mobile\PushNotificationService;
 use AmeliaBooking\Application\Services\WaitingList\WaitingListService;
+use AmeliaBooking\Domain\Services\Mobile\MobileNotificationPreferences;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Application\Services\Notification\EmailNotificationService;
@@ -51,7 +52,7 @@ class BookingCanceledEventHandler
      * @throws ContainerException
      * @throws Exception
      */
-    public static function handle($commandResult, $container)
+    public static function handle($commandResult, $container): void
     {
         /** @var ApplicationIntegrationService $applicationIntegrationService */
         $applicationIntegrationService = $container->get('application.integration.service');
@@ -145,6 +146,9 @@ class BookingCanceledEventHandler
             }
         }
 
+        /** @var PushNotificationService $pushNotificationService */
+        $pushNotificationService = $container->get('application.mobile.pushNotification.service');
+
         if ($appStatusChanged === true) {
             $bookingKey = array_search($booking['id'], array_column($appointment['bookings'], 'id'), true);
 
@@ -159,6 +163,8 @@ class BookingCanceledEventHandler
             if ($whatsAppNotificationService->checkRequiredFields()) {
                 $whatsAppNotificationService->sendAppointmentStatusNotifications($appointment, true, true);
             }
+
+            $pushNotificationService->sendStatusChange($appointment, $booking);
         } else {
             $emailNotificationService->sendAppointmentUpdatedNotifications($appointment, false);
 
@@ -169,6 +175,12 @@ class BookingCanceledEventHandler
             if ($whatsAppNotificationService->checkRequiredFields()) {
                 $whatsAppNotificationService->sendAppointmentUpdatedNotifications($appointment, false);
             }
+
+            $pushNotificationService->sendFromArray(
+                $appointment,
+                MobileNotificationPreferences::CATEGORY_CHANGES,
+                $booking
+            );
         }
 
         $webHookService->process(self::BOOKING_CANCELED, $appointment, [$booking]);

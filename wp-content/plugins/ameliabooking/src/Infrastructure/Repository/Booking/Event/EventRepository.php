@@ -5,6 +5,7 @@ namespace AmeliaBooking\Infrastructure\Repository\Booking\Event;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Event\Event;
+use AmeliaBooking\Domain\Entity\Booking\Event\EventTicket;
 use AmeliaBooking\Domain\Factory\Booking\Appointment\CustomerBookingFactory;
 use AmeliaBooking\Domain\Factory\Booking\Event\EventFactory;
 use AmeliaBooking\Domain\Repository\Booking\Event\EventRepositoryInterface;
@@ -722,7 +723,6 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
     {
         $eventsPeriodsTable = EventsPeriodsTable::getTableName();
         $eventsTagsTable    = EventsTagsTable::getTableName();
-        $eventsTicketTable  = EventsTicketsTable::getTableName();
 
         $customerBookingsTable = CustomerBookingsTable::getTableName();
         $paymentsTable         = PaymentsTable::getTableName();
@@ -743,8 +743,7 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                 LEFT JOIN {$usersTable} pu ON pu.id = epr.userId
                 LEFT JOIN {$paymentsTable} p ON p.customerBookingId = cb.id
                 LEFT JOIN {$galleriesTable} g ON g.entityId = e.id AND g.entityType = 'event'
-                LEFT JOIN {$couponsTable} c ON c.id = cb.couponId
-                LEFT JOIN {$eventsTicketTable} t ON t.eventId = e.id";
+                LEFT JOIN {$couponsTable} c ON c.id = cb.couponId";
 
         if (!empty($criteria['fetchBookingsTickets'])) {
             $bookingsTicketsTable = CustomerBookingToEventsTicketsTable::getTableName();
@@ -873,16 +872,7 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
                     c.deduction AS coupon_deduction,
                     c.limit AS coupon_limit,
                     c.customerLimit AS coupon_customerLimit,
-                    c.status AS coupon_status,
-       
-                    t.id AS ticket_id,
-                    t.name AS ticket_name,
-                    t.enabled AS ticket_enabled,
-                    t.price AS ticket_price,
-                    t.spots AS ticket_spots,
-                    t.waitingListSpots AS ticket_waiting_list_spots,
-                    t.dateRanges AS ticket_dateRanges,
-                    t.translations AS ticket_translations';
+                    c.status AS coupon_status';
 
         try {
             $statement = $this->connection->prepare(
@@ -903,7 +893,24 @@ class EventRepository extends AbstractRepository implements EventRepositoryInter
             throw new QueryExecutionException('Unable to find event by id in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
 
-        return call_user_func([static::FACTORY, 'createCollection'], $rows)->getItem($id);
+        /** @var Event $event */
+        $event = call_user_func([static::FACTORY, 'createCollection'], $rows)->getItem($id);
+
+        $eventTicketRepository = new EventTicketRepository(
+            $this->connection,
+            EventsTicketsTable::getTableName()
+        );
+
+        $customTickets = new Collection();
+
+        /** @var EventTicket $ticket */
+        foreach ($eventTicketRepository->getByEntityId($id, 'eventId')->getItems() as $ticket) {
+            $customTickets->addItem($ticket, $ticket->getId()->getValue());
+        }
+
+        $event->setCustomTickets($customTickets);
+
+        return $event;
     }
 
 

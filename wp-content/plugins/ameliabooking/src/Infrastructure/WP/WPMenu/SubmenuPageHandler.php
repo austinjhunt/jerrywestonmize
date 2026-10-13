@@ -41,8 +41,9 @@ class SubmenuPageHandler
     // TODO - Redesign: Finish & Refactor method
     private function renderRedesign($page)
     {
-        $testFlagFileExists = file_exists(AMELIA_PATH . '/test_mode.flag');
-        define('AMELIA_TEST', $testFlagFileExists);
+        if (!defined('AMELIA_TEST')) {
+            define('AMELIA_TEST', file_exists(AMELIA_PATH . '/test_mode.flag'));
+        }
 
         $isTestEnv = defined('AMELIA_TEST') && AMELIA_TEST;
         $isDev     = defined('AMELIA_DEV') && AMELIA_DEV && !$isTestEnv;
@@ -50,7 +51,7 @@ class SubmenuPageHandler
 
         // Enqueue V3 scripts for customize page
         if ($page === 'wpamelia-customize') {
-            $this->enqueueV3Scripts();
+            $this->enqueueV3Scripts($isDev);
         }
 
         if ($isDev) {
@@ -124,12 +125,18 @@ class SubmenuPageHandler
 
     /**
      * Enqueue V3 scripts for embedding in redesign app
+     *
+     * Takes the caller's $isDev rather than reading AMELIA_DEV directly, so the test_mode.flag
+     * escape hatch covers the Customize page's live preview too. Without it the preview kept
+     * pointing at the Vite dev server on :3000 while the rest of the page served built assets.
+     *
+     * @param bool $isDev
      */
-    private function enqueueV3Scripts()
+    private function enqueueV3Scripts($isDev)
     {
-        $scriptId = AMELIA_DEV ? 'amelia_booking_scripts_dev_vite' : 'amelia_booking_script_index';
+        $scriptId = $isDev ? 'amelia_booking_scripts_dev_vite' : 'amelia_booking_script_index';
 
-        if (AMELIA_DEV) {
+        if ($isDev) {
             wp_enqueue_script(
                 'amelia_booking_scripts_dev_vite',
                 'http://localhost:3000/@vite/client',

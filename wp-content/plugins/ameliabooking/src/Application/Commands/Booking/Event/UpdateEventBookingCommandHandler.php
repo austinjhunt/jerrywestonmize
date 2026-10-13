@@ -22,7 +22,8 @@ use AmeliaBooking\Domain\Services\Reservation\ReservationServiceInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\Json;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
-use AmeliaBooking\Domain\ValueObjects\Number\Integer\IntegerValue;
+use AmeliaBooking\Domain\ValueObjects\Number\Integer\PositiveInteger;
+use AmeliaBooking\Domain\ValueObjects\Number\Integer\WholeNumber;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
@@ -166,16 +167,18 @@ class UpdateEventBookingCommandHandler extends CommandHandler
                             $customerBooking->getTicketsBooking()->addItem($bookingEventTicket);
                         }
                     } elseif ($ticketBooking['id'] && $ticketBooking['persons']) {
+                        $ticketPersons = new PositiveInteger($ticketBooking['persons']);
+
                         $bookingEventTicketRepository->update($ticketBooking['id'], $ticketBooking);
 
                         foreach ($customerBooking->getTicketsBooking()->getItems() as $item) {
                             if (
                                 $item->getEventTicketId()->getValue() === $ticketBooking['eventTicketId'] &&
-                                $item->getPersons()->getValue() < $ticketBooking['persons'] &&
+                                $item->getPersons()->getValue() < $ticketPersons->getValue() &&
                                 $customerBooking->getStatus()->getValue() === BookingStatus::APPROVED
                             ) {
                                 $isBookingStatusChanged = true;
-                                $item->setPersons(new IntegerValue($ticketBooking['persons']));
+                                $item->setPersons($ticketPersons);
                             }
                         }
                     } elseif ($ticketBooking['id'] && !$ticketBooking['persons']) {
@@ -200,12 +203,12 @@ class UpdateEventBookingCommandHandler extends CommandHandler
                 $customerBooking->getPersons()->getValue() < $bookingData['persons']
             ) {
                 $isBookingStatusChanged = true;
-                $customerBooking->setPersons(new IntegerValue($bookingData['persons']));
+                $customerBooking->setPersons(new WholeNumber($bookingData['persons']));
             } elseif (
                 $customerBooking->getStatus()->getValue() === BookingStatus::APPROVED &&
                 $customerBooking->getPersons()->getValue() > $bookingData['persons']
             ) {
-                $customerBooking->setPersons(new IntegerValue($bookingData['persons']));
+                $customerBooking->setPersons(new WholeNumber($bookingData['persons']));
             }
         }
 

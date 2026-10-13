@@ -11,6 +11,7 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Entities;
+use AmeliaBooking\Domain\Entity\Google\GoogleCalendar;
 use AmeliaBooking\Domain\Entity\Location\Location;
 use AmeliaBooking\Domain\Entity\Schedule\BlockTime;
 use AmeliaBooking\Domain\Entity\Schedule\DayOff;
@@ -64,14 +65,12 @@ use AmeliaBooking\Infrastructure\Repository\Schedule\TimeOutRepository;
 use AmeliaBooking\Infrastructure\Repository\Schedule\WeekDayRepository;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
+use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
 use AmeliaVendor\Psr\Container\ContainerExceptionInterface;
 use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarMiddlewareService;
-use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
 use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarMiddlewareService;
 use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 use AmeliaBooking\Infrastructure\WP\UserRoles\SuperAdminRoleService;
-use Interop\Container\Exception\ContainerException;
-use Slim\Exception\ContainerValueNotFoundException;
 
 /**
  * Class ProviderApplicationService
@@ -80,6 +79,9 @@ use Slim\Exception\ContainerValueNotFoundException;
  */
 class ProviderApplicationService
 {
+    /**
+     * @var Container
+     */
     private $container;
 
     /**
@@ -87,7 +89,7 @@ class ProviderApplicationService
      *
      * @param Container $container
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function __construct(Container $container)
     {
@@ -99,7 +101,6 @@ class ProviderApplicationService
      * @param Provider $user
      *
      * @return int
-     * @throws ContainerValueNotFoundException
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      */
@@ -374,11 +375,10 @@ class ProviderApplicationService
      * @param Provider $newUser
      *
      * @return boolean
-     * @throws ContainerValueNotFoundException
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      */
-    public function update($oldUser, $newUser, $providerData = [])
+    public function update($oldUser, $newUser, $providerData = []): bool
     {
         /** @var UserRepositoryInterface $userRepository */
         $userRepository = $this->container->get('domain.users.repository');
@@ -395,6 +395,13 @@ class ProviderApplicationService
             $googleCalendarData = !empty($providerData['googleCalendar'])
                 ? $providerData['googleCalendar']
                 : [];
+
+            $newUser->getGoogleCalendar()->setUserId(new Id($newUser->getId()->getValue()));
+
+            // The watch itself is taken up by the caller once this transaction has committed: attaching
+            // it talks to Google, and holding row locks across that round trip is what let concurrent
+            // employee writes deadlock. Nothing here depends on it - watch state lives on the
+            // calendar_sync row, and manageChannel() persists the connection's syncId itself.
             $this->updateProviderGoogleCalendar($newUser, $googleCalendarData);
         }
 
@@ -417,7 +424,6 @@ class ProviderApplicationService
      * @param Collection $removedDayList
      *
      * @return Collection
-     * @throws ContainerValueNotFoundException
      * @throws InvalidArgumentException
      */
     public function getModifiedDayList(
@@ -475,7 +481,6 @@ class ProviderApplicationService
      * @param Collection $dayList
      *
      * @return void
-     * @throws ContainerValueNotFoundException
      * @throws InvalidArgumentException
      */
     public function modifyPeriodsWithSingleLocationBeforePersist($dayList)
@@ -509,7 +514,6 @@ class ProviderApplicationService
      * @param Collection $dayList
      *
      * @return void
-     * @throws ContainerValueNotFoundException
      * @throws InvalidArgumentException
      */
     public function modifyPeriodsWithSingleLocationAfterFetch($dayList)
@@ -550,7 +554,6 @@ class ProviderApplicationService
      * @param Provider $newUser
      *
      * @return boolean
-     * @throws ContainerValueNotFoundException
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      */
@@ -773,7 +776,6 @@ class ProviderApplicationService
      * @param Provider $newUser
      *
      * @return boolean
-     * @throws ContainerValueNotFoundException
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      */
@@ -954,7 +956,6 @@ class ProviderApplicationService
      * @param bool  $companyDayOff
      *
      * @return array
-     * @throws ContainerValueNotFoundException
      * @throws QueryExecutionException
      */
     public function manageProvidersActivity($providers, $companyDayOff)
@@ -1128,14 +1129,41 @@ class ProviderApplicationService
             return;
         }
 
-        // Fallback: single-account or token-refresh path – update by entity id.
         /** @var GoogleCalendarRepository $googleCalendarRepository */
         $googleCalendarRepository = $this->container->get('domain.google.calendar.repository');
 
+        $googleCalendar = $googleCalendarRepository->getByProviderId($newUser->getId()->getValue());
+        $this->mergeProviderGoogleCalendarFromIncoming($googleCalendar, $newUser->getGoogleCalendar());
         $googleCalendarRepository->update(
-            $newUser->getGoogleCalendar(),
-            $newUser->getGoogleCalendar()->getId()->getValue()
+            $googleCalendar,
+            $googleCalendar->getId()->getValue()
         );
+    }
+
+    /**
+     * Overlay the in-memory Google Calendar from the request onto the row loaded from the DB, so a
+     * refreshed token, the calendar id and the account settings are persisted. Watch state is not among
+     * them: it belongs to the calendar_sync row, not to this connection.
+     *
+     * @param GoogleCalendar $persisted
+     * @param GoogleCalendar $incoming
+     *
+     * @return void
+     */
+    private function mergeProviderGoogleCalendarFromIncoming(GoogleCalendar $persisted, GoogleCalendar $incoming): void
+    {
+        if ($incoming->getToken() && $incoming->getToken()->getValue() !== '') {
+            $persisted->setToken($incoming->getToken());
+        }
+
+        if ($incoming->getCalendarId() !== null) {
+            $persisted->setCalendarId($incoming->getCalendarId());
+        }
+
+        $persisted->setInsertPendingAppointments($incoming->getInsertPendingAppointments());
+        $persisted->setIncludeBufferTime($incoming->getIncludeBufferTime());
+        $persisted->setTitle($incoming->getTitle());
+        $persisted->setDescription($incoming->getDescription());
     }
 
     /**
@@ -1220,7 +1248,6 @@ class ProviderApplicationService
      * @param array $settings
      *
      * @throws QueryExecutionException
-     * @throws ContainerException
      */
     public function updateProviderGoogleCalendarAccountSettings($providerId, $settings)
     {
@@ -1235,7 +1262,6 @@ class ProviderApplicationService
      * @param array    $outlookCalendarData
      *
      * @throws QueryExecutionException
-     * @throws ContainerException
      */
     public function updateProviderOutlookCalendar($newUser, $outlookCalendarData = [])
     {
@@ -1295,7 +1321,6 @@ class ProviderApplicationService
      * @param array $blockedCalendars
      *
      * @throws QueryExecutionException
-     * @throws ContainerException
      */
     public function updateProviderOutlookCalendarBlockedCalendars($providerId, $blockedCalendars)
     {
@@ -1367,7 +1392,6 @@ class ProviderApplicationService
      * @param array $settings
      *
      * @throws QueryExecutionException
-     * @throws ContainerException
      */
     public function updateProviderOutlookCalendarAccountSettings($providerId, $settings)
     {
@@ -1633,7 +1657,6 @@ class ProviderApplicationService
      * @param bool $fetchCalendars
      *
      * @return Provider
-     * @throws ContainerValueNotFoundException
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      */
@@ -1838,7 +1861,6 @@ class ProviderApplicationService
      * @return boolean
      *
      * @throws InvalidArgumentException
-     * @throws ContainerValueNotFoundException
      * @throws QueryExecutionException
      */
     public function delete($provider)
@@ -1922,6 +1944,11 @@ class ProviderApplicationService
             }
         }
 
+        // Only Amelia's side of the link is removed here. The watch these connections own is left to the
+        // renewal cron: renewChannels() and renewSubscriptions() find a registry row nothing points at
+        // any more, stop it remotely and delete it, and hand a shared row to a surviving connection.
+        // Doing it here instead would mean a Google and a Graph round trip inside this transaction,
+        // holding row locks across them - which is what let two concurrent employee deletes deadlock.
         return
             $this->updateProviderDaysOff($provider, $newProvider) &&
             $this->updateProviderSpecialDays($provider, $newProvider) &&

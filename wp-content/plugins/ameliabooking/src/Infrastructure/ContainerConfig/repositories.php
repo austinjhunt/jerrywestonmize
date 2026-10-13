@@ -400,6 +400,17 @@ $entries['domain.outlook.calendar.repository'] = function (Container $c) {
     );
 };
 
+$entries['domain.calendar.sync.lock.repository'] = function (Container $c) {
+    return new Repository\Calendar\CalendarSyncLockRepository($c->getDatabaseConnection());
+};
+
+$entries['domain.calendar.sync.repository'] = function (Container $c) {
+    return new Repository\Calendar\CalendarSyncRepository(
+        $c->getDatabaseConnection(),
+        DB\Calendar\CalendarSyncTable::getTableName()
+    );
+};
+
 $entries['domain.customField.repository'] = function (Container $c) {
     return new Repository\CustomField\CustomFieldRepository(
         $c->getDatabaseConnection(),
@@ -472,5 +483,26 @@ $entries['domain.cache.repository'] = function (Container $c) {
     return new Repository\Cache\CacheRepository(
         $c->getDatabaseConnection(),
         DB\Cache\CacheTable::getTableName()
+    );
+};
+
+$entries['domain.mobile.device.repository'] = function (Container $c) {
+    return new Repository\Mobile\MobileDeviceRepository(
+        $c->getDatabaseConnection(),
+        DB\Mobile\MobileDevicesTable::getTableName()
+    );
+};
+
+$entries['domain.mobile.notificationPrefs.repository'] = function (Container $c) {
+    return new Repository\Mobile\MobileNotificationPrefsRepository(
+        $c->getDatabaseConnection(),
+        DB\Mobile\MobileNotificationPrefsTable::getTableName()
+    );
+};
+
+$entries['domain.mobile.pushReminderLog.repository'] = function (Container $c) {
+    return new Repository\Mobile\MobilePushReminderLogRepository(
+        $c->getDatabaseConnection(),
+        DB\Mobile\MobilePushReminderLogsTable::getTableName()
     );
 };

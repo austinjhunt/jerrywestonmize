@@ -2,8 +2,8 @@
 
 namespace AmeliaBooking\Infrastructure\Repository\Booking\Event;
 
+use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Entity\Booking\Event\EventPeriod;
-use AmeliaBooking\Domain\Factory\Booking\Event\EventFactory;
 use AmeliaBooking\Domain\Factory\Booking\Event\EventPeriodFactory;
 use AmeliaBooking\Domain\Repository\Booking\Event\EventRepositoryInterface;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
@@ -90,5 +90,59 @@ class EventPeriodsRepository extends AbstractRepository implements EventReposito
         } catch (\Exception $e) {
             throw new QueryExecutionException('Unable to save data in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
+    }
+
+    /**
+     * @return Collection
+     * @throws QueryExecutionException
+     */
+    public function getByFieldValue($field, $value)
+    {
+        if (
+            !in_array(
+                $field,
+                [
+                  'googleCalendarEventId',
+                  'outlookCalendarEventId',
+                ]
+            )
+        ) {
+            throw new QueryExecutionException("Invalid field $field for " . __CLASS__);
+        }
+
+        $params = [
+            ":$field" => $value,
+        ];
+
+        try {
+            $statement = $this->connection->prepare(
+                "SELECT * FROM {$this->table} WHERE {$field} = :{$field}"
+            );
+
+            $statement->execute($params);
+
+            $rows = $statement->fetchAll();
+        } catch (\Exception $e) {
+            throw new QueryExecutionException('Unable to find by field value in ' . __CLASS__, $e->getCode(), $e);
+        }
+
+        $collection = new Collection();
+
+        foreach ($rows as $row) {
+            $row['periodStart'] = DateTimeService::getCustomDateTimeFromUtc(
+                $row['periodStart']
+            );
+
+            $row['periodEnd'] = DateTimeService::getCustomDateTimeFromUtc(
+                $row['periodEnd']
+            );
+
+            $collection->addItem(
+                call_user_func([static::FACTORY, 'create'], $row),
+                $row['id']
+            );
+        }
+
+        return $collection;
     }
 }

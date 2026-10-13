@@ -173,12 +173,17 @@ class Newsletter {
     SendingQueueEntity $queue,
     ?array $personalizationContext
   ): string {
-    $resolveTokenUrl = function (string $url) use ($personalizationContext): string {
+    $resolveTokenUrl = function (string $url) use ($newsletter, $personalizationContext): string {
       if ($personalizationContext === null || !$this->personalizationTagLinkResolver->isTokenUrl($url)) {
         return $url;
       }
+      $resolvedUrl = $this->personalizationTagLinkResolver->resolveWithContext($url, $personalizationContext);
       // An unresolvable token would otherwise ship as literal text.
-      return $this->personalizationTagLinkResolver->resolveWithContext($url, $personalizationContext) ?? '';
+      if ($resolvedUrl === null) {
+        return '';
+      }
+      // Restored ordinary links carry the GA params baked in at send time; match them.
+      return $this->gaTracking->addParamsToUrl($resolvedUrl, $newsletter);
     };
     // true = convert every hashed link, not only the shortcode ones.
     $content = $this->newsletterLinks->convertHashedLinksToShortcodesAndUrls(
@@ -358,7 +363,8 @@ class Newsletter {
         $renderedNewsletter['html'],
         $newsletter,
         null,
-        $queue
+        $queue,
+        $isPlainText = true
       )
     );
 
@@ -446,6 +452,14 @@ class Newsletter {
   }
 
   /**
+   * Whether this subscriber's email gets the open pixel and tracked links. The sent statistics
+   * row stores the same answer.
+   */
+  public function isSentWithTracking(SubscriberEntity $subscriber): bool {
+    return $this->trackingEnabled && $this->trackingConsentController->isTrackingAllowed($subscriber);
+  }
+
+  /**
    * Shortcodes and links will be replaced in the subject, html and text body
    * to speed the processing, join content into a continuous string.
    */
@@ -470,47 +484,45 @@ class Newsletter {
     $context = $newsletter->getWpPostId() !== null
       ? $this->personalizationContextBuilder->build($newsletter, $subscriber, $queue)
       : null;
-    if ($this->trackingEnabled) {
-      if ($this->trackingConsentController->isTrackingAllowed($subscriber)) {
-        $preparedNewsletter = $this->newsletterLinks->replaceSubscriberData(
-          $subscriber->getId(),
-          $queue->getId(),
-          $preparedNewsletter
-        );
-      } else {
-        // CNIL/Garante: withdrawal must stop the reading operation itself, not
-        // merely the recording of it. A tracked link still tells our server the
-        // recipient clicked, so these recipients get the plain destination
-        // instead of a redirect through us.
-        $preparedNewsletter = $this->untrackLinks($preparedNewsletter, $newsletter, $subscriber, $queue, $context);
-        $preparedNewsletter = OpenTracking::removeTrackingImage($preparedNewsletter);
-      }
+    if ($this->isSentWithTracking($subscriber)) {
+      $preparedNewsletter = $this->newsletterLinks->replaceSubscriberData(
+        $subscriber->getId(),
+        $queue->getId(),
+        $preparedNewsletter
+      );
+    } elseif ($this->trackingEnabled) {
+      // CNIL/Garante: withdrawal must stop the reading operation itself, not
+      // merely the recording of it. A tracked link still tells our server the
+      // recipient clicked, so these recipients get the plain destination
+      // instead of a redirect through us.
+      $preparedNewsletter = $this->untrackLinks($preparedNewsletter, $newsletter, $subscriber, $queue, $context);
+      $preparedNewsletter = OpenTracking::removeTrackingImage($preparedNewsletter);
     }
-    $preparedNewsletter = Helpers::splitObject($preparedNewsletter);
+    [$subject, $html, $text] = Helpers::splitObject($preparedNewsletter);
     if ($context !== null) {
-      $this->guardOrderReviewUrlPersonalization($newsletter, $queue, $preparedNewsletter, $context);
+      $this->guardOrderReviewUrlPersonalization($newsletter, $queue, [$subject, $html, $text], $context);
 
       $this->personalizer->set_context($context);
-      foreach ($preparedNewsletter as $key => $content) {
-        $preparedNewsletter[$key] = $this->personalizer->personalize_content($content);
-      }
+      $subject = $this->personalizer->personalize_content($subject, Personalizer::RENDERING_CONTEXT_TEXT);
+      $html = $this->personalizer->personalize_content($html, Personalizer::RENDERING_CONTEXT_HTML);
+      $text = $this->personalizer->personalize_content($text, Personalizer::RENDERING_CONTEXT_TEXT);
       // Token links that were not hashed (tracking disabled) are still literal in the text body.
-      $preparedNewsletter[2] = $this->personalizationTagLinkResolver->resolveMarkdownLinks($preparedNewsletter[2], $context);
-      $personalizedHtml = $this->wp->applyFilters('mailpoet_automation_email_personalize_html_after', $preparedNewsletter[1], $context);
+      $text = $this->personalizationTagLinkResolver->resolveMarkdownLinks($text, $context);
+      $personalizedHtml = $this->wp->applyFilters('mailpoet_automation_email_personalize_html_after', $html, $context);
       if (is_string($personalizedHtml)) {
-        $preparedNewsletter[1] = $personalizedHtml;
+        $html = $personalizedHtml;
       }
-      $personalizedText = $this->wp->applyFilters('mailpoet_automation_email_personalize_text_after', $preparedNewsletter[2], $context);
+      $personalizedText = $this->wp->applyFilters('mailpoet_automation_email_personalize_text_after', $text, $context);
       if (is_string($personalizedText)) {
-        $preparedNewsletter[2] = $personalizedText;
+        $text = $personalizedText;
       }
     }
     return [
       'id' => $newsletter->getId(),
-      'subject' => $preparedNewsletter[0],
+      'subject' => $subject,
       'body' => [
-        'html' => $preparedNewsletter[1],
-        'text' => $preparedNewsletter[2],
+        'html' => $html,
+        'text' => $text,
       ],
     ];
   }

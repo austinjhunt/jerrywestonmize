@@ -34,26 +34,6 @@ msgid "# of bookings"
 msgstr "# de rezervări"
 
 #, php-format
-msgid "%1$s, %2$s, was canceled."
-msgstr "%1$s, %2$s, a fost anulat."
-
-#, php-format
-msgid "%1$s, %2$s, was rejected."
-msgstr "%1$s, %2$s, a fost respins."
-
-#, php-format
-msgid "%1$s booked %2$s at %3$s."
-msgstr "%1$s a rezervat %2$s la %3$s."
-
-#, php-format
-msgid "%1$s on %2$s had a status change."
-msgstr "%1$s din %2$s și-a schimbat starea."
-
-#, php-format
-msgid "%1$s on %2$s was updated."
-msgstr "%1$s din %2$s a fost actualizat."
-
-#, php-format
 msgid "%event_name% Event Booked"
 msgstr "%event_name% Eveniment rezervat"
 
@@ -460,8 +440,14 @@ msgstr "Acțiuni"
 msgid "Activate"
 msgstr "Activați"
 
+msgid "Activate now"
+msgstr ""
+
 msgid "Activate with Envato"
 msgstr "Activați cu Envato"
+
+msgid "Activate your license to unlock the features included in your plan."
+msgstr ""
 
 msgid "Activated with Envato"
 msgstr "Activat cu Envato"
@@ -877,6 +863,9 @@ msgstr "Deja achitat"
 msgid "Already have an account?"
 msgstr "Ai deja un cont?"
 
+msgid "Already purchased Amelia?"
+msgstr ""
+
 msgid "Also cancel and delete future events"
 msgstr "Anulează și șterge și evenimentele viitoare"
 
@@ -936,7 +925,7 @@ msgid "Apple Calendar setup"
 msgstr "Configurarea Calendarului Apple"
 
 msgid "Apple calendar events"
-msgstr "Evenimente Apple Calendar"
+msgstr ""
 
 msgid "Application (client) ID"
 msgstr "ID aplicație (client)."
@@ -1082,9 +1071,6 @@ msgstr "Note pentru rezervare"
 msgid "Appointment price"
 msgstr "Preț rezervare"
 
-msgid "Appointment reminder"
-msgstr "Reamintire de programare"
-
 msgid "Appointment repeats"
 msgstr "Repetarea programărilor"
 
@@ -1097,9 +1083,6 @@ msgstr "Ora de începere a programării"
 msgid "Appointment status"
 msgstr "Starea de numire"
 
-msgid "Appointment status changed"
-msgstr "Statusul programării s-a schimbat"
-
 msgid "Appointment status has been changed to "
 msgstr "Statutul programării a fost schimbat în "
 
@@ -1108,9 +1091,6 @@ msgstr "Starea programării a fost actualizată."
 
 msgid "Appointment title"
 msgstr "Titlul programării"
-
-msgid "Appointment updated"
-msgstr "Programare actualizată"
 
 msgid "Appointments"
 msgstr "Rezervări"
@@ -1150,6 +1130,10 @@ msgstr "Ești sigur că vrei să anulezi și să ștergi acest eveniment?"
 
 msgid "Are you sure you want to cancel this appointment?"
 msgstr "Sunteți sigur că doriți să anulați aceasta rezervare?"
+
+msgid ""
+"Are you sure you want to cancel this booking? This action cannot be undone."
+msgstr ""
 
 msgid "Are you sure you want to cancel this event?"
 msgstr "Sigur doriți să anulați acest eveniment?"
@@ -1338,13 +1322,13 @@ msgid "Attendee"
 msgstr "Participant"
 
 msgid "Attendee Asc"
-msgstr "Participant Ascendent"
+msgstr "Participant Ascendent crescător"
 
 msgid "Attendee Desc"
-msgstr "Participant Descendent"
+msgstr "Participant Ascendent descrescător"
 
 msgid "Attendee code"
-msgstr "Cod participant"
+msgstr "Codul participantului"
 
 msgid "Attendee has been saved"
 msgstr "Participantul a fost salvat"
@@ -1448,13 +1432,13 @@ msgid "Available date text"
 msgstr "Textul datei disponibile"
 
 msgid "Available from Pro license"
-msgstr "Disponibil din licența Pro"
+msgstr "Disponibil de la licența Pro"
 
 msgid "Available from Standard license"
-msgstr "Disponibil din licența standard"
+msgstr "Disponibil de la licența Standard"
 
 msgid "Available from Starter license"
-msgstr "Disponibil din licența Starter"
+msgstr "Disponibil de la licența Starter"
 
 msgid "Available in Elite licence"
 msgstr "Disponibil în licență Elite"
@@ -1686,10 +1670,10 @@ msgid "Booking Closes"
 msgstr "Rezervarea se închide"
 
 msgid "Booking Closes Asc"
-msgstr "Închidere rezervare Asc"
+msgstr "Închidere rezervare crescător"
 
 msgid "Booking Closes Desc"
-msgstr "Închidere rezervare Desc"
+msgstr "Închidere rezervare descrescător"
 
 msgid "Booking Confirmed"
 msgstr "Rezervare confirmată"
@@ -1716,10 +1700,10 @@ msgid "Booking Opens"
 msgstr "Rezervarea se deschide"
 
 msgid "Booking Opens Asc"
-msgstr "Deschidere rezervări ascendent"
+msgstr "Deschidere rezervări ascendent crescător"
 
 msgid "Booking Opens Desc"
-msgstr "Deschidere rezervări descendent"
+msgstr "Deschidere rezervări ascendent descrescător"
 
 msgid "Booking Overview"
 msgstr "Prezentare generală a rezervării"
@@ -2287,6 +2271,9 @@ msgstr "Alegeți când se termină repetarea"
 msgid "Choose whether you want to manage services, events, or both."
 msgstr "Alegeți dacă doriți să gestionați servicii, evenimente sau ambele."
 
+msgid "Choose which tab users see first when they log in"
+msgstr ""
+
 msgid "Choosing layout of first step in step by step form"
 msgstr "Alegerea aspectului primului pas în formularul pas cu pas"
 
@@ -2472,6 +2459,9 @@ msgstr "Configurați lista de așteptare pentru programări"
 
 msgid "Confirm"
 msgstr "Confirmă"
+
+msgid "Confirm Cancellation"
+msgstr ""
 
 msgid "Confirm My Appointment"
 msgstr "Confirmă-mi programarea"
@@ -2943,10 +2933,10 @@ msgid "Customer(s)"
 msgstr "Client (ți)"
 
 msgid "Customer Asc"
-msgstr "Client Ascendent"
+msgstr "Client Ascendent crescător"
 
 msgid "Customer Desc"
-msgstr "Client Descendent"
+msgstr "Client Ascendent descrescător"
 
 msgid "Customer Panel"
 msgstr "Panoul pentru clienți"
@@ -3127,9 +3117,6 @@ msgstr "Date care rămân neschimbate:"
 msgid "Data to be updated:"
 msgstr "Date de actualizat:"
 
-msgid "Data transfer"
-msgstr "Transferul de date"
-
 msgid "Date"
 msgstr "Dată"
 
@@ -3146,19 +3133,19 @@ msgid "Date & time periods of the event with Lesson Space join links"
 msgstr "Data și perioada evenimentului cu linkuri de conectare la Lesson Space"
 
 msgid "Date Asc"
-msgstr "Dată Asc"
+msgstr "Dată crescător"
 
 msgid "Date Desc"
-msgstr "Dată Desc"
+msgstr "Dată descrescător"
 
 msgid "Date Picker"
 msgstr "Selector de dată"
 
 msgid "Date Purchased Asc"
-msgstr "Data achiziției ascendent"
+msgstr "Data achiziției ascendent crescător"
 
 msgid "Date Purchased Desc"
-msgstr "Data achiziției descendent"
+msgstr "Data achiziției ascendent descrescător"
 
 msgid ""
 "Date Ranges that are not defined will use default price from ticket category."
@@ -4131,10 +4118,10 @@ msgid "Deduction"
 msgstr "Deducere"
 
 msgid "Deduction Asc"
-msgstr "Deducere Ascendentă"
+msgstr "Deducere Ascendentă crescător"
 
 msgid "Deduction Desc"
-msgstr "Deducere Descendentă"
+msgstr "Deducere Ascendentă descrescător"
 
 msgid "Default Label"
 msgstr "Etichetă implicită"
@@ -4147,6 +4134,9 @@ msgstr "Starea implicită a programării"
 
 msgid "Default back end page"
 msgstr "Pagina implicită a back-end-ului"
+
+msgid "Default landing tab"
+msgstr ""
 
 msgid "Default language"
 msgstr "Limba implicita"
@@ -4385,10 +4375,10 @@ msgid "Discount"
 msgstr "Reducere"
 
 msgid "Discount Asc"
-msgstr "Reducere Ascendentă"
+msgstr "Reducere Ascendentă crescător"
 
 msgid "Discount Desc"
-msgstr "Reducere Descendentă"
+msgstr "Reducere Ascendentă descrescător"
 
 msgid "Discount (%)"
 msgstr "Reducere (%)"
@@ -4568,10 +4558,10 @@ msgid "Duration:"
 msgstr "Durata:"
 
 msgid "Duration Asc"
-msgstr "Durată Asc"
+msgstr "Durată crescător"
 
 msgid "Duration Desc"
-msgstr "Durată Desc"
+msgstr "Durată descrescător"
 
 msgid "E-Ticket Scanner"
 msgstr "Scaner de bilete electronice"
@@ -4658,8 +4648,6 @@ msgid ""
 "Edit appointments/events when connected Google Calendar Events are "
 "rescheduled or deleted"
 msgstr ""
-"Editează programări/evenimente când evenimentele Google Calendar conectate "
-"sunt reprogramate sau șterse"
 
 msgid "Edit block time"
 msgstr "Editează timpul blocului"
@@ -5335,7 +5323,7 @@ msgid "Event"
 msgstr "Eveniment"
 
 msgid "Event Asc"
-msgstr "Eveniment Asc"
+msgstr "Eveniment crescător"
 
 msgid "Event Available"
 msgstr "Eveniment disponibil"
@@ -5374,7 +5362,7 @@ msgid "Event Day"
 msgstr "Data evenimentului"
 
 msgid "Event Desc"
-msgstr "Descrierea evenimentului"
+msgstr "Eveniment descrescător"
 
 msgid "Event Employee"
 msgstr "Angajat eveniment"
@@ -5790,9 +5778,6 @@ msgstr "Eșuată"
 msgid "Failed to access camera. Please try again."
 msgstr "Accesarea camerei a eșuat. Vă rugăm să încercați din nou."
 
-msgid "Failed to initialize payment. Please try again."
-msgstr "Inițializarea plății a eșuat. Vă rugăm să încercați din nou."
-
 msgid "Failed to load appointment details. Please try again later."
 msgstr ""
 "Încărcarea detaliilor programării a eșuat. Vă rugăm să încercați din nou mai "
@@ -6146,7 +6131,7 @@ msgid "Google Analytics setup"
 msgstr "Configurarea Google Analytics"
 
 msgid "Google Calendar"
-msgstr "Calendarul Google"
+msgstr "Calendar Google"
 
 msgid "Google Calendar & Google Meet"
 msgstr "Google Calendar și Google Meet"
@@ -6176,7 +6161,7 @@ msgid "Google Meet setup"
 msgstr "Configurare Google Meet"
 
 msgid "Google calendar events"
-msgstr "Evenimente din Google Calendar"
+msgstr ""
 
 msgid "Google reCAPTCHA v2 secret key"
 msgstr "Cheie secretă pentru Google reCAPTCHA v2"
@@ -6934,10 +6919,10 @@ msgid "ID"
 msgstr ""
 
 msgid "ID Asc"
-msgstr ""
+msgstr "ID crescător"
 
 msgid "ID Desc"
-msgstr ""
+msgstr "ID descrescător"
 
 msgid "I understand this import will replace all current data permanently."
 msgstr ""
@@ -6965,13 +6950,6 @@ msgid ""
 msgstr ""
 "Dacă această opțiune este dezactivată, rezervarea trebuie să îndeplinească "
 "capacitatea minimă, iar intervalul de timp se închide după prima rezervare."
-
-msgid ""
-"If disabled, the price will remain the same regardless of how many people "
-"are included in the group appointment."
-msgstr ""
-"Dacă este dezactivat, prețul va rămâne același indiferent de câți oameni "
-"sunt incluși în programarea de grup."
 
 msgid ""
 "If enabled, customers can book with Pending status even after maximum "
@@ -7118,6 +7096,9 @@ msgstr "Miniaturi imagini"
 msgid "Import"
 msgstr ""
 
+msgid "Import/Export"
+msgstr ""
+
 msgid "Import Failed"
 msgstr "Import nereușit"
 
@@ -7147,6 +7128,9 @@ msgstr "Importul a eșuat"
 
 msgid "Import failed. Review the details below."
 msgstr "Importul a eșuat. Verificați detaliile de mai jos."
+
+msgid "Import or export your Amelia data."
+msgstr ""
 
 msgid "Import progress"
 msgstr "Progresul importului"
@@ -7565,10 +7549,10 @@ msgid "Invoice Format"
 msgstr "Formatul facturii"
 
 msgid "Invoice Number Asc"
-msgstr "Număr factură ascendent"
+msgstr "Număr factură ascendent crescător"
 
 msgid "Invoice Number Desc"
-msgstr "Număr factură descendent"
+msgstr "Număr factură ascendent descrescător"
 
 msgid "Invoice date"
 msgstr "Data facturii"
@@ -7737,10 +7721,10 @@ msgid "Last"
 msgstr "Ultimul"
 
 msgid "Last Booking Asc"
-msgstr "Ultima rezervare ascendent"
+msgstr "Ultima rezervare ascendent crescător"
 
 msgid "Last Booking Desc"
-msgstr "Ultima rezervare descendent"
+msgstr "Ultima rezervare ascendent descrescător"
 
 msgid "Last Name:"
 msgstr "Nume:"
@@ -8117,10 +8101,10 @@ msgid "Max. Capacity"
 msgstr "Max. Capacitate"
 
 msgid "Max Capacity Asc"
-msgstr "Capacitate maximă ascendentă"
+msgstr "Capacitate maximă ascendentă crescător"
 
 msgid "Max Capacity Desc"
-msgstr "Capacitate maximă - Descriere"
+msgstr "Capacitate maximă ascendentă descrescător"
 
 msgid "Maximum"
 msgstr "Maxim"
@@ -8338,13 +8322,13 @@ msgid "Name:"
 msgstr "Nume:"
 
 msgid "Name Asc"
-msgstr "Nume Ascendent"
+msgstr "Nume Ascendent crescător"
 
 msgid "Name Ascending"
 msgstr "Nume crescător"
 
 msgid "Name Desc"
-msgstr "Nume Descendent"
+msgstr "Nume Ascendent descrescător"
 
 msgid "Name Descending"
 msgstr "Nume descrescător"
@@ -8461,10 +8445,10 @@ msgid "No, just this one"
 msgstr "Nu, doar acesta"
 
 msgid "No-show"
-msgstr "Neprezentare"
+msgstr "Absent"
 
 msgid "No-show tag"
-msgstr "Etichetă „No-show”"
+msgstr "Etichetă de absență"
 
 msgid "No Employees Assigned to This Location"
 msgstr "Nu sunt angajați asignați acestei locații"
@@ -8482,7 +8466,7 @@ msgid "No Show (2)"
 msgstr "Absent (2)"
 
 msgid "No Show (3+)"
-msgstr "Absență (3+)"
+msgstr "Absent (3+)"
 
 msgid "No Tags. Create a new one."
 msgstr "Fără etichete. Creați unul nou."
@@ -8687,13 +8671,13 @@ msgid "Notify selected employees about empty package purchases"
 msgstr "Notificați angajații selectați despre achizițiile de pachete goale"
 
 msgid "Notify the attendee(s)"
-msgstr "Notificați clientul (clienții)"
+msgstr "Anunță participanții"
 
 msgid "Notify the attendees"
 msgstr "Anunță participanții"
 
 msgid "Notify the customer(s)"
-msgstr "Notificați clientul (clienții)"
+msgstr "Anunță clienții"
 
 msgid "Number of Additional People"
 msgstr "Numărul de persoane suplimentare"
@@ -9032,7 +9016,7 @@ msgid "Outlook Calendar setup"
 msgstr "Configurarea calendarului Outlook"
 
 msgid "Outlook Mailer"
-msgstr "Program de e-mail Outlook"
+msgstr "Serviciu de mail Outlook"
 
 msgid ""
 "Outlook Mailer is not fully configured. Please complete the account setup in "
@@ -9042,7 +9026,7 @@ msgstr ""
 "configurarea contului în setările de integrare Outlook."
 
 msgid "Outlook calendar events"
-msgstr "Evenimente din calendarul Outlook"
+msgstr ""
 
 msgid "Outside of working hours"
 msgstr "În afara orelor de lucru"
@@ -9081,13 +9065,13 @@ msgid "Package %package_name% purchased"
 msgstr "Pachetul %package_name% a fost achiziționat"
 
 msgid "Package Asc"
-msgstr "Pachet Asc"
+msgstr "Pachet crescător"
 
 msgid "Package Canceled"
 msgstr "Pachet anulat"
 
 msgid "Package Desc"
-msgstr "Descriere Pachet"
+msgstr "Pachet descrescător"
 
 msgid "Package ID"
 msgstr "ID Pachet"
@@ -10049,7 +10033,7 @@ msgid "Price:"
 msgstr "Preț:"
 
 msgid "Price Asc"
-msgstr "Preț Ascendent"
+msgstr "Preț Ascendent crescător"
 
 msgid "Price Ascending"
 msgstr "Preț crescător"
@@ -10175,6 +10159,11 @@ msgstr "Achiziția este anulată"
 msgid "Purchased"
 msgstr "Cumparat"
 
+msgid ""
+"Purchasing doesn't upgrade this plugin automatically. Follow our step-by-"
+"step guide to switch to the full version."
+msgstr ""
+
 msgid "Purple"
 msgstr "Violet"
 
@@ -10188,10 +10177,10 @@ msgid "Quantity"
 msgstr "Cantitate maximă"
 
 msgid "Quantity Asc"
-msgstr "Cantitate Ascendentă"
+msgstr "Cantitate Ascendentă crescător"
 
 msgid "Quantity Desc"
-msgstr "Cantitate Descendentă"
+msgstr "Cantitate Ascendentă descrescător"
 
 msgid "Quantity is shared"
 msgstr "Cantitatea este partajată"
@@ -10314,7 +10303,7 @@ msgid "Redirect"
 msgstr "Redirecționare"
 
 msgid "Redirect URI"
-msgstr "Redirecționați URI"
+msgstr "URI de redirecționare"
 
 msgid "Redirect URL After Booking"
 msgstr "Redirecționați URL-ul după rezervare"
@@ -10344,7 +10333,7 @@ msgid "Redirect URL for unsuccessfully rejected booking"
 msgstr "URL de redirecționare pentru rezervare respinsă fără succes"
 
 msgid "Redirect URLs"
-msgstr "URL-uri de redirecționare"
+msgstr "Adrese URL de redirecționare"
 
 msgid "Redirect page"
 msgstr "Redirecționează pagina"
@@ -10383,10 +10372,6 @@ msgstr "Restul sumei totale va fi plătită la fața locului."
 
 msgid "Remind me when my SMS balance is low"
 msgstr "Amintește-mi când soldul meu SMS este scăzut"
-
-#, php-format
-msgid "Reminder: %1$s is scheduled for %2$s."
-msgstr "Reamintire: %1$s este programat la %2$s."
 
 msgid "Remove Apple Calendar event slots"
 msgstr "Elimină intervalele de evenimente din Calendarul Apple"
@@ -10601,7 +10586,7 @@ msgid "Sandbox secret key (POSKey)"
 msgstr "Cheie secretă Sandbox (POSKey)"
 
 msgid "Sat"
-msgstr "Sâmbătă"
+msgstr "Sâm"
 
 msgid "Saturday"
 msgstr "Sâmbătă"
@@ -10785,6 +10770,9 @@ msgstr "Actiune"
 
 msgid "Securely process payments using Stripe."
 msgstr "Procesează plățile în siguranță folosind Stripe."
+
+msgid "See upgrade guide."
+msgstr ""
 
 msgid "Segment"
 msgstr ""
@@ -11125,7 +11113,7 @@ msgid "Service/Event"
 msgstr "Serviciu/Eveniment"
 
 msgid "Service Asc"
-msgstr "Serviciu Asc"
+msgstr "Serviciu crescător"
 
 msgid "Service Categories"
 msgstr "Categorii de Servicii"
@@ -11134,7 +11122,7 @@ msgid "Service Category"
 msgstr "Categoria de servicii"
 
 msgid "Service Desc"
-msgstr "Serviciu Desc"
+msgstr "Serviciu descrescător"
 
 msgid "Service ID"
 msgstr "ID serviciu"
@@ -11233,10 +11221,10 @@ msgid "Services & categories setup"
 msgstr "Configurare Servicii și Categorii"
 
 msgid "Services Asc"
-msgstr "Servicii Ascendent"
+msgstr "Servicii Ascendent crescător"
 
 msgid "Services Desc"
-msgstr "Servicii Descendent"
+msgstr "Servicii Ascendent descrescător"
 
 msgid "Services and packages overview"
 msgstr "Prezentare generală a serviciilor și pachetelor"
@@ -11611,10 +11599,10 @@ msgid "Show specific packages"
 msgstr "Afișați pachete specifice"
 
 msgid "Show specific service"
-msgstr "Afișați un serviciu specific"
+msgstr "Afișează un serviciu anume"
 
 msgid "Show specific services"
-msgstr "Afișați anumite servicii"
+msgstr "Afișează servicii anume"
 
 msgid "Show tag"
 msgstr "Afișează eticheta"
@@ -11668,6 +11656,9 @@ msgstr "Conectați-vă cu Microsoft"
 
 msgid "Sign in with Outlook"
 msgstr "Conectați-vă cu Outlook"
+
+msgid "Sign out and use a customer account"
+msgstr ""
 
 msgid "Sign out from Google"
 msgstr "Deconectați-vă de la Google"
@@ -11874,10 +11865,10 @@ msgid "Status"
 msgstr "Stare"
 
 msgid "Status Asc"
-msgstr "Status Ascendent"
+msgstr "Status Ascendent crescător"
 
 msgid "Status Desc"
-msgstr "Status Descendent"
+msgstr "Status Ascendent descrescător"
 
 msgid ""
 "Stay compliant with ease through consistent, reliable tax handling across "
@@ -12053,7 +12044,7 @@ msgid "Summary segment"
 msgstr "Rezumatul segmentului"
 
 msgid "Sun"
-msgstr "Soare"
+msgstr "Dum"
 
 msgid "Sunday"
 msgstr "Duminică"
@@ -12081,7 +12072,7 @@ msgid "Switch Camera"
 msgstr "Comutare cameră"
 
 msgid "Sync Google Events"
-msgstr "Sincronizează evenimente Google"
+msgstr ""
 
 msgid "Sync with"
 msgstr "Sincronizează cu"
@@ -12613,6 +12604,12 @@ msgstr ""
 "configurația cronului dumneavoastră."
 
 msgid ""
+"This option applies only to people added through \"Bringing anyone with "
+"you\". If disabled, the service price is charged once for the entire "
+"booking, regardless of how many additional people are included."
+msgstr ""
+
+msgid ""
 "This option requires adding the payment link placeholder to your message "
 "templates."
 msgstr ""
@@ -12712,7 +12709,7 @@ msgstr ""
 "global."
 
 msgid "Thu"
-msgstr "Jo"
+msgstr "Joi"
 
 msgid "Thursday"
 msgstr "Joi"
@@ -12775,10 +12772,10 @@ msgid "Time Range:"
 msgstr "Interval orar:"
 
 msgid "Time Used Asc"
-msgstr "Timp utilizat ascendent"
+msgstr "Timp utilizat ascendent crescător"
 
 msgid "Time Used Desc"
-msgstr "Timp utilizat descendent"
+msgstr "Timp utilizat ascendent descrescător"
 
 msgid "Time frame"
 msgstr "Interval orar:"
@@ -12858,7 +12855,7 @@ msgid ""
 "to activate Amelia."
 msgstr ""
 "Pentru a primi actualizări automate este necesară activarea licenței. Vă "
-"rugăm să vizitați% s pentru a activa Amelia."
+"rugăm să vizitați %s pentru a activa Amelia."
 
 msgid ""
 "To reschedule your appointment, select an available date time from the "
@@ -13033,10 +13030,10 @@ msgid "Type"
 msgstr "Tip"
 
 msgid "Type Asc"
-msgstr "Tip Asc"
+msgstr "Tip crescător"
 
 msgid "Type Desc"
-msgstr "Tip Desc"
+msgstr "Tip descrescător"
 
 msgid "URL"
 msgstr "URL-ul"
@@ -13818,6 +13815,11 @@ msgstr ""
 msgid "Your password has been reset successfully."
 msgstr "Parola ta a fost resetată cu succes."
 
+msgid ""
+"Your payment is still processing. You will receive a confirmation as soon as "
+"it is completed."
+msgstr ""
+
 msgid "Your postal code is incomplete"
 msgstr "Codul dvs. poștal este incomplet"
 
@@ -14177,7 +14179,7 @@ msgid ""
 "{count} employee has not been deleted due to future bookings. | {count} "
 "employees have not been deleted due to future bookings."
 msgstr ""
-"{count}Angajatul nu a fost șters din cauza rezervărilor viitoare.{count} "
+"{count} Angajatul nu a fost șters din cauza rezervărilor viitoare. | {count} "
 "Angajații nu au fost șterși din cauza rezervărilor viitoare."
 
 msgid ""
@@ -14214,7 +14216,7 @@ msgid ""
 "{count} location has not been deleted due to future bookings. | {count} "
 "locations have not been deleted due to future bookings."
 msgstr ""
-"{count}Locația nu a fost ștearsă din cauza rezervărilor viitoare.{count} "
+"{count} Locația nu a fost ștearsă din cauza rezervărilor viitoare. | {count} "
 "Locațiile nu au fost șterse din cauza rezervărilor viitoare."
 
 msgid "{count} minute | {count} minutes"
@@ -14244,7 +14246,7 @@ msgid ""
 "{count} package has not been deleted due to future bookings. | {count} "
 "packages have not been deleted due to future bookings."
 msgstr ""
-"{count}Pachetul nu a fost șters din cauza rezervărilor viitoare.{count} "
+"{count} Pachetul nu a fost șters din cauza rezervărilor viitoare. | {count} "
 "Pachetele nu au fost șterse din cauza rezervărilor viitoare."
 
 msgid ""

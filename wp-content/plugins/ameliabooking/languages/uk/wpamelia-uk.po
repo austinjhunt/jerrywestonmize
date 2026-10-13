@@ -34,26 +34,6 @@ msgid "# of bookings"
 msgstr "# бронювань"
 
 #, php-format
-msgid "%1$s, %2$s, was canceled."
-msgstr "%1$s, %2$s, скасовано."
-
-#, php-format
-msgid "%1$s, %2$s, was rejected."
-msgstr "%1$s, %2$s, відхилено."
-
-#, php-format
-msgid "%1$s booked %2$s at %3$s."
-msgstr "%1$s забронював(-ла) %2$s о %3$s."
-
-#, php-format
-msgid "%1$s on %2$s had a status change."
-msgstr "%1$s на %2$s змінено статус."
-
-#, php-format
-msgid "%1$s on %2$s was updated."
-msgstr "%1$s на %2$s оновлено."
-
-#, php-format
 msgid "%event_name% Event Booked"
 msgstr "%event_name% Захід заброньовано"
 
@@ -462,8 +442,14 @@ msgstr "Дії"
 msgid "Activate"
 msgstr "Активувати"
 
+msgid "Activate now"
+msgstr ""
+
 msgid "Activate with Envato"
 msgstr "Активувати за допомогою Envato"
+
+msgid "Activate your license to unlock the features included in your plan."
+msgstr ""
 
 msgid "Activated with Envato"
 msgstr "Активовано за допомогою Envato"
@@ -713,7 +699,7 @@ msgid "All customers"
 msgstr "Усі клієнти"
 
 msgid "All employees"
-msgstr "Всі Майстри"
+msgstr "Всі співробітники"
 
 msgid "All entities imported"
 msgstr "Усі об’єкти імпортовано"
@@ -876,6 +862,9 @@ msgstr "Вже сплачено"
 msgid "Already have an account?"
 msgstr "Вже є аккаунт?"
 
+msgid "Already purchased Amelia?"
+msgstr ""
+
 msgid "Also cancel and delete future events"
 msgstr "Також скасувати та видалити майбутні події"
 
@@ -925,7 +914,7 @@ msgid "Apple"
 msgstr ""
 
 msgid "Apple Calendar"
-msgstr "Календар Google"
+msgstr "Календар Apple"
 
 msgid "Apple Calendar (Personal)"
 msgstr "Календар Apple (особистий)"
@@ -934,7 +923,7 @@ msgid "Apple Calendar setup"
 msgstr "Налаштування календаря Apple"
 
 msgid "Apple calendar events"
-msgstr "Події в Apple Calendar"
+msgstr ""
 
 msgid "Application (client) ID"
 msgstr "Ідентифікатор програми (клієнта) (client ID)"
@@ -1080,9 +1069,6 @@ msgstr "Нотатки про Зустріч"
 msgid "Appointment price"
 msgstr "Вартість прийому"
 
-msgid "Appointment reminder"
-msgstr "Нагадування про запис"
-
 msgid "Appointment repeats"
 msgstr "Повторення зустрічей"
 
@@ -1095,9 +1081,6 @@ msgstr "Час початку зустрічі"
 msgid "Appointment status"
 msgstr "Статус зустрічі змінено на "
 
-msgid "Appointment status changed"
-msgstr "Змінено статус запису"
-
 msgid "Appointment status has been changed to "
 msgstr "Статус зустрічі змінено на "
 
@@ -1106,9 +1089,6 @@ msgstr "Статус зустрічі оновлено."
 
 msgid "Appointment title"
 msgstr "Назва зустрічі"
-
-msgid "Appointment updated"
-msgstr "Запис змінено"
 
 msgid "Appointments"
 msgstr "Записи"
@@ -1148,6 +1128,10 @@ msgstr "Ви впевнені, що хочете скасувати та вид�
 
 msgid "Are you sure you want to cancel this appointment?"
 msgstr "Ви впевнені, що хочете скасувати цю зустріч?"
+
+msgid ""
+"Are you sure you want to cancel this booking? This action cannot be undone."
+msgstr ""
 
 msgid "Are you sure you want to cancel this event?"
 msgstr "Ви впевнені, що хочете скасувати цю подію?"
@@ -1333,7 +1317,7 @@ msgid "Attachment upload path"
 msgstr "Папка для завантаження вкладеного файлу"
 
 msgid "Attendee"
-msgstr "Відвідування Заходу скасовано учасником"
+msgstr "Учасник"
 
 msgid "Attendee Asc"
 msgstr "Учасник за зростанням"
@@ -1357,7 +1341,7 @@ msgid "Attendees"
 msgstr "Учасники"
 
 msgid "Attendees Allowed"
-msgstr "Код учасника"
+msgstr "Дозволені учасники"
 
 msgid "Attendees Export Format"
 msgstr "Формат експорту учасників"
@@ -1449,7 +1433,7 @@ msgid "Available from Pro license"
 msgstr "Доступно з ліцензії Pro"
 
 msgid "Available from Standard license"
-msgstr "Доступно в Пакеті Послуг"
+msgstr "Доступно з ліцензії Standard"
 
 msgid "Available from Starter license"
 msgstr "Доступно з ліцензії Starter"
@@ -2281,6 +2265,9 @@ msgstr "Виберіть, коли закінчується повторення
 msgid "Choose whether you want to manage services, events, or both."
 msgstr "Виберіть, чи хочете ви керувати послугами, подіями або обома."
 
+msgid "Choose which tab users see first when they log in"
+msgstr ""
+
 msgid "Choosing layout of first step in step by step form"
 msgstr "Вибір макета першого кроку в покроковій формі"
 
@@ -2466,6 +2453,9 @@ msgstr "Налаштувати список очікування на прийо
 
 msgid "Confirm"
 msgstr "Підтвердити"
+
+msgid "Confirm Cancellation"
+msgstr ""
 
 msgid "Confirm My Appointment"
 msgstr "Підтвердити мій візит"
@@ -2822,10 +2812,7 @@ msgstr ""
 "підвищити зацікавленість, задоволеність та продажі."
 
 msgid "Created On"
-msgstr ""
-"Бронювання подій — це шорткод, який дає вашим клієнтам можливість "
-"забронювати одну з подій, створених вами на сервері, у простому перегляді "
-"списку подій."
+msgstr "Створено"
 
 msgid "Created on"
 msgstr "Створено"
@@ -3113,9 +3100,6 @@ msgstr "Дані, що залишаються без змін:"
 
 msgid "Data to be updated:"
 msgstr "Дані для оновлення:"
-
-msgid "Data transfer"
-msgstr "Передача даних"
 
 msgid "Date"
 msgstr "Дата"
@@ -4130,6 +4114,9 @@ msgstr "Статус запису за замовчуванням"
 msgid "Default back end page"
 msgstr "Стандартна сторінка бек-енду"
 
+msgid "Default landing tab"
+msgstr ""
+
 msgid "Default language"
 msgstr "Мова за замовчуванням"
 
@@ -4641,8 +4628,6 @@ msgid ""
 "Edit appointments/events when connected Google Calendar Events are "
 "rescheduled or deleted"
 msgstr ""
-"Оновлювати записи/події, коли пов’язані події Google Calendar "
-"перезаплановано або видалено"
 
 msgid "Edit block time"
 msgstr "Редагувати заблокований час"
@@ -4726,13 +4711,13 @@ msgstr ""
 "системі оподаткування"
 
 msgid "Email"
-msgstr "Встановити електронну пошту як обов’язкове поле"
+msgstr "Електронна пошта"
 
 msgid "Email:"
-msgstr "Встановити електронну пошту як обов’язкове поле"
+msgstr "Електронна пошта:"
 
 msgid "Email Address"
-msgstr "Будь ласка, введіть дійсну адресу електронної пошти"
+msgstr "Адреса електронної пошти"
 
 msgid "Email address"
 msgstr "Адреса електронної пошти"
@@ -5354,7 +5339,7 @@ msgid "Event Day"
 msgstr "Дата Події"
 
 msgid "Event Desc"
-msgstr "Опис події"
+msgstr "Подія (за спаданням)"
 
 msgid "Event Employee"
 msgstr "Співробітник заходу"
@@ -5459,7 +5444,7 @@ msgid "Event e-ticket"
 msgstr "Електронний квиток на захід"
 
 msgid "Event employee"
-msgstr "Співробітник, відповідальний за організацію заходів"
+msgstr "Співробітник події"
 
 msgid "Event employees"
 msgstr "Співробітники заходу"
@@ -5766,9 +5751,6 @@ msgstr "Не вдалося"
 msgid "Failed to access camera. Please try again."
 msgstr "Не вдалося отримати доступ до камери. Будь ласка, спробуйте ще раз."
 
-msgid "Failed to initialize payment. Please try again."
-msgstr "Не вдалося ініціалізувати платіж. Будь ласка, спробуйте ще раз."
-
 msgid "Failed to load appointment details. Please try again later."
 msgstr "Не вдалося завантажити деталі запису. Будь ласка, спробуйте пізніше."
 
@@ -5966,7 +5948,7 @@ msgid "Fri"
 msgstr "Пт"
 
 msgid "Friday"
-msgstr "П'ЯТНИЦЯ"
+msgstr "П'ятниця"
 
 msgid "From"
 msgstr "Із"
@@ -6145,7 +6127,7 @@ msgid "Google Meet setup"
 msgstr "Налаштування Google Meet"
 
 msgid "Google calendar events"
-msgstr "Події Google Календаря"
+msgstr ""
 
 msgid "Google reCAPTCHA v2 secret key"
 msgstr "Секретний ключ Google reCAPTCHA v2"
@@ -6813,7 +6795,7 @@ msgid "Hidden"
 msgstr "Приховано"
 
 msgid "Hide"
-msgstr "Приховати кошик WooCommerce, коли ціна дорівнює 0"
+msgstr "Приховати"
 
 msgid "Hide Employee Profile"
 msgstr "Приховати профіль співробітника"
@@ -6931,13 +6913,6 @@ msgid ""
 msgstr ""
 "Якщо ця опція вимкнена, бронювання повинно відповідати мінімальній "
 "місткості, а часовий проміжок закривається після першого бронювання."
-
-msgid ""
-"If disabled, the price will remain the same regardless of how many people "
-"are included in the group appointment."
-msgstr ""
-"Якщо відключено, ціна залишиться незмінною незалежно від того, скільки людей "
-"включено в груповий запис."
 
 msgid ""
 "If enabled, customers can book with Pending status even after maximum "
@@ -7081,6 +7056,9 @@ msgstr "Ескізи зображень"
 msgid "Import"
 msgstr "Імпорт"
 
+msgid "Import/Export"
+msgstr ""
+
 msgid "Import Failed"
 msgstr "Імпорт не вдався"
 
@@ -7110,6 +7088,9 @@ msgstr "Імпорт не вдався"
 
 msgid "Import failed. Review the details below."
 msgstr "Імпорт не вдався. Перегляньте деталі нижче."
+
+msgid "Import or export your Amelia data."
+msgstr ""
 
 msgid "Import progress"
 msgstr "Прогрес імпорту"
@@ -8077,7 +8058,7 @@ msgid "Max Capacity Asc"
 msgstr "Макс. місткість за зростанням"
 
 msgid "Max Capacity Desc"
-msgstr "Опис максимальної місткості"
+msgstr "Макс. місткість (за спаданням)"
 
 msgid "Maximum"
 msgstr "Максимум"
@@ -8234,7 +8215,7 @@ msgid "Mon"
 msgstr "Пн"
 
 msgid "Monday"
-msgstr "ПОНЕДІЛОК"
+msgstr "Понеділок"
 
 msgid "Month"
 msgstr "Місяць"
@@ -8417,7 +8398,7 @@ msgid "No, just this one"
 msgstr "Ні, тільки цей"
 
 msgid "No-show"
-msgstr "Показати Все"
+msgstr "Не з'явився"
 
 msgid "No-show tag"
 msgstr "Теги «Не з'явився»"
@@ -8640,13 +8621,13 @@ msgid "Notify selected employees about empty package purchases"
 msgstr "Повідомити вибраних працівників про покупки порожніх пакетів"
 
 msgid "Notify the attendee(s)"
-msgstr "Повідомити клієнта(ів)"
+msgstr "Повідомити учасників"
 
 msgid "Notify the attendees"
 msgstr "Повідомити учасників"
 
 msgid "Notify the customer(s)"
-msgstr "Повідомити клієнта(ів)"
+msgstr "Повідомити клієнтів"
 
 msgid "Number of Additional People"
 msgstr "Кількість додаткових людей"
@@ -8986,7 +8967,7 @@ msgid "Outlook Calendar setup"
 msgstr "Налаштування календаря Outlook"
 
 msgid "Outlook Mailer"
-msgstr "Календар Outlook"
+msgstr "Поштова служба Outlook"
 
 msgid ""
 "Outlook Mailer is not fully configured. Please complete the account setup in "
@@ -8996,7 +8977,7 @@ msgstr ""
 "налаштування облікового запису в параметрах інтеграції Outlook."
 
 msgid "Outlook calendar events"
-msgstr "Події календаря Outlook"
+msgstr ""
 
 msgid "Outside of working hours"
 msgstr "Поза робочим часом"
@@ -9035,13 +9016,13 @@ msgid "Package %package_name% purchased"
 msgstr "Пакет %package_name% придбано"
 
 msgid "Package Asc"
-msgstr "Пакет Asc"
+msgstr "Пакет (за зростанням)"
 
 msgid "Package Canceled"
 msgstr "Пакет скасовано"
 
 msgid "Package Desc"
-msgstr "Опис пакета"
+msgstr "Пакет (за спаданням)"
 
 msgid "Package ID"
 msgstr "Ідентифікатор пакета"
@@ -9403,7 +9384,7 @@ msgid "Pending payment"
 msgstr "Очікує на оплату"
 
 msgid "People"
-msgstr "Помножте суму депозиту на кількість людей в одному бронюванні"
+msgstr "Особи"
 
 msgid "People counting logic"
 msgstr "Логіка підрахунку людей"
@@ -10124,6 +10105,11 @@ msgstr "Покупку скасовано"
 msgid "Purchased"
 msgstr "Придбано Пакет Послуг"
 
+msgid ""
+"Purchasing doesn't upgrade this plugin automatically. Follow our step-by-"
+"step guide to switch to the full version."
+msgstr ""
+
 msgid "Purple"
 msgstr "Фіолетовий"
 
@@ -10263,7 +10249,7 @@ msgid "Redirect"
 msgstr "Перенаправлення"
 
 msgid "Redirect URI"
-msgstr "URI для редиректа"
+msgstr "URI перенаправлення"
 
 msgid "Redirect URL After Booking"
 msgstr "Перенаправлення URL-адреси після бронювання"
@@ -10293,7 +10279,7 @@ msgid "Redirect URL for unsuccessfully rejected booking"
 msgstr "URL перенаправлення для невдало відхиленого бронювання"
 
 msgid "Redirect URLs"
-msgstr "URI для редиректа"
+msgstr "URL-адреси перенаправлення"
 
 msgid "Redirect page"
 msgstr "Перенаправити сторінку"
@@ -10332,10 +10318,6 @@ msgstr "Залишок загальної суми буде оплачено н�
 
 msgid "Remind me when my SMS balance is low"
 msgstr "Нагадати мені, коли баланс SMS низький"
-
-#, php-format
-msgid "Reminder: %1$s is scheduled for %2$s."
-msgstr "Нагадування: %1$s заплановано на %2$s."
 
 msgid "Remove Apple Calendar event slots"
 msgstr "Видалити слоти подій Календаря Apple"
@@ -10553,7 +10535,7 @@ msgid "Sat"
 msgstr "Сб"
 
 msgid "Saturday"
-msgstr "СУБОТА"
+msgstr "Субота"
 
 msgid "Save"
 msgstr "Зберегти"
@@ -10730,6 +10712,9 @@ msgstr "Дія"
 
 msgid "Securely process payments using Stripe."
 msgstr "Безпечно обробляйте платежі за допомогою Stripe."
+
+msgid "See upgrade guide."
+msgstr ""
 
 msgid "Segment"
 msgstr "Сегмент"
@@ -11054,7 +11039,7 @@ msgid "Sender name"
 msgstr "Ім'я відправника"
 
 msgid "Sent"
-msgstr "Вам надіслано електронний лист із деталями вашого бронювання."
+msgstr "Надіслано"
 
 msgid "Separate-row export"
 msgstr "Експорт у окремий рядок"
@@ -11551,10 +11536,10 @@ msgid "Show specific packages"
 msgstr "Показати конкретний пакет"
 
 msgid "Show specific service"
-msgstr "Показати конкретну послугу"
+msgstr "Показати певну послугу"
 
 msgid "Show specific services"
-msgstr "Показати конкретну послугу"
+msgstr "Показати певні послуги"
 
 msgid "Show tag"
 msgstr "Показати тег"
@@ -11607,6 +11592,9 @@ msgstr "Увійти за допомогою Microsoft"
 
 msgid "Sign in with Outlook"
 msgstr "Увійти через Outlook"
+
+msgid "Sign out and use a customer account"
+msgstr ""
 
 msgid "Sign out from Google"
 msgstr "Вийти з Google"
@@ -11992,10 +11980,10 @@ msgid "Summary segment"
 msgstr "Сегмент підсумку"
 
 msgid "Sun"
-msgstr "Неділя"
+msgstr "Нд"
 
 msgid "Sunday"
-msgstr "НЕДІЛЯ"
+msgstr "Неділя"
 
 msgid "Support"
 msgstr "Підтримка"
@@ -12020,7 +12008,7 @@ msgid "Switch Camera"
 msgstr "Перемкнути камеру"
 
 msgid "Sync Google Events"
-msgstr "Синхронізувати події Google"
+msgstr ""
 
 msgid "Sync with"
 msgstr "Синхронізувати з"
@@ -12545,6 +12533,12 @@ msgstr ""
 "конфігурації cron."
 
 msgid ""
+"This option applies only to people added through \"Bringing anyone with "
+"you\". If disabled, the service price is charged once for the entire "
+"booking, regardless of how many additional people are included."
+msgstr ""
+
+msgid ""
 "This option requires adding the payment link placeholder to your message "
 "templates."
 msgstr ""
@@ -12647,7 +12641,7 @@ msgid "Thu"
 msgstr "Чт"
 
 msgid "Thursday"
-msgstr "ЧЕТВЕР"
+msgstr "Четвер"
 
 msgid "Ticket"
 msgstr "Тип Події"
@@ -12695,13 +12689,13 @@ msgid "Tickets for events with attendees will not be updated"
 msgstr "Квитки на події з учасниками не будуть оновлені"
 
 msgid "Time"
-msgstr "Включати час буфера послуги в часові інтервали"
+msgstr "Час"
 
 msgid "Time(s):"
 msgstr "Кількість:"
 
 msgid "Time:"
-msgstr "Включати час буфера послуги в часові інтервали"
+msgstr "Час:"
 
 msgid "Time Range:"
 msgstr "Часовий діапазон:"
@@ -12951,7 +12945,7 @@ msgid "Tue"
 msgstr "Вт"
 
 msgid "Tuesday"
-msgstr "ВІВТОРОК"
+msgstr "Вівторок"
 
 msgid ""
 "Turn your services into high-value packages that customers love. Combine "
@@ -13339,7 +13333,7 @@ msgid "Wed"
 msgstr "Ср"
 
 msgid "Wednesday"
-msgstr "СЕРЕДА"
+msgstr "Середа"
 
 msgid "Week"
 msgstr "Тиждень"
@@ -13743,6 +13737,11 @@ msgstr "Ваш пароль успішно змінено. Використов�
 msgid "Your password has been reset successfully."
 msgstr "Ваш пароль успішно скинуто."
 
+msgid ""
+"Your payment is still processing. You will receive a confirmation as soon as "
+"it is completed."
+msgstr ""
+
 msgid "Your postal code is incomplete"
 msgstr "Ваш поштовий індекс неповний"
 
@@ -13903,7 +13902,7 @@ msgid "payment button"
 msgstr "кнопка оплати"
 
 msgid "people"
-msgstr "Помножте суму депозиту на кількість людей в одному бронюванні"
+msgstr "особи"
 
 msgid "people waiting"
 msgstr "людей чекає"

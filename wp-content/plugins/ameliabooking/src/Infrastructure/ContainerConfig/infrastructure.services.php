@@ -301,3 +301,27 @@ $entries['infrastructure.social.authentication.service'] = function ($c) {
 $entries['infrastructure.qrcode.service'] = function ($c) {
     return AmeliaBooking\Infrastructure\Licence\InfrastructureService::getQrCodeService($c);
 };
+
+/**
+ * Expo Push API client
+ *
+ * @param Container $c
+ *
+ * @return AmeliaBooking\Infrastructure\Services\Mobile\ExpoPushApiClient
+ */
+$entries['infrastructure.mobile.expoPushApi.client'] = function ($c) {
+    return new AmeliaBooking\Infrastructure\Services\Mobile\ExpoPushApiClient(
+        $c->getLoggerService()
+    );
+};
+
+/**
+ * Mobile push gateway (Expo implementation)
+ *
+ * @param Container $c
+ *
+ * @return AmeliaBooking\Domain\Services\Mobile\MobilePushGatewayInterface
+ */
+$entries['domain.mobile.pushGateway'] = function ($c) {
+    return $c->get('infrastructure.mobile.expoPushApi.client');
+};

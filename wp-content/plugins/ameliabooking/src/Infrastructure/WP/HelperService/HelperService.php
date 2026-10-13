@@ -46,6 +46,31 @@ class HelperService
     }
 
     /**
+     * Rewrites scheme and host of a gateway callback/webhook URL to the public dev tunnel.
+     *
+     * Payment providers cannot reach local hosts (localhost, *.test, Docker hostnames),
+     * so in AMELIA_DEV mode the URL is pointed at AMELIA_NGROK_URL over HTTPS.
+     *
+     * @param string $url
+     *
+     * @return string
+     */
+    public static function getPublicCallbackUrl(string $url): string
+    {
+        if (!defined('AMELIA_DEV') || !AMELIA_DEV || !defined('AMELIA_NGROK_URL')) {
+            return $url;
+        }
+
+        $host = rtrim(preg_replace('#^https?://#', '', (string)AMELIA_NGROK_URL), '/');
+
+        if (empty($host)) {
+            return $url;
+        }
+
+        return preg_replace('#^https?://[^/]+#', 'https://' . $host, $url);
+    }
+
+    /**
      * Helper method to add PHP vars to JS vars
      *
      * @param $varName

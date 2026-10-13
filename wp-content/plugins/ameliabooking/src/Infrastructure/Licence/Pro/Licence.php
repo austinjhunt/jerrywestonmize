@@ -64,6 +64,15 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Basic\Licence
                 // QR Code
                 Commands\QrCode\ScanQrCodeCommand::class                           => new Commands\QrCode\ScanQrCodeCommandHandler($c),
                 Commands\Mobile\Events\ScanEventTicketCommand::class              => new Commands\Mobile\Events\ScanEventTicketCommandHandler($c),
+                Commands\Mobile\Settings\GetMobileSettingsCommand::class          => new Commands\Mobile\Settings\GetMobileSettingsCommandHandler($c),
+                Commands\Mobile\Devices\RegisterMobileDeviceCommand::class
+                    => new Commands\Mobile\Devices\RegisterMobileDeviceCommandHandler($c),
+                Commands\Mobile\Devices\UnregisterMobileDeviceCommand::class
+                    => new Commands\Mobile\Devices\UnregisterMobileDeviceCommandHandler($c),
+                Commands\Mobile\NotificationPreferences\GetMobileNotificationPreferencesCommand::class
+                    => new Commands\Mobile\NotificationPreferences\GetMobileNotificationPreferencesCommandHandler($c),
+                Commands\Mobile\NotificationPreferences\UpdateMobileNotificationPreferencesCommand::class
+                    => new Commands\Mobile\NotificationPreferences\UpdateMobileNotificationPreferencesCommandHandler($c),
                 Commands\QrCode\GetQrCodeCommand::class                            => new Commands\QrCode\GetQrCodeCommandHandler($c),
             ]
         );

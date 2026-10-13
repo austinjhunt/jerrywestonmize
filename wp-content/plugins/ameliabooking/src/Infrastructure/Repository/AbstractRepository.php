@@ -180,6 +180,53 @@ class AbstractRepository
     }
 
     /**
+     * @return Collection
+     * @throws InvalidArgumentException
+     * @throws QueryExecutionException
+     */
+    public function getByFieldsValues($data)
+    {
+        if (!$data) {
+            return new Collection();
+        }
+
+        $params = [];
+
+        $where = [];
+
+        foreach ($data as $field => $value) {
+            $params[":$field"]  = $value;
+
+            $where[] = "$field = :$field";
+        }
+
+        $where = implode(' AND ', $where);
+
+        try {
+            $statement = $this->connection->prepare(
+                "SELECT * FROM {$this->table} WHERE {$where}"
+            );
+
+            $statement->execute($params);
+
+            $rows = $statement->fetchAll();
+        } catch (\Exception $e) {
+            throw new QueryExecutionException('Unable to find by fields values in ' . __CLASS__, $e->getCode(), $e);
+        }
+
+        $collection = new Collection();
+
+        foreach ($rows as $row) {
+            $collection->addItem(
+                call_user_func([static::FACTORY, 'create'], $row),
+                $row['id']
+            );
+        }
+
+        return $collection;
+    }
+
+    /**
      * @param int $id
      *
      * @return bool
@@ -397,6 +444,51 @@ class AbstractRepository
                 $e->getCode(),
                 $e
             );
+        }
+    }
+
+    /**
+     * SET $fieldName = $fieldValue WHERE id = $id
+     *
+     * @param int    $id
+     * @param array  $fields
+     *
+     * @return mixed
+     * @throws QueryExecutionException
+     */
+    public function updateFieldsById($id, $fields)
+    {
+        if (!$fields) {
+            return true;
+        }
+
+        $params = [
+            ':id' => (int)$id,
+        ];
+
+        $updateQueryParts = [];
+
+        foreach ($fields as $fieldName => $fieldValue) {
+            $params[":$fieldName"] = $fieldValue;
+
+            $updateQueryParts[] = "`$fieldName` = :$fieldName";
+        }
+
+        $updateQueryParts = implode(', ', $updateQueryParts);
+
+        try {
+            $statement = $this->connection->prepare(
+                "UPDATE {$this->table}
+                SET
+                {$updateQueryParts}
+                WHERE id = :id"
+            );
+
+            $statement->execute($params);
+
+            return true;
+        } catch (\Exception $e) {
+            throw new QueryExecutionException('Unable to save data in ' . __CLASS__, $e->getCode(), $e);
         }
     }
 

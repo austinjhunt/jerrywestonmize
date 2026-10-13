@@ -21,8 +21,6 @@ use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
 use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 use DateTimeZone;
 use Exception;
-use Interop\Container\Exception\ContainerException;
-use Slim\Exception\ContainerValueNotFoundException;
 
 /**
  * Class GetTimeSlotsCommandHandler
@@ -42,8 +40,6 @@ class GetTimeSlotsCommandHandler extends CommandHandler
      * @param GetTimeSlotsCommand $command
      *
      * @return CommandResult
-     * @throws ContainerValueNotFoundException
-     * @throws ContainerException
      * @throws Exception
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
@@ -155,15 +151,18 @@ class GetTimeSlotsCommandHandler extends CommandHandler
 
         $timeZone = $props['queryTimeZone'] ?: DateTimeService::getTimeZone()->getName();
 
-        $queryStartDateTime = $props['startDateTime'] ?
+        $startDateTimeString = DateTimeService::withDefaultTimeIfMissing($props['startDateTime'], '00:00');
+        $endDateTimeString   = DateTimeService::withDefaultTimeIfMissing($props['endDateTime'], '23:59');
+
+        $queryStartDateTime = $startDateTimeString ?
             DateTimeService::getDateTimeObjectInTimeZone(
-                $props['startDateTime'],
+                $startDateTimeString,
                 $timeZone
             )->setTimezone(DateTimeService::getTimeZone()) : null;
 
-        $queryEndDateTime = $props['endDateTime'] ?
+        $queryEndDateTime = $endDateTimeString ?
             DateTimeService::getDateTimeObjectInTimeZone(
-                $props['endDateTime'],
+                $endDateTimeString,
                 $timeZone
             )->setTimezone(DateTimeService::getTimeZone()) : null;
 

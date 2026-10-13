@@ -38,6 +38,8 @@ class Booking
 
         $app->get('/bookings/cancel/{id:[0-9]+}', CancelBookingRemotelyController::class);
 
+        $app->post('/bookings/cancel/remotely/{id:[0-9]+}', CancelBookingRemotelyController::class);
+
         $app->post('/bookings/delete/{id:[0-9]+}', DeleteBookingController::class);
 
         $app->post('/bookings/delete/remotely/{id:[0-9]+}', DeleteBookingRemotelyController::class);

@@ -33,26 +33,6 @@ msgid "# of bookings"
 msgstr "# af bookinger"
 
 #, php-format
-msgid "%1$s, %2$s, was canceled."
-msgstr "%1$s, %2$s, blev aflyst."
-
-#, php-format
-msgid "%1$s, %2$s, was rejected."
-msgstr "%1$s, %2$s, blev afvist."
-
-#, php-format
-msgid "%1$s booked %2$s at %3$s."
-msgstr "%1$s bookede %2$s kl. %3$s."
-
-#, php-format
-msgid "%1$s on %2$s had a status change."
-msgstr "%1$s den %2$s skiftede status."
-
-#, php-format
-msgid "%1$s on %2$s was updated."
-msgstr "%1$s den %2$s blev opdateret."
-
-#, php-format
 msgid "%event_name% Event Booked"
 msgstr "%event_name% Event booket"
 
@@ -458,8 +438,14 @@ msgstr "Handlinger"
 msgid "Activate"
 msgstr "Aktiver"
 
+msgid "Activate now"
+msgstr ""
+
 msgid "Activate with Envato"
 msgstr "Aktivér med Envato"
+
+msgid "Activate your license to unlock the features included in your plan."
+msgstr ""
 
 msgid "Activated with Envato"
 msgstr "Aktiveret med Envato"
@@ -702,7 +688,7 @@ msgid "All assigned services"
 msgstr "Alle tildelte tjenester"
 
 msgid "All bookings"
-msgstr "Gennemsnitlige bookinger"
+msgstr "Alle bookinger"
 
 msgid "All customers"
 msgstr "Alle kunder"
@@ -750,7 +736,7 @@ msgid "Allow admin to book over an existing appointment"
 msgstr "Tillad administrator at booke over en eksisterende aftale"
 
 msgid "Allow booking above maximum capacity"
-msgstr "Tillad Booking ved under min. antal"
+msgstr "Tillad booking ud over den maksimale kapacitet"
 
 msgid "Allow booking without a prior login"
 msgstr "Tillad booking uden forudgående login"
@@ -869,6 +855,9 @@ msgstr "Allerede betalt"
 msgid "Already have an account?"
 msgstr "Har du allerede en konto?"
 
+msgid "Already purchased Amelia?"
+msgstr ""
+
 msgid "Also cancel and delete future events"
 msgstr "Annuller og slet også fremtidige arrangementer"
 
@@ -918,7 +907,7 @@ msgid "Apple"
 msgstr ""
 
 msgid "Apple Calendar"
-msgstr "Google Kalender"
+msgstr "Apple Kalender"
 
 msgid "Apple Calendar (Personal)"
 msgstr "Apple Kalender (Personlig)"
@@ -927,7 +916,7 @@ msgid "Apple Calendar setup"
 msgstr "Opsætning af Apple Kalender"
 
 msgid "Apple calendar events"
-msgstr "Begivenheder i Apple Kalender"
+msgstr ""
 
 msgid "Application (client) ID"
 msgstr "Applikations-ID (klient)"
@@ -1073,9 +1062,6 @@ msgstr "Aftalenoter"
 msgid "Appointment price"
 msgstr "Aftalepris"
 
-msgid "Appointment reminder"
-msgstr "Påmindelse om tidsbestilling"
-
 msgid "Appointment repeats"
 msgstr "Aftaler gentages"
 
@@ -1088,9 +1074,6 @@ msgstr "Starttidspunkt for aftalen"
 msgid "Appointment status"
 msgstr "Udnævnelsesstatus er ændret til "
 
-msgid "Appointment status changed"
-msgstr "Tidsbestillingsstatus ændret"
-
 msgid "Appointment status has been changed to "
 msgstr "Udnævnelsesstatus er ændret til "
 
@@ -1099,9 +1082,6 @@ msgstr "Aftalestatus er blevet opdateret."
 
 msgid "Appointment title"
 msgstr "Titel på aftale"
-
-msgid "Appointment updated"
-msgstr "Aftale opdateret"
 
 msgid "Appointments"
 msgstr "Aftaler"
@@ -1141,6 +1121,10 @@ msgstr "Er du sikker på, at du vil annullere og slette denne begivenhed?"
 
 msgid "Are you sure you want to cancel this appointment?"
 msgstr "Er du sikker på at du vil slette denne aftale?"
+
+msgid ""
+"Are you sure you want to cancel this booking? This action cannot be undone."
+msgstr ""
 
 msgid "Are you sure you want to cancel this event?"
 msgstr "Er du sikker på, at du vil aflyse dette arrangement?"
@@ -1326,7 +1310,7 @@ msgid "Attachment upload path"
 msgstr "Sti til vedhæftning"
 
 msgid "Attendee"
-msgstr "Arrangement annulleret af deltager"
+msgstr "Deltager"
 
 msgid "Attendee Asc"
 msgstr "Deltager stigende"
@@ -1350,7 +1334,7 @@ msgid "Attendees"
 msgstr "Deltagere"
 
 msgid "Attendees Allowed"
-msgstr "Deltagerkode"
+msgstr "Tilladte deltagere"
 
 msgid "Attendees Export Format"
 msgstr "Eksportformat for deltagere"
@@ -1438,13 +1422,13 @@ msgid "Available date text"
 msgstr "Tekst om tilgængelig dato"
 
 msgid "Available from Pro license"
-msgstr "Tilgængelige Billeder"
+msgstr "Tilgængelig fra Pro-licens"
 
 msgid "Available from Standard license"
-msgstr "Tilgængelige Billeder"
+msgstr "Tilgængelig fra Standard-licens"
 
 msgid "Available from Starter license"
-msgstr "Tilgængelige Billeder"
+msgstr "Tilgængelig fra Starter-licens"
 
 msgid "Available in Elite licence"
 msgstr "Tilgængelig med Elite-licens"
@@ -2273,6 +2257,9 @@ msgstr "Vælg hvornår gentagelsen slutter"
 msgid "Choose whether you want to manage services, events, or both."
 msgstr "Vælg, om du vil administrere tjenester, begivenheder eller begge dele."
 
+msgid "Choose which tab users see first when they log in"
+msgstr ""
+
 msgid "Choosing layout of first step in step by step form"
 msgstr "Valg af layout for første trin i trin-for-trin-formular"
 
@@ -2458,6 +2445,9 @@ msgstr "Konfigurer venteliste for aftaler"
 
 msgid "Confirm"
 msgstr "Bekræft"
+
+msgid "Confirm Cancellation"
+msgstr ""
 
 msgid "Confirm My Appointment"
 msgstr "Bekræft min aftale"
@@ -2812,10 +2802,7 @@ msgstr ""
 "salg."
 
 msgid "Created On"
-msgstr ""
-"Begivenhedsreservation er en kort kode, der giver dine kunder mulighed for "
-"at booke en af de begivenheder, som du har oprettet på bagsiden i en simpel "
-"begivenhedslistevisning."
+msgstr "Oprettet den"
 
 msgid "Created on"
 msgstr "Oprettet den"
@@ -3108,9 +3095,6 @@ msgstr "Data, der forbliver uændret:"
 
 msgid "Data to be updated:"
 msgstr "Data, der skal opdateres:"
-
-msgid "Data transfer"
-msgstr "Dataoverførsel"
 
 msgid "Date"
 msgstr "Dato"
@@ -4121,6 +4105,9 @@ msgstr "Standard aftalestatus"
 msgid "Default back end page"
 msgstr "Standard bagside"
 
+msgid "Default landing tab"
+msgstr ""
+
 msgid "Default language"
 msgstr "Standardsprog"
 
@@ -4558,7 +4545,7 @@ msgid "E-ticket scanner"
 msgstr "E-billet-scanner"
 
 msgid "Each:"
-msgstr "Er du sikker på, at du vil slette denne aftale?"
+msgstr "Hver:"
 
 msgid "Each spot counts as one attendee."
 msgstr "Hver plads tæller som én deltager."
@@ -4624,8 +4611,6 @@ msgid ""
 "Edit appointments/events when connected Google Calendar Events are "
 "rescheduled or deleted"
 msgstr ""
-"Opdater aftaler/begivenheder, når tilknyttede Google Kalender-begivenheder "
-"omplanlægges eller slettes"
 
 msgid "Edit block time"
 msgstr "Rediger blokeret tidsrum"
@@ -5330,7 +5315,7 @@ msgid "Event Day"
 msgstr "Begivenhedsdato"
 
 msgid "Event Desc"
-msgstr "Begivenhedsbeskrivelse"
+msgstr "Begivenhed Faldende"
 
 msgid "Event Employee"
 msgstr "Begivenhedsmedarbejder"
@@ -5741,9 +5726,6 @@ msgstr "Mislykket"
 msgid "Failed to access camera. Please try again."
 msgstr "Kunne ikke få adgang til kameraet. Prøv venligst igen."
 
-msgid "Failed to initialize payment. Please try again."
-msgstr "Kunne ikke igangsætte betalingen. Prøv venligst igen."
-
 msgid "Failed to load appointment details. Please try again later."
 msgstr "Kunne ikke indlæse aftaledetaljer. Prøv venligst igen senere."
 
@@ -6119,7 +6101,7 @@ msgid "Google Meet setup"
 msgstr "Opsætning af Google Meet"
 
 msgid "Google calendar events"
-msgstr "Google Calendar-begivenheder"
+msgstr ""
 
 msgid "Google reCAPTCHA v2 secret key"
 msgstr "Google reCAPTCHA v2 hemmelig nøgle"
@@ -6905,13 +6887,6 @@ msgstr ""
 "minimumskapaciteten, og tidsintervallet lukkes efter den første booking."
 
 msgid ""
-"If disabled, the price will remain the same regardless of how many people "
-"are included in the group appointment."
-msgstr ""
-"Hvis deaktiveret, vil prisen forblive den samme, uanset hvor mange personer "
-"der er inkluderet i gruppeaftalen."
-
-msgid ""
 "If enabled, customers can book with Pending status even after maximum "
 "capacity is reached."
 msgstr ""
@@ -7055,6 +7030,9 @@ msgstr "Billedminiaturer"
 msgid "Import"
 msgstr "Importér"
 
+msgid "Import/Export"
+msgstr ""
+
 msgid "Import Failed"
 msgstr "Import mislykkedes"
 
@@ -7084,6 +7062,9 @@ msgstr "Import mislykkedes"
 
 msgid "Import failed. Review the details below."
 msgstr "Import mislykkedes. Gennemgå detaljerne nedenfor."
+
+msgid "Import or export your Amelia data."
+msgstr ""
 
 msgid "Import progress"
 msgstr "Importfremgang"
@@ -8048,7 +8029,7 @@ msgid "Max Capacity Asc"
 msgstr "Maksimal kapacitet stigende"
 
 msgid "Max Capacity Desc"
-msgstr "Beskrivelse af maksimal kapacitet"
+msgstr "Maksimal kapacitet Faldende"
 
 msgid "Maximum"
 msgstr "Maksimum"
@@ -8391,7 +8372,7 @@ msgid "No-show"
 msgstr "Udeblevet"
 
 msgid "No-show tag"
-msgstr "No-show-tag"
+msgstr "Udeblevet-tag"
 
 msgid "No Employees Assigned to This Location"
 msgstr "Ingen medarbejdere tildelt denne lokation"
@@ -8409,7 +8390,7 @@ msgid "No Show (2)"
 msgstr "Udeblevet (2)"
 
 msgid "No Show (3+)"
-msgstr "Ingen fremmøde (3+)"
+msgstr "Udeblevet (3+)"
 
 msgid "No Tags. Create a new one."
 msgstr "Ingen tags. Opret en ny."
@@ -8614,13 +8595,13 @@ msgid "Notify selected employees about empty package purchases"
 msgstr "Underret udvalgte medarbejdere om køb af tomme pakker"
 
 msgid "Notify the attendee(s)"
-msgstr "Underret kunden / kunderne"
+msgstr "Underret deltagerne"
 
 msgid "Notify the attendees"
 msgstr "Underret deltagerne"
 
 msgid "Notify the customer(s)"
-msgstr "Underret kunden / kunderne"
+msgstr "Underret kunderne"
 
 msgid "Number of Additional People"
 msgstr "Antal ekstra personer"
@@ -8958,7 +8939,7 @@ msgid "Outlook Calendar setup"
 msgstr "Opsætning af Outlook-kalender"
 
 msgid "Outlook Mailer"
-msgstr ""
+msgstr "Outlook Mail-tjeneste"
 
 msgid ""
 "Outlook Mailer is not fully configured. Please complete the account setup in "
@@ -8968,7 +8949,7 @@ msgstr ""
 "i Outlook Integration-indstillingerne."
 
 msgid "Outlook calendar events"
-msgstr "Outlook-kalenderhændelser"
+msgstr ""
 
 msgid "Outside of working hours"
 msgstr "Uden for arbejdstid"
@@ -9013,7 +8994,7 @@ msgid "Package Canceled"
 msgstr "Pakke annulleret"
 
 msgid "Package Desc"
-msgstr "Pakkebeskrivelse"
+msgstr "Pakke Faldende"
 
 msgid "Package ID"
 msgstr "Pakke-ID"
@@ -9414,7 +9395,7 @@ msgid "Period available for booking in advance"
 msgstr "Angiv hvor længe før, kunden kan booke en aftale"
 
 msgid "Periods"
-msgstr "Dato & tidsperioder for begivenheden med Zoom tilslutningslink"
+msgstr "Perioder"
 
 msgid "Permanent access token"
 msgstr "Permanent adgangstoken"
@@ -10097,6 +10078,11 @@ msgstr "Købet er annulleret"
 msgid "Purchased"
 msgstr "Købt"
 
+msgid ""
+"Purchasing doesn't upgrade this plugin automatically. Follow our step-by-"
+"step guide to switch to the full version."
+msgstr ""
+
 msgid "Purple"
 msgstr "Lilla"
 
@@ -10266,7 +10252,7 @@ msgid "Redirect URL for unsuccessfully rejected booking"
 msgstr "Omdirigerings-URL for ikke-succesfuldt afvist booking"
 
 msgid "Redirect URLs"
-msgstr "Omdirigerings-URI"
+msgstr "Omdirigerings-URL'er"
 
 msgid "Redirect page"
 msgstr "Omdirigeringsside"
@@ -10303,10 +10289,6 @@ msgstr "Resterende beløb betales på stedet."
 
 msgid "Remind me when my SMS balance is low"
 msgstr "Mind mig, når min SMS-saldo er lav"
-
-#, php-format
-msgid "Reminder: %1$s is scheduled for %2$s."
-msgstr "Påmindelse: %1$s er sat til %2$s."
 
 msgid "Remove Apple Calendar event slots"
 msgstr "Fjern Apple Calendar-eventtidsrum"
@@ -10701,6 +10683,9 @@ msgstr "Handling"
 
 msgid "Securely process payments using Stripe."
 msgstr "Behandl betalinger sikkert med Stripe."
+
+msgid "See upgrade guide."
+msgstr ""
 
 msgid "Segment"
 msgstr ""
@@ -11520,10 +11505,10 @@ msgid "Show specific packages"
 msgstr "Vis specifik kategori"
 
 msgid "Show specific service"
-msgstr "Vis specifik behandling"
+msgstr "Vis en bestemt ydelse"
 
 msgid "Show specific services"
-msgstr "Vis specifik behandling"
+msgstr "Vis bestemte ydelser"
 
 msgid "Show tag"
 msgstr "Vis tag"
@@ -11576,6 +11561,9 @@ msgstr "Log ind med Microsoft"
 
 msgid "Sign in with Outlook"
 msgstr "Log ind med Outlook"
+
+msgid "Sign out and use a customer account"
+msgstr ""
 
 msgid "Sign out from Google"
 msgstr "Log ud fra Google"
@@ -11637,7 +11625,7 @@ msgid "Slot end time"
 msgstr "Slot-sluttidspunkt"
 
 msgid "Social login"
-msgstr ""
+msgstr "Socialt login"
 
 msgid "Social login setup"
 msgstr "Opsætning af social login"
@@ -11986,7 +11974,7 @@ msgid "Switch Camera"
 msgstr "Skift kamera"
 
 msgid "Sync Google Events"
-msgstr "Synkroniser Google-events"
+msgstr ""
 
 msgid "Sync with"
 msgstr "Synkroniser med"
@@ -12510,6 +12498,12 @@ msgstr ""
 "konfiguration."
 
 msgid ""
+"This option applies only to people added through \"Bringing anyone with "
+"you\". If disabled, the service price is charged once for the entire "
+"booking, regardless of how many additional people are included."
+msgstr ""
+
+msgid ""
 "This option requires adding the payment link placeholder to your message "
 "templates."
 msgstr ""
@@ -12789,7 +12783,7 @@ msgid "Tomorrow"
 msgstr "I morgen"
 
 msgid "Top trends"
-msgstr ""
+msgstr "Toptendenser"
 
 msgid "Torch off"
 msgstr "Lommelygte slukket"
@@ -13707,6 +13701,11 @@ msgstr "Din adgangskode er nu blevet nulstillet"
 
 msgid "Your password has been reset successfully."
 msgstr "Din adgangskode er blevet nulstillet med succes."
+
+msgid ""
+"Your payment is still processing. You will receive a confirmation as soon as "
+"it is completed."
+msgstr ""
 
 msgid "Your postal code is incomplete"
 msgstr "Din postnummer er ufuldstændig"

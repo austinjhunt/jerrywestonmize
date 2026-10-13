@@ -211,7 +211,13 @@ class EventEditedEventHandler
                         $eventArray,
                         ApplicationIntegrationService::TIME_UPDATED,
                         [
-                            ApplicationIntegrationService::SKIP_LESSON_SPACE => true,
+                            ApplicationIntegrationService::SKIP_GOOGLE_CALENDAR  =>
+                                !empty($commandResult->getData()[ApplicationIntegrationService::SKIP_GOOGLE_CALENDAR]),
+                            ApplicationIntegrationService::SKIP_OUTLOOK_CALENDAR =>
+                                !empty($commandResult->getData()[ApplicationIntegrationService::SKIP_OUTLOOK_CALENDAR]),
+                            ApplicationIntegrationService::SKIP_APPLE_CALENDAR   =>
+                                !empty($commandResult->getData()[ApplicationIntegrationService::SKIP_APPLE_CALENDAR]),
+                            ApplicationIntegrationService::SKIP_LESSON_SPACE     => true,
                         ]
                     );
                 }
@@ -235,7 +241,13 @@ class EventEditedEventHandler
                         $eventArray,
                         ApplicationIntegrationService::EVENT_PERIOD_DELETED,
                         [
-                            ApplicationIntegrationService::SKIP_LESSON_SPACE => true,
+                            ApplicationIntegrationService::SKIP_LESSON_SPACE     => true,
+                            ApplicationIntegrationService::SKIP_GOOGLE_CALENDAR  =>
+                                !empty($commandResult->getData()[ApplicationIntegrationService::SKIP_GOOGLE_CALENDAR]),
+                            ApplicationIntegrationService::SKIP_OUTLOOK_CALENDAR =>
+                                !empty($commandResult->getData()[ApplicationIntegrationService::SKIP_OUTLOOK_CALENDAR]),
+                            ApplicationIntegrationService::SKIP_APPLE_CALENDAR   =>
+                                !empty($commandResult->getData()[ApplicationIntegrationService::SKIP_APPLE_CALENDAR]),
                         ]
                     );
                 }
@@ -318,7 +330,7 @@ class EventEditedEventHandler
 
                     $applicationIntegrationService->handleEvent(
                         $event,
-                        $event->getPeriods(),
+                        self::getPeriodsForOrganizerChange($event, $rescheduledEvents),
                         $eventArray,
                         ApplicationIntegrationService::EVENT_PERIOD_ADDED,
                         [
@@ -452,6 +464,44 @@ class EventEditedEventHandler
 
             $webHookService->process(self::TIME_UPDATED, $eventArray, []);
         }
+    }
+
+    /**
+     * Periods to write to the new organizer's calendar.
+     *
+     * The clone the organizer change works from carries the times the event had before this request, so
+     * an organizer and a date changed together would put the event in the new calendar at the old time.
+     * The calendar then pushes that back as a reschedule, which moves the event again and notifies twice.
+     *
+     * @param Event      $clonedEvent
+     * @param Collection $rescheduledEvents events as they are after the update, keyed by event id
+     *
+     * @return Collection
+     * @throws \AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException
+     */
+    private static function getPeriodsForOrganizerChange($clonedEvent, $rescheduledEvents): Collection
+    {
+        $eventId = $clonedEvent->getId()->getValue();
+
+        /** @var Event|null $rescheduledEvent */
+        $rescheduledEvent = $rescheduledEvents->keyExists($eventId) ? $rescheduledEvents->getItem($eventId) : null;
+
+        if (!$rescheduledEvent) {
+            return $clonedEvent->getPeriods();
+        }
+
+        /** @var Collection $periods */
+        $periods = new Collection();
+
+        // The periods the delete pass just removed, as they are after the update. One the update dropped
+        // stays removed, or the new organizer would get an event for a period Amelia no longer has.
+        foreach ($clonedEvent->getPeriods()->keys() as $periodId) {
+            if ($rescheduledEvent->getPeriods()->keyExists($periodId)) {
+                $periods->addItem($rescheduledEvent->getPeriods()->getItem($periodId), $periodId);
+            }
+        }
+
+        return $periods;
     }
 
     /**

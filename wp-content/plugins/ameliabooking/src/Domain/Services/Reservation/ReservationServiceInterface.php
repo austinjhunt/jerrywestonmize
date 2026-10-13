@@ -75,7 +75,7 @@ interface ReservationServiceInterface
      * @throws QueryExecutionException
      * @throws ContainerException
      */
-    public function addPayment($bookingId, $packageCustomerId, $paymentData, $amount, $dateTime, $entityType);
+    public function addPayment($bookingId, $packageCustomerId, $paymentData, $amount, $dateTime, $entityType): Payment;
 
     /**
      * @param array       $data
@@ -276,7 +276,7 @@ interface ReservationServiceInterface
      *
      * @return Reservation
      */
-    public function getNew($couponValidation, $customFieldsValidation, $availabilityValidation);
+    public function getNew($couponValidation, $customFieldsValidation, $availabilityValidation): Reservation;
 
     /**
      * @param Payment $payment
@@ -315,6 +315,15 @@ interface ReservationServiceInterface
      * @return array
      */
     public function getProvidersPaymentAmount($reservation, $usePayment = true);
+
+    /**
+     * The payments covered by the amount getReservationPaymentAmount asks the gateway for.
+     *
+     * @param Reservation $reservation
+     *
+     * @return Payment[]
+     */
+    public function getChargedPayments($reservation): array;
 
     /**
      * @param array $data

@@ -22,10 +22,11 @@ use AmeliaVendor\Psr\Http\Message\ResponseInterface as Response;
  *     "message": "success",
  *     "data": {
  *       "pluginVersion": "9.5",            // AMELIA_VERSION, informational
- *       "mobileApi": { "min": 1, "max": 1}, // inclusive range of mobile-API
+ *       "mobileApi": { "min": 1, "max": 2}, // inclusive range of mobile-API
  *                                           // contract versions this build serves
- *       "licenseOk": true                  // false when the installed license does
+ *       "licenseOk": true,                 // false when the installed license does
  *                                           // not include the mobile-app feature (Pro+)
+ *       "features": { "pushNotifications": true }  // same gate as licenseOk (Pro+ mobileApp)
  *     }
  *   }
  *
@@ -47,6 +48,7 @@ use AmeliaVendor\Psr\Http\Message\ResponseInterface as Response;
  *
  * Bump protocol for the constants below:
  *   - Raise MOBILE_API_MAX when adding a new, additive mobile-API contract version.
+ *     Contract v2 adds POST /mobile/v1/authenticate (staff-app login, no reCAPTCHA).
  *   - Raise MOBILE_API_MIN only when DELIBERATELY dropping support for an older app
  *     contract — this forces those app builds to update.
  */
@@ -56,7 +58,7 @@ class GetMobileInfoController extends Controller
     public const MOBILE_API_MIN = 1;
 
     /** Newest mobile-API contract version this plugin build serves. */
-    public const MOBILE_API_MAX = 1;
+    public const MOBILE_API_MAX = 2;
 
     /**
      * @param Request  $request
@@ -81,6 +83,9 @@ class GetMobileInfoController extends Controller
                             'max' => self::MOBILE_API_MAX,
                         ],
                         'licenseOk'     => Licence::hasFeatureAccess('mobileApp'),
+                        'features'      => [
+                            'pushNotifications' => Licence::hasFeatureAccess('mobileApp'),
+                        ],
                     ],
                 ]
             )

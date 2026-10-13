@@ -13,6 +13,7 @@ class Personalizer {
  public const RENDERING_CONTEXT_KEY = 'rendering_context';
  private Personalization_Tags_Registry $tags_registry;
  private array $context;
+ private $value_interceptor = null;
  public function __construct( Personalization_Tags_Registry $tags_registry ) {
  $this->tags_registry = $tags_registry;
  $this->context = array();
@@ -22,6 +23,17 @@ class Personalizer {
  }
  public function get_context(): array {
  return $this->context;
+ }
+ public function set_value_interceptor( ?callable $interceptor ): ?callable {
+ $previous = $this->value_interceptor;
+ $this->value_interceptor = $interceptor;
+ return $previous;
+ }
+ private function intercept_value( string $value, string $source, string $rendering_context ): string {
+ if ( null === $this->value_interceptor ) {
+ return $value;
+ }
+ return ( $this->value_interceptor )( $value, $source, $rendering_context );
  }
  public function personalize_content( string $content, string $rendering_context = self::RENDERING_CONTEXT_HTML ): string {
  if ( ! in_array( $rendering_context, array( self::RENDERING_CONTEXT_HTML, self::RENDERING_CONTEXT_TEXT ), true ) ) {
@@ -40,6 +52,7 @@ class Personalizer {
  if ( self::RENDERING_CONTEXT_HTML === $rendering_context && Personalization_Tag::VALUE_TYPE_TEXT === $tag->get_value_type() ) {
  $value = esc_html( $value );
  }
+ $value = $this->intercept_value( (string) $value, trim( $modifiable_text ), $rendering_context );
  $content_processor->replace_token( $value );
  } elseif ( $content_processor->get_token_type() === '#tag' && $content_processor->get_tag() === 'TITLE' ) {
  // The title tag contains the subject of the email which should be personalized. HTML_Tag_Processor does parse the header tags.
@@ -57,6 +70,7 @@ class Personalizer {
  }
  $value = $tag->execute_callback( $this->get_callback_context( self::RENDERING_CONTEXT_HREF ), $token['arguments'] );
  $value = $this->replace_link_href( $href, $tag->get_token(), $value );
+ $value = $this->intercept_value( $value, $href, self::RENDERING_CONTEXT_HREF );
  if ( '' !== $value ) {
  $content_processor->set_attribute( 'href', $value );
  $content_processor->remove_attribute( 'data-link-href' );
@@ -91,6 +105,7 @@ class Personalizer {
  continue;
  }
  $value = $tag->execute_callback( $this->get_callback_context( self::RENDERING_CONTEXT_HREF ), $token['arguments'] );
+ $value = $this->intercept_value( $value, $token_string, self::RENDERING_CONTEXT_HREF );
  if ( '' !== $value ) {
  $replacements[ $token_string ] = $value;
  }

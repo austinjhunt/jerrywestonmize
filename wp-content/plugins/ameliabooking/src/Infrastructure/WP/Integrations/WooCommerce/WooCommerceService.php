@@ -9,6 +9,7 @@ use AmeliaBooking\Application\Services\Helper\HelperService;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Application\Services\Placeholder\PlaceholderService;
 use AmeliaBooking\Application\Services\Tax\TaxApplicationService;
+use AmeliaBooking\Application\Services\Reservation\AbstractReservationService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\BookingCancellationException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
@@ -352,6 +353,20 @@ class WooCommerceService
                 $reservationService->processBooking($result, $data, $reservation, false);
 
                 if ($result->getResult() === CommandResult::RESULT_ERROR) {
+                    $isExistingWcBooking = !empty($data['processed']) ||
+                        !empty($data['booked']) ||
+                        !empty($data['payment']['wcOrderId']) ||
+                        !empty($data['payment']['wcOrderItemId']);
+
+                    if (
+                        !empty($data['payment']['gateway']) &&
+                        $data['payment']['gateway'] === 'wc' &&
+                        $isExistingWcBooking &&
+                        !empty($result->getData()['customerAlreadyBooked'])
+                    ) {
+                        return '';
+                    }
+
                     return self::getBookingErrorMessage($result, $data['type']);
                 }
 
@@ -773,6 +788,8 @@ class WooCommerceService
                             'depositPayment'   => $service->getDepositPayment()->getValue(),
                             'deposit'          => $service->getDeposit()->getValue(),
                             'depositPerPerson' => $service->getDepositPerPerson()->getValue(),
+                            'fullPayment'      => $service->getFullPayment() ?
+                                $service->getFullPayment()->getValue() : false,
                             'customPricing'    => $service->getCustomPricing()
                                 ? $service->getCustomPricing()->getValue()
                                 : null,
@@ -927,12 +944,26 @@ class WooCommerceService
 
         $wcSettings = self::$settingsService->getSetting('payments', 'wc');
 
+        $bookingFingerprint = self::getAmeliaBookingFingerprint($data);
+
         foreach ($wooCommerceCart->get_cart() as $wc_key => $wc_item) {
-            if (isset($wc_item[self::AMELIA])) {
-                if (empty($wcSettings['bookMultiple'])) {
-                    $wooCommerceCart->remove_cart_item($wc_key);
-                }
+            if (!isset($wc_item[self::AMELIA])) {
+                continue;
             }
+
+            if (
+                empty($wcSettings['bookMultiple']) ||
+                (
+                    $bookingFingerprint &&
+                    self::getAmeliaBookingFingerprint($wc_item[self::AMELIA]) === $bookingFingerprint
+                )
+            ) {
+                $wooCommerceCart->remove_cart_item($wc_key);
+            }
+        }
+
+        if (method_exists($wooCommerceCart, 'set_session')) {
+            $wooCommerceCart->set_session();
         }
 
         $defaultProductId = self::getProductIdFromSettings();
@@ -2073,7 +2104,7 @@ class WooCommerceService
             new BooleanValueObject(
                 $applyDeposit &&
                 $bookableData['bookable']['depositPayment'] !== DepositType::DISABLED &&
-                self::hasDeposit($wcItemAmeliaCache)
+                self::shouldApplyDepositFromCart($wcItemAmeliaCache, $bookableData)
             )
         );
 
@@ -2119,13 +2150,101 @@ class WooCommerceService
         switch ($wcItemAmeliaCache['type']) {
             case (Entities::APPOINTMENT):
             case (Entities::EVENT):
-                return !empty($wcItemAmeliaCache['bookings'][0]['deposit']);
+                return AbstractReservationService::parseDepositFlag(
+                    $wcItemAmeliaCache['bookings'][0]['deposit'] ?? false
+                );
 
             case (Entities::PACKAGE):
-                return !empty($wcItemAmeliaCache['deposit']);
+                return AbstractReservationService::parseDepositFlag($wcItemAmeliaCache['deposit'] ?? false);
         }
 
         return false;
+    }
+
+    /**
+     * @param array $wcItemAmeliaCache
+     * @param array $bookableData
+     *
+     * @return bool
+     */
+    private static function shouldApplyDepositFromCart($wcItemAmeliaCache, $bookableData)
+    {
+        $depositPaymentEnabled = !empty($bookableData['bookable']['deposit']) &&
+            $bookableData['bookable']['depositPayment'] !== DepositType::DISABLED;
+
+        return self::hasDeposit($wcItemAmeliaCache) && $depositPaymentEnabled;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return string|null
+     */
+    private static function getAmeliaBookingFingerprint($data)
+    {
+        if (!$data || !is_array($data)) {
+            return null;
+        }
+
+        $email = !empty($data['bookings'][0]['customer']['email'])
+            ? strtolower($data['bookings'][0]['customer']['email'])
+            : '';
+
+        $start = !empty($data['bookingStart']) ? $data['bookingStart'] : '';
+
+        switch ($data['type']) {
+            case (Entities::APPOINTMENT):
+                return md5(
+                    Entities::APPOINTMENT . '|' .
+                    ($data['serviceId'] ?? '') . '|' .
+                    ($data['providerId'] ?? '') . '|' .
+                    $start . '|' .
+                    $email
+                );
+
+            case (Entities::EVENT):
+                return md5(
+                    Entities::EVENT . '|' .
+                    ($data['eventId'] ?? '') . '|' .
+                    $start . '|' .
+                    $email
+                );
+
+            case (Entities::PACKAGE):
+                return md5(
+                    Entities::PACKAGE . '|' .
+                    ($data['packageId'] ?? '') . '|' .
+                    $email
+                );
+
+            case (Entities::CART):
+                return self::getCartBookingFingerprint($data, $email);
+        }
+
+        return null;
+    }
+
+    /**
+     * @param array  $data
+     * @param string $email
+     *
+     * @return string
+     */
+    private static function getCartBookingFingerprint($data, $email)
+    {
+        $parts = [];
+
+        foreach (array_merge([$data], !empty($data['recurring']) ? $data['recurring'] : []) as $bookingData) {
+            $parts[] = implode('|', [
+                $bookingData['serviceId'] ?? '',
+                $bookingData['providerId'] ?? '',
+                !empty($bookingData['bookingStart']) ? $bookingData['bookingStart'] : '',
+            ]);
+        }
+
+        sort($parts);
+
+        return md5(Entities::CART . '|' . $email . '|' . implode('||', $parts));
     }
 
     /**
@@ -2394,6 +2513,92 @@ class WooCommerceService
      * @throws NotFoundException
      * @throws QueryExecutionException
      */
+    /**
+     * @param Payment   $payment
+     * @param \WC_Order $order
+     * @param bool      $force
+     *
+     * @return void
+     * @throws ContainerException
+     * @throws QueryExecutionException
+     */
+    private static function syncPaymentAmountFromOrderItem($payment, $order, $force = false)
+    {
+        $successfulStatuses = ['processing', 'completed', 'on-hold'];
+        $currentAmount = $payment->getAmount() ? $payment->getAmount()->getValue() : 0;
+
+        if (!$force && $currentAmount > 0 && !in_array($order->get_status(), $successfulStatuses, true)) {
+            return;
+        }
+
+        /** @var PaymentRepository $paymentRepository */
+        $paymentRepository = self::$container->get('domain.payment.repository');
+
+        $orderItemIds = array_map('intval', array_keys($order->get_items()));
+        $paymentItemId = $payment->getWcOrderItemId() ? $payment->getWcOrderItemId()->getValue() : null;
+
+        if (!$paymentItemId || !in_array((int)$paymentItemId, $orderItemIds, true)) {
+            $paymentItemId = self::syncPaymentMetaFromOrder($payment, $order);
+        }
+
+        if (!$paymentItemId) {
+            return;
+        }
+
+        foreach ($order->get_items() as $itemId => $orderItem) {
+            if ((int)$paymentItemId === (int)$itemId) {
+                $paymentRepository->updateFieldById(
+                    $payment->getId()->getValue(),
+                    ($orderItem->get_total() > 0 ? $orderItem->get_total() : 0) + $orderItem->get_total_tax(),
+                    'amount'
+                );
+
+                break;
+            }
+        }
+    }
+
+    /**
+     * @param Payment   $payment
+     * @param \WC_Order $order
+     *
+     * @return int|null
+     * @throws ContainerException
+     * @throws QueryExecutionException
+     */
+    private static function syncPaymentMetaFromOrder($payment, $order)
+    {
+        /** @var PaymentRepository $paymentRepository */
+        $paymentRepository = self::$container->get('domain.payment.repository');
+
+        $ameliaItemIds = [];
+
+        foreach ($order->get_items() as $itemId => $orderItem) {
+            $data = wc_get_order_item_meta($itemId, self::AMELIA);
+
+            if (!$data || !is_array($data)) {
+                continue;
+            }
+
+            $ameliaItemIds[] = (int)$itemId;
+        }
+
+        if (count($ameliaItemIds) !== 1) {
+            return null;
+        }
+
+        $itemId = $ameliaItemIds[0];
+
+        $paymentRepository->updateFieldById($payment->getId()->getValue(), $itemId, 'wcOrderItemId');
+        $paymentRepository->updateFieldById(
+            $payment->getId()->getValue(),
+            $order->get_payment_method_title(),
+            'gatewayTitle'
+        );
+
+        return $itemId;
+    }
+
     private static function updateBookingStatus($payment, $type, $order)
     {
         /** @var ReservationServiceInterface $reservationService */
@@ -2402,12 +2607,43 @@ class WooCommerceService
         /** @var PaymentRepository $paymentRepository */
         $paymentRepository = self::$container->get('domain.payment.repository');
 
-        $paymentStatus =  $reservationService->getWcStatus(
+        $successfulStatuses = ['processing', 'completed', 'on-hold'];
+        $currentAmount = $payment->getAmount() ? $payment->getAmount()->getValue() : 0;
+
+        if (
+            in_array($order->get_status(), $successfulStatuses, true) ||
+            $currentAmount <= 0
+        ) {
+            self::syncPaymentAmountFromOrderItem($payment, $order);
+        }
+
+        if (!$payment->getWcOrderItemId()) {
+            self::syncPaymentMetaFromOrder($payment, $order);
+        } else {
+            $paymentRepository->updateFieldById(
+                $payment->getId()->getValue(),
+                $order->get_payment_method_title(),
+                'gatewayTitle'
+            );
+        }
+
+        $paymentStatus = $reservationService->getWcStatus(
             $type,
             $order->get_status(),
             'payment',
             true
-        ) ?: PaymentStatus::PAID;
+        );
+
+        if ($paymentStatus === false) {
+            if (
+                in_array($order->get_status(), ['on-hold', 'pending'], true) &&
+                in_array($order->get_payment_method(), ['bacs', 'cod', 'cheque'], true)
+            ) {
+                $paymentStatus = PaymentStatus::PENDING;
+            } else {
+                $paymentStatus = PaymentStatus::PAID;
+            }
+        }
 
         if ($paymentStatus !== false) {
             if (
@@ -2546,7 +2782,7 @@ class WooCommerceService
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      */
-    private static function bookingPackageUpdated($payment, $requestedStatus, $runActions)
+    private static function bookingPackageUpdated($payment, $requestedStatus, $runActions): void
     {
         /** @var PackageCustomerRepository $packageCustomerRepository */
         $packageCustomerRepository = self::$container->get('domain.bookable.packageCustomer.repository');
@@ -2566,7 +2802,7 @@ class WooCommerceService
             'status'
         );
 
-        if ($requestedStatus === 'canceled') {
+        if (in_array($requestedStatus, [BookingStatus::CANCELED, BookingStatus::REJECTED], true)) {
             /** @var Collection $packageCustomerServices */
             $packageCustomerServices = $packageCustomerServiceRepository->getByCriteria(
                 [
@@ -2592,13 +2828,20 @@ class WooCommerceService
                                 $packageCustomerServices->keys()
                             )
                         ) {
-                            $approvedOrPendingBookings = array_filter($appointment->getBookings()->toArray(), function ($booking) {
-                                return $booking['status'] === 'approved' || $booking['status'] === 'pending';
+                            $approvedOrPendingBookings = array_filter($appointment->getBookings()->toArray(), function ($appointmentBooking) {
+                                return $appointmentBooking['status'] === BookingStatus::APPROVED
+                                    || $appointmentBooking['status'] === BookingStatus::PENDING;
                             });
 
-                            $bookingRepository->updateFieldById($booking->getId()->getValue(), 'canceled', 'status');
-                            if (count($approvedOrPendingBookings) === 1) {
-                                $appointmentRepository->updateFieldById($appointment->getId()->getValue(), 'canceled', 'status');
+                            $wasApprovedOrPending = in_array(
+                                $booking->getStatus()->getValue(),
+                                [BookingStatus::APPROVED, BookingStatus::PENDING],
+                                true
+                            );
+
+                            $bookingRepository->updateFieldById($booking->getId()->getValue(), $requestedStatus, 'status');
+                            if ($wasApprovedOrPending && count($approvedOrPendingBookings) === 1) {
+                                $appointmentRepository->updateFieldById($appointment->getId()->getValue(), $requestedStatus, 'status');
                             }
 
                             break;
@@ -2641,6 +2884,8 @@ class WooCommerceService
         if (!$order->has_status('failed')) {
             if (!self::isAmeliaOrderProcessed($order)) {
                 self::completeBookings($order);
+            } else {
+                self::manageOrderUpdateStatus($order);
             }
 
             foreach ($order->get_items() as $itemId => $orderItem) {
@@ -2733,7 +2978,16 @@ class WooCommerceService
 
                             $reservationData = $reservationService->getReservationByPayment($payment)->getData();
 
-                            $reservationData['appointmentStatusChanged'] = $data['appointmentStatusChanged'];
+                            $reservationData['appointmentStatusChanged'] = array_key_exists(
+                                'appointmentStatusChanged',
+                                $data
+                            ) && $data['appointmentStatusChanged'] !== null
+                                ? $data['appointmentStatusChanged']
+                                : (
+                                    !empty($reservationData['appointmentStatusChanged'])
+                                        ? $reservationData['appointmentStatusChanged']
+                                        : false
+                                );
 
                             if ($payment->getEntity()->getValue() === Entities::PACKAGE) {
                                 $reservationData = array_merge(
@@ -2784,11 +3038,22 @@ class WooCommerceService
                                 );
                             }
 
+                            $cacheStatus = 'paid';
+
+                            if (
+                                !empty($reservationData[Entities::BOOKING]['status']) &&
+                                $reservationData[Entities::BOOKING]['status'] === BookingStatus::REJECTED
+                            ) {
+                                $cacheStatus = 'failed';
+                            } elseif ($payment->getStatus()->getValue() === PaymentStatus::PENDING) {
+                                $cacheStatus = 'paid';
+                            }
+
                             return array_merge(
                                 $cacheData ?: [],
                                 [
                                     'response' => $reservationData,
-                                    'status'   => 'paid'
+                                    'status'   => $cacheStatus
                                 ]
                             );
                         }
@@ -3090,10 +3355,8 @@ class WooCommerceService
         foreach ($order->get_items() as $item_id => $order_item) {
             $data = wc_get_order_item_meta($item_id, self::AMELIA);
 
-            if ($data && is_array($data)) {
-                if (isset($data['processed'], $data['payment']['wcOrderId'])) {
-                    return true;
-                }
+            if ($data && is_array($data) && !empty($data['processed'])) {
+                return true;
             }
         }
 
@@ -3173,11 +3436,12 @@ class WooCommerceService
     /**
      * Manage bookings after order status is changed.
      *
-     * @param string $orderStatus
-     * @param array  $data
+     * @param string   $orderStatus
+     * @param array    $data
+     * @param bool|null $useUpdateRules
      * @return bool|null
      */
-    private static function isValid($orderStatus, $data)
+    private static function isValid($orderStatus, $data, $useUpdateRules = null)
     {
         $isValid = $data && is_array($data);
 
@@ -3187,11 +3451,13 @@ class WooCommerceService
             /** @var ReservationServiceInterface $reservationService */
             $reservationService = self::$container->get('application.reservation.service')->get($data['type']);
 
+            $isUpdate = $useUpdateRules !== null ? $useUpdateRules : isset($data['processed']);
+
             $isValid = $reservationService->getWcStatus(
                 $data['type'],
                 $orderStatus,
                 'booking',
-                isset($data['processed'])
+                $isUpdate
             );
         }
 
@@ -3237,6 +3503,8 @@ class WooCommerceService
 
         $data['payment']['status'] = $order->get_payment_method() === 'cod' ?
             PaymentStatus::PENDING : PaymentStatus::PAID;
+
+        wc_update_order_item_meta($item_id, self::AMELIA, $data);
 
         /** @var SettingsService $settingsService */
         $settingsService = self::$container->get('domain.settings.service');
@@ -3368,15 +3636,7 @@ class WooCommerceService
 
                     /** @var Payment $payment */
                     foreach ($payments->getItems() as $payment) {
-                        foreach ($order->get_items() as $itemId => $orderItem) {
-                            if ($payment->getWcOrderItemId() && $payment->getWcOrderItemId()->getValue() === (int)$itemId) {
-                                $paymentRepository->updateFieldById(
-                                    $payment->getId()->getValue(),
-                                    ($orderItem->get_total() > 0 ? $orderItem->get_total() : 0) + $orderItem->get_total_tax(),
-                                    'amount'
-                                );
-                            }
-                        }
+                        self::syncPaymentAmountFromOrderItem($payment, $order, true);
                     }
 
                     $data['bookings'][0]['customFields'] = $customFields;
@@ -3537,7 +3797,7 @@ class WooCommerceService
      * @throws NotFoundException
      * @throws QueryExecutionException
      */
-    private static function manageOrderUpdateStatus($order)
+    private static function manageOrderUpdateStatus($order, $useUpdateRules = null)
     {
         /** @var PaymentRepository $paymentRepository */
         $paymentRepository = self::$container->get('domain.payment.repository');
@@ -3547,9 +3807,14 @@ class WooCommerceService
 
             if (
                 $data &&
-                self::isValid($order->get_status(), $data) !== false &&
-                isset($data['processed'], $data['payment']['wcOrderId'])
+                self::isValid($order->get_status(), $data, $useUpdateRules) !== false &&
+                ($useUpdateRules === true || isset($data['processed']))
             ) {
+                if (empty($data['payment']['wcOrderId'])) {
+                    $data['payment']['wcOrderId'] = $order->get_id();
+                    $data['payment']['wcOrderItemId'] = $item_id;
+                    wc_update_order_item_meta($item_id, self::AMELIA, $data);
+                }
                 /** @var Collection $payments */
                 $payments = $paymentRepository->getByEntityId($order->get_id(), 'wcOrderId');
 
@@ -3578,15 +3843,42 @@ class WooCommerceService
      */
     private static function completeBookings($order)
     {
+        self::manageOrderUpdateStatus($order, true);
+
+        /** @var PaymentRepository $paymentRepository */
+        $paymentRepository = self::$container->get('domain.payment.repository');
+
         foreach ($order->get_items() as $item_id => $order_item) {
             $data = wc_get_order_item_meta($item_id, self::AMELIA);
 
             if ($data && is_array($data)) {
+                if (array_key_exists('booked', $data) && $data['booked'] === false) {
+                    continue;
+                }
+
+                $payments = $paymentRepository->getByEntityId($item_id, 'wcOrderItemId');
+
+                if (!$payments->length()) {
+                    continue;
+                }
+
                 $data['processed'] = true;
 
-                wc_update_order_item_meta($item_id, self::AMELIA, $data);
+                if (empty($data['payment']['wcOrderId'])) {
+                    $data['payment']['wcOrderId'] = $order->get_id();
+                }
 
-                self::manageOrderUpdateStatus($order);
+                if (empty($data['payment']['wcOrderItemId'])) {
+                    $data['payment']['wcOrderItemId'] = $item_id;
+                }
+
+                if (!array_key_exists('appointmentStatusChanged', $data) || $data['appointmentStatusChanged'] === null) {
+                    $data['appointmentStatusChanged'] = false;
+                }
+
+                $data['booked'] = true;
+
+                wc_update_order_item_meta($item_id, self::AMELIA, $data);
 
                 if (isset($data['result']) && self::shouldAmeliaActionsRun($data['cacheData'])) {
                     /** @var ReservationServiceInterface $reservationService */
@@ -3647,6 +3939,23 @@ class WooCommerceService
                     }
                 }
 
+                // The booking status for a cancelled/failed order comes from the WooCommerce rules;
+                // "canceled" is only the fallback when no rule covers this order status.
+                $requestedStatus = BookingStatus::CANCELED;
+
+                if (isset($data['type'])) {
+                    /** @var ReservationServiceInterface $reservationService */
+                    $reservationService = self::$container->get('application.reservation.service')
+                        ->get($data['type']);
+
+                    $requestedStatus = $reservationService->getWcStatus(
+                        $data['type'],
+                        $order->get_status(),
+                        'booking',
+                        isset($data['processed'])
+                    ) ?: BookingStatus::CANCELED;
+                }
+
                 /** @var Payment $payment */
                 foreach ($payments->getItems() as $payment) {
                     $paymentRepository->updateFieldById(
@@ -3655,24 +3964,18 @@ class WooCommerceService
                         'status'
                     );
 
-                    $paymentRepository->updateFieldById(
-                        $payment->getId()->getValue(),
-                        0,
-                        'amount'
-                    );
-
                     try {
                         switch ($data['type']) {
                             case (Entities::APPOINTMENT):
-                                self::bookingAppointmentUpdated($payment, 'canceled', false);
+                                self::bookingAppointmentUpdated($payment, $requestedStatus, false);
                                 break;
 
                             case (Entities::EVENT):
-                                self::bookingEventUpdated($payment, 'canceled', false);
+                                self::bookingEventUpdated($payment, $requestedStatus, false);
                                 break;
 
                             case (Entities::PACKAGE):
-                                self::bookingPackageUpdated($payment, 'canceled', false);
+                                self::bookingPackageUpdated($payment, $requestedStatus, false);
                                 break;
                         }
                     } catch (\Exception $e) {

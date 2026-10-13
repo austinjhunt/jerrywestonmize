@@ -1,0 +1,116 @@
+@mixin tiptap-styles {
+  color: var(--am-c-main-text);
+
+  & > :first-child {
+    margin-top: 0;
+    outline: none;
+
+    * {
+      margin: 0;
+    }
+  }
+
+  img {
+    height: auto;
+    max-width: 100%;
+  }
+
+  a {
+    cursor: pointer;
+    color: var(--am-c-primary) !important;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  ul {
+    list-style-type: disc;
+  }
+
+  ol {
+    list-style-type: decimal;
+  }
+
+  ul,
+  ol {
+    padding: 0 1rem;
+
+    li p {
+      display: inline;
+      margin-top: 0.25em;
+      margin-bottom: 0.25em;
+    }
+
+    li > p {
+      display: inline;
+      margin: 0;
+    }
+  }
+
+  blockquote {
+    border-left: 3px solid var(--am-c-main-text-op10);
+    margin: 1.5rem 0;
+    padding-left: 1rem;
+  }
+
+  p {
+    font-size: unset;
+    line-height: unset;
+    margin: 0;
+    padding: 0;
+  }
+
+  sub {
+    vertical-align: sub;
+    font-size: smaller;
+    color: inherit;
+    position: static;
+    line-height: unset;
+  }
+
+  sup {
+    vertical-align: super;
+    font-size: smaller;
+    color: inherit;
+    position: static;
+    line-height: unset;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    line-height: 1.1;
+    text-wrap: pretty;
+    color: var(--am-c-main-text);
+  }
+
+  h1 {
+    font-size: 1.6rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.4rem;
+  }
+
+  h4 {
+    font-size: 1.3rem;
+  }
+  h5 {
+    font-size: 1.2rem;
+  }
+  h6 {
+    font-size: 1.1rem;
+  }
+}
+
+@mixin tiptap-editor-styles {
+  @include tiptap-styles;
+  min-height: 80px;
+  cursor: text;
+}

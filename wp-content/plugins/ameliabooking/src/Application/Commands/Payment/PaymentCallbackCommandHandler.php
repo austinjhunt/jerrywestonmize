@@ -44,7 +44,7 @@ class PaymentCallbackCommandHandler extends CommandHandler
      * @return CommandResult
      * @throws \AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException
      */
-    public function handle(PaymentCallbackCommand $command)
+    public function handle(PaymentCallbackCommand $command): CommandResult
     {
         $result = new CommandResult();
 
@@ -66,38 +66,62 @@ class PaymentCallbackCommandHandler extends CommandHandler
         $payment = null;
 
         if ($paymentId) {
-            /** @var Payment $payment */
-            $payment = $paymentRepository->getById($paymentId);
+            $paymentRepository->beginTransaction();
 
-            $paymentArray = apply_filters('amelia_before_payment_link_callback_filter', $payment ? $payment->toArray() : null, $command->getFields());
+            // A Stripe link payment is recorded both by the customer's return here and by the
+            // payment_intent.succeeded webhook, which arrive within a second of each other. The row
+            // lock makes the later one wait until the first has committed. It is taken before the
+            // payment is read, so the later one decides from what the first one wrote - it skips a
+            // charge already recorded, and adds a second charge instead of overwriting the first.
+            if ($gateway === 'stripe') {
+                try {
+                    $paymentRepository->lockById((int)$paymentId);
+                } catch (QueryExecutionException $e) {
+                    $paymentRepository->rollback();
+                    $result->setResult(CommandResult::RESULT_ERROR);
+                    $result->setMessage($e->getMessage());
 
-            $payment = PaymentFactory::create($paymentArray);
+                    return $result;
+                }
+            }
 
-            /** @var ReservationServiceInterface $reservationService */
-            $reservationService = $this->container->get('application.reservation.service')->get(
-                $payment->getEntity()->getValue()
-            );
-            $reservation        = $reservationService->getReservationByPayment($payment, true);
-            $data = $reservation->getData();
+            try {
+                /** @var Payment $payment */
+                $payment = $paymentRepository->getById($paymentId);
 
-            $bookableSettings     = $data['bookable']['settings'];
-            $entitySettings       = !empty($bookableSettings) && json_decode($bookableSettings, true) ? json_decode($bookableSettings, true) : null;
-            $paymentLinksSettings =
-                !empty($entitySettings) && !empty($entitySettings['payments']['paymentLinks']) ? $entitySettings['payments']['paymentLinks'] : null;
-            $generalPaymentSettings = $settingsDS->getSetting('payments', 'paymentLinks');
-            $redirectUrl          = $paymentLinksSettings && !empty($paymentLinksSettings['redirectUrl']) ? $paymentLinksSettings['redirectUrl'] :
-                (!empty($generalPaymentSettings['redirectUrl']) ? $generalPaymentSettings['redirectUrl'] : '');
-            $redirectLink         = !empty($redirectUrl) ? $redirectUrl : '';
-            $customerPanelUrl     = $settingsDS->getSetting('roles', 'customerCabinet')['pageUrl'];
-            $redirectLink         = !empty($command->getField('fromPanel')) ? $customerPanelUrl : $redirectLink;
+                $paymentArray = apply_filters('amelia_before_payment_link_callback_filter', $payment ? $payment->toArray() : null, $command->getFields());
 
-            $changeBookingStatus =
-                $paymentLinksSettings && isset($paymentLinksSettings['changeBookingStatus']) ? $paymentLinksSettings['changeBookingStatus'] :
-                $settingsDS->getSetting('payments', 'paymentLinks')['changeBookingStatus'];
+                $payment = PaymentFactory::create($paymentArray);
 
+                /** @var ReservationServiceInterface $reservationService */
+                $reservationService = $this->container->get('application.reservation.service')->get(
+                    $payment->getEntity()->getValue()
+                );
+                $reservation        = $reservationService->getReservationByPayment($payment, true);
+                $data = $reservation->getData();
+
+                $bookableSettings     = $data['bookable']['settings'];
+                $entitySettings       = !empty($bookableSettings) && json_decode($bookableSettings, true) ? json_decode($bookableSettings, true) : null;
+                $paymentLinksSettings =
+                    !empty($entitySettings) && !empty($entitySettings['payments']['paymentLinks']) ? $entitySettings['payments']['paymentLinks'] : null;
+                $generalPaymentSettings = $settingsDS->getSetting('payments', 'paymentLinks');
+                $redirectUrl          = $paymentLinksSettings && !empty($paymentLinksSettings['redirectUrl']) ? $paymentLinksSettings['redirectUrl'] :
+                    (!empty($generalPaymentSettings['redirectUrl']) ? $generalPaymentSettings['redirectUrl'] : '');
+                $redirectLink         = !empty($redirectUrl) ? $redirectUrl : '';
+                $customerPanelUrl     = $settingsDS->getSetting('roles', 'customerCabinet')['pageUrl'];
+                $redirectLink         = !empty($command->getField('fromPanel')) ? $customerPanelUrl : $redirectLink;
+
+                $changeBookingStatus =
+                    $paymentLinksSettings && isset($paymentLinksSettings['changeBookingStatus']) ? $paymentLinksSettings['changeBookingStatus'] :
+                    $settingsDS->getSetting('payments', 'paymentLinks')['changeBookingStatus'];
+            } catch (\Exception $e) {
+                // Nothing has been written yet; release the lock and fail as before.
+                $paymentRepository->rollback();
+
+                throw $e;
+            }
 
             $transactionId = null;
-            $paymentRepository->beginTransaction();
 
             do_action('amelia_before_payment_link_callback', $payment ? $payment->toArray() : null, $command->getFields());
 
@@ -130,7 +154,7 @@ class PaymentCallbackCommandHandler extends CommandHandler
                                 $result->setMessage('');
                                 $result->setData([]);
                                 if (!empty($redirectLink)) {
-                                    $result->setUrl($redirectLink . '&status=canceled');
+                                    $result->setUrl(add_query_arg('status', 'canceled', $redirectLink));
                                 } else {
                                     BookingFallbackService::getFallbackHtml('failed');
                                 }
@@ -156,7 +180,7 @@ class PaymentCallbackCommandHandler extends CommandHandler
                                 $result->setMessage('');
                                 $result->setData([]);
                                 if (!empty($redirectLink)) {
-                                    $result->setUrl($redirectLink . '&status=canceled');
+                                    $result->setUrl(add_query_arg('status', 'canceled', $redirectLink));
                                 } else {
                                     BookingFallbackService::getFallbackHtml('failed');
                                 }
@@ -208,13 +232,65 @@ class PaymentCallbackCommandHandler extends CommandHandler
                             /** @var SquareService $paymentService */
                             $paymentService = $this->container->get('infrastructure.payment.square.service');
 
-                            if ($command->getField('squareOrderId')) {
-                                $response = $paymentService->getOrderResponse($command->getField('squareOrderId'));
-                                $order    = $response->isSuccess() ? $response->getResult()->getOrder() : null;
-                                if ($order && $order->getTenders() && sizeof($order->getTenders()) > 0) {
-                                    $transactionId = $order->getTenders()[0]->getPaymentId();
-                                    $response      = $paymentService->completePayment($transactionId);
+                            $status = null;
+
+                            $storedPaymentData = [];
+                            if ($payment->getData() && $payment->getData()->getValue()) {
+                                $decodedPaymentData = json_decode($payment->getData()->getValue(), true);
+
+                                if (is_array($decodedPaymentData)) {
+                                    $storedPaymentData = $decodedPaymentData;
                                 }
+                            }
+
+                            // Prefer the order id persisted when the payment link was created.
+                            // Fall back to the redirect query param only for links created before that binding.
+                            $squareOrderId = !empty($storedPaymentData['squareOrderId'])
+                                ? $storedPaymentData['squareOrderId']
+                                : $command->getField('squareOrderId');
+
+                            if ($squareOrderId) {
+                                $response = $paymentService->getOrderResponse($squareOrderId);
+                                $order    = $response->isSuccess() ? $response->getResult()->getOrder() : null;
+
+                                if ($order && $order->getTenders() && sizeof($order->getTenders()) > 0) {
+                                    $squarePaymentId = $order->getTenders()[0]->getPaymentId();
+                                    $paymentResponse = $paymentService->getPayment($squarePaymentId);
+                                    $squarePayment   = $paymentResponse->isSuccess()
+                                        ? $paymentResponse->getResult()->getPayment()
+                                        : null;
+
+                                    if (
+                                        $squarePayment &&
+                                        $squarePayment->getStatus() === 'APPROVED'
+                                    ) {
+                                        $completeResponse = $paymentService->completePayment($squarePaymentId);
+                                        $squarePayment    = $completeResponse->isSuccess()
+                                            ? $completeResponse->getResult()->getPayment()
+                                            : $squarePayment;
+                                    }
+
+                                    if ($paymentService->isAcceptablePayment($squarePayment)) {
+                                        $transactionId = $squarePayment->getId();
+                                        $status        = PaymentStatus::PAID;
+                                    }
+                                }
+                            }
+
+                            if ($status !== PaymentStatus::PAID) {
+                                $result->setResult(CommandResult::RESULT_SUCCESS);
+                                $result->setMessage('');
+                                $result->setData([]);
+
+                                if (!empty($redirectLink)) {
+                                    $result->setUrl(add_query_arg('status', 'canceled', $redirectLink));
+                                } else {
+                                    $result->setHtml(BookingFallbackService::getFallbackHtml('failed'));
+                                }
+
+                                $paymentRepository->commit();
+
+                                return $result;
                             }
                             break;
                     }

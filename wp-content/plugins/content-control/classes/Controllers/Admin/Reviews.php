@@ -90,17 +90,16 @@ class Reviews extends Controller {
 	 * @return void
 	 */
 	public function ajax_handler() {
-		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( wp_unslash( $_REQUEST['nonce'] ), 'content_control_review_action' ) ) {
+		if ( ! isset( $_REQUEST['nonce'] ) || ! is_string( $_REQUEST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['nonce'] ) ), 'content_control_review_action' ) ) {
 			wp_send_json_error();
 		}
 
-		$args = wp_parse_args( $_REQUEST, [
-			'group'  => $this->get_trigger_group(),
-			'code'   => $this->get_trigger_code(),
-			'pri'    => $this->get_current_trigger( 'pri' ),
-			'reason' => 'maybe_later',
-		] );
+		$args = [
+			'group'  => isset( $_REQUEST['group'] ) && is_string( $_REQUEST['group'] ) ? sanitize_key( wp_unslash( $_REQUEST['group'] ) ) : $this->get_trigger_group(),
+			'code'   => isset( $_REQUEST['code'] ) && is_string( $_REQUEST['code'] ) ? sanitize_key( wp_unslash( $_REQUEST['code'] ) ) : $this->get_trigger_code(),
+			'pri'    => isset( $_REQUEST['pri'] ) && is_numeric( $_REQUEST['pri'] ) ? absint( $_REQUEST['pri'] ) : $this->get_current_trigger( 'pri' ),
+			'reason' => isset( $_REQUEST['reason'] ) && is_string( $_REQUEST['reason'] ) ? sanitize_key( wp_unslash( $_REQUEST['reason'] ) ) : 'maybe_later',
+		];
 
 		try {
 			$user_id = get_current_user_id();
@@ -272,7 +271,7 @@ class Reviews extends Controller {
 		static $triggers;
 
 		if ( ! isset( $triggers ) ) {
-			$link = 'https://wordpress.org/support/plugin/content-control/reviews/?rate=5#rate-response';
+			$link = $this->get_review_link();
 
 			// Translators: 1. emoji, 2. html tag, 3. html tag, 4. the number of days, 5. html tag, 6. html tag.
 			$time_message = __( 'Hi there! %1$s You\'ve been using the %2$sContent Control%3$s plugin on your site for %4$s now - We hope it\'s been helpful. If you\'re enjoying the plugin, would you mind rating it %5$s5-stars%6$s to help spread the word?', 'content-control' );
@@ -357,6 +356,23 @@ class Reviews extends Controller {
 		}
 
 		return $triggers;
+	}
+
+	/**
+	 * Get the review destination for the installed product.
+	 *
+	 * Free users go directly to WordPress.org's unselected review form. Sites
+	 * with Pro installed use the first-party landing page, which routes them to
+	 * the verified-purchaser review form for the commercial product.
+	 *
+	 * @since 2.7.3
+	 *
+	 * @return string
+	 */
+	public function get_review_link() {
+		return $this->container->is_pro_installed()
+			? 'https://contentcontrolplugin.com/leave-a-review/?product=pro'
+			: 'https://wordpress.org/support/plugin/content-control/reviews/#rate-response';
 	}
 
 	/**
@@ -484,20 +500,20 @@ class Reviews extends Controller {
 		<div class="notice notice-success is-dismissible content-control-notice">
 
 			<div class="notice-logo">
-				<img class="logo" width="110" src="<?php echo esc_attr( plugin()->get_url( 'assets/images/illustration-check.svg' ) ); ?>" />
+				<img class="logo" width="110" src="<?php echo esc_url( plugin()->get_url( 'assets/images/illustration-check.svg' ) ); ?>" />
 			</div>
 
 			<div class="notice-content">
 				<p>
 					<?php
-					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-					echo $trigger['message'];
+					// Review messages support post-safe inline markup such as emphasis and the star-rating span.
+					echo wp_kses_post( $trigger['message'] );
 					?>
 					~ <a target="_blank" href="https://twitter.com/danieliser" title="Follow Daniel on Twitter">@danieliser</a>
 				</p>
 				<ul class="review-actions">
 					<li>😁
-						<a class="content-control-dismiss" target="_blank" href="<?php echo esc_attr( $trigger['link'] ); ?>" data-reason="am_now">
+						<a class="content-control-dismiss" target="_blank" href="<?php echo esc_url( $trigger['link'] ); ?>" data-reason="am_now">
 							<strong><?php esc_html_e( 'Ok, you deserve it', 'content-control' ); ?></strong>
 						</a>
 					</li>

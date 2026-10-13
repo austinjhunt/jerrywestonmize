@@ -196,23 +196,27 @@ class AppointmentApplicationService
 
         $bookIfPending = $isFrontEndBooking && $settingsDS->getSetting('appointments', 'allowBookingIfPending');
 
-        // prevent booking in existing canceled/rejected appointment on frontend based on capacity and settings
-        // Waiting-list requests must still resolve the occupied appointment at this slot (see bookSingle / isDoubleBooking).
-        if (
+        // AMR-1474: avoid reusing canceled capacity-1 appointments on frontend so they do not look like group bookings.
+        // Exception (AMR-2358): still reuse when waitlist customers remain on that appointment.
+        $avoidReuseCanceledCapacityOne =
             ($appointmentData['bookings'][0]['status'] ?? null) !== BookingStatus::WAITING &&
             $service->getMaxCapacity()->getValue() === 1 &&
             (
                 ($appointmentData['bookings'][0]['status'] ?? null) === BookingStatus::APPROVED ||
                 !$settingsDS->getSetting('appointments', 'allowBookingIfPending')
-            )
-        ) {
-            return null;
-        }
+            );
 
         $personsCount = 0;
 
         foreach ($appointmentData['bookings'] as $bookingData) {
-            $personsCount += $bookingData['persons'];
+            if (
+                !isset($bookingData['persons']) ||
+                $bookingData['persons'] < 1
+            ) {
+                throw new InvalidArgumentException("Number of persons must be a positive number");
+            }
+
+            $personsCount += (int)$bookingData['persons'];
         }
 
         /** @var Collection $existingAppointments */
@@ -255,10 +259,26 @@ class AppointmentApplicationService
                     ($persons + $personsCount) <= $service->getMaxCapacity()->getValue() &&
                     !($existingAppointment->isFull() ? $existingAppointment->isFull()->getValue() : false);
 
+                $isCanceledRejectedOrNoShow = in_array(
+                    $status,
+                    [BookingStatus::CANCELED, BookingStatus::REJECTED, BookingStatus::NO_SHOW],
+                    true
+                );
+
+                if ($isCanceledRejectedOrNoShow) {
+                    if (
+                        $avoidReuseCanceledCapacityOne &&
+                        !$this->appointmentHasWaitingBooking($existingAppointment)
+                    ) {
+                        continue;
+                    }
+
+                    return $existingAppointment;
+                }
+
                 if (
                     ($status === BookingStatus::APPROVED && $hasCapacity && $hasLocation) ||
                     ($status === BookingStatus::PENDING && ($bookIfPending || $hasCapacity) && $hasLocation) ||
-                    ($status === BookingStatus::CANCELED || $status === BookingStatus::REJECTED || $status === BookingStatus::NO_SHOW) ||
                     (($appointmentData['bookings'][0]['status'] ?? null) === BookingStatus::WAITING && !$hasCapacity)
                 ) {
                     return $existingAppointment;
@@ -267,6 +287,23 @@ class AppointmentApplicationService
         }
 
         return null;
+    }
+
+    /**
+     * @param Appointment $appointment
+     *
+     * @return bool
+     */
+    private function appointmentHasWaitingBooking($appointment)
+    {
+        /** @var CustomerBooking $booking */
+        foreach ($appointment->getBookings()->getItems() as $booking) {
+            if ($booking->getStatus()->getValue() === BookingStatus::WAITING) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

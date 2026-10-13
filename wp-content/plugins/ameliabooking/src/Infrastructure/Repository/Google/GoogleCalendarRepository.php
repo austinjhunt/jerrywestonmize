@@ -95,16 +95,34 @@ class GoogleCalendarRepository extends AbstractRepository
     {
         $data = $googleCalendar->toArray();
 
+        $title = $data['title'] ?? null;
+        $description = $data['description'] ?? null;
+
         $params = [
-            ':token'      => $data['token'],
-            ':calendarId' => $data['calendarId'],
-            ':id'         => $id
+            ':token'                      => $data['token'],
+            ':calendarId'                 => $data['calendarId'],
+            ':insertPendingAppointments'  => (int)($data['insertPendingAppointments'] ?? false),
+            ':includeBufferTime'          => (int)($data['includeBufferTime'] ?? false),
+            ':title'                      => is_array($title) ? json_encode($title) : $title,
+            ':description'                => is_array($description) ? json_encode($description) : $description,
+            ':id'                         => $id
         ];
 
         try {
+            // accountId and syncId are deliberately left alone. They are registry bookkeeping rather than
+            // anything a provider form submits, and this method is handed entities built from request data
+            // that never carry them - writing them here would detach the connection from its watch on
+            // every save.
             $statement = $this->connection->prepare(
                 "UPDATE {$this->table}
-                SET `token` = :token, `calendarId` = :calendarId WHERE id = :id"
+                SET 
+                    `token` = :token,
+                    `calendarId` = :calendarId,
+                    `insertPendingAppointments` = :insertPendingAppointments,
+                    `includeBufferTime` = :includeBufferTime,
+                    `title` = :title,
+                    `description` = :description
+                WHERE id = :id"
             );
 
             $statement->execute($params);
@@ -112,6 +130,113 @@ class GoogleCalendarRepository extends AbstractRepository
             return true;
         } catch (\Exception $e) {
             throw new QueryExecutionException('Unable to save data in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+    /**
+     * @param int      $id
+     * @param int|null $syncId
+     *
+     * @return bool
+     * @throws QueryExecutionException
+     */
+    public function updateSyncId($id, $syncId)
+    {
+        try {
+            $statement = $this->connection->prepare(
+                "UPDATE {$this->table} SET `syncId` = :syncId WHERE id = :id"
+            );
+
+            $statement->execute([':syncId' => $syncId, ':id' => $id]);
+
+            return true;
+        } catch (\Exception $e) {
+            throw new QueryExecutionException('Unable to save sync id in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+    /**
+     * @param int    $id
+     * @param string $accountId
+     *
+     * @return bool
+     * @throws QueryExecutionException
+     */
+    public function updateAccountId($id, $accountId)
+    {
+        try {
+            $statement = $this->connection->prepare(
+                "UPDATE {$this->table} SET `accountId` = :accountId WHERE id = :id"
+            );
+
+            $statement->execute([':accountId' => $accountId, ':id' => $id]);
+
+            return true;
+        } catch (\Exception $e) {
+            throw new QueryExecutionException('Unable to save account id in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+    /**
+     * Connections still attached to a watch, so a caller can hand ownership to another one.
+     *
+     * @param int      $syncId
+     * @param int|null $excludeId connection being removed
+     *
+     * @return array list of ['id' => int, 'userId' => int]
+     * @throws QueryExecutionException
+     */
+    public function getConnectionsBySyncId($syncId, $excludeId = null)
+    {
+        $params = [':syncId' => $syncId];
+
+        $where = '';
+        if ($excludeId !== null) {
+            $where = ' AND id <> :excludeId';
+            $params[':excludeId'] = $excludeId;
+        }
+
+        try {
+            $statement = $this->connection->prepare(
+                "SELECT id, userId FROM {$this->table} WHERE `syncId` = :syncId{$where} ORDER BY id ASC"
+            );
+
+            $statement->execute($params);
+
+            $rows = $statement->fetchAll();
+        } catch (\Exception $e) {
+            throw new QueryExecutionException('Unable to get connections in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
+        }
+
+        return array_map(
+            function ($row) {
+                return ['id' => (int)$row['id'], 'userId' => (int)$row['userId']];
+            },
+            $rows ?: []
+        );
+    }
+
+    /**
+     * Whether a provider is connected to the calendar this watch belongs to - the calendar scoped guard.
+     *
+     * @param int $syncId
+     * @param int $providerId
+     *
+     * @return bool
+     * @throws QueryExecutionException
+     */
+    public function isProviderAttachedToSync($syncId, $providerId)
+    {
+        try {
+            $statement = $this->connection->prepare(
+                "SELECT id FROM {$this->table} WHERE `syncId` = :syncId AND `userId` = :userId LIMIT 1"
+            );
+
+            $statement->execute([':syncId' => $syncId, ':userId' => $providerId]);
+
+            return (bool)$statement->fetch();
+        } catch (\Exception $e) {
+            throw new QueryExecutionException('Unable to check connection in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
     }
 

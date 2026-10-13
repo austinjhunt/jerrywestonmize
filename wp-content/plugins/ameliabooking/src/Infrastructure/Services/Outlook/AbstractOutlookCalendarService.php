@@ -2,6 +2,7 @@
 
 namespace AmeliaBooking\Infrastructure\Services\Outlook;
 
+use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
@@ -21,6 +22,12 @@ use WP_Error;
  */
 abstract class AbstractOutlookCalendarService
 {
+    /** Namespace of the extended properties Amelia writes on the events it creates. */
+    public const GUID = '{66f5a359-4659-4830-9070-00049ec6ac6e}';
+
+    /** Extended property every Amelia-created event carries, holding the appointment / event id. */
+    public const AMELIA_APPOINTMENT_PROPERTY_ID = 'Integer ' . self::GUID . ' Name appointmentId';
+
     /** @var Container $container */
     protected $container;
 
@@ -34,12 +41,21 @@ abstract class AbstractOutlookCalendarService
      * @return string
      * @throws ContainerException
      */
-    abstract public function createAuthUrl($providerId);
+    abstract public function createAuthUrl($providerId): string;
 
     /**
      * @return void
      */
     public static function handleCallback()
+    {
+    }
+
+    /**
+     * Register the Outlook Graph notification webhook route.
+     *
+     * @return void
+     */
+    public function getOutlookAction(): void
     {
     }
 
@@ -50,7 +66,7 @@ abstract class AbstractOutlookCalendarService
      *
      * @return array
      */
-    abstract public function fetchAccessTokenWithAuthCode($authCode, $redirectUri, $providerId);
+    abstract public function fetchAccessTokenWithAuthCode($authCode, $redirectUri, $providerId): array;
 
     /**
      * @param Provider $provider
@@ -61,7 +77,7 @@ abstract class AbstractOutlookCalendarService
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      */
-    abstract public function listCalendarList($provider);
+    abstract public function listCalendarList($provider): array;
 
     /**
      * Get Provider's Outlook Calendar ID.
@@ -72,7 +88,7 @@ abstract class AbstractOutlookCalendarService
      * @throws GraphException|ContainerException|QueryExecutionException
      * @throws InvalidArgumentException
      */
-    abstract public function getProviderOutlookCalendarId($provider);
+    abstract public function getProviderOutlookCalendarId($provider): ?string;
 
     /**
      * @param Appointment $appointment
@@ -85,7 +101,7 @@ abstract class AbstractOutlookCalendarService
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      */
-    abstract public function handleEvent($appointment, $commandSlug, $oldStatus = null);
+    abstract public function handleEvent($appointment, $commandSlug, $oldStatus = null): void;
 
     /**
      * @param \AmeliaBooking\Domain\Entity\Booking\Event\Event $event
@@ -98,7 +114,7 @@ abstract class AbstractOutlookCalendarService
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      */
-    abstract public function handleEventPeriod($event, $commandSlug, $periods, $newProviders = null, $removeProviders = null);
+    abstract public function handleEventPeriod($event, $commandSlug, $periods, $newProviders = null, $removeProviders = null): void;
 
     /**
      * Get providers events within date range
@@ -116,7 +132,7 @@ abstract class AbstractOutlookCalendarService
      * @throws GraphException
      * @throws Exception
      */
-    abstract public function getEvents($providerArr, $dateStart, $dateStartEnd, $dateEnd, $eventIds);
+    abstract public function getEvents($providerArr, $dateStart, $dateStartEnd, $dateEnd, $eventIds): array;
 
 
     /**
@@ -138,7 +154,7 @@ abstract class AbstractOutlookCalendarService
         $excludeAppointmentId,
         $startDateTime,
         $endDateTime
-    );
+    ): void;
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
@@ -164,7 +180,7 @@ abstract class AbstractOutlookCalendarService
         $body,
         $bccEmails = [],
         $attachments = []
-    );
+    ): void;
 
     /**
      * Get calendar lists for multiple Outlook accounts
@@ -183,5 +199,64 @@ abstract class AbstractOutlookCalendarService
      *
      * @return array
      */
-    abstract public function getUserInfo(Provider $provider);
+    abstract public function getUserInfo(Provider $provider): array;
+
+    /**
+     * Register Microsoft Graph calendar subscriptions when two-way sync is enabled.
+     *
+     * @param int $providerId
+     *
+     * @return void
+     */
+    abstract public function ensureTwoWaySyncForProvider($providerId): void;
+
+    /**
+     * Renew Microsoft Graph calendar subscriptions for all linked Outlook calendars.
+     *
+     * @return void
+     */
+    abstract public function renewSubscriptions(): void;
+
+    /**
+     * Delete Graph subscriptions for all Outlook accounts linked to the provider.
+     *
+     * @param int $providerId
+     *
+     * @return void
+     */
+    abstract public function removeTwoWaySyncForProvider($providerId): void;
+
+    /**
+     * Remove Graph subscription for a single linked Outlook calendar row (multi-account disconnect).
+     *
+     * @param int $calendarRowId
+     *
+     * @return void
+     */
+    abstract public function removeTwoWaySyncForCalendarRow($calendarRowId): void;
+
+    /**
+     * Handle Microsoft Graph change notifications for calendar events.
+     *
+     * @param string      $subscriptionId
+     * @param string|null $clientStateFromNotification
+     * @param array       $notifications
+     *
+     * @return void
+     */
+    abstract public function processGraphCalendarNotifications(
+        $subscriptionId,
+        $clientStateFromNotification,
+        array $notifications
+    ): void;
+
+    /**
+     * Validate Outlook client ID / secret when calendar settings change.
+     *
+     * @param array $outlookSettings
+     * @param array $savedOutlookSettings
+     *
+     * @return CommandResult
+     */
+    abstract public function validateCredentials(array $outlookSettings, array $savedOutlookSettings): CommandResult;
 }

@@ -204,9 +204,9 @@ class AmeliaStepBookingElementorWidget extends ElementorSharedShortcodeWidget
 
         $shortcode = '[' . AmeliaElementorWhiteLabelHelper::shortcodeTag('stepbooking', 'ameliastepbooking') . $layout . $sharedSortcode;
         if ($settings['preselect']) {
-            echo $shortcode . $show . $category_service . $employee . $location . $package . ']';
+            echo esc_html($shortcode . $show . $category_service . $employee . $location . $package . ']');
         } else {
-            echo $shortcode . ']';
+            echo esc_html($shortcode . ']');
         }
     }
 

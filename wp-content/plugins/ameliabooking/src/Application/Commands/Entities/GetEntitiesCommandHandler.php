@@ -303,6 +303,95 @@ class GetEntitiesCommandHandler extends CommandHandler
                 );
             }
 
+            foreach ($resultData['employees'] as &$employee) {
+                if (empty($employee['id'])) {
+                    continue;
+                }
+
+                $employeeId = (int)$employee['id'];
+
+                if ($settingsDS->isFeatureEnabled('googleCalendar')) {
+                    /** @var ProviderRepository $providerRepository */
+                    $googleAccounts = $providerRepository->getGoogleCalendarAccounts($employeeId);
+
+                    if ($googleAccounts) {
+                        $employeeGoogleCalendar = isset($employee['googleCalendar']) && is_array($employee['googleCalendar'])
+                            ? $employee['googleCalendar']
+                            : [];
+
+                        $employeeGoogleCalendar['accounts'] = $googleAccounts;
+                        $employeeGoogleCalendar['token'] = (string)($employeeGoogleCalendar['token'] ?? '');
+
+
+                        $googleCalendarId = !empty($employeeGoogleCalendar['calendarId']) ? (string)$employeeGoogleCalendar['calendarId'] : '';
+
+                        if ($googleCalendarId === '' && !empty($employee['googleCalendarId'])) {
+                            $googleCalendarId = (string)$employee['googleCalendarId'];
+                        }
+
+                        $googleCalendarToken = !empty($employeeGoogleCalendar['token']) ? (string)$employeeGoogleCalendar['token'] : '';
+
+                        if ($googleCalendarToken === '' || $googleCalendarId === '') {
+                            [$googleCalendarToken, $googleCalendarId, $employeeGoogleCalendar] =
+                                self::resolveCalendarCredentialsFromAccounts(
+                                    $googleAccounts,
+                                    $employeeGoogleCalendar,
+                                    $googleCalendarToken,
+                                    $googleCalendarId
+                                );
+                        }
+
+                        if ($googleCalendarToken !== '' && $googleCalendarId !== '') {
+                            $employeeGoogleCalendar['token'] = $googleCalendarToken;
+                            $employeeGoogleCalendar['calendarId'] = $googleCalendarId;
+                        }
+
+                        $employee['googleCalendar'] = $employeeGoogleCalendar;
+                    }
+                }
+
+                if ($settingsDS->isFeatureEnabled('outlookCalendar')) {
+                    /** @var ProviderRepository $providerRepository */
+                    $outlookAccounts = $providerRepository->getOutlookCalendarAccounts($employeeId);
+
+                    if ($outlookAccounts) {
+                        $employeeOutlookCalendar = isset($employee['outlookCalendar']) && is_array($employee['outlookCalendar'])
+                            ? $employee['outlookCalendar']
+                            : [];
+
+                        $employeeOutlookCalendar['accounts'] = $outlookAccounts;
+                        $employeeOutlookCalendar['token'] = (string)($employeeOutlookCalendar['token'] ?? '');
+
+                        $outlookCalendarId = !empty($employeeOutlookCalendar['calendarId']) ? (string)$employeeOutlookCalendar['calendarId'] : '';
+
+                        if ($outlookCalendarId === '' && !empty($employee['outlookCalendarId'])) {
+                            $outlookCalendarId = (string)$employee['outlookCalendarId'];
+                        }
+
+                        $outlookCalendarToken = !empty($employeeOutlookCalendar['token']) ? (string)$employeeOutlookCalendar['token'] : '';
+
+                        if ($outlookCalendarToken === '' || $outlookCalendarId === '') {
+                            [$outlookCalendarToken, $outlookCalendarId, $employeeOutlookCalendar] =
+                                self::resolveCalendarCredentialsFromAccounts(
+                                    $outlookAccounts,
+                                    $employeeOutlookCalendar,
+                                    $outlookCalendarToken,
+                                    $outlookCalendarId
+                                );
+                        }
+
+                        if ($outlookCalendarToken !== '' && $outlookCalendarId !== '') {
+                            $employeeOutlookCalendar['token'] = $outlookCalendarToken;
+                            $employeeOutlookCalendar['calendarId'] = $outlookCalendarId;
+                        }
+
+                        $employee['outlookCalendar'] = $employeeOutlookCalendar;
+                    }
+                }
+            }
+
+            unset($employee);
+
             // Add calendar list to each provider's Google Calendar data
             $settingsDS->getSetting('general', 'googleCalendar');
             $googleCalendar = $settingsDS->getSetting('googleCalendar', 'accessToken');
@@ -322,7 +411,10 @@ class GetEntitiesCommandHandler extends CommandHandler
             }
 
             foreach ($resultData['employees'] as &$employee) {
-                if ($employee['googleCalendar'] && $employee['googleCalendar']['token']) {
+                if (
+                    is_array($employee['googleCalendar'] ?? null) &&
+                    ($employee['googleCalendar']['token'] ?? '') !== ''
+                ) {
                     continue;
                 }
 
@@ -346,7 +438,10 @@ class GetEntitiesCommandHandler extends CommandHandler
             }
 
             foreach ($resultData['employees'] as &$employee) {
-                if ($employee['outlookCalendar'] && $employee['outlookCalendar']['token']) {
+                if (
+                    is_array($employee['outlookCalendar'] ?? null) &&
+                    ($employee['outlookCalendar']['token'] ?? '') !== ''
+                ) {
                     continue;
                 }
 
@@ -720,5 +815,111 @@ class GetEntitiesCommandHandler extends CommandHandler
         $result->setData($resultData);
 
         return $result;
+    }
+
+    /**
+     * Prefer token and calendarId from the same linked account row; never merge token from one row
+     * with calendarId from another. When one value is already known, only the matching row may supply the other.
+     *
+     * @param array<int, array<string, mixed>> $accounts
+     * @param array<string, mixed>             $employeeCalendar
+     *
+     * @return array{0: string, 1: string, 2: array<string, mixed>}
+     */
+    private static function resolveCalendarCredentialsFromAccounts(
+        array $accounts,
+        array $employeeCalendar,
+        string $token,
+        string $calendarId
+    ): array {
+        if ($token !== '' && $calendarId !== '') {
+            return [$token, $calendarId, $employeeCalendar];
+        }
+
+        if ($token !== '' && $calendarId === '') {
+            foreach ($accounts as $account) {
+                if (
+                    !empty($account['calendarId']) &&
+                    !empty($account['token']) &&
+                    (string)$account['token'] === $token
+                ) {
+                    $calendarId = (string)$account['calendarId'];
+
+                    if (!empty($account['id'])) {
+                        $employeeCalendar['id'] = $account['id'];
+                    }
+
+                    break;
+                }
+            }
+
+            return [$token, $calendarId, $employeeCalendar];
+        }
+
+        if ($calendarId !== '' && $token === '') {
+            foreach ($accounts as $account) {
+                if (
+                    !empty($account['token']) &&
+                    !empty($account['calendarId']) &&
+                    (string)$account['calendarId'] === $calendarId
+                ) {
+                    $token = (string)$account['token'];
+
+                    if (!empty($account['id'])) {
+                        $employeeCalendar['id'] = $account['id'];
+                    }
+
+                    break;
+                }
+            }
+
+            return [$token, $calendarId, $employeeCalendar];
+        }
+
+        $chosen = null;
+
+        foreach ($accounts as $account) {
+            if (!empty($account['token']) && !empty($account['calendarId'])) {
+                $chosen = $account;
+
+                break;
+            }
+        }
+
+        if ($chosen === null) {
+            foreach ($accounts as $account) {
+                if (!empty($account['token'])) {
+                    $chosen = $account;
+
+                    break;
+                }
+            }
+        }
+
+        if ($chosen === null) {
+            foreach ($accounts as $account) {
+                if (!empty($account['calendarId'])) {
+                    $chosen = $account;
+
+                    break;
+                }
+            }
+        }
+
+        if ($chosen !== null) {
+            if ($token === '' && !empty($chosen['token'])) {
+                $token = (string)$chosen['token'];
+            }
+
+            if ($calendarId === '' && !empty($chosen['calendarId'])) {
+                $calendarId = (string)$chosen['calendarId'];
+            }
+
+            if (!empty($chosen['id'])) {
+                $employeeCalendar['id'] = $chosen['id'];
+            }
+        }
+
+        return [$token, $calendarId, $employeeCalendar];
     }
 }

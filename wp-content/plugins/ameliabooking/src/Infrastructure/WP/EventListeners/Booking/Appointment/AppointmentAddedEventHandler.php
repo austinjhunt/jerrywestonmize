@@ -11,6 +11,7 @@ use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\Booking\IcsApplicationService;
 use AmeliaBooking\Application\Services\Integration\ApplicationIntegrationService;
+use AmeliaBooking\Application\Services\Mobile\PushNotificationService;
 use AmeliaBooking\Application\Services\Notification\ApplicationNotificationService;
 use AmeliaBooking\Application\Services\Notification\EmailNotificationService;
 use AmeliaBooking\Application\Services\Notification\SMSNotificationService;
@@ -26,6 +27,7 @@ use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Factory\Booking\Appointment\AppointmentFactory;
 use AmeliaBooking\Domain\Factory\Booking\Appointment\CustomerBookingFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
+use AmeliaBooking\Domain\Services\Mobile\MobileNotificationPreferences;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Common\Container;
@@ -57,7 +59,7 @@ class AppointmentAddedEventHandler
      * @throws InvalidArgumentException
      * @throws \Exception
      */
-    public static function handle($commandResult, $container)
+    public static function handle($commandResult, $container): void
     {
         /** @var ApplicationIntegrationService $applicationIntegrationService */
         $applicationIntegrationService = $container->get('application.integration.service');
@@ -213,10 +215,16 @@ class AppointmentAddedEventHandler
                 $whatsAppNotificationService->sendAppointmentStatusNotifications($appointment, false, true);
             }
 
+            /** @var PushNotificationService $pushNotificationService */
+            $pushNotificationService = $container->get('application.mobile.pushNotification.service');
+            $pushNotificationService->sendFromArray(
+                $appointment,
+                MobileNotificationPreferences::CATEGORY_NEW_BOOKINGS
+            );
+
             if ($waitingBookings->getItems()) {
                 /** @var ApplicationNotificationService $applicationNotificationService */
                 $applicationNotificationService = $container->get('application.notification.service');
-
                 $applicationNotificationService->sendAppointmentCustomersStatusNotifications(
                     $appointmentObject,
                     $waitingBookings
@@ -284,6 +292,12 @@ class AppointmentAddedEventHandler
                         true
                     );
                 }
+
+                /** @var PushNotificationService $pushNotificationService */
+                $pushNotificationService = $container->get('application.mobile.pushNotification.service');
+                $pushNotificationService->sendStatusChange(
+                    $recurringData[$key][Entities::APPOINTMENT]
+                );
             }
         }
 

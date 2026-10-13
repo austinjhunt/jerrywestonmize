@@ -30,7 +30,10 @@ class ValidateActivationCommandHandler extends CommandHandler
     {
         $result = new CommandResult();
 
-        if (!(new SuperAdminRoleService())->canAccessActivationSettings()) {
+        /** @var SettingsService $settingsService */
+        $settingsService = $this->container->get('domain.settings.service');
+
+        if (!(new SuperAdminRoleService($settingsService))->canAccessActivationSettings()) {
             throw new AccessDeniedException('You are not allowed to manage activation settings.');
         }
 
@@ -41,9 +44,6 @@ class ValidateActivationCommandHandler extends CommandHandler
 
             return $result;
         }
-
-        /** @var SettingsService $settingsService */
-        $settingsService = $this->container->get('domain.settings.service');
 
         $response = AutoUpdateHook::checkInfo(false, 'plugin_information', (object) [ 'slug' => AMELIA_PLUGIN_SLUG ]);
 

@@ -15,7 +15,6 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\User\UserRepository;
 use AmeliaBooking\Infrastructure\Services\Recaptcha\AbstractRecaptchaService;
 use AmeliaBooking\Infrastructure\WP\UserService\UserService;
-use Interop\Container\Exception\ContainerException;
 
 /**
  * Class LoginCabinetCommandHandler
@@ -29,7 +28,6 @@ class LoginCabinetCommandHandler extends CommandHandler
      *
      * @return CommandResult
      *
-     * @throws ContainerException
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      * @throws AccessDeniedException
@@ -41,7 +39,7 @@ class LoginCabinetCommandHandler extends CommandHandler
         /** @var UserApplicationService $userAS */
         $userAS = $this->container->get('application.user.service');
 
-        /** @var Provider $user */
+        /** @var AbstractUser $user */
         $user = $this->container->get('logged.in.user');
 
         /** @var UserService $userService */
@@ -53,7 +51,24 @@ class LoginCabinetCommandHandler extends CommandHandler
         /** @var string $cabinetType */
         $cabinetType = $command->getField('cabinetType');
 
+        // If customer panel is accessed by admin, manager or provider, return error
         if (
+            $user &&
+            $command->getField('cabinetType') === 'customer' &&
+            in_array($user->getType(), [AbstractUser::USER_ROLE_ADMIN, AbstractUser::USER_ROLE_MANAGER, AbstractUser::USER_ROLE_PROVIDER], true)
+        ) {
+            $result->setResult(CommandResult::RESULT_ERROR);
+            $result->setMessage('Could not retrieve user');
+            $result->setData(['logout_login' => true]);
+
+            return $result;
+        }
+
+        $skipRecaptcha = $command->skipsRecaptcha()
+            && $cabinetType === AbstractUser::USER_ROLE_PROVIDER;
+
+        if (
+            !$skipRecaptcha &&
             $command->getField('email') &&
             $command->getField('password') &&
             !$recaptchaService->process(
@@ -91,7 +106,10 @@ class LoginCabinetCommandHandler extends CommandHandler
             if ($user === null) {
                 $result->setResult(CommandResult::RESULT_ERROR);
                 $result->setMessage('Could not retrieve user');
-                $result->setData(['reauthorize' => true]);
+                $result->setData([
+                    'reauthorize'      => true,
+                    'send_access_link' => $command->getField('token') !== null,
+                ]);
 
                 return $result;
             }

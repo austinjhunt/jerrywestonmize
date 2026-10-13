@@ -25,6 +25,7 @@ use AmeliaBooking\Domain\ValueObjects\PositiveDuration;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\IntegerValue;
+use AmeliaBooking\Domain\ValueObjects\Number\Integer\WholeNumber;
 use AmeliaBooking\Domain\ValueObjects\String\Token;
 
 /**
@@ -40,7 +41,7 @@ class CustomerBookingFactory
      * @return CustomerBooking
      * @throws InvalidArgumentException
      */
-    public static function create($data)
+    public static function create($data): CustomerBooking
     {
         $customerBooking = new CustomerBooking();
 
@@ -57,7 +58,7 @@ class CustomerBookingFactory
         }
 
         if (isset($data['persons'])) {
-            $customerBooking->setPersons(new IntegerValue($data['persons']));
+            $customerBooking->setPersons(new WholeNumber($data['persons']));
         }
 
         if (isset($data['price'])) {

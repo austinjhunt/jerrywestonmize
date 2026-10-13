@@ -301,4 +301,30 @@ class DateTimeService
         return self::getCustomDateTimeObject($dateTimeString)
             ->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');
     }
+
+    /**
+     * Append a default time when the datetime string has no time component.
+     *
+     * PHP treats date-only values (Y-m-d) as midnight, which collapses same-day
+     * slot ranges after conversion to a provider timezone.
+     *
+     * @param string|null $dateTimeString
+     * @param string      $defaultTime
+     *
+     * @return string|null
+     */
+    public static function withDefaultTimeIfMissing($dateTimeString, string $defaultTime): ?string
+    {
+        if (!$dateTimeString) {
+            return null;
+        }
+
+        $dateTimeString = (string) $dateTimeString;
+
+        if (strpos($dateTimeString, ':') !== false) {
+            return $dateTimeString;
+        }
+
+        return $dateTimeString . ' ' . $defaultTime;
+    }
 }

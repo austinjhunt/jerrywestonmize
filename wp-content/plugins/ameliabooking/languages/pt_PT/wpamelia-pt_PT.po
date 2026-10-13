@@ -33,26 +33,6 @@ msgid "# of bookings"
 msgstr "Total de marcações"
 
 #, php-format
-msgid "%1$s, %2$s, was canceled."
-msgstr "%1$s, %2$s, foi cancelado."
-
-#, php-format
-msgid "%1$s, %2$s, was rejected."
-msgstr "%1$s, %2$s, foi rejeitado."
-
-#, php-format
-msgid "%1$s booked %2$s at %3$s."
-msgstr "%1$s marcou %2$s às %3$s."
-
-#, php-format
-msgid "%1$s on %2$s had a status change."
-msgstr "%1$s em %2$s teve uma alteração de estado."
-
-#, php-format
-msgid "%1$s on %2$s was updated."
-msgstr "%1$s em %2$s foi atualizado."
-
-#, php-format
 msgid "%event_name% Event Booked"
 msgstr "%event_name% Evento reservado"
 
@@ -460,8 +440,14 @@ msgstr "Ações"
 msgid "Activate"
 msgstr "Ativar"
 
+msgid "Activate now"
+msgstr ""
+
 msgid "Activate with Envato"
 msgstr "Ativar com Envato"
+
+msgid "Activate your license to unlock the features included in your plan."
+msgstr ""
 
 msgid "Activated with Envato"
 msgstr "Ativado com Envato"
@@ -506,7 +492,7 @@ msgid ""
 "Add Google Maps API Key to show Google static map on \"Locations\" page."
 msgstr ""
 "Adicione a chave API do Google Maps para apresentar o mapa estático do "
-"Google na página &quot;Locais&quot;."
+"Google na página \"Locais\"."
 
 msgid "Add Meta Pixel to track ad conversions and optimize marketing."
 msgstr ""
@@ -876,6 +862,9 @@ msgstr "Já pago"
 msgid "Already have an account?"
 msgstr "Já tem conta?"
 
+msgid "Already purchased Amelia?"
+msgstr ""
+
 msgid "Also cancel and delete future events"
 msgstr "Também cancelar e apagar eventos futuros"
 
@@ -925,7 +914,7 @@ msgid "Apple"
 msgstr ""
 
 msgid "Apple Calendar"
-msgstr "Calendário da Apple"
+msgstr "Calendário Apple"
 
 msgid "Apple Calendar (Personal)"
 msgstr "Calendário Apple (Pessoal)"
@@ -934,7 +923,7 @@ msgid "Apple Calendar setup"
 msgstr "Configuração do Calendário Apple"
 
 msgid "Apple calendar events"
-msgstr "Eventos do Calendário Apple"
+msgstr ""
 
 msgid "Application (client) ID"
 msgstr "ID de aplicação (cliente)"
@@ -1081,9 +1070,6 @@ msgstr "Notas de nomeação"
 msgid "Appointment price"
 msgstr "Preço de nomeação"
 
-msgid "Appointment reminder"
-msgstr "Lembrete de marcação"
-
 msgid "Appointment repeats"
 msgstr "Repetições de compromissos"
 
@@ -1096,9 +1082,6 @@ msgstr "Hora de início da consulta"
 msgid "Appointment status"
 msgstr "Estado da marcação"
 
-msgid "Appointment status changed"
-msgstr "Estado da marcação alterado"
-
 msgid "Appointment status has been changed to "
 msgstr "Status do Agendamento foi alterado para "
 
@@ -1107,9 +1090,6 @@ msgstr "O estado da marcação foi atualizado."
 
 msgid "Appointment title"
 msgstr "Título da nomeação"
-
-msgid "Appointment updated"
-msgstr "Marcação alterada"
 
 msgid "Appointments"
 msgstr "Agendamentos"
@@ -1149,6 +1129,10 @@ msgstr "Tem a certeza de que deseja cancelar e apagar este evento?"
 
 msgid "Are you sure you want to cancel this appointment?"
 msgstr "Tem a certeza de que deseja cancelar este compromisso?"
+
+msgid ""
+"Are you sure you want to cancel this booking? This action cannot be undone."
+msgstr ""
 
 msgid "Are you sure you want to cancel this event?"
 msgstr "Tem certeza que quer cancelar este evento?"
@@ -1337,10 +1321,10 @@ msgid "Attendee"
 msgstr "Participante"
 
 msgid "Attendee Asc"
-msgstr "Participante Asc"
+msgstr "Participante crescente"
 
 msgid "Attendee Desc"
-msgstr "Descrição do participante"
+msgstr "Participante decrescente"
 
 msgid "Attendee code"
 msgstr "Código do participante"
@@ -1358,7 +1342,7 @@ msgid "Attendees"
 msgstr "Participantes"
 
 msgid "Attendees Allowed"
-msgstr "Adicionar Eventos dos Participantes"
+msgstr "Participantes permitidos"
 
 msgid "Attendees Export Format"
 msgstr "Formato de exportação dos participantes"
@@ -1683,10 +1667,10 @@ msgid "Booking Closes"
 msgstr "Encerramento das marcações"
 
 msgid "Booking Closes Asc"
-msgstr "Encerramento das marcações Asc"
+msgstr "Encerramento das marcações crescente"
 
 msgid "Booking Closes Desc"
-msgstr "Encerramento das marcações"
+msgstr "Encerramento das marcações decrescente"
 
 msgid "Booking Confirmed"
 msgstr "Marcação confirmada"
@@ -1713,10 +1697,10 @@ msgid "Booking Opens"
 msgstr "Abertura das marcações"
 
 msgid "Booking Opens Asc"
-msgstr "Abertura das marcações Asc"
+msgstr "Abertura das marcações crescente"
 
 msgid "Booking Opens Desc"
-msgstr "Abertura das marcações Desc"
+msgstr "Abertura das marcações decrescente"
 
 msgid "Booking Overview"
 msgstr "Visão geral das marcações"
@@ -2013,7 +1997,7 @@ msgid "Capacity:"
 msgstr "Capacidade:"
 
 msgid "Card"
-msgstr "O código de segurança do seu cartão está incompleto"
+msgstr "Cartão"
 
 msgid "Card color"
 msgstr "Cor do cartão"
@@ -2285,6 +2269,9 @@ msgstr "Escolha quando a repetição termina"
 msgid "Choose whether you want to manage services, events, or both."
 msgstr "Escolha se deseja gerir serviços, eventos ou ambos."
 
+msgid "Choose which tab users see first when they log in"
+msgstr ""
+
 msgid "Choosing layout of first step in step by step form"
 msgstr "Escolher o esquema do primeiro passo no formulário passo a passo"
 
@@ -2472,6 +2459,9 @@ msgstr "Configurar lista de espera para marcações"
 
 msgid "Confirm"
 msgstr "Confirmar"
+
+msgid "Confirm Cancellation"
+msgstr ""
 
 msgid "Confirm My Appointment"
 msgstr "Confirmar a minha marcação"
@@ -2945,10 +2935,10 @@ msgid "Customer(s)"
 msgstr "Clientes(s)"
 
 msgid "Customer Asc"
-msgstr "Cliente Asc"
+msgstr "Cliente crescente"
 
 msgid "Customer Desc"
-msgstr "Descrição do cliente"
+msgstr "Cliente decrescente"
 
 msgid "Customer Panel"
 msgstr "Link de Acesso ao Painel de Cliente"
@@ -3125,9 +3115,6 @@ msgstr "Dados que permanecem inalterados:"
 msgid "Data to be updated:"
 msgstr "Dados a serem atualizados:"
 
-msgid "Data transfer"
-msgstr "Transferência de dados"
-
 msgid "Date"
 msgstr "Data"
 
@@ -3144,19 +3131,19 @@ msgid "Date & time periods of the event with Lesson Space join links"
 msgstr "Data e horários do evento com links para participar do Espaço de Aulas"
 
 msgid "Date Asc"
-msgstr "Data Asc"
+msgstr "Data crescente"
 
 msgid "Date Desc"
-msgstr "Data Descrição"
+msgstr "Data decrescente"
 
 msgid "Date Picker"
 msgstr "Seletor de Data"
 
 msgid "Date Purchased Asc"
-msgstr "Data de compra Asc"
+msgstr "Data de compra crescente"
 
 msgid "Date Purchased Desc"
-msgstr "Data de compra Descrição"
+msgstr "Data de compra decrescente"
 
 msgid ""
 "Date Ranges that are not defined will use default price from ticket category."
@@ -4124,10 +4111,10 @@ msgid "Deduction"
 msgstr "Dedução"
 
 msgid "Deduction Asc"
-msgstr "Dedução Asc"
+msgstr "Dedução crescente"
 
 msgid "Deduction Desc"
-msgstr "Dedução Desc"
+msgstr "Dedução decrescente"
 
 msgid "Default Label"
 msgstr "Rótulo padrão"
@@ -4140,6 +4127,9 @@ msgstr "Status padrão do compromisso"
 
 msgid "Default back end page"
 msgstr "Página padrão do back-end"
+
+msgid "Default landing tab"
+msgstr ""
 
 msgid "Default language"
 msgstr "Linguagem padrão"
@@ -4233,7 +4223,7 @@ msgid "Delete Package Booking"
 msgstr "Apagar marcação de pacote"
 
 msgid "Delete Period"
-msgstr "Seleccionar local específico para este período."
+msgstr "Eliminar período"
 
 msgid "Delete appointment"
 msgstr "Apagar compromisso"
@@ -4381,10 +4371,10 @@ msgid "Discount"
 msgstr "Desconto"
 
 msgid "Discount Asc"
-msgstr "Desconto Asc"
+msgstr "Desconto crescente"
 
 msgid "Discount Desc"
-msgstr "Desconto Descrição"
+msgstr "Desconto decrescente"
 
 msgid "Discount (%)"
 msgstr "Desconto (%)"
@@ -4561,10 +4551,10 @@ msgid "Duration:"
 msgstr "Duração:"
 
 msgid "Duration Asc"
-msgstr "Duração Asc"
+msgstr "Duração crescente"
 
 msgid "Duration Desc"
-msgstr "Duração Descrição"
+msgstr "Duração decrescente"
 
 msgid "E-Ticket Scanner"
 msgstr "Leitor de bilhetes eletrónicos"
@@ -4651,8 +4641,6 @@ msgid ""
 "Edit appointments/events when connected Google Calendar Events are "
 "rescheduled or deleted"
 msgstr ""
-"Atualizar marcações/eventos quando os eventos do Google Calendário "
-"associados forem reagendados ou eliminados"
 
 msgid "Edit block time"
 msgstr "Editar tempo de bloco"
@@ -5321,7 +5309,7 @@ msgid "Event"
 msgstr "Evento"
 
 msgid "Event Asc"
-msgstr "Evento Asc"
+msgstr "Evento crescente"
 
 msgid "Event Available"
 msgstr "Disponível"
@@ -5359,7 +5347,7 @@ msgid "Event Day"
 msgstr "Evento"
 
 msgid "Event Desc"
-msgstr "Descrição do evento"
+msgstr "Evento decrescente"
 
 msgid "Event Employee"
 msgstr "Colaborador do evento"
@@ -5737,7 +5725,7 @@ msgid "Extras Heading"
 msgstr "Extras Título"
 
 msgid "Extras Subtotal"
-msgstr ""
+msgstr "Subtotal dos extras"
 
 msgid "Extras are included in the deposit amount."
 msgstr "Os extras estão incluídos no valor do depósito."
@@ -5771,9 +5759,6 @@ msgstr "Falha"
 
 msgid "Failed to access camera. Please try again."
 msgstr "Falha ao aceder à câmara. Por favor, tente novamente."
-
-msgid "Failed to initialize payment. Please try again."
-msgstr "Não foi possível inicializar o pagamento. Por favor, tente novamente."
 
 msgid "Failed to load appointment details. Please try again later."
 msgstr ""
@@ -5974,7 +5959,7 @@ msgid "Free"
 msgstr "Grátis"
 
 msgid "Fri"
-msgstr "Sexta-feira"
+msgstr "Sex"
 
 msgid "Friday"
 msgstr "Sexta"
@@ -6126,7 +6111,7 @@ msgid "Google Analytics setup"
 msgstr "Configuração do Google Analytics"
 
 msgid "Google Calendar"
-msgstr "Calendário do Google"
+msgstr "Calendário Google"
 
 msgid "Google Calendar & Google Meet"
 msgstr "Google Agenda e Google Meet"
@@ -6157,7 +6142,7 @@ msgid "Google Meet setup"
 msgstr "Configuração do Google Meet"
 
 msgid "Google calendar events"
-msgstr "Eventos do Google Calendar"
+msgstr ""
 
 msgid "Google reCAPTCHA v2 secret key"
 msgstr "Chave secreta do Google reCAPTCHA v2"
@@ -6915,10 +6900,10 @@ msgid "ID"
 msgstr ""
 
 msgid "ID Asc"
-msgstr ""
+msgstr "ID crescente"
 
 msgid "ID Desc"
-msgstr "ID Descrição"
+msgstr "ID decrescente"
 
 msgid "I understand this import will replace all current data permanently."
 msgstr ""
@@ -6947,13 +6932,6 @@ msgid ""
 msgstr ""
 "Se desativado, a marcação deve atingir a capacidade mínima e o intervalo de "
 "tempo fecha após a primeira reserva."
-
-msgid ""
-"If disabled, the price will remain the same regardless of how many people "
-"are included in the group appointment."
-msgstr ""
-"Se desativado, o preço permanecerá o mesmo, independentemente do número de "
-"pessoas incluídas na marcação de grupo."
 
 msgid ""
 "If enabled, customers can book with Pending status even after maximum "
@@ -7099,6 +7077,9 @@ msgstr "Miniaturas de imagens"
 msgid "Import"
 msgstr "Importar"
 
+msgid "Import/Export"
+msgstr ""
+
 msgid "Import Failed"
 msgstr "Falha na importação"
 
@@ -7128,6 +7109,9 @@ msgstr "Falha na importação"
 
 msgid "Import failed. Review the details below."
 msgstr "Falha na importação. Reveja os detalhes abaixo."
+
+msgid "Import or export your Amelia data."
+msgstr ""
 
 msgid "Import progress"
 msgstr "Progresso da importação"
@@ -7546,10 +7530,10 @@ msgid "Invoice Format"
 msgstr "Formato de Fatura"
 
 msgid "Invoice Number Asc"
-msgstr "Número da fatura Asc"
+msgstr "Número da fatura crescente"
 
 msgid "Invoice Number Desc"
-msgstr "Número da fatura Descrição"
+msgstr "Número da fatura decrescente"
 
 msgid "Invoice date"
 msgstr "Data da fatura"
@@ -7718,10 +7702,10 @@ msgid "Last"
 msgstr "Último"
 
 msgid "Last Booking Asc"
-msgstr "Última marcação Asc"
+msgstr "Última marcação crescente"
 
 msgid "Last Booking Desc"
-msgstr "Última marcação Desc"
+msgstr "Última marcação decrescente"
 
 msgid "Last Name:"
 msgstr "Sobrenome:"
@@ -8099,10 +8083,10 @@ msgid "Max. Capacity"
 msgstr "Capacidade máxima"
 
 msgid "Max Capacity Asc"
-msgstr "Capacidade máxima Asc"
+msgstr "Capacidade máxima crescente"
 
 msgid "Max Capacity Desc"
-msgstr "Descrição da capacidade máxima"
+msgstr "Capacidade máxima decrescente"
 
 msgid "Maximum"
 msgstr "Máximo"
@@ -8319,13 +8303,13 @@ msgid "Name:"
 msgstr "Nome:"
 
 msgid "Name Asc"
-msgstr "Nome Asc"
+msgstr "Nome crescente"
 
 msgid "Name Ascending"
 msgstr "Nome crescente"
 
 msgid "Name Desc"
-msgstr "Nome Descrição"
+msgstr "Nome decrescente"
 
 msgid "Name Descending"
 msgstr "Nome descendente"
@@ -8457,13 +8441,13 @@ msgid "No Show"
 msgstr "Não compareceu"
 
 msgid "No Show (1)"
-msgstr "Ausência (1)"
+msgstr "Não compareceu (1)"
 
 msgid "No Show (2)"
-msgstr "Ausência (2)"
+msgstr "Não compareceu (2)"
 
 msgid "No Show (3+)"
-msgstr "Ausência (3+)"
+msgstr "Não compareceu (3+)"
 
 msgid "No Tags. Create a new one."
 msgstr "Sem tags. Crie uma nova."
@@ -8670,13 +8654,13 @@ msgid "Notify selected employees about empty package purchases"
 msgstr "Notificar os colaborador selecionados sobre compras de pacotes vazios"
 
 msgid "Notify the attendee(s)"
-msgstr "Notifique o(s) participante(s)"
+msgstr "Notificar os participantes"
 
 msgid "Notify the attendees"
 msgstr "Notificar os participantes"
 
 msgid "Notify the customer(s)"
-msgstr "Notifique os clientes(s)"
+msgstr "Notificar os clientes"
 
 msgid "Number of Additional People"
 msgstr "Número de pessoas adicionais"
@@ -9014,7 +8998,7 @@ msgid "Outlook Calendar setup"
 msgstr "Configuração do Calendário do Outlook"
 
 msgid "Outlook Mailer"
-msgstr "Mailer do Outlook"
+msgstr "Serviço de correio do Outlook"
 
 msgid ""
 "Outlook Mailer is not fully configured. Please complete the account setup in "
@@ -9024,7 +9008,7 @@ msgstr ""
 "conta nas definições de integração do Outlook."
 
 msgid "Outlook calendar events"
-msgstr "Eventos do calendário do Outlook"
+msgstr ""
 
 msgid "Outside of working hours"
 msgstr "Fora do horário de funcionamento"
@@ -9063,13 +9047,13 @@ msgid "Package %package_name% purchased"
 msgstr "Pacote %package_name% comprado"
 
 msgid "Package Asc"
-msgstr "Pacote Asc"
+msgstr "Pacote crescente"
 
 msgid "Package Canceled"
 msgstr "Pacote cancelado"
 
 msgid "Package Desc"
-msgstr "Descrição do pacote"
+msgstr "Pacote decrescente"
 
 msgid "Package ID"
 msgstr "ID do pacote"
@@ -9464,7 +9448,7 @@ msgid "Percentage of Load"
 msgstr "Porcentagem de Carga"
 
 msgid "Period"
-msgstr "Seleccionar local específico para este período."
+msgstr "Período"
 
 msgid "Period available for booking in advance"
 msgstr "Período disponível para marcação antecipada"
@@ -10029,13 +10013,13 @@ msgid "Price:"
 msgstr "Preço:"
 
 msgid "Price Asc"
-msgstr "Preço Asc"
+msgstr "Preço crescente"
 
 msgid "Price Ascending"
 msgstr "Preço Ascendente"
 
 msgid "Price Desc"
-msgstr "Preço Descrição"
+msgstr "Preço decrescente"
 
 msgid "Price Descending"
 msgstr "Preço Descedente"
@@ -10155,6 +10139,11 @@ msgstr "A compra foi cancelada"
 msgid "Purchased"
 msgstr "Adquirido"
 
+msgid ""
+"Purchasing doesn't upgrade this plugin automatically. Follow our step-by-"
+"step guide to switch to the full version."
+msgstr ""
+
 msgid "Purple"
 msgstr "Roxo"
 
@@ -10168,10 +10157,10 @@ msgid "Quantity"
 msgstr "Quantidade"
 
 msgid "Quantity Asc"
-msgstr "Quantidade Asc"
+msgstr "Quantidade crescente"
 
 msgid "Quantity Desc"
-msgstr "Quantidade Descrição"
+msgstr "Quantidade decrescente"
 
 msgid "Quantity is shared"
 msgstr "A quantidade é partilhada"
@@ -10243,7 +10232,7 @@ msgid "Recurrences"
 msgstr "Recorrências"
 
 msgid "Recurring"
-msgstr "Seleccione esta opção se quer criar marcações recorrentes"
+msgstr "Recorrente"
 
 msgid "Recurring Appointment"
 msgstr "Compromisso recorrente"
@@ -10294,7 +10283,7 @@ msgid "Redirect"
 msgstr "Redirecionar"
 
 msgid "Redirect URI"
-msgstr "URI de Redirecionamento"
+msgstr "URI de redirecionamento"
 
 msgid "Redirect URL After Booking"
 msgstr "URL de redirecionamento após a reserva"
@@ -10324,7 +10313,7 @@ msgid "Redirect URL for unsuccessfully rejected booking"
 msgstr "URL de redirecionamento para marcações rejeitadas sem sucesso"
 
 msgid "Redirect URLs"
-msgstr "Redirecionar URLs"
+msgstr "URL de redirecionamento"
 
 msgid "Redirect page"
 msgstr "Redirecionar página"
@@ -10362,10 +10351,6 @@ msgstr "O restante do valor total será pago no local."
 
 msgid "Remind me when my SMS balance is low"
 msgstr "Lembrar-me quando o saldo de SMS estiver baixo"
-
-#, php-format
-msgid "Reminder: %1$s is scheduled for %2$s."
-msgstr "Reminder: %1$s está marcado para %2$s."
 
 msgid "Remove Apple Calendar event slots"
 msgstr "Retirar intervalos de eventos do Calendário da Apple"
@@ -10581,7 +10566,7 @@ msgid "Sandbox secret key (POSKey)"
 msgstr ""
 
 msgid "Sat"
-msgstr "Sábado"
+msgstr "Sáb"
 
 msgid "Saturday"
 msgstr "Sábado"
@@ -10762,6 +10747,9 @@ msgstr "Seção"
 
 msgid "Securely process payments using Stripe."
 msgstr "Processe pagamentos com segurança usando o Stripe."
+
+msgid "See upgrade guide."
+msgstr ""
 
 msgid "Segment"
 msgstr "Segmento"
@@ -11098,7 +11086,7 @@ msgid "Service/Event"
 msgstr "Serviço/Evento"
 
 msgid "Service Asc"
-msgstr "Serviço Asc"
+msgstr "Serviço crescente"
 
 msgid "Service Categories"
 msgstr "Categorias de serviços"
@@ -11107,7 +11095,7 @@ msgid "Service Category"
 msgstr "Categoria do Serviço"
 
 msgid "Service Desc"
-msgstr "Descrição do serviço"
+msgstr "Serviço decrescente"
 
 msgid "Service ID"
 msgstr "ID de serviço"
@@ -11206,10 +11194,10 @@ msgid "Services & categories setup"
 msgstr "Configuração de serviços e categorias"
 
 msgid "Services Asc"
-msgstr "Serviços Asc"
+msgstr "Serviços crescente"
 
 msgid "Services Desc"
-msgstr "Descrição dos serviços"
+msgstr "Serviços decrescente"
 
 msgid "Services and packages overview"
 msgstr "Visão geral dos serviços e pacotes"
@@ -11585,7 +11573,7 @@ msgid "Show specific packages"
 msgstr "Mostrar pacotes específicos"
 
 msgid "Show specific service"
-msgstr "Mostrar serviço específico"
+msgstr "Mostrar um serviço específico"
 
 msgid "Show specific services"
 msgstr "Mostrar serviços específicos"
@@ -11642,6 +11630,9 @@ msgstr "Iniciar sessão com a Microsoft"
 
 msgid "Sign in with Outlook"
 msgstr "Iniciar sessão com o Outlook"
+
+msgid "Sign out and use a customer account"
+msgstr ""
 
 msgid "Sign out from Google"
 msgstr "Sair do Google"
@@ -11791,7 +11782,7 @@ msgid "Specific date & time"
 msgstr "Data e hora específicas"
 
 msgid "Spot"
-msgstr ""
+msgstr "Vaga"
 
 msgid "Spots"
 msgstr "Vagas"
@@ -11848,10 +11839,10 @@ msgid "Status"
 msgstr "Estado"
 
 msgid "Status Asc"
-msgstr ""
+msgstr "Estado crescente"
 
 msgid "Status Desc"
-msgstr "Descrição do estado"
+msgstr "Estado decrescente"
 
 msgid ""
 "Stay compliant with ease through consistent, reliable tax handling across "
@@ -12027,7 +12018,7 @@ msgid "Summary segment"
 msgstr "Segmento de resumo"
 
 msgid "Sun"
-msgstr ""
+msgstr "Dom"
 
 msgid "Sunday"
 msgstr "Domingo"
@@ -12055,7 +12046,7 @@ msgid "Switch Camera"
 msgstr "Mudar de câmara"
 
 msgid "Sync Google Events"
-msgstr "Sincronizar Eventos do Google"
+msgstr ""
 
 msgid "Sync with"
 msgstr "Sincronizar com"
@@ -12592,6 +12583,12 @@ msgstr ""
 "configuração cron."
 
 msgid ""
+"This option applies only to people added through \"Bringing anyone with "
+"you\". If disabled, the service price is charged once for the entire "
+"booking, regardless of how many additional people are included."
+msgstr ""
+
+msgid ""
 "This option requires adding the payment link placeholder to your message "
 "templates."
 msgstr ""
@@ -12750,10 +12747,10 @@ msgid "Time Range:"
 msgstr "Intervalo de tempo:"
 
 msgid "Time Used Asc"
-msgstr "Tempo utilizado Asc"
+msgstr "Tempo utilizado crescente"
 
 msgid "Time Used Desc"
-msgstr "Tempo utilizado Descrição"
+msgstr "Tempo utilizado decrescente"
 
 msgid "Time frame"
 msgstr "Intervalo de tempo:"
@@ -12789,7 +12786,7 @@ msgid "Time zones"
 msgstr "Fusos horários"
 
 msgid "Times"
-msgstr ""
+msgstr "Vezes"
 
 msgid "Times bought"
 msgstr "Vezes comprado"
@@ -13009,10 +13006,10 @@ msgid "Type"
 msgstr "Tipo"
 
 msgid "Type Asc"
-msgstr "Tipo Asc"
+msgstr "Tipo crescente"
 
 msgid "Type Desc"
-msgstr "Tipo Descrição"
+msgstr "Tipo decrescente"
 
 msgid "URL"
 msgstr ""
@@ -13383,7 +13380,7 @@ msgid "Website"
 msgstr "Site"
 
 msgid "Wed"
-msgstr "Quarta-feira"
+msgstr "Qua"
 
 msgid "Wednesday"
 msgstr "Quarta"
@@ -13700,7 +13697,7 @@ msgid "You have entered an incorrect password."
 msgstr "Introduziu uma palavra-passe incorreta."
 
 msgid "You have reached maximum number of registered domains"
-msgstr ""
+msgstr "Atingiu o número máximo de domínios registados"
 
 msgid ""
 "You have successfully declined this booking request. The status has been "
@@ -13793,6 +13790,11 @@ msgstr "A sua palavra-passe foi reposta com sucesso"
 
 msgid "Your password has been reset successfully."
 msgstr "A sua palavra-passe foi redefinida com sucesso."
+
+msgid ""
+"Your payment is still processing. You will receive a confirmation as soon as "
+"it is completed."
+msgstr ""
 
 msgid "Your postal code is incomplete"
 msgstr "O seu código postal está incompleto"

@@ -22,6 +22,7 @@ use AmeliaBooking\Application\Controller\Stripe\CancelStripePaymentIntentControl
 use AmeliaBooking\Application\Controller\Stripe\CompleteStripePaymentIntentController;
 use AmeliaBooking\Application\Controller\Stripe\CreateStripePaymentIntentController;
 use AmeliaBooking\Application\Controller\Stripe\StripePaymentCallbackController;
+use AmeliaBooking\Application\Controller\Stripe\StripePaymentWebhookController;
 use AmeliaBooking\Application\Controller\PaymentGateway\WooCommercePaymentController;
 use AmeliaBooking\Application\Controller\PaymentGateway\WooCommerceProductsController;
 use Slim\App;
@@ -73,5 +74,7 @@ class PaymentGateway
         $app->post('/payment/stripe/complete', CompleteStripePaymentIntentController::class);
 
         $app->get('/payment/stripe/callback', StripePaymentCallbackController::class);
+
+        $app->post('/payment/stripe/webhook', StripePaymentWebhookController::class);
     }
 }

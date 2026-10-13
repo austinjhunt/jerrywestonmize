@@ -7,12 +7,13 @@ if (!defined('ABSPATH')) exit;
 
 use MailPoet\Router\Endpoints\Captcha as CaptchaEndpoint;
 use MailPoet\Router\Router;
-use MailPoet\Settings\SettingsController;
+use MailPoet\Settings\MailPoetPageResolver;
+use MailPoet\Settings\Pages;
 use MailPoet\WP\Functions as WPFunctions;
 
 class CaptchaUrlFactory {
   private WPFunctions $wp;
-  private SettingsController $settings;
+  private MailPoetPageResolver $pageResolver;
 
   const REFERER_MP_FORM = 'mp_form';
   const REFERER_WP_FORM = 'wp_register_form';
@@ -20,10 +21,10 @@ class CaptchaUrlFactory {
 
   public function __construct(
     WPFunctions $wp,
-    SettingsController $settings
+    MailPoetPageResolver $pageResolver
   ) {
     $this->wp = $wp;
-    $this->settings = $settings;
+    $this->pageResolver = $pageResolver;
   }
 
   public function getCaptchaUrl(array $data) {
@@ -60,11 +61,10 @@ class CaptchaUrlFactory {
 
   public function getCaptchaPreviewUrl($post = null) {
     if ($post === null) {
-      $post = $this->wp->getPost($this->settings->get('subscription.pages.captcha'));
+      $post = $this->getCaptchaPage();
     }
-    if ($post === null) return;
 
-    $url = $this->wp->getPermalink($post);
+    $url = $this->getBaseUrl($post);
 
     // Use preview session ID for preview
     $data = [
@@ -91,8 +91,7 @@ class CaptchaUrlFactory {
   }
 
   private function getUrl(string $action, array $data) {
-    $post = $this->wp->getPost($this->settings->get('subscription.pages.captcha'));
-    $url = $this->wp->getPermalink($post);
+    $url = $this->getBaseUrl($this->getCaptchaPage());
 
     $params = [
       Router::NAME,
@@ -103,5 +102,13 @@ class CaptchaUrlFactory {
 
     $url .= (parse_url($url, PHP_URL_QUERY) ? '&' : '?') . join('&', $params);
     return $url;
+  }
+
+  private function getCaptchaPage(): ?\WP_Post {
+    return $this->pageResolver->getPage('subscription.pages.captcha', Pages::PAGE_CAPTCHA);
+  }
+
+  private function getBaseUrl(?\WP_Post $post): string {
+    return $this->pageResolver->getPermalinkOrHome($post);
   }
 }

@@ -194,7 +194,7 @@ class AmeliaEventsListBookingElementorWidget extends ElementorSharedShortcodeWid
             if (empty($settings['select_event']) && !empty($settings['event_to_show']) && $settings['event_to_show'] !== 'all') {
                 if ($settings['event_to_show'] === 'custom') {
                     if (empty($settings['start_date']) || empty($settings['end_date'])) {
-                        echo BackendStrings::get('notice_for_missing_dates');
+                        echo esc_html(BackendStrings::get('notice_for_missing_dates'));
                         return;
                     }
 

@@ -10,6 +10,7 @@ namespace AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Services\Booking\BookingApplicationService;
 use AmeliaBooking\Application\Services\Integration\ApplicationIntegrationService;
+use AmeliaBooking\Application\Services\Mobile\PushNotificationService;
 use AmeliaBooking\Application\Services\Notification\EmailNotificationService;
 use AmeliaBooking\Application\Services\Notification\SMSNotificationService;
 use AmeliaBooking\Application\Services\Notification\AbstractWhatsAppNotificationService;
@@ -50,7 +51,7 @@ class BookingRejectedEventHandler
      * @throws ContainerException
      * @throws Exception
      */
-    public static function handle($commandResult, $container)
+    public static function handle($commandResult, $container): void
     {
         /** @var ApplicationIntegrationService $applicationIntegrationService */
         $applicationIntegrationService = $container->get('application.integration.service');
@@ -125,6 +126,10 @@ class BookingRejectedEventHandler
             if ($whatsAppNotificationService->checkRequiredFields()) {
                 $whatsAppNotificationService->sendAppointmentStatusNotifications($appointment, true, true);
             }
+
+            /** @var PushNotificationService $pushNotificationService */
+            $pushNotificationService = $container->get('application.mobile.pushNotification.service');
+            $pushNotificationService->sendStatusChange($appointment, $booking);
         }
 
         $webHookService->process(self::BOOKING_STATUS_UPDATED, $appointment, [$booking]);

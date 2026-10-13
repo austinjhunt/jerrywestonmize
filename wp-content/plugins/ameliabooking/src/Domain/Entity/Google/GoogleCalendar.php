@@ -2,6 +2,7 @@
 
 namespace AmeliaBooking\Domain\Entity\Google;
 
+use AmeliaBooking\Domain\ValueObjects\DateTime\DateTimeValue;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\String\Name;
 use AmeliaBooking\Domain\ValueObjects\String\Token;
@@ -33,6 +34,15 @@ class GoogleCalendar
 
     /** @var array */
     private $description;
+
+    /** @var Id */
+    private $userId;
+
+    /** @var string|null Google account this calendar id belongs to */
+    private $accountId;
+
+    /** @var Id|null calendar_sync row that owns the watch for this calendar */
+    private $syncId;
 
     /**
      * GoogleCalendar constructor.
@@ -165,6 +175,54 @@ class GoogleCalendar
     }
 
     /**
+     * @return Id
+     */
+    public function getUserId()
+    {
+        return $this->userId;
+    }
+
+    /**
+     * @param Id $userId
+     */
+    public function setUserId($userId)
+    {
+        $this->userId = $userId;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAccountId()
+    {
+        return $this->accountId;
+    }
+
+    /**
+     * @param string|null $accountId
+     */
+    public function setAccountId($accountId)
+    {
+        $this->accountId = $accountId;
+    }
+
+    /**
+     * @return Id|null
+     */
+    public function getSyncId()
+    {
+        return $this->syncId;
+    }
+
+    /**
+     * @param Id|null $syncId
+     */
+    public function setSyncId($syncId)
+    {
+        $this->syncId = $syncId;
+    }
+
+    /**
      * @return array
      */
     public function toArray()
@@ -177,6 +235,9 @@ class GoogleCalendar
             'includeBufferTime'          => $this->getIncludeBufferTime(),
             'title'                      => $this->getTitle(),
             'description'                => $this->getDescription(),
+            'userId'     => null !== $this->getUserId() ? $this->getUserId()->getValue() : null,
+            'accountId'  => $this->getAccountId(),
+            'syncId'     => null !== $this->getSyncId() ? $this->getSyncId()->getValue() : null,
         ];
     }
 }

@@ -25,5 +25,22 @@ interface ConsentNoticeCollectorInterface extends PluginCollectorInterface
      */
     public function getConsentNoticeAjaxPrefix(): string;
 
+    /**
+     * @return array{
+     *     accentColor: string,
+     *     iconUrl: string,
+     *     iconAlt: string,
+     *     title: string,
+     *     description: string,
+     *     enableLabel: string,
+     *     learnMoreLabel: string,
+     *     learnMoreUrl: string,
+     *     dismissLabel: string,
+     *     spaPageId?: string|null,
+     *     spaAppRootSelector?: string|null
+     * }
+     */
+    public function getConsentNoticePresentation(): array;
+
     public function renderConsentAdminNotice(): void;
 }

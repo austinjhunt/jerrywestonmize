@@ -11,7 +11,7 @@ use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Event\CustomerBookingEventTicket;
 use AmeliaBooking\Domain\ValueObjects\Number\Float\Price;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
-use AmeliaBooking\Domain\ValueObjects\Number\Integer\IntegerValue;
+use AmeliaBooking\Domain\ValueObjects\Number\Integer\PositiveInteger;
 
 /**
  * Class CustomerBookingEventTicketFactory
@@ -26,7 +26,7 @@ class CustomerBookingEventTicketFactory
      * @return CustomerBookingEventTicket
      * @throws InvalidArgumentException
      */
-    public static function create($data)
+    public static function create($data): CustomerBookingEventTicket
     {
         $customerBookingEventTicket = new CustomerBookingEventTicket();
 
@@ -43,7 +43,7 @@ class CustomerBookingEventTicketFactory
         }
 
         if (!empty($data['persons'])) {
-            $customerBookingEventTicket->setPersons(new IntegerValue($data['persons']));
+            $customerBookingEventTicket->setPersons(new PositiveInteger($data['persons']));
         }
 
         if (isset($data['price'])) {

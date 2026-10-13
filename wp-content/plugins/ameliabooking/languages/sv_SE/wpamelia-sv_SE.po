@@ -33,26 +33,6 @@ msgid "# of bookings"
 msgstr "# bokningar"
 
 #, php-format
-msgid "%1$s, %2$s, was canceled."
-msgstr "%1$s, %2$s, avbokades."
-
-#, php-format
-msgid "%1$s, %2$s, was rejected."
-msgstr "%1$s, %2$s, avslogs."
-
-#, php-format
-msgid "%1$s booked %2$s at %3$s."
-msgstr "%1$s bokade %2$s kl. %3$s."
-
-#, php-format
-msgid "%1$s on %2$s had a status change."
-msgstr "%1$s på %2$s fick en statusändring."
-
-#, php-format
-msgid "%1$s on %2$s was updated."
-msgstr "%1$s på %2$s uppdaterades."
-
-#, php-format
 msgid "%event_name% Event Booked"
 msgstr "%event_name% Evenemang bokat"
 
@@ -456,8 +436,14 @@ msgstr "Åtgärder"
 msgid "Activate"
 msgstr "Aktivera"
 
+msgid "Activate now"
+msgstr ""
+
 msgid "Activate with Envato"
 msgstr "Aktivera med Envato"
+
+msgid "Activate your license to unlock the features included in your plan."
+msgstr ""
 
 msgid "Activated with Envato"
 msgstr "Aktiverad med Envato"
@@ -869,6 +855,9 @@ msgstr "Betald sedan tidigare"
 msgid "Already have an account?"
 msgstr "Har du redan ett konto?"
 
+msgid "Already purchased Amelia?"
+msgstr ""
+
 msgid "Also cancel and delete future events"
 msgstr "Avbryt och ta bort även framtida händelser"
 
@@ -919,7 +908,7 @@ msgid "Apple"
 msgstr ""
 
 msgid "Apple Calendar"
-msgstr "Apple Kalender"
+msgstr "Apple-kalender"
 
 msgid "Apple Calendar (Personal)"
 msgstr "Apple Kalender (Personlig)"
@@ -928,7 +917,7 @@ msgid "Apple Calendar setup"
 msgstr "Inställningar för Apple Kalender"
 
 msgid "Apple calendar events"
-msgstr "Apple Calendar-händelser"
+msgstr ""
 
 msgid "Application (client) ID"
 msgstr "Applikations (klient) ID"
@@ -1074,9 +1063,6 @@ msgstr "Noteringar om avtalade tider"
 msgid "Appointment price"
 msgstr "Utnämnings pris"
 
-msgid "Appointment reminder"
-msgstr "Påminnelse om bokad tid"
-
 msgid "Appointment repeats"
 msgstr "Upprepade möten"
 
@@ -1089,9 +1075,6 @@ msgstr "Starttid för möte"
 msgid "Appointment status"
 msgstr "Bokningsstatus"
 
-msgid "Appointment status changed"
-msgstr "Status för bokad tid ändrad"
-
 msgid "Appointment status has been changed to "
 msgstr "Mötes status har ändrats till "
 
@@ -1100,9 +1083,6 @@ msgstr "Mötesstatus har uppdaterats."
 
 msgid "Appointment title"
 msgstr "Titel på möte"
-
-msgid "Appointment updated"
-msgstr "Bokning ändrad"
 
 msgid "Appointments"
 msgstr "Bokningar"
@@ -1142,6 +1122,10 @@ msgstr "Är du säker på att du vill avbryta och ta bort det här evenemanget?"
 
 msgid "Are you sure you want to cancel this appointment?"
 msgstr "Klicka på Bekräfta för att avboka denna bokning!"
+
+msgid ""
+"Are you sure you want to cancel this booking? This action cannot be undone."
+msgstr ""
 
 msgid "Are you sure you want to cancel this event?"
 msgstr "Är du säker på att du vill ställa in det här evenemanget?"
@@ -1351,7 +1335,7 @@ msgid "Attendees"
 msgstr "Deltagare"
 
 msgid "Attendees Allowed"
-msgstr "Deltagarkod"
+msgstr "Tillåtna deltagare"
 
 msgid "Attendees Export Format"
 msgstr "Exportformat för deltagare"
@@ -1439,13 +1423,13 @@ msgid "Available date text"
 msgstr "Tillgängligt datumtext"
 
 msgid "Available from Pro license"
-msgstr "Tillgängliga bilder"
+msgstr "Tillgängligt från Pro-licensen"
 
 msgid "Available from Standard license"
-msgstr "Tillgängliga bilder"
+msgstr "Tillgängligt från Standard-licensen"
 
 msgid "Available from Starter license"
-msgstr "Tillgängliga bilder"
+msgstr "Tillgängligt från Starter-licensen"
 
 msgid "Available in Elite licence"
 msgstr "Även tillgänglig i paket"
@@ -2273,6 +2257,9 @@ msgstr "Välj när upprepning slutar"
 msgid "Choose whether you want to manage services, events, or both."
 msgstr "Välj om du vill hantera tjänster, evenemang eller båda."
 
+msgid "Choose which tab users see first when they log in"
+msgstr ""
+
 msgid "Choosing layout of first step in step by step form"
 msgstr "Välj layout för första steget i steg-för-steg-formuläret"
 
@@ -2457,6 +2444,9 @@ msgstr "Konfigurera väntelista för bokningar"
 
 msgid "Confirm"
 msgstr "Bekräfta"
+
+msgid "Confirm Cancellation"
+msgstr ""
 
 msgid "Confirm My Appointment"
 msgstr "Bekräfta min tid"
@@ -3103,9 +3093,6 @@ msgstr "Data som förblir oförändrad:"
 
 msgid "Data to be updated:"
 msgstr "Data som ska uppdateras:"
-
-msgid "Data transfer"
-msgstr "dataöverföring"
 
 msgid "Date"
 msgstr "Datum"
@@ -4115,6 +4102,9 @@ msgstr "Standardstatus för bokning"
 msgid "Default back end page"
 msgstr "Standardbackend-sida"
 
+msgid "Default landing tab"
+msgstr ""
+
 msgid "Default language"
 msgstr "Standardspråk"
 
@@ -4619,8 +4609,6 @@ msgid ""
 "Edit appointments/events when connected Google Calendar Events are "
 "rescheduled or deleted"
 msgstr ""
-"Uppdatera bokningar/evenemang när länkade evenemang i Google Kalender "
-"flyttas eller tas bort"
 
 msgid "Edit block time"
 msgstr "Redigera spärrad tid"
@@ -5325,7 +5313,7 @@ msgid "Event Day"
 msgstr "Evenemangets namn"
 
 msgid "Event Desc"
-msgstr "Händelsebeskrivning"
+msgstr "Evenemang Fallande"
 
 msgid "Event Employee"
 msgstr "Evenemangsanställd"
@@ -5738,9 +5726,6 @@ msgstr "Misslyckad"
 msgid "Failed to access camera. Please try again."
 msgstr "Misslyckades med att komma åt kameran. Försök igen."
 
-msgid "Failed to initialize payment. Please try again."
-msgstr "Kunde inte initiera betalningen. Försök igen."
-
 msgid "Failed to load appointment details. Please try again later."
 msgstr "Misslyckades med att ladda bokningsdetaljerna. Försök igen senare."
 
@@ -6087,7 +6072,7 @@ msgid "Google Analytics setup"
 msgstr "Inställningar för Google Analytics"
 
 msgid "Google Calendar"
-msgstr "Google Kalender"
+msgstr "Google-kalender"
 
 msgid "Google Calendar & Google Meet"
 msgstr "Google Kalender & Google Meet"
@@ -6118,7 +6103,7 @@ msgid "Google Meet setup"
 msgstr "Inställningar för Google Meet"
 
 msgid "Google calendar events"
-msgstr "Google Calendar-händelser"
+msgstr ""
 
 msgid "Google reCAPTCHA v2 secret key"
 msgstr "Google reCAPTCHA v2 hemliga nyckel"
@@ -6902,13 +6887,6 @@ msgstr ""
 "tidsluckan stängs efter den första bokningen."
 
 msgid ""
-"If disabled, the price will remain the same regardless of how many people "
-"are included in the group appointment."
-msgstr ""
-"Om inaktiverad kommer priset att förbli detsamma oavsett hur många personer "
-"som ingår i gruppbokningen."
-
-msgid ""
 "If enabled, customers can book with Pending status even after maximum "
 "capacity is reached."
 msgstr ""
@@ -7054,6 +7032,9 @@ msgstr "Bildminiatyrer"
 msgid "Import"
 msgstr "Importera"
 
+msgid "Import/Export"
+msgstr ""
+
 msgid "Import Failed"
 msgstr "Import misslyckades"
 
@@ -7083,6 +7064,9 @@ msgstr "Importen misslyckades"
 
 msgid "Import failed. Review the details below."
 msgstr "Importen misslyckades. Granska detaljerna nedan."
+
+msgid "Import or export your Amelia data."
+msgstr ""
 
 msgid "Import progress"
 msgstr "Importstatus"
@@ -8049,7 +8033,7 @@ msgid "Max Capacity Asc"
 msgstr "Maxkapacitet stigande"
 
 msgid "Max Capacity Desc"
-msgstr "Beskrivning av maxkapacitet"
+msgstr "Maxkapacitet Fallande"
 
 msgid "Maximum"
 msgstr "Maximalt"
@@ -8389,7 +8373,7 @@ msgid "No, just this one"
 msgstr "Nej, bara den här"
 
 msgid "No-show"
-msgstr "Icke infinnande"
+msgstr "Utebliven ankomst"
 
 msgid "No-show tag"
 msgstr "Tagg för utebliven ankomst"
@@ -8401,16 +8385,16 @@ msgid "No Packages"
 msgstr "Inga paket"
 
 msgid "No Show"
-msgstr "Ingen visning"
+msgstr "Utebliven ankomst"
 
 msgid "No Show (1)"
-msgstr "Ingen visning (1)"
+msgstr "Utebliven ankomst (1)"
 
 msgid "No Show (2)"
-msgstr "Ingen visning (2)"
+msgstr "Utebliven ankomst (2)"
 
 msgid "No Show (3+)"
-msgstr "Ingen visning (3+)"
+msgstr "Utebliven ankomst (3+)"
 
 msgid "No Tags. Create a new one."
 msgstr "Inga taggar. Skapa en ny."
@@ -8614,13 +8598,13 @@ msgid "Notify selected employees about empty package purchases"
 msgstr "Meddela utvalda medarbetare om tomma paketköp"
 
 msgid "Notify the attendee(s)"
-msgstr "Meddela kunden/kunderna"
+msgstr "Meddela deltagarna"
 
 msgid "Notify the attendees"
 msgstr "Meddela deltagarna"
 
 msgid "Notify the customer(s)"
-msgstr "Meddela kunden/kunderna"
+msgstr "Meddela kunderna"
 
 msgid "Number of Additional People"
 msgstr "Antal ytterligare personer"
@@ -8944,7 +8928,7 @@ msgid "Outline"
 msgstr "Översikt"
 
 msgid "Outlook Calendar"
-msgstr "Outlook Kalender"
+msgstr "Outlook-kalender"
 
 msgid "Outlook Calendar & Microsoft Teams"
 msgstr "Outlook-kalender & Microsoft Teams"
@@ -8956,7 +8940,7 @@ msgid "Outlook Calendar setup"
 msgstr "Inställningar för Outlook-kalendern"
 
 msgid "Outlook Mailer"
-msgstr "Outlook Kalender"
+msgstr "Outlook e-posttjänst"
 
 msgid ""
 "Outlook Mailer is not fully configured. Please complete the account setup in "
@@ -8966,7 +8950,7 @@ msgstr ""
 "kontoinställningen i Outlook-integrationsinställningarna."
 
 msgid "Outlook calendar events"
-msgstr "Outlook-kalenderhändelser"
+msgstr ""
 
 msgid "Outside of working hours"
 msgstr "Utanför ordinarie arbetstid"
@@ -9005,13 +8989,13 @@ msgid "Package %package_name% purchased"
 msgstr "Paket %package_name% köpt"
 
 msgid "Package Asc"
-msgstr "Paket Asc"
+msgstr "Paket Stigande"
 
 msgid "Package Canceled"
 msgstr "Paketet avbokat"
 
 msgid "Package Desc"
-msgstr "Paketbeskrivning"
+msgstr "Paket Fallande"
 
 msgid "Package ID"
 msgstr "Paket-ID"
@@ -10095,6 +10079,11 @@ msgstr "Köpet avbröts"
 msgid "Purchased"
 msgstr "Köpt"
 
+msgid ""
+"Purchasing doesn't upgrade this plugin automatically. Follow our step-by-"
+"step guide to switch to the full version."
+msgstr ""
+
 msgid "Purple"
 msgstr "Lila"
 
@@ -10234,7 +10223,7 @@ msgid "Redirect"
 msgstr "Omdirigera"
 
 msgid "Redirect URI"
-msgstr "Omdirigera URL"
+msgstr "Omdirigerings-URI"
 
 msgid "Redirect URL After Booking"
 msgstr "Omdirigera URL efter bokning"
@@ -10264,7 +10253,7 @@ msgid "Redirect URL for unsuccessfully rejected booking"
 msgstr "Omdirigerings-URL för bokning som inte avvisades korrekt"
 
 msgid "Redirect URLs"
-msgstr "Omdirigera URL"
+msgstr "Omdirigerings-URL:er"
 
 msgid "Redirect page"
 msgstr "Omdirigera sida"
@@ -10303,10 +10292,6 @@ msgstr "Resterande del av det totala beloppet betalas på plats."
 
 msgid "Remind me when my SMS balance is low"
 msgstr "Påminn mig när mitt SMS-saldo är lågt"
-
-#, php-format
-msgid "Reminder: %1$s is scheduled for %2$s."
-msgstr "Påminnelse: %1$s är bokad till %2$s."
 
 msgid "Remove Apple Calendar event slots"
 msgstr "Ta bort tidsluckor för Apple Calendar-evenemang"
@@ -10702,6 +10687,9 @@ msgstr "Avdrag"
 msgid "Securely process payments using Stripe."
 msgstr "Bearbeta betalningar säkert med Stripe."
 
+msgid "See upgrade guide."
+msgstr ""
+
 msgid "Segment"
 msgstr ""
 
@@ -11032,7 +11020,7 @@ msgid "Service/Event"
 msgstr "Tjänst/Evenemang"
 
 msgid "Service Asc"
-msgstr "Tjänst Asc"
+msgstr "Tjänst Stigande"
 
 msgid "Service Categories"
 msgstr "Tjänstkategorier"
@@ -11041,7 +11029,7 @@ msgid "Service Category"
 msgstr "Tjänst kategori"
 
 msgid "Service Desc"
-msgstr "Tjänst Desc"
+msgstr "Tjänst Fallande"
 
 msgid "Service ID"
 msgstr "Tjänste-ID"
@@ -11513,10 +11501,10 @@ msgid "Show specific packages"
 msgstr "Visa specifik kategori"
 
 msgid "Show specific service"
-msgstr "Visa specifik tjänst"
+msgstr "Visa en viss tjänst"
 
 msgid "Show specific services"
-msgstr "Visa specifik tjänst"
+msgstr "Visa vissa tjänster"
 
 msgid "Show tag"
 msgstr "Visa tagg"
@@ -11569,6 +11557,9 @@ msgstr "Logga in med Microsoft"
 
 msgid "Sign in with Outlook"
 msgstr "Logga in med Outlook"
+
+msgid "Sign out and use a customer account"
+msgstr ""
 
 msgid "Sign out from Google"
 msgstr "Logga ut från Google"
@@ -11980,7 +11971,7 @@ msgid "Switch Camera"
 msgstr "Byt kamera"
 
 msgid "Sync Google Events"
-msgstr "Synkronisera Google Kalender-evenemang"
+msgstr ""
 
 msgid "Sync with"
 msgstr "Synkronisera med"
@@ -12500,6 +12491,12 @@ msgid ""
 msgstr ""
 "Denna avisering kräver ett cron-jobb. Lägg till raden nedan i din cron-"
 "konfiguration."
+
+msgid ""
+"This option applies only to people added through \"Bringing anyone with "
+"you\". If disabled, the service price is charged once for the entire "
+"booking, regardless of how many additional people are included."
+msgstr ""
 
 msgid ""
 "This option requires adding the payment link placeholder to your message "
@@ -13694,6 +13691,11 @@ msgstr "Ditt lösen ord har återställts"
 
 msgid "Your password has been reset successfully."
 msgstr "Ditt lösenord har återställts."
+
+msgid ""
+"Your payment is still processing. You will receive a confirmation as soon as "
+"it is completed."
+msgstr ""
 
 msgid "Your postal code is incomplete"
 msgstr "Ditt post nummer är ofullständigt"

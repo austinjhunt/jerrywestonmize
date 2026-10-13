@@ -229,8 +229,8 @@ class AmeliaAbilitiesRegistrar
                 'readonly'    => true,
                 'destructive' => false,
            ),
-            'show_in_rest' => true,
-            'mcp'          => array('public' => true),
+            'show_in_rest' => AmeliaAbilitiesRegistrar::canListServices(),
+            'mcp'          => array('public' => AmeliaAbilitiesRegistrar::canListServices()),
         ),
         ));
     }
@@ -316,8 +316,8 @@ class AmeliaAbilitiesRegistrar
                 'readonly'    => true,
                 'destructive' => false,
            ),
-            'show_in_rest' => true,
-            'mcp'          => array('public' => true),
+            'show_in_rest' => current_user_can('amelia_read_employees'),
+            'mcp'          => array('public' => current_user_can('amelia_read_employees')),
         ),
         ));
     }
@@ -397,8 +397,8 @@ class AmeliaAbilitiesRegistrar
                 'readonly'    => true,
                 'destructive' => false,
            ),
-            'show_in_rest' => true,
-            'mcp'          => array('public' => true),
+            'show_in_rest' => AmeliaAbilitiesRegistrar::canListCustomers(),
+            'mcp'          => array('public' => AmeliaAbilitiesRegistrar::canListCustomers()),
         ),
         ));
     }
@@ -502,15 +502,15 @@ class AmeliaAbilitiesRegistrar
             return AmeliaAbilitiesRegistrar::invokeApplication(GetEventsController::class, $params, [], 'GET');
         },
         'permission_callback' => function () {
-            return current_user_can('amelia_read_events');
+            return current_user_can('amelia_read_events') && !AmeliaAbilitiesRegistrar::isCustomer();
         },
         'meta' => array(
             'annotations' => array(
                 'readonly'    => true,
                 'destructive' => false,
            ),
-            'show_in_rest' => true,
-            'mcp'          => array('public' => true),
+            'show_in_rest' => current_user_can('amelia_read_events') && !AmeliaAbilitiesRegistrar::isCustomer(),
+            'mcp'          => array('public' => current_user_can('amelia_read_events') && !AmeliaAbilitiesRegistrar::isCustomer()),
         ),
         ));
     }
@@ -663,15 +663,15 @@ class AmeliaAbilitiesRegistrar
                 return AmeliaAbilitiesRegistrar::invokeApplication(GetAppointmentsController::class, $params, [], 'GET');
             },
             'permission_callback' => function () {
-                return current_user_can('amelia_read_appointments');
+                return current_user_can('amelia_read_appointments') && !AmeliaAbilitiesRegistrar::isCustomer();
             },
             'meta' => array(
                 'annotations' => array(
                     'readonly'    => true,
                     'destructive' => false,
                 ),
-                'show_in_rest' => true,
-                'mcp'          => array('public' => true),
+                'show_in_rest' => current_user_can('amelia_read_appointments') && !AmeliaAbilitiesRegistrar::isCustomer(),
+                'mcp'          => array('public' => current_user_can('amelia_read_appointments') && !AmeliaAbilitiesRegistrar::isCustomer()),
             ),
         ));
     }
@@ -799,8 +799,8 @@ class AmeliaAbilitiesRegistrar
                 'readonly'    => true,
                 'destructive' => false,
            ),
-            'show_in_rest' => true,
-            'mcp'          => array('public' => true),
+            'show_in_rest' => AmeliaAbilitiesRegistrar::canListServices(),
+            'mcp'          => array('public' => AmeliaAbilitiesRegistrar::canListServices()),
         ),
         ));
     }
@@ -894,8 +894,8 @@ class AmeliaAbilitiesRegistrar
                 'destructive' => true,
                 'idempotent'  => false,
            ),
-            'show_in_rest' => true,
-            'mcp'          => array('public' => true),
+            'show_in_rest' => current_user_can('amelia_write_services'),
+            'mcp'          => array('public' => current_user_can('amelia_write_services')),
         ),
         ));
     }
@@ -976,8 +976,8 @@ class AmeliaAbilitiesRegistrar
                 'destructive' => true,
                 'idempotent'  => false,
            ),
-            'show_in_rest' => true,
-            'mcp'          => array('public' => true),
+            'show_in_rest' => current_user_can('amelia_write_customers'),
+            'mcp'          => array('public' => current_user_can('amelia_write_customers')),
         ),
         ));
     }
@@ -1088,8 +1088,8 @@ class AmeliaAbilitiesRegistrar
                 'destructive' => true,
                 'idempotent'  => false,
            ),
-            'show_in_rest' => true,
-            'mcp'          => array('public' => true),
+            'show_in_rest' => current_user_can('amelia_write_appointments'),
+            'mcp'          => array('public' => current_user_can('amelia_write_appointments')),
         ),
         ));
     }
@@ -1196,8 +1196,8 @@ class AmeliaAbilitiesRegistrar
                 'destructive' => true,
                 'idempotent'  => false,
            ),
-            'show_in_rest' => true,
-            'mcp'          => array('public' => true),
+            'show_in_rest' => current_user_can('amelia_write_events'),
+            'mcp'          => array('public' => current_user_can('amelia_write_events')),
         ),
         ));
     }
@@ -1298,8 +1298,8 @@ class AmeliaAbilitiesRegistrar
                 'destructive' => true,
                 'idempotent'  => false,
            ),
-            'show_in_rest' => true,
-            'mcp'          => array('public' => true),
+            'show_in_rest' => current_user_can('amelia_write_events'),
+            'mcp'          => array('public' => current_user_can('amelia_write_events')),
         ),
         ));
     }
@@ -1419,8 +1419,8 @@ class AmeliaAbilitiesRegistrar
                 'destructive' => true,
                 'idempotent'  => false,
            ),
-            'show_in_rest' => true,
-            'mcp'          => array('public' => true),
+            'show_in_rest' => current_user_can('amelia_write_appointments') || current_user_can('amelia_write_events'),
+            'mcp'          => array('public' => current_user_can('amelia_write_appointments') || current_user_can('amelia_write_events')),
         ),
         ));
     }
@@ -1464,6 +1464,18 @@ class AmeliaAbilitiesRegistrar
 
         return $container->getPermissionsService()->currentUserCanRead(Entities::CUSTOMERS)
             || ($currentUser && $currentUser->getType() === AbstractUser::USER_ROLE_PROVIDER);
+    }
+
+    /**
+     * MCP management tools are not intended for the Customer role, even when a coarse
+     * Amelia capability (e.g. amelia_read_events, amelia_read_appointments) happens to be true for it.
+     */
+    protected static function isCustomer(): bool
+    {
+        $container = static::getContainer();
+        $currentUser = $container->get('logged.in.user');
+
+        return $currentUser && $currentUser->getType() === AbstractUser::USER_ROLE_CUSTOMER;
     }
 
     protected static function canListServices(): bool

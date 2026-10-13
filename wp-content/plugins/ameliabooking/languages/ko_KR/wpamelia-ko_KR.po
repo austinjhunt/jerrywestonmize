@@ -33,26 +33,6 @@ msgid "# of bookings"
 msgstr "예약 수"
 
 #, php-format
-msgid "%1$s, %2$s, was canceled."
-msgstr "%1$s, %2$s은 취소되었습니다."
-
-#, php-format
-msgid "%1$s, %2$s, was rejected."
-msgstr "%1$s, %2$s은 거부되었습니다."
-
-#, php-format
-msgid "%1$s booked %2$s at %3$s."
-msgstr "%1$s은 %3$s에 %2$s을 예약했습니다."
-
-#, php-format
-msgid "%1$s on %2$s had a status change."
-msgstr "%2$s의 %1$s 상태가 변경되었습니다."
-
-#, php-format
-msgid "%1$s on %2$s was updated."
-msgstr "%2$s의 %1$s이 업데이트되었습니다."
-
-#, php-format
 msgid "%event_name% Event Booked"
 msgstr "%event_name% 이벤트 예약 완료"
 
@@ -455,8 +435,14 @@ msgstr "작업"
 msgid "Activate"
 msgstr "활성화"
 
+msgid "Activate now"
+msgstr ""
+
 msgid "Activate with Envato"
 msgstr "Envato로 활성화"
+
+msgid "Activate your license to unlock the features included in your plan."
+msgstr ""
 
 msgid "Activated with Envato"
 msgstr "Envato로 활성화"
@@ -863,6 +849,9 @@ msgstr "이미 결제됨"
 msgid "Already have an account?"
 msgstr "이미 계정이 있으신가요?"
 
+msgid "Already purchased Amelia?"
+msgstr ""
+
 msgid "Also cancel and delete future events"
 msgstr "또한 향후 예정된 이벤트를 취소하고 삭제하십시오"
 
@@ -921,7 +910,7 @@ msgid "Apple Calendar setup"
 msgstr "애플 캘린더 설정"
 
 msgid "Apple calendar events"
-msgstr "Apple 캘린더 일정"
+msgstr ""
 
 msgid "Application (client) ID"
 msgstr "애플리케이션(클라이언트) ID"
@@ -1065,9 +1054,6 @@ msgstr "예약 메모"
 msgid "Appointment price"
 msgstr "예약 가격"
 
-msgid "Appointment reminder"
-msgstr "예약 알림"
-
 msgid "Appointment repeats"
 msgstr "예약 반복"
 
@@ -1080,9 +1066,6 @@ msgstr "예약 시작 시간"
 msgid "Appointment status"
 msgstr "예약 상태"
 
-msgid "Appointment status changed"
-msgstr "예약 상태가 변경되었습니다"
-
 msgid "Appointment status has been changed to "
 msgstr "예약 상태가 다음과 같이 변경되었습니다. "
 
@@ -1091,9 +1074,6 @@ msgstr "예약 상태가 업데이트되었습니다."
 
 msgid "Appointment title"
 msgstr "예약 제목"
-
-msgid "Appointment updated"
-msgstr "예약 정보가 업데이트되었습니다."
 
 msgid "Appointments"
 msgstr "예약"
@@ -1133,6 +1113,10 @@ msgstr "이 이벤트를 취소하고 삭제하시겠습니까?"
 
 msgid "Are you sure you want to cancel this appointment?"
 msgstr "이 예약을 취소하시겠습니까?"
+
+msgid ""
+"Are you sure you want to cancel this booking? This action cannot be undone."
+msgstr ""
 
 msgid "Are you sure you want to cancel this event?"
 msgstr "이 이벤트를 취소하시겠습니까?"
@@ -2230,6 +2214,9 @@ msgstr "반복 종료 시기 선택"
 msgid "Choose whether you want to manage services, events, or both."
 msgstr "서비스, 이벤트 또는 둘 다 관리할지 선택하세요."
 
+msgid "Choose which tab users see first when they log in"
+msgstr ""
+
 msgid "Choosing layout of first step in step by step form"
 msgstr "단계별 양식에서 첫 번째 단계의 레이아웃 선택하기"
 
@@ -2413,6 +2400,9 @@ msgstr "예약 대기 목록 설정"
 
 msgid "Confirm"
 msgstr "확인"
+
+msgid "Confirm Cancellation"
+msgstr ""
 
 msgid "Confirm My Appointment"
 msgstr "예약 확인"
@@ -3027,9 +3017,6 @@ msgstr "변하지 않는 데이터:"
 
 msgid "Data to be updated:"
 msgstr "업데이트할 데이터:"
-
-msgid "Data transfer"
-msgstr "데이터 전송"
 
 msgid "Date"
 msgstr "날짜"
@@ -4034,6 +4021,9 @@ msgstr "기본 예약 상태"
 msgid "Default back end page"
 msgstr "기본 백엔드 페이지"
 
+msgid "Default landing tab"
+msgstr ""
+
 msgid "Default language"
 msgstr "기본 언어"
 
@@ -4526,7 +4516,6 @@ msgid ""
 "Edit appointments/events when connected Google Calendar Events are "
 "rescheduled or deleted"
 msgstr ""
-"Google 캘린더 이벤트가 변경되거나 삭제될 때 약속/이벤트를 편집할 수 있습니다."
 
 msgid "Edit block time"
 msgstr "블록 시간 편집"
@@ -5607,9 +5596,6 @@ msgstr "실패"
 msgid "Failed to access camera. Please try again."
 msgstr "카메라에 접근하지 못했습니다. 다시 시도해 주세요."
 
-msgid "Failed to initialize payment. Please try again."
-msgstr "결제 초기화에 실패했습니다. 다시 시도해 주세요."
-
 msgid "Failed to load appointment details. Please try again later."
 msgstr "예약 세부 정보를 불러오는 데 실패했습니다. 나중에 다시 시도해 주세요."
 
@@ -5982,7 +5968,7 @@ msgid "Google Meet setup"
 msgstr "구글 미트 설정"
 
 msgid "Google calendar events"
-msgstr "Google 캘린더 이벤트"
+msgstr ""
 
 msgid "Google reCAPTCHA v2 secret key"
 msgstr "구글 리캡챠 v2 시크릿 키"
@@ -6750,13 +6736,6 @@ msgstr ""
 "해당 시간대는 마감됩니다."
 
 msgid ""
-"If disabled, the price will remain the same regardless of how many people "
-"are included in the group appointment."
-msgstr ""
-"이 기능이 비활성화된 경우, 단체 예약에 포함된 인원 수와 관계없이 가격이 동일"
-"하게 유지됩니다."
-
-msgid ""
 "If enabled, customers can book with Pending status even after maximum "
 "capacity is reached."
 msgstr ""
@@ -6893,6 +6872,9 @@ msgstr "이미지 썸네일"
 msgid "Import"
 msgstr "가져오기"
 
+msgid "Import/Export"
+msgstr ""
+
 msgid "Import Failed"
 msgstr "가져오기 실패"
 
@@ -6922,6 +6904,9 @@ msgstr "가져오기 실패"
 
 msgid "Import failed. Review the details below."
 msgstr "가져오기에 실패했습니다. 아래의 세부 정보를 확인하십시오."
+
+msgid "Import or export your Amelia data."
+msgstr ""
 
 msgid "Import progress"
 msgstr "가져오기 진행 상황"
@@ -8773,7 +8758,7 @@ msgstr ""
 "완료하세요."
 
 msgid "Outlook calendar events"
-msgstr "Outlook 캘린더 일정"
+msgstr ""
 
 msgid "Outside of working hours"
 msgstr "근무 시간 외"
@@ -9888,6 +9873,11 @@ msgstr "구매가 취소되었습니다"
 msgid "Purchased"
 msgstr "구매 완료"
 
+msgid ""
+"Purchasing doesn't upgrade this plugin automatically. Follow our step-by-"
+"step guide to switch to the full version."
+msgstr ""
+
 msgid "Purple"
 msgstr "보라색"
 
@@ -10093,10 +10083,6 @@ msgstr "총 금액의 잔액은 현장에서 결제됩니다."
 
 msgid "Remind me when my SMS balance is low"
 msgstr "SMS 잔액이 부족할 때 알림"
-
-#, php-format
-msgid "Reminder: %1$s is scheduled for %2$s."
-msgstr "알림: %1$s은 %2$s으로 예정되어 있습니다."
 
 msgid "Remove Apple Calendar event slots"
 msgstr "Apple 캘린더 이벤트 슬롯 제거"
@@ -10485,6 +10471,9 @@ msgstr "섹션"
 
 msgid "Securely process payments using Stripe."
 msgstr "스트라이프를 사용하여 안전하게 결제를 처리하세요."
+
+msgid "See upgrade guide."
+msgstr ""
 
 msgid "Segment"
 msgstr "세그먼트"
@@ -11339,6 +11328,9 @@ msgstr "마이크로소프트 계정으로 로그인"
 msgid "Sign in with Outlook"
 msgstr "아웃룩으로 로그인"
 
+msgid "Sign out and use a customer account"
+msgstr ""
+
 msgid "Sign out from Google"
 msgstr "구글에서 로그아웃"
 
@@ -11729,7 +11721,7 @@ msgid "Switch Camera"
 msgstr "카메라 전환"
 
 msgid "Sync Google Events"
-msgstr "Google 이벤트 동기화"
+msgstr ""
 
 msgid "Sync with"
 msgstr "동기화"
@@ -12224,6 +12216,12 @@ msgid ""
 "This notification requires a cron job. Add the line below to your cron "
 "configuration."
 msgstr "이 알림은 cron 작업이 필요합니다. 아래 줄을 cron 구성에 추가하십시오."
+
+msgid ""
+"This option applies only to people added through \"Bringing anyone with "
+"you\". If disabled, the service price is charged once for the entire "
+"booking, regardless of how many additional people are included."
+msgstr ""
 
 msgid ""
 "This option requires adding the payment link placeholder to your message "
@@ -13397,6 +13395,11 @@ msgstr ""
 
 msgid "Your password has been reset successfully."
 msgstr "비밀번호가 성공적으로 재설정되었습니다."
+
+msgid ""
+"Your payment is still processing. You will receive a confirmation as soon as "
+"it is completed."
+msgstr ""
 
 msgid "Your postal code is incomplete"
 msgstr "우편 번호가 불완전합니다"

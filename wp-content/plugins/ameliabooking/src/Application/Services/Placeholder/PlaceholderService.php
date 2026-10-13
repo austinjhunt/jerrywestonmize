@@ -433,11 +433,14 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
 
         $appointmentPrice = $helperService->getFormattedPrice($amountData['price'] >= 0 ? $amountData['price'] : 0);
 
-        $paymentDueAmount = $payment ?
-            $helperService->getFormattedPrice(
-                ($amountData['price'] >= 0 ? $amountData['price'] : 0) -
-                ($payment['amount'] - (!empty($payment['wcItemTaxValue']) ? $payment['wcItemTaxValue'] : 0))
-            ) : '';
+        $paymentDueAmountValue = $payment ?
+            ($amountData['price'] >= 0 ? $amountData['price'] : 0) -
+            ($payment['amount'] - (!empty($payment['wcItemTaxValue']) ? $payment['wcItemTaxValue'] : 0))
+            : null;
+
+        $paymentDueAmount = $paymentDueAmountValue !== null ?
+            $helperService->getFormattedPrice(max($paymentDueAmountValue, 0))
+            : '';
 
         $bookingKeyForEmployee = null;
 
@@ -564,6 +567,47 @@ abstract class PlaceholderService implements PlaceholderServiceInterface
                     $bookedCustomerEmail    = $customer->getEmail() ? $customer->getEmail()->getValue() : '';
                     $bookedCustomerPhone    = $customer->getPhone() ? $customer->getPhone()->getValue() : '';
                 }
+            }
+
+            // No booking is flagged as changed when the update is not a status change (appointment
+            // reschedule, for example), so fall back to the customers that are attending instead of
+            // rendering an empty "booked customer" block.
+            if ($bookedCustomerFullName === '' && $customers) {
+                $bookedCustomerNames  = [];
+                $bookedCustomerPhones = [];
+                $bookedCustomerEmails = [];
+
+                foreach ($customers as $key => $bookedCustomer) {
+                    $bookedCustomerInfo = isset($customerInformationData[$key]) ?
+                        $customerInformationData[$key] : [];
+
+                    $name = trim(
+                        (isset($bookedCustomerInfo['firstName']) ? $bookedCustomerInfo['firstName'] : '') . ' ' .
+                        (isset($bookedCustomerInfo['lastName']) ? $bookedCustomerInfo['lastName'] : '')
+                    );
+
+                    $bookedCustomerNames[] = $name ?: $bookedCustomer->getFullName();
+
+                    $phone = !empty($bookedCustomerInfo['phone']) ?
+                        $bookedCustomerInfo['phone'] :
+                        ($bookedCustomer->getPhone() ? $bookedCustomer->getPhone()->getValue() : '');
+
+                    if ($phone) {
+                        $bookedCustomerPhones[] = $phone;
+                    }
+
+                    $email = !empty($bookedCustomerInfo['email']) ?
+                        $bookedCustomerInfo['email'] :
+                        ($bookedCustomer->getEmail() ? $bookedCustomer->getEmail()->getValue() : '');
+
+                    if ($email) {
+                        $bookedCustomerEmails[] = $email;
+                    }
+                }
+
+                $bookedCustomerFullName = implode(', ', $bookedCustomerNames);
+                $bookedCustomerPhone    = implode(', ', $bookedCustomerPhones);
+                $bookedCustomerEmail    = implode(', ', $bookedCustomerEmails);
             }
 
             $phones = '';

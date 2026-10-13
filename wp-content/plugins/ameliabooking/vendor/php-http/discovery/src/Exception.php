@@ -7,6 +7,6 @@ namespace AmeliaHttp\Discovery;
  *
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
-interface Exception
+interface Exception extends \Throwable
 {
 }

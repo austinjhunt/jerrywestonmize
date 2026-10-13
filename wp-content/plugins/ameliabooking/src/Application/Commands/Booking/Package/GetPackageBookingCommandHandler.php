@@ -6,11 +6,16 @@ use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
+use AmeliaBooking\Application\Services\Reservation\PackageReservationService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
+use AmeliaBooking\Domain\Entity\Bookable\Service\Package;
+use AmeliaBooking\Domain\Entity\Bookable\Service\PackageCustomer;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
+use AmeliaBooking\Domain\Factory\Bookable\Service\PackageCustomerFactory;
+use AmeliaBooking\Domain\Factory\Bookable\Service\PackageFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\String\BookableType;
@@ -18,6 +23,7 @@ use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageCustomerRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\CustomerBookingRepository;
+use AmeliaBooking\Infrastructure\WP\Integrations\IvyForms\IvyFormsService;
 
 /**
  * Class GetPackageBookingCommandHandler
@@ -121,16 +127,53 @@ class GetPackageBookingCommandHandler extends CommandHandler
             $appointments = $appointmentRepo->getFiltered(['ids' => $appointmentIds]);
         }
 
+        /** @var PackageReservationService $reservationService */
+        $reservationService = $this->container->get('application.reservation.service')->get(Entities::PACKAGE);
+
+        /** @var PackageCustomer $packageCustomer */
+        $packageCustomer = PackageCustomerFactory::create($packagePurchase);
+
+        /** @var Package $bookable */
+        $bookable = PackageFactory::create(
+            [
+                'price'           => $reservationEntity['price'],
+                'calculatedPrice' => $reservationEntity['calculatedPrice'],
+                'discount'        => $reservationEntity['discount'],
+            ]
+        );
+
+        $bookingPaymentAmount = $reservationService->getPaymentAmount($packageCustomer, $bookable, true);
+
         $wcTax = 0;
         $wcDiscount = 0;
+        $bookingPaidPrice = 0;
+        $paymentMethods = [];
+        $wcOrderUrls = [];
 
         foreach ($packagePurchase['payments'] as $payment) {
+            $paymentMethods[] = $payment['gateway'];
+
+            if ($payment['status'] === 'paid' || $payment['status'] === 'partiallyPaid') {
+                $bookingPaidPrice += $payment['amount'];
+            }
+
             $paymentAS->addWcFields($payment);
 
             $wcTax += !empty($payment['wcItemTaxValue']) ? $payment['wcItemTaxValue'] : 0;
 
             $wcDiscount += !empty($payment['wcItemCouponValue']) ? $payment['wcItemCouponValue'] : 0;
+
+            if (!empty($payment['wcOrderId'])) {
+                $wcOrderUrls[$payment['wcOrderId']] = $payment['wcOrderUrl'];
+            }
         }
+
+        $total = $bookingPaymentAmount['subtotal']
+            + $bookingPaymentAmount['total_tax']
+            + $wcTax
+            - $bookingPaymentAmount['discount']
+            - $bookingPaymentAmount['deduction']
+            - $wcDiscount;
 
         // Calculate booked count using the actual booking statuses for this package customer
         $bookedCount = 0;
@@ -157,8 +200,8 @@ class GetPackageBookingCommandHandler extends CommandHandler
                 'name' => $packagePurchase['package']['name'],
                 'color' => $packagePurchase['package']['color'],
                 'services' => array_map(
-                    function ($bookable) {
-                        return $bookable['service'];
+                    function ($bookableItem) {
+                        return $bookableItem['service'];
                     },
                     $packagePurchase['package']['bookable']
                 ),
@@ -169,15 +212,28 @@ class GetPackageBookingCommandHandler extends CommandHandler
             ],
             'appointments' => [],
             'payment' => [
-                'status' => $paymentAS->getFullStatus(['payments' => $packagePurchase['payments']], BookableType::PACKAGE, $reservationEntity),
-                'total'  => $paymentAS->calculateAppointmentPrice([], BookableType::PACKAGE, $reservationEntity) + $wcTax - $wcDiscount,
-                'paymentMethods' => array_map(
-                    function ($payment) {
-                        return $payment['gateway'];
-                    },
-                    $packagePurchase['payments']
+                'paymentMethods' => $paymentMethods,
+                'wcOrderUrls' => $wcOrderUrls,
+                'status' => $paymentAS->getFullStatus(
+                    ['payments' => $reservationEntity['packageCustomer']['payments']],
+                    BookableType::PACKAGE,
+                    $reservationEntity
                 ),
+                'total' => $total,
+                'tax' => $bookingPaymentAmount['total_tax'],
+                'wcTax' => $wcTax,
+                'discount' => $bookingPaymentAmount['discount'] + $bookingPaymentAmount['deduction'],
+                'wcDiscount' => $wcDiscount,
+                'price' => $bookingPaymentAmount['subtotal'],
+                'subtotal' => $bookingPaymentAmount['subtotal'],
+                'paid' => $bookingPaidPrice,
+                'due' => max($total - $bookingPaidPrice, 0),
+                'id' => !empty($reservationEntity['packageCustomer']['payments'])
+                    ? $reservationEntity['packageCustomer']['payments'][0]['id']
+                    : null,
             ],
+            'ivyEntryId'     => $packagePurchase['ivyEntryId'],
+            'ivyEntryFields' => $packagePurchase['ivyEntryId'] ? IvyFormsService::getEntryFields($packagePurchase['ivyEntryId']) : [],
         ];
 
         /** @var Appointment $appointment */

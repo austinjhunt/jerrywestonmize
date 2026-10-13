@@ -31,12 +31,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Http\\Client\\Curl\\": "src/"
+            "AmeliaHttp\\Client\\Curl\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Http\\Client\\Curl\\Tests\\": "tests/"
+            "AmeliaHttp\\Client\\Curl\\Tests\\": "tests/"
         }
     },
     "provide": {

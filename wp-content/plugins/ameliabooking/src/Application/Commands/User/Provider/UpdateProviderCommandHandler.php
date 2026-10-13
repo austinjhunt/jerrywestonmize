@@ -14,11 +14,16 @@ use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Domain\Factory\User\UserFactory;
+use AmeliaBooking\Domain\Services\Logger\LoggerInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\String\Password;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Services\Apple\AbstractAppleCalendarService;
+use AmeliaBooking\Domain\Entity\Google\GoogleCalendar;
+use AmeliaBooking\Infrastructure\Repository\Google\GoogleCalendarRepository;
+use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
+use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 use AmeliaBooking\Infrastructure\WP\UserRoles\SuperAdminRoleService;
 use Exception;
 use AmeliaBooking\Domain\ValueObjects\String\Name;
@@ -40,7 +45,7 @@ class UpdateProviderCommandHandler extends CommandHandler
      * @throws QueryExecutionException
      * @throws Exception
      */
-    public function handle(UpdateProviderCommand $command)
+    public function handle(UpdateProviderCommand $command): CommandResult
     {
         /** @var AbstractUser $currentUser */
         $currentUser = $command->authorizeProviderWritePermission((int)$command->getArg('id'));
@@ -233,7 +238,7 @@ class UpdateProviderCommandHandler extends CommandHandler
             return $result;
         }
 
-        $canWriteWpCredentials = $userAS->canWriteLinkedWpCredentials($currentUser, $oldUser);
+        $canWriteWpCredentials = $userAS->canWriteWpCredentials($currentUser, $oldUser);
         $emailChanged          = $oldUser->getEmail()->getValue() !== $newUser->getEmail()->getValue();
         $linkedWpId            = $newUser->getExternalId() ? $newUser->getExternalId()->getValue() : null;
 
@@ -336,6 +341,106 @@ class UpdateProviderCommandHandler extends CommandHandler
         );
 
         $providerRepository->commit();
+
+        // Deliberately after the commit: reaching Google takes a round trip, and holding row locks across
+        // one is what let concurrent employee writes deadlock. Running it here also means a rolled back
+        // save leaves no watch behind, and lets the connections be read back in their persisted state.
+        //
+        // They are read back rather than taken from the request precisely because syncId is watch state:
+        // it lives on the calendar_sync row, the payload never carries it, and the shallow merge that
+        // builds $newUser drops it whenever the request sends a nested googleCalendar object.
+        if ($newUser->getGoogleCalendar() && $newUser->getGoogleCalendar()->getId()) {
+            /** @var AbstractGoogleCalendarService $googleCalendarService */
+            $googleCalendarService = $this->container->get('infrastructure.google.calendar.service');
+
+            /** @var GoogleCalendarRepository $googleCalendarRepository */
+            $googleCalendarRepository = $this->container->get('domain.google.calendar.repository');
+
+            try {
+                /** @var Collection $googleConnections */
+                $googleConnections = $googleCalendarRepository->getByEntityId($userId, 'userId');
+
+                /** @var GoogleCalendar $googleConnection */
+                foreach ($googleConnections->getItems() as $googleConnection) {
+                    $connectionCalendarId = $googleConnection->getCalendarId()
+                        ? $googleConnection->getCalendarId()->getValue()
+                        : null;
+
+                    if ($connectionCalendarId) {
+                        // manageChannel() decides for itself whether a channel is needed: it consults the
+                        // watch registry, so it does not need the caller to compare old and new state.
+                        $googleCalendarService->manageChannel($googleConnection);
+
+                        continue;
+                    }
+
+                    // The selection has been cleared, on this connection or on one the save switched away
+                    // from. Nothing else releases the watch: manageChannel() returns at its first guard on
+                    // an empty calendar id, ensureTwoWaySyncForGlobalProvider() below leaves an employee
+                    // who owns a connection alone, and the renewal cron still sees this row pointing at the
+                    // registry entry, so it keeps renewing. Left attached, isProviderAttachedToSync()
+                    // matches on syncId alone and changes on the old calendar would go on moving this
+                    // employee's appointments.
+                    $googleCalendarService->disconnect($googleConnection);
+                }
+            } catch (\Throwable $e) {
+                $this->container->getLoggerService()->channel(LoggerInterface::CHANNEL_SYNC)->error(
+                    'GoogleCalendar: managing watches after provider update failed',
+                    [
+                        'exception'  => $e,
+                        'providerId' => $userId,
+                    ]
+                );
+            }
+        }
+
+        // Both shapes matter: the integrations page sends a flat googleCalendarId (an empty string when
+        // the selection is cleared), the Employees page a nested googleCalendar object. Keys are tested
+        // for presence rather than for a value, so neither an empty nor a null one slips past and leaves
+        // a watch running. For an employee with a connection of their own this is a no-op: the global
+        // path bows out and manageChannel() handles them.
+        if (
+            array_key_exists('googleCalendar', $providerData) ||
+            array_key_exists('googleCalendarId', $providerData)
+        ) {
+            /** @var AbstractGoogleCalendarService $googleCalendarService */
+            $googleCalendarService = $this->container->get('infrastructure.google.calendar.service');
+
+            try {
+                $googleCalendarService->ensureTwoWaySyncForGlobalProvider($userId);
+            } catch (\Throwable $e) {
+                $this->container->getLoggerService()->channel(LoggerInterface::CHANNEL_SYNC)->error(
+                    'GoogleCalendar: ensureTwoWaySync after provider update failed',
+                    [
+                        'exception'  => $e,
+                        'providerId' => $userId,
+                    ]
+                );
+            }
+        }
+
+        // The Employees page sends a nested outlookCalendar object; the integrations page sends a flat
+        // outlookCalendarId for employees on the global connection, including an empty one to clear it.
+        // Presence rather than value, for the same reason as Google above.
+        if (
+            array_key_exists('outlookCalendar', $providerData) ||
+            array_key_exists('outlookCalendarId', $providerData)
+        ) {
+            /** @var AbstractOutlookCalendarService $outlookCalendarService */
+            $outlookCalendarService = $this->container->get('infrastructure.outlook.calendar.service');
+
+            try {
+                $outlookCalendarService->ensureTwoWaySyncForProvider($userId);
+            } catch (\Throwable $e) {
+                $this->container->getLoggerService()->channel(LoggerInterface::CHANNEL_SYNC)->error(
+                    'OutlookCalendar: ensureTwoWaySync after provider update failed',
+                    [
+                        'exception'  => $e,
+                        'providerId' => $userId,
+                    ]
+                );
+            }
+        }
 
         do_action('amelia_after_provider_updated', $newUser ? $newUser->toArray() : null, $oldUser ? $oldUser->toArray() : null);
 

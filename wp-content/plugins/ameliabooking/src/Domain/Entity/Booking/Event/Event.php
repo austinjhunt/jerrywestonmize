@@ -528,7 +528,7 @@ class Event extends AbstractBookable
     }
 
     /**
-     * @param Id $organizerId
+     * @param Id|null $organizerId
      */
     public function setOrganizerId($organizerId)
     {

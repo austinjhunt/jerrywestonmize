@@ -65,6 +65,29 @@ class AddAppointmentCommandHandler extends CommandHandler
 
         $result = new CommandResult();
 
+        /** @var UserApplicationService $userAS */
+        $userAS = $this->getContainer()->get('application.user.service');
+        /** @var SettingsService $settingsDS */
+        $settingsDS = $this->container->get('domain.settings.service');
+
+        if (!$user) {
+            throw new AccessDeniedException('You are not allowed to add appointments because you are not logged in');
+        }
+
+        if ($userAS->isCustomer($user)) {
+            throw new AccessDeniedException('You are not allowed to add appointment');
+        }
+
+        if ($userAS->isProvider($user)) {
+            if (!$settingsDS->getSetting('roles', 'allowWriteAppointments')) {
+                throw new AccessDeniedException('You are not allowed to add appointments');
+            }
+
+            if (!$command->getPermissionService()->currentUserCanWrite(Entities::APPOINTMENTS)) {
+                throw new AccessDeniedException('You are not allowed to add appointments for this provider');
+            }
+        }
+
         $this->checkMandatoryFields($command);
 
         /** @var AppointmentRepository $appointmentRepo */
@@ -73,10 +96,6 @@ class AddAppointmentCommandHandler extends CommandHandler
         $appointmentAS = $this->container->get('application.booking.appointment.service');
         /** @var BookableApplicationService $bookableAS */
         $bookableAS = $this->container->get('application.bookable.service');
-        /** @var UserApplicationService $userAS */
-        $userAS = $this->getContainer()->get('application.user.service');
-        /** @var SettingsService $settingsDS */
-        $settingsDS = $this->container->get('domain.settings.service');
         /** @var EntityApplicationService $entityService */
         $entityService = $this->container->get('application.entity.service');
         /** @var ReservationServiceInterface $reservationService */
@@ -86,12 +105,11 @@ class AddAppointmentCommandHandler extends CommandHandler
             return $entityService->getMissingEntityResponse($missingEntity);
         }
 
-        if ($userAS->isCustomer($user)) {
-            throw new AccessDeniedException('You are not allowed to add appointment');
-        }
-
-        if ($userAS->isProvider($user) && !$settingsDS->getSetting('roles', 'allowWriteAppointments')) {
-            throw new AccessDeniedException('You are not allowed to add an appointment');
+        if (
+            ($userAS->isProvider($user) &&
+            (int)$command->getField('providerId') !== $user->getId()->getValue())
+        ) {
+            throw new AccessDeniedException('You are not allowed to add appointments for this provider');
         }
 
         $appointmentData = $command->getFields();

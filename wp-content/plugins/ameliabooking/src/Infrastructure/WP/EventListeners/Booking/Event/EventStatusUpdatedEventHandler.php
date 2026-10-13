@@ -55,7 +55,9 @@ class EventStatusUpdatedEventHandler
         /** @var BookingApplicationService $bookingApplicationService */
         $bookingApplicationService = $container->get('application.booking.booking.service');
 
-        $events = $commandResult->getData()[Entities::EVENTS];
+        $data = $commandResult->getData();
+
+        $events = $data[Entities::EVENTS];
 
         foreach ($events as $event) {
             /** @var Event $reservationObject */
@@ -69,7 +71,13 @@ class EventStatusUpdatedEventHandler
                 $event,
                 ApplicationIntegrationService::EVENT_STATUS_UPDATED,
                 [
-                    ApplicationIntegrationService::SKIP_LESSON_SPACE => true,
+                    ApplicationIntegrationService::SKIP_LESSON_SPACE     => true,
+                    ApplicationIntegrationService::SKIP_GOOGLE_CALENDAR  =>
+                        !empty($data[ApplicationIntegrationService::SKIP_GOOGLE_CALENDAR]),
+                    ApplicationIntegrationService::SKIP_OUTLOOK_CALENDAR =>
+                        !empty($data[ApplicationIntegrationService::SKIP_OUTLOOK_CALENDAR]),
+                    ApplicationIntegrationService::SKIP_APPLE_CALENDAR   =>
+                        !empty($data[ApplicationIntegrationService::SKIP_APPLE_CALENDAR]),
                 ]
             );
 

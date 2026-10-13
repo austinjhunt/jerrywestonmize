@@ -4,6 +4,7 @@ namespace AmeliaBooking\Infrastructure\WP\SettingsService;
 
 use AmeliaBooking\Application\Services\Location\AbstractCurrentLocation;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
+use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\Services\Settings\SettingsStorageInterface;
 use AmeliaBooking\Infrastructure\Licence;
 use AmeliaBooking\Plugin;
@@ -142,7 +143,7 @@ class SettingsStorage implements SettingsStorageInterface
         }
 
         $wpUser = wp_get_current_user();
-        $superAdminService = new SuperAdminRoleService();
+        $superAdminService = new SuperAdminRoleService(new SettingsService($this));
 
         $userType = 'customer';
 
@@ -588,7 +589,7 @@ class SettingsStorage implements SettingsStorageInterface
         $ipLocateApyKey   = $this->getSetting('general', 'ipLocateApiKey');
 
         $wpUser = wp_get_current_user();
-        $superAdminService = new SuperAdminRoleService();
+        $superAdminService = new SuperAdminRoleService(new SettingsService($this));
 
         $userType = 'customer';
 
@@ -721,6 +722,7 @@ class SettingsStorage implements SettingsStorageInterface
                     'general',
                     'redirectUrlAfterAppointment'
                 ),
+                'requiredPhoneNumberField'                  => $this->getSetting('general', 'requiredPhoneNumberField'),
                 'sortingPackages'                           => $this->getSetting('general', 'sortingPackages'),
                 'sortingServices'                           => $this->getSetting('general', 'sortingServices'),
                 'timeSlotLength'                            => $this->getSetting('general', 'timeSlotLength'),

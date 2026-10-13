@@ -3,7 +3,6 @@
 namespace AmeliaBooking\Application\Controller\Booking\Appointment;
 
 use AmeliaBooking\Application\Commands\Booking\Appointment\CancelBookingRemotelyCommand;
-use AmeliaBooking\Application\Commands\Booking\Appointment\UpdateBookingStatusCommand;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Controller\Controller;
 use AmeliaBooking\Domain\Events\DomainEventBus;
@@ -24,7 +23,8 @@ class CancelBookingRemotelyController extends Controller
     protected $allowedFields = [
         'token',
         'type',
-        'fromForm'
+        'fromForm',
+        'confirmed',
     ];
 
     /**
@@ -43,6 +43,8 @@ class CancelBookingRemotelyController extends Controller
         $command->setField('token', (string)self::getParam($request, 'token', ''));
         $command->setField('type', (string)self::getParam($request, 'type', ''));
         $command->setField('fromForm', self::getParam($request, 'fromForm', false));
+        $command->setField('confirmed', self::getParam($request, 'confirmed', false));
+        $command->setField('requestMethod', $request->getMethod());
         $this->setCommandFields($command, $requestBody);
 
         return $command;

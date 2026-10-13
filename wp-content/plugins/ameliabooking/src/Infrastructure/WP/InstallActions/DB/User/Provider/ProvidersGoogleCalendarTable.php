@@ -21,7 +21,7 @@ class ProvidersGoogleCalendarTable extends AbstractDatabaseTable
      * @return string
      * @throws InvalidArgumentException
      */
-    public static function buildTable()
+    public static function buildTable(): string
     {
         $table = self::getTableName();
 
@@ -39,15 +39,18 @@ class ProvidersGoogleCalendarTable extends AbstractDatabaseTable
                   `includeBufferTime` TINYINT(1) DEFAULT 0,
                   `title` TEXT NULL,
                   `description` TEXT NULL,
+                  `accountId` VARCHAR(191) DEFAULT NULL,
+                  `syncId` INT(11) DEFAULT NULL,
                   PRIMARY KEY (`id`),
-                  UNIQUE KEY `id` (`id`)
+                  UNIQUE KEY `id` (`id`),
+                  KEY `syncId` (`syncId`)
                 ) {$charsetCollate};";
     }
 
     /**
      * @return array
      */
-    public static function alterTable()
+    public static function alterTable(): array
     {
         $table = self::getTableName();
 
@@ -109,6 +112,21 @@ class ProvidersGoogleCalendarTable extends AbstractDatabaseTable
             );
         }
 
-        return [];
+        // Channel and cursor state moved to the calendar_sync table. dbDelta() adds and modifies columns
+        // but never drops them, so the superseded ones go here. They only ever existed on unreleased 9.8
+        // builds, which is why this drops rather than migrates.
+        $commands = [];
+
+        $dropped = ['channelId', 'resourceId', 'expiration', 'syncToken'];
+
+        foreach ($dropped as $column) {
+            $exists = $wpdb->get_var($wpdb->prepare("SHOW COLUMNS FROM `{$table}` LIKE %s", $column));
+
+            if ($exists !== null) {
+                $commands[] = "ALTER TABLE `{$table}` DROP COLUMN `{$column}`";
+            }
+        }
+
+        return $commands;
     }
 }

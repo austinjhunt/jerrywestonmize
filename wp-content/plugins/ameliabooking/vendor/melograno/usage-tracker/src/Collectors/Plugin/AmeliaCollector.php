@@ -61,6 +61,38 @@ class AmeliaCollector extends BaseCollector implements ConsentNoticeCollectorInt
         return 'amelia';
     }
 
+    /**
+     * @return array{
+     *     accentColor: string,
+     *     iconUrl: string,
+     *     iconAlt: string,
+     *     title: string,
+     *     description: string,
+     *     enableLabel: string,
+     *     learnMoreLabel: string,
+     *     learnMoreUrl: string,
+     *     dismissLabel: string,
+     *     spaPageId?: string|null,
+     *     spaAppRootSelector?: string|null
+     * }
+     */
+    public function getConsentNoticePresentation(): array
+    {
+        return [
+            'accentColor' => '#4a3bd6',
+            'iconUrl' => AMELIA_URL . 'public/img/amelia-logo-admin-icon.svg',
+            'iconAlt' => 'Amelia',
+            'title' => \AmeliaBooking\Infrastructure\WP\Translations\BackendStrings::get('improve_amelia'),
+            'description' => \AmeliaBooking\Infrastructure\WP\Translations\BackendStrings::get('usage_tracking_description'),
+            'enableLabel' => \AmeliaBooking\Infrastructure\WP\Translations\BackendStrings::get('improve_plugin'),
+            'learnMoreLabel' => \AmeliaBooking\Infrastructure\WP\Translations\BackendStrings::get('learn_more'),
+            'learnMoreUrl' => 'https://wpamelia.com/usage-data-privacy/',
+            'dismissLabel' => \__('Dismiss this notice.', 'wpamelia'),
+            'spaPageId' => 'amelia-redesign-page',
+            'spaAppRootSelector' => '#amelia-redesign',
+        ];
+    }
+
     public function renderConsentAdminNotice(): void
     {
         if (!$this->isOnAmeliaAdminPage() || $this->isOnWelcomePage()) {
@@ -77,7 +109,7 @@ class AmeliaCollector extends BaseCollector implements ConsentNoticeCollectorInt
         );
 
         $usageTrackingCollector = $this;
-        $usageTrackingResourcesUrl = $resourcesUrl;
+        $usageTrackingNoticePresentation = $this->getConsentNoticePresentation();
         include dirname(dirname(dirname(__DIR__))) . '/resources/usage-tracking-notice.php';
     }
 
@@ -105,10 +137,6 @@ class AmeliaCollector extends BaseCollector implements ConsentNoticeCollectorInt
      */
     protected function pluginPayload(): array
     {
-        $container = require AMELIA_PATH . '/src/Infrastructure/ContainerConfig/container.php';
-        $customerBookingRepository = $container->get('domain.booking.customerBooking.repository');
-        $appointmentRepository = $container->get('domain.booking.appointment.repository');
-
         $data = [
             'plugin_version' => AMELIA_VERSION,
         ];
@@ -118,6 +146,36 @@ class AmeliaCollector extends BaseCollector implements ConsentNoticeCollectorInt
         if ($licenseTier !== null) {
             $data['license'] = $licenseTier;
         }
+
+        $data = array_merge($data, $this->resolveBookingMetrics());
+
+        $featureTelemetry = $this->resolveFeatures();
+        if ($featureTelemetry !== null) {
+            // Empty PHP arrays become JSON [] and fail BI object validation;
+            // always emit a JSON object for features.
+            $data['features'] = $featureTelemetry['features'] === []
+                ? new \stdClass()
+                : $featureTelemetry['features'];
+            if ($featureTelemetry['feature_metrics'] !== []) {
+                $data['feature_metrics'] = $featureTelemetry['feature_metrics'];
+            }
+        }
+
+        return array_filter($data, static function ($value) {
+            return $value !== null;
+        });
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function resolveBookingMetrics(): array
+    {
+        $container = require AMELIA_PATH . '/src/Infrastructure/ContainerConfig/container.php';
+        $customerBookingRepository = $container->get('domain.booking.customerBooking.repository');
+        $appointmentRepository = $container->get('domain.booking.appointment.repository');
+
+        $data = [];
 
         $minCreated = $customerBookingRepository->getEarliestCreatedAt();
         if ($minCreated !== null && $minCreated !== '') {
@@ -133,9 +191,30 @@ class AmeliaCollector extends BaseCollector implements ConsentNoticeCollectorInt
         $data['approved_appointment_bookings_count'] = $customerBookingRepository->getApprovedAppointmentBookingsCount();
         $data['approved_appointments_count'] = $appointmentRepository->getApprovedAppointmentsCount();
 
-        return array_filter($data, static function ($value) {
-            return $value !== null;
-        });
+        return $data;
+    }
+
+    /**
+     * @return array{
+     *     features: array<string, bool>,
+     *     feature_metrics: array<string, array{usage_count: int}>
+     * }|null null when collection fails
+     */
+    protected function resolveFeatures(): ?array
+    {
+        if (!defined('AMELIA_PATH')) {
+            return null;
+        }
+
+        try {
+            $container = require AMELIA_PATH . '/src/Infrastructure/ContainerConfig/container.php';
+            /** @var \AmeliaBooking\Domain\Services\Settings\SettingsService $settingsService */
+            $settingsService = $container->get('domain.settings.service');
+
+            return AmeliaFeatureTelemetry::collect($settingsService, $container);
+        } catch (\Throwable $e) {
+            return null;
+        }
     }
 
     protected function resolveAmeliaLicence(): ?string

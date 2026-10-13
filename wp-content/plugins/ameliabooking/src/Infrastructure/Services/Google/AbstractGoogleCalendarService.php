@@ -2,10 +2,12 @@
 
 namespace AmeliaBooking\Infrastructure\Services\Google;
 
+use AmeliaBooking\Domain\Entity\Calendar\CalendarSync;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Event\Event;
+use AmeliaBooking\Domain\Entity\Google\GoogleCalendar;
 use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
@@ -147,4 +149,45 @@ abstract class AbstractGoogleCalendarService
      * @return array
      */
     abstract public function getCalendarListsForAccounts(array $accounts, Provider $provider): array;
+
+    /**
+     * @param GoogleCalendar $googleCalendar
+     *
+     * @return void
+     * @throws ContainerException
+     * @throws QueryExecutionException
+     * @throws Exception
+     */
+    abstract public function disconnect($googleCalendar);
+
+    /**
+     * @param GoogleCalendar $newGoogleCalendar
+     *
+     * @return void
+     */
+    abstract public function manageChannel($newGoogleCalendar): void;
+
+    /**
+     * @return void
+     *
+     * @throws Exception
+     */
+    abstract public function renewChannels(): void;
+
+    /**
+     * Watch the calendar an employee selected on the global Settings page connection.
+     *
+     * @param int $providerId
+     *
+     * @return void
+     */
+    abstract public function ensureTwoWaySyncForGlobalProvider($providerId): void;
+
+    /**
+     * @param CalendarSync $calendarSync
+     * @param string       $resourceId
+     *
+     * @return void
+     */
+    abstract public function manageChangedEvents($calendarSync, $resourceId): void;
 }

@@ -50,6 +50,7 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Starter\Licence
                 Commands\Google\FetchGoogleMiddlewareAccessTokenCommand::class     => new Commands\Google\FetchGoogleMiddlewareAccessTokenCommandHandler($c),
                 Commands\Google\DisconnectFromGoogleMiddlewareAccountCommand::class =>
                     new Commands\Google\DisconnectFromGoogleMiddlewareAccountCommandHandler($c),
+                Commands\Google\WatchGoogleEventCommand::class                     => new Commands\Google\WatchGoogleEventCommandHandler($c),
                 // Outlook
                 Commands\Outlook\DisconnectFromOutlookAccountCommand::class        => new Commands\Outlook\DisconnectFromOutlookAccountCommandHandler($c),
                 Commands\Outlook\GetOutlookAuthURLCommand::class                   => new Commands\Outlook\GetOutlookAuthURLCommandHandler($c),
@@ -59,6 +60,8 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Starter\Licence
                 Commands\Outlook\FetchOutlookMiddlewareAccessTokenCommand::class   => new Commands\Outlook\FetchOutlookMiddlewareAccessTokenCommandHandler($c),
                 Commands\Outlook\DisconnectFromOutlookMiddlewareAccountCommand::class =>
                     new Commands\Outlook\DisconnectFromOutlookMiddlewareAccountCommandHandler($c),
+                Commands\Outlook\WatchOutlookCalendarNotificationCommand::class =>
+                    new Commands\Outlook\WatchOutlookCalendarNotificationCommandHandler($c),
                 Commands\Outlook\ValidateOutlookCredentialsCommand::class =>
                     new Commands\Outlook\ValidateOutlookCredentialsCommandHandler($c),
                 // Mailchimp
@@ -88,8 +91,9 @@ class Licence extends \AmeliaBooking\Infrastructure\Licence\Starter\Licence
                 Commands\PaymentGateway\MollieValidateKeyCommand::class            => new Commands\PaymentGateway\MollieValidateKeyCommandHandler($c),
                 Commands\Stripe\CreateStripePaymentIntentCommand::class            => new Commands\Stripe\CreateStripePaymentIntentCommandHandler($c),
                 Commands\Stripe\CancelStripePaymentIntentCommand::class            => new Commands\Stripe\CancelStripePaymentIntentCommandHandler($c),
-                Commands\Stripe\CompleteStripePaymentIntentCommand::class          => new Commands\Stripe\CompleteStripePaymentIntentCommandHandler($c),
+                Commands\Stripe\CompleteStripePaymentIntentCommand::class          => $c->get(Commands\Stripe\CompleteStripePaymentIntentCommandHandler::class),
                 Commands\Stripe\StripePaymentCallbackCommand::class                => new Commands\Stripe\StripePaymentCallbackCommandHandler($c),
+                Commands\Stripe\StripePaymentWebhookCommand::class                 => new Commands\Stripe\StripePaymentWebhookCommandHandler($c),
 
                 // Tax
                 Commands\Tax\AddTaxCommand::class                                  => new Commands\Tax\AddTaxCommandHandler($c),

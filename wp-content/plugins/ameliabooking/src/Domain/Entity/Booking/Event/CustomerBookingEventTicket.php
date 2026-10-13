@@ -9,7 +9,7 @@ namespace AmeliaBooking\Domain\Entity\Booking\Event;
 
 use AmeliaBooking\Domain\ValueObjects\Number\Float\Price;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
-use AmeliaBooking\Domain\ValueObjects\Number\Integer\IntegerValue;
+use AmeliaBooking\Domain\ValueObjects\Number\Integer\PositiveInteger;
 
 /**
  * Class CustomerBookingEventTicket
@@ -27,7 +27,7 @@ class CustomerBookingEventTicket
     /** @var  Id */
     protected $eventTicketId;
 
-    /** @var  IntegerValue */
+    /** @var  PositiveInteger */
     protected $persons;
 
     /** @var  Price */
@@ -82,17 +82,17 @@ class CustomerBookingEventTicket
     }
 
     /**
-     * @return IntegerValue
+     * @return PositiveInteger|null
      */
-    public function getPersons()
+    public function getPersons(): ?PositiveInteger
     {
         return $this->persons;
     }
 
     /**
-     * @param IntegerValue $persons
+     * @param PositiveInteger $persons
      */
-    public function setPersons(IntegerValue $persons)
+    public function setPersons(PositiveInteger $persons): void
     {
         $this->persons = $persons;
     }

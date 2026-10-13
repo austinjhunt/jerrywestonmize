@@ -21,7 +21,7 @@ msgid "\"Paying now\" Button Type"
 msgstr "Hnapptegundin „Greiða núna“"
 
 msgid "\"Payment Method\" View"
-msgstr "Yfirlit yfir &quot;Greiðslumáta&quot;"
+msgstr "Yfirlit yfir \"Greiðslumáta\""
 
 msgid "# of Hours in appointment"
 msgstr "Fjöldi klukkustunda í viðtali"
@@ -31,26 +31,6 @@ msgstr "# tímapantanir"
 
 msgid "# of bookings"
 msgstr "# bókana"
-
-#, php-format
-msgid "%1$s, %2$s, was canceled."
-msgstr "%1$s, %2$s, var afbókað."
-
-#, php-format
-msgid "%1$s, %2$s, was rejected."
-msgstr "%1$s, %2$s, var hafnað."
-
-#, php-format
-msgid "%1$s booked %2$s at %3$s."
-msgstr "%1$s bókaði %2$s kl. %3$s."
-
-#, php-format
-msgid "%1$s on %2$s had a status change."
-msgstr "%1$s á %2$s varð stöðubreyting."
-
-#, php-format
-msgid "%1$s on %2$s was updated."
-msgstr "%1$s á %2$s var uppfært."
 
 #, php-format
 msgid "%event_name% Event Booked"
@@ -459,8 +439,14 @@ msgstr "Aðgerðir"
 msgid "Activate"
 msgstr "Virkja"
 
+msgid "Activate now"
+msgstr ""
+
 msgid "Activate with Envato"
 msgstr "Virkja með Envato"
+
+msgid "Activate your license to unlock the features included in your plan."
+msgstr ""
 
 msgid "Activated with Envato"
 msgstr "Virkjað með Envato"
@@ -874,6 +860,9 @@ msgstr "Þegar greitt"
 msgid "Already have an account?"
 msgstr "Ertu nú þegar með aðgang?"
 
+msgid "Already purchased Amelia?"
+msgstr ""
+
 msgid "Also cancel and delete future events"
 msgstr "Einnig hætta við og eyða framtíðarviðburðum"
 
@@ -932,7 +921,7 @@ msgid "Apple Calendar setup"
 msgstr "Uppsetning Apple dagatals"
 
 msgid "Apple calendar events"
-msgstr "Viðburðir í Apple-dagatali"
+msgstr ""
 
 msgid "Application (client) ID"
 msgstr "Auðkenni forrits (viðskiptavinar)"
@@ -1076,9 +1065,6 @@ msgstr "Tímabókunarathugasemdir"
 msgid "Appointment price"
 msgstr "Verð á tímapöntun"
 
-msgid "Appointment reminder"
-msgstr "Tímapöntunaráminning"
-
 msgid "Appointment repeats"
 msgstr "Endurteknar tímapantanir"
 
@@ -1091,9 +1077,6 @@ msgstr "Upphafstími fundar"
 msgid "Appointment status"
 msgstr "Staða tímasetningar"
 
-msgid "Appointment status changed"
-msgstr "Breytt staða tímapöntunar"
-
 msgid "Appointment status has been changed to "
 msgstr "Staða tímapöntunar hefur verið breytt í "
 
@@ -1102,9 +1085,6 @@ msgstr "Staða tímapöntunar hefur verið uppfærð."
 
 msgid "Appointment title"
 msgstr "Titill ráðningar"
-
-msgid "Appointment updated"
-msgstr "Tímapöntun uppfærð"
 
 msgid "Appointments"
 msgstr "Bókanir"
@@ -1144,6 +1124,10 @@ msgstr "Ertu viss um að þú viljir hætta við og eyða þessum viðburði?"
 
 msgid "Are you sure you want to cancel this appointment?"
 msgstr "Ertu viss um að þú viljir hætta við þessa bókun?"
+
+msgid ""
+"Are you sure you want to cancel this booking? This action cannot be undone."
+msgstr ""
 
 msgid "Are you sure you want to cancel this event?"
 msgstr "Ertu viss um að þú viljir hætta við þennan viðburð?"
@@ -1332,13 +1316,13 @@ msgid "Attendee"
 msgstr "Þátttakandi"
 
 msgid "Attendee Asc"
-msgstr "Þátttakandi upp"
+msgstr "Þátttakandi hækkandi"
 
 msgid "Attendee Desc"
-msgstr "Lýsing þátttakanda"
+msgstr "Þátttakandi lækkandi"
 
 msgid "Attendee code"
-msgstr "Þátttakandakóði"
+msgstr "Kóði þátttakanda"
 
 msgid "Attendee has been saved"
 msgstr "Þátttakandi hefur verið vistaður"
@@ -1353,7 +1337,7 @@ msgid "Attendees"
 msgstr "Þátttakendur"
 
 msgid "Attendees Allowed"
-msgstr "Þátttakendur leyfðir"
+msgstr "Leyfðir þátttakendur"
 
 msgid "Attendees Export Format"
 msgstr "Útflutningssnið þátttakenda"
@@ -1441,13 +1425,13 @@ msgid "Available date text"
 msgstr "Texti fyrir tiltækan dag"
 
 msgid "Available from Pro license"
-msgstr "Laus með Pro leyfi"
+msgstr "Í boði frá Pro leyfi"
 
 msgid "Available from Standard license"
-msgstr "Laus með Standard leyfi"
+msgstr "Í boði frá Standard leyfi"
 
 msgid "Available from Starter license"
-msgstr "Laus með Starter leyfi"
+msgstr "Í boði frá Starter leyfi"
 
 msgid "Available in Elite licence"
 msgstr "Laus í Elite leyfi"
@@ -1678,10 +1662,10 @@ msgid "Booking Closes"
 msgstr "Bókun lokar"
 
 msgid "Booking Closes Asc"
-msgstr "Bókun lokar"
+msgstr "Bókun lokar hækkandi"
 
 msgid "Booking Closes Desc"
-msgstr "Bókun lokar Lýsing"
+msgstr "Bókun lokar lækkandi"
 
 msgid "Booking Confirmed"
 msgstr "Bókun staðfest"
@@ -1708,10 +1692,10 @@ msgid "Booking Opens"
 msgstr "Bókun opnast"
 
 msgid "Booking Opens Asc"
-msgstr "Bókun opnar Asc"
+msgstr "Bókun opnar hækkandi"
 
 msgid "Booking Opens Desc"
-msgstr "Bókun opnar Lýsing"
+msgstr "Bókun opnar lækkandi"
 
 msgid "Booking Overview"
 msgstr "Yfirlit yfir bókun"
@@ -2271,6 +2255,9 @@ msgstr "Veldu hvenær endurtekning lýkur"
 msgid "Choose whether you want to manage services, events, or both."
 msgstr "Veldu hvort þú vilt stjórna þjónustu, viðburðum eða báðum."
 
+msgid "Choose which tab users see first when they log in"
+msgstr ""
+
 msgid "Choosing layout of first step in step by step form"
 msgstr "Að velja útlit fyrsta skrefsins í skref-fyrir-skref eyðublaði"
 
@@ -2455,6 +2442,9 @@ msgstr "Setja upp biðlista fyrir tímapantanir"
 
 msgid "Confirm"
 msgstr "Staðfesta"
+
+msgid "Confirm Cancellation"
+msgstr ""
 
 msgid "Confirm My Appointment"
 msgstr "Staðfesta tímapöntunina mína"
@@ -2920,10 +2910,10 @@ msgid "Customer(s)"
 msgstr "Viðskiptavin(ur)"
 
 msgid "Customer Asc"
-msgstr "Uppstigning viðskiptavinar"
+msgstr "Viðskiptavinur hækkandi"
 
 msgid "Customer Desc"
-msgstr "Lýsing viðskiptavinar"
+msgstr "Viðskiptavinur lækkandi"
 
 msgid "Customer Panel"
 msgstr "Mínar síður"
@@ -3102,9 +3092,6 @@ msgstr "Gögn sem eru óbreytt:"
 msgid "Data to be updated:"
 msgstr "Gögn sem á að uppfæra:"
 
-msgid "Data transfer"
-msgstr "Gagnaflutningur"
-
 msgid "Date"
 msgstr "Dagsetning"
 
@@ -3122,19 +3109,19 @@ msgstr ""
 "Dagsetning og tímabil viðburðarins með tenglum fyrir þátttöku í Lesson Space"
 
 msgid "Date Asc"
-msgstr "Dagsetning uppsveiflu"
+msgstr "Dagsetning hækkandi"
 
 msgid "Date Desc"
-msgstr "Dagsetning Lýsing"
+msgstr "Dagsetning lækkandi"
 
 msgid "Date Picker"
 msgstr "Dagsetningarveljari"
 
 msgid "Date Purchased Asc"
-msgstr "Kaupdagur Uppstig"
+msgstr "Kaupdagur hækkandi"
 
 msgid "Date Purchased Desc"
-msgstr "Kaupdagur Lýsing"
+msgstr "Kaupdagur lækkandi"
 
 msgid ""
 "Date Ranges that are not defined will use default price from ticket category."
@@ -4105,10 +4092,10 @@ msgid "Deduction"
 msgstr "Frádráttur"
 
 msgid "Deduction Asc"
-msgstr "Frádráttur Uppsafnaður"
+msgstr "Frádráttur hækkandi"
 
 msgid "Deduction Desc"
-msgstr "Frádráttarlýsing"
+msgstr "Frádráttur lækkandi"
 
 msgid "Default Label"
 msgstr "Sjálfgefið merki"
@@ -4121,6 +4108,9 @@ msgstr "Sjálfgefin staða fyrir tímapantanir"
 
 msgid "Default back end page"
 msgstr "Sjálfgefin baksíða"
+
+msgid "Default landing tab"
+msgstr ""
 
 msgid "Default language"
 msgstr "Sjálfgefið tungumál"
@@ -4364,7 +4354,7 @@ msgid "Discount Asc"
 msgstr "Afsláttur hækkandi"
 
 msgid "Discount Desc"
-msgstr "Afsláttarlýsing"
+msgstr "Afsláttur lækkandi"
 
 msgid "Discount (%)"
 msgstr "Afsláttur (%)"
@@ -4541,10 +4531,10 @@ msgid "Duration:"
 msgstr "Lengd:"
 
 msgid "Duration Asc"
-msgstr "Lengd uppsveiflu"
+msgstr "Lengd hækkandi"
 
 msgid "Duration Desc"
-msgstr "Lýsing á lengd"
+msgstr "Lengd lækkandi"
 
 msgid "E-Ticket Scanner"
 msgstr "Rafrænn miðaskanni"
@@ -4631,8 +4621,6 @@ msgid ""
 "Edit appointments/events when connected Google Calendar Events are "
 "rescheduled or deleted"
 msgstr ""
-"Breyta tímapöntunum/viðburðum þegar tengdir Google Dagatalsviðburðir eru "
-"færðir eða þeim eytt"
 
 msgid "Edit block time"
 msgstr "Breyta lokuðu tímabili"
@@ -5300,7 +5288,7 @@ msgid "Event"
 msgstr "Viðburður"
 
 msgid "Event Asc"
-msgstr "Uppgangur viðburðar"
+msgstr "Viðburður hækkandi"
 
 msgid "Event Available"
 msgstr "Viðburður laus"
@@ -5339,7 +5327,7 @@ msgid "Event Day"
 msgstr "Viðburðardagur"
 
 msgid "Event Desc"
-msgstr "Lýsing viðburðar"
+msgstr "Viðburður lækkandi"
 
 msgid "Event Employee"
 msgstr "Viðburðarstarfsmaður"
@@ -5750,9 +5738,6 @@ msgstr "Mistókst"
 msgid "Failed to access camera. Please try again."
 msgstr "Mistókst að fá aðgang að myndavélinni. Reyndu aftur."
 
-msgid "Failed to initialize payment. Please try again."
-msgstr "Ekki tókst að frumstilla greiðsluferlið. Vinsamlegast reyndu aftur."
-
 msgid "Failed to load appointment details. Please try again later."
 msgstr "Mistókst að hlaða upplýsingum um tímasetningu. Reyndu aftur síðar."
 
@@ -6129,7 +6114,7 @@ msgid "Google Meet setup"
 msgstr "Uppsetning Google Meet"
 
 msgid "Google calendar events"
-msgstr "Google Calendar-viðburðir"
+msgstr ""
 
 msgid "Google reCAPTCHA v2 secret key"
 msgstr "Leynilykill Google reCAPTCHA v2"
@@ -6881,10 +6866,10 @@ msgid "ID"
 msgstr "Auðkenni"
 
 msgid "ID Asc"
-msgstr "Auðkenni uppstigandi"
+msgstr "Auðkenni hækkandi"
 
 msgid "ID Desc"
-msgstr "Lýsing auðkennis"
+msgstr "Auðkenni lækkandi"
 
 msgid "I understand this import will replace all current data permanently."
 msgstr ""
@@ -6913,12 +6898,6 @@ msgid ""
 msgstr ""
 "Ef bókunin er óvirk verður hún að uppfylla lágmarksfjölda og tímaramminn "
 "lokast eftir fyrstu bókun."
-
-msgid ""
-"If disabled, the price will remain the same regardless of how many people "
-"are included in the group appointment."
-msgstr ""
-"Ef óvirkt er, helst verðið það sama óháð því hversu margir eru í hópnum."
 
 msgid ""
 "If enabled, customers can book with Pending status even after maximum "
@@ -7065,6 +7044,9 @@ msgstr "Smámyndir"
 msgid "Import"
 msgstr "Innflutningur"
 
+msgid "Import/Export"
+msgstr ""
+
 msgid "Import Failed"
 msgstr "Innflutningur mistókst"
 
@@ -7094,6 +7076,9 @@ msgstr "Innflutningur mistókst"
 
 msgid "Import failed. Review the details below."
 msgstr "Innflutningur mistókst. Skoðaðu nánari upplýsingar hér fyrir neðan."
+
+msgid "Import or export your Amelia data."
+msgstr ""
 
 msgid "Import progress"
 msgstr "Framvinda innflutnings"
@@ -7505,10 +7490,10 @@ msgid "Invoice Format"
 msgstr "Reikningssnið"
 
 msgid "Invoice Number Asc"
-msgstr "Reikningsnúmer Uppstigandi"
+msgstr "Reikningsnúmer hækkandi"
 
 msgid "Invoice Number Desc"
-msgstr "Reikningsnúmer Lýsing"
+msgstr "Reikningsnúmer lækkandi"
 
 msgid "Invoice date"
 msgstr "Reikningsdagsetning"
@@ -7678,10 +7663,10 @@ msgid "Last"
 msgstr "Síðast"
 
 msgid "Last Booking Asc"
-msgstr "Síðasta bókun upp"
+msgstr "Síðasta bókun hækkandi"
 
 msgid "Last Booking Desc"
-msgstr "Síðasta bókunarlýsing"
+msgstr "Síðasta bókun lækkandi"
 
 msgid "Last Name:"
 msgstr "Eftirnafn:"
@@ -8055,10 +8040,10 @@ msgid "Max. Capacity"
 msgstr "Hámarks getu"
 
 msgid "Max Capacity Asc"
-msgstr "Hámarksgeta uppstigningar"
+msgstr "Hámarksgeta hækkandi"
 
 msgid "Max Capacity Desc"
-msgstr "Lýsing á hámarksgetu"
+msgstr "Hámarksgeta lækkandi"
 
 msgid "Maximum"
 msgstr "Hámark"
@@ -8275,13 +8260,13 @@ msgid "Name:"
 msgstr "Nafn:"
 
 msgid "Name Asc"
-msgstr "Nafn Uppstig"
+msgstr "Nafn hækkandi"
 
 msgid "Name Ascending"
 msgstr "Nafn í upprásandi röð"
 
 msgid "Name Desc"
-msgstr "Nafn Lýsing"
+msgstr "Nafn lækkandi"
 
 msgid "Name Descending"
 msgstr "Nafn í niðurrásandi röð"
@@ -8401,7 +8386,7 @@ msgid "No-show"
 msgstr "Mætti ekki"
 
 msgid "No-show tag"
-msgstr "Merki um að mæta ekki"
+msgstr "Mætti ekki merki"
 
 msgid "No Employees Assigned to This Location"
 msgstr "Engir starfsmenn úthlutaðir þessum stað"
@@ -8410,16 +8395,16 @@ msgid "No Packages"
 msgstr "Engir pakkar"
 
 msgid "No Show"
-msgstr "Engin mæting"
+msgstr "Mætti ekki"
 
 msgid "No Show (1)"
-msgstr "Engin mæting (1)"
+msgstr "Mætti ekki (1)"
 
 msgid "No Show (2)"
-msgstr "Engin mæting (2)"
+msgstr "Mætti ekki (2)"
 
 msgid "No Show (3+)"
-msgstr "Engin mæting (3+)"
+msgstr "Mætti ekki (3+)"
 
 msgid "No Tags. Create a new one."
 msgstr "Engin tagg. Búðu til nýtt."
@@ -8626,13 +8611,13 @@ msgid "Notify selected employees about empty package purchases"
 msgstr "Láta valda starfsmenn vita um kaup á tómum umbúðum"
 
 msgid "Notify the attendee(s)"
-msgstr "Láta þátttakendur vita"
+msgstr "Tilkynna þátttakendum"
 
 msgid "Notify the attendees"
 msgstr "Láta þátttakendur vita"
 
 msgid "Notify the customer(s)"
-msgstr "Láta viðskiptavini vita"
+msgstr "Tilkynna viðskiptavinum"
 
 msgid "Number of Additional People"
 msgstr "Fjöldi viðbótarfólks"
@@ -8970,7 +8955,7 @@ msgid "Outlook Calendar setup"
 msgstr "Uppsetning Outlook dagatals"
 
 msgid "Outlook Mailer"
-msgstr "Outlook póstur"
+msgstr "Outlook póstþjónusta"
 
 msgid ""
 "Outlook Mailer is not fully configured. Please complete the account setup in "
@@ -8980,7 +8965,7 @@ msgstr ""
 "reikningsins í samþættingarstillingum Outlook."
 
 msgid "Outlook calendar events"
-msgstr "Viðburðir í Outlook-dagatali"
+msgstr ""
 
 msgid "Outside of working hours"
 msgstr "Utan vinnutíma"
@@ -9019,13 +9004,13 @@ msgid "Package %package_name% purchased"
 msgstr "Pakki %package_name% keyptur"
 
 msgid "Package Asc"
-msgstr "Pakki uppstigandi"
+msgstr "Pakki hækkandi"
 
 msgid "Package Canceled"
 msgstr "Pakki hættur við"
 
 msgid "Package Desc"
-msgstr "Lýsing pakka"
+msgstr "Pakki lækkandi"
 
 msgid "Package ID"
 msgstr "Pakkaauðkenni"
@@ -9993,7 +9978,7 @@ msgid "Price Ascending"
 msgstr "Verð - Uppsveif"
 
 msgid "Price Desc"
-msgstr "Verðlýsing"
+msgstr "Verð lækkandi"
 
 msgid "Price Descending"
 msgstr "Verð - Niðursveif"
@@ -10114,6 +10099,11 @@ msgstr "Kaup er hætt"
 msgid "Purchased"
 msgstr "Keypt"
 
+msgid ""
+"Purchasing doesn't upgrade this plugin automatically. Follow our step-by-"
+"step guide to switch to the full version."
+msgstr ""
+
 msgid "Purple"
 msgstr "Fjólublátt"
 
@@ -10130,7 +10120,7 @@ msgid "Quantity Asc"
 msgstr "Magn hækkandi"
 
 msgid "Quantity Desc"
-msgstr "Magn Lýsing"
+msgstr "Magn lækkandi"
 
 msgid "Quantity is shared"
 msgstr "Magn er deilt"
@@ -10253,7 +10243,7 @@ msgid "Redirect"
 msgstr "Áframsending"
 
 msgid "Redirect URI"
-msgstr "Tilvísunar-URL"
+msgstr "URI fyrir áframsendingu"
 
 msgid "Redirect URL After Booking"
 msgstr "Ábendingar-URL eftir bókun"
@@ -10283,7 +10273,7 @@ msgid "Redirect URL for unsuccessfully rejected booking"
 msgstr "Bein vefslóð fyrir bókun sem ekki var náð"
 
 msgid "Redirect URLs"
-msgstr "Beina vefslóðum"
+msgstr "URL-slóðir fyrir áframsendingu"
 
 msgid "Redirect page"
 msgstr "Beina síðu"
@@ -10321,10 +10311,6 @@ msgstr "Eftirstöðvar af heildarupphæð verða greiddar á staðnum."
 
 msgid "Remind me when my SMS balance is low"
 msgstr "Minntu mig á þegar SMS-innistæðan mín er lág"
-
-#, php-format
-msgid "Reminder: %1$s is scheduled for %2$s."
-msgstr "Áminning: %1$s er áætlað á %2$s."
 
 msgid "Remove Apple Calendar event slots"
 msgstr "Fjarlægja tímaraufar fyrir Apple Calendar-viðburði"
@@ -10722,6 +10708,9 @@ msgstr "Kafli"
 msgid "Securely process payments using Stripe."
 msgstr "Vinnið úr greiðslum á öruggan hátt með Stripe."
 
+msgid "See upgrade guide."
+msgstr ""
+
 msgid "Segment"
 msgstr "Hluti"
 
@@ -11056,7 +11045,7 @@ msgid "Service/Event"
 msgstr "Þjónusta/Viðburður"
 
 msgid "Service Asc"
-msgstr "Þjónustuhækkun"
+msgstr "Þjónusta hækkandi"
 
 msgid "Service Categories"
 msgstr "Þjónustuflokkar"
@@ -11065,7 +11054,7 @@ msgid "Service Category"
 msgstr "Þjónustuflokkur"
 
 msgid "Service Desc"
-msgstr "Þjónustulýsing"
+msgstr "Þjónusta lækkandi"
 
 msgid "Service ID"
 msgstr "Þjónustuauðkenni"
@@ -11164,10 +11153,10 @@ msgid "Services & categories setup"
 msgstr "Uppsetning þjónustu og flokka"
 
 msgid "Services Asc"
-msgstr "Þjónusta uppstigandi"
+msgstr "Þjónustur hækkandi"
 
 msgid "Services Desc"
-msgstr "Lýsing þjónustu"
+msgstr "Þjónustur lækkandi"
 
 msgid "Services and packages overview"
 msgstr "Yfirlit yfir þjónustu og pakka"
@@ -11596,6 +11585,9 @@ msgstr "Innskráning með Microsoft"
 msgid "Sign in with Outlook"
 msgstr "Skrá inn með Outlook"
 
+msgid "Sign out and use a customer account"
+msgstr ""
+
 msgid "Sign out from Google"
 msgstr "Skrá út úr Google"
 
@@ -11798,10 +11790,10 @@ msgid "Status"
 msgstr "Staða"
 
 msgid "Status Asc"
-msgstr "Staða upp"
+msgstr "Staða hækkandi"
 
 msgid "Status Desc"
-msgstr "Lýsing á stöðu"
+msgstr "Staða lækkandi"
 
 msgid ""
 "Stay compliant with ease through consistent, reliable tax handling across "
@@ -12005,7 +11997,7 @@ msgid "Switch Camera"
 msgstr "Skipta um myndavél"
 
 msgid "Sync Google Events"
-msgstr "Samstilla Google-viðburði"
+msgstr ""
 
 msgid "Sync with"
 msgstr "Samstilla við"
@@ -12533,6 +12525,12 @@ msgstr ""
 "stillingarnar þínar."
 
 msgid ""
+"This option applies only to people added through \"Bringing anyone with "
+"you\". If disabled, the service price is charged once for the entire "
+"booking, regardless of how many additional people are included."
+msgstr ""
+
+msgid ""
 "This option requires adding the payment link placeholder to your message "
 "templates."
 msgstr ""
@@ -12634,7 +12632,7 @@ msgid "Thu"
 msgstr "Fim"
 
 msgid "Thursday"
-msgstr "Fimmtudag"
+msgstr "Fimmtudagur"
 
 msgid "Ticket"
 msgstr "Miði"
@@ -12694,10 +12692,10 @@ msgid "Time Range:"
 msgstr "Tímabil:"
 
 msgid "Time Used Asc"
-msgstr "Tími notaður upp"
+msgstr "Tími notaður hækkandi"
 
 msgid "Time Used Desc"
-msgstr "Tími notaður Lýsing"
+msgstr "Tími notaður lækkandi"
 
 msgid "Time frame"
 msgstr "Tímarammi"
@@ -12937,7 +12935,7 @@ msgid "Tue"
 msgstr "Þri"
 
 msgid "Tuesday"
-msgstr "Þriðjudag"
+msgstr "Þriðjudagur"
 
 msgid ""
 "Turn your services into high-value packages that customers love. Combine "
@@ -12952,10 +12950,10 @@ msgid "Type"
 msgstr "Tegund"
 
 msgid "Type Asc"
-msgstr "Tegund uppstigandi"
+msgstr "Tegund hækkandi"
 
 msgid "Type Desc"
-msgstr "Lýsing á gerð"
+msgstr "Tegund lækkandi"
 
 msgid "URL"
 msgstr "Vefslóð"
@@ -13319,10 +13317,10 @@ msgid "Website"
 msgstr "Vefsíða"
 
 msgid "Wed"
-msgstr "Miðvikudagur"
+msgstr "Mið"
 
 msgid "Wednesday"
-msgstr "Miðvikudag"
+msgstr "Miðvikudagur"
 
 msgid "Week"
 msgstr "Vika"
@@ -13729,6 +13727,11 @@ msgstr ""
 msgid "Your password has been reset successfully."
 msgstr "Lykilorðið þitt hefur verið endurstillt."
 
+msgid ""
+"Your payment is still processing. You will receive a confirmation as soon as "
+"it is completed."
+msgstr ""
+
 msgid "Your postal code is incomplete"
 msgstr "Póstnúmerið er ófullkomið"
 
@@ -14036,35 +14039,35 @@ msgid ""
 "{count} appointment has been deleted. | {count} appointments have been "
 "deleted."
 msgstr ""
-"{count}Tímapöntun hefur verið eytt.{count} Tímapantanir hafa verið eytt."
+"{count} Tímapöntun hefur verið eytt. | {count} Tímapantanir hafa verið eytt."
 
 msgid ""
 "{count} appointment has not been deleted. | {count} appointments have not "
 "been deleted."
 msgstr ""
-"{count}Tímapöntun hefur ekki verið eytt.{count} Tímasetningar hafa ekki "
+"{count} Tímapöntun hefur ekki verið eytt. | {count} Tímasetningar hafa ekki "
 "verið eytt."
 
 msgid "{count} coupon has been deleted. | {count} coupons have been deleted."
 msgstr ""
-"{count}Afsláttarmiði hefur verið eytt.{count} afsláttarmiðum hefur verið "
+"{count} Afsláttarmiði hefur verið eytt. | {count} afsláttarmiðum hefur verið "
 "eytt."
 
 msgid ""
 "{count} coupon has not been deleted. | {count} coupons have not been deleted."
 msgstr ""
-"{count}Afsláttarmiði hefur ekki verið eytt.{count} afsláttarmiðum hefur ekki "
-"verið eytt."
+"{count} Afsláttarmiði hefur ekki verið eytt. | {count} afsláttarmiðum hefur "
+"ekki verið eytt."
 
 msgid ""
 "{count} customer could not be deleted due to future bookings. | {count} "
 "customers could not be deleted due to future bookings."
 msgstr ""
-"{count}Ekki var hægt að eyða viðskiptavini vegna bókana í framtíðinni."
+"{count} Ekki var hægt að eyða viðskiptavini vegna bókana í framtíðinni. | "
 "{count} Ekki var hægt að eyða viðskiptavinum vegna bókana í framtíðinni."
 
 msgid "{count} customer deleted. | {count} customers deleted."
-msgstr "{count}viðskiptavinur eytt.{count} viðskiptavinir eytt."
+msgstr "{count} viðskiptavinur eytt. | {count} viðskiptavinir eytt."
 
 msgid ""
 "{count} customers were not imported due to missing First Name, Last Name, "
@@ -14088,31 +14091,33 @@ msgstr "{count}dagur |{count} dagar"
 msgid ""
 "{count} employee has been deleted. | {count} employees have been deleted."
 msgstr ""
-"{count}Starfsmaður hefur verið eytt.{count} starfsmenn hafa verið fjarlægðir."
+"{count} Starfsmaður hefur verið eytt. | {count} starfsmenn hafa verið "
+"fjarlægðir."
 
 msgid ""
 "{count} employee has not been deleted due to future bookings. | {count} "
 "employees have not been deleted due to future bookings."
 msgstr ""
-"{count}Starfsmanni hefur ekki verið eytt vegna bókana í framtíðinni.{count} "
-"Starfsmenn hafa ekki verið eyddir vegna bókana í framtíðinni."
+"{count} Starfsmanni hefur ekki verið eytt vegna bókana í framtíðinni. | "
+"{count} Starfsmenn hafa ekki verið eyddir vegna bókana í framtíðinni."
 
 msgid ""
 "{count} event booking has been deleted. | {count} event bookings have been "
 "deleted."
 msgstr ""
-"{count}Bókun viðburðar hefur verið eytt.{count} Bókunum á viðburði hefur "
+"{count} Bókun viðburðar hefur verið eytt. | {count} Bókunum á viðburði hefur "
 "verið eytt."
 
 msgid ""
 "{count} event booking has not been deleted. | {count} event bookings have "
 "not been deleted."
 msgstr ""
-"{count}Bókun viðburðar hefur ekki verið eytt.{count} Bókunum á viðburðum "
+"{count} Bókun viðburðar hefur ekki verið eytt. | {count} Bókunum á viðburðum "
 "hefur ekki verið eytt."
 
 msgid "{count} event has been deleted. | {count} events have been deleted."
-msgstr "{count}Viðburður hefur verið eytt.{count} viðburðum hefur verið eytt."
+msgstr ""
+"{count} Viðburður hefur verið eytt. | {count} viðburðum hefur verið eytt."
 
 msgid "{count} event | {count} events"
 msgstr "{count}viðburður |{count} viðburðir"
@@ -14126,14 +14131,15 @@ msgstr "{count}atriði valið |{count} atriði valin"
 msgid ""
 "{count} location has been deleted. | {count} locations have been deleted."
 msgstr ""
-"{count}Staðsetning hefur verið eytt.{count} staðsetningum hefur verið eytt."
+"{count} Staðsetning hefur verið eytt. | {count} staðsetningum hefur verið "
+"eytt."
 
 msgid ""
 "{count} location has not been deleted due to future bookings. | {count} "
 "locations have not been deleted due to future bookings."
 msgstr ""
-"{count}Staðsetning hefur ekki verið eytt vegna bókana í framtíðinni.{count} "
-"Staðsetningar hafa ekki verið eytt vegna bókana í framtíðinni."
+"{count} Staðsetning hefur ekki verið eytt vegna bókana í framtíðinni. | "
+"{count} Staðsetningar hafa ekki verið eytt vegna bókana í framtíðinni."
 
 msgid "{count} minute | {count} minutes"
 msgstr "{count}mínúta |{count} mínútur"
@@ -14145,53 +14151,56 @@ msgid ""
 "{count} package booking has been deleted. | {count} package bookings have "
 "been deleted."
 msgstr ""
-"{count}Pakkabókun hefur verið eytt.{count} Pakkabókunum hefur verið eytt."
+"{count} Pakkabókun hefur verið eytt. | {count} Pakkabókunum hefur verið eytt."
 
 msgid ""
 "{count} package booking has not been deleted. | {count} package bookings "
 "have not been deleted."
 msgstr ""
-"{count}Pakkabókun hefur ekki verið eytt.{count} Pakkabókunum hefur ekki "
+"{count} Pakkabókun hefur ekki verið eytt. | {count} Pakkabókunum hefur ekki "
 "verið eytt."
 
 msgid "{count} package has been deleted. | {count} packages have been deleted."
-msgstr "{count}Pakkinn hefur verið eytt.{count} pakkarnir hafa verið eytt."
+msgstr "{count} Pakkinn hefur verið eytt. | {count} pakkarnir hafa verið eytt."
 
 msgid ""
 "{count} package has not been deleted due to future bookings. | {count} "
 "packages have not been deleted due to future bookings."
 msgstr ""
-"{count}Pakkinn hefur ekki verið eytt vegna bókana í framtíðinni.{count} "
+"{count} Pakkinn hefur ekki verið eytt vegna bókana í framtíðinni. | {count} "
 "Pökkum hefur ekki verið eytt vegna bókana í framtíðinni."
 
 msgid ""
 "{count} resource has been deleted. | {count} resources have been deleted."
-msgstr "{count}Auðlind hefur verið eytt.{count} auðlindum hefur verið eytt."
+msgstr ""
+"{count} Auðlind hefur verið eytt. | {count} auðlindum hefur verið eytt."
 
 msgid ""
 "{count} resource has not been deleted. | {count} resources have not been "
 "deleted."
 msgstr ""
-"{count}Auðlindin hefur ekki verið eytt.{count} auðlindum hefur ekki verið "
-"eytt."
+"{count} Auðlindin hefur ekki verið eytt. | {count} auðlindum hefur ekki "
+"verið eytt."
 
 msgid "{count} service has been deleted. | {count} services have been deleted."
-msgstr "{count}Þjónustan hefur verið eytt.{count} þjónustum hefur verið eytt."
+msgstr ""
+"{count} Þjónustan hefur verið eytt. | {count} þjónustum hefur verið eytt."
 
 msgid ""
 "{count} service has not been deleted. | {count} services have not been "
 "deleted."
 msgstr ""
-"{count}Þjónustan hefur ekki verið eytt.{count} Þjónustur hafa ekki verið "
+"{count} Þjónustan hefur ekki verið eytt. | {count} Þjónustur hafa ekki verið "
 "eytt."
 
 msgid "{count} tax has been deleted. | {count} taxes have been deleted."
-msgstr "{count}Skattur hefur verið eytt.{count} skattar hafa verið fjarlægðir."
+msgstr ""
+"{count} Skattur hefur verið eytt. | {count} skattar hafa verið fjarlægðir."
 
 msgid ""
 "{count} tax has not been deleted. | {count} taxes have not been deleted."
 msgstr ""
-"{count}Skattur hefur ekki verið eytt.{count} skattar hafa ekki verið "
+"{count} Skattur hefur ekki verið eytt. | {count} skattar hafa ekki verið "
 "afnumdir."
 
 msgid "{count} week | {count} weeks"

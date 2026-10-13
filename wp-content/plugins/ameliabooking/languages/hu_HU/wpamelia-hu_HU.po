@@ -33,26 +33,6 @@ msgid "# of bookings"
 msgstr "Foglalások száma"
 
 #, php-format
-msgid "%1$s, %2$s, was canceled."
-msgstr "%1$s, %2$s, lemondva."
-
-#, php-format
-msgid "%1$s, %2$s, was rejected."
-msgstr "%1$s, %2$s, elutasítva."
-
-#, php-format
-msgid "%1$s booked %2$s at %3$s."
-msgstr "%1$s lefoglalta a(z) %2$s-t ekkor: %3$s."
-
-#, php-format
-msgid "%1$s on %2$s had a status change."
-msgstr "%1$s (%2$s) státusza megváltozott."
-
-#, php-format
-msgid "%1$s on %2$s was updated."
-msgstr "%1$s (%2$s) frissítve."
-
-#, php-format
 msgid "%event_name% Event Booked"
 msgstr "%event_name% Esemény lefoglalva"
 
@@ -463,8 +443,14 @@ msgstr "Műveletek"
 msgid "Activate"
 msgstr "Aktivál"
 
+msgid "Activate now"
+msgstr ""
+
 msgid "Activate with Envato"
 msgstr "Aktiválás Envato-val"
+
+msgid "Activate your license to unlock the features included in your plan."
+msgstr ""
 
 msgid "Activated with Envato"
 msgstr "Envato-val aktiválva"
@@ -892,6 +878,9 @@ msgstr "Korábban kifizetve"
 msgid "Already have an account?"
 msgstr "Van már fiókja?"
 
+msgid "Already purchased Amelia?"
+msgstr ""
+
 msgid "Also cancel and delete future events"
 msgstr "A jövőbeli eseményeket is törölje és szüntesse meg"
 
@@ -941,7 +930,7 @@ msgid "Apple"
 msgstr ""
 
 msgid "Apple Calendar"
-msgstr "Google Naptár"
+msgstr "Apple Naptár"
 
 msgid "Apple Calendar (Personal)"
 msgstr "Apple Naptár (Személyes)"
@@ -950,7 +939,7 @@ msgid "Apple Calendar setup"
 msgstr "Apple Naptár beállítása"
 
 msgid "Apple calendar events"
-msgstr "Apple Naptár-események"
+msgstr ""
 
 msgid "Application (client) ID"
 msgstr "Alkalmazás (ügyfél) azonosító"
@@ -1096,9 +1085,6 @@ msgstr "Találkozás megjegyzés"
 msgid "Appointment price"
 msgstr "Találkozó ára"
 
-msgid "Appointment reminder"
-msgstr "Időpont-emlékeztető"
-
 msgid "Appointment repeats"
 msgstr "A találkozó ismétlődik"
 
@@ -1111,9 +1097,6 @@ msgstr "A találkozó kezdési ideje"
 msgid "Appointment status"
 msgstr "A találkozó állapotát a következőre módosítottuk: "
 
-msgid "Appointment status changed"
-msgstr "Időpont állapota megváltozott"
-
 msgid "Appointment status has been changed to "
 msgstr "A találkozó állapotát a következőre módosítottuk: "
 
@@ -1122,9 +1105,6 @@ msgstr "A találkozó státusza frissült."
 
 msgid "Appointment title"
 msgstr "A találkozó címe"
-
-msgid "Appointment updated"
-msgstr "Időpont módosítva"
 
 msgid "Appointments"
 msgstr "Találkozók"
@@ -1164,6 +1144,10 @@ msgstr "Biztosan törölni és törölni szeretné ezt az eseményt?"
 
 msgid "Are you sure you want to cancel this appointment?"
 msgstr "Biztosan le kívánja mondani ezt a találkozót?"
+
+msgid ""
+"Are you sure you want to cancel this booking? This action cannot be undone."
+msgstr ""
 
 msgid "Are you sure you want to cancel this event?"
 msgstr "Biztosan le kívánja mondani ezt az eseményt?"
@@ -1348,16 +1332,16 @@ msgid "Attachment upload path"
 msgstr "Csatolmány feltöltési útvonala"
 
 msgid "Attendee"
-msgstr "Esemény résztvevő által lemondva"
+msgstr "Résztvevő"
 
 msgid "Attendee Asc"
-msgstr "Résztvevő Asc"
+msgstr "Résztvevő növekvő"
 
 msgid "Attendee Desc"
-msgstr "Résztvevő leírása"
+msgstr "Résztvevő csökkenő"
 
 msgid "Attendee code"
-msgstr "Résztvevő kód"
+msgstr "Résztvevő kódja"
 
 msgid "Attendee has been saved"
 msgstr "A résztvevőt elmentettük"
@@ -1372,7 +1356,7 @@ msgid "Attendees"
 msgstr "Résztvevők"
 
 msgid "Attendees Allowed"
-msgstr "Résztvevő kód"
+msgstr "Engedélyezett résztvevők"
 
 msgid "Attendees Export Format"
 msgstr "Résztvevők export formátuma"
@@ -1463,13 +1447,13 @@ msgid "Available date text"
 msgstr "Elérhető dátum szöveg"
 
 msgid "Available from Pro license"
-msgstr "Elérhető képek"
+msgstr "A Pro licenctől érhető el"
 
 msgid "Available from Standard license"
-msgstr "Elérhető képek"
+msgstr "A Standard licenctől érhető el"
 
 msgid "Available from Starter license"
-msgstr "Elérhető képek"
+msgstr "A Starter licenctől érhető el"
 
 msgid "Available in Elite licence"
 msgstr "Elite licenccel elérhető"
@@ -1701,10 +1685,10 @@ msgid "Booking Closes"
 msgstr "Foglalási időszak zárása:"
 
 msgid "Booking Closes Asc"
-msgstr "Foglalás lezárása Asc"
+msgstr "Foglalás lezárása növekvő"
 
 msgid "Booking Closes Desc"
-msgstr "Foglalás lezárása Leírás"
+msgstr "Foglalás lezárása csökkenő"
 
 msgid "Booking Confirmed"
 msgstr "Foglalás megerősítve"
@@ -1731,10 +1715,10 @@ msgid "Booking Opens"
 msgstr "Foglalási időszak kezdete:"
 
 msgid "Booking Opens Asc"
-msgstr "Foglalás megnyitása Asc"
+msgstr "Foglalás megnyitása növekvő"
 
 msgid "Booking Opens Desc"
-msgstr "Foglalás megnyitása Desc"
+msgstr "Foglalás megnyitása csökkenő"
 
 msgid "Booking Overview"
 msgstr "Foglalás áttekintése"
@@ -2304,6 +2288,9 @@ msgstr ""
 "Válassza ki, hogy szolgáltatásokat, eseményeket vagy mindkettőt szeretne "
 "kezelni."
 
+msgid "Choose which tab users see first when they log in"
+msgstr ""
+
 msgid "Choosing layout of first step in step by step form"
 msgstr ""
 "Az első lépés elrendezésének kiválasztása a lépésről lépésre kitölthető "
@@ -2493,6 +2480,9 @@ msgstr "A várólista beállítása a találkozókhoz"
 
 msgid "Confirm"
 msgstr "Megerősít"
+
+msgid "Confirm Cancellation"
+msgstr ""
 
 msgid "Confirm My Appointment"
 msgstr "Erősítse meg az időpontomat"
@@ -2857,10 +2847,7 @@ msgstr ""
 "elkötelezettséget, az elégedettséget és az eladásokat."
 
 msgid "Created On"
-msgstr ""
-"Az Időpontfoglalás egy shortcode, ami lehetővé teszi ügyfelei számára, hogy "
-"az Ön által a back-enden létrehozott események közül valamelyikre foglalást "
-"végezzen egy egyszerű lista nézetben."
+msgstr "Létrehozva"
 
 msgid "Created on"
 msgstr "Létrehozva:"
@@ -2970,10 +2957,10 @@ msgid "Customer(s)"
 msgstr "Ügyfél/ügyfelek"
 
 msgid "Customer Asc"
-msgstr "Ügyfél Asc"
+msgstr "Ügyfél növekvő"
 
 msgid "Customer Desc"
-msgstr "Ügyfél leírás"
+msgstr "Ügyfél csökkenő"
 
 msgid "Customer Panel"
 msgstr "Ügyfélpanel bekapcsolása"
@@ -3149,9 +3136,6 @@ msgstr "Változatlan adatok:"
 msgid "Data to be updated:"
 msgstr "Frissítendő adatok:"
 
-msgid "Data transfer"
-msgstr "Adatáttelepítés"
-
 msgid "Date"
 msgstr "Dátum"
 
@@ -3168,19 +3152,19 @@ msgid "Date & time periods of the event with Lesson Space join links"
 msgstr "Az esemény dátuma és időtartama a Lesson Space csatlakozási linkjeivel"
 
 msgid "Date Asc"
-msgstr "Dátum Asc"
+msgstr "Dátum növekvő"
 
 msgid "Date Desc"
-msgstr "Dátum Leírás"
+msgstr "Dátum csökkenő"
 
 msgid "Date Picker"
 msgstr "Dátumválasztó"
 
 msgid "Date Purchased Asc"
-msgstr "Vásárlás dátuma Asc"
+msgstr "Vásárlás dátuma növekvő"
 
 msgid "Date Purchased Desc"
-msgstr "Vásárlás dátuma Leírás"
+msgstr "Vásárlás dátuma csökkenő"
 
 msgid ""
 "Date Ranges that are not defined will use default price from ticket category."
@@ -4152,10 +4136,10 @@ msgid "Deduction"
 msgstr "Engedmény"
 
 msgid "Deduction Asc"
-msgstr "Levonás Asc"
+msgstr "Levonás növekvő"
 
 msgid "Deduction Desc"
-msgstr "Levonás Leírás"
+msgstr "Levonás csökkenő"
 
 msgid "Default Label"
 msgstr "Alapértelmezett címke"
@@ -4168,6 +4152,9 @@ msgstr "Alapértelmezett találkozó státusz"
 
 msgid "Default back end page"
 msgstr "Alapértelmezett háttéroldal"
+
+msgid "Default landing tab"
+msgstr ""
 
 msgid "Default language"
 msgstr "Alapértelmezett nyelv"
@@ -4412,10 +4399,10 @@ msgid "Discount"
 msgstr "Engedmény"
 
 msgid "Discount Asc"
-msgstr "Kedvezmény Asc"
+msgstr "Kedvezmény növekvő"
 
 msgid "Discount Desc"
-msgstr "Kedvezmény leírása"
+msgstr "Kedvezmény csökkenő"
 
 msgid "Discount (%)"
 msgstr "Engedmény (%)"
@@ -4594,10 +4581,10 @@ msgid "Duration:"
 msgstr "Időtartam:"
 
 msgid "Duration Asc"
-msgstr "Időtartam Asc"
+msgstr "Időtartam növekvő"
 
 msgid "Duration Desc"
-msgstr "Időtartam Leírás"
+msgstr "Időtartam csökkenő"
 
 msgid "E-Ticket Scanner"
 msgstr "E-jegy szkenner"
@@ -4684,8 +4671,6 @@ msgid ""
 "Edit appointments/events when connected Google Calendar Events are "
 "rescheduled or deleted"
 msgstr ""
-"Időpontok/események frissítése, ha az összekapcsolt Google Naptár "
-"eseményeket átütemezik vagy törlik"
 
 msgid "Edit block time"
 msgstr "Blokkolt idő módosítása"
@@ -5360,7 +5345,7 @@ msgid "Event"
 msgstr "Esemény"
 
 msgid "Event Asc"
-msgstr "Esemény Asc"
+msgstr "Esemény növekvő"
 
 msgid "Event Available"
 msgstr "Rendelkezésre áll"
@@ -5399,7 +5384,7 @@ msgid "Event Day"
 msgstr "Esemény dátum"
 
 msgid "Event Desc"
-msgstr "Esemény leírása"
+msgstr "Esemény csökkenő"
 
 msgid "Event Employee"
 msgstr "Esemény Alkalmazott"
@@ -5811,9 +5796,6 @@ msgstr "Sikertelen"
 msgid "Failed to access camera. Please try again."
 msgstr "Nem sikerült hozzáférni a kamerához. Kérjük, próbálkozzon újra."
 
-msgid "Failed to initialize payment. Please try again."
-msgstr "Nem sikerült elindítani a fizetést. Kérjük, próbálja meg újra."
-
 msgid "Failed to load appointment details. Please try again later."
 msgstr ""
 "A találkozó részleteinek betöltése sikertelen. Kérjük, próbálkozzon újra "
@@ -6012,7 +5994,7 @@ msgid "Free"
 msgstr "Szabad"
 
 msgid "Fri"
-msgstr "Péntek"
+msgstr "Pén"
 
 msgid "Friday"
 msgstr "Péntek"
@@ -6072,7 +6054,7 @@ msgid "Frontend & Backend"
 msgstr "Frontend és backend"
 
 msgid "Full"
-msgstr "Foglalást végző ügyfél (teljes név, e-mail, telefonszám)"
+msgstr "Megtelt"
 
 msgid "Full events"
 msgstr "Teljes események"
@@ -6196,7 +6178,7 @@ msgid "Google Meet setup"
 msgstr "Google Meet beállítás"
 
 msgid "Google calendar events"
-msgstr "Google Calendar-események"
+msgstr ""
 
 msgid "Google reCAPTCHA v2 secret key"
 msgstr "Google reCAPTCHA v2 titkos kulcs"
@@ -6956,10 +6938,10 @@ msgid "ID"
 msgstr "Alfanumerikus küldőazonosító módosítása"
 
 msgid "ID Asc"
-msgstr ""
+msgstr "ID növekvő"
 
 msgid "ID Desc"
-msgstr "ID Leírás"
+msgstr "ID csökkenő"
 
 msgid "I understand this import will replace all current data permanently."
 msgstr ""
@@ -6988,13 +6970,6 @@ msgid ""
 msgstr ""
 "Ha ez a beállítás ki van kapcsolva, akkor a foglalásnak meg kell felelnie a "
 "minimális kapacitásnak, és az időintervallum az első foglalás után bezárul."
-
-msgid ""
-"If disabled, the price will remain the same regardless of how many people "
-"are included in the group appointment."
-msgstr ""
-"Ha ez a funkció ki van kapcsolva, az ár változatlan marad, függetlenül "
-"attól, hogy hány fő vesz részt a csoportos időpontban."
 
 msgid ""
 "If enabled, customers can book with Pending status even after maximum "
@@ -7138,6 +7113,9 @@ msgstr "Képek miniatűrjei"
 msgid "Import"
 msgstr ""
 
+msgid "Import/Export"
+msgstr ""
+
 msgid "Import Failed"
 msgstr "Importálás sikertelen"
 
@@ -7167,6 +7145,9 @@ msgstr "Az importálás sikertelen."
 
 msgid "Import failed. Review the details below."
 msgstr "Az importálás sikertelen. Tekintse át az alábbi részleteket."
+
+msgid "Import or export your Amelia data."
+msgstr ""
 
 msgid "Import progress"
 msgstr "Importálás állása"
@@ -7586,10 +7567,10 @@ msgid "Invoice Format"
 msgstr "Szolgáltatás Időtartama"
 
 msgid "Invoice Number Asc"
-msgstr "Számlaszám Asc"
+msgstr "Számlaszám növekvő"
 
 msgid "Invoice Number Desc"
-msgstr "Számlaszám Leírás"
+msgstr "Számlaszám csökkenő"
 
 msgid "Invoice date"
 msgstr "Számla dátuma"
@@ -7758,10 +7739,10 @@ msgid "Last"
 msgstr "Vezetéknév"
 
 msgid "Last Booking Asc"
-msgstr "Utolsó foglalás Asc"
+msgstr "Utolsó foglalás növekvő"
 
 msgid "Last Booking Desc"
-msgstr "Utolsó foglalás leírása"
+msgstr "Utolsó foglalás csökkenő"
 
 msgid "Last Name:"
 msgstr "Vezetéknév:"
@@ -8140,10 +8121,10 @@ msgid "Max. Capacity"
 msgstr "Max. kapacitás"
 
 msgid "Max Capacity Asc"
-msgstr "Maximális kapacitás Asc"
+msgstr "Maximális kapacitás növekvő"
 
 msgid "Max Capacity Desc"
-msgstr "Maximális kapacitás leírása"
+msgstr "Maximális kapacitás csökkenő"
 
 msgid "Maximum"
 msgstr ""
@@ -8297,7 +8278,7 @@ msgid "Mollie payment link"
 msgstr "Mollie fizetési link"
 
 msgid "Mon"
-msgstr "Hétfő"
+msgstr "Hét"
 
 msgid "Monday"
 msgstr "Hétfő"
@@ -8364,13 +8345,13 @@ msgid "Name:"
 msgstr "Név:"
 
 msgid "Name Asc"
-msgstr "Név Asc"
+msgstr "Név növekvő"
 
 msgid "Name Ascending"
 msgstr "Név szerint, növekvő"
 
 msgid "Name Desc"
-msgstr "Név Leírás"
+msgstr "Név csökkenő"
 
 msgid "Name Descending"
 msgstr "Név szerint, csökkenő"
@@ -8487,10 +8468,10 @@ msgid "No, just this one"
 msgstr "Nem, csak ezt"
 
 msgid "No-show"
-msgstr ""
+msgstr "Nem jelent meg"
 
 msgid "No-show tag"
-msgstr "No-show címke"
+msgstr "Nem jelent meg címke"
 
 msgid "No Employees Assigned to This Location"
 msgstr "Nincs alkalmazott hozzárendelve ehhez a helyszínhez"
@@ -8499,16 +8480,16 @@ msgid "No Packages"
 msgstr "Nincs csomag"
 
 msgid "No Show"
-msgstr "Nem jelenik meg"
+msgstr "Nem jelent meg"
 
 msgid "No Show (1)"
-msgstr "Nem jelenik meg (1)"
+msgstr "Nem jelent meg (1)"
 
 msgid "No Show (2)"
-msgstr "Nem jelenik meg (2)"
+msgstr "Nem jelent meg (2)"
 
 msgid "No Show (3+)"
-msgstr ""
+msgstr "Nem jelent meg (3+)"
 
 msgid "No Tags. Create a new one."
 msgstr "Nincs címke. Hozzon létre egy újat."
@@ -8714,13 +8695,13 @@ msgid "Notify selected employees about empty package purchases"
 msgstr "Értesítsd a kiválasztott alkalmazottakat az üres csomagok vásárlásáról"
 
 msgid "Notify the attendee(s)"
-msgstr "Ügyfél/ügyfelek értesítése"
+msgstr "Résztvevők értesítése"
 
 msgid "Notify the attendees"
 msgstr "Értesítse a résztvevőket"
 
 msgid "Notify the customer(s)"
-msgstr "Ügyfél/ügyfelek értesítése"
+msgstr "Ügyfelek értesítése"
 
 msgid "Number of Additional People"
 msgstr "További személyek száma"
@@ -9049,7 +9030,7 @@ msgid "Outline"
 msgstr "Vázlat"
 
 msgid "Outlook Calendar"
-msgstr "Outlook naptár"
+msgstr "Outlook Naptár"
 
 msgid "Outlook Calendar & Microsoft Teams"
 msgstr "Outlook naptár és Microsoft Teams"
@@ -9061,7 +9042,7 @@ msgid "Outlook Calendar setup"
 msgstr "Outlook naptár beállítása"
 
 msgid "Outlook Mailer"
-msgstr ""
+msgstr "Outlook e-mail szolgáltatás"
 
 msgid ""
 "Outlook Mailer is not fully configured. Please complete the account setup in "
@@ -9071,7 +9052,7 @@ msgstr ""
 "beállítását az Outlook integrációs beállításokban."
 
 msgid "Outlook calendar events"
-msgstr "Outlook naptári események"
+msgstr ""
 
 msgid "Outside of working hours"
 msgstr "Munkaidőn kívül"
@@ -9110,13 +9091,13 @@ msgid "Package %package_name% purchased"
 msgstr "Csomag %package_name% megvásárolva"
 
 msgid "Package Asc"
-msgstr "Csomag Asc"
+msgstr "Csomag növekvő"
 
 msgid "Package Canceled"
 msgstr "Csomag törölve"
 
 msgid "Package Desc"
-msgstr "Csomag leírása"
+msgstr "Csomag csökkenő"
 
 msgid "Package ID"
 msgstr "Csomagazonosító"
@@ -9517,7 +9498,7 @@ msgid "Period available for booking in advance"
 msgstr "Előre foglalás legtávolabbi dátuma"
 
 msgid "Periods"
-msgstr "Az esemény dátum- és időperiódusai Zoom belépési linkekkel"
+msgstr "Időszakok"
 
 msgid "Permanent access token"
 msgstr "Állandó hozzáférési token"
@@ -10079,13 +10060,13 @@ msgid "Price:"
 msgstr "Ár:"
 
 msgid "Price Asc"
-msgstr "Ár emelkedő"
+msgstr "Ár emelkedő növekvő"
 
 msgid "Price Ascending"
 msgstr "Ár szerint, emelkedő"
 
 msgid "Price Desc"
-msgstr "Ár leírás"
+msgstr "Ár emelkedő csökkenő"
 
 msgid "Price Descending"
 msgstr "Ár szerint, csökkenő"
@@ -10205,6 +10186,11 @@ msgstr "A vásárlás törölve"
 msgid "Purchased"
 msgstr "Megvásárolt"
 
+msgid ""
+"Purchasing doesn't upgrade this plugin automatically. Follow our step-by-"
+"step guide to switch to the full version."
+msgstr ""
+
 msgid "Purple"
 msgstr "Lila"
 
@@ -10218,10 +10204,10 @@ msgid "Quantity"
 msgstr "Maximum mennyiség"
 
 msgid "Quantity Asc"
-msgstr "Mennyiség Asc"
+msgstr "Mennyiség növekvő"
 
 msgid "Quantity Desc"
-msgstr "Mennyiség Leírás"
+msgstr "Mennyiség csökkenő"
 
 msgid "Quantity is shared"
 msgstr "A mennyiség megosztott"
@@ -10344,7 +10330,7 @@ msgid "Redirect"
 msgstr "Átirányítás"
 
 msgid "Redirect URI"
-msgstr "Átirányítási URL"
+msgstr "Átirányítási URI"
 
 msgid "Redirect URL After Booking"
 msgstr "Átirányítási URL foglalás után"
@@ -10374,7 +10360,7 @@ msgid "Redirect URL for unsuccessfully rejected booking"
 msgstr "Átirányítási URL a sikertelenül elutasított foglalás esetén"
 
 msgid "Redirect URLs"
-msgstr "Átirányítási URL"
+msgstr "Átirányítási URL-ek"
 
 msgid "Redirect page"
 msgstr "Átirányítási oldal"
@@ -10413,10 +10399,6 @@ msgstr "A teljes összeg fennmaradó része a helyszínen kerül kifizetésre."
 
 msgid "Remind me when my SMS balance is low"
 msgstr "Emlékeztessen, ha az SMS-egyenlegem alacsony"
-
-#, php-format
-msgid "Reminder: %1$s is scheduled for %2$s."
-msgstr "Emlékeztető: %1$s erre az időpontra van beütemezve: %2$s."
 
 msgid "Remove Apple Calendar event slots"
 msgstr "Apple Calendar eseményidősávok eltávolítása"
@@ -10632,7 +10614,7 @@ msgid "Sandbox secret key (POSKey)"
 msgstr "Sandbox titkos kulcs (POSKey)"
 
 msgid "Sat"
-msgstr "Szombat"
+msgstr "Szo"
 
 msgid "Saturday"
 msgstr "Szombat"
@@ -10815,6 +10797,9 @@ msgstr "Művelet"
 
 msgid "Securely process payments using Stripe."
 msgstr "Biztonságos fizetések feldolgozása a Stripe segítségével."
+
+msgid "See upgrade guide."
+msgstr ""
 
 msgid "Segment"
 msgstr "Szegmens"
@@ -11153,7 +11138,7 @@ msgid "Service/Event"
 msgstr "Szolgáltatás/Esemény"
 
 msgid "Service Asc"
-msgstr "Szolgáltatás Asc"
+msgstr "Szolgáltatás növekvő"
 
 msgid "Service Categories"
 msgstr "Szolgáltatási kategóriák"
@@ -11162,7 +11147,7 @@ msgid "Service Category"
 msgstr "Szolgáltatási kategória"
 
 msgid "Service Desc"
-msgstr "Szolgáltatás leírása"
+msgstr "Szolgáltatás csökkenő"
 
 msgid "Service ID"
 msgstr "Szolgáltatási azonosító"
@@ -11261,10 +11246,10 @@ msgid "Services & categories setup"
 msgstr "Szolgáltatások és kategóriák beállítása"
 
 msgid "Services Asc"
-msgstr "Szolgáltatások Asc"
+msgstr "Szolgáltatások növekvő"
 
 msgid "Services Desc"
-msgstr "Szolgáltatások leírása"
+msgstr "Szolgáltatások csökkenő"
 
 msgid "Services and packages overview"
 msgstr "Szolgáltatások és csomagok áttekintése"
@@ -11645,10 +11630,10 @@ msgid "Show specific packages"
 msgstr "Specifikus kategória megjelenítése"
 
 msgid "Show specific service"
-msgstr "Specifikus szolgáltatás megjelenítése"
+msgstr "Adott szolgáltatás megjelenítése"
 
 msgid "Show specific services"
-msgstr "Specifikus szolgáltatás megjelenítése"
+msgstr "Adott szolgáltatások megjelenítése"
 
 msgid "Show tag"
 msgstr "Címke megjelenítése"
@@ -11701,6 +11686,9 @@ msgstr "Jelentkezzen be a Microsoft fiókjával"
 
 msgid "Sign in with Outlook"
 msgstr "Bejelentkezés az Outlook segítségével"
+
+msgid "Sign out and use a customer account"
+msgstr ""
 
 msgid "Sign out from Google"
 msgstr "Kijelentkezés a Google-ból"
@@ -11905,10 +11893,10 @@ msgid "Status"
 msgstr "Állapot"
 
 msgid "Status Asc"
-msgstr "Állapot Asc"
+msgstr "Állapot növekvő"
 
 msgid "Status Desc"
-msgstr "Állapot leírás"
+msgstr "Állapot csökkenő"
 
 msgid ""
 "Stay compliant with ease through consistent, reliable tax handling across "
@@ -11993,10 +11981,10 @@ msgid "Steps order"
 msgstr "Lépések sorrendje"
 
 msgid "Stop Scanner"
-msgstr ""
+msgstr "Szkenner leállítása"
 
 msgid "Stop scanner"
-msgstr ""
+msgstr "Szkenner leállítása"
 
 msgid ""
 "Streamline operations with one central place to manage all resources across "
@@ -12083,7 +12071,7 @@ msgid "Summary segment"
 msgstr "Összefoglaló szakasz"
 
 msgid "Sun"
-msgstr "Vasárnap"
+msgstr "Vas"
 
 msgid "Sunday"
 msgstr "Vasárnap"
@@ -12110,7 +12098,7 @@ msgid "Switch Camera"
 msgstr "Kamera váltás"
 
 msgid "Sync Google Events"
-msgstr "Google-események szinkronizálása"
+msgstr ""
 
 msgid "Sync with"
 msgstr "Szinkronizálás"
@@ -12646,6 +12634,12 @@ msgstr ""
 "cron konfigurációjához."
 
 msgid ""
+"This option applies only to people added through \"Bringing anyone with "
+"you\". If disabled, the service price is charged once for the entire "
+"booking, regardless of how many additional people are included."
+msgstr ""
+
+msgid ""
 "This option requires adding the payment link placeholder to your message "
 "templates."
 msgstr ""
@@ -12743,7 +12737,7 @@ msgstr ""
 "Ez a widget a globális dátumtartomány helyett havi adatokat jelenít meg."
 
 msgid "Thu"
-msgstr "Cs"
+msgstr "Csü"
 
 msgid "Thursday"
 msgstr "Csütörtök"
@@ -12806,10 +12800,10 @@ msgid "Time Range:"
 msgstr "Idősáv:"
 
 msgid "Time Used Asc"
-msgstr "Felhasznált idő Asc"
+msgstr "Felhasznált idő növekvő"
 
 msgid "Time Used Desc"
-msgstr "Felhasznált idő Leírás"
+msgstr "Felhasznált idő csökkenő"
 
 msgid "Time frame"
 msgstr "Idősáv:"
@@ -13047,7 +13041,7 @@ msgid "Try adjusting your search to find what you are looking for."
 msgstr "Próbálja meg módosítani a keresést, hogy megtalálja, amit keres."
 
 msgid "Tue"
-msgstr "Kedd"
+msgstr "Ked"
 
 msgid "Tuesday"
 msgstr "Kedd"
@@ -13065,10 +13059,10 @@ msgid "Type"
 msgstr "Típus"
 
 msgid "Type Asc"
-msgstr "Típus Asc"
+msgstr "Típus növekvő"
 
 msgid "Type Desc"
-msgstr "Típus Leírás"
+msgstr "Típus csökkenő"
 
 msgid "URL"
 msgstr ""
@@ -13434,7 +13428,7 @@ msgid "Website"
 msgstr "Weboldal"
 
 msgid "Wed"
-msgstr "Szer"
+msgstr "Sze"
 
 msgid "Wednesday"
 msgstr "Szerda"
@@ -13842,6 +13836,11 @@ msgstr "Jelszavát sikereset visszaállítottuk"
 msgid "Your password has been reset successfully."
 msgstr "A jelszavad sikeresen visszaállítva."
 
+msgid ""
+"Your payment is still processing. You will receive a confirmation as soon as "
+"it is completed."
+msgstr ""
+
 msgid "Your postal code is incomplete"
 msgstr "Irányítószáma hiányos"
 
@@ -13915,7 +13914,7 @@ msgid "at"
 msgstr "Dátum"
 
 msgid "at {time}"
-msgstr ""
+msgstr "{time}-kor"
 
 msgid "book appointments before the deal expires!"
 msgstr "Találkozás megjegyzés"

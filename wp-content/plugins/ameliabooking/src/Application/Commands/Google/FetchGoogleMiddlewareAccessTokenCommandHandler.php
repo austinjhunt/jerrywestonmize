@@ -5,12 +5,16 @@ namespace AmeliaBooking\Application\Commands\Google;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
+use AmeliaBooking\Domain\Entity\Google\GoogleCalendar;
 use AmeliaBooking\Domain\Factory\Google\GoogleCalendarFactory;
+use AmeliaBooking\Domain\Services\Logger\LoggerInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
+use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
 use AmeliaBooking\Infrastructure\Repository\Google\GoogleCalendarRepository;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarMiddlewareService;
+use Throwable;
 
 class FetchGoogleMiddlewareAccessTokenCommandHandler extends CommandHandler
 {
@@ -18,7 +22,7 @@ class FetchGoogleMiddlewareAccessTokenCommandHandler extends CommandHandler
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      */
-    public function handle(FetchGoogleMiddlewareAccessTokenCommand $command)
+    public function handle(FetchGoogleMiddlewareAccessTokenCommand $command): CommandResult
     {
         $result = new CommandResult();
 
@@ -51,7 +55,13 @@ class FetchGoogleMiddlewareAccessTokenCommandHandler extends CommandHandler
                 $googleCalendarRepository->getByProviderId($providerId);
                 $hasExistingCalendar = true;
             } catch (\Exception $e) {
-                error_log('GoogleCalendar: No existing calendar found, this is the first account. ' . $e->getMessage());
+                $this->container->getLoggerService()->channel(LoggerInterface::CHANNEL_SYNC)->info(
+                    'GoogleCalendar: No existing calendar found, this is the first account',
+                    [
+                        'exception'  => $e,
+                        'providerId' => $providerId,
+                    ]
+                );
             }
 
             $primaryCalendarId = null;
@@ -65,7 +75,13 @@ class FetchGoogleMiddlewareAccessTokenCommandHandler extends CommandHandler
                         }
                     }
                 } catch (\Exception $e) {
-                    error_log('GoogleCalendar: Unable to fetch primary calendar - ' . $e->getMessage());
+                    $this->container->getLoggerService()->channel(LoggerInterface::CHANNEL_SYNC)->warning(
+                        'GoogleCalendar: Unable to fetch primary calendar',
+                        [
+                            'exception'  => $e,
+                            'providerId' => $providerId,
+                        ]
+                    );
                 }
             }
 
@@ -101,7 +117,9 @@ class FetchGoogleMiddlewareAccessTokenCommandHandler extends CommandHandler
                 }
             }
 
-            if (!$googleCalendarRepository->add($googleCalendar, $providerId, $additionalSettings)) {
+            $calendarId = $googleCalendarRepository->add($googleCalendar, $providerId, $additionalSettings);
+
+            if (!$calendarId) {
                 $googleCalendarRepository->rollback();
                 $result->setResult(CommandResult::RESULT_ERROR);
                 $result->setMessage('Failed to add Google Calendar');
@@ -116,13 +134,42 @@ class FetchGoogleMiddlewareAccessTokenCommandHandler extends CommandHandler
                 $providerRepository->updateFieldById($providerId, null, 'googleCalendarId');
             }
 
+            /** @var SettingsService $settingsService */
+            $settingsService = $this->container->get('domain.settings.service');
+
+            if ($settingsService->isFeatureEnabled('googleCalendar')) {
+                /** @var AbstractGoogleCalendarService $googleCalendarService */
+                $googleCalendarService = $this->container->get('infrastructure.google.calendar.service');
+
+                try {
+                    /** @var GoogleCalendar $savedCalendar */
+                    $savedCalendar = $googleCalendarRepository->getById($calendarId);
+
+                    $googleCalendarService->manageChannel($savedCalendar);
+                } catch (Throwable $e) {
+                    $this->container->getLoggerService()->channel(LoggerInterface::CHANNEL_SYNC)->error(
+                        'GoogleCalendar: manageChannel after OAuth (middleware) failed',
+                        [
+                            'exception'  => $e,
+                            'providerId' => $providerId,
+                            'calendarId' => $calendarId,
+                        ]
+                    );
+                }
+            }
+
             $result->setResult(CommandResult::RESULT_SUCCESS);
             $result->setMessage('Successfully fetched access token');
 
             if ($returnUrl) {
                 $result->setUrl($returnUrl);
             } else {
-                $result->setUrl(AMELIA_SITE_URL . '/wp-admin/admin.php?page=wpamelia-employees#/manage/' . $providerId . '/integrations/google-calendar');
+                $result->setUrl(
+                    rtrim(AMELIA_SITE_URL, '/')
+                    . '/wp-admin/admin.php?page=wpamelia-employees#/manage/'
+                    . $providerId
+                    . '/integrations/google-calendar'
+                );
             }
 
             return $result;

@@ -28,16 +28,16 @@ class DeactivatePluginEnvatoCommandHandler extends CommandHandler
      * @throws AccessDeniedException
      *
      */
-    public function handle(DeactivatePluginEnvatoCommand $command)
+    public function handle(DeactivatePluginEnvatoCommand $command): CommandResult
     {
         $result = new CommandResult();
 
-        if (!(new SuperAdminRoleService())->isCurrentUserSuperAdmin()) {
-            throw new AccessDeniedException('You are not allowed to manage activation settings.');
-        }
-
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
+
+        if (!(new SuperAdminRoleService($settingsService))->canAccessActivationSettings()) {
+            throw new AccessDeniedException('You are not allowed to manage activation settings.');
+        }
 
         // Get the purchase code from query string
         $envatoTokenEmail = trim($command->getField('params')['envatoTokenEmail']);

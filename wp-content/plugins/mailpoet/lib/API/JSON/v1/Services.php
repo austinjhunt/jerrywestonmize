@@ -14,6 +14,7 @@ use MailPoet\Config\Installer;
 use MailPoet\Config\ServicesChecker;
 use MailPoet\Cron\Workers\KeyCheck\PremiumKeyCheck;
 use MailPoet\Cron\Workers\KeyCheck\SendingServiceKeyCheck;
+use MailPoet\Mailer\MailerError;
 use MailPoet\Mailer\MailerLog;
 use MailPoet\Services\AuthorizedEmailsController;
 use MailPoet\Services\AuthorizedSenderDomainController;
@@ -22,6 +23,7 @@ use MailPoet\Services\CongratulatoryMssEmailController;
 use MailPoet\Services\SubscribersCountReporter;
 use MailPoet\Settings\SettingsController;
 use MailPoet\Util\Helpers;
+use MailPoet\Util\Notices\PendingApprovalNotice;
 use MailPoet\WP\DateTime;
 use MailPoet\WP\Functions as WPFunctions;
 
@@ -62,6 +64,9 @@ class Services extends APIEndpoint {
   /** @var SubscribersCountReporter */
   private $subscribersCountReporter;
 
+  /** @var PendingApprovalNotice */
+  private $pendingApprovalNotice;
+
   public $permissions = [
     'global' => AccessControl::PERMISSION_MANAGE_SETTINGS,
     'methods' => ['pingBridge' => AccessControl::PERMISSION_ACCESS_PLUGIN_ADMIN],
@@ -78,7 +83,8 @@ class Services extends APIEndpoint {
     CongratulatoryMssEmailController $congratulatoryMssEmailController,
     WPFunctions $wp,
     AuthorizedSenderDomainController $senderDomainController,
-    AuthorizedEmailsController $authorizedEmailsController
+    AuthorizedEmailsController $authorizedEmailsController,
+    PendingApprovalNotice $pendingApprovalNotice
   ) {
     $this->bridge = $bridge;
     $this->settings = $settings;
@@ -92,6 +98,7 @@ class Services extends APIEndpoint {
     $this->wp = $wp;
     $this->senderDomainController = $senderDomainController;
     $this->authorizedEmailsController = $authorizedEmailsController;
+    $this->pendingApprovalNotice = $pendingApprovalNotice;
   }
 
   public function checkMSSKey($data = []) {
@@ -120,12 +127,15 @@ class Services extends APIEndpoint {
       );
     }
 
-    // pause sending when key is pending approval, resume when not pending anymore
+    // pause sending when key becomes pending approval; Bridge resumes once a state that is no longer pending is stored
     $isPendingApproval = $this->servicesChecker->isMailPoetAPIKeyPendingApproval();
     if (!$wasPendingApproval && $isPendingApproval) {
-      MailerLog::pauseSending(MailerLog::getMailerLog());
-    } elseif ($wasPendingApproval && !$isPendingApproval) {
-      MailerLog::resumeSending();
+      $mailerLog = MailerLog::setError(
+        MailerLog::getMailerLog(),
+        MailerError::OPERATION_PENDING_APPROVAL,
+        $this->pendingApprovalNotice->getPendingApprovalMessage()
+      );
+      MailerLog::pauseSending($mailerLog);
     }
 
     $state = !empty($result['state']) ? $result['state'] : null;

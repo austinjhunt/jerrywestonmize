@@ -8,15 +8,18 @@ use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Reservation\AbstractReservationService;
 use AmeliaBooking\Domain\Entity\Bookable\Service\PackageCustomer;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
+use AmeliaBooking\Domain\Entity\Cache\Cache;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
+use AmeliaBooking\Domain\ValueObjects\Json;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Domain\ValueObjects\String\PaymentStatus;
 use AmeliaBooking\Domain\ValueObjects\String\PaymentType;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
+use AmeliaBooking\Infrastructure\Repository\Cache\CacheRepository;
 use Slim\Exception\ContainerException;
 use Slim\Exception\ContainerValueNotFoundException;
 
@@ -121,6 +124,37 @@ class DeleteBookingRemotelyCommandHandler extends CommandHandler
             $result->setMessage($e->getMessage());
 
             return $result;
+        }
+
+        /** @var CacheRepository $cacheRepository */
+        $cacheRepository = $this->container->get('domain.cache.repository');
+
+        /** @var Payment $payment */
+        foreach ($booking->getPayments()->getItems() as $payment) {
+            $caches = $cacheRepository->getByEntityId($payment->getId()->getValue(), 'paymentId');
+
+            /** @var Cache $cache */
+            foreach ($caches->getItems() as $cache) {
+                $cacheData = $cache->getData() ? json_decode($cache->getData()->getValue(), true) : [];
+
+                if (!is_array($cacheData)) {
+                    $cacheData = [];
+                }
+
+                $cache->setData(
+                    new Json(
+                        json_encode(
+                            array_merge(
+                                $cacheData,
+                                [
+                                    'deletedGoingBack' => true,
+                                ]
+                            )
+                        )
+                    )
+                );
+                $cacheRepository->update($cache->getId()->getValue(), $cache);
+            }
         }
 
         $result->setResult(CommandResult::RESULT_SUCCESS);

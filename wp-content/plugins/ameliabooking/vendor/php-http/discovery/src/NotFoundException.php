@@ -2,6 +2,8 @@
 
 namespace AmeliaHttp\Discovery;
 
+use AmeliaHttp\Discovery\Exception\NotFoundException as RealNotFoundException;
+
 /**
  * Thrown when a discovery does not find any matches.
  *
@@ -9,6 +11,6 @@ namespace AmeliaHttp\Discovery;
  *
  * @deprecated since since version 1.0, and will be removed in 2.0. Use {@link \AmeliaHttp\Discovery\Exception\NotFoundException} instead.
  */
-final class NotFoundException extends \AmeliaHttp\Discovery\Exception\NotFoundException
+final class NotFoundException extends RealNotFoundException
 {
 }

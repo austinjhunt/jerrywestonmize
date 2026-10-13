@@ -43,9 +43,28 @@ class AddBookingCommandHandler extends CommandHandler
     {
         $this->checkMandatoryFields($command);
 
+        // Public /bookings validates, capacity-checks and charges only bookings[0]. Extra elements
+        // would still be persisted (with payment rows) on new appointments — reject them here.
+        // Multi-customer group booking uses authenticated POST /appointments instead.
+        $bookings = $command->getField('bookings');
+        if (
+            !is_array($bookings) ||
+            count($bookings) !== 1 ||
+            !array_key_exists(0, $bookings) ||
+            !is_array($bookings[0])
+        ) {
+            $result = new CommandResult();
+            $result->setResult(CommandResult::RESULT_ERROR);
+            $result->setMessage('Invalid bookings payload');
+
+            return $result;
+        }
+
+        $isPackageBooking = $this->isPackageBooking($bookings[0]);
+
         $appointmentData = $this->getAppointmentData(
             $command->getFields(),
-            empty($command->getFields()['bookings'][0]['packageCustomerService']['id'])
+            !$isPackageBooking && !$command->isValidApiCall()
                 ? [
                     PaymentType::ON_SITE,
                     PaymentType::PAY_PAL,
@@ -65,6 +84,9 @@ class AddBookingCommandHandler extends CommandHandler
 
         do_action('amelia_before_booking_added', $appointmentData);
 
+        // the filter can attach package data of its own, so the check below follows what is booked
+        $isPackageBooking = $this->isPackageBooking($appointmentData['bookings'][0]);
+
         $validateCoupon = true;
 
         if (
@@ -75,14 +97,11 @@ class AddBookingCommandHandler extends CommandHandler
         }
 
         /** @var Reservation $reservation */
-        $reservation = $reservationService->getNew(
-            $validateCoupon,
-            true,
-            true
-        );
+        $reservation = $reservationService->getNew($validateCoupon, true, true);
 
-        // package appointment booking is available only for logged in users (WP dashboard or panel)
-        if (!empty($appointmentData['bookings'][0]['packageCustomerService']['id'])) {
+        // package appointment booking is available only for logged in users (WP dashboard or panel),
+        // or for an API call, which is already authenticated by its key
+        if ($isPackageBooking && !$command->isValidApiCall()) {
             if ($command->getToken()) {
                 /** @var UserApplicationService $userAS */
                 $userAS = $this->container->get('application.user.service');
@@ -110,13 +129,17 @@ class AddBookingCommandHandler extends CommandHandler
                 $user = $this->container->get('logged.in.user');
             }
 
+            $bookingCustomerId = !empty($appointmentData['bookings'][0]['customer']['id'])
+                ? (int)$appointmentData['bookings'][0]['customer']['id']
+                : null;
+
             // user must be admin, manager or customer (same as the customer in the booking)
             if (
                 !$user ||
                 (
                     $user->getType() !== AbstractUser::USER_ROLE_ADMIN &&
                     $user->getType() !== AbstractUser::USER_ROLE_MANAGER &&
-                    $user->getId()->getValue() !== (int)$appointmentData['bookings'][0]['customer']['id']
+                    $user->getId()->getValue() !== $bookingCustomerId
                 )
             ) {
                 $result = new CommandResult();
@@ -168,5 +191,21 @@ class AddBookingCommandHandler extends CommandHandler
         }
 
         return $result;
+    }
+
+    /**
+     * A package service is referenced either directly or through the package purchase it belongs to, and
+     * both mean the same thing: the appointment was paid for with the package, so it is booked free of
+     * charge and only the customer who bought the package (or an admin or manager) may book it.
+     *
+     * @param array $booking
+     *
+     * @return bool
+     */
+    private function isPackageBooking(array $booking): bool
+    {
+        return
+            !empty($booking['packageCustomerService']['id']) ||
+            !empty($booking['packageCustomerService']['packageCustomer']['id']);
     }
 }

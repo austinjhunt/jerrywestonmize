@@ -8,7 +8,6 @@ use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Reservation\AbstractReservationService;
 use AmeliaBooking\Application\Services\User\APIUserApplicationService;
 use AmeliaBooking\Domain\Entity\Entities;
-use AmeliaBooking\Domain\Entity\Payment\Payment;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Infrastructure\Repository\Bookable\Service\PackageCustomerRepository;
@@ -77,13 +76,10 @@ class SuccessfulBookingCommandHandler extends CommandHandler
         $paymentId = $command->getField('paymentId');
 
         if ($paymentId) {
-            /** @var Payment $payment */
-            $payment = $paymentRepository->getById($paymentId);
-
-            if (
-                ($payment && $payment->getActionsCompleted() && $payment->getActionsCompleted()->getValue()) ||
-                ($payment && $payment->getTriggeredActions() && $payment->getTriggeredActions()->getValue())
-            ) {
+            // Claimed in one statement rather than read and then written, so that this request
+            // and a server-side finalization of the same Stripe payment - a webhook delivery, or
+            // the reconciliation cron - cannot both find the flag unset and both notify.
+            if (!$paymentRepository->claimTriggeredActions($paymentId)) {
                 $result = new CommandResult();
 
                 $result->setResult(CommandResult::RESULT_SUCCESS);
@@ -91,8 +87,6 @@ class SuccessfulBookingCommandHandler extends CommandHandler
                 $result->setDataInResponse(false);
 
                 return $result;
-            } elseif ($payment && !$payment->getTriggeredActions()) {
-                $paymentRepository->updateFieldById($paymentId, 1, 'triggeredActions');
             }
         } else {
             $result = new CommandResult();

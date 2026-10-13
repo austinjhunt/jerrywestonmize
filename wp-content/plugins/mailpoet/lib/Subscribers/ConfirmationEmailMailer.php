@@ -175,7 +175,7 @@ class ConfirmationEmailMailer {
       'activation_link'
     );
 
-    $subject = Shortcodes::process($signupConfirmation['subject'], null, null, $subscriber, null);
+    $subject = Shortcodes::process($signupConfirmation['subject'], null, null, $subscriber, null, $isPlainText = true);
 
     $body = Shortcodes::process($body, null, null, $subscriber, null);
 
@@ -218,7 +218,12 @@ class ConfirmationEmailMailer {
       $html,
       $text,
       $subject,
-    ] = Helpers::splitObject(Shortcodes::process($body, null, $newsletter, $subscriber, null));
+    ] = Helpers::splitObject($body);
+    $subject = Shortcodes::process($subject, $html, $newsletter, $subscriber, null, $isPlainText = true);
+    [
+      $html,
+      $text,
+    ] = Helpers::splitObject(Shortcodes::process(Helpers::joinObject([$html, $text]), null, $newsletter, $subscriber, null));
 
     // Fallback to newsletter subject if extracted subject is empty
     if (empty($subject)) {

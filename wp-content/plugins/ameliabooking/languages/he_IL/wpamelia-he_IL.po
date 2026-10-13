@@ -34,26 +34,6 @@ msgid "# of bookings"
 msgstr "מספר הזמנות"
 
 #, php-format
-msgid "%1$s, %2$s, was canceled."
-msgstr "%1$s, %2$s, בוטל."
-
-#, php-format
-msgid "%1$s, %2$s, was rejected."
-msgstr "%1$s, %2$s, נדחה."
-
-#, php-format
-msgid "%1$s booked %2$s at %3$s."
-msgstr "%1$s קבע/ה %2$s ב-%3$s."
-
-#, php-format
-msgid "%1$s on %2$s had a status change."
-msgstr "%1$s ב-%2$s חל שינוי סטטוס."
-
-#, php-format
-msgid "%1$s on %2$s was updated."
-msgstr "%1$s ב-%2$s עודכן."
-
-#, php-format
 msgid "%event_name% Event Booked"
 msgstr "%event_name% אירוע הוזמן"
 
@@ -454,8 +434,14 @@ msgstr "פעולות"
 msgid "Activate"
 msgstr "הפעל"
 
+msgid "Activate now"
+msgstr ""
+
 msgid "Activate with Envato"
 msgstr "הפעל באמצעות Envato"
+
+msgid "Activate your license to unlock the features included in your plan."
+msgstr ""
 
 msgid "Activated with Envato"
 msgstr "מופעל עם Envato"
@@ -857,6 +843,9 @@ msgstr "כבר שולם"
 msgid "Already have an account?"
 msgstr "כבר יש לך חשבון ?"
 
+msgid "Already purchased Amelia?"
+msgstr ""
+
 msgid "Also cancel and delete future events"
 msgstr "בטל ומחק גם אירועים עתידיים"
 
@@ -906,7 +895,7 @@ msgid "Apple"
 msgstr ""
 
 msgid "Apple Calendar"
-msgstr "יומן גוגל"
+msgstr "לוח שנה Apple"
 
 msgid "Apple Calendar (Personal)"
 msgstr "לוח השנה של Apple (אישי)"
@@ -915,7 +904,7 @@ msgid "Apple Calendar setup"
 msgstr "הגדרת לוח השנה של Apple"
 
 msgid "Apple calendar events"
-msgstr "אירועי Apple Calendar"
+msgstr ""
 
 msgid "Application (client) ID"
 msgstr "מזהה יישום (לקוח)"
@@ -1058,9 +1047,6 @@ msgstr "הערות לפגישה"
 msgid "Appointment price"
 msgstr "מחיר הפגישה"
 
-msgid "Appointment reminder"
-msgstr "תזכורת לפגישה"
-
 msgid "Appointment repeats"
 msgstr "חזרות פגישות"
 
@@ -1073,9 +1059,6 @@ msgstr "שעת תחילת הפגישה"
 msgid "Appointment status"
 msgstr "סטטוס הפגישה"
 
-msgid "Appointment status changed"
-msgstr "סטטוס הפגישה השתנה"
-
 msgid "Appointment status has been changed to "
 msgstr "סטטוס הפגישה שונה ל "
 
@@ -1084,9 +1067,6 @@ msgstr "סטטוס הפגישה עודכן."
 
 msgid "Appointment title"
 msgstr "כותרת הפגישה"
-
-msgid "Appointment updated"
-msgstr "התור עודכן"
 
 msgid "Appointments"
 msgstr "פגישות"
@@ -1126,6 +1106,10 @@ msgstr "האם אתה בטוח שברצונך לבטל ולמחוק אירוע �
 
 msgid "Are you sure you want to cancel this appointment?"
 msgstr "האם אתה בטוח שברצונך לבטל פגישה זו?"
+
+msgid ""
+"Are you sure you want to cancel this booking? This action cannot be undone."
+msgstr ""
 
 msgid "Are you sure you want to cancel this event?"
 msgstr "האם אתה בטוח שברצונך לבטל את האירוע הזה?"
@@ -1313,10 +1297,10 @@ msgid "Attendee"
 msgstr "משתתף"
 
 msgid "Attendee Asc"
-msgstr "משתתף Asc"
+msgstr "משתתף עולה"
 
 msgid "Attendee Desc"
-msgstr "תיאור המשתתף"
+msgstr "משתתף יורד"
 
 msgid "Attendee code"
 msgstr "קוד משתתף"
@@ -1334,7 +1318,7 @@ msgid "Attendees"
 msgstr "משתתפים"
 
 msgid "Attendees Allowed"
-msgstr "קוד משתתף"
+msgstr "משתתפים מותרים"
 
 msgid "Attendees Export Format"
 msgstr "פורמט ייצוא משתתפים"
@@ -1417,13 +1401,13 @@ msgid "Available date text"
 msgstr "טקסט תאריך זמין"
 
 msgid "Available from Pro license"
-msgstr "זמין ברישיון Pro"
+msgstr "זמין מרישיון Pro"
 
 msgid "Available from Standard license"
-msgstr "זמין ברישיון סטנדרטי"
+msgstr "זמין מרישיון Standard"
 
 msgid "Available from Starter license"
-msgstr "זמין ברישיון Starter"
+msgstr "זמין מרישיון Starter"
 
 msgid "Available in Elite licence"
 msgstr "זמין ברישיון Elite"
@@ -1648,10 +1632,10 @@ msgid "Booking Closes"
 msgstr "הזמנות סגורות"
 
 msgid "Booking Closes Asc"
-msgstr "ההזמנות נסגרו Asc"
+msgstr "ההזמנות נסגרו עולה"
 
 msgid "Booking Closes Desc"
-msgstr "ההזמנה נסגרה תיאור"
+msgstr "ההזמנות נסגרו יורד"
 
 msgid "Booking Confirmed"
 msgstr "ההזמנה אושרה"
@@ -1678,10 +1662,10 @@ msgid "Booking Opens"
 msgstr "הזמנות פתוחות"
 
 msgid "Booking Opens Asc"
-msgstr "ההזמנות נפתחות Asc"
+msgstr "ההזמנות נפתחות עולה"
 
 msgid "Booking Opens Desc"
-msgstr "הזמנות נפתחות תיאור"
+msgstr "ההזמנות נפתחות יורד"
 
 msgid "Booking Overview"
 msgstr "סקירת הזמנות"
@@ -2221,11 +2205,14 @@ msgstr "בחר מתי החזרה מסתיימת"
 msgid "Choose whether you want to manage services, events, or both."
 msgstr "בחר אם ברצונך לנהל שירותים, אירועים או שניהם."
 
+msgid "Choose which tab users see first when they log in"
+msgstr ""
+
 msgid "Choosing layout of first step in step by step form"
 msgstr "בחירת פריסת השלב הראשון בטופס שלב אחר שלב"
 
 msgid "Class"
-msgstr ""
+msgstr "שיעור"
 
 msgid "Clear"
 msgstr "נקה"
@@ -2402,6 +2389,9 @@ msgstr "הגדר רשימת המתנה לפגישות"
 
 msgid "Confirm"
 msgstr "מאושר"
+
+msgid "Confirm Cancellation"
+msgstr ""
 
 msgid "Confirm My Appointment"
 msgstr "אשר/י את התור שלי"
@@ -2841,10 +2831,10 @@ msgid "Customer(s)"
 msgstr "לקוח(ות)"
 
 msgid "Customer Asc"
-msgstr "לקוח Asc"
+msgstr "לקוח עולה"
 
 msgid "Customer Desc"
-msgstr "תיאור הלקוח"
+msgstr "לקוח יורד"
 
 msgid "Customer Panel"
 msgstr "פנל לקוחות"
@@ -3014,9 +3004,6 @@ msgstr "נתונים שלא השתנו:"
 msgid "Data to be updated:"
 msgstr "נתונים שיש לעדכן:"
 
-msgid "Data transfer"
-msgstr "העברת נתונים"
-
 msgid "Date"
 msgstr "תאריך"
 
@@ -3036,7 +3023,7 @@ msgid "Date Asc"
 msgstr "תאריך עולה"
 
 msgid "Date Desc"
-msgstr "תאריך תיאור"
+msgstr "תאריך יורד"
 
 msgid "Date Picker"
 msgstr "בורר תאריך"
@@ -3045,7 +3032,7 @@ msgid "Date Purchased Asc"
 msgstr "תאריך רכישה עולה"
 
 msgid "Date Purchased Desc"
-msgstr "תאריך הרכישה תיאור"
+msgstr "תאריך רכישה יורד"
 
 msgid ""
 "Date Ranges that are not defined will use default price from ticket category."
@@ -3987,7 +3974,7 @@ msgid "Deduction Asc"
 msgstr "הפחתה עולה"
 
 msgid "Deduction Desc"
-msgstr "הסבר על הניכוי"
+msgstr "הפחתה יורד"
 
 msgid "Default Label"
 msgstr "תווית ברירת מחדל"
@@ -4000,6 +3987,9 @@ msgstr "סטטוס ברירת מחדל של פגישה"
 
 msgid "Default back end page"
 msgstr "דף ברירת מחדל של ה-back end"
+
+msgid "Default landing tab"
+msgstr ""
 
 msgid "Default language"
 msgstr "ברירת מחדל שפה"
@@ -4233,7 +4223,7 @@ msgid "Discount Asc"
 msgstr "הנחה עולה"
 
 msgid "Discount Desc"
-msgstr "תיאור ההנחה"
+msgstr "הנחה יורד"
 
 msgid "Discount (%)"
 msgstr "הנחה(%)"
@@ -4409,7 +4399,7 @@ msgid "Duration Asc"
 msgstr "משך זמן עולה"
 
 msgid "Duration Desc"
-msgstr "משך תיאור"
+msgstr "משך זמן יורד"
 
 msgid "E-Ticket Scanner"
 msgstr "סורק כרטיסים אלקטרוניים"
@@ -4495,8 +4485,6 @@ msgid ""
 "Edit appointments/events when connected Google Calendar Events are "
 "rescheduled or deleted"
 msgstr ""
-"עדכון תורים/אירועים כאשר אירועים מקושרים ב‑Google Calendar מתוזמנים מחדש או "
-"נמחקים"
 
 msgid "Edit block time"
 msgstr "ערוך פרק זמן חסום"
@@ -5131,7 +5119,7 @@ msgid "Event"
 msgstr "אירוע"
 
 msgid "Event Asc"
-msgstr "אירוע Asc"
+msgstr "אירוע עולה"
 
 msgid "Event Available"
 msgstr "אירוע זמין"
@@ -5168,7 +5156,7 @@ msgid "Event Day"
 msgstr "תאריך האירוע"
 
 msgid "Event Desc"
-msgstr "תיאור האירוע"
+msgstr "אירוע יורד"
 
 msgid "Event Employee"
 msgstr "אירוע עובד"
@@ -5577,9 +5565,6 @@ msgstr "נכשל"
 msgid "Failed to access camera. Please try again."
 msgstr "לא ניתן לגשת למצלמה. אנא נסה שוב."
 
-msgid "Failed to initialize payment. Please try again."
-msgstr "לא ניתן לאתחל את תהליך התשלום. נא לנסות שוב."
-
 msgid "Failed to load appointment details. Please try again later."
 msgstr "לא ניתן לטעון את פרטי הפגישה. אנא נסה שוב מאוחר יותר."
 
@@ -5919,7 +5904,7 @@ msgid "Google Analytics setup"
 msgstr "הגדרת Google Analytics"
 
 msgid "Google Calendar"
-msgstr "יומן גוגל"
+msgstr "לוח שנה Google"
 
 msgid "Google Calendar & Google Meet"
 msgstr "Google Calendar ו-Google Meet"
@@ -5949,7 +5934,7 @@ msgid "Google Meet setup"
 msgstr "הגדרת Google Meet"
 
 msgid "Google calendar events"
-msgstr "אירועי Google Calendar"
+msgstr ""
 
 msgid "Google reCAPTCHA v2 secret key"
 msgstr "מפתח סודי של Google reCAPTCHA v2"
@@ -6691,7 +6676,7 @@ msgid "ID Asc"
 msgstr "ID עולה"
 
 msgid "ID Desc"
-msgstr "ID תיאור"
+msgstr "ID יורד"
 
 msgid "I understand this import will replace all current data permanently."
 msgstr "אני מבין/ה שייבוא זה יחליף לצמיתות את כל הנתונים הקיימים."
@@ -6718,13 +6703,6 @@ msgid ""
 msgstr ""
 "אם האפשרות מושבתת, ההזמנה חייבת לעמוד בקיבולת המינימלית, והמשבצת הזמן נסגרת "
 "לאחר ההזמנה הראשונה."
-
-msgid ""
-"If disabled, the price will remain the same regardless of how many people "
-"are included in the group appointment."
-msgstr ""
-"אם האפשרות מושבתת, המחיר יישאר זהה ללא תלות במספר האנשים הכלולים בפגישה "
-"הקבוצתית."
 
 msgid ""
 "If enabled, customers can book with Pending status even after maximum "
@@ -6861,6 +6839,9 @@ msgstr "תמונות ממוזערות"
 msgid "Import"
 msgstr "ייבוא"
 
+msgid "Import/Export"
+msgstr ""
+
 msgid "Import Failed"
 msgstr "הייבוא נכשל"
 
@@ -6890,6 +6871,9 @@ msgstr "הייבוא נכשל"
 
 msgid "Import failed. Review the details below."
 msgstr "הייבוא נכשל. יש לעיין בפרטים שלמטה."
+
+msgid "Import or export your Amelia data."
+msgstr ""
 
 msgid "Import progress"
 msgstr "התקדמות הייבוא"
@@ -7291,7 +7275,7 @@ msgid "Invoice Number Asc"
 msgstr "מספר חשבונית עולה"
 
 msgid "Invoice Number Desc"
-msgstr "מספר חשבונית תיאור"
+msgstr "מספר חשבונית יורד"
 
 msgid "Invoice date"
 msgstr "תאריך החשבונית"
@@ -7452,10 +7436,10 @@ msgid "Last"
 msgstr "אחרון"
 
 msgid "Last Booking Asc"
-msgstr "הזמנה אחרונה Asc"
+msgstr "הזמנה אחרונה עולה"
 
 msgid "Last Booking Desc"
-msgstr "ההזמנה האחרונה תיאור"
+msgstr "הזמנה אחרונה יורד"
 
 msgid "Last Name:"
 msgstr "שם משפחה:"
@@ -7827,7 +7811,7 @@ msgid "Max Capacity Asc"
 msgstr "קיבולת מקסימלית עולה"
 
 msgid "Max Capacity Desc"
-msgstr "תיאור קיבולת מקסימלית"
+msgstr "קיבולת מקסימלית יורד"
 
 msgid "Maximum"
 msgstr "מקסימום"
@@ -7981,7 +7965,7 @@ msgid "Mollie payment link"
 msgstr "קישור לתשלום Mollie"
 
 msgid "Mon"
-msgstr ""
+msgstr "שני"
 
 msgid "Monday"
 msgstr "שני"
@@ -8050,7 +8034,7 @@ msgid "Name Ascending"
 msgstr "שם עולה"
 
 msgid "Name Desc"
-msgstr "שם תיאור"
+msgstr "שם יורד"
 
 msgid "Name Descending"
 msgstr "שם יורד"
@@ -8166,7 +8150,7 @@ msgid "No, just this one"
 msgstr "לא, רק זה"
 
 msgid "No-show"
-msgstr "אי-הופעה"
+msgstr "לא הופיע"
 
 msgid "No-show tag"
 msgstr "תגית \"לא הופיע\""
@@ -8178,10 +8162,10 @@ msgid "No Packages"
 msgstr "אין חבילות"
 
 msgid "No Show"
-msgstr "לא מוצג"
+msgstr "לא הופיע"
 
 msgid "No Show (1)"
-msgstr "לא מופיע (1)"
+msgstr "לא הופיע (1)"
 
 msgid "No Show (2)"
 msgstr "לא הופיע (2)"
@@ -8388,13 +8372,13 @@ msgid "Notify selected employees about empty package purchases"
 msgstr "הודע לעובדים שנבחרו על רכישות של חבילות ריקות"
 
 msgid "Notify the attendee(s)"
-msgstr "שלח הודעה ללקוח(ות)"
+msgstr "הודע למשתתפים"
 
 msgid "Notify the attendees"
 msgstr "הודע למשתתפים"
 
 msgid "Notify the customer(s)"
-msgstr "שלח הודעה ללקוח(ות)"
+msgstr "הודע ללקוחות"
 
 msgid "Number of Additional People"
 msgstr "מספר אנשים נוספים"
@@ -8712,7 +8696,7 @@ msgid "Outline"
 msgstr "תוכן"
 
 msgid "Outlook Calendar"
-msgstr "יומן אאטלוק"
+msgstr "לוח שנה Outlook"
 
 msgid "Outlook Calendar & Microsoft Teams"
 msgstr "יומן Outlook ו-Microsoft Teams"
@@ -8724,7 +8708,7 @@ msgid "Outlook Calendar setup"
 msgstr "הגדרת לוח השנה של Outlook"
 
 msgid "Outlook Mailer"
-msgstr "יומן אאטלוק"
+msgstr "שירות דואר Outlook"
 
 msgid ""
 "Outlook Mailer is not fully configured. Please complete the account setup in "
@@ -8733,7 +8717,7 @@ msgstr ""
 "Outlook Mailer אינו מוגדר במלואו. השלם את הגדרת החשבון בהגדרות שילוב Outlook."
 
 msgid "Outlook calendar events"
-msgstr "פריטי יומן Outlook"
+msgstr ""
 
 msgid "Outside of working hours"
 msgstr "מחוץ לשעות הפעילות"
@@ -8772,13 +8756,13 @@ msgid "Package %package_name% purchased"
 msgstr "החבילה %package_name% נרכשה"
 
 msgid "Package Asc"
-msgstr "חבילה Asc"
+msgstr "חבילה עולה"
 
 msgid "Package Canceled"
 msgstr "החבילה בוטלה"
 
 msgid "Package Desc"
-msgstr "תיאור החבילה"
+msgstr "חבילה יורד"
 
 msgid "Package ID"
 msgstr "מזהה חבילה"
@@ -9728,7 +9712,7 @@ msgid "Price Ascending"
 msgstr "לפי מחיר גבוה"
 
 msgid "Price Desc"
-msgstr "מחיר תיאור"
+msgstr "מחיר יורד"
 
 msgid "Price Descending"
 msgstr "לפי מחיר נמוך"
@@ -9846,6 +9830,11 @@ msgstr "הרכישה בוטלה"
 msgid "Purchased"
 msgstr "נרכש"
 
+msgid ""
+"Purchasing doesn't upgrade this plugin automatically. Follow our step-by-"
+"step guide to switch to the full version."
+msgstr ""
+
 msgid "Purple"
 msgstr "סגול"
 
@@ -9862,7 +9851,7 @@ msgid "Quantity Asc"
 msgstr "כמות עולה"
 
 msgid "Quantity Desc"
-msgstr "כמות תיאור"
+msgstr "כמות יורד"
 
 msgid "Quantity is shared"
 msgstr "הכמות משותפת"
@@ -9984,7 +9973,7 @@ msgid "Redirect"
 msgstr "הפניה"
 
 msgid "Redirect URI"
-msgstr "הפניה מחדש של URI"
+msgstr "URI להפניה"
 
 msgid "Redirect URL After Booking"
 msgstr "הפניה מחדש לכתובת URL לאחר ההזמנה"
@@ -10014,7 +10003,7 @@ msgid "Redirect URL for unsuccessfully rejected booking"
 msgstr "כתובת URL להפניה מחדש עבור הזמנה שנדחתה ללא הצלחה"
 
 msgid "Redirect URLs"
-msgstr "הפניות לאתרים"
+msgstr "כתובות URL להפניה"
 
 msgid "Redirect page"
 msgstr "הפניה לדף"
@@ -10051,10 +10040,6 @@ msgstr "יתרת הסכום הכולל תשולם במקום."
 
 msgid "Remind me when my SMS balance is low"
 msgstr "הזכר לי כאשר יתרת ה-SMS שלי נמוכה"
-
-#, php-format
-msgid "Reminder: %1$s is scheduled for %2$s."
-msgstr "תזכורת: %1$s נקבע ל%2$s."
 
 msgid "Remove Apple Calendar event slots"
 msgstr "הסר משבצות זמן של אירועים ב-Apple Calendar"
@@ -10445,6 +10430,9 @@ msgstr "פעולה"
 msgid "Securely process payments using Stripe."
 msgstr "עיבוד תשלומים בצורה מאובטחת באמצעות Stripe."
 
+msgid "See upgrade guide."
+msgstr ""
+
 msgid "Segment"
 msgstr "קטע"
 
@@ -10773,7 +10761,7 @@ msgid "Service/Event"
 msgstr "שירות/אירוע"
 
 msgid "Service Asc"
-msgstr "שירות Asc"
+msgstr "שירות עולה"
 
 msgid "Service Categories"
 msgstr "קטגוריות שירות"
@@ -10782,7 +10770,7 @@ msgid "Service Category"
 msgstr "קטגוריית שירות"
 
 msgid "Service Desc"
-msgstr "תיאור השירות"
+msgstr "שירות יורד"
 
 msgid "Service ID"
 msgstr "מזהה שירות"
@@ -10881,10 +10869,10 @@ msgid "Services & categories setup"
 msgstr "הגדרת שירותים וקטגוריות"
 
 msgid "Services Asc"
-msgstr "שירותים Asc"
+msgstr "שירותים עולה"
 
 msgid "Services Desc"
-msgstr "תיאור השירותים"
+msgstr "שירותים יורד"
 
 msgid "Services and packages overview"
 msgstr "סקירת שירותים וחבילות"
@@ -11239,10 +11227,10 @@ msgid "Show specific packages"
 msgstr "הצג חבילות ספציפיות"
 
 msgid "Show specific service"
-msgstr "הצג שירות ספציפי"
+msgstr "הצג שירות מסוים"
 
 msgid "Show specific services"
-msgstr "הצג שירותים ספציפים"
+msgstr "הצג שירותים מסוימים"
 
 msgid "Show tag"
 msgstr "הצג תווית"
@@ -11295,6 +11283,9 @@ msgstr "התחבר עם Microsoft"
 
 msgid "Sign in with Outlook"
 msgstr "התחבר עם אאטלוק"
+
+msgid "Sign out and use a customer account"
+msgstr ""
 
 msgid "Sign out from Google"
 msgstr "התנתק מגוגל"
@@ -11487,10 +11478,10 @@ msgid "Status"
 msgstr "סטטוס"
 
 msgid "Status Asc"
-msgstr "סטטוס Asc"
+msgstr "סטטוס עולה"
 
 msgid "Status Desc"
-msgstr "סטטוס תיאור"
+msgstr "סטטוס יורד"
 
 msgid ""
 "Stay compliant with ease through consistent, reliable tax handling across "
@@ -11658,7 +11649,7 @@ msgid "Summary segment"
 msgstr "קטע סיכום"
 
 msgid "Sun"
-msgstr ""
+msgstr "ראשון"
 
 msgid "Sunday"
 msgstr "ראשון"
@@ -11685,7 +11676,7 @@ msgid "Switch Camera"
 msgstr "החלף מצלמה"
 
 msgid "Sync Google Events"
-msgstr "סנכרן אירועי Google"
+msgstr ""
 
 msgid "Sync with"
 msgstr "סנכרון עם"
@@ -12179,6 +12170,12 @@ msgid ""
 msgstr "הודעה זו דורשת משימת cron. הוסף את השורה הבאה לתצורת cron שלך."
 
 msgid ""
+"This option applies only to people added through \"Bringing anyone with "
+"you\". If disabled, the service price is charged once for the entire "
+"booking, regardless of how many additional people are included."
+msgstr ""
+
+msgid ""
 "This option requires adding the payment link placeholder to your message "
 "templates."
 msgstr "אפשרות זו מחייבת הוספת מחזיק מקום לקישור התשלום לתבניות ההודעות שלך."
@@ -12327,7 +12324,7 @@ msgid "Time Used Asc"
 msgstr "זמן שימוש עולה"
 
 msgid "Time Used Desc"
-msgstr "זמן שימוש תיאור"
+msgstr "זמן שימוש יורד"
 
 msgid "Time frame"
 msgstr "טווח הזמן"
@@ -12555,7 +12552,7 @@ msgid "Try adjusting your search to find what you are looking for."
 msgstr "נסה לשנות את החיפוש כדי למצוא את מה שאתה מחפש."
 
 msgid "Tue"
-msgstr ""
+msgstr "שלישי"
 
 msgid "Tuesday"
 msgstr "שלישי"
@@ -12572,10 +12569,10 @@ msgid "Type"
 msgstr "סוג"
 
 msgid "Type Asc"
-msgstr "סוג Asc"
+msgstr "סוג עולה"
 
 msgid "Type Desc"
-msgstr "סוג תיאור"
+msgstr "סוג יורד"
 
 msgid "URL"
 msgstr ""
@@ -13331,6 +13328,11 @@ msgstr "סיסמתך אופסה בהצלחה, השתמש בסיסמה החדשה
 
 msgid "Your password has been reset successfully."
 msgstr "הסיסמה שלך אופסה בהצלחה."
+
+msgid ""
+"Your payment is still processing. You will receive a confirmation as soon as "
+"it is completed."
+msgstr ""
 
 msgid "Your postal code is incomplete"
 msgstr "המיקוד אינו תקין"

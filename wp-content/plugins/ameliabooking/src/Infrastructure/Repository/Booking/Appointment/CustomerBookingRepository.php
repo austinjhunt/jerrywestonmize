@@ -699,6 +699,20 @@ class CustomerBookingRepository extends AbstractRepository
             $where[] = '(e.id IN (' . implode(', ', $queryIds) . '))';
         }
 
+        if (!empty($criteria['bookings'])) {
+            $queryIds = [];
+
+            foreach ($criteria['bookings'] as $index => $value) {
+                $param = ':bookingId' . $index;
+
+                $queryIds[] = $param;
+
+                $params[$param] = $value;
+            }
+
+            $where[] = '(cb.id IN (' . implode(', ', $queryIds) . '))';
+        }
+
         $where = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
         $groupBy = 'GROUP BY cb.id';

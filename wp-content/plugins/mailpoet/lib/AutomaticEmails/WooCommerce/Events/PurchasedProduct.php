@@ -160,7 +160,7 @@ class PurchasedProduct {
     if (!$subscriber instanceof SubscriberEntity) {
       $this->loggerFactory->getLogger(self::SLUG)->info(
         'Email not scheduled because the customer was not found as WooCommerce list subscriber',
-        ['order_id' => $orderId, 'customer_email' => $customerEmail]
+        ['order_id' => $orderId, 'customer_email' => Helpers::maskEmail($customerEmail)]
       );
       return;
     }
@@ -188,7 +188,7 @@ class PurchasedProduct {
       'Email scheduled',
       [
         'order_id' => $orderId,
-        'customer_email' => $customerEmail,
+        'customer_email' => Helpers::maskEmail($customerEmail),
         'subscriber_id' => $subscriber->getId(),
       ]
     );

@@ -45,6 +45,16 @@ class ApplicationService
     /**
      * @param Container $c
      *
+     * @return ApplicationServices\Stripe\AbstractStripeApplicationService
+     */
+    public static function getStripeService($c)
+    {
+        return new ApplicationServices\Stripe\StarterStripeApplicationService($c);
+    }
+
+    /**
+     * @param Container $c
+     *
      * @return ApplicationServices\Coupon\AbstractCouponApplicationService
      */
     public static function getCouponService($c)
@@ -158,5 +168,15 @@ class ApplicationService
     public static function getQrCodeService($c)
     {
         return new ApplicationServices\QrCode\StarterQrCodeApplicationService($c);
+    }
+
+    /**
+     * @param Container $c
+     *
+     * @return ApplicationServices\Calendar\AbstractCalendarApplicationService
+     */
+    public static function getCalendarService($c)
+    {
+        return new ApplicationServices\Calendar\StarterCalendarApplicationService($c);
     }
 }

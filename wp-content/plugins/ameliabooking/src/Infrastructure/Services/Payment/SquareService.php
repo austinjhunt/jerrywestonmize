@@ -27,6 +27,7 @@ use Square\Models\Location;
 use Square\Models\Money;
 use Square\Models\Order;
 use Square\Models\OrderLineItem;
+use Square\Models\Payment;
 use Square\Models\PaymentLink;
 use Square\Models\PrePopulatedData;
 use Square\Models\RefundPaymentRequest;
@@ -39,6 +40,16 @@ use Square\SquareClient;
  */
 class SquareService extends AbstractPaymentService implements PaymentServiceInterface
 {
+    public const COMPLETED_PAYMENT_STATUS = 'COMPLETED';
+
+    /**
+     * Source types that must not finalize a booking even once Square reports them as COMPLETED.
+     * ACH debits can still be returned by the bank days after Square completes them.
+     *
+     * @var string[]
+     */
+    public const REJECTED_SOURCE_TYPES = ['BANK_ACCOUNT'];
+
     /**
      * @var SquareMiddlewareService $middlewareService
      */
@@ -312,7 +323,8 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
 
             return [
                 'link' => $paymentLink->getUrl(),
-                'status' => 200
+                'status' => 200,
+                'orderId' => $orderId,
             ];
         }
 
@@ -346,6 +358,39 @@ class SquareService extends AbstractPaymentService implements PaymentServiceInte
     public function completePayment($paymentId)
     {
         return $this->getApiResponse('getPaymentsApi', 'completePayment', [$paymentId, new CompletePaymentRequest()]);
+    }
+
+    /**
+     * @param string $paymentId
+     *
+     * @return ApiResponse
+     *
+     * @throws ApiException
+     * @throws Exception
+     */
+    public function getPayment($paymentId): ApiResponse
+    {
+        return $this->getApiResponse('getPaymentsApi', 'getPayment', [$paymentId]);
+    }
+
+    /**
+     * Whether a Square Payment may finalize an Amelia booking as paid.
+     * Requires a settled COMPLETED status from a source whose funds cannot be pulled back.
+     *
+     * @param Payment|null $payment
+     *
+     * @return bool
+     */
+    public function isAcceptablePayment($payment): bool
+    {
+        if (!$payment instanceof Payment) {
+            return false;
+        }
+
+        $sourceType = $payment->getSourceType();
+
+        return $payment->getStatus() === self::COMPLETED_PAYMENT_STATUS &&
+            !in_array($sourceType, self::REJECTED_SOURCE_TYPES, true);
     }
 
     /**

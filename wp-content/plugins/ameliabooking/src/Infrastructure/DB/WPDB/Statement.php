@@ -61,9 +61,9 @@ class Statement
      * Repositories previously called execute($params); this now works.
      *
      * @param array $params
-     * @return void
+     * @return bool Always true - a failed query leaves by the RuntimeException below.
      */
-    public function execute(array $params = [])
+    public function execute(array $params = []): bool
     {
         // Merge passed params into bindings (allows both bindParam + execute($params))
         if ($params) {
@@ -122,6 +122,11 @@ class Statement
         $this->results = array_map(function ($row) {
             return (array) $row;
         }, $this->wpdb->last_result ?? []);
+
+        // PDOStatement::execute() returns a bool, and callers are entitled to test it. Failure leaves by
+        // the throw above, so reaching here means success - without this the method returned null and a
+        // caller checking the result read every successful write as a failure.
+        return true;
     }
 
     /**

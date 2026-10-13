@@ -27,10 +27,10 @@ abstract class WebhookSignature
         $timestamp = self::getTimestamp($header);
         $signatures = self::getSignatures($header, self::EXPECTED_SCHEME);
         if (-1 === $timestamp) {
-            throw \Stripe\Exception\SignatureVerificationException::factory('Unable to extract timestamp and signatures from header', $payload, $header);
+            throw \AmeliaVendor\Stripe\Exception\SignatureVerificationException::factory('Unable to extract timestamp and signatures from header', $payload, $header);
         }
         if (empty($signatures)) {
-            throw \Stripe\Exception\SignatureVerificationException::factory('No signatures found with expected scheme', $payload, $header);
+            throw \AmeliaVendor\Stripe\Exception\SignatureVerificationException::factory('No signatures found with expected scheme', $payload, $header);
         }
         // Check if expected signature is found in list of signatures from
         // header
@@ -44,11 +44,11 @@ abstract class WebhookSignature
             }
         }
         if (!$signatureFound) {
-            throw \Stripe\Exception\SignatureVerificationException::factory('No signatures found matching the expected signature for payload', $payload, $header);
+            throw \AmeliaVendor\Stripe\Exception\SignatureVerificationException::factory('No signatures found matching the expected signature for payload', $payload, $header);
         }
         // Check if timestamp is within tolerance
         if ($tolerance > 0 && \abs(\time() - $timestamp) > $tolerance) {
-            throw \Stripe\Exception\SignatureVerificationException::factory('Timestamp outside the tolerance zone', $payload, $header);
+            throw \AmeliaVendor\Stripe\Exception\SignatureVerificationException::factory('Timestamp outside the tolerance zone', $payload, $header);
         }
         return true;
     }

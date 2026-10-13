@@ -6,12 +6,9 @@ use AmeliaBooking\Domain\Services\Logger\LoggerInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaVendor\GuzzleHttp\Exception\GuzzleException;
 use Exception;
-use Microsoft\Graph\Exception\GraphException;
-use Microsoft\Graph\Graph;
-use Microsoft\Graph\Model\Calendar;
-use Microsoft\Graph\Model\FileAttachment;
-use Microsoft\Graph\Model\Message;
-use Microsoft\Graph\Model\User;
+use Microsoft\Kiota\Abstractions\ApiException as GraphException;
+use Microsoft\Graph\Generated\Models\Calendar;
+use Microsoft\Graph\Generated\Models\User;
 
 class OutlookCalendarMiddlewareService extends AbstractOutlookCalendarMiddlewareService
 {
@@ -33,7 +30,7 @@ class OutlookCalendarMiddlewareService extends AbstractOutlookCalendarMiddleware
     {
         $this->service = $settingsService;
         $this->outlookCalendarSettings = $settingsService->getCategorySettings('outlookCalendar');
-        $this->graph = new Graph();
+        $this->graph = new OutlookGraphClient();
         $this->outlookUserInfoUrl = self::OUTLOOK_USER_INFO_URL;
         $this->logger = $logger->channel(LoggerInterface::CHANNEL_SYNC);
     }
@@ -95,11 +92,12 @@ class OutlookCalendarMiddlewareService extends AbstractOutlookCalendarMiddleware
 
             /** @var Calendar $outlookCalendar */
             foreach ($outlookCalendars as $outlookCalendar) {
-                if ($outlookCalendar->getCanEdit()) {
+                if ($outlookCalendar->getCanEdit() !== false) {
                     $calendars[] = [
-                        'id' => $outlookCalendar->getId(),
-                        'name' => $outlookCalendar->getName(),
-                        'owner' => $outlookCalendar->getOwner() ? $outlookCalendar->getOwner()->getName() : null,
+                        'id'        => $outlookCalendar->getId(),
+                        'name'      => $outlookCalendar->getName(),
+                        'owner'     => $outlookCalendar->getOwner() ? $outlookCalendar->getOwner()->getName() : null,
+                        'isDefault' => $outlookCalendar->getIsDefaultCalendar() === true,
                     ];
                 }
             }
@@ -147,10 +145,10 @@ class OutlookCalendarMiddlewareService extends AbstractOutlookCalendarMiddleware
      * Get configured Graph client with the appropriate token (provider-specific or global)
      *
      * @param array|null $providerOutlookCalendar
-     * @return Graph|null
+     * @return OutlookGraphClient|null
      * @throws Exception
      */
-    public function getGraph(array $providerOutlookCalendar = null): ?Graph
+    public function getGraph(array $providerOutlookCalendar = null): ?OutlookGraphClient
     {
         $accessTokenJson = $this->outlookCalendarSettings['accessToken'] ?? null;
 
@@ -175,7 +173,7 @@ class OutlookCalendarMiddlewareService extends AbstractOutlookCalendarMiddleware
             return null;
         }
 
-        $graph = new Graph();
+        $graph = new OutlookGraphClient();
 
         if ($this->isAccessTokenExpired($accessToken)) {
             $refreshToken = $accessToken['refresh_token'] ?? null;
@@ -222,6 +220,7 @@ class OutlookCalendarMiddlewareService extends AbstractOutlookCalendarMiddleware
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode(['refresh_token' => $refreshToken]));
 
         $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
         if ($response) {
             $responseData = json_decode($response, true);
@@ -230,6 +229,20 @@ class OutlookCalendarMiddlewareService extends AbstractOutlookCalendarMiddleware
                 $result['created'] = time();
                 return $result;
             }
+
+            // A refresh token is bound to the app registration that issued it, so one minted by the
+            // customer's own clientID/secret is rejected here. Callers only see null, which reads the
+            // same as an unreachable middleware - the body is what tells the two apart.
+            $this->logger->error(
+                'OutlookCalendar: middleware refresh returned no access token',
+                [
+                    'httpCode'   => $httpCode,
+                    'resultKeys' => is_array($result) ? array_keys($result) : null,
+                    'body'       => substr($response, 0, 300),
+                ]
+            );
+
+            return null;
         }
 
         return null;
@@ -276,7 +289,7 @@ class OutlookCalendarMiddlewareService extends AbstractOutlookCalendarMiddleware
         $picture = $oidcData['picture'] ?? null;
 
         if (!$name || !$email) {
-            $graph = new Graph();
+            $graph = new OutlookGraphClient();
             $graph->setAccessToken($bearer);
 
             // Attempt 1: /me — lightweight, requires User.Read scope.
@@ -389,15 +402,13 @@ class OutlookCalendarMiddlewareService extends AbstractOutlookCalendarMiddleware
         $attachmentList = [];
 
         foreach ($attachments as $attachment) {
-            $attachmentObject = new FileAttachment();
-
-            $attachmentObject->setODataType("#microsoft.graph.fileAttachment");
-            $attachmentObject->setName($attachment['fileName']);
-            $attachmentObject->setContentType(mime_content_type($attachment['filePath']));
-            $attachmentObject->setContentBytes(base64_encode(file_get_contents($attachment['filePath'])));
-            $attachmentObject->setIsInline(false);
-
-            $attachmentList[] = $attachmentObject;
+            $attachmentList[] = [
+                '@odata.type'  => '#microsoft.graph.fileAttachment',
+                'name'         => $attachment['fileName'],
+                'contentType'  => mime_content_type($attachment['filePath']),
+                'contentBytes' => base64_encode(file_get_contents($attachment['filePath'])),
+                'isInline'     => false,
+            ];
         }
 
         $bccList = [];
@@ -410,36 +421,34 @@ class OutlookCalendarMiddlewareService extends AbstractOutlookCalendarMiddleware
             ];
         }
 
-        $message = new Message(
-            [
-                'from'          => [
+        $message = [
+            'from'          => [
+                'emailAddress' => [
+                    'name' => mb_convert_encoding($fromName, 'UTF-8'),
+                ]
+            ],
+            'subject'       => mb_convert_encoding($subject, 'UTF-8'),
+            'body'          => [
+                'contentType' => 'HTML',
+                'content'     => mb_convert_encoding($body, 'UTF-8'),
+            ],
+            'toRecipients'  => [
+                [
                     'emailAddress' => [
-                        'name' => mb_convert_encoding($fromName, 'UTF-8'),
-                    ]
-                ],
-                'subject'       => mb_convert_encoding($subject, 'UTF-8'),
-                'body'          => [
-                    'contentType' => 'HTML',
-                    'content'     => mb_convert_encoding($body, 'UTF-8'),
-                ],
-                'toRecipients'  => [
-                    [
-                        'emailAddress' => [
-                            'address' => trim($to),
-                        ],
-                    ]
-                ],
-                'replyTo'       => trim($replyTo) ? [
-                    [
-                        'emailAddress' => [
-                            'address' => trim($replyTo),
-                        ],
-                    ]
-                ] : [],
-                'bccRecipients' => $bccList,
-                'attachments'   => $attachmentList,
-            ]
-        );
+                        'address' => trim($to),
+                    ],
+                ]
+            ],
+            'replyTo'       => trim($replyTo) ? [
+                [
+                    'emailAddress' => [
+                        'address' => trim($replyTo),
+                    ],
+                ]
+            ] : [],
+            'bccRecipients' => $bccList,
+            'attachments'   => $attachmentList,
+        ];
 
         try {
             $this->graph

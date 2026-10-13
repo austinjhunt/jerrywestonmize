@@ -3,6 +3,7 @@
 namespace AmeliaBooking\Application\Services\Booking;
 
 use AmeliaBooking\Application\Services\Bookable\BookableApplicationService;
+use AmeliaBooking\Application\Services\Mobile\PushNotificationService;
 use AmeliaBooking\Application\Services\Notification\EmailNotificationService;
 use AmeliaBooking\Application\Services\Notification\SMSNotificationService;
 use AmeliaBooking\Application\Services\Notification\AbstractWhatsAppNotificationService;
@@ -275,6 +276,12 @@ class BookingApplicationService
 
         if (!empty($data['packageBookingFromBackend'])) {
             $data['packageBookingFromBackend'] = true;
+        }
+
+        if (isset($data['isCart'])) {
+            $data['isCart'] = is_string($data['isCart'])
+                ? filter_var($data['isCart'], FILTER_VALIDATE_BOOLEAN)
+                : !empty($data['isCart']);
         }
 
         if (isset($data['utcOffset']) && $data['utcOffset'] === '') {
@@ -908,7 +915,7 @@ class BookingApplicationService
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      */
-    public function bookingRescheduled($entityId, $entityType, $userId, $userType)
+    public function bookingRescheduled($entityId, $entityType, $userId, $userType): void
     {
         /** @var EmailNotificationService $notificationService */
         $notificationService = $this->container->get('application.emailNotification.service');
@@ -918,6 +925,8 @@ class BookingApplicationService
         $whatsAppNotificationService = $this->container->get('application.whatsAppNotification.service');
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
+        /** @var PushNotificationService $pushNotificationService */
+        $pushNotificationService = $this->container->get('application.mobile.pushNotification.service');
 
         $notificationService->invalidateSentScheduledNotifications(
             $entityId,
@@ -942,6 +951,10 @@ class BookingApplicationService
                 $userId,
                 $userType
             );
+        }
+
+        if ($entityType === Entities::APPOINTMENT) {
+            $pushNotificationService->invalidateScheduledReminders((int) $entityId);
         }
     }
 }

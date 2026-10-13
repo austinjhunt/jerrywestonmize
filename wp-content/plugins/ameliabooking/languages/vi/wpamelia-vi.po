@@ -33,26 +33,6 @@ msgid "# of bookings"
 msgstr "Số lượng đặt chỗ"
 
 #, php-format
-msgid "%1$s, %2$s, was canceled."
-msgstr "%1$s, %2$s đã bị hủy."
-
-#, php-format
-msgid "%1$s, %2$s, was rejected."
-msgstr "%1$s, %2$s đã bị từ chối."
-
-#, php-format
-msgid "%1$s booked %2$s at %3$s."
-msgstr "%1$s đã đặt %2$s tại %3$s."
-
-#, php-format
-msgid "%1$s on %2$s had a status change."
-msgstr "%1$s vào %2$s đã thay đổi trạng thái."
-
-#, php-format
-msgid "%1$s on %2$s was updated."
-msgstr "%1$s vào %2$s đã được cập nhật."
-
-#, php-format
 msgid "%event_name% Event Booked"
 msgstr "%event_name% Sự kiện đã được đặt"
 
@@ -457,8 +437,14 @@ msgstr "Hành động"
 msgid "Activate"
 msgstr "Kích hoạt"
 
+msgid "Activate now"
+msgstr ""
+
 msgid "Activate with Envato"
 msgstr "Kích hoạt với Envato"
+
+msgid "Activate your license to unlock the features included in your plan."
+msgstr ""
 
 msgid "Activated with Envato"
 msgstr "Đã kích hoạt với Envato"
@@ -870,6 +856,9 @@ msgstr "Đã thanh toán"
 msgid "Already have an account?"
 msgstr "Đã có tài khoản?"
 
+msgid "Already purchased Amelia?"
+msgstr ""
+
 msgid "Also cancel and delete future events"
 msgstr "Cũng hủy và xóa các sự kiện sắp tới"
 
@@ -928,7 +917,7 @@ msgid "Apple Calendar setup"
 msgstr "Cài đặt Lịch Apple"
 
 msgid "Apple calendar events"
-msgstr "Sự kiện Lịch Apple"
+msgstr ""
 
 msgid "Application (client) ID"
 msgstr "ID Ứng dụng (khách hàng)"
@@ -1072,9 +1061,6 @@ msgstr "Ghi chú cuộc hẹn"
 msgid "Appointment price"
 msgstr "Giá cuộc hẹn"
 
-msgid "Appointment reminder"
-msgstr "Nhắc nhở cuộc hẹn"
-
 msgid "Appointment repeats"
 msgstr "Lịch hẹn lặp lại"
 
@@ -1087,9 +1073,6 @@ msgstr "Thời gian bắt đầu cuộc hẹn"
 msgid "Appointment status"
 msgstr "Trạng thái cuộc hẹn"
 
-msgid "Appointment status changed"
-msgstr "Trạng thái cuộc hẹn đã thay đổi"
-
 msgid "Appointment status has been changed to "
 msgstr "Trạng thái đặt hẹn đã được thay đổi thành"
 
@@ -1098,9 +1081,6 @@ msgstr "Trạng thái cuộc hẹn đã được cập nhật."
 
 msgid "Appointment title"
 msgstr "Tiêu đề cuộc hẹn"
-
-msgid "Appointment updated"
-msgstr "Đã cập nhật lịch hẹn"
 
 msgid "Appointments"
 msgstr "Lịch hẹn"
@@ -1140,6 +1120,10 @@ msgstr "Bạn có chắc chắn muốn hủy và xóa sự kiện này không?"
 
 msgid "Are you sure you want to cancel this appointment?"
 msgstr "Bạn có chắc chắn muốn hủy bỏ cuộc hẹn này không?"
+
+msgid ""
+"Are you sure you want to cancel this booking? This action cannot be undone."
+msgstr ""
 
 msgid "Are you sure you want to cancel this event?"
 msgstr "Bạn có chắc chắn muốn hủy sự kiện này không?"
@@ -2269,6 +2253,9 @@ msgstr "Chọn khi nào lặp lại kết thúc"
 msgid "Choose whether you want to manage services, events, or both."
 msgstr "Chọn xem bạn muốn quản lý dịch vụ, sự kiện hay cả hai."
 
+msgid "Choose which tab users see first when they log in"
+msgstr ""
+
 msgid "Choosing layout of first step in step by step form"
 msgstr "Chọn bố cục của bước đầu tiên trong biểu mẫu từng bước"
 
@@ -2453,6 +2440,9 @@ msgstr "Cấu hình danh sách chờ cho các cuộc hẹn"
 
 msgid "Confirm"
 msgstr "Xác nhận"
+
+msgid "Confirm Cancellation"
+msgstr ""
 
 msgid "Confirm My Appointment"
 msgstr "Xác nhận lịch hẹn của tôi"
@@ -3091,9 +3081,6 @@ msgstr "Dữ liệu không thay đổi:"
 
 msgid "Data to be updated:"
 msgstr "Dữ liệu cần được cập nhật:"
-
-msgid "Data transfer"
-msgstr "Chuyển dữ liệu"
 
 msgid "Date"
 msgstr "Ngày"
@@ -4113,6 +4100,9 @@ msgstr "Trạng thái cuộc hẹn mặc định"
 msgid "Default back end page"
 msgstr "Trang quản trị mặc định"
 
+msgid "Default landing tab"
+msgstr ""
+
 msgid "Default language"
 msgstr "Ngôn ngữ mặc định"
 
@@ -4617,8 +4607,6 @@ msgid ""
 "Edit appointments/events when connected Google Calendar Events are "
 "rescheduled or deleted"
 msgstr ""
-"Tự động cập nhật lịch hẹn/sự kiện khi sự kiện Google Lịch được liên kết bị "
-"dời lịch hoặc bị xóa"
 
 msgid "Edit block time"
 msgstr "Sửa khung giờ bị chặn"
@@ -5732,9 +5720,6 @@ msgstr "Thất bại"
 msgid "Failed to access camera. Please try again."
 msgstr "Không thể truy cập camera. Vui lòng thử lại."
 
-msgid "Failed to initialize payment. Please try again."
-msgstr "Không thể khởi tạo quá trình thanh toán. Vui lòng thử lại."
-
 msgid "Failed to load appointment details. Please try again later."
 msgstr "Không thể tải chi tiết cuộc hẹn. Vui lòng thử lại sau."
 
@@ -6109,7 +6094,7 @@ msgid "Google Meet setup"
 msgstr "Cài đặt Google Meet"
 
 msgid "Google calendar events"
-msgstr "Sự kiện lịch Google Calendar"
+msgstr ""
 
 msgid "Google reCAPTCHA v2 secret key"
 msgstr "Khóa bí mật Google reCAPTCHA v2"
@@ -6895,13 +6880,6 @@ msgstr ""
 "sẽ đóng sau khi có đặt chỗ đầu tiên."
 
 msgid ""
-"If disabled, the price will remain the same regardless of how many people "
-"are included in the group appointment."
-msgstr ""
-"Nếu bị vô hiệu hóa, giá sẽ giữ nguyên bất kể có bao nhiêu người được bao gồm "
-"trong cuộc hẹn nhóm."
-
-msgid ""
 "If enabled, customers can book with Pending status even after maximum "
 "capacity is reached."
 msgstr ""
@@ -7043,6 +7021,9 @@ msgstr "Hình thu nhỏ"
 msgid "Import"
 msgstr "Nhập"
 
+msgid "Import/Export"
+msgstr ""
+
 msgid "Import Failed"
 msgstr "Nhập thất bại"
 
@@ -7072,6 +7053,9 @@ msgstr "Nhập không thành công"
 
 msgid "Import failed. Review the details below."
 msgstr "Nhập không thành công. Xem chi tiết bên dưới."
+
+msgid "Import or export your Amelia data."
+msgstr ""
 
 msgid "Import progress"
 msgstr "Tiến trình nhập"
@@ -8957,7 +8941,7 @@ msgstr ""
 "khoản trong cài đặt Tích hợp Outlook."
 
 msgid "Outlook calendar events"
-msgstr "Sự kiện trong Lịch Outlook"
+msgstr ""
 
 msgid "Outside of working hours"
 msgstr "Ngoài giờ làm việc"
@@ -10083,6 +10067,11 @@ msgstr "Giao dịch đã hủy"
 msgid "Purchased"
 msgstr "Đã mua"
 
+msgid ""
+"Purchasing doesn't upgrade this plugin automatically. Follow our step-by-"
+"step guide to switch to the full version."
+msgstr ""
+
 msgid "Purple"
 msgstr "Màu Tím"
 
@@ -10291,10 +10280,6 @@ msgstr "Phần còn lại của tổng số tiền sẽ được thanh toán t�
 
 msgid "Remind me when my SMS balance is low"
 msgstr "Nhắc nhở tôi khi số dư SMS của tôi thấp"
-
-#, php-format
-msgid "Reminder: %1$s is scheduled for %2$s."
-msgstr "Nhắc nhở: %1$s được lên lịch vào %2$s."
 
 msgid "Remove Apple Calendar event slots"
 msgstr "Xóa khung giờ từ sự kiện trong Apple Calendar"
@@ -10697,6 +10682,9 @@ msgstr "Phần"
 
 msgid "Securely process payments using Stripe."
 msgstr "Xử lý thanh toán an toàn bằng Stripe."
+
+msgid "See upgrade guide."
+msgstr ""
 
 msgid "Segment"
 msgstr "Phân đoạn"
@@ -11561,6 +11549,9 @@ msgstr "Đăng nhập bằng Microsoft"
 msgid "Sign in with Outlook"
 msgstr "Đăng nhập bằng Outlook"
 
+msgid "Sign out and use a customer account"
+msgstr ""
+
 msgid "Sign out from Google"
 msgstr "Đăng xuất khỏi Google"
 
@@ -11969,7 +11960,7 @@ msgid "Switch Camera"
 msgstr "Chuyển đổi camera"
 
 msgid "Sync Google Events"
-msgstr "Đồng Bộ Sự Kiện Google"
+msgstr ""
 
 msgid "Sync with"
 msgstr "Đồng bộ với"
@@ -12487,6 +12478,12 @@ msgid ""
 msgstr ""
 "Thông báo này yêu cầu một công việc cron. Thêm dòng dưới đây vào cấu hình "
 "cron của bạn."
+
+msgid ""
+"This option applies only to people added through \"Bringing anyone with "
+"you\". If disabled, the service price is charged once for the entire "
+"booking, regardless of how many additional people are included."
+msgstr ""
 
 msgid ""
 "This option requires adding the payment link placeholder to your message "
@@ -13687,6 +13684,11 @@ msgstr "Mật khẩu của bạn đã được đặt lại thành công"
 
 msgid "Your password has been reset successfully."
 msgstr "Mật khẩu của bạn đã được đặt lại thành công."
+
+msgid ""
+"Your payment is still processing. You will receive a confirmation as soon as "
+"it is completed."
+msgstr ""
 
 msgid "Your postal code is incomplete"
 msgstr "Mã bưu điện của bạn không đầy đủ"

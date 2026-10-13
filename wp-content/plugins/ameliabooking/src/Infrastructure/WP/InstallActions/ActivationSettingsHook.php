@@ -466,6 +466,7 @@ This message does not have an option for responding. If you need additional info
             'includeBufferTimeGoogleCalendar' => false,
             'status'                          => 'tentative',
             'enableGoogleMeet'                => false,
+            'updateEventStatusOnDelete'       => false,
             'title'                           => [
                 'appointment' => $savedSettings && !empty($savedSettings['eventTitle']) ?
                     $savedSettings['eventTitle'] : '%service_name%',
@@ -477,7 +478,8 @@ This message does not have an option for responding. If you need additional info
                 'event' => ''
             ],
             'accessToken'                      => '',
-            'googleAccountData'                => null
+            'googleAccountData'                => null,
+            'showCalendarBookings'             => false,
         ];
 
         self::initSettings('googleCalendar', $settings);
@@ -506,6 +508,7 @@ This message does not have an option for responding. If you need additional info
             'eventDescription'                 => '',
             'includeBufferTimeOutlookCalendar' => false,
             'enableMicrosoftTeams'             => false,
+            'updateEventStatusOnDelete'        => false,
             'title'                            => [
                 'appointment' => $savedSettings && !empty($savedSettings['eventTitle']) ?
                     $savedSettings['eventTitle'] : '%service_name%',
@@ -519,7 +522,8 @@ This message does not have an option for responding. If you need additional info
             'mailEnabled'                      => false,
             'token'                            => null,
             'accessToken'                      => '',
-            'outlookAccountData'               => null
+            'outlookAccountData'               => null,
+            'showCalendarBookings'             => false,
         ];
 
         self::initSettings('outlookCalendar', $settings);
@@ -1850,7 +1854,7 @@ This message does not have an option for responding. If you need additional info
      *
      * @return array
      */
-    public static function getDefaultPaymentsSettings($savedSettings)
+    public static function getDefaultPaymentsSettings($savedSettings): array
     {
         return [
             'currency'                   => 'USD',
@@ -1892,6 +1896,16 @@ This message does not have an option for responding. If you need additional info
                 'liveSecretKey'      => '',
                 'testPublishableKey' => '',
                 'testSecretKey'      => '',
+                'liveWebhookSecret'  => '',
+                'testWebhookSecret'  => '',
+                'liveWebhookId'      => '',
+                'testWebhookId'      => '',
+                'liveConnectWebhookSecret' => '',
+                'testConnectWebhookSecret' => '',
+                'liveConnectWebhookId'     => '',
+                'testConnectWebhookId'     => '',
+                'liveWebhookKeyFingerprint' => '',
+                'testWebhookKeyFingerprint' => '',
                 'address'            => false,
                 'description'        => [
                     'enabled'     => false,
@@ -2153,7 +2167,7 @@ This message does not have an option for responding. If you need additional info
     /**
      * Init Payments Settings
      */
-    private static function initPaymentsSettings()
+    private static function initPaymentsSettings(): void
     {
         $settingsService = new SettingsService(new SettingsStorage());
 
@@ -2176,6 +2190,16 @@ This message does not have an option for responding. If you need additional info
                 ['stripe', 'metaData', 'cart'],
                 ['stripe', 'manualCapture'],
                 ['stripe', 'returnUrl'],
+                ['stripe', 'liveWebhookSecret'],
+                ['stripe', 'testWebhookSecret'],
+                ['stripe', 'liveWebhookId'],
+                ['stripe', 'testWebhookId'],
+                ['stripe', 'liveConnectWebhookSecret'],
+                ['stripe', 'testConnectWebhookSecret'],
+                ['stripe', 'liveConnectWebhookId'],
+                ['stripe', 'testConnectWebhookId'],
+                ['stripe', 'liveWebhookKeyFingerprint'],
+                ['stripe', 'testWebhookKeyFingerprint'],
                 ['stripe', 'address'],
                 ['payPal', 'description'],
                 ['payPal', 'description', 'package'],
@@ -2585,7 +2609,11 @@ This message does not have an option for responding. If you need additional info
 
             foreach ((array)$keys as $key) {
                 if (!isset($current[$key])) {
-                    $current[$key] = !empty($currentInit[$key]) ? $currentInit[$key] : null;
+                    // array_key_exists, so that falsy initializer values (empty strings,
+                    // false, 0) are migrated as-is instead of being turned into null.
+                    $current[$key] = is_array($currentInit) && array_key_exists($key, $currentInit)
+                        ? $currentInit[$key]
+                        : null;
 
                     $setSettings = true;
 

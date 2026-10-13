@@ -20,23 +20,24 @@ mobile app, and it would mean shipping a shared admin secret inside the app.
 The **Cabinet** flow below issues a per-provider JWT instead.
 
 ## 1. Log in
-
-```
-POST {site}/wp-admin/admin-ajax.php?action=wpamelia_api&call=/users/authenticate
+```http
+POST {site}/wp-admin/admin-ajax.php?action=wpamelia_api&call=/mobile/v1/authenticate
 Content-Type: application/json
 
 {
   "email": "employee@example.com",
-  "password": "••••••••",
-  "cabinetType": "provider"
+  "password": "••••••••"
 }
 ```
 
-- **No `Amelia` API key required** — `/users/authenticate` is a Cabinet (Starter-tier)
-  route, not part of the key-gated API set.
-- **No CSRF nonce required** — `LoginCabinetCommand` is explicitly nonce-exempt
-  (`src/Application/Commands/Command.php`, `validateNonce`).
-- `cabinetType: "provider"` is what makes this **employees only** — see §3.
+The server forces `cabinetType: provider`. Do not send `source`, `recaptcha`, or
+the Amelia admin API key. CSRF nonce is not required (`LoginMobileCommand`
+extends `LoginCabinetCommand`, which is nonce-exempt).
+
+This URL is **not** a secret. Anyone can POST to it. It exists so the native app
+does not have to complete a Google reCAPTCHA widget. Email + password still
+authenticate the employee. The web Employee Panel continues to use
+`/users/authenticate` and still requires reCAPTCHA when that setting is on.
 
 ### Success response
 
@@ -65,10 +66,14 @@ into the provider cabinet (see §3).
 
 ## 2. Make authenticated requests
 
-Send the token as a Bearer header on every subsequent call:
+Send the token as a Bearer header on every subsequent `/mobile/v1/*` call
+(`MobileV1.php`). Cabinet context is forced by `MobileV1Controller` — do **not**
+send `?source=cabinet-provider` (the web Employee Panel still does; the mobile
+controllers unset client `source` and call `forceCabinetContext()`). List endpoints
+also strip client `providerId` / `providers` so the token owner cannot be overridden.
 
-```
-GET {site}/wp-admin/admin-ajax.php?action=wpamelia_api&call=/appointments
+```http
+GET {site}/wp-admin/admin-ajax.php?action=wpamelia_api&call=/mobile/v1/appointments
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
@@ -79,38 +84,34 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
   validated against the same `headerJwtSecret`) and scopes the request to that provider
   via `authorization($token, 'provider')`. The employee only sees their own
   appointments / schedule.
-
-Two non-obvious rules a mobile client must follow:
-
-- **Always send `?source=cabinet-provider`** (a query param, even on POSTs). This is what
-  flips the handler into cabinet mode (`isCabinetPage = getPage() === 'cabinet'`) and
-  engages per-provider scoping. Without it the handler ignores the token and the request
-  is treated as an unscoped dashboard call. The web Employee Panel sends exactly this
-  (see `v3/src/views/public/Cabinet/**`, `source: 'cabinet-' + cabinetType`).
 - **Auth failures are NOT HTTP 401.** An expired/invalid token yields `RESULT_ERROR` with
-  `data.reauthorize = true`, which `Controller::__invoke` maps to HTTP **409/500**. Key
-  your re-login off the `data.reauthorize` body flag, not the status code (the web panel
-  does: `error.response.data.data.reauthorize → logout`).
+  `data.reauthorize = true`, which `Controller::__invoke` maps to HTTP **409/500**. A
+  missing Bearer on `/mobile/v1/*` (except `/mobile/v1/authenticate`) is the same 409
+  `{reauthorize: true}` body from `MobileV1Controller`. Key re-login off that flag, not
+  the status code.
 
-## 2a. Cabinet data endpoints (use these, not `/api/v1/*`)
+## 2a. Mobile data endpoints (use these, not `/api/v1/*`)
 
-The `/api/v1/*` routes require the admin API key and won't accept the JWT. Use the cabinet
-(no-prefix) routes instead. All take `Authorization: Bearer <token>` + `?source=cabinet-provider`.
+The `/api/v1/*` routes require the admin API key and won't accept the JWT. Use the
+`/mobile/v1/*` routes. All take `Authorization: Bearer <token>`; cabinet-provider
+context is forced by the route.
 
-| Operation                | Method & path                          | Body         | Scoping |
-| ------------------------ | -------------------------------------- | ------------ | ------- |
-| List appointments        | `GET /appointments`                    | —            | server forces the provider's own id; **do not send `providerId`** |
-| Appointment detail       | `GET /appointments/{id}`               | —            | provider-checked |
-| Update appt. status       | `POST /appointments/status/{id}`       | `{ status }` | provider-checked; returns new status in `data.status` |
-| List events              | `GET /events`                          | —            | provider-scoped |
-| Event detail             | `GET /events/{id}`                     | —            | provider-scoped |
+| Operation                | Method & path                                | Body         | Scoping |
+| ------------------------ | -------------------------------------------- | ------------ | ------- |
+| List appointments        | `GET /mobile/v1/appointments`                | —            | server forces the token provider; client `providerId` / `providers` are stripped |
+| Appointment detail       | `GET /mobile/v1/appointments/{id}`           | —            | provider-checked |
+| Update appt. status       | `POST /mobile/v1/appointments/status/{id}`   | `{ status }` | provider-checked; returns new status in `data.status` |
+| List events              | `GET /mobile/v1/events`                      | —            | provider-scoped |
+| Event detail             | `GET /mobile/v1/events/{id}`                 | —            | provider-scoped |
+| Filter entities          | `GET /mobile/v1/entities`                    | —            | cabinet-provider; `types` e.g. `categories,employees,locations,packages` |
+| Filter customers         | `GET /mobile/v1/customers`                   | —            | provider-scoped; `page`, `limit`, `search`, `skipCount` |
 
 ### Pagination (for infinite scroll / load-on-scroll)
 
 Both list endpoints paginate server-side, but with **different** param names, page-size
 sources, and total fields:
 
-| | `GET /appointments` | `GET /events` |
+| | `GET /mobile/v1/appointments` | `GET /mobile/v1/events` |
 | --- | --- | --- |
 | Page param | `page` (1-based) | `page` (1-based) |
 | Page size | server-fixed (`general.itemsPerPage`); **client sends no limit** | `limit` — **client sends it** |
@@ -148,7 +149,7 @@ Different sites run different plugin builds, so the app negotiates compatibility
 **before** it relies on the `/mobile/v1/*` contract. The plugin exposes one tiny,
 **unversioned, unauthenticated** handshake:
 
-```
+```http
 GET {site}/wp-admin/admin-ajax.php?action=wpamelia_api&call=/mobile/info
 → 200 { "message": "success",
         "data": { "pluginVersion": "9.5", "mobileApi": { "min": 1, "max": 1 } } }
@@ -185,6 +186,35 @@ no-Bearer `/mobile/v1/*` → `409 {reauthorize:true}`).
 > **Bump protocol:** raise `MOBILE_API_MAX` for a new additive contract version;
 > raise `MOBILE_API_MIN` only when deliberately dropping support for an old app
 > contract (this forces those app builds to update).
+
+## 2c. Push notifications (`/mobile/v1/*`)
+
+Bearer JWT only — `source=cabinet-provider` is **not** required (cabinet context is forced
+server-side by `MobileV1Controller`).
+
+| Operation | Method & path | Body | Notes |
+| --- | --- | --- | --- |
+| Register device | `POST /mobile/v1/devices` | `{ "token", "platform", "appVersion"? }` | Upserts Expo token for the authenticated provider |
+| Unregister device | `DELETE /mobile/v1/devices` | `{ "token" }` | Idempotent; only deletes tokens owned by the caller |
+| Get preferences | `GET /mobile/v1/notification-preferences` | — | `data.preferences` object; defaults when unset |
+| Update preferences | `PUT /mobile/v1/notification-preferences` | flat keys or `{ "preferences": { ... } }` | Per-user; shared across all devices |
+
+Preference keys (appointment pushes only): `new_bookings`, `status_changes`, `changes`, `reminders`.
+
+Appointment push `data` payload (Expo):
+
+| Field | Type | Example | Purpose |
+| --- | --- | --- | --- |
+| `type` | string | `"appointment"` | Entity kind |
+| `appointmentId` | int | `42` | Target appointment |
+| `start` | string | `"2026-07-10 09:00:00"` | Raw `bookingStart` (site timezone) |
+| `url` | string | `"/appointments/42"` | expo-router deep link path |
+
+The mobile app navigates to `data.url` on notification tap (falls back to
+`/appointments/{appointmentId}` when `url` is absent).
+
+Detect support via `/mobile/info` → `data.features.pushNotifications === true` (same
+Pro+ `mobileApp` licence gate as `data.licenseOk`) and `data.mobileApi.max >= 2`.
 
 ## 3. Employee-only enforcement
 
@@ -227,17 +257,18 @@ employee) or `admin` (an admin using the employee panel). Branch the UI on
 
 | Concern                       | Location |
 | ----------------------------- | -------- |
-| Login route (no key/nonce)    | `src/Infrastructure/Routes/Cabinet/Cabinet.php` → `/users/authenticate` |
-| Nonce exemption               | `src/Application/Commands/Command.php` → `validateNonce` |
+| Login route (staff app)       | `src/Infrastructure/Routes/Mobile/MobileV1.php` → `POST /mobile/v1/authenticate` |
+| Nonce exemption               | `src/Application/Commands/Command.php` → `validateNonce` (`LoginCabinetCommand` / `LoginMobileCommand`) |
 | Token issued (in body)        | `src/Application/Services/User/UserApplicationService.php` → `getAuthenticatedUserResponse` |
 | Bearer header read            | `src/Application/Commands/Command.php` → `setToken` (`enabledHttpAuthorization`) |
 | Token validated + scoped      | `src/Application/Services/User/UserApplicationService.php` → `getAuthenticatedUser` / `authorization` |
 | Employee-only check           | `getAuthenticatedUserResponse` (`type !== cabinetType`) |
 | Role constants / WP mapping   | `src/Domain/Entity/User/AbstractUser.php`, `src/Infrastructure/WP/UserRoles/UserRoles.php` |
-| Cabinet data routes           | `src/Infrastructure/Routes/Booking/**` (`/appointments`, `/events`, `/appointments/status/{id}`) |
-| `source=cabinet` scoping      | `src/Application/Commands/Booking/Appointment/GetAppointmentsCommandHandler.php` (`isCabinetPage`, provider id pinning) |
+| Mobile data routes            | `src/Infrastructure/Routes/Mobile/MobileV1.php` (`/mobile/v1/appointments`, `/mobile/v1/events`, …) |
+| Cabinet context (forced)      | `src/Application/Controller/Mobile/MobileV1Controller.php` → `forceCabinetContext()` |
 | `reauthorize` (not 401)       | `src/Application/Controller/Controller.php` → `__invoke` (maps RESULT_ERROR to 409/500) |
 | Version handshake             | `src/Application/Controller/Mobile/GetMobileInfoController.php`, route in `src/Infrastructure/Routes/Mobile/MobileV1.php` |
+| Mobile payment settings       | `GET /mobile/v1/settings` → `GetMobileSettingsMobileController` / `GetMobileSettingsCommandHandler` |
 | Routing 404 shape             | `src/Infrastructure/Common/AmeliaErrorHandler.php` (`{message}` only, no `data`) |
 | Reference client              | `amelia-mobile-app` repo → `lib/api.ts` + `context/AuthContext.tsx` (+ `__tests__/api.test.ts`) |
 
@@ -246,9 +277,12 @@ employee) or `admin` (an admin using the employee panel). Branch the UI on
 - **Plugin:** `tests/phpunit/Application/Commands/LoginNonceExemptionTest.php` locks the
   nonce exemption that lets the mobile app log in without a nonce/API key. Runs in CI via
   the existing `PHPUnit` job in `.github/workflows/ci.yml`.
+- **Plugin:** `tests/phpunit/Application/Controller/Mobile/LoginMobileControllerTest.php`
+  pins provider-forced, unauthenticated staff-app login (no Bearer, no client cabinetType).
 - **Plugin:** `tests/phpunit/Application/Controller/Mobile/GetMobileInfoControllerTest.php`
   pins the `/mobile/info` handshake payload (success + integer `mobileApi.min/max`) the app
   compares against.
 - **Mobile app:** `__tests__/api.test.ts` (`npm test`) locks the security-critical client
-  invariants: never sends the admin `Amelia` key, always sends `source=cabinet-provider`,
-  never sends a client `providerId`, and re-logs-in on the `reauthorize` body flag.
+  invariants: never sends the admin `Amelia` key, never sends a client `providerId`, and
+  re-logs-in on the `reauthorize` body flag. `/mobile/v1/*` does not require a client
+  `source` param (`MobileV1Controller` forces cabinet-provider).

@@ -33,26 +33,6 @@ msgid "# of bookings"
 msgstr "# rezervací"
 
 #, php-format
-msgid "%1$s, %2$s, was canceled."
-msgstr "%1$s, %2$s, byl zrušen."
-
-#, php-format
-msgid "%1$s, %2$s, was rejected."
-msgstr "%1$s, %2$s, byl zamítnut."
-
-#, php-format
-msgid "%1$s booked %2$s at %3$s."
-msgstr "%1$s rezervoval %2$s v %3$s."
-
-#, php-format
-msgid "%1$s on %2$s had a status change."
-msgstr "Stav %1$s na %2$s se změnil."
-
-#, php-format
-msgid "%1$s on %2$s was updated."
-msgstr "%1$s na %2$s byl aktualizován."
-
-#, php-format
 msgid "%event_name% Event Booked"
 msgstr "Událost %event_name% rezervována"
 
@@ -433,7 +413,7 @@ msgid "Access link"
 msgstr "Přístupový odkaz"
 
 msgid "Access link success"
-msgstr ""
+msgstr "Odkaz pro přístup byl úspěšně vytvořen"
 
 msgid "Access your financial data in seconds"
 msgstr "Získejte přístup ke svým finančním údajům během několika sekund"
@@ -456,8 +436,14 @@ msgstr "Akce"
 msgid "Activate"
 msgstr "Aktivovat"
 
+msgid "Activate now"
+msgstr ""
+
 msgid "Activate with Envato"
 msgstr "Aktivovat s Envato"
+
+msgid "Activate your license to unlock the features included in your plan."
+msgstr ""
 
 msgid "Activated with Envato"
 msgstr "Aktivováno s Envato"
@@ -868,6 +854,9 @@ msgstr "Již zaplaceno"
 msgid "Already have an account?"
 msgstr "Máte už účet?"
 
+msgid "Already purchased Amelia?"
+msgstr ""
+
 msgid "Also cancel and delete future events"
 msgstr "Zrušit a smazat také budoucí akce"
 
@@ -926,7 +915,7 @@ msgid "Apple Calendar setup"
 msgstr "Nastavení kalendáře Apple"
 
 msgid "Apple calendar events"
-msgstr "Události kalendáře Apple"
+msgstr ""
 
 msgid "Application (client) ID"
 msgstr "ID aplikace (uživatelské)"
@@ -1070,9 +1059,6 @@ msgstr "Poznámky k termínu"
 msgid "Appointment price"
 msgstr "Cena rezervace"
 
-msgid "Appointment reminder"
-msgstr "Připomenutí termínu"
-
 msgid "Appointment repeats"
 msgstr "Termín se opakuje"
 
@@ -1085,20 +1071,14 @@ msgstr "Čas začátku termínu"
 msgid "Appointment status"
 msgstr "Stav rezervace"
 
-msgid "Appointment status changed"
-msgstr "Stav termínu se změnil"
-
 msgid "Appointment status has been changed to "
-msgstr "Stav rezervace byl změněn na "
+msgstr "Stav schůzky byl změněn na "
 
 msgid "Appointment status has been updated."
 msgstr "Stav termínu byl aktualizován."
 
 msgid "Appointment title"
 msgstr "Název termínu"
-
-msgid "Appointment updated"
-msgstr "Termín aktualizován"
 
 msgid "Appointments"
 msgstr "Rezervace"
@@ -1138,6 +1118,10 @@ msgstr "Opravdu chcete tuto akci zrušit a smazat?"
 
 msgid "Are you sure you want to cancel this appointment?"
 msgstr "Opravdu chcete zrušit tento termín?"
+
+msgid ""
+"Are you sure you want to cancel this booking? This action cannot be undone."
+msgstr ""
 
 msgid "Are you sure you want to cancel this event?"
 msgstr "Opravdu chcete zrušit tuto akci?"
@@ -1346,7 +1330,7 @@ msgid "Attendees"
 msgstr "Účastníci"
 
 msgid "Attendees Allowed"
-msgstr "Povolených účastníků"
+msgstr "Povolení účastníci"
 
 msgid "Attendees Export Format"
 msgstr "Formát exportu účastníků"
@@ -2263,6 +2247,9 @@ msgstr "Zvolte, kdy opakování skončí"
 msgid "Choose whether you want to manage services, events, or both."
 msgstr "Zvolte si, jestli chcete spravovat služby, akce, nebo obojí."
 
+msgid "Choose which tab users see first when they log in"
+msgstr ""
+
 msgid "Choosing layout of first step in step by step form"
 msgstr "Výběr rozvržení prvního kroku ve formuláři Krok za krokem"
 
@@ -2448,6 +2435,9 @@ msgstr "Nastavit čekací listinu termínů"
 
 msgid "Confirm"
 msgstr "Potvrdit"
+
+msgid "Confirm Cancellation"
+msgstr ""
 
 msgid "Confirm My Appointment"
 msgstr "Potvrdit můj termín"
@@ -3080,9 +3070,6 @@ msgstr "Údaje, která zůstávají beze změny:"
 
 msgid "Data to be updated:"
 msgstr "Údaje k aktualizaci:"
-
-msgid "Data transfer"
-msgstr "Přenos dat"
 
 msgid "Date"
 msgstr "Datum"
@@ -4094,6 +4081,9 @@ msgstr "Výchozí stav rezervace"
 msgid "Default back end page"
 msgstr "Výchozí stránka backendu"
 
+msgid "Default landing tab"
+msgstr ""
+
 msgid "Default language"
 msgstr "Výchozí jazyk"
 
@@ -4603,8 +4593,6 @@ msgid ""
 "Edit appointments/events when connected Google Calendar Events are "
 "rescheduled or deleted"
 msgstr ""
-"Upravit termíny/akce, když jsou propojené události v kalendáři Google "
-"přeplánovány nebo smazány"
 
 msgid "Edit block time"
 msgstr "Upravit čas bloku"
@@ -5714,9 +5702,6 @@ msgstr "Selhalo"
 msgid "Failed to access camera. Please try again."
 msgstr "Nepodařilo se připojit k fotoaparátu. Zkuste to znovu."
 
-msgid "Failed to initialize payment. Please try again."
-msgstr "Platbu se nepodařilo spustit. Zkuste to prosím znovu."
-
 msgid "Failed to load appointment details. Please try again later."
 msgstr "Nepodařilo se načíst podrobnosti o termínu. Zkuste to znovu později."
 
@@ -6090,7 +6075,7 @@ msgid "Google Meet setup"
 msgstr "Nastavení Google Meet"
 
 msgid "Google calendar events"
-msgstr "Události kalendáře Google"
+msgstr ""
 
 msgid "Google reCAPTCHA v2 secret key"
 msgstr ""
@@ -6862,13 +6847,6 @@ msgstr ""
 "časový úsek se po první rezervaci uzavře."
 
 msgid ""
-"If disabled, the price will remain the same regardless of how many people "
-"are included in the group appointment."
-msgstr ""
-"Pokud vypnuto, cena zůstane stejná bez ohledu na to, kolik osob je zahrnuto "
-"do skupinové rezervace."
-
-msgid ""
 "If enabled, customers can book with Pending status even after maximum "
 "capacity is reached."
 msgstr ""
@@ -7008,6 +6986,9 @@ msgstr "Náhledy obrázku"
 msgid "Import"
 msgstr "Importovat"
 
+msgid "Import/Export"
+msgstr ""
+
 msgid "Import Failed"
 msgstr "Import se nezdařil"
 
@@ -7037,6 +7018,9 @@ msgstr "Import selhal"
 
 msgid "Import failed. Review the details below."
 msgstr "Import selhal. Prověřte níže uvedené podrobnosti."
+
+msgid "Import or export your Amelia data."
+msgstr ""
 
 msgid "Import progress"
 msgstr "Průběh importu"
@@ -7368,7 +7352,7 @@ msgid "Info"
 msgstr "Informace"
 
 msgid "Info text"
-msgstr ""
+msgstr "Informační text"
 
 msgid "Initial end date & time of the event"
 msgstr "Prvotní datum a čas akce"
@@ -8562,13 +8546,13 @@ msgid "Notify selected employees about empty package purchases"
 msgstr "Informovat vybrané pracovníky o nákupech s prázdným balíčkem"
 
 msgid "Notify the attendee(s)"
-msgstr "Upozornit účastníka/y"
+msgstr "Informovat účastníky"
 
 msgid "Notify the attendees"
 msgstr "Upozornit účastníky"
 
 msgid "Notify the customer(s)"
-msgstr "Upozornit zákazníky"
+msgstr "Informovat zákazníky"
 
 msgid "Number of Additional People"
 msgstr "Počet dalších osob"
@@ -8890,7 +8874,7 @@ msgid "Outline"
 msgstr ""
 
 msgid "Outlook Calendar"
-msgstr "Outlook kalendář"
+msgstr "Kalendář Outlook"
 
 msgid "Outlook Calendar & Microsoft Teams"
 msgstr "Outlook kalendář & Microsoft Teams"
@@ -8902,7 +8886,7 @@ msgid "Outlook Calendar setup"
 msgstr "Nastavení kalendáře Outlook"
 
 msgid "Outlook Mailer"
-msgstr ""
+msgstr "Emailová služba Outlook"
 
 msgid ""
 "Outlook Mailer is not fully configured. Please complete the account setup in "
@@ -8912,7 +8896,7 @@ msgstr ""
 "nastavení integrace s Outlookem."
 
 msgid "Outlook calendar events"
-msgstr "Události kalendáře Outlook"
+msgstr ""
 
 msgid "Outside of working hours"
 msgstr "Mimo pracovní dobu"
@@ -10040,6 +10024,11 @@ msgstr "Nákup je zrušen"
 msgid "Purchased"
 msgstr "Zakoupeno"
 
+msgid ""
+"Purchasing doesn't upgrade this plugin automatically. Follow our step-by-"
+"step guide to switch to the full version."
+msgstr ""
+
 msgid "Purple"
 msgstr "Fialová"
 
@@ -10179,7 +10168,7 @@ msgid "Redirect"
 msgstr "Přesměrování"
 
 msgid "Redirect URI"
-msgstr "URL přesměrování"
+msgstr "URI přesměrování"
 
 msgid "Redirect URL After Booking"
 msgstr "URL přesměrování po úspěšné rezervaci"
@@ -10209,7 +10198,7 @@ msgid "Redirect URL for unsuccessfully rejected booking"
 msgstr "URL přesměrování po neúspěšně odmítnuté rezervaci"
 
 msgid "Redirect URLs"
-msgstr "URL přesměrování"
+msgstr "Adresy URL pro přesměrování"
 
 msgid "Redirect page"
 msgstr "Přesměrovat stránku"
@@ -10247,10 +10236,6 @@ msgstr "Zbývající částka bude zaplacena na místě."
 
 msgid "Remind me when my SMS balance is low"
 msgstr "Upozornit mě, pokud je můj SMS kredit nízký"
-
-#, php-format
-msgid "Reminder: %1$s is scheduled for %2$s."
-msgstr "Připomínka: %1$s je naplánován na %2$s."
 
 msgid "Remove Apple Calendar event slots"
 msgstr "Odstranit časové sloty akcí v kalendáři Apple"
@@ -10325,7 +10310,7 @@ msgid "Replace"
 msgstr "Nahradit"
 
 msgid "Reply-to email"
-msgstr ""
+msgstr "E-mail pro odpovědi"
 
 msgid "Require password for login"
 msgstr "Vyžadovat heslo pro přihlášení"
@@ -10645,6 +10630,9 @@ msgstr "Sekce"
 
 msgid "Securely process payments using Stripe."
 msgstr "Bezpečně zpracovat platby s využitím Stripe."
+
+msgid "See upgrade guide."
+msgstr ""
 
 msgid "Segment"
 msgstr ""
@@ -11510,6 +11498,9 @@ msgstr "Přihlásit se pomocí Microsoftu"
 msgid "Sign in with Outlook"
 msgstr "Přihlásit se pomocí Outlook"
 
+msgid "Sign out and use a customer account"
+msgstr ""
+
 msgid "Sign out from Google"
 msgstr "Odhlásit z Google"
 
@@ -11918,7 +11909,7 @@ msgid "Switch Camera"
 msgstr "Přepnout kameru"
 
 msgid "Sync Google Events"
-msgstr "Synchronizovat události Google"
+msgstr ""
 
 msgid "Sync with"
 msgstr "Synchronizovat s"
@@ -12433,6 +12424,12 @@ msgid ""
 msgstr ""
 "Toto upozornění vyžaduje cron úlohu. Přidejte následující řádek do "
 "konfigurace cronu."
+
+msgid ""
+"This option applies only to people added through \"Bringing anyone with "
+"you\". If disabled, the service price is charged once for the entire "
+"booking, regardless of how many additional people are included."
+msgstr ""
 
 msgid ""
 "This option requires adding the payment link placeholder to your message "
@@ -13618,6 +13615,11 @@ msgstr "Heslo bylo úspěšně změněno. Použijte nové heslo pro přihlášen
 msgid "Your password has been reset successfully."
 msgstr "Heslo bylo úspěšně resetováno."
 
+msgid ""
+"Your payment is still processing. You will receive a confirmation as soon as "
+"it is completed."
+msgstr ""
+
 msgid "Your postal code is incomplete"
 msgstr "PSČ není kompletní"
 
@@ -13943,7 +13945,7 @@ msgid ""
 "{count} customer could not be deleted due to future bookings. | {count} "
 "customers could not be deleted due to future bookings."
 msgstr ""
-"{count} zákazníka se nepodařilo smazat kvůli budoucím rezervacím.{count} "
+"{count} zákazníka se nepodařilo smazat kvůli budoucím rezervacím. | {count} "
 "zákazníky/ů se nepodařilo smazat kvůli budoucím rezervacím."
 
 msgid "{count} customer deleted. | {count} customers deleted."

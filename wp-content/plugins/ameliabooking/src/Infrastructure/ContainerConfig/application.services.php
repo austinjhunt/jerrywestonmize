@@ -5,6 +5,7 @@
  * Instantiating application services and injecting the Infrastructure layer implementations
  */
 
+use AmeliaBooking\Application\Commands\Stripe\CompleteStripePaymentIntentCommandHandler;
 use AmeliaBooking\Application\Services\Bookable\AbstractPackageApplicationService;
 use AmeliaBooking\Application\Services\Bookable\BookableApplicationService;
 use AmeliaBooking\Application\Services\Booking\AppointmentApplicationService;
@@ -368,6 +369,28 @@ $entries['application.notificationHelper.service'] = function ($c) {
 };
 
 /**
+ * Expo Push Notification Service
+ *
+ * @param Container $c
+ *
+ * @return AmeliaBooking\Application\Services\Mobile\ExpoPushNotificationService
+ */
+$entries['application.mobile.expoPushNotification.service'] = function ($c) {
+    return new AmeliaBooking\Application\Services\Mobile\ExpoPushNotificationService($c);
+};
+
+/**
+ * Push Notification Service
+ *
+ * @param Container $c
+ *
+ * @return AmeliaBooking\Application\Services\Mobile\PushNotificationService
+ */
+$entries['application.mobile.pushNotification.service'] = function ($c) {
+    return new AmeliaBooking\Application\Services\Mobile\PushNotificationService($c);
+};
+
+/**
  * SMS Notification Service
  *
  * @param Container $c
@@ -501,6 +524,28 @@ $entries['application.payment.service'] = function ($c) {
 };
 
 /**
+ * Stripe service
+ *
+ * @param Container $c
+ *
+ * @return AmeliaBooking\Application\Services\Stripe\AbstractStripeApplicationService
+ */
+$entries['application.stripe.service'] = function ($c) {
+    return AmeliaBooking\Infrastructure\Licence\ApplicationService::getStripeService($c);
+};
+
+/**
+ * Stripe webhook registration service
+ *
+ * @param Container $c
+ *
+ * @return AmeliaBooking\Application\Services\Payment\StripeWebhookRegistrationService
+ */
+$entries['application.stripe.webhook.registration.service'] = function ($c) {
+    return new AmeliaBooking\Application\Services\Payment\StripeWebhookRegistrationService($c);
+};
+
+/**
  * Invoice service
  *
  * @param Container $c
@@ -578,6 +623,17 @@ $entries['application.stash.service'] = function ($c) {
 };
 
 /**
+ * Calendar Service
+ *
+ * @param Container $c
+ *
+ * @return AmeliaBooking\Application\Services\Calendar\AbstractCalendarApplicationService
+ */
+$entries['application.calendar.service'] = function ($c) {
+    return AmeliaBooking\Infrastructure\Licence\ApplicationService::getCalendarService($c);
+};
+
+/**
  * QR Code service
  *
  * @param Container $c
@@ -586,4 +642,15 @@ $entries['application.stash.service'] = function ($c) {
  */
 $entries['application.qrcode.service'] = function ($c) {
     return AmeliaBooking\Infrastructure\Licence\ApplicationService::getQrCodeService($c);
+};
+
+/**
+ * Stripe PaymentIntent completion handler
+ *
+ * @param Container $c
+ *
+ * @return CompleteStripePaymentIntentCommandHandler
+ */
+$entries[CompleteStripePaymentIntentCommandHandler::class] = function ($c) {
+    return new CompleteStripePaymentIntentCommandHandler($c);
 };

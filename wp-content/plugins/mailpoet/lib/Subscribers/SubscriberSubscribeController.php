@@ -224,14 +224,29 @@ class SubscriberSubscribeController {
 
     if (!empty($formSettings['on_success'])) {
       if ($formSettings['on_success'] === 'page') {
-        // redirect to a page on a success, pass the page url in the meta
-        $meta['redirect_url'] = $this->wp->getPermalink($formSettings['success_page']);
+        $redirectUrl = $this->getSuccessPageUrl((int)($formSettings['success_page'] ?? 0));
+        if ($redirectUrl !== null) {
+          $meta['redirect_url'] = $redirectUrl;
+        }
       } else if ($formSettings['on_success'] === 'url') {
         $meta['redirect_url'] = $formSettings['success_url'];
       }
     }
 
     return $meta;
+  }
+
+  private function getSuccessPageUrl(int $pageId): ?string {
+    if ($pageId <= 0) {
+      return null;
+    }
+    $page = $this->wp->getPost($pageId);
+    // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+    if (!$page instanceof \WP_Post || !in_array($page->post_status, ['publish', 'private'], true)) {
+      return null;
+    }
+    $url = $this->wp->getPermalink($page);
+    return is_string($url) && $url !== '' ? $url : null;
   }
 
   /**
@@ -254,11 +269,11 @@ class SubscriberSubscribeController {
     $email = $data['email'] ?? null;
     $method = SubscriberEntity::TRACKING_CONSENT_METHOD_FORM;
 
-    return $this->trackingConsentCapture->getConsentData(
+    return $this->trackingConsentCapture->getConsentDataForEmail(
       (bool)$data[TrackingConsentCapture::FIELD_ID],
       $method,
       $this->trackingConsentCapture->getCopy($method, $this->getFormConsentCopy($form)),
-      $this->trackingConsentCapture->isNewSubscriber(is_string($email) ? $email : null)
+      is_string($email) ? $email : null
     );
   }
 
@@ -427,7 +442,7 @@ class SubscriberSubscribeController {
     $formId = (isset($data['form_id']) ? (int)$data['form_id'] : false);
     $form = $this->formsRepository->findOneById($formId);
 
-    if (!$form) {
+    if (!$form || $form->getDeletedAt() || $form->getStatus() !== FormEntity::STATUS_ENABLED) {
       throw new NotFoundException(__('Please specify a valid form ID.', 'mailpoet'));
     }
 

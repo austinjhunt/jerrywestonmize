@@ -117,85 +117,123 @@ class __TwigTemplate_cbe6b7731003366ad97ca691fe5f4c1bccaf16b35087954ed358e9e4465
                 yield ": ";
                 yield $this->extensions['MailPoet\Twig\Functions']->statsNumberFormatI18n(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "bounced", [], "any", false, false, false, 22));
                 yield "%
-
 ";
-                // line 24
+                // line 23
+                if ((CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "notTracked", [], "any", false, false, false, 23) > 0)) {
+                    // line 24
+                    if ((CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "trackedSent", [], "any", false, false, false, 24) > 0)) {
+                        // line 25
+                        yield "  ";
+                        yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(MailPoetVendor\Twig\Extension\CoreExtension::replace($this->extensions['MailPoet\Twig\I18n']->pluralize("%1\$s of your recipients is not tracked, so open and click rates are based on the other %2\$s.", "%1\$s of your recipients are not tracked, so open and click rates are based on the other %2\$s.", CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "notTracked", [], "any", false, false, false, 25)), ["%1\$s" => CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "notTracked", [], "any", false, false, false, 25), "%2\$s" => CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "trackedSent", [], "any", false, false, false, 25)]), "html", null, true);
+                        yield "
+";
+                    } else {
+                        // line 27
+                        yield "  ";
+                        yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(MailPoetVendor\Twig\Extension\CoreExtension::replace($this->extensions['MailPoet\Twig\I18n']->pluralize("Your %1\$s recipient is not tracked, so open and click rates cannot be measured.", "None of your %1\$s recipients are tracked, so open and click rates cannot be measured.", CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "notTracked", [], "any", false, false, false, 27)), ["%1\$s" => CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "notTracked", [], "any", false, false, false, 27)]), "html", null, true);
+                        yield "
+";
+                    }
+                }
+                // line 30
+                yield "
+";
+                // line 31
                 yield $this->extensions['MailPoet\Twig\I18n']->translate("View automation report");
                 yield "
   ";
-                // line 25
-                yield CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "linkStats", [], "any", false, false, false, 25);
+                // line 32
+                yield CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "linkStats", [], "any", false, false, false, 32);
                 yield "
 ";
             }
             $_parent = $context['_parent'];
             unset($context['_seq'], $context['_iterated'], $context['_key'], $context['newsletter'], $context['_parent'], $context['loop']);
             $context = array_intersect_key($context, $_parent) + $_parent;
-            // line 27
+            // line 34
             yield "------------------------------------------
 ";
         } else {
-            // line 29
+            // line 36
             yield $this->extensions['MailPoet\Twig\I18n']->translate("Your monthly stats are in!");
             yield "
 
 ";
-            // line 31
+            // line 38
             $context['_parent'] = $context;
             $context['_seq'] = CoreExtension::ensureTraversable(($context["newsletters"] ?? null));
             foreach ($context['_seq'] as $context["_key"] => $context["newsletter"]) {
-                // line 32
+                // line 39
                 yield "------------------------------------------
   ";
-                // line 33
-                yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "subject", [], "any", false, false, false, 33), "html", null, true);
+                // line 40
+                yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "subject", [], "any", false, false, false, 40), "html", null, true);
                 yield "
   ";
-                // line 34
-                yield $this->extensions['MailPoet\Twig\Functions']->statsNumberFormatI18n(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "clicked", [], "any", false, false, false, 34));
+                // line 41
+                yield $this->extensions['MailPoet\Twig\Functions']->statsNumberFormatI18n(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "clicked", [], "any", false, false, false, 41));
                 yield "% ";
                 yield $this->extensions['MailPoet\Twig\I18n']->translate("clicked");
                 yield " (";
-                yield $this->extensions['MailPoet\Twig\Functions']->clickedStatsText(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "clicked", [], "any", false, false, false, 34));
+                yield $this->extensions['MailPoet\Twig\Functions']->clickedStatsText(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "clicked", [], "any", false, false, false, 41));
                 yield ")
   ";
-                // line 35
-                yield $this->extensions['MailPoet\Twig\Functions']->statsNumberFormatI18n(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "opened", [], "any", false, false, false, 35));
+                // line 42
+                yield $this->extensions['MailPoet\Twig\Functions']->statsNumberFormatI18n(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "opened", [], "any", false, false, false, 42));
                 yield "% ";
                 yield $this->extensions['MailPoet\Twig\I18n']->translate("opened");
                 yield "
   ";
-                // line 36
-                yield $this->extensions['MailPoet\Twig\Functions']->statsNumberFormatI18n(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "machineOpened", [], "any", false, false, false, 36));
+                // line 43
+                yield $this->extensions['MailPoet\Twig\Functions']->statsNumberFormatI18n(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "machineOpened", [], "any", false, false, false, 43));
                 yield "% ";
                 yield $this->extensions['MailPoet\Twig\I18n']->translate("machine-opened");
                 yield "
   ";
-                // line 37
-                yield $this->extensions['MailPoet\Twig\Functions']->statsNumberFormatI18n(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "unsubscribed", [], "any", false, false, false, 37));
+                // line 44
+                yield $this->extensions['MailPoet\Twig\Functions']->statsNumberFormatI18n(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "unsubscribed", [], "any", false, false, false, 44));
                 yield "% ";
                 yield $this->extensions['MailPoet\Twig\I18n']->translate("unsubscribed");
                 yield "
   ";
-                // line 38
-                yield $this->extensions['MailPoet\Twig\Functions']->statsNumberFormatI18n(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "bounced", [], "any", false, false, false, 38));
+                // line 45
+                yield $this->extensions['MailPoet\Twig\Functions']->statsNumberFormatI18n(CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "bounced", [], "any", false, false, false, 45));
                 yield "% ";
                 yield $this->extensions['MailPoet\Twig\I18n']->translate("bounced");
                 yield "
+";
+                // line 46
+                if ((CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "notTracked", [], "any", false, false, false, 46) > 0)) {
+                    // line 47
+                    yield "  ";
+                    if ((CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "trackedSent", [], "any", false, false, false, 47) > 0)) {
+                        // line 48
+                        yield "    ";
+                        yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(MailPoetVendor\Twig\Extension\CoreExtension::replace($this->extensions['MailPoet\Twig\I18n']->pluralize("%1\$s of your recipients is not tracked, so open and click rates are based on the other %2\$s.", "%1\$s of your recipients are not tracked, so open and click rates are based on the other %2\$s.", CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "notTracked", [], "any", false, false, false, 48)), ["%1\$s" => CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "notTracked", [], "any", false, false, false, 48), "%2\$s" => CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "trackedSent", [], "any", false, false, false, 48)]), "html", null, true);
+                        yield "
   ";
-                // line 39
+                    } else {
+                        // line 50
+                        yield "    ";
+                        yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(MailPoetVendor\Twig\Extension\CoreExtension::replace($this->extensions['MailPoet\Twig\I18n']->pluralize("Your %1\$s recipient is not tracked, so open and click rates cannot be measured.", "None of your %1\$s recipients are tracked, so open and click rates cannot be measured.", CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "notTracked", [], "any", false, false, false, 50)), ["%1\$s" => CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "notTracked", [], "any", false, false, false, 50)]), "html", null, true);
+                        yield "
+  ";
+                    }
+                }
+                // line 53
+                yield "  ";
                 yield $this->extensions['MailPoet\Twig\I18n']->translate("View all stats");
                 yield "
     ";
-                // line 40
-                yield CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "linkStats", [], "any", false, false, false, 40);
+                // line 54
+                yield CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "linkStats", [], "any", false, false, false, 54);
                 yield "
 ";
             }
             $_parent = $context['_parent'];
             unset($context['_seq'], $context['_iterated'], $context['_key'], $context['newsletter'], $context['_parent'], $context['loop']);
             $context = array_intersect_key($context, $_parent) + $_parent;
-            // line 42
+            // line 56
             yield "------------------------------------------
 ";
         }
@@ -223,7 +261,7 @@ class __TwigTemplate_cbe6b7731003366ad97ca691fe5f4c1bccaf16b35087954ed358e9e4465
      */
     public function getDebugInfo()
     {
-        return array (  196 => 42,  188 => 40,  184 => 39,  178 => 38,  172 => 37,  166 => 36,  160 => 35,  152 => 34,  148 => 33,  145 => 32,  141 => 31,  136 => 29,  132 => 27,  124 => 25,  120 => 24,  113 => 22,  107 => 21,  101 => 20,  95 => 19,  87 => 18,  82 => 16,  79 => 15,  75 => 14,  70 => 12,  63 => 9,  58 => 7,  53 => 5,  51 => 4,  47 => 3,  36 => 1,);
+        return array (  234 => 56,  226 => 54,  221 => 53,  214 => 50,  208 => 48,  205 => 47,  203 => 46,  197 => 45,  191 => 44,  185 => 43,  179 => 42,  171 => 41,  167 => 40,  164 => 39,  160 => 38,  155 => 36,  151 => 34,  143 => 32,  139 => 31,  136 => 30,  129 => 27,  123 => 25,  121 => 24,  119 => 23,  113 => 22,  107 => 21,  101 => 20,  95 => 19,  87 => 18,  82 => 16,  79 => 15,  75 => 14,  70 => 12,  63 => 9,  58 => 7,  53 => 5,  51 => 4,  47 => 3,  36 => 1,);
     }
 
     public function getSourceContext()

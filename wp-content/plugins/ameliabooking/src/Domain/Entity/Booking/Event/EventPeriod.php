@@ -178,7 +178,7 @@ class EventPeriod
     }
 
     /**
-     * @param Token $googleCalendarEventId
+     * @param Token|null $googleCalendarEventId
      */
     public function setGoogleCalendarEventId($googleCalendarEventId)
     {

@@ -292,16 +292,16 @@ class AppleCalendarService extends AbstractAppleCalendarService
                     }
 
                     foreach ($events as $event) {
-                        $data          = Reader::read($event);
-                        $startDateTime = $data->VFREEBUSY->DTSTART->getDateTime();
-                        $endDateTime   = $data->VFREEBUSY->DTEND->getDateTime();
+                        $data               = Reader::read($event);
+                        $eventStartDateTime = $data->VFREEBUSY->DTSTART->getDateTime();
+                        $eventEndDateTime   = $data->VFREEBUSY->DTEND->getDateTime();
 
                         $eventStartString = DateTimeService::getCustomDateTimeFromUtc(
-                            $startDateTime->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s')
+                            $eventStartDateTime->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s')
                         );
 
                         $eventEndString = DateTimeService::getCustomDateTimeFromUtc(
-                            $endDateTime->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s')
+                            $eventEndDateTime->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s')
                         );
 
                         /** @var Appointment $appointment */

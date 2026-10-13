@@ -141,6 +141,7 @@ abstract class Controller
 
         $command->setPermissionService($this->permissionsService);
         $command->setUserApplicationService($this->userApplicationService);
+        $command->setValidApiCall($validApiCall);
 
         try {
             /** @var CommandResult $commandResult */
@@ -344,6 +345,7 @@ abstract class Controller
             'statuses',
             'stats',
             'bookingTypes',
+            'bookings',
         ], $keys);
 
         foreach ($names as $name) {

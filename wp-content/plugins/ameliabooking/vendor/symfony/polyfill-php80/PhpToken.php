@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\Polyfill\Php80;
+namespace AmeliaVendor\Symfony\Polyfill\Php80;
 
 /**
  * @author Fedonyuk Anton <info@ensostudio.ru>

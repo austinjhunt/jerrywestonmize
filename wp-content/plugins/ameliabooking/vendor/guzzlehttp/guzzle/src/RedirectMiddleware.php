@@ -12,7 +12,7 @@ use AmeliaVendor\Psr\Http\Message\UriInterface;
  * Request redirect middleware.
  *
  * Apply this middleware like other middleware using
- * {@see \AmeliaVendor\GuzzleHttp\Middleware::redirect()}.
+ * {@see Middleware::redirect()}.
  *
  * @final
  */

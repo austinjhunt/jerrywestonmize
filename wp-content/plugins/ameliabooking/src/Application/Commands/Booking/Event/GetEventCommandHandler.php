@@ -21,6 +21,7 @@ use AmeliaBooking\Domain\Entity\Booking\Event\EventTicket;
 use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\IntegerValue;
+use AmeliaBooking\Domain\ValueObjects\Number\Integer\WholeNumber;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\WP\CustomPostTypes\Events\WpaEventsSync;
@@ -45,7 +46,7 @@ class GetEventCommandHandler extends CommandHandler
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    public function handle(GetEventCommand $command)
+    public function handle(GetEventCommand $command): CommandResult
     {
         /** @var AbstractUser $user */
         $user = $command->authorize();
@@ -191,7 +192,7 @@ class GetEventCommandHandler extends CommandHandler
                     'quantity' => $ticket->getPersons()->getValue()
                 ];
             }
-            $booking->setPersons(new IntegerValue($persons));
+            $booking->setPersons(new WholeNumber($persons));
 
             $bookingPaymentAmount = $reservationService->getPaymentAmount($booking, $event);
 
@@ -233,7 +234,7 @@ class GetEventCommandHandler extends CommandHandler
                 'status' => $paymentAS->getFullStatus($booking->toArray(), 'appointment'),
                 'total' => $bookingPrice,
                 'discount' => $bookingPaymentAmount['full_discount'],
-                'eventPrice' => $bookingPaymentAmount['price'],
+                'price' => $bookingPaymentAmount['price'],
                 'subtotal' => $bookingPaymentAmount['price'],
                 'paid' => $bookingPaidPrice,
                 'due' => max($bookingPrice - $bookingPaidPrice, 0),

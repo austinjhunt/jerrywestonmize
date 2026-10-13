@@ -33,26 +33,6 @@ msgid "# of bookings"
 msgstr "Rezervasyon sayısı"
 
 #, php-format
-msgid "%1$s, %2$s, was canceled."
-msgstr "%1$s, %2$s, iptal edildi."
-
-#, php-format
-msgid "%1$s, %2$s, was rejected."
-msgstr "%1$s, %2$s, reddedildi."
-
-#, php-format
-msgid "%1$s booked %2$s at %3$s."
-msgstr "%1$s, %3$s tarihinde %2$s rezervasyonu yaptı."
-
-#, php-format
-msgid "%1$s on %2$s had a status change."
-msgstr "%2$s tarihindeki %1$s öğesinin durumu değişti."
-
-#, php-format
-msgid "%1$s on %2$s was updated."
-msgstr "%2$s tarihindeki %1$s güncellendi."
-
-#, php-format
 msgid "%event_name% Event Booked"
 msgstr "%event_name% Etkinlik Kaydı Yapıldı"
 
@@ -461,8 +441,14 @@ msgstr "Eylemler"
 msgid "Activate"
 msgstr "Etkinleştir"
 
+msgid "Activate now"
+msgstr ""
+
 msgid "Activate with Envato"
 msgstr "Envato ile Etkinleştir"
+
+msgid "Activate your license to unlock the features included in your plan."
+msgstr ""
 
 msgid "Activated with Envato"
 msgstr "Envato ile etkinleştirildi"
@@ -881,6 +867,9 @@ msgstr "Zaten Ödenmiş"
 msgid "Already have an account?"
 msgstr "Zaten bir hesabınız var mı?"
 
+msgid "Already purchased Amelia?"
+msgstr ""
+
 msgid "Also cancel and delete future events"
 msgstr "Ayrıca gelecekteki etkinlikleri iptal edin ve silin"
 
@@ -930,7 +919,7 @@ msgid "Apple"
 msgstr ""
 
 msgid "Apple Calendar"
-msgstr "Apple Takvim"
+msgstr "Apple Takvimi"
 
 msgid "Apple Calendar (Personal)"
 msgstr "Apple Takvim"
@@ -939,7 +928,7 @@ msgid "Apple Calendar setup"
 msgstr "Apple Takvim kurulumu"
 
 msgid "Apple calendar events"
-msgstr "Apple takvim etkinlikleri"
+msgstr ""
 
 msgid "Application (client) ID"
 msgstr "Uygulama (istemci) Kimliği"
@@ -1083,9 +1072,6 @@ msgstr "Randevu notları"
 msgid "Appointment price"
 msgstr "Randevu fiyatı"
 
-msgid "Appointment reminder"
-msgstr "Randevu hatırlatması"
-
 msgid "Appointment repeats"
 msgstr "Randevu tekrarları"
 
@@ -1098,9 +1084,6 @@ msgstr "Randevu başlangıç saati"
 msgid "Appointment status"
 msgstr "Randevu durumu"
 
-msgid "Appointment status changed"
-msgstr "Randevu durumu değişti"
-
 msgid "Appointment status has been changed to "
 msgstr "Randevu durumu şu şekilde değiştirildi"
 
@@ -1109,9 +1092,6 @@ msgstr "Randevu durumu güncellendi."
 
 msgid "Appointment title"
 msgstr "Randevu başlığı"
-
-msgid "Appointment updated"
-msgstr "Randevu güncellendi"
 
 msgid "Appointments"
 msgstr "Randevular"
@@ -1151,6 +1131,10 @@ msgstr "Bu etkinliği iptal edip silmek istediğinizden emin misiniz?"
 
 msgid "Are you sure you want to cancel this appointment?"
 msgstr "Bu randevuyu iptal etmek istediğinizden emin misiniz?"
+
+msgid ""
+"Are you sure you want to cancel this booking? This action cannot be undone."
+msgstr ""
 
 msgid "Are you sure you want to cancel this event?"
 msgstr "Bu etkinliği iptal etmek istediğinizden emin misiniz?"
@@ -1360,7 +1344,7 @@ msgid "Attendees"
 msgstr "Katılımcılar"
 
 msgid "Attendees Allowed"
-msgstr "Katılımcılara İzin Verildi"
+msgstr "İzin verilen katılımcılar"
 
 msgid "Attendees Export Format"
 msgstr "Katılımcılar Dışa Aktarma Formatı"
@@ -1450,13 +1434,13 @@ msgid "Available date text"
 msgstr "Müsait tarih metni"
 
 msgid "Available from Pro license"
-msgstr "Pro lisans ile kullanılabilir"
+msgstr "Pro lisansından itibaren kullanılabilir"
 
 msgid "Available from Standard license"
-msgstr "Standart lisans ile kullanılabilir"
+msgstr "Standard lisansından itibaren kullanılabilir"
 
 msgid "Available from Starter license"
-msgstr "Başlangıç lisansından temin edilebilir"
+msgstr "Starter lisansından itibaren kullanılabilir"
 
 msgid "Available in Elite licence"
 msgstr "Elite lisansında mevcuttur"
@@ -2284,6 +2268,9 @@ msgid "Choose whether you want to manage services, events, or both."
 msgstr ""
 "Hizmetleri, etkinlikleri veya her ikisini birden yönetmek istediğinizi seçin."
 
+msgid "Choose which tab users see first when they log in"
+msgstr ""
+
 msgid "Choosing layout of first step in step by step form"
 msgstr "Adım adım formda ilk adımın düzenini seçme"
 
@@ -2468,6 +2455,9 @@ msgstr "Randevular için bekleme listesi yapılandırma"
 
 msgid "Confirm"
 msgstr "Onayla"
+
+msgid "Confirm Cancellation"
+msgstr ""
 
 msgid "Confirm My Appointment"
 msgstr "Randevumu Onayla"
@@ -3111,9 +3101,6 @@ msgstr "Değişmeyen veriler:"
 
 msgid "Data to be updated:"
 msgstr "Güncellenecek veriler:"
-
-msgid "Data transfer"
-msgstr "Veri aktarımı"
 
 msgid "Date"
 msgstr "Tarih"
@@ -4116,6 +4103,9 @@ msgstr "Varsayılan randevu durumu"
 msgid "Default back end page"
 msgstr "Varsayılan arka uç sayfası"
 
+msgid "Default landing tab"
+msgstr ""
+
 msgid "Default language"
 msgstr "Varsayılan dil"
 
@@ -4621,8 +4611,6 @@ msgid ""
 "Edit appointments/events when connected Google Calendar Events are "
 "rescheduled or deleted"
 msgstr ""
-"Bağlı Google Takvim Etkinlikleri yeniden planlandığında veya silindiğinde "
-"randevuları/etkinlikleri düzenle"
 
 msgid "Edit block time"
 msgstr "Blok süresini düzenle"
@@ -5743,9 +5731,6 @@ msgstr "Başarısız"
 msgid "Failed to access camera. Please try again."
 msgstr "Kameraya erişilemedi. Lütfen tekrar deneyin."
 
-msgid "Failed to initialize payment. Please try again."
-msgstr "Ödeme başlatılamadı. Lütfen tekrar deneyin."
-
 msgid "Failed to load appointment details. Please try again later."
 msgstr "Randevu ayrıntılarını yükleyemedi. Lütfen daha sonra tekrar deneyin."
 
@@ -5940,7 +5925,7 @@ msgid "Free"
 msgstr "Ücretsiz"
 
 msgid "Fri"
-msgstr "Cuma"
+msgstr "Cum"
 
 msgid "Friday"
 msgstr "Cuma"
@@ -6091,7 +6076,7 @@ msgid "Google Analytics setup"
 msgstr "Google Analytics kurulumu"
 
 msgid "Google Calendar"
-msgstr "Google Takvim"
+msgstr "Google Takvimi"
 
 msgid "Google Calendar & Google Meet"
 msgstr "Google Takvim ve Google Meet"
@@ -6123,7 +6108,7 @@ msgid "Google Meet setup"
 msgstr "Google Meet kurulumu"
 
 msgid "Google calendar events"
-msgstr "Google takvim etkinlikleri"
+msgstr ""
 
 msgid "Google reCAPTCHA v2 secret key"
 msgstr "Google reCAPTCHA v2 gizli anahtarı"
@@ -6907,13 +6892,6 @@ msgstr ""
 "ilk rezervasyondan sonra zaman dilimi kapanır."
 
 msgid ""
-"If disabled, the price will remain the same regardless of how many people "
-"are included in the group appointment."
-msgstr ""
-"Devre dışı bırakılırsa, grup randevusuna kaç kişinin dahil olduğu fark "
-"etmeksizin fiyat aynı kalacaktır."
-
-msgid ""
 "If enabled, customers can book with Pending status even after maximum "
 "capacity is reached."
 msgstr ""
@@ -7054,6 +7032,9 @@ msgstr "Resim önizlemeleri"
 msgid "Import"
 msgstr "İçe Aktar"
 
+msgid "Import/Export"
+msgstr ""
+
 msgid "Import Failed"
 msgstr "İçe Aktarma Başarısız"
 
@@ -7083,6 +7064,9 @@ msgstr "İçe aktarma başarısız oldu"
 
 msgid "Import failed. Review the details below."
 msgstr "İçe aktarma başarısız oldu. Aşağıdaki ayrıntıları inceleyin."
+
+msgid "Import or export your Amelia data."
+msgstr ""
 
 msgid "Import progress"
 msgstr "İçe aktarma ilerlemesi"
@@ -8614,13 +8598,13 @@ msgid "Notify selected employees about empty package purchases"
 msgstr "Boş paket alımları hakkında seçilen çalışanları bilgilendir"
 
 msgid "Notify the attendee(s)"
-msgstr "Katılımcı(ları) bilgilendir"
+msgstr "Katılımcıları bilgilendir"
 
 msgid "Notify the attendees"
 msgstr "Katılımcılara bildirin"
 
 msgid "Notify the customer(s)"
-msgstr "Müşteriyi(leri) bilgilendir"
+msgstr "Müşterileri bilgilendir"
 
 msgid "Number of Additional People"
 msgstr "Ek Kişi Sayısı"
@@ -8957,7 +8941,7 @@ msgid "Outlook Calendar setup"
 msgstr "Outlook Takvim kurulumu"
 
 msgid "Outlook Mailer"
-msgstr ""
+msgstr "Outlook posta hizmeti"
 
 msgid ""
 "Outlook Mailer is not fully configured. Please complete the account setup in "
@@ -8967,7 +8951,7 @@ msgstr ""
 "ayarlarından hesap kurulumunu tamamlayın."
 
 msgid "Outlook calendar events"
-msgstr "Outlook takvim etkinlikleri"
+msgstr ""
 
 msgid "Outside of working hours"
 msgstr "Çalışma saatleri dışında"
@@ -10096,6 +10080,11 @@ msgstr "Satın Alma İptal Edildi"
 msgid "Purchased"
 msgstr "Satın Alındı"
 
+msgid ""
+"Purchasing doesn't upgrade this plugin automatically. Follow our step-by-"
+"step guide to switch to the full version."
+msgstr ""
+
 msgid "Purple"
 msgstr "Mor"
 
@@ -10267,7 +10256,7 @@ msgstr ""
 "Başarısız bir şekilde reddedilen rezervasyon için yönlendirme bağlantısı"
 
 msgid "Redirect URLs"
-msgstr "Yönlendirme Bağlantıları"
+msgstr "Yönlendirme URL'leri"
 
 msgid "Redirect page"
 msgstr "Yönlendirme sayfası"
@@ -10306,10 +10295,6 @@ msgstr "Toplam tutarın kalanı yerinde ödenecek."
 
 msgid "Remind me when my SMS balance is low"
 msgstr "SMS bakiyem düşük olduğunda beni hatırlat"
-
-#, php-format
-msgid "Reminder: %1$s is scheduled for %2$s."
-msgstr "Hatırlatma: %1$s, %2$s için planlandı."
 
 msgid "Remove Apple Calendar event slots"
 msgstr "Apple Takvim etkinlik aralıklarını kaldır"
@@ -10711,6 +10696,9 @@ msgstr "Bölüm"
 
 msgid "Securely process payments using Stripe."
 msgstr "Stripe kullanarak ödemeleri güvenli bir şekilde işleyin."
+
+msgid "See upgrade guide."
+msgstr ""
 
 msgid "Segment"
 msgstr ""
@@ -11584,6 +11572,9 @@ msgstr "Microsoft ile oturum açın"
 msgid "Sign in with Outlook"
 msgstr "Outlook ile Giriş Yap"
 
+msgid "Sign out and use a customer account"
+msgstr ""
+
 msgid "Sign out from Google"
 msgstr "Google'dan Çıkış Yap"
 
@@ -11994,7 +11985,7 @@ msgid "Switch Camera"
 msgstr "Kamera Değiştir"
 
 msgid "Sync Google Events"
-msgstr "Google Etkinliklerini Senkronize Et"
+msgstr ""
 
 msgid "Sync with"
 msgstr "Senkronize et"
@@ -12514,6 +12505,12 @@ msgstr ""
 "ekleyin."
 
 msgid ""
+"This option applies only to people added through \"Bringing anyone with "
+"you\". If disabled, the service price is charged once for the entire "
+"booking, regardless of how many additional people are included."
+msgstr ""
+
+msgid ""
 "This option requires adding the payment link placeholder to your message "
 "templates."
 msgstr ""
@@ -12913,7 +12910,7 @@ msgid "Try adjusting your search to find what you are looking for."
 msgstr "Aradığınızı bulmak için arama yapmayı deneyin."
 
 msgid "Tue"
-msgstr "Salı"
+msgstr "Sal"
 
 msgid "Tuesday"
 msgstr "Salı"
@@ -13709,6 +13706,11 @@ msgstr ""
 
 msgid "Your password has been reset successfully."
 msgstr "Şifreniz başarıyla sıfırlandı."
+
+msgid ""
+"Your payment is still processing. You will receive a confirmation as soon as "
+"it is completed."
+msgstr ""
 
 msgid "Your postal code is incomplete"
 msgstr "Posta kodunuz eksik"

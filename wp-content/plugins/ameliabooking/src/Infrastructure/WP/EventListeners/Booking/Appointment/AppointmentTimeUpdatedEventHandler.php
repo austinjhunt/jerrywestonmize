@@ -21,7 +21,6 @@ use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use Exception;
-use Slim\Exception\ContainerValueNotFoundException;
 
 /**
  * Class AppointmentTimeUpdatedEventHandler
@@ -37,7 +36,6 @@ class AppointmentTimeUpdatedEventHandler
      * @param CommandResult $commandResult
      * @param Container     $container
      *
-     * @throws ContainerValueNotFoundException
      * @throws NotFoundException
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
@@ -57,8 +55,10 @@ class AppointmentTimeUpdatedEventHandler
         /** @var BookingApplicationService $bookingApplicationService */
         $bookingApplicationService = $container->get('application.booking.booking.service');
 
+        $data = $commandResult->getData();
+
         /** @var Appointment|Event $reservationObject */
-        $reservationObject = AppointmentFactory::create($commandResult->getData()[Entities::APPOINTMENT]);
+        $reservationObject = AppointmentFactory::create($data[Entities::APPOINTMENT]);
 
         $bookingApplicationService->setAppointmentEntities($reservationObject);
 
@@ -67,7 +67,15 @@ class AppointmentTimeUpdatedEventHandler
         $applicationIntegrationService->handleAppointment(
             $reservationObject,
             $appointment,
-            ApplicationIntegrationService::TIME_UPDATED
+            ApplicationIntegrationService::TIME_UPDATED,
+            [
+                ApplicationIntegrationService::SKIP_GOOGLE_CALENDAR  =>
+                    !empty($data[ApplicationIntegrationService::SKIP_GOOGLE_CALENDAR]),
+                ApplicationIntegrationService::SKIP_OUTLOOK_CALENDAR =>
+                    !empty($data[ApplicationIntegrationService::SKIP_OUTLOOK_CALENDAR]),
+                ApplicationIntegrationService::SKIP_APPLE_CALENDAR   =>
+                    !empty($data[ApplicationIntegrationService::SKIP_APPLE_CALENDAR]),
+            ]
         );
 
         $applicationNotificationService->sendAppointmentRescheduleNotifications(

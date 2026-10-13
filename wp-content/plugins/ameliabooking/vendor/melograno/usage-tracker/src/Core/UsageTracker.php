@@ -179,7 +179,8 @@ class UsageTracker
     {
         if ($enabled === $this->consentManager->isEnabled()
             && ($enabled || $this->consentManager->isConfigured())) {
-            if ($enabled && $this->consentNoticeService !== null) {
+            if ($this->consentNoticeService !== null
+                && ($enabled || !$armNoticeOnDisable)) {
                 $this->consentNoticeService->dismissNoticeIfArmed();
             }
 

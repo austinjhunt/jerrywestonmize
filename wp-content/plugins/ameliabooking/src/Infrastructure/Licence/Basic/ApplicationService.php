@@ -25,6 +25,16 @@ class ApplicationService extends \AmeliaBooking\Infrastructure\Licence\Starter\A
     /**
      * @param Container $c
      *
+     * @return ApplicationServices\Stripe\AbstractStripeApplicationService
+     */
+    public static function getStripeService($c)
+    {
+        return new ApplicationServices\Stripe\StripeApplicationService($c);
+    }
+
+    /**
+     * @param Container $c
+     *
      * @return ApplicationServices\Deposit\AbstractDepositApplicationService
      */
     public static function getDepositService($c)
@@ -80,5 +90,15 @@ class ApplicationService extends \AmeliaBooking\Infrastructure\Licence\Starter\A
     public static function getInvoiceService($c)
     {
         return new ApplicationServices\Invoice\InvoiceApplicationService($c);
+    }
+
+    /**
+     * @param Container $c
+     *
+     * @return ApplicationServices\Calendar\AbstractCalendarApplicationService
+     */
+    public static function getCalendarService($c)
+    {
+        return new ApplicationServices\Calendar\CalendarApplicationService($c);
     }
 }

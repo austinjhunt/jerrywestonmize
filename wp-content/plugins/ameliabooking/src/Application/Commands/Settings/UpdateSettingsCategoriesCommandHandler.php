@@ -51,7 +51,7 @@ class UpdateSettingsCategoriesCommandHandler extends CommandHandler
         /** @var SettingsService $settingsService */
         $settingsService = $this->getContainer()->get('domain.settings.service');
 
-        $superAdminService = new SuperAdminRoleService();
+        $superAdminService = new SuperAdminRoleService($settingsService);
         $pendingSuperAdminGrantUserId = null;
         $savedActivationSettings = null;
 

@@ -4,7 +4,6 @@ namespace AmeliaBooking\Infrastructure\WP\WPMenu;
 
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Licence\Licence;
-use AmeliaBooking\Infrastructure\WP\SettingsService\SettingsStorage;
 
 /**
  * Class Submenu
@@ -19,17 +18,23 @@ class Submenu
     /** @var  array $menu */
     private $menu;
 
+    /** @var SettingsService */
+    private $settingsService;
+
     /**
      * Submenu constructor.
      *
      * @param SubmenuPageHandler $submenuHandler
      * @param array              $menu
+     * @param SettingsService    $settingsService
      */
-    public function __construct($submenuHandler, $menu)
+    public function __construct($submenuHandler, $menu, SettingsService $settingsService)
     {
         $this->submenuHandler = $submenuHandler;
 
         $this->menu = $menu;
+
+        $this->settingsService = $settingsService;
     }
 
     /**
@@ -67,8 +72,10 @@ class Submenu
             remove_submenu_page('amelia', 'wpamelia-welcome');
         });
 
-        if (!Licence::isPremium() && current_user_can('manage_options')) {
-            $this->addUpgradeMenuItem();
+        $isActive = $this->isPluginActivated();
+
+        if ((!$isActive || !Licence::isPremium()) && current_user_can('manage_options')) {
+            $this->addUpgradeMenuItem($isActive);
         }
 
         add_action('admin_menu', [$this, 'applyWhiteLabelMenuBranding'], 999);
@@ -79,15 +86,13 @@ class Submenu
      */
     public function applyWhiteLabelMenuBranding()
     {
-        $settingsService = new SettingsService(new SettingsStorage());
-
-        $featuresIntegrations = $settingsService->getCategorySettings('featuresIntegrations');
+        $featuresIntegrations = $this->settingsService->getCategorySettings('featuresIntegrations');
 
         if (!$this->isWhiteLabelFeatureEnabled($featuresIntegrations)) {
             return;
         }
 
-        $whiteLabel = $settingsService->getCategorySettings('whiteLabel');
+        $whiteLabel = $this->settingsService->getCategorySettings('whiteLabel');
 
         if (empty($whiteLabel['pluginName']) && empty($whiteLabel['pictureFullPath']) && empty($whiteLabel['pictureThumbPath'])) {
             return;
@@ -122,29 +127,39 @@ class Submenu
         }
     }
 
-    private function addUpgradeMenuItem()
+    private function addUpgradeMenuItem(bool $isActive): void
     {
-        $upgradeUrl = 'https://wpamelia.com/pricing/?utm_source=lite&utm_medium=dashboard&utm_content=amelia&utm_campaign=amelia-utm';
+        $needsActivation = !$isActive && Licence::isPremium();
+        $menuTitle = $needsActivation
+            ? esc_html__('Activate', 'wpamelia')
+            : esc_html__('Upgrade', 'wpamelia');
+        $menuSlug = $needsActivation
+            ? 'admin.php?page=wpamelia-settings#/activation'
+            : 'wpamelia-upgrade';
 
         $this->addSubmenuPage(
             'amelia',
             '',
-            esc_html__('Upgrade', 'wpamelia'),
+            $menuTitle,
             'amelia_read_menu',
-            'wpamelia-upgrade',
-            '__return_null'
+            $menuSlug,
+            $needsActivation ? '' : '__return_null'
         );
 
-        add_action('admin_init', function () use ($upgradeUrl) {
-            $page = isset($_GET['page']) ? sanitize_key($_GET['page']) : '';
+        if (!$needsActivation) {
+            $upgradeUrl = 'https://wpamelia.com/pricing/?utm_source=lite&utm_medium=dashboard&utm_content=amelia&utm_campaign=amelia-utm';
 
-            if ('wpamelia-upgrade' === $page) {
-                wp_redirect($upgradeUrl);
-                exit;
-            }
-        });
+            add_action('admin_init', function () use ($upgradeUrl) {
+                $page = isset($_GET['page']) ? sanitize_key($_GET['page']) : '';
 
-        add_action('admin_enqueue_scripts', function () {
+                if ('wpamelia-upgrade' === $page) {
+                    wp_redirect($upgradeUrl);
+                    exit;
+                }
+            });
+        }
+
+        add_action('admin_enqueue_scripts', function () use ($needsActivation) {
             wp_enqueue_style(
                 'amelia-admin-menu',
                 AMELIA_URL . 'public/css/backend/admin-menu.css',
@@ -152,12 +167,23 @@ class Submenu
                 AMELIA_VERSION
             );
 
+            if ($needsActivation) {
+                return;
+            }
+
             wp_enqueue_script(
                 'amelia-admin-menu',
                 AMELIA_URL . 'public/js/backend/admin-menu.js',
                 ['jquery'],
                 AMELIA_VERSION,
                 true
+            );
+
+            // The activation page is a plugin page, so it should not be opened in a new tab
+            wp_localize_script(
+                'amelia-admin-menu',
+                'wpAmeliaAdminMenu',
+                ['openInNewTab' => $needsActivation ? '' : '1']
             );
         });
     }
@@ -176,19 +202,21 @@ class Submenu
             . '</svg>';
     }
 
-    public function handleMenuItem(array $menu)
+    public function handleMenuItem(array $menu): void
     {
         if (!isset($menu['menuSlug'])) {
             return;
         }
 
+        $isActive = $this->isPluginActivated();
+
         // Hide locations if it shouldn't be shown based on license and hideUnavailableFeatures setting
-        if ($menu['menuSlug'] === 'wpamelia-locations' && !Licence::shouldShowFeature('locations')) {
+        if ($menu['menuSlug'] === 'wpamelia-locations' && $isActive && !Licence::shouldShowFeature('locations')) {
             return;
         }
 
         // Hide custom fields if it shouldn't be shown based on license and hideUnavailableFeatures setting
-        if ($menu['menuSlug'] === 'wpamelia-customfields' && !Licence::shouldShowFeature('customFields')) {
+        if ($menu['menuSlug'] === 'wpamelia-customfields' && $isActive && !Licence::shouldShowFeature('customFields')) {
             return;
         }
 
@@ -196,13 +224,13 @@ class Submenu
             return;
         }
 
-        // Add diamond icon for locked features
-        if ($menu['menuSlug'] === 'wpamelia-locations' && Licence::isFeatureLocked('locations')) {
+        // Add diamond icon for locked features or when the purchase code is not entered
+        if ($menu['menuSlug'] === 'wpamelia-locations' && (Licence::isFeatureLocked('locations') || !$isActive)) {
             $menu['menuTitle'] = '<span style="display: inline-flex; align-items: center;">'
                 . $menu['menuTitle'] . $this->getDiamondIcon() . '</span>';
         }
 
-        if ($menu['menuSlug'] === 'wpamelia-customfields' && Licence::isFeatureLocked('customFields')) {
+        if ($menu['menuSlug'] === 'wpamelia-customfields' && (Licence::isFeatureLocked('customFields') || !$isActive)) {
             $menu['menuTitle'] = '<span style="display: inline-flex; align-items: center;">'
                 . $menu['menuTitle'] . $this->getDiamondIcon() . '</span>';
         }
@@ -242,21 +270,27 @@ class Submenu
     }
 
     /**
+     * Whether the plugin has an entered/validated purchase code.
+     */
+    private function isPluginActivated(): bool
+    {
+        return (bool) $this->settingsService->getSetting('activation', 'active');
+    }
+
+    /**
      * Check whether white label settings hide external Amelia links.
      *
      * @return bool
      */
     private function shouldHideExternalLinks()
     {
-        $settingsService = new SettingsService(new SettingsStorage());
-
-        $featuresIntegrations = $settingsService->getCategorySettings('featuresIntegrations');
+        $featuresIntegrations = $this->settingsService->getCategorySettings('featuresIntegrations');
 
         if (!$this->isWhiteLabelFeatureEnabled($featuresIntegrations)) {
             return false;
         }
 
-        $whiteLabel = $settingsService->getCategorySettings('whiteLabel');
+        $whiteLabel = $this->settingsService->getCategorySettings('whiteLabel');
 
         return !empty($whiteLabel['hideExternalLinks']);
     }

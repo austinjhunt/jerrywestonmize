@@ -154,6 +154,7 @@ class Import {
     if (!$subscribersData) {
       throw new \Exception(__('No valid subscribers were found.', 'mailpoet'));
     }
+    $subscribersData = $this->removeRepeatedEmails($subscribersData);
     // permanently trash deleted subscribers
     $this->deleteExistingTrashedSubscribers($subscribersData);
 
@@ -182,6 +183,9 @@ class Import {
             $newSubscribers,
             $this->subscribersCustomFields
           );
+        if ($createdSubscribers) {
+          $this->notifyTrackingConsentForNewSubscribers($createdSubscribers, $newSubscribers);
+        }
       }
 
       $updateExistingSubscribersStatus = false;
@@ -285,12 +289,13 @@ class Import {
         ];
         $data = array_map(function($value) use ($validStates) {
           $value = trim((string)$value);
-          // A blank cell is left blank on purpose: blank means "leave the stored value alone",
-          // which is a different thing from an invalid value, and only the caller can act on it.
           if ($value === '') {
             return '';
           }
-          return in_array($value, $validStates, true) ? $value : SubscriberEntity::TRACKING_CONSENT_UNKNOWN;
+          // An unreadable value is not an answer, so it is blanked and treated like an
+          // empty cell: leave whatever the subscriber actually chose alone. Writing
+          // 'unknown' here would let one mistyped cell erase a real consent record.
+          return in_array($value, $validStates, true) ? $value : '';
         }, $data);
       }
       // if this is a custom column
@@ -373,6 +378,28 @@ class Import {
 
     $invalidRecords = $dateTimeInvalidRecords;
     return $dateTimeDates;
+  }
+
+  /**
+   * Keeps the first row for each email, as the import wizard does. A repeated email
+   * is otherwise split across the create and update writes, and the consent change
+   * announced for it can differ from the value stored.
+   */
+  private function removeRepeatedEmails(array $subscribersData): array {
+    $firstRowByEmail = [];
+    foreach ($subscribersData['email'] as $index => $email) {
+      if (!isset($firstRowByEmail[$email])) {
+        $firstRowByEmail[$email] = $index;
+      }
+    }
+    if (count($firstRowByEmail) === count($subscribersData['email'])) {
+      return $subscribersData;
+    }
+    $rowsToKeep = array_flip($firstRowByEmail);
+    foreach ($subscribersData as $column => $data) {
+      $subscribersData[$column] = array_values(array_intersect_key($data, $rowsToKeep));
+    }
+    return $subscribersData;
   }
 
   public function transformSubscribersData(array $subscribers, array $columns): array {
@@ -593,6 +620,11 @@ class Import {
   /**
    * Writes consent for existing subscribers, skipping every row whose CSV cell
    * was blank so their stored value is left alone.
+   *
+   * A cell repeating the state the subscriber already holds is skipped too. The
+   * timestamp records when they chose, not when a list was last re-uploaded, so
+   * re-importing an unchanged answer must not restamp its evidence. This matches
+   * SubscriberEntity::setTrackingConsent(), which every other write path uses.
    */
   private function updateTrackingConsent(array $subscribersData): void {
     if (!in_array('tracking_consent', $subscribersData['fields'], true)) {
@@ -603,10 +635,18 @@ class Import {
     $methods = $subscribersData['data']['tracking_consent_method'] ?? [];
     $copies = $subscribersData['data']['tracking_consent_copy'] ?? [];
 
+    $stored = $this->getStoredTrackingConsent($emails);
+
     $rows = [];
+    $changes = [];
     foreach ($states as $index => $state) {
       $state = trim((string)$state);
       if ($state === '') {
+        continue;
+      }
+      $email = mb_strtolower((string)$emails[$index]);
+      $current = $stored[$email] ?? null;
+      if ($current !== null && $current['tracking_consent'] === $state) {
         continue;
       }
       $method = trim((string)($methods[$index] ?? ''));
@@ -618,6 +658,9 @@ class Import {
         $method !== '' ? mb_substr($method, 0, self::TRACKING_CONSENT_METHOD_MAX_LENGTH) : SubscriberEntity::TRACKING_CONSENT_METHOD_IMPORT,
         $copy !== '' ? $copy : null,
       ];
+      if ($current !== null) {
+        $changes[$current['id']] = [$current['tracking_consent'], $state];
+      }
     }
     if (!$rows) {
       return;
@@ -629,6 +672,54 @@ class Import {
         $chunk
       );
     }
+    $this->importExportRepository->notifyTrackingConsentChanges($changes);
+  }
+
+  /**
+   * @param string[] $emails
+   * @return array<string, array{id: int, tracking_consent: string}>
+   */
+  private function getStoredTrackingConsent(array $emails): array {
+    $stored = [];
+    foreach (array_chunk($emails, self::DB_QUERY_CHUNK_SIZE) as $chunk) {
+      foreach ($this->subscriberRepository->findIdEmailAndTrackingConsentByEmails($chunk) as $row) {
+        $stored[mb_strtolower((string)$row['email'])] = [
+          'id' => (int)$row['id'],
+          'tracking_consent' => (string)$row['trackingConsent'],
+        ];
+      }
+    }
+    return $stored;
+  }
+
+  /**
+   * Consent that arrived with a newly created subscriber is a change from the
+   * 'unknown' every new row starts at, and the bulk insert bypasses Doctrine, so
+   * it is announced here rather than by the entity listener.
+   *
+   * @param array<int, array{id: int, email: string}> $createdSubscribers
+   */
+  private function notifyTrackingConsentForNewSubscribers(array $createdSubscribers, array $newSubscribers): void {
+    if (!in_array('tracking_consent', $newSubscribers['fields'], true)) {
+      return;
+    }
+    $states = [];
+    foreach ($newSubscribers['data']['email'] as $index => $email) {
+      $state = (string)($newSubscribers['data']['tracking_consent'][$index] ?? '');
+      if ($state === '' || $state === SubscriberEntity::TRACKING_CONSENT_UNKNOWN) {
+        continue;
+      }
+      $states[mb_strtolower((string)$email)] = $state;
+    }
+    $changes = [];
+    foreach ($createdSubscribers as $created) {
+      $email = mb_strtolower((string)$created['email']);
+      if (!isset($states[$email])) {
+        continue;
+      }
+      $changes[(int)$created['id']] = [SubscriberEntity::TRACKING_CONSENT_UNKNOWN, $states[$email]];
+    }
+    $this->importExportRepository->notifyTrackingConsentChanges($changes);
   }
 
   public function getSubscribersFields(array $subscribersFields): array {

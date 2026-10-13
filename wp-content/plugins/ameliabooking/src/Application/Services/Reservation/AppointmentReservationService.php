@@ -102,7 +102,7 @@ class AppointmentReservationService extends AbstractReservationService
      * @throws QueryExecutionException
      * @throws Exception
      */
-    public function book($appointmentData, $reservation, $save)
+    public function book($appointmentData, $reservation, $save): void
     {
         /** @var SettingsService $settingsDS */
         $settingsDS = $this->container->get('domain.settings.service');
@@ -182,11 +182,7 @@ class AppointmentReservationService extends AbstractReservationService
         $reservation->setApplyDeposit(new BooleanValueObject($reservation->getBooking()->getDeposit()->getValue()));
 
         $reservation->setIsCart(
-            new BooleanValueObject(
-                isset($appointmentData['isCart']) && is_string($appointmentData['isCart']) ?
-                    filter_var($appointmentData['isCart'], FILTER_VALIDATE_BOOLEAN) :
-                    !empty($appointmentData['isCart'])
-            )
+            new BooleanValueObject($this->isCartBooking($appointmentData))
         );
 
         /** @var Payment $payment */
@@ -253,7 +249,7 @@ class AppointmentReservationService extends AbstractReservationService
                     $recurringAppointmentData['bookings'][0]['couponId'] = null;
                 }
 
-                $isRecurringAndOnSite = empty($appointmentData['isCart']) &&
+                $isRecurringAndOnSite = !$reservation->isCart()->getValue() &&
                     $index >= $bookable->getRecurringPayment()->getValue();
 
                 if ($isRecurringAndOnSite) {
@@ -390,7 +386,7 @@ class AppointmentReservationService extends AbstractReservationService
             $appointmentData['payment']['gateway'] !== PaymentType::ON_SITE &&
             $this->applyDeposit(
                 $service,
-                !empty($appointmentData['bookings'][0]['deposit'])
+                self::parseDepositFlag($appointmentData['bookings'][0]['deposit'] ?? false)
             );
 
         if ($service->getStatus()->getValue() === Status::HIDDEN) {
@@ -514,17 +510,47 @@ class AppointmentReservationService extends AbstractReservationService
             /** @var PackageCustomerServiceRepository $packageCustomerServiceRepository */
             $packageCustomerServiceRepository = $this->container->get('domain.bookable.packageCustomerService.repository');
 
+            $packageCustomerServiceCriteria = [
+                'packagesCustomers' => [$booking->getPackageCustomerService()->getPackageCustomer()->getId()->getValue()],
+                'services'          => [$service->getId()->getValue()]
+            ];
+
+            // scoped to the booking customer so that a package purchased by someone else cannot be spent here
+            if ($booking->getCustomerId() && $booking->getCustomerId()->getValue()) {
+                $packageCustomerServiceCriteria['customers'] = [$booking->getCustomerId()->getValue()];
+            }
+
             $packageCustomerService = $packageCustomerServiceRepository->getByCriteria(
-                [
-                    'packagesCustomers' => [$booking->getPackageCustomerService()->getPackageCustomer()->getId()->getValue()],
-                    'services'          => [$service->getId()->getValue()]
-                ]
+                $packageCustomerServiceCriteria
             );
 
             if ($packageCustomerService->length()) {
                 $booking->getPackageCustomerService()->setId(new Id($packageCustomerService->toArray()[0]['id']));
             }
         }
+
+        $bookedPackageCustomerService = false;
+
+        if (
+            $booking->getPackageCustomerService() && $booking->getPackageCustomerService()->getId()
+            && $booking->getCustomerId() && $booking->getCustomerId()->getValue()
+        ) {
+            /** @var PackageCustomerServiceRepository $packageCustomerServiceRepository */
+            $packageCustomerServiceRepository = $this->container->get('domain.bookable.packageCustomerService.repository');
+
+            $bookedPackageCustomerService = $packageCustomerServiceRepository->getByCriteria(
+                [
+                    'ids'       => [$booking->getPackageCustomerService()->getId()->getValue()],
+                    'customers' => [$booking->getCustomerId()->getValue()],
+                    'services'  => [$service->getId()->getValue()],
+                ]
+            )->length() > 0;
+        }
+
+        // the appointment is free of charge only when it is booked against a package service the booking
+        // customer really bought - package data in the request says nothing about that, so it is looked
+        // up here and the payment is skipped on this flag alone (see processRequest)
+        $reservation->setIsPackageAppointment(new BooleanValueObject($bookedPackageCustomerService));
 
         $service->setPrice(
             new Price(
@@ -536,6 +562,13 @@ class AppointmentReservationService extends AbstractReservationService
                 )
             )
         );
+
+        $isWaitingListBooking =
+            $booking->getStatus()->getValue() === BookingStatus::WAITING &&
+            $existingAppointment &&
+            $waitingListService->isAllowedWaitingForAppointmentBooking($service, $existingAppointment, $booking);
+
+        $reservation->setAllowedWaiting(new BooleanValueObject($isWaitingListBooking));
 
         if ($inspectTimeSlot) {
             /** @var ApplicationTimeSlotService $applicationTimeSlotService */
@@ -570,8 +603,6 @@ class AppointmentReservationService extends AbstractReservationService
                     'quantity' => $booking->getExtras()->getItem($extraKey)->getQuantity()->getValue(),
                 ];
             }
-
-            $isWaitingListBooking = $waitingListService->isWaitingListBooking($service, $appointmentData, $booking);
 
             if (
                 !$isWaitingListBooking &&
@@ -760,11 +791,13 @@ class AppointmentReservationService extends AbstractReservationService
 
     /**
      * @param Appointment $appointment
+     * @param bool        $ignoreAppointmentStatus When true, treat the appointment as about to be booked
+     *                                             (e.g. waitlist approve on a canceled appointment).
      *
      * @return boolean
      * @throws QueryExecutionException
      */
-    public function isDoubleBooking($appointment)
+    public function isDoubleBooking($appointment, $ignoreAppointmentStatus = false)
     {
         /** @var AppointmentRepository $appointmentRepository */
         $appointmentRepository = $this->container->get('domain.booking.appointment.repository');
@@ -784,15 +817,17 @@ class AppointmentReservationService extends AbstractReservationService
             ]
         );
 
+        $appointmentIsBooked = $ignoreAppointmentStatus ||
+            $appointment->getStatus()->getValue() === BookingStatus::APPROVED ||
+            $appointment->getStatus()->getValue() === BookingStatus::PENDING;
+
+        if (!$appointmentIsBooked) {
+            return false;
+        }
+
         /** @var Appointment $bookedAppointment */
         foreach ($bookedAppointments->getItems() as $bookedAppointment) {
-            if (
-                $bookedAppointment->getId()->getValue() !== $appointment->getId()->getValue() &&
-                (
-                    $appointment->getStatus()->getValue() === BookingStatus::APPROVED ||
-                    $appointment->getStatus()->getValue() === BookingStatus::PENDING
-                )
-            ) {
+            if ($bookedAppointment->getId()->getValue() !== $appointment->getId()->getValue()) {
                 return true;
             }
         }
@@ -890,6 +925,17 @@ class AppointmentReservationService extends AbstractReservationService
             $bookingsCount,
             $requestedStatus
         );
+
+        // Re-validate provider availability when promoting a waitlist booking, so a
+        // separately rebooked appointment at the same slot is not double-booked.
+        if (
+            $oldBookingStatus === BookingStatus::WAITING &&
+            in_array($requestedStatus, [BookingStatus::APPROVED, BookingStatus::PENDING], true) &&
+            in_array($appointmentStatus, [BookingStatus::APPROVED, BookingStatus::PENDING], true) &&
+            $this->isDoubleBooking($appointment, true)
+        ) {
+            throw new BookingUnavailableException();
+        }
 
         $appointmentAS->calculateAndSetAppointmentEnd($appointment, $service);
 
@@ -1200,7 +1246,7 @@ class AppointmentReservationService extends AbstractReservationService
                 'gateway' => $paymentGateway
             ],
             'recurring'          => $recurringAppointmentsData,
-            'isCart'             => !empty($requestData['isCart']),
+            'isCart'             => $this->isCartBooking($requestData),
             'package'            => [],
             'locale'             => $reservation->getLocale()->getValue(),
             'timeZone'           => $reservation->getTimeZone()->getValue(),
@@ -1396,7 +1442,11 @@ class AppointmentReservationService extends AbstractReservationService
         /** @var Tax $serviceTax */
         $serviceTax = $this->getTax($booking->getTax());
 
-        $persons = $booking->getPersons()->getValue();
+        $persons = $booking->getPersons() ? $booking->getPersons()->getValue() : null;
+
+        if ($persons === null || $persons < 1) {
+            throw new InvalidArgumentException('Number of persons must be a positive number');
+        }
 
         $serviceAmount = (float)($booking->getPrice() ?
                 $booking->getPrice()->getValue() :
@@ -1640,6 +1690,34 @@ class AppointmentReservationService extends AbstractReservationService
         }
 
         return $amountData;
+    }
+
+    /**
+     * The payments covered by the amount getReservationPaymentAmount asks the gateway for.
+     *
+     * Included are the payments of the booked appointment and of every recurring appointment the
+     * charge covers - all of them for a cart, the first recurringPayment ones for a series. The
+     * remaining recurrings are paid on site later, so their payments are not part of the charge.
+     *
+     * @param Reservation $reservation
+     *
+     * @return Payment[]
+     */
+    public function getChargedPayments($reservation): array
+    {
+        $payments = $this->getReservationPayments($reservation);
+
+        /** @var Reservation $recurringReservation */
+        foreach ($reservation->getRecurring()->getItems() as $index => $recurringReservation) {
+            /** @var Service $recurringBookable */
+            $recurringBookable = $recurringReservation->getBookable();
+
+            if ($reservation->isCart()->getValue() || $index < $recurringBookable->getRecurringPayment()->getValue()) {
+                $payments = array_merge($payments, $this->getReservationPayments($recurringReservation));
+            }
+        }
+
+        return $payments;
     }
 
     /**

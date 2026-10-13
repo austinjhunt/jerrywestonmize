@@ -34,26 +34,6 @@ msgid "# of bookings"
 msgstr "عدد الحجوزات"
 
 #, php-format
-msgid "%1$s, %2$s, was canceled."
-msgstr "%1$s, %2$s, تم الإلغاء."
-
-#, php-format
-msgid "%1$s, %2$s, was rejected."
-msgstr "%1$s, %2$s, تم الرفض."
-
-#, php-format
-msgid "%1$s booked %2$s at %3$s."
-msgstr "%1$s حجز %2$s عند %3$s."
-
-#, php-format
-msgid "%1$s on %2$s had a status change."
-msgstr "%1$s في %2$s تم تغيير الحالة."
-
-#, php-format
-msgid "%1$s on %2$s was updated."
-msgstr "%1$s في %2$s تم تحديث الحجز."
-
-#, php-format
 msgid "%event_name% Event Booked"
 msgstr "%event_name% تم حجزه"
 
@@ -456,8 +436,14 @@ msgstr "الإجراءات"
 msgid "Activate"
 msgstr "فعل"
 
+msgid "Activate now"
+msgstr ""
+
 msgid "Activate with Envato"
 msgstr "‫فعل باستخدام إنفاتو"
+
+msgid "Activate your license to unlock the features included in your plan."
+msgstr ""
 
 msgid "Activated with Envato"
 msgstr "‫تفعيل باستخدام إنفاتو"
@@ -780,7 +766,7 @@ msgid "Allow customers to cancel packages"
 msgstr "السماح للعملاء بإلغاء الباقات"
 
 msgid "Allow customers to choose employee on the customer panel"
-msgstr "اسمح للعملاء برؤية الحضور الآخرين"
+msgstr "السماح للعملاء باختيار الموظف في لوحة العميل"
 
 msgid "Allow customers to delete their profile"
 msgstr "السماح للعملاء بحذف ملفهم الشخصي"
@@ -859,6 +845,9 @@ msgstr "مدفوع بالفعل"
 msgid "Already have an account?"
 msgstr "هل لديك حساب?"
 
+msgid "Already purchased Amelia?"
+msgstr ""
+
 msgid "Also cancel and delete future events"
 msgstr "إلغاء وحذف الأحداث المستقبلية أيضًا"
 
@@ -908,7 +897,7 @@ msgid "Apple"
 msgstr "تفاح"
 
 msgid "Apple Calendar"
-msgstr "تقويم جوجل"
+msgstr "تقويم Apple"
 
 msgid "Apple Calendar (Personal)"
 msgstr "تقويم آبل (شخصي)"
@@ -917,7 +906,7 @@ msgid "Apple Calendar setup"
 msgstr "إعداد تقويم Apple"
 
 msgid "Apple calendar events"
-msgstr "أحداث تقويم Apple"
+msgstr ""
 
 msgid "Application (client) ID"
 msgstr "معرف التطبيق (العميل)"
@@ -1061,9 +1050,6 @@ msgstr "ملاحظات الموعد"
 msgid "Appointment price"
 msgstr "سعر الموعد"
 
-msgid "Appointment reminder"
-msgstr "تذكير بالموعد"
-
 msgid "Appointment repeats"
 msgstr "تكرار المواعيد"
 
@@ -1076,9 +1062,6 @@ msgstr "وقت بدء الموعد"
 msgid "Appointment status"
 msgstr "تم تغيير حالة الموعد إلى "
 
-msgid "Appointment status changed"
-msgstr "تغيّرت حالة الموعد"
-
 msgid "Appointment status has been changed to "
 msgstr "تم تغيير حالة الموعد إلى "
 
@@ -1087,9 +1070,6 @@ msgstr "تم تحديث حالة الموعد."
 
 msgid "Appointment title"
 msgstr "عنوان الموعد"
-
-msgid "Appointment updated"
-msgstr "تم تحديث الموعد"
 
 msgid "Appointments"
 msgstr "المواعيد"
@@ -1129,6 +1109,10 @@ msgstr "هل أنت متأكد أنك تريد إلغاء وحذف هذا الح
 
 msgid "Are you sure you want to cancel this appointment?"
 msgstr "هل أنت متأكد أنك تريد إلغاء هذا الموعد؟"
+
+msgid ""
+"Are you sure you want to cancel this booking? This action cannot be undone."
+msgstr ""
 
 msgid "Are you sure you want to cancel this event?"
 msgstr "‫هل أنت متأكد من رغبتك في إلغاء هذا الحدث؟"
@@ -1188,7 +1172,7 @@ msgid "Are you sure you want to delete this package booking?"
 msgstr "هل أنت متأكد أنك تريد حذف حجز هذه الحزمة؟"
 
 msgid "Are you sure you want to delete this resource?"
-msgstr "هل أنت متأكد أنك تريد حذف هذه الخدمة?"
+msgstr "هل أنت متأكد أنك تريد حذف هذا المورد؟"
 
 msgid "Are you sure you want to delete this service?"
 msgstr "هل أنت متأكد أنك تريد حذف هذه الخدمة?"
@@ -1225,7 +1209,7 @@ msgid "Are you sure you want to duplicate this package?"
 msgstr "هل أنت متأكد أنك تريد تكرار هذه الحزمة؟"
 
 msgid "Are you sure you want to duplicate this resource?"
-msgstr "هل تريد بالتأكيد تكرار هذه الخدمة?"
+msgstr "هل تريد بالتأكيد تكرار هذا المورد؟"
 
 msgid "Are you sure you want to duplicate this service?"
 msgstr "هل تريد بالتأكيد تكرار هذه الخدمة?"
@@ -1246,7 +1230,7 @@ msgid "Are you sure you want to hide this package?"
 msgstr "هل أنت متأكد أنك تريد إخفاء هذه الحزمة؟"
 
 msgid "Are you sure you want to hide this resource?"
-msgstr "هل أنت متأكد أنك تريد إخفاء هذه الخدمة?"
+msgstr "هل أنت متأكد أنك تريد إخفاء هذا المورد؟"
 
 msgid "Are you sure you want to hide this service?"
 msgstr "هل أنت متأكد أنك تريد إخفاء هذه الخدمة?"
@@ -1313,16 +1297,16 @@ msgid "Attachment upload path"
 msgstr "مسار تحميل المرفقات"
 
 msgid "Attendee"
-msgstr "إلغاء الحدث من قبل أحد الحضور"
+msgstr "الحاضر"
 
 msgid "Attendee Asc"
-msgstr "الحضور تصاعدي"
+msgstr "الحضور تصاعديًا"
 
 msgid "Attendee Desc"
-msgstr "الحضور تنازلي"
+msgstr "الحضور تنازليًا"
 
 msgid "Attendee code"
-msgstr "كود الحضور"
+msgstr "رمز الحاضر"
 
 msgid "Attendee has been saved"
 msgstr "تم حفظ الحضور"
@@ -1337,7 +1321,7 @@ msgid "Attendees"
 msgstr "الحضور"
 
 msgid "Attendees Allowed"
-msgstr "كود الحضور"
+msgstr "الحضور المسموح بهم"
 
 msgid "Attendees Export Format"
 msgstr "تنسيق تصدير المشاركين"
@@ -1420,13 +1404,13 @@ msgid "Available date text"
 msgstr "نص التاريخ المتاح"
 
 msgid "Available from Pro license"
-msgstr "الصور المتاحة"
+msgstr "متاح من ترخيص Pro"
 
 msgid "Available from Standard license"
-msgstr "الصور المتاحة"
+msgstr "متاح من ترخيص Standard"
 
 msgid "Available from Starter license"
-msgstr "الصور المتاحة"
+msgstr "متاح من ترخيص Starter"
 
 msgid "Available in Elite licence"
 msgstr "متاح في ترخيص النخبة"
@@ -1740,7 +1724,7 @@ msgid "Booking is canceled"
 msgstr "الفاصل الزمني غير متاح"
 
 msgid "Booking is currently unavailable. Please try again later."
-msgstr "غير قادرين على تفعيل الإضافة. رجاء المحاولة مرة أخرى لاحقاً."
+msgstr "الحجز غير متاح حاليًا. يرجى المحاولة مرة أخرى لاحقًا."
 
 msgid "Booking is unavailable"
 msgstr "الفاصل الزمني غير متاح"
@@ -2228,6 +2212,9 @@ msgstr "اختر متى ينتهي التكرار"
 msgid "Choose whether you want to manage services, events, or both."
 msgstr "اختر ما إذا كنت تريد إدارة الخدمات أو الأحداث أو كليهما."
 
+msgid "Choose which tab users see first when they log in"
+msgstr ""
+
 msgid "Choosing layout of first step in step by step form"
 msgstr "اختيار تخطيط الخطوة الأولى في النموذج خطوة بخطوة"
 
@@ -2411,6 +2398,9 @@ msgstr "تكوين قائمة الانتظار للمواعيد"
 
 msgid "Confirm"
 msgstr "تأكيد"
+
+msgid "Confirm Cancellation"
+msgstr ""
 
 msgid "Confirm My Appointment"
 msgstr "أكّد موعدي"
@@ -3028,9 +3018,6 @@ msgstr "البيانات التي تبقى دون تغيير:"
 msgid "Data to be updated:"
 msgstr "البيانات التي سيتم تحديثها:"
 
-msgid "Data transfer"
-msgstr "نقل البيانات"
-
 msgid "Date"
 msgstr "التاريخ"
 
@@ -3047,10 +3034,10 @@ msgid "Date & time periods of the event with Lesson Space join links"
 msgstr "تاريخ وفترات زمنية للحدث مع روابط الانضمام إلى Lesson Space"
 
 msgid "Date Asc"
-msgstr "تاريخ تصاعدي"
+msgstr "تاريخ تصاعديًا"
 
 msgid "Date Desc"
-msgstr "تاريخ تنازلي"
+msgstr "تاريخ تنازليًا"
 
 msgid "Date Picker"
 msgstr "منتقي التاريخ"
@@ -4000,10 +3987,10 @@ msgid "Deduction"
 msgstr "المستقطع"
 
 msgid "Deduction Asc"
-msgstr "الخصم تصاعدي"
+msgstr "الخصم تصاعديًا"
 
 msgid "Deduction Desc"
-msgstr "الخصم تنازلي"
+msgstr "الخصم تنازليًا"
 
 msgid "Default Label"
 msgstr "التسمية الافتراضية"
@@ -4016,6 +4003,9 @@ msgstr "حالة الموعد الافتراضية"
 
 msgid "Default back end page"
 msgstr "الصفحة الخلفية الافتراضية"
+
+msgid "Default landing tab"
+msgstr ""
 
 msgid "Default language"
 msgstr "اللغة الافتراضية"
@@ -4510,7 +4500,6 @@ msgid ""
 "Edit appointments/events when connected Google Calendar Events are "
 "rescheduled or deleted"
 msgstr ""
-"تحديث المواعيد/الأحداث عند إعادة جدولة أحداث تقويم Google المرتبطة أو حذفها"
 
 msgid "Edit block time"
 msgstr "تعديل الفترة المحجوبة"
@@ -5189,7 +5178,7 @@ msgid "Event Day"
 msgstr "تاريخ الحدث"
 
 msgid "Event Desc"
-msgstr "وصف الحدث"
+msgstr "ترتيب الأحداث تنازليًا"
 
 msgid "Event Employee"
 msgstr "موظف الحدث"
@@ -5598,9 +5587,6 @@ msgstr "فشل"
 msgid "Failed to access camera. Please try again."
 msgstr "فشل في الوصول إلى الكاميرا. يرجى المحاولة مرة أخرى."
 
-msgid "Failed to initialize payment. Please try again."
-msgstr "تعذر بدء عملية الدفع. يرجى المحاولة مرة أخرى."
-
 msgid "Failed to load appointment details. Please try again later."
 msgstr "فشل في تحميل تفاصيل الموعد. يرجى المحاولة مرة أخرى لاحقًا."
 
@@ -5937,7 +5923,7 @@ msgid "Google Analytics setup"
 msgstr "إعداد Google Analytics"
 
 msgid "Google Calendar"
-msgstr "تقويم جوجل"
+msgstr "تقويم Google"
 
 msgid "Google Calendar & Google Meet"
 msgstr "تقويم جوجل وGoogle Meet"
@@ -5967,7 +5953,7 @@ msgid "Google Meet setup"
 msgstr "إعداد Google Meet"
 
 msgid "Google calendar events"
-msgstr "أحداث تقويم Google"
+msgstr ""
 
 msgid "Google reCAPTCHA v2 secret key"
 msgstr "المفتاح السري لـ Google reCAPTCHA v2"
@@ -6712,10 +6698,10 @@ msgid "ID"
 msgstr "تغيير ID مرسل المرسل"
 
 msgid "ID Asc"
-msgstr "تصاعدي حسب المعرف"
+msgstr "حسب المعرف تصاعديًا"
 
 msgid "ID Desc"
-msgstr "تنازلي حسب المعرف"
+msgstr "حسب المعرف تنازليًا"
 
 msgid "I understand this import will replace all current data permanently."
 msgstr "أفهم أن عملية الاستيراد هذه ستستبدل جميع البيانات الحالية بشكل دائم."
@@ -6742,13 +6728,6 @@ msgid ""
 msgstr ""
 "إذا تم تعطيل هذه الميزة، يجب أن يفي الحجز بالسعة الدنيا، ويتم إغلاق الفترة "
 "الزمنية بعد الحجز الأول."
-
-msgid ""
-"If disabled, the price will remain the same regardless of how many people "
-"are included in the group appointment."
-msgstr ""
-"إذا تم تعطيله، سيبقى السعر كما هو بغض النظر عن عدد الأشخاص المشمولين في "
-"الموعد الجماعي."
 
 msgid ""
 "If enabled, customers can book with Pending status even after maximum "
@@ -6885,6 +6864,9 @@ msgstr "صور مصغرة"
 msgid "Import"
 msgstr "استيراد"
 
+msgid "Import/Export"
+msgstr ""
+
 msgid "Import Failed"
 msgstr "فشل الاستيراد"
 
@@ -6914,6 +6896,9 @@ msgstr "فشل الاستيراد"
 
 msgid "Import failed. Review the details below."
 msgstr "فشل الاستيراد. راجع التفاصيل أدناه."
+
+msgid "Import or export your Amelia data."
+msgstr ""
 
 msgid "Import progress"
 msgstr "تقدم الاستيراد"
@@ -7479,10 +7464,10 @@ msgid "Last"
 msgstr "الاسم الأخير للعميل"
 
 msgid "Last Booking Asc"
-msgstr "آخر حجز تصاعدي"
+msgstr "آخر حجز تصاعديًا"
 
 msgid "Last Booking Desc"
-msgstr "آخر حجز تنازلي"
+msgstr "آخر حجز تنازليًا"
 
 msgid "Last Name:"
 msgstr "الاسم الثاني:"
@@ -7854,7 +7839,7 @@ msgid "Max Capacity Asc"
 msgstr "الحد الأقصى للسعة تصاعديًا"
 
 msgid "Max Capacity Desc"
-msgstr "الوصف الأقصى للسعة"
+msgstr "الحد الأقصى للسعة تنازليًا"
 
 msgid "Maximum"
 msgstr "الحد الأقصى"
@@ -8197,7 +8182,7 @@ msgid "No-show"
 msgstr "عدم الحضور"
 
 msgid "No-show tag"
-msgstr "علامة عدم الظهور"
+msgstr "علامة عدم الحضور"
 
 msgid "No Employees Assigned to This Location"
 msgstr "لا يوجد موظفون مخصصون لهذا الموقع"
@@ -8416,13 +8401,13 @@ msgid "Notify selected employees about empty package purchases"
 msgstr "إخطار الموظفين المختارين بشأن شراء الحزم الفارغة"
 
 msgid "Notify the attendee(s)"
-msgstr "إخطار العميل (العملاء)"
+msgstr "إخطار الحاضرين"
 
 msgid "Notify the attendees"
 msgstr "إخطار الحاضرين"
 
 msgid "Notify the customer(s)"
-msgstr "إخطار العميل (العملاء)"
+msgstr "إخطار العملاء"
 
 msgid "Number of Additional People"
 msgstr "عدد الأشخاص الإضافيين"
@@ -8726,7 +8711,7 @@ msgid "Outline"
 msgstr "المخطط"
 
 msgid "Outlook Calendar"
-msgstr "تقويم أوتلوك"
+msgstr "تقويم Outlook"
 
 msgid "Outlook Calendar & Microsoft Teams"
 msgstr "تقويم أوتلوك وفرق مايكروسوفت"
@@ -8738,7 +8723,7 @@ msgid "Outlook Calendar setup"
 msgstr "إعداد تقويم Outlook"
 
 msgid "Outlook Mailer"
-msgstr "مُرسل أوتلوك"
+msgstr "خدمة بريد Outlook"
 
 msgid ""
 "Outlook Mailer is not fully configured. Please complete the account setup in "
@@ -8748,7 +8733,7 @@ msgstr ""
 "أوتلوك."
 
 msgid "Outlook calendar events"
-msgstr "مواعيد تقويم Outlook"
+msgstr ""
 
 msgid "Outside of working hours"
 msgstr "خارج أوقات العمل"
@@ -8793,7 +8778,7 @@ msgid "Package Canceled"
 msgstr "تم إلغاء الحزمة"
 
 msgid "Package Desc"
-msgstr "وصف الحزمة"
+msgstr "ترتيب الحزمة تنازليًا"
 
 msgid "Package ID"
 msgstr "معرف الحزمة"
@@ -9153,9 +9138,7 @@ msgid "Pending payment"
 msgstr "في انتظار الدفع"
 
 msgid "People"
-msgstr ""
-"يمكنك هنا تحديد عدد الأشخاص القادمين <br/> مع هذا العميل. يعتمد الرقم الذي "
-"يمكنك اختياره على سعة المختص وقدرته."
+msgstr "أشخاص"
 
 msgid "People counting logic"
 msgstr "منطق حساب عدد الأشخاص"
@@ -9864,6 +9847,11 @@ msgstr "تم إلغاء الشراء"
 msgid "Purchased"
 msgstr "تم الشراء"
 
+msgid ""
+"Purchasing doesn't upgrade this plugin automatically. Follow our step-by-"
+"step guide to switch to the full version."
+msgstr ""
+
 msgid "Purple"
 msgstr "أرجواني"
 
@@ -10002,7 +9990,7 @@ msgid "Redirect"
 msgstr "إعادة التوجيه"
 
 msgid "Redirect URI"
-msgstr "إعادة توجيه URI"
+msgstr "معرف URI لإعادة التوجيه"
 
 msgid "Redirect URL After Booking"
 msgstr "عنوان URL لإعادة التوجيه بعد الحجز"
@@ -10032,7 +10020,7 @@ msgid "Redirect URL for unsuccessfully rejected booking"
 msgstr "عنوان URL لإعادة التوجيه للحجز المرفوض الذي لم ينجح"
 
 msgid "Redirect URLs"
-msgstr "إعادة توجيه URI"
+msgstr "عناوين URL لإعادة التوجيه"
 
 msgid "Redirect page"
 msgstr "صفحة إعادة التوجيه"
@@ -10069,10 +10057,6 @@ msgstr "سيتم دفع المبلغ المتبقي من الإجمالي في �
 
 msgid "Remind me when my SMS balance is low"
 msgstr "ذكرني عندما يكون رصيد الرسائل النصية القصيرة منخفضًا"
-
-#, php-format
-msgid "Reminder: %1$s is scheduled for %2$s."
-msgstr "تذكير: %1$s مقرر في %2$s."
 
 msgid "Remove Apple Calendar event slots"
 msgstr "حذف الفترات الزمنية لأحداث Apple Calendar"
@@ -10159,9 +10143,7 @@ msgid "Required fields: <b>First Name</b> and <b>Last Name</b>."
 msgstr "الحقول المطلوبة: <b>الاسم الأول</b> و<b>الاسم الأخير</b>."
 
 msgid "Reschedule"
-msgstr ""
-"قم بتمكين هذا الخيار إذا كنت تريد السماح لعملائك بإعادة جدولة المواعيد "
-"الخاصة بهم."
+msgstr "إعادة الجدولة"
 
 msgid "Reschedule appointment"
 msgstr "إعادة جدولة الموعد"
@@ -10290,7 +10272,7 @@ msgid "Sat"
 msgstr "السبت"
 
 msgid "Saturday"
-msgstr "يوم السبت"
+msgstr "السبت"
 
 msgid "Save"
 msgstr "حفظ"
@@ -10464,6 +10446,9 @@ msgstr "المستقطع"
 
 msgid "Securely process payments using Stripe."
 msgstr "معالجة المدفوعات بأمان باستخدام Stripe."
+
+msgid "See upgrade guide."
+msgstr ""
 
 msgid "Segment"
 msgstr "الجزء"
@@ -10793,7 +10778,7 @@ msgid "Service/Event"
 msgstr "خدمة/حدث"
 
 msgid "Service Asc"
-msgstr "الخدمة تصاعدي"
+msgstr "الخدمة تصاعديًا"
 
 msgid "Service Categories"
 msgstr "فئات الخدمة"
@@ -10802,7 +10787,7 @@ msgid "Service Category"
 msgstr "تصنيف الخدمة"
 
 msgid "Service Desc"
-msgstr "الخدمة تنازلي"
+msgstr "الخدمة تنازليًا"
 
 msgid "Service ID"
 msgstr "معرف الخدمة"
@@ -11259,10 +11244,10 @@ msgid "Show specific packages"
 msgstr "عرض فئة محددة"
 
 msgid "Show specific service"
-msgstr "عرض خدمة محددة"
+msgstr "إظهار خدمة محددة"
 
 msgid "Show specific services"
-msgstr "عرض خدمة محددة"
+msgstr "إظهار خدمات محددة"
 
 msgid "Show tag"
 msgstr "عرض الوسم"
@@ -11315,6 +11300,9 @@ msgstr "تسجيل الدخول باستخدام Microsoft"
 
 msgid "Sign in with Outlook"
 msgstr "تسجيل الدخول باستخدام أوتلوك"
+
+msgid "Sign out and use a customer account"
+msgstr ""
 
 msgid "Sign out from Google"
 msgstr "تسجيل الخروج من جوجل"
@@ -11675,7 +11663,7 @@ msgid "Summary segment"
 msgstr "ملخص المقطع"
 
 msgid "Sun"
-msgstr "الشمس"
+msgstr "الأحد"
 
 msgid "Sunday"
 msgstr "الأحد"
@@ -11700,7 +11688,7 @@ msgid "Switch Camera"
 msgstr "تبديل الكاميرا"
 
 msgid "Sync Google Events"
-msgstr "مزامنة أحداث Google"
+msgstr ""
 
 msgid "Sync with"
 msgstr "المزامنة مع"
@@ -12200,6 +12188,12 @@ msgid ""
 msgstr "تتطلب هذه الإشعار وظيفة كرون. أضف السطر أدناه إلى إعدادات الكرون لديك."
 
 msgid ""
+"This option applies only to people added through \"Bringing anyone with "
+"you\". If disabled, the service price is charged once for the entire "
+"booking, regardless of how many additional people are included."
+msgstr ""
+
+msgid ""
 "This option requires adding the payment link placeholder to your message "
 "templates."
 msgstr "يتطلب هذا الخيار إضافة عنصر نائب لرابط الدفع إلى قوالب رسائلك."
@@ -12607,13 +12601,13 @@ msgid "Type"
 msgstr "نوع"
 
 msgid "Type Asc"
-msgstr "النوع تصاعدي"
+msgstr "النوع تصاعديًا"
 
 msgid "Type Desc"
-msgstr "النوع تنازلي"
+msgstr "النوع تنازليًا"
 
 msgid "URL"
-msgstr "سيتم إعادة توجيه العميل إلى عنوان URL هذا بمجرد تحديد الموعد."
+msgstr "عنوان URL"
 
 msgid ""
 "URL on which will user be redirected if appointment can't be canceled "
@@ -13371,6 +13365,11 @@ msgstr "تم إعادة تعيين كلمة المرور الخاصة بك بن�
 msgid "Your password has been reset successfully."
 msgstr "تمت إعادة تعيين كلمة المرور بنجاح."
 
+msgid ""
+"Your payment is still processing. You will receive a confirmation as soon as "
+"it is completed."
+msgstr ""
+
 msgid "Your postal code is incomplete"
 msgstr "الرمز البريدي الخاص بك غير مكتمل"
 
@@ -13531,9 +13530,7 @@ msgid "payment button"
 msgstr "زر الدفع"
 
 msgid "people"
-msgstr ""
-"يمكنك هنا تحديد عدد الأشخاص القادمين <br/> مع هذا العميل. يعتمد الرقم الذي "
-"يمكنك اختياره على سعة المختص وقدرته."
+msgstr "أشخاص"
 
 msgid "people waiting"
 msgstr "أشخاص ينتظرون"
@@ -13858,28 +13855,28 @@ msgid "{pluginName} - Events List Button"
 msgstr "{pluginName} - زر قائمة الفعاليات"
 
 msgid "{pluginName} - Events view"
-msgstr ""
+msgstr "{pluginName} - عرض الفعاليات"
 
 msgid "{pluginName} - Search view"
-msgstr ""
+msgstr "{pluginName} - عرض البحث"
 
 msgid "{pluginName} - Step-By-Step Booking"
-msgstr ""
+msgstr "{pluginName} - الحجز خطوة بخطوة"
 
 msgid "{pluginName} - Step Booking"
-msgstr ""
+msgstr "{pluginName} - الحجز المتدرج"
 
 msgid "{pluginName} Event"
-msgstr ""
+msgstr "صفحة فعالية {pluginName}"
 
 msgid "{pluginName} Event Page"
-msgstr ""
+msgstr "{pluginName} صفحة الفعالية"
 
 msgid "{pluginName} Event Pages"
-msgstr ""
+msgstr "{pluginName} صفحات الفعاليات"
 
 msgid "{pluginName} Events List Booking Settings"
-msgstr ""
+msgstr "{pluginName} إعدادات حجز قائمة الفعاليات"
 
 msgid "{pluginName} Events List Booking Shortcode"
 msgstr "{pluginName} الكود القصير لحجز قائمة الفعاليات"

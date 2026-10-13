@@ -2,6 +2,7 @@
 
 namespace AmeliaBooking\Infrastructure\WP\UserRoles;
 
+use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Licence\Licence;
 use AmeliaBooking\Infrastructure\Licence\LicenceConstants;
 
@@ -21,6 +22,14 @@ class SuperAdminRoleService
         'wpamelia-provider',
         'wpamelia-manager',
     ];
+
+    /** @var SettingsService */
+    private $settingsService;
+
+    public function __construct(SettingsService $settingsService)
+    {
+        $this->settingsService = $settingsService;
+    }
 
     /**
      * SuperAdmin is only available on Elite (Developer) licence.
@@ -43,6 +52,12 @@ class SuperAdminRoleService
             return true;
         }
 
+        // Plugin not activated yet — keep Activation reachable so a purchase
+        // code can be entered (dashboard treats this as Lite).
+        if (!$this->isPluginActivated()) {
+            return true;
+        }
+
         if ($this->isCurrentUserSuperAdmin()) {
             return true;
         }
@@ -50,6 +65,11 @@ class SuperAdminRoleService
         // Bootstrap / recovery: no SuperAdmins yet (first activation, or role
         // restored after switching back to Elite).
         return $this->countSuperAdmins() === 0;
+    }
+
+    private function isPluginActivated(): bool
+    {
+        return (bool) $this->settingsService->getSetting('activation', 'active');
     }
 
     public function countSuperAdmins(): int

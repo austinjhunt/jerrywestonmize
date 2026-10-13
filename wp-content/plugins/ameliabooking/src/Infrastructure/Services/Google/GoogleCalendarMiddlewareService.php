@@ -98,12 +98,40 @@ class GoogleCalendarMiddlewareService extends AbstractGoogleCalendarMiddlewareSe
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
         if ($httpCode !== 200 || !$response) {
-            return null; // or throw an exception
+            $this->logger->error(
+                'GoogleCalendar: middleware refresh call failed',
+                [
+                    'httpCode'  => $httpCode,
+                    'curlError' => curl_error($ch) ?: null,
+                    'body'      => is_string($response) ? substr($response, 0, 300) : null,
+                ]
+            );
+
+            return null;
         }
 
         $data = json_decode($response, true);
 
-        return $data['result'] ?? null;
+        $result = isset($data['result']) ? $data['result'] : null;
+
+        // A refresh token is bound to the OAuth client that issued it, so one minted by the customer's
+        // own clientID/secret is rejected here. The middleware reports that in the body rather than the
+        // status, and handing the error payload on as a token surfaces much later as "Invalid token
+        // format", naming the wrong cause.
+        if (!is_array($result) || empty($result['access_token'])) {
+            $this->logger->error(
+                'GoogleCalendar: middleware refresh returned no access token',
+                [
+                    'httpCode'    => $httpCode,
+                    'resultKeys'  => is_array($result) ? array_keys($result) : null,
+                    'body'        => substr($response, 0, 300),
+                ]
+            );
+
+            return null;
+        }
+
+        return $result;
     }
 
     /**

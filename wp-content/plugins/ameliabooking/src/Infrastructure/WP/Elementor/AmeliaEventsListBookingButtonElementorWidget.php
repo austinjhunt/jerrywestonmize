@@ -204,7 +204,7 @@ class AmeliaEventsListBookingButtonElementorWidget extends Widget_Button
             } elseif (!empty($settings['event_to_show']) && $settings['event_to_show'] !== 'all') {
                 if ($settings['event_to_show'] === 'custom') {
                     if (empty($settings['start_date']) || empty($settings['end_date'])) {
-                        echo BackendStrings::get('notice_for_missing_dates');
+                        echo esc_html(BackendStrings::get('notice_for_missing_dates'));
 
                         return;
                     }
@@ -319,7 +319,7 @@ class AmeliaEventsListBookingButtonElementorWidget extends Widget_Button
 
         // Keep the legacy shortcode class so existing frontend scans also pick this up.
         echo '<div class="amelia-step-booking-shortcode amelia-events-list-booking-shortcode" style="display:none">'
-            . $shortcode
+            . esc_html($shortcode)
             . '</div>';
     }
 }

@@ -14,6 +14,7 @@ use AmeliaBooking\Application\Controller\Google\FetchGoogleMiddlewareAccessToken
 use AmeliaBooking\Application\Controller\Google\GetGoogleAuthURLController;
 use AmeliaBooking\Application\Controller\Google\GetGoogleMiddlewareAuthURLController;
 use AmeliaBooking\Application\Controller\Google\VerifyRecaptchaController;
+use AmeliaBooking\Application\Controller\Google\WatchGoogleEventController;
 use Slim\App;
 
 /**
@@ -37,6 +38,8 @@ class Google
         $app->post('/google/authorization/token', FetchAccessTokenWithAuthCodeController::class);
 
         $app->post('/google/recaptcha/verify', VerifyRecaptchaController::class);
+
+        $app->post('/google/watch', WatchGoogleEventController::class);
 
         // Middleware routes for Google Calendar integration
 

@@ -9,7 +9,7 @@ use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 /**
  * Class FetchAccessTokenWithAuthCodeController
  *
- * @package AmeliaBooking\Application\Controller\Booking\Appointment
+ * @package AmeliaBooking\Application\Controller\Google
  */
 class FetchAccessTokenWithAuthCodeController extends Controller
 {

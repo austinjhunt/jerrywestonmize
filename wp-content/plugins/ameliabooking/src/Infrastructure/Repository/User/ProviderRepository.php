@@ -196,13 +196,17 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
                     gd.includeBufferTime AS google_calendar_include_buffer_time,
                     gd.title AS google_calendar_title,
                     gd.description AS google_calendar_description,
+                    gd.accountId AS google_calendar_account_id,
+                    gd.syncId AS google_calendar_sync_id,
                     od.id AS outlook_calendar_id,
                     od.token AS outlook_calendar_token,
                     od.calendarId AS outlook_calendar_calendar_id,
                     od.insertPendingAppointments AS outlook_calendar_insert_pending_appointments,
                     od.includeBufferTime AS outlook_calendar_include_buffer_time,
                     od.title AS outlook_calendar_title,
-                    od.description AS outlook_calendar_description
+                    od.description AS outlook_calendar_description,
+                    od.accountId AS outlook_calendar_account_id,
+                    od.syncId AS outlook_calendar_sync_id
                 FROM {$this->table} u
                 LEFT JOIN {$this->providersGoogleCalendarTable} gd ON gd.userId = u.id
                 LEFT JOIN {$this->providersOutlookCalendarTable} od ON od.userId = u.id
@@ -741,13 +745,17 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
                         gd.includeBufferTime AS google_calendar_include_buffer_time,
                         gd.title AS google_calendar_title,
                         gd.description AS google_calendar_description,
+                        gd.accountId AS google_calendar_account_id,
+                        gd.syncId AS google_calendar_sync_id,
                         od.id AS outlook_calendar_id,
                         od.token AS outlook_calendar_token,
                         od.calendarId AS outlook_calendar_calendar_id,
                         od.insertPendingAppointments AS outlook_calendar_insert_pending_appointments,
                         od.includeBufferTime AS outlook_calendar_include_buffer_time,
                         od.title AS outlook_calendar_title,
-                        od.description AS outlook_calendar_description
+                        od.description AS outlook_calendar_description,
+                        od.accountId AS outlook_calendar_account_id,
+                        od.syncId AS outlook_calendar_sync_id
                     FROM {$this->table} u
                     LEFT JOIN {$this->providersGoogleCalendarTable} gd ON gd.userId = u.id
                     LEFT JOIN {$this->providersOutlookCalendarTable} od ON od.userId = u.id
@@ -962,6 +970,7 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
                     s.deposit AS service_deposit,
                     s.depositPayment AS service_depositPayment,
                     s.depositPerPerson AS service_depositPerPerson,
+                    s.fullPayment AS service_fullPayment,
                     e.id AS extra_id,
                     e.name AS extra_name,
                     e.price AS extra_price,
@@ -1583,6 +1592,16 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
             $providerRows[$userId]['googleCalendar']['description'] = isset($row['google_calendar_description']) && $row['google_calendar_description'] ?
                 json_decode($row['google_calendar_description'], true) :
                 ['appointment' => '', 'event' => ''];
+            $providerRows[$userId]['googleCalendar']['userId']     = $userId;
+            $providerRows[$userId]['googleCalendar']['calendarId'] = isset($row['google_calendar_calendar_id'])
+                ? $row['google_calendar_calendar_id']
+                : null;
+            $providerRows[$userId]['googleCalendar']['accountId']  = isset($row['google_calendar_account_id'])
+                ? $row['google_calendar_account_id']
+                : null;
+            $providerRows[$userId]['googleCalendar']['syncId']     = isset($row['google_calendar_sync_id'])
+                ? $row['google_calendar_sync_id']
+                : null;
         }
 
         $rowOutlookCalendarId = isset($row['outlook_calendar_calendar_id']) ? $row['outlook_calendar_calendar_id'] : null;
@@ -1613,6 +1632,12 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
             $providerRows[$userId]['outlookCalendar']['description'] = isset($row['outlook_calendar_description']) && $row['outlook_calendar_description'] ?
                 json_decode($row['outlook_calendar_description'], true) :
                 ['appointment' => '', 'event' => ''];
+            $providerRows[$userId]['outlookCalendar']['accountId'] = isset($row['outlook_calendar_account_id'])
+                ? $row['outlook_calendar_account_id']
+                : null;
+            $providerRows[$userId]['outlookCalendar']['syncId']    = isset($row['outlook_calendar_sync_id'])
+                ? $row['outlook_calendar_sync_id']
+                : null;
         }
 
         if (
@@ -1816,6 +1841,7 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
                 'deposit'          => isset($row['service_deposit']) ? $row['service_deposit'] : 0,
                 'depositPayment'   => isset($row['service_depositPayment']) ? $row['service_depositPayment'] : 'disabled',
                 'depositPerPerson' => isset($row['service_depositPerPerson']) ? $row['service_depositPerPerson'] : 1,
+                'fullPayment'      => isset($row['service_fullPayment']) ? $row['service_fullPayment'] : false,
             ];
         }
 
@@ -2043,13 +2069,91 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
      * @return array
      * @throws QueryExecutionException
      */
-    public function getGoogleCalendarAccounts($providerId)
+    /**
+     * Employees whose calendar selection lives on the user row, which is how the global Settings page
+     * connection stores it - those employees have no providers_to_*_calendar row of their own.
+     *
+     * @param string $calendarId
+     * @param string $column googleCalendarId|outlookCalendarId
+     *
+     * @return int[]
+     * @throws QueryExecutionException
+     */
+    public function getProviderIdsByCalendarId($calendarId, $column): array
+    {
+        if (!in_array($column, ['googleCalendarId', 'outlookCalendarId'], true)) {
+            throw new QueryExecutionException('Unsupported calendar column ' . $column . ' in ' . __CLASS__);
+        }
+
+        try {
+            // Restricted to providers: the calendar columns live on the shared users table, so without
+            // this a row of any other role holding the same value would be handed back as an employee.
+            $statement = $this->connection->prepare(
+                "SELECT id FROM {$this->table} WHERE `{$column}` = :calendarId AND type = :type"
+            );
+
+            $statement->execute(
+                [
+                    ':calendarId' => $calendarId,
+                    ':type'       => AbstractUser::USER_ROLE_PROVIDER,
+                ]
+            );
+
+            $rows = $statement->fetchAll();
+        } catch (\Exception $e) {
+            throw new QueryExecutionException('Unable to get providers by calendar in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
+        }
+
+        return array_map(
+            function ($row) {
+                return (int)$row['id'];
+            },
+            $rows ?: []
+        );
+    }
+
+    /**
+     * @param int    $providerId
+     * @param string $calendarId
+     * @param string $column googleCalendarId|outlookCalendarId
+     *
+     * @return bool
+     * @throws QueryExecutionException
+     */
+    public function isProviderUsingCalendarId($providerId, $calendarId, $column): bool
+    {
+        if (!in_array($column, ['googleCalendarId', 'outlookCalendarId'], true)) {
+            throw new QueryExecutionException('Unsupported calendar column ' . $column . ' in ' . __CLASS__);
+        }
+
+        try {
+            $statement = $this->connection->prepare(
+                "SELECT id FROM {$this->table}
+                 WHERE id = :id AND `{$column}` = :calendarId AND type = :type
+                 LIMIT 1"
+            );
+
+            $statement->execute(
+                [
+                    ':id'         => $providerId,
+                    ':calendarId' => $calendarId,
+                    ':type'       => AbstractUser::USER_ROLE_PROVIDER,
+                ]
+            );
+
+            return (bool)$statement->fetch();
+        } catch (\Exception $e) {
+            throw new QueryExecutionException('Unable to check provider calendar in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+    public function getGoogleCalendarAccounts($providerId): array
     {
         $accounts = [];
 
         try {
             $statement = $this->connection->prepare(
-                "SELECT id, token, calendarId, blockedCalendars
+                "SELECT id, token, calendarId, blockedCalendars, accountId, syncId
                 FROM {$this->providersGoogleCalendarTable}
                 WHERE userId = :userId"
             );
@@ -2067,6 +2171,8 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
                     'token'            => $row['token'],
                     'calendarId'       => $row['calendarId'],
                     'blockedCalendars' => $blockedCalendars,
+                    'accountId'        => isset($row['accountId']) ? $row['accountId'] : null,
+                    'syncId'           => isset($row['syncId']) ? $row['syncId'] : null,
                 ];
             }
         } catch (\Exception $e) {
@@ -2074,6 +2180,54 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
         }
 
         return $accounts;
+    }
+
+    /**
+     * Get employee level Google Calendar "Event title and description" templates
+     *
+     * The account that has a calendar selected has priority, the same way the provider entity is
+     * hydrated in self::parseUserRow()
+     *
+     * @param int $providerId
+     *
+     * @return array
+     * @throws QueryExecutionException
+     */
+    public function getGoogleCalendarSettings($providerId)
+    {
+        try {
+            $statement = $this->connection->prepare(
+                "SELECT calendarId, title, description
+                FROM {$this->providersGoogleCalendarTable}
+                WHERE userId = :userId"
+            );
+
+            $statement->bindParam(':userId', $providerId);
+            $statement->execute();
+
+            $settingsRow = null;
+
+            while ($row = $statement->fetch()) {
+                if ($settingsRow === null || (empty($settingsRow['calendarId']) && !empty($row['calendarId']))) {
+                    $settingsRow = $row;
+                }
+            }
+        } catch (\Exception $e) {
+            throw new QueryExecutionException(
+                'Unable to get Google Calendar settings in ' . __CLASS__ . ': ' . $e->getMessage(),
+                $e->getCode(),
+                $e
+            );
+        }
+
+        if ($settingsRow === null) {
+            return [];
+        }
+
+        return [
+            'title'       => !empty($settingsRow['title']) ? json_decode($settingsRow['title'], true) : null,
+            'description' => !empty($settingsRow['description']) ? json_decode($settingsRow['description'], true) : null,
+        ];
     }
 
 
@@ -2125,7 +2279,7 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
      * @return bool
      * @throws QueryExecutionException
      */
-    public function updateGoogleCalendarAccountToken($accountId, $token)
+    public function updateGoogleCalendarAccountToken($accountId, $token): bool
     {
         try {
             $statement = $this->connection->prepare(
@@ -2137,15 +2291,15 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
             $statement->bindParam(':token', $token);
             $statement->bindParam(':accountId', $accountId);
 
-            $result = $statement->execute();
+            $statement->execute();
 
-            if (!$result) {
-                throw new QueryExecutionException('Unable to update Google Calendar account token in ' . __CLASS__);
-            }
-
-            return $result;
+            return true;
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to update Google Calendar account token in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException(
+                'Unable to update Google Calendar account token in ' . __CLASS__ . ': ' . $e->getMessage(),
+                $e->getCode(),
+                $e
+            );
         }
     }
 
@@ -2216,13 +2370,14 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
      * @return array
      * @throws QueryExecutionException
      */
-    public function getOutlookCalendarAccounts($providerId)
+    public function getOutlookCalendarAccounts($providerId): array
     {
         $accounts = [];
 
         try {
             $statement = $this->connection->prepare(
-                "SELECT id, token, calendarId, blockedCalendars, insertPendingAppointments, includeBufferTime, title, description
+                "SELECT id, token, calendarId, blockedCalendars, insertPendingAppointments, includeBufferTime, title, description,
+                accountId, syncId
                 FROM {$this->providersOutlookCalendarTable}
                 WHERE userId = :userId"
             );
@@ -2244,6 +2399,8 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
                     'includeBufferTime'         => isset($row['includeBufferTime']) ? $row['includeBufferTime'] : null,
                     'title'                     => isset($row['title']) && $row['title'] ? json_decode($row['title'], true) : null,
                     'description'               => isset($row['description']) && $row['description'] ? json_decode($row['description'], true) : null,
+                    'accountId'                 => isset($row['accountId']) ? $row['accountId'] : null,
+                    'syncId'                    => isset($row['syncId']) ? $row['syncId'] : null,
                 ];
             }
         } catch (\Exception $e) {
@@ -2332,7 +2489,7 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
      * @return void
      * @throws QueryExecutionException
      */
-    public function updateOutlookCalendarAccountToken($accountId, $token)
+    public function updateOutlookCalendarAccountToken($accountId, $token): void
     {
         try {
             $statement = $this->connection->prepare(
@@ -2344,13 +2501,13 @@ class ProviderRepository extends UserRepository implements ProviderRepositoryInt
             $statement->bindParam(':token', $token);
             $statement->bindParam(':accountId', $accountId);
 
-            $result = $statement->execute();
-
-            if (!$result) {
-                throw new QueryExecutionException('Unable to update Outlook Calendar account token in ' . __CLASS__);
-            }
+            $statement->execute();
         } catch (\Exception $e) {
-            throw new QueryExecutionException('Unable to update Outlook Calendar account token in ' . __CLASS__, $e->getCode(), $e);
+            throw new QueryExecutionException(
+                'Unable to update Outlook Calendar account token in ' . __CLASS__ . ': ' . $e->getMessage(),
+                $e->getCode(),
+                $e
+            );
         }
     }
 

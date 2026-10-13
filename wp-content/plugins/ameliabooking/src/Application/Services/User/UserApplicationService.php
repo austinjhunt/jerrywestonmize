@@ -148,6 +148,13 @@ class UserApplicationService
     }
 
     /**
+     * Create or attach a WordPress user for an Amelia record (customer/provider).
+     *
+     * When the email already belongs to a WP account, CreateWPUser reuses that account.
+     * A password from the request must only be written onto that account when the caller
+     * is allowed to change WP credentials (Amelia/WP admin or the account owner). Managers
+     * may still create brand-new WP users and set their password.
+     *
      * @param int          $userId
      * @param AbstractUser $user
      * @param string       $type
@@ -172,19 +179,34 @@ class UserApplicationService
 
         do_action('amelia_set_wp_user_for_new_' . $type, $user->toArray());
 
+        $email = $user->getEmail()->getValue();
+
+        // Mirror CreateWPUser::create() lookup — existing login/email means match, not create.
+        $matchedExistingWpUser = (bool)(username_exists($email) || email_exists($email));
+
         /** @var CreateWPUser $createWPUserService */
         $createWPUserService = $this->container->get('user.create.wp.user');
 
         $externalId = $createWPUserService->create(
-            $user->getEmail()->getValue(),
+            $email,
             $user->getFirstName() ? $user->getFirstName()->getValue() : '',
             $user->getLastName() ? $user->getLastName()->getValue() : '',
             'wpamelia-' . $user->getType(),
             $sendNewUserNotification
         );
 
-        if ($password) {
-            wp_set_password($password, $externalId);
+        if ($password && $externalId) {
+            /** @var AbstractUser|null $currentUser */
+            $currentUser = $this->container->get('logged.in.user');
+
+            // New WP user: Manager may set the initial password.
+            // Matched existing WP user: only admin/owner may overwrite credentials.
+            if (
+                !$matchedExistingWpUser ||
+                $this->canWriteWpCredentials($currentUser, null, (int)$externalId)
+            ) {
+                wp_set_password($password, $externalId);
+            }
         }
 
         /** @var UserRepository $userRepository */
@@ -329,39 +351,69 @@ class UserApplicationService
     }
 
     /**
-     * Whether the caller may write password/email onto the target user's linked WP account.
+     * Whether the caller may write password/email onto a WordPress account.
      *
-     * Allowed when the caller is an Amelia admin, or when the caller is updating their own
-     * profile. A null $currentUser means a token-only cabinet session where the target was
-     * already authorized as the caller. A non-null caller without a matching Amelia ID
-     * (e.g. Manager) must not be treated as the account owner.
+     * Allowed for Amelia/WP admins, or the account owner. Ownership is detected via:
+     *  - Amelia IDs matching ($targetUser) — update of own linked profile
+     *  - null $currentUser with a $targetUser — token-only cabinet session already
+     *    authorized as that user
+     *  - WP user ID ($wpUserId or $targetUser->externalId) matching the caller's
+     *    linked WP account / current WP login — create-or-match-by-email path
+     *
+     * A Manager must not pass either ownership check for another user's WP account.
      *
      * @param AbstractUser|null $currentUser
-     * @param AbstractUser      $targetUser
+     * @param AbstractUser|null $targetUser  Amelia record being edited (optional)
+     * @param int|null          $wpUserId    WP account being written (optional)
      *
      * @return bool
      */
-    public function canWriteLinkedWpCredentials(?AbstractUser $currentUser, AbstractUser $targetUser): bool
-    {
+    public function canWriteWpCredentials(
+        ?AbstractUser $currentUser,
+        ?AbstractUser $targetUser = null,
+        ?int $wpUserId = null
+    ): bool {
         if ($currentUser && $currentUser->getType() === AbstractUser::USER_ROLE_ADMIN) {
             return true;
         }
 
-        $targetId = $targetUser->getId() ? $targetUser->getId()->getValue() : null;
-
-        if ($targetId === null) {
-            return false;
-        }
-
-        // Token-only cabinet session (get_current_user_id() returns 0): $currentUser is null
-        // and prior auth already ensured the token belongs to $targetUser.
-        if ($currentUser === null) {
+        if (function_exists('current_user_can') && current_user_can('manage_options')) {
             return true;
         }
 
-        $callerId = $currentUser->getId() ? $currentUser->getId()->getValue() : null;
+        if ($targetUser !== null) {
+            $targetId = $targetUser->getId() ? $targetUser->getId()->getValue() : null;
 
-        return $callerId !== null && $callerId === $targetId;
+            // Token-only cabinet session: prior auth already ensured the token belongs
+            // to $targetUser.
+            if ($targetId !== null && $currentUser === null) {
+                return true;
+            }
+
+            $callerId = $currentUser && $currentUser->getId() ? $currentUser->getId()->getValue() : null;
+
+            if ($targetId !== null && $callerId !== null && $callerId === $targetId) {
+                return true;
+            }
+
+            if ($wpUserId === null && $targetUser->getExternalId()) {
+                $wpUserId = (int)$targetUser->getExternalId()->getValue();
+            }
+        }
+
+        if ($wpUserId === null || $wpUserId <= 0) {
+            return false;
+        }
+
+        if (
+            $currentUser &&
+            $currentUser->getExternalId() &&
+            (int)$currentUser->getExternalId()->getValue() === $wpUserId
+        ) {
+            return true;
+        }
+
+        return function_exists('get_current_user_id') && (int)get_current_user_id() === $wpUserId;
     }
 
     /**

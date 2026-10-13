@@ -200,7 +200,7 @@ abstract class AbstractNotificationService
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      */
-    public function sendAppointmentStatusNotifications($appointmentArray, $forcedStatusChange, $logNotification, $isBackend = false, $sendInvoice = false)
+    public function sendAppointmentStatusNotifications($appointmentArray, $forcedStatusChange, $logNotification, $isBackend = false, $sendInvoice = false): void
     {
         /** @var BookingApplicationService $bookingAS */
         $bookingAS = $this->container->get('application.booking.booking.service');
@@ -298,7 +298,7 @@ abstract class AbstractNotificationService
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      */
-    public function sendAppointmentRescheduleNotifications($appointmentArray)
+    public function sendAppointmentRescheduleNotifications($appointmentArray): void
     {
         // Notify customers
         if ($appointmentArray['notifyParticipants']) {
@@ -364,7 +364,7 @@ abstract class AbstractNotificationService
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      */
-    public function sendAppointmentUpdatedNotifications($appointmentArray, $appointmentRescheduled = null)
+    public function sendAppointmentUpdatedNotifications($appointmentArray, $appointmentRescheduled = null): void
     {
         if (!empty($appointmentArray['providerId'])) {
             $appointmentArray['assignedEmployeeId'] = $appointmentArray['providerId'];
@@ -440,7 +440,7 @@ abstract class AbstractNotificationService
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      */
-    public function sendBookingAddedNotifications($appointmentArray, $bookingArray, $logNotification, $invoice = null)
+    public function sendBookingAddedNotifications($appointmentArray, $bookingArray, $logNotification, $invoice = null): void
     {
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
@@ -527,7 +527,7 @@ abstract class AbstractNotificationService
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      */
-    public function sendCustomerBookingNotification($appointmentArray, $bookingArray, $sendInvoice = false)
+    public function sendCustomerBookingNotification($appointmentArray, $bookingArray, $sendInvoice = false): void
     {
         // Notify customers
         if ($appointmentArray['notifyParticipants']) {
@@ -577,7 +577,7 @@ abstract class AbstractNotificationService
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      */
-    public function sendProviderBookingNotification($appointmentArray, $bookingArray)
+    public function sendProviderBookingNotification($appointmentArray, $bookingArray): void
     {
         // Notify provider
         if ($appointmentArray['notifyParticipants'] && $bookingArray['status'] !== BookingStatus::REJECTED) {
@@ -651,7 +651,7 @@ abstract class AbstractNotificationService
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    public function sendNextDayReminderNotifications($entityType)
+    public function sendNextDayReminderNotifications($entityType): void
     {
         /** @var NotificationLogRepository $notificationLogRepo */
         $notificationLogRepo = $this->container->get('domain.notificationLog.repository');
@@ -949,10 +949,12 @@ abstract class AbstractNotificationService
      * @param Notification $notification
      * @param Collection $appointments
      * @param bool $before
+     *
+     * @return void
      * @throws QueryExecutionException
      * @throws InvalidArgumentException
      */
-    private function sendBookingsNotifications($notification, $appointments, $before)
+    private function sendBookingsNotifications($notification, $appointments, $before): void
     {
         /** @var PaymentApplicationService $paymentAS */
         $paymentAS = $this->container->get('application.payment.service');

@@ -33,26 +33,6 @@ msgid "# of bookings"
 msgstr "# de reservas"
 
 #, php-format
-msgid "%1$s, %2$s, was canceled."
-msgstr "%1$s, %2$s, se canceló."
-
-#, php-format
-msgid "%1$s, %2$s, was rejected."
-msgstr "%1$s, %2$s, se rechazó."
-
-#, php-format
-msgid "%1$s booked %2$s at %3$s."
-msgstr "%1$s reservó %2$s a las %3$s."
-
-#, php-format
-msgid "%1$s on %2$s had a status change."
-msgstr "%1$s el %2$s tuvo un cambio de estado."
-
-#, php-format
-msgid "%1$s on %2$s was updated."
-msgstr "%1$s el %2$s se actualizó."
-
-#, php-format
 msgid "%event_name% Event Booked"
 msgstr "%event_name% Evento reservado"
 
@@ -460,8 +440,14 @@ msgstr "Acciones"
 msgid "Activate"
 msgstr "Activar"
 
+msgid "Activate now"
+msgstr ""
+
 msgid "Activate with Envato"
 msgstr "Activar con Envato"
+
+msgid "Activate your license to unlock the features included in your plan."
+msgstr ""
 
 msgid "Activated with Envato"
 msgstr "Activado con Envato"
@@ -877,6 +863,9 @@ msgstr "Pagado previamente"
 msgid "Already have an account?"
 msgstr "¿Ya tienes una cuenta?"
 
+msgid "Already purchased Amelia?"
+msgstr ""
+
 msgid "Also cancel and delete future events"
 msgstr "Cancelar y eliminar también eventos futuros"
 
@@ -926,7 +915,7 @@ msgid "Apple"
 msgstr ""
 
 msgid "Apple Calendar"
-msgstr "Google Calendar"
+msgstr "Calendario de Apple"
 
 msgid "Apple Calendar (Personal)"
 msgstr "Calendario de Apple (personal)"
@@ -935,7 +924,7 @@ msgid "Apple Calendar setup"
 msgstr "Configuración del calendario de Apple"
 
 msgid "Apple calendar events"
-msgstr "Eventos del Calendario de Apple"
+msgstr ""
 
 msgid "Application (client) ID"
 msgstr "Aplicación (Cliente) ID"
@@ -1083,9 +1072,6 @@ msgstr "Notas de la cita"
 msgid "Appointment price"
 msgstr "Precio de la cita"
 
-msgid "Appointment reminder"
-msgstr "Recordatorio de cita"
-
 msgid "Appointment repeats"
 msgstr "Repeticiones de citas"
 
@@ -1098,9 +1084,6 @@ msgstr "Hora de inicio de la cita"
 msgid "Appointment status"
 msgstr "Estado de la reserva"
 
-msgid "Appointment status changed"
-msgstr "Estado de la cita cambiado"
-
 msgid "Appointment status has been changed to "
 msgstr "El estado de la reserva ha cambiado a "
 
@@ -1109,9 +1092,6 @@ msgstr "Se ha actualizado el estado de la cita."
 
 msgid "Appointment title"
 msgstr "Título de la cita"
-
-msgid "Appointment updated"
-msgstr "Cita modificada"
 
 msgid "Appointments"
 msgstr "Citas"
@@ -1151,6 +1131,10 @@ msgstr "¿Está seguro de que desea cancelar y eliminar este evento?"
 
 msgid "Are you sure you want to cancel this appointment?"
 msgstr "¿Estas seguro que deseas cancelar esta cita?"
+
+msgid ""
+"Are you sure you want to cancel this booking? This action cannot be undone."
+msgstr ""
 
 msgid "Are you sure you want to cancel this event?"
 msgstr "¿Estás seguro de que quieres cancelar este evento?"
@@ -1360,7 +1344,7 @@ msgid "Attendees"
 msgstr "Asistentes"
 
 msgid "Attendees Allowed"
-msgstr "Código de asistente"
+msgstr "Asistentes permitidos"
 
 msgid "Attendees Export Format"
 msgstr "Formato de exportación de asistentes"
@@ -1452,10 +1436,10 @@ msgid "Available from Pro license"
 msgstr "Disponible desde la licencia Pro"
 
 msgid "Available from Standard license"
-msgstr "Disponible desde la licencia estándar"
+msgstr "Disponible desde la licencia Standard"
 
 msgid "Available from Starter license"
-msgstr "Disponible desde la licencia de inicio"
+msgstr "Disponible desde la licencia Starter"
 
 msgid "Available in Elite licence"
 msgstr "Disponible en licencia Elite"
@@ -1687,10 +1671,10 @@ msgid "Booking Closes"
 msgstr "Reservas cerradas"
 
 msgid "Booking Closes Asc"
-msgstr "Cierre de reservas Asc"
+msgstr "Cierre de reservas ascendente"
 
 msgid "Booking Closes Desc"
-msgstr "Cierre de reservas Desc"
+msgstr "Cierre de reservas descendente"
 
 msgid "Booking Confirmed"
 msgstr "Reserva confirmada"
@@ -2287,6 +2271,9 @@ msgstr "Elige cuándo termina la repetición"
 msgid "Choose whether you want to manage services, events, or both."
 msgstr "Elige si deseas gestionar servicios, eventos o ambos."
 
+msgid "Choose which tab users see first when they log in"
+msgstr ""
+
 msgid "Choosing layout of first step in step by step form"
 msgstr "Elegir el diseño del primer paso en el formulario paso a paso"
 
@@ -2476,6 +2463,9 @@ msgstr "Configurar lista de espera para citas"
 
 msgid "Confirm"
 msgstr "Confirmar"
+
+msgid "Confirm Cancellation"
+msgstr ""
 
 msgid "Confirm My Appointment"
 msgstr "Confirmar mi cita"
@@ -3126,9 +3116,6 @@ msgstr "Datos que permanecen sin cambios:"
 msgid "Data to be updated:"
 msgstr "Datos a actualizar:"
 
-msgid "Data transfer"
-msgstr "Transferencia de datos"
-
 msgid "Date"
 msgstr "Fecha"
 
@@ -3145,10 +3132,10 @@ msgid "Date & time periods of the event with Lesson Space join links"
 msgstr "Fechas y horarios del evento con enlaces para unirse a Lesson Space."
 
 msgid "Date Asc"
-msgstr "Fecha Asc"
+msgstr "Fecha ascendente"
 
 msgid "Date Desc"
-msgstr "Fecha Desc"
+msgstr "Fecha descendente"
 
 msgid "Date Picker"
 msgstr "Selector de fecha"
@@ -4130,10 +4117,10 @@ msgid "Deduction"
 msgstr "Deducción"
 
 msgid "Deduction Asc"
-msgstr "Deducción Asc"
+msgstr "Deducción ascendente"
 
 msgid "Deduction Desc"
-msgstr "Deducción Desc"
+msgstr "Deducción descendente"
 
 msgid "Default Label"
 msgstr "Etiqueta por defecto"
@@ -4146,6 +4133,9 @@ msgstr "Estado predeterminado de la cita"
 
 msgid "Default back end page"
 msgstr "Página predeterminada del backend"
+
+msgid "Default landing tab"
+msgstr ""
 
 msgid "Default language"
 msgstr "Idioma por defecto"
@@ -4658,8 +4648,6 @@ msgid ""
 "Edit appointments/events when connected Google Calendar Events are "
 "rescheduled or deleted"
 msgstr ""
-"Editar citas/eventos cuando se reprogramen o eliminen los eventos vinculados "
-"de Google Calendar"
 
 msgid "Edit block time"
 msgstr "Editar franja bloqueada"
@@ -5336,7 +5324,7 @@ msgid "Event"
 msgstr "Evento"
 
 msgid "Event Asc"
-msgstr "Evento Asc"
+msgstr "Evento ascendente"
 
 msgid "Event Available"
 msgstr "Evento disponible"
@@ -5375,7 +5363,7 @@ msgid "Event Day"
 msgstr "Día del evento"
 
 msgid "Event Desc"
-msgstr "Descripción del evento"
+msgstr "Evento descendente"
 
 msgid "Event Employee"
 msgstr "Empleado del evento"
@@ -5790,10 +5778,6 @@ msgstr "Erróneo"
 msgid "Failed to access camera. Please try again."
 msgstr "Error al acceder a la cámara. Por favor, inténtelo de nuevo."
 
-msgid "Failed to initialize payment. Please try again."
-msgstr ""
-"No se ha podido iniciar el proceso de pago. Por favor, vuelva a intentarlo."
-
 msgid "Failed to load appointment details. Please try again later."
 msgstr ""
 "Error al cargar los detalles de la cita. Por favor, inténtelo de nuevo más "
@@ -6147,7 +6131,7 @@ msgid "Google Analytics setup"
 msgstr "Configuración de Google Analytics"
 
 msgid "Google Calendar"
-msgstr ""
+msgstr "Calendario de Google"
 
 msgid "Google Calendar & Google Meet"
 msgstr "Google Calendar y Google Meet"
@@ -6178,7 +6162,7 @@ msgid "Google Meet setup"
 msgstr "Configuración de Google Meet"
 
 msgid "Google calendar events"
-msgstr "Eventos en Google Calendar"
+msgstr ""
 
 msgid "Google reCAPTCHA v2 secret key"
 msgstr "Clave secreta de Google reCAPTCHA v2"
@@ -6938,10 +6922,10 @@ msgid "ID"
 msgstr ""
 
 msgid "ID Asc"
-msgstr ""
+msgstr "ID ascendente"
 
 msgid "ID Desc"
-msgstr "ID Descripción"
+msgstr "ID descendente"
 
 msgid "I understand this import will replace all current data permanently."
 msgstr ""
@@ -6970,13 +6954,6 @@ msgid ""
 msgstr ""
 "Si está desactivado, la reserva debe cumplir con la capacidad mínima y la "
 "franja horaria se cierra después de la primera reserva."
-
-msgid ""
-"If disabled, the price will remain the same regardless of how many people "
-"are included in the group appointment."
-msgstr ""
-"Si está deshabilitado, el precio permanecerá igual independientemente de "
-"cuántas personas estén incluidas en la cita grupal."
 
 msgid ""
 "If enabled, customers can book with Pending status even after maximum "
@@ -7123,6 +7100,9 @@ msgstr "Miniaturas de imágenes"
 msgid "Import"
 msgstr "Importar"
 
+msgid "Import/Export"
+msgstr ""
+
 msgid "Import Failed"
 msgstr "Importación fallida"
 
@@ -7152,6 +7132,9 @@ msgstr "La importación ha fallado"
 
 msgid "Import failed. Review the details below."
 msgstr "La importación ha fallado. Revise los detalles a continuación."
+
+msgid "Import or export your Amelia data."
+msgstr ""
 
 msgid "Import progress"
 msgstr "Progreso de importación"
@@ -8123,10 +8106,10 @@ msgid "Max. Capacity"
 msgstr "Capacidad máxima"
 
 msgid "Max Capacity Asc"
-msgstr "Capacidad máx asc"
+msgstr "Capacidad máx ascendente"
 
 msgid "Max Capacity Desc"
-msgstr "Descripción de capacidad máxima"
+msgstr "Capacidad máx descendente"
 
 msgid "Maximum"
 msgstr "Máximo"
@@ -8468,7 +8451,7 @@ msgid "No, just this one"
 msgstr "No, solo este"
 
 msgid "No-show"
-msgstr "No se presenta"
+msgstr "Ausencia"
 
 msgid "No-show tag"
 msgstr "Etiqueta de ausencia"
@@ -8489,7 +8472,7 @@ msgid "No Show (2)"
 msgstr "Ausencia (2)"
 
 msgid "No Show (3+)"
-msgstr "No presentado (3+)"
+msgstr "Ausencia (3+)"
 
 msgid "No Tags. Create a new one."
 msgstr "No hay etiqueta. Cree una nueva."
@@ -8701,7 +8684,7 @@ msgid "Notify the attendees"
 msgstr "Notificar a los asistentes"
 
 msgid "Notify the customer(s)"
-msgstr "Notificar al/los Cliente/s"
+msgstr "Notificar a los clientes"
 
 msgid "Number of Additional People"
 msgstr "Número de personas adicionales"
@@ -9042,7 +9025,7 @@ msgid "Outlook Calendar setup"
 msgstr "Configuración del calendario de Outlook"
 
 msgid "Outlook Mailer"
-msgstr "Calendario de Outlook"
+msgstr "Servicio de correo de Outlook"
 
 msgid ""
 "Outlook Mailer is not fully configured. Please complete the account setup in "
@@ -9052,7 +9035,7 @@ msgstr ""
 "la configuración de la cuenta en los ajustes de Integración de Outlook."
 
 msgid "Outlook calendar events"
-msgstr "Eventos del calendario de Outlook"
+msgstr ""
 
 msgid "Outside of working hours"
 msgstr "Fuera del horario de trabajo"
@@ -9091,13 +9074,13 @@ msgid "Package %package_name% purchased"
 msgstr "Paquete %package_name% adquirido"
 
 msgid "Package Asc"
-msgstr "Paquete Asc"
+msgstr "Paquete ascendente"
 
 msgid "Package Canceled"
 msgstr "Paquete cancelado"
 
 msgid "Package Desc"
-msgstr "Descripción del paquete"
+msgstr "Paquete descendente"
 
 msgid "Package ID"
 msgstr "ID del paquete"
@@ -10067,7 +10050,7 @@ msgid "Price Ascending"
 msgstr "Precio ascendente"
 
 msgid "Price Desc"
-msgstr "Descripción del precio"
+msgstr "Precio descendente"
 
 msgid "Price Descending"
 msgstr "Precio descendente"
@@ -10185,6 +10168,11 @@ msgstr "La compra está cancelada"
 
 msgid "Purchased"
 msgstr "Comprado"
+
+msgid ""
+"Purchasing doesn't upgrade this plugin automatically. Follow our step-by-"
+"step guide to switch to the full version."
+msgstr ""
 
 msgid "Purple"
 msgstr "Púrpura"
@@ -10356,7 +10344,7 @@ msgid "Redirect URL for unsuccessfully rejected booking"
 msgstr "URL de redirección para reserva rechazada sin éxito"
 
 msgid "Redirect URLs"
-msgstr "Redirigir URLs"
+msgstr "URL de redirección"
 
 msgid "Redirect page"
 msgstr "Página de redireccionamiento"
@@ -10394,10 +10382,6 @@ msgstr "El resto del monto total se pagará en el sitio."
 
 msgid "Remind me when my SMS balance is low"
 msgstr "Recordarme cuando mi saldo de SMS sea bajo"
-
-#, php-format
-msgid "Reminder: %1$s is scheduled for %2$s."
-msgstr "Recordatorio: %1$s programado para %2$s."
 
 msgid "Remove Apple Calendar event slots"
 msgstr "Eliminar franjas horarias de eventos de Apple Calendar"
@@ -10795,6 +10779,9 @@ msgstr "Sección"
 
 msgid "Securely process payments using Stripe."
 msgstr "Procesa pagos de manera segura usando Stripe."
+
+msgid "See upgrade guide."
+msgstr ""
 
 msgid "Segment"
 msgstr "Segmento"
@@ -11628,7 +11615,7 @@ msgid "Show specific packages"
 msgstr "Mostrar paquetes específicos"
 
 msgid "Show specific service"
-msgstr "Mostrar servicio específico"
+msgstr "Mostrar un servicio específico"
 
 msgid "Show specific services"
 msgstr "Mostrar servicios específicos"
@@ -11685,6 +11672,9 @@ msgstr "Iniciar sesión con Microsoft"
 
 msgid "Sign in with Outlook"
 msgstr "Inicia sesión con Outlook"
+
+msgid "Sign out and use a customer account"
+msgstr ""
 
 msgid "Sign out from Google"
 msgstr "Cerrar sesión en Google"
@@ -12071,7 +12061,7 @@ msgid "Summary segment"
 msgstr "Segmento de resumen"
 
 msgid "Sun"
-msgstr "Domingo"
+msgstr "Dom"
 
 msgid "Sunday"
 msgstr "Domingo"
@@ -12099,7 +12089,7 @@ msgid "Switch Camera"
 msgstr "Cambiar cámara"
 
 msgid "Sync Google Events"
-msgstr "Sincronizar eventos de Google"
+msgstr ""
 
 msgid "Sync with"
 msgstr "Sincronizar con"
@@ -12637,6 +12627,12 @@ msgstr ""
 "configuración de cron."
 
 msgid ""
+"This option applies only to people added through \"Bringing anyone with "
+"you\". If disabled, the service price is charged once for the entire "
+"booking, regardless of how many additional people are included."
+msgstr ""
+
+msgid ""
 "This option requires adding the payment link placeholder to your message "
 "templates."
 msgstr ""
@@ -13059,10 +13055,10 @@ msgid "Type"
 msgstr "Tipo"
 
 msgid "Type Asc"
-msgstr "Tipo Asc"
+msgstr "Tipo ascendente"
 
 msgid "Type Desc"
-msgstr "Tipo Desc"
+msgstr "Tipo descendente"
 
 msgid "URL"
 msgstr ""
@@ -13840,6 +13836,11 @@ msgstr ""
 
 msgid "Your password has been reset successfully."
 msgstr "Tu contraseña se ha restablecido con éxito."
+
+msgid ""
+"Your payment is still processing. You will receive a confirmation as soon as "
+"it is completed."
+msgstr ""
 
 msgid "Your postal code is incomplete"
 msgstr "Tu código postal está incompleto"

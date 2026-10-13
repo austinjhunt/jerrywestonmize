@@ -7,7 +7,9 @@ use AmeliaVendor\Psr\Http\Message\ServerRequestInterface as Request;
 use AmeliaVendor\Psr\Http\Message\ResponseInterface as Response;
 
 /**
- * Base controller for all /mobile/v1/ routes.
+ * Base controller for authenticated /mobile/v1/ routes.
+ *
+ * Login (POST /mobile/v1/authenticate) does **not** use this class.
  *
  * Enforces two invariants so individual mobile controllers don't have to:
  *

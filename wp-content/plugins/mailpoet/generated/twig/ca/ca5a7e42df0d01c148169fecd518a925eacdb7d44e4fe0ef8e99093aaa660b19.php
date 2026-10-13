@@ -401,12 +401,45 @@ class __TwigTemplate_2bbd0548d5462e9781dcc2649091521a405c5b3b1847f123d5fb51dce2e
       </table>
     </td>
   </tr>
-";
+  ";
+                // line 282
+                if ((CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "notTracked", [], "any", false, false, false, 282) > 0)) {
+                    // line 283
+                    yield "  <tr>
+    <td class=\"mailpoet_content\" align=\"center\" style=\"border-collapse:collapse\">
+      <table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-spacing:0;mso-table-lspace:0;mso-table-rspace:0;border-collapse:collapse\">
+        <tbody>
+        <tr>
+          <td class=\"mailpoet_paragraph mailpoet_padded_side\" style=\"word-break:break-word;word-wrap:break-word;text-align:center;border-collapse:collapse;color:#7f7f7f;font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;font-size:13px;line-height:20px;padding-left:20px;padding-right:20px;padding-bottom:10px\">
+            ";
+                    // line 289
+                    if ((CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "trackedSent", [], "any", false, false, false, 289) > 0)) {
+                        // line 290
+                        yield "              ";
+                        yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(MailPoetVendor\Twig\Extension\CoreExtension::replace($this->extensions['MailPoet\Twig\I18n']->pluralize("%1\$s of your recipients is not tracked, so open and click rates are based on the other %2\$s.", "%1\$s of your recipients are not tracked, so open and click rates are based on the other %2\$s.", CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "notTracked", [], "any", false, false, false, 290)), ["%1\$s" => CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "notTracked", [], "any", false, false, false, 290), "%2\$s" => CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "trackedSent", [], "any", false, false, false, 290)]), "html", null, true);
+                        yield "
+            ";
+                    } else {
+                        // line 292
+                        yield "              ";
+                        yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(MailPoetVendor\Twig\Extension\CoreExtension::replace($this->extensions['MailPoet\Twig\I18n']->pluralize("Your %1\$s recipient is not tracked, so open and click rates cannot be measured.", "None of your %1\$s recipients are tracked, so open and click rates cannot be measured.", CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "notTracked", [], "any", false, false, false, 292)), ["%1\$s" => CoreExtension::getAttribute($this->env, $this->source, $context["newsletter"], "notTracked", [], "any", false, false, false, 292)]), "html", null, true);
+                        yield "
+            ";
+                    }
+                    // line 294
+                    yield "          </td>
+        </tr>
+        </tbody>
+      </table>
+    </td>
+  </tr>
+  ";
+                }
             }
             $_parent = $context['_parent'];
             unset($context['_seq'], $context['_iterated'], $context['_key'], $context['newsletter'], $context['_parent'], $context['loop']);
             $context = array_intersect_key($context, $_parent) + $_parent;
-            // line 283
+            // line 302
             yield "
 <tr>
   <td class=\"mailpoet_spacer\" height=\"55\" valign=\"top\" style=\"border-collapse:collapse\"></td>
@@ -437,7 +470,7 @@ class __TwigTemplate_2bbd0548d5462e9781dcc2649091521a405c5b3b1847f123d5fb51dce2e
      */
     public function getDebugInfo()
     {
-        return array (  407 => 283,  378 => 262,  354 => 243,  309 => 203,  285 => 184,  241 => 143,  233 => 140,  228 => 138,  214 => 127,  208 => 126,  201 => 122,  195 => 119,  185 => 112,  141 => 71,  137 => 70,  113 => 48,  109 => 47,  90 => 31,  82 => 25,  75 => 21,  71 => 19,  69 => 18,  56 => 7,  53 => 5,  51 => 4,  47 => 3,  36 => 1,);
+        return array (  440 => 302,  427 => 294,  421 => 292,  415 => 290,  413 => 289,  405 => 283,  403 => 282,  378 => 262,  354 => 243,  309 => 203,  285 => 184,  241 => 143,  233 => 140,  228 => 138,  214 => 127,  208 => 126,  201 => 122,  195 => 119,  185 => 112,  141 => 71,  137 => 70,  113 => 48,  109 => 47,  90 => 31,  82 => 25,  75 => 21,  71 => 19,  69 => 18,  56 => 7,  53 => 5,  51 => 4,  47 => 3,  36 => 1,);
     }
 
     public function getSourceContext()

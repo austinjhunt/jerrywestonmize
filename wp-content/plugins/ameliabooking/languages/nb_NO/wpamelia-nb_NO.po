@@ -33,26 +33,6 @@ msgid "# of bookings"
 msgstr "Antall bestillinger"
 
 #, php-format
-msgid "%1$s, %2$s, was canceled."
-msgstr "%1$s, %2$s, ble avlyst."
-
-#, php-format
-msgid "%1$s, %2$s, was rejected."
-msgstr "%1$s, %2$s, ble avvist."
-
-#, php-format
-msgid "%1$s booked %2$s at %3$s."
-msgstr "%1$s bestilte %2$s på %3$s."
-
-#, php-format
-msgid "%1$s on %2$s had a status change."
-msgstr "%1$s den %2$s fikk en statusendring."
-
-#, php-format
-msgid "%1$s on %2$s was updated."
-msgstr "%1$s den %2$s ble oppdatert."
-
-#, php-format
 msgid "%event_name% Event Booked"
 msgstr "%event_name% Eventet er booket"
 
@@ -457,8 +437,14 @@ msgstr "Handlinger"
 msgid "Activate"
 msgstr "Aktivere"
 
+msgid "Activate now"
+msgstr ""
+
 msgid "Activate with Envato"
 msgstr "Aktiver med Envato"
+
+msgid "Activate your license to unlock the features included in your plan."
+msgstr ""
 
 msgid "Activated with Envato"
 msgstr "Aktivert med Envato"
@@ -867,6 +853,9 @@ msgstr "Allerede betalt"
 msgid "Already have an account?"
 msgstr "Har du allerede en konto?"
 
+msgid "Already purchased Amelia?"
+msgstr ""
+
 msgid "Also cancel and delete future events"
 msgstr "Avbryt og slett også fremtidige hendelser"
 
@@ -916,7 +905,7 @@ msgid "Apple"
 msgstr ""
 
 msgid "Apple Calendar"
-msgstr "Google kalender"
+msgstr "Apple-kalender"
 
 msgid "Apple Calendar (Personal)"
 msgstr "Apple Kalender (Personlig)"
@@ -925,7 +914,7 @@ msgid "Apple Calendar setup"
 msgstr "Apple Kalender-oppsett"
 
 msgid "Apple calendar events"
-msgstr "Hendelser i Apple Kalender"
+msgstr ""
 
 msgid "Application (client) ID"
 msgstr "Applikasjons-ID (klient-ID)"
@@ -1069,9 +1058,6 @@ msgstr "Avtale merknad"
 msgid "Appointment price"
 msgstr "Avtale pris"
 
-msgid "Appointment reminder"
-msgstr "Påminnelse om avtale"
-
 msgid "Appointment repeats"
 msgstr "Avtale gjentas"
 
@@ -1084,9 +1070,6 @@ msgstr "Starttidspunkt for avtale"
 msgid "Appointment status"
 msgstr "Avtalestatus"
 
-msgid "Appointment status changed"
-msgstr "Avtalestatus endret"
-
 msgid "Appointment status has been changed to "
 msgstr "Avtalestatusen er endret til "
 
@@ -1095,9 +1078,6 @@ msgstr "Avtalestatusen er oppdatert."
 
 msgid "Appointment title"
 msgstr "Tittel på avtale"
-
-msgid "Appointment updated"
-msgstr "Timeavtale oppdatert"
 
 msgid "Appointments"
 msgstr "Avtaler"
@@ -1137,6 +1117,10 @@ msgstr "Er du sikker på at du vil avbryte og slette denne hendelsen?"
 
 msgid "Are you sure you want to cancel this appointment?"
 msgstr "Er du sikker på at du vil avlyse avtalen?"
+
+msgid ""
+"Are you sure you want to cancel this booking? This action cannot be undone."
+msgstr ""
 
 msgid "Are you sure you want to cancel this event?"
 msgstr "Er du sikker på at du vil avbryte denne arrangementet?"
@@ -1325,13 +1309,13 @@ msgid "Attendee"
 msgstr "Deltaker"
 
 msgid "Attendee Asc"
-msgstr "Deltaker Asc"
+msgstr "Deltaker stigende"
 
 msgid "Attendee Desc"
-msgstr "Deltakerbeskrivelse"
+msgstr "Deltaker synkende"
 
 msgid "Attendee code"
-msgstr "Deltaker kode"
+msgstr "Deltakerkode"
 
 msgid "Attendee has been saved"
 msgstr "Deltaker er lagret"
@@ -1346,7 +1330,7 @@ msgid "Attendees"
 msgstr "Deltakere"
 
 msgid "Attendees Allowed"
-msgstr "Deltaker kode"
+msgstr "Tillatte deltakere"
 
 msgid "Attendees Export Format"
 msgstr "Deltakere Eksportformat"
@@ -1435,13 +1419,13 @@ msgid "Available date text"
 msgstr "Tilgjengelig dato-tekst"
 
 msgid "Available from Pro license"
-msgstr "Tilgjengelig for Pro lisens"
+msgstr "Tilgjengelig fra Pro-lisens"
 
 msgid "Available from Standard license"
-msgstr "Tilgjengelig for Standard lisens"
+msgstr "Tilgjengelig fra Standard-lisens"
 
 msgid "Available from Starter license"
-msgstr "Tilgjengelig for begynner lisens"
+msgstr "Tilgjengelig fra Starter-lisens"
 
 msgid "Available in Elite licence"
 msgstr "Tilgjengelig for Elite lisens"
@@ -1673,10 +1657,10 @@ msgid "Booking Closes"
 msgstr "Bestilling stenger"
 
 msgid "Booking Closes Asc"
-msgstr "Bestillingen stenger Asc"
+msgstr "Bestillingen stenger stigende"
 
 msgid "Booking Closes Desc"
-msgstr "Bestillingen stenger Desc"
+msgstr "Bestillingen stenger synkende"
 
 msgid "Booking Confirmed"
 msgstr "Bestilling bekreftet"
@@ -1703,10 +1687,10 @@ msgid "Booking Opens"
 msgstr "Bestilling åpner"
 
 msgid "Booking Opens Asc"
-msgstr "Bestillingen åpner Asc"
+msgstr "Bestillingen åpner stigende"
 
 msgid "Booking Opens Desc"
-msgstr "Bestillingen åpnes Desc"
+msgstr "Bestillingen åpner synkende"
 
 msgid "Booking Overview"
 msgstr "Bestillingsoversikt"
@@ -2266,6 +2250,9 @@ msgstr "Velg når gjentakelsen avsluttes"
 msgid "Choose whether you want to manage services, events, or both."
 msgstr "Velg om du vil administrere tjenester, hendelser eller begge deler."
 
+msgid "Choose which tab users see first when they log in"
+msgstr ""
+
 msgid "Choosing layout of first step in step by step form"
 msgstr "Velge layout for første trinn i trinnvis skjema"
 
@@ -2450,6 +2437,9 @@ msgstr "Konfigurer venteliste for avtaler"
 
 msgid "Confirm"
 msgstr "Bekreft"
+
+msgid "Confirm Cancellation"
+msgstr ""
 
 msgid "Confirm My Appointment"
 msgstr "Bekreft avtalen min"
@@ -2914,10 +2904,10 @@ msgid "Customer(s)"
 msgstr "Kunde(r)"
 
 msgid "Customer Asc"
-msgstr "Kunde Asc"
+msgstr "Kunde stigende"
 
 msgid "Customer Desc"
-msgstr "Kundebeskrivelse"
+msgstr "Kunde synkende"
 
 msgid "Customer Panel"
 msgstr "Kundepanel"
@@ -3098,9 +3088,6 @@ msgstr "Data som forblir uendret:"
 msgid "Data to be updated:"
 msgstr "Data som skal oppdateres:"
 
-msgid "Data transfer"
-msgstr "Dataoverføring"
-
 msgid "Date"
 msgstr "Dato"
 
@@ -3118,19 +3105,19 @@ msgstr ""
 "Dato og klokkeslett for arrangementet med lenker for å delta i Lesson Space"
 
 msgid "Date Asc"
-msgstr "Dato Asc"
+msgstr "Dato stigende"
 
 msgid "Date Desc"
-msgstr "Dato Beskrivelse"
+msgstr "Dato synkende"
 
 msgid "Date Picker"
 msgstr "Datovelger"
 
 msgid "Date Purchased Asc"
-msgstr "Kjøpsdato Asc"
+msgstr "Kjøpsdato stigende"
 
 msgid "Date Purchased Desc"
-msgstr "Kjøpsdato Beskrivelse"
+msgstr "Kjøpsdato synkende"
 
 msgid ""
 "Date Ranges that are not defined will use default price from ticket category."
@@ -4093,10 +4080,10 @@ msgid "Deduction"
 msgstr "Fradrag"
 
 msgid "Deduction Asc"
-msgstr "Fradrag Asc"
+msgstr "Fradrag stigende"
 
 msgid "Deduction Desc"
-msgstr "Fradrag Beskrivelse"
+msgstr "Fradrag synkende"
 
 msgid "Default Label"
 msgstr "Standard etikett"
@@ -4109,6 +4096,9 @@ msgstr "Standard avtalestatus"
 
 msgid "Default back end page"
 msgstr "Standard backend-side"
+
+msgid "Default landing tab"
+msgstr ""
 
 msgid "Default language"
 msgstr "Standard språk"
@@ -4343,10 +4333,10 @@ msgid "Discount"
 msgstr "Rabatt"
 
 msgid "Discount Asc"
-msgstr "Rabatt Asc"
+msgstr "Rabatt stigende"
 
 msgid "Discount Desc"
-msgstr "Rabattbeskrivelse"
+msgstr "Rabatt synkende"
 
 msgid "Discount (%)"
 msgstr "Rabatt (%)"
@@ -4523,10 +4513,10 @@ msgid "Duration:"
 msgstr "Varighet:"
 
 msgid "Duration Asc"
-msgstr "Varighet Asc"
+msgstr "Varighet stigende"
 
 msgid "Duration Desc"
-msgstr "Varighet Beskrivelse"
+msgstr "Varighet synkende"
 
 msgid "E-Ticket Scanner"
 msgstr "Billettnavn"
@@ -4612,8 +4602,6 @@ msgid ""
 "Edit appointments/events when connected Google Calendar Events are "
 "rescheduled or deleted"
 msgstr ""
-"Rediger avtaler/arrangementer når tilknyttede Google Kalender-arrangementer "
-"omplanlegges eller slettes"
 
 msgid "Edit block time"
 msgstr "Rediger sperret tid"
@@ -5278,7 +5266,7 @@ msgid "Event"
 msgstr "Arrangement"
 
 msgid "Event Asc"
-msgstr ""
+msgstr "Arrangement stigende"
 
 msgid "Event Available"
 msgstr "Tilgjengelig arrangement"
@@ -5317,7 +5305,7 @@ msgid "Event Day"
 msgstr "Arrangement dag"
 
 msgid "Event Desc"
-msgstr "Beskrivelse av hendelse"
+msgstr "Arrangement synkende"
 
 msgid "Event Employee"
 msgstr "Arrangement ansatt"
@@ -5728,9 +5716,6 @@ msgstr "Feilet"
 msgid "Failed to access camera. Please try again."
 msgstr "Kunne ikke få tilgang til kameraet. Prøv igjen."
 
-msgid "Failed to initialize payment. Please try again."
-msgstr "Kunne ikke klargjøre betalingen. Prøv igjen."
-
 msgid "Failed to load appointment details. Please try again later."
 msgstr "Kunne ikke laste inn avtaleinformasjon. Prøv igjen senere."
 
@@ -5925,7 +5910,7 @@ msgid "Free"
 msgstr "Gratis"
 
 msgid "Fri"
-msgstr ""
+msgstr "Fre"
 
 msgid "Friday"
 msgstr "Fredag"
@@ -6076,7 +6061,7 @@ msgid "Google Analytics setup"
 msgstr "Google Analytics-oppsett"
 
 msgid "Google Calendar"
-msgstr "Google kalender"
+msgstr "Google-kalender"
 
 msgid "Google Calendar & Google Meet"
 msgstr "Google Kalender og Google Meet"
@@ -6108,7 +6093,7 @@ msgid "Google Meet setup"
 msgstr "Google Meet-oppsett"
 
 msgid "Google calendar events"
-msgstr "Google Calendar-hendelser"
+msgstr ""
 
 msgid "Google reCAPTCHA v2 secret key"
 msgstr "Google reCAPTCHA v2 hemmelig nøkkel"
@@ -6858,10 +6843,10 @@ msgid "ID"
 msgstr ""
 
 msgid "ID Asc"
-msgstr ""
+msgstr "ID stigende"
 
 msgid "ID Desc"
-msgstr "ID Beskrivelse"
+msgstr "ID synkende"
 
 msgid "I understand this import will replace all current data permanently."
 msgstr ""
@@ -6890,13 +6875,6 @@ msgid ""
 msgstr ""
 "Hvis deaktivert, må bestillingen oppfylle minimumskapasiteten, og tidsluken "
 "lukkes etter den første bestillingen."
-
-msgid ""
-"If disabled, the price will remain the same regardless of how many people "
-"are included in the group appointment."
-msgstr ""
-"Hvis denne funksjonen er deaktivert, vil prisen forbli den samme uavhengig "
-"av hvor mange personer som er inkludert i gruppeavtalen."
 
 msgid ""
 "If enabled, customers can book with Pending status even after maximum "
@@ -7044,6 +7022,9 @@ msgstr "Miniatyrbilder"
 msgid "Import"
 msgstr "Importere"
 
+msgid "Import/Export"
+msgstr ""
+
 msgid "Import Failed"
 msgstr "Import mislyktes"
 
@@ -7073,6 +7054,9 @@ msgstr "Import mislyktes"
 
 msgid "Import failed. Review the details below."
 msgstr "Import mislyktes. Gå gjennom detaljene nedenfor."
+
+msgid "Import or export your Amelia data."
+msgstr ""
 
 msgid "Import progress"
 msgstr "Importfremdrift"
@@ -7484,10 +7468,10 @@ msgid "Invoice Format"
 msgstr "Tjeneste delsum"
 
 msgid "Invoice Number Asc"
-msgstr "Fakturanummer Asc"
+msgstr "Fakturanummer stigende"
 
 msgid "Invoice Number Desc"
-msgstr "Fakturanummer Beskrivelse"
+msgstr "Fakturanummer synkende"
 
 msgid "Invoice date"
 msgstr "Fakturadato"
@@ -7656,10 +7640,10 @@ msgid "Last"
 msgstr "Siste"
 
 msgid "Last Booking Asc"
-msgstr "Siste bestilling Asc"
+msgstr "Siste bestilling stigende"
 
 msgid "Last Booking Desc"
-msgstr "Siste bestilling Desc"
+msgstr "Siste bestilling synkende"
 
 msgid "Last Name:"
 msgstr "Etternavn:"
@@ -8031,10 +8015,10 @@ msgid "Max. Capacity"
 msgstr "Maksimum kapasitet"
 
 msgid "Max Capacity Asc"
-msgstr "Maksimal kapasitet Asc"
+msgstr "Maksimal kapasitet stigende"
 
 msgid "Max Capacity Desc"
-msgstr "Maksimal kapasitet Beskrivelse"
+msgstr "Maksimal kapasitet synkende"
 
 msgid "Maximum"
 msgstr "Maksimum"
@@ -8251,13 +8235,13 @@ msgid "Name:"
 msgstr "Navn:"
 
 msgid "Name Asc"
-msgstr "Navn Asc"
+msgstr "Navn stigende"
 
 msgid "Name Ascending"
 msgstr "Navn stigende"
 
 msgid "Name Desc"
-msgstr "Navn Beskrivelse"
+msgstr "Navn synkende"
 
 msgid "Name Descending"
 msgstr "Navn synkende"
@@ -8377,7 +8361,7 @@ msgid "No-show"
 msgstr "Ikke oppmøte"
 
 msgid "No-show tag"
-msgstr "No-show-tag"
+msgstr "Ikke oppmøte-tag"
 
 msgid "No Employees Assigned to This Location"
 msgstr "Ingen ansatte tilordnet denne lokasjonen"
@@ -8386,16 +8370,16 @@ msgid "No Packages"
 msgstr "Ingen pakker"
 
 msgid "No Show"
-msgstr ""
+msgstr "Ikke oppmøte"
 
 msgid "No Show (1)"
-msgstr ""
+msgstr "Ikke oppmøte (1)"
 
 msgid "No Show (2)"
-msgstr ""
+msgstr "Ikke oppmøte (2)"
 
 msgid "No Show (3+)"
-msgstr ""
+msgstr "Ikke oppmøte (3+)"
 
 msgid "No Tags. Create a new one."
 msgstr "Ingen fane. Lag en ny."
@@ -8600,13 +8584,13 @@ msgid "Notify selected employees about empty package purchases"
 msgstr "Varsel de valgte ansatte om tomme pakkekjøp"
 
 msgid "Notify the attendee(s)"
-msgstr "Varsle deltaker(e)"
+msgstr "Varsle deltakerne"
 
 msgid "Notify the attendees"
 msgstr "Gi beskjed til deltakerne"
 
 msgid "Notify the customer(s)"
-msgstr "Varsle kunde(r)"
+msgstr "Varsle kundene"
 
 msgid "Number of Additional People"
 msgstr "Antall ekstra personer"
@@ -8930,7 +8914,7 @@ msgid "Outline"
 msgstr "Oversikt"
 
 msgid "Outlook Calendar"
-msgstr "Outlook kalender"
+msgstr "Outlook-kalender"
 
 msgid "Outlook Calendar & Microsoft Teams"
 msgstr "Outlook-kalender og Microsoft Teams"
@@ -8942,7 +8926,7 @@ msgid "Outlook Calendar setup"
 msgstr "Oppsett av Outlook-kalender"
 
 msgid "Outlook Mailer"
-msgstr "Outlook kalender"
+msgstr "Outlook e-posttjeneste"
 
 msgid ""
 "Outlook Mailer is not fully configured. Please complete the account setup in "
@@ -8952,7 +8936,7 @@ msgstr ""
 "innstillingene for Outlook-integrasjon."
 
 msgid "Outlook calendar events"
-msgstr "Kalenderhendelser i Outlook"
+msgstr ""
 
 msgid "Outside of working hours"
 msgstr "Utenom arbeidstid"
@@ -8991,13 +8975,13 @@ msgid "Package %package_name% purchased"
 msgstr "Pakke %package_name% kjøpt"
 
 msgid "Package Asc"
-msgstr "Pakke Asc"
+msgstr "Pakke stigende"
 
 msgid "Package Canceled"
 msgstr "Avbrytt pakke"
 
 msgid "Package Desc"
-msgstr "Pakkebeskrivelse"
+msgstr "Pakke synkende"
 
 msgid "Package ID"
 msgstr "Pakke-ID"
@@ -9965,7 +9949,7 @@ msgid "Price Ascending"
 msgstr "Pris stigende"
 
 msgid "Price Desc"
-msgstr "Prisbeskrivelse"
+msgstr "Pris synkende"
 
 msgid "Price Descending"
 msgstr "Pris synkende"
@@ -10085,6 +10069,11 @@ msgstr "Kjøp er avbrutt"
 msgid "Purchased"
 msgstr "Kjøpt"
 
+msgid ""
+"Purchasing doesn't upgrade this plugin automatically. Follow our step-by-"
+"step guide to switch to the full version."
+msgstr ""
+
 msgid "Purple"
 msgstr "Lilla"
 
@@ -10098,10 +10087,10 @@ msgid "Quantity"
 msgstr "Mengde"
 
 msgid "Quantity Asc"
-msgstr "Mengde Asc"
+msgstr "Mengde stigende"
 
 msgid "Quantity Desc"
-msgstr "Mengde Beskrivelse"
+msgstr "Mengde synkende"
 
 msgid "Quantity is shared"
 msgstr "Mengden deles"
@@ -10224,7 +10213,7 @@ msgid "Redirect"
 msgstr "Omdirigere"
 
 msgid "Redirect URI"
-msgstr "Omdiriger URI"
+msgstr "Omdirigerings-URI"
 
 msgid "Redirect URL After Booking"
 msgstr "Omdiriger URL etter bestilling"
@@ -10254,7 +10243,7 @@ msgid "Redirect URL for unsuccessfully rejected booking"
 msgstr "Omdirigerings-URL for avvist bestilling"
 
 msgid "Redirect URLs"
-msgstr "Omdiriger URLene"
+msgstr "Omdirigerings-URL-er"
 
 msgid "Redirect page"
 msgstr "Omdirigere side"
@@ -10292,10 +10281,6 @@ msgstr "Resterende beløp betales på stedet."
 
 msgid "Remind me when my SMS balance is low"
 msgstr "Minn meg på når SMS saldoen er lav"
-
-#, php-format
-msgid "Reminder: %1$s is scheduled for %2$s."
-msgstr "Påminnelse: %1$s er satt opp til %2$s."
 
 msgid "Remove Apple Calendar event slots"
 msgstr "Fjern tidsluker for Apple Calendar-eventer"
@@ -10692,6 +10677,9 @@ msgstr "Del"
 msgid "Securely process payments using Stripe."
 msgstr "Behandle betalinger sikkert med Stripe."
 
+msgid "See upgrade guide."
+msgstr ""
+
 msgid "Segment"
 msgstr ""
 
@@ -11023,7 +11011,7 @@ msgid "Service/Event"
 msgstr "Tjeneste/Arrangement"
 
 msgid "Service Asc"
-msgstr "Tjeneste Asc"
+msgstr "Tjeneste stigende"
 
 msgid "Service Categories"
 msgstr "Tjenestekategorier"
@@ -11032,7 +11020,7 @@ msgid "Service Category"
 msgstr "Tjeneste kategori"
 
 msgid "Service Desc"
-msgstr "Tjenestebeskrivelse"
+msgstr "Tjeneste synkende"
 
 msgid "Service ID"
 msgstr "Tjeneste ID"
@@ -11131,10 +11119,10 @@ msgid "Services & categories setup"
 msgstr "Oppsett av tjenester og kategorier"
 
 msgid "Services Asc"
-msgstr "Tjenester Asc"
+msgstr "Tjenester stigende"
 
 msgid "Services Desc"
-msgstr "Tjenester Beskrivelse"
+msgstr "Tjenester synkende"
 
 msgid "Services and packages overview"
 msgstr "Oversikt over tjenester og pakker"
@@ -11504,10 +11492,10 @@ msgid "Show specific packages"
 msgstr "Vis spesielle pakker"
 
 msgid "Show specific service"
-msgstr "Vis en spesiell tjeneste"
+msgstr "Vis en bestemt tjeneste"
 
 msgid "Show specific services"
-msgstr "Vis spesielle tjenester"
+msgstr "Vis bestemte tjenester"
 
 msgid "Show tag"
 msgstr "Vis fane"
@@ -11560,6 +11548,9 @@ msgstr "Logg inn med Microsoft"
 
 msgid "Sign in with Outlook"
 msgstr "Logg inn med Outlook"
+
+msgid "Sign out and use a customer account"
+msgstr ""
 
 msgid "Sign out from Google"
 msgstr "Logg ut av Google"
@@ -11765,10 +11756,10 @@ msgid "Status"
 msgstr ""
 
 msgid "Status Asc"
-msgstr ""
+msgstr "Status stigende"
 
 msgid "Status Desc"
-msgstr "Statusbeskrivelse"
+msgstr "Status synkende"
 
 msgid ""
 "Stay compliant with ease through consistent, reliable tax handling across "
@@ -11942,10 +11933,10 @@ msgid "Summary segment"
 msgstr "Sammendragssegment"
 
 msgid "Sun"
-msgstr ""
+msgstr "Søn"
 
 msgid "Sunday"
-msgstr "Sundag"
+msgstr "Søndag"
 
 msgid "Support"
 msgstr "Støtte"
@@ -11969,7 +11960,7 @@ msgid "Switch Camera"
 msgstr "Bytt kamera"
 
 msgid "Sync Google Events"
-msgstr "Synkroniser Google-hendelser"
+msgstr ""
 
 msgid "Sync with"
 msgstr "Synkroniser med"
@@ -12489,6 +12480,12 @@ msgstr ""
 "konfigurasjonen din."
 
 msgid ""
+"This option applies only to people added through \"Bringing anyone with "
+"you\". If disabled, the service price is charged once for the entire "
+"booking, regardless of how many additional people are included."
+msgstr ""
+
+msgid ""
 "This option requires adding the payment link placeholder to your message "
 "templates."
 msgstr ""
@@ -12651,10 +12648,10 @@ msgid "Time Range:"
 msgstr "Tidsrom:"
 
 msgid "Time Used Asc"
-msgstr "Brukt tid Asc"
+msgstr "Brukt tid stigende"
 
 msgid "Time Used Desc"
-msgstr "Brukt tid Beskrivelse"
+msgstr "Brukt tid synkende"
 
 msgid "Time frame"
 msgstr "Tidsramme"
@@ -12908,10 +12905,10 @@ msgid "Type"
 msgstr ""
 
 msgid "Type Asc"
-msgstr ""
+msgstr "Type stigende"
 
 msgid "Type Desc"
-msgstr "Type Beskrivelse"
+msgstr "Type synkende"
 
 msgid "URL"
 msgstr ""
@@ -13688,6 +13685,11 @@ msgstr ""
 msgid "Your password has been reset successfully."
 msgstr "Passordet ditt er tilbakestilt."
 
+msgid ""
+"Your payment is still processing. You will receive a confirmation as soon as "
+"it is completed."
+msgstr ""
+
 msgid "Your postal code is incomplete"
 msgstr "Ditt postnummer er ufullstendig"
 
@@ -13857,7 +13859,7 @@ msgid "person"
 msgstr ""
 
 msgid "person waiting"
-msgstr "person"
+msgstr "person venter"
 
 msgid "placeholder"
 msgstr "plassholder"
@@ -13983,7 +13985,7 @@ msgid "{count} Service | {count} Services"
 msgstr "{count} Tjeneste | {count} Tjenester"
 
 msgid "{count} Spots"
-msgstr ""
+msgstr "{count} plasser"
 
 msgid "{count} Total"
 msgstr "{count} Totalt"
@@ -14066,7 +14068,7 @@ msgid "{count} event has been deleted. | {count} events have been deleted."
 msgstr "{count} hendelsen er slettet. | {count} hendelser er slettet."
 
 msgid "{count} event | {count} events"
-msgstr ""
+msgstr "{count} arrangement | {count} arrangementer"
 
 msgid "{count} hour | {count} hours"
 msgstr "{count} time | {count} hours"

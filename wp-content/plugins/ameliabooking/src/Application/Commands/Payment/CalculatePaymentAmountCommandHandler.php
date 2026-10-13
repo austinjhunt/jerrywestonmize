@@ -31,7 +31,7 @@ class CalculatePaymentAmountCommandHandler extends CommandHandler
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    public function handle(CalculatePaymentAmountCommand $command)
+    public function handle(CalculatePaymentAmountCommand $command): CommandResult
     {
         $result = new CommandResult();
 
@@ -47,7 +47,7 @@ class CalculatePaymentAmountCommandHandler extends CommandHandler
 
         $squareSettings = $settingsService->getCategorySettings('payments')['square'];
 
-        $reservation = $reservationService->getNew(true, true, true);
+        $reservation = $reservationService->getNew(true, true, false);
 
         $reservationService->processBooking(
             $result,

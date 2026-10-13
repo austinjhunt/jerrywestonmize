@@ -306,7 +306,8 @@ class TimeSlotService
                             'serviceId'  => $appServiceId,
                             'duration'   => $durationMinutes,
                             'waiting'    => $personsWaiting,
-                        ]
+                        ],
+                        $provider
                     );
                 }
             } else {
@@ -320,7 +321,8 @@ class TimeSlotService
                         'end'        => $bookingEndString,
                         'serviceId'  => $appServiceId,
                         'duration'   => $this->getAppointmentDurationMinutes($bookingStart, $bookingEnd),
-                    ]
+                    ],
+                    $provider
                 );
             }
         }
@@ -329,16 +331,49 @@ class TimeSlotService
     }
 
     /**
-     * @param array  $intervals
-     * @param string $dateStart
-     * @param string $timeKey
-     * @param array  $entry
+     * @param array    $intervals
+     * @param string   $dateStart
+     * @param string   $timeKey
+     * @param array    $entry
+     * @param Provider $provider
+     *
+     * @return void
      */
-    private function setProviderFullInterval(&$intervals, $dateStart, $timeKey, $entry)
+    private function setProviderFullInterval(&$intervals, $dateStart, $timeKey, $entry, $provider)
     {
+        // inspect if inspected time slot is time slot of real appointment, and if it is occupied by blocker appointment
+        // move blocker appointment to new start time
+        if (
+            isset($intervals[$dateStart]['full'][$timeKey]) &&
+            empty($intervals[$dateStart]['full'][$timeKey]['serviceId']) &&
+            !empty($entry['serviceId']) &&
+            $entry['duration'] < $intervals[$dateStart]['full'][$timeKey]['duration']
+        ) {
+            $newDuration = $intervals[$dateStart]['full'][$timeKey]['duration'] - $entry['duration'];
+
+            $movedDateTime = $this->getProviderTimeZoneDateTime(
+                $dateStart . ' ' . $timeKey,
+                $provider->getTimeZone() ? $provider->getTimeZone()->getValue() : null
+            );
+            $movedDateTime->modify('+' . $entry['duration'] . ' minutes');
+
+            $movedDateString = $movedDateTime->format('Y-m-d');
+
+            $movedTimeKey = $movedDateTime->format('H:i');
+
+            // move start of blocker appointment
+            $intervals[$movedDateString]['full'][$movedTimeKey] = $intervals[$dateStart]['full'][$timeKey];
+
+            $intervals[$movedDateString]['full'][$movedTimeKey]['duration'] = $newDuration;
+
+            // set real appointment in place of blocker appointment
+            $intervals[$dateStart]['full'][$timeKey] = $entry;
+        }
+
+        // blocker appointments are always populated first, so owerwriting is always allowed if duration is longer or equal
         if (
             !isset($intervals[$dateStart]['full'][$timeKey]) ||
-            $entry['duration'] > $intervals[$dateStart]['full'][$timeKey]['duration']
+            $entry['duration'] >= $intervals[$dateStart]['full'][$timeKey]['duration']
         ) {
             $intervals[$dateStart]['full'][$timeKey] = $entry;
         }

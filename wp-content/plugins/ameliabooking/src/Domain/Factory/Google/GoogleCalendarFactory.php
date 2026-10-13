@@ -4,6 +4,8 @@ namespace AmeliaBooking\Domain\Factory\Google;
 
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Google\GoogleCalendar;
+use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
+use AmeliaBooking\Domain\ValueObjects\DateTime\DateTimeValue;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\String\Name;
 use AmeliaBooking\Domain\ValueObjects\String\Token;
@@ -21,7 +23,7 @@ class GoogleCalendarFactory
      * @return GoogleCalendar
      * @throws InvalidArgumentException
      */
-    public static function create($data)
+    public static function create($data): GoogleCalendar
     {
         $googleCalendar = new GoogleCalendar(
             new Token($data['token']),
@@ -46,6 +48,18 @@ class GoogleCalendarFactory
 
         if (isset($data['description'])) {
             $googleCalendar->setDescription($data['description']);
+        }
+
+        if (isset($data['userId'])) {
+            $googleCalendar->setUserId(new Id($data['userId']));
+        }
+
+        if (!empty($data['accountId'])) {
+            $googleCalendar->setAccountId((string)$data['accountId']);
+        }
+
+        if (!empty($data['syncId'])) {
+            $googleCalendar->setSyncId(new Id($data['syncId']));
         }
 
         return $googleCalendar;

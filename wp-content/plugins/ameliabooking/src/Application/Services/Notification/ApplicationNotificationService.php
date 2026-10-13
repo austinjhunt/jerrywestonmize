@@ -7,12 +7,15 @@
 
 namespace AmeliaBooking\Application\Services\Notification;
 
+use AmeliaBooking\Application\Services\Mobile\PushNotificationService;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Event\Event;
+use AmeliaBooking\Domain\Services\Mobile\MobileNotificationPreferences;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
+use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
@@ -47,7 +50,7 @@ class ApplicationNotificationService
     public function sendAppointmentProviderStatusNotifications(
         $appointment,
         $logNotification = true
-    ) {
+    ): void {
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
 
@@ -83,6 +86,16 @@ class ApplicationNotificationService
                 $appointment,
                 $logNotification
             );
+        }
+
+        $statusCategory = PushNotificationService::resolveStatusCategory(
+            $appointment->getStatus()->getValue()
+        );
+
+        if ($statusCategory !== null) {
+            /** @var PushNotificationService $pushService */
+            $pushService = $this->container->get('application.mobile.pushNotification.service');
+            $pushService->sendFromEntity($appointment, $statusCategory);
         }
     }
 
@@ -167,7 +180,7 @@ class ApplicationNotificationService
         $appointment,
         $notifyProvider = true,
         $notifyCustomers = true
-    ) {
+    ): void {
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
 
@@ -206,6 +219,12 @@ class ApplicationNotificationService
                 $notifyProvider,
                 $notifyCustomers
             );
+        }
+
+        if ($notifyProvider) {
+            /** @var PushNotificationService $pushService */
+            $pushService = $this->container->get('application.mobile.pushNotification.service');
+            $pushService->sendFromEntity($appointment, MobileNotificationPreferences::CATEGORY_CHANGES);
         }
     }
 
@@ -312,7 +331,7 @@ class ApplicationNotificationService
         $appointment,
         $notifyProvider = true,
         $notifyCustomers = true
-    ) {
+    ): void {
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
 
@@ -351,6 +370,16 @@ class ApplicationNotificationService
                 $notifyProvider,
                 $notifyCustomers
             );
+        }
+
+        if (
+            $notifyProvider &&
+            !$notifyCustomers &&
+            $appointment->getStatus()->getValue() === BookingStatus::APPROVED
+        ) {
+            /** @var PushNotificationService $pushService */
+            $pushService = $this->container->get('application.mobile.pushNotification.service');
+            $pushService->sendFromEntity($appointment, MobileNotificationPreferences::CATEGORY_CHANGES);
         }
     }
 

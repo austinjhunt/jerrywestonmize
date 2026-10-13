@@ -1,0 +1,97 @@
+{
+	"name": "code-atlantic/content-control",
+	"type": "wordpress-plugin",
+	"license": "GPL-2.0-or-later",
+	"homepage": "https://contentcontrolplugin.com/",
+	"support": {
+		"issues": "https://contentcontrolplugin.com/support"
+	},
+	"minimum-stability": "dev",
+	"require": {
+		"php": ">=7.4",
+		"composer/installers": "^1.0 || ^2.0",
+		"pimple/pimple": "3.5.0",
+		"trustedlogin/client": "1.9.0"
+	},
+	"require-dev": {
+		"code-atlantic/coding-standards": "^1.1.0",
+		"dealerdirect/phpcodesniffer-composer-installer": "^1.0.0",
+		"phpstan/phpstan": "^2.1.13",
+		"szepeviktor/phpstan-wordpress": "v2.0.1",
+		"phpstan/extension-installer": "^1.4.3",
+		"phpunit/phpunit": "^12.1.3",
+		"mockery/mockery": "^1.6.12",
+		"brain/monkey": "^2.6.2",
+		"php-stubs/woocommerce-stubs": "^9.8.2",
+		"php-stubs/generator": "^0.8.5"
+	},
+	"autoload": {
+		"psr-4": {
+			"ContentControl\\": "classes/"
+		},
+		"classmap": [
+			"vendor-prefixed"
+		]
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"ContentControl\\Tests\\": "tests/unit/"
+		}
+	},
+	"prefer-stable": true,
+	"scripts": {
+		"format": "vendor/bin/phpcbf --standard=.phpcs.xml.dist --report-summary --report-source",
+		"lint": "vendor/bin/phpcs --standard=.phpcs.xml.dist",
+		"generate-stubs": "generate-stubs --out=./bin/stubs/content-control.stub  --include-inaccessible-class-nodes --force  ./classes/ ./inc/ ./content-control.php ./uninstall.php",
+		"install-strauss": [
+			"test -f strauss.phar || curl -o strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/download/0.16.0/strauss.phar"
+		],
+		"clean-vendor-prefix-folder": [
+			"rm -rf vendor-prefixed/**/*"
+		],
+		"post-install-cmd": [
+			"@clean-vendor-prefix-folder",
+			"@strauss",
+			"composer dump-autoload"
+		],
+		"post-update-cmd": [
+			"@clean-vendor-prefix-folder",
+			"@strauss",
+			"composer dump-autoload"
+		],
+		"phpstan": [
+			"vendor/bin/phpstan analyse --memory-limit=2048M"
+		],
+		"psalm": [
+			"vendor/bin/psalm --threads=4"
+		],
+		"strauss": [
+			"@install-strauss",
+			"@php strauss.phar"
+		],
+		"test:unit": "phpunit --configuration tests/unit/phpunit.xml --no-coverage",
+		"coverage": "phpunit --configuration tests/unit/phpunit.xml --coverage-html coverage/unit/",
+		"test:watch": "phpunit-watcher watch < /dev/tty"
+	},
+	"extra": {
+		"strauss": {
+			"target_directory": "/vendor-prefixed/",
+			"namespace_prefix": "ContentControl\\Vendor\\",
+			"classmap_prefix": "ContentControl_",
+			"constant_prefix": "CONTENTCONTROL_",
+			"packages": [
+				"pimple/pimple",
+				"trustedlogin/client"
+			],
+			"delete_vendor_packages": true
+		}
+	},
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true,
+			"composer/installers": true,
+			"phpstan/extension-installer": true
+		},
+		"optimize-autoloader": true
+	}
+}

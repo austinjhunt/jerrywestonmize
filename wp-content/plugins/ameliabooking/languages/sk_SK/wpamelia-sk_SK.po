@@ -33,26 +33,6 @@ msgid "# of bookings"
 msgstr "Počet rezervácií"
 
 #, php-format
-msgid "%1$s, %2$s, was canceled."
-msgstr "%1$s, %2$s, bolo zrušené."
-
-#, php-format
-msgid "%1$s, %2$s, was rejected."
-msgstr "%1$s, %2$s, bolo zamietnuté."
-
-#, php-format
-msgid "%1$s booked %2$s at %3$s."
-msgstr "%1$s má rezerváciu %2$s o %3$s."
-
-#, php-format
-msgid "%1$s on %2$s had a status change."
-msgstr "%1$s dňa %2$s: došlo k zmene stavu."
-
-#, php-format
-msgid "%1$s on %2$s was updated."
-msgstr "Došlo k aktualizácii %1$s dňa %2$s."
-
-#, php-format
 msgid "%event_name% Event Booked"
 msgstr "%event_name% Udalosť zarezervovaná"
 
@@ -459,8 +439,14 @@ msgstr "Akcie"
 msgid "Activate"
 msgstr "Aktivovať"
 
+msgid "Activate now"
+msgstr ""
+
 msgid "Activate with Envato"
 msgstr "Aktivujte s Envato"
+
+msgid "Activate your license to unlock the features included in your plan."
+msgstr ""
 
 msgid "Activated with Envato"
 msgstr "Aktivované s Envato"
@@ -871,6 +857,9 @@ msgstr "Už zaplatené"
 msgid "Already have an account?"
 msgstr "Už máte účet?"
 
+msgid "Already purchased Amelia?"
+msgstr ""
+
 msgid "Also cancel and delete future events"
 msgstr "Zrušiť a odstrániť aj budúce udalosti"
 
@@ -920,7 +909,7 @@ msgid "Apple"
 msgstr ""
 
 msgid "Apple Calendar"
-msgstr "Google Kalendár"
+msgstr "Kalendár Apple"
 
 msgid "Apple Calendar (Personal)"
 msgstr "Kalendár Apple (osobný)"
@@ -929,7 +918,7 @@ msgid "Apple Calendar setup"
 msgstr "Nastavenie kalendára Apple"
 
 msgid "Apple calendar events"
-msgstr "Udalosti v Apple kalendári"
+msgstr ""
 
 msgid "Application (client) ID"
 msgstr "ID aplikácie (klienta)"
@@ -1075,9 +1064,6 @@ msgstr "Poznámky k schôdzke"
 msgid "Appointment price"
 msgstr "Cena schôdzky"
 
-msgid "Appointment reminder"
-msgstr "Pripomienka termínu"
-
 msgid "Appointment repeats"
 msgstr "Opakované stretnutia"
 
@@ -1090,9 +1076,6 @@ msgstr "Čas začiatku schôdzky"
 msgid "Appointment status"
 msgstr "Stav schôdzky sa zmenil na"
 
-msgid "Appointment status changed"
-msgstr "Stav termínu sa zmenil"
-
 msgid "Appointment status has been changed to "
 msgstr "Stav schôdzky sa zmenil na"
 
@@ -1101,9 +1084,6 @@ msgstr "Stav schôdzky bol aktualizovaný."
 
 msgid "Appointment title"
 msgstr "Názov schôdzky"
-
-msgid "Appointment updated"
-msgstr "Termín upravený"
 
 msgid "Appointments"
 msgstr "Schôdzky"
@@ -1143,6 +1123,10 @@ msgstr "Ste si istí, že chcete zrušiť a vymazať túto udalosť?"
 
 msgid "Are you sure you want to cancel this appointment?"
 msgstr "Naozaj chcete zrušiť túto schôdzku?"
+
+msgid ""
+"Are you sure you want to cancel this booking? This action cannot be undone."
+msgstr ""
 
 msgid "Are you sure you want to cancel this event?"
 msgstr "Ste si istý, že chcete zrušiť túto udalosť?"
@@ -1327,7 +1311,7 @@ msgid "Attachment upload path"
 msgstr "Cesta pre odovzdanie prílohy"
 
 msgid "Attendee"
-msgstr "Udalosť bola zrušená zo strany uchádzača"
+msgstr "Účastník"
 
 msgid "Attendee Asc"
 msgstr "Účastník vzostupne"
@@ -1351,7 +1335,7 @@ msgid "Attendees"
 msgstr "Účastníci"
 
 msgid "Attendees Allowed"
-msgstr "Kód účastníka"
+msgstr "Povolení účastníci"
 
 msgid "Attendees Export Format"
 msgstr "Formát exportu účastníkov"
@@ -1439,13 +1423,13 @@ msgid "Available date text"
 msgstr "Text dostupného dátumu"
 
 msgid "Available from Pro license"
-msgstr "Dostupné obrázky"
+msgstr "Dostupné od licencie Pro"
 
 msgid "Available from Standard license"
-msgstr "Dostupné obrázky"
+msgstr "Dostupné od licencie Standard"
 
 msgid "Available from Starter license"
-msgstr "Dostupné obrázky"
+msgstr "Dostupné od licencie Starter"
 
 msgid "Available in Elite licence"
 msgstr "Dostupné v licencii Elite"
@@ -2272,6 +2256,9 @@ msgstr "Vyberte, kedy sa opakovanie skončí"
 msgid "Choose whether you want to manage services, events, or both."
 msgstr "Vyberte, či chcete spravovať služby, udalosti alebo oboje."
 
+msgid "Choose which tab users see first when they log in"
+msgstr ""
+
 msgid "Choosing layout of first step in step by step form"
 msgstr "Výber rozloženia prvého kroku v postupnom formulári"
 
@@ -2456,6 +2443,9 @@ msgstr "Nastaviť čakací zoznam pre termíny"
 
 msgid "Confirm"
 msgstr "Potvrdiť"
+
+msgid "Confirm Cancellation"
+msgstr ""
 
 msgid "Confirm My Appointment"
 msgstr "Potvrdiť môj termín"
@@ -2810,10 +2800,7 @@ msgstr ""
 "angažovanosť, spokojnosť a predaj."
 
 msgid "Created On"
-msgstr ""
-"Rezervácia udalostí je shortcode, ktorý umožňuje vašim zákazníkom rezervovať "
-"jednu z udalostí, ktoré ste vytvorili na pozadí, v jednoduchom zobrazení "
-"zoznamu udalostí."
+msgstr "Vytvorené dňa"
 
 msgid "Created on"
 msgstr "Vytvorené dňa"
@@ -3094,9 +3081,6 @@ msgstr "Údaje, ktoré zostávajú nezmenené:"
 
 msgid "Data to be updated:"
 msgstr "Údaje, ktoré sa majú aktualizovať:"
-
-msgid "Data transfer"
-msgstr "Prenos údajov"
 
 msgid "Date"
 msgstr "Dátum"
@@ -4116,6 +4100,9 @@ msgstr "Predvolený stav stretnutia"
 msgid "Default back end page"
 msgstr "Predvolená stránka backendu"
 
+msgid "Default landing tab"
+msgstr ""
+
 msgid "Default language"
 msgstr "Predvolený jazyk"
 
@@ -4622,8 +4609,6 @@ msgid ""
 "Edit appointments/events when connected Google Calendar Events are "
 "rescheduled or deleted"
 msgstr ""
-"Upraviť termíny/udalosti pri preplánovaní alebo odstránení prepojených "
-"udalostí v Google Calendar"
 
 msgid "Edit block time"
 msgstr "Upraviť zablokovaný čas"
@@ -5326,7 +5311,7 @@ msgid "Event Day"
 msgstr "Termín udalosti"
 
 msgid "Event Desc"
-msgstr "Popis udalosti"
+msgstr "Udalosť Zostupne"
 
 msgid "Event Employee"
 msgstr "Zamestnanec udalosti"
@@ -5635,7 +5620,7 @@ msgid "Expiration date"
 msgstr "Dátum vypršania platnosti"
 
 msgid "Expired"
-msgstr "Licenčný kód je neplatný alebo jeho platnosť už vypršala"
+msgstr "Expirované"
 
 msgid "Expires after"
 msgstr "Platnosť končí po"
@@ -5736,9 +5721,6 @@ msgstr "Neúspešná"
 
 msgid "Failed to access camera. Please try again."
 msgstr "Nepodarilo sa získať prístup ku kamere. Skúste to znova."
-
-msgid "Failed to initialize payment. Please try again."
-msgstr "Nepodarilo sa spustiť platobný proces. Skúste to znova, prosím."
 
 msgid "Failed to load appointment details. Please try again later."
 msgstr "Nepodarilo sa načítať podrobnosti o stretnutí. Skúste to znova neskôr."
@@ -5933,7 +5915,7 @@ msgid "Free"
 msgstr "Zadarmo"
 
 msgid "Fri"
-msgstr "Pia"
+msgstr "Pi"
 
 msgid "Friday"
 msgstr "Piatok"
@@ -5993,7 +5975,7 @@ msgid "Frontend & Backend"
 msgstr "Frontend a backend"
 
 msgid "Full"
-msgstr "Rezervovaný zákazník (celé meno, e-mail, telefón)"
+msgstr "Obsadené"
 
 msgid "Full events"
 msgstr "Plné udalosti"
@@ -6084,7 +6066,7 @@ msgid "Google Analytics setup"
 msgstr "Nastavenie Google Analytics"
 
 msgid "Google Calendar"
-msgstr "Google Kalendár"
+msgstr "Kalendár Google"
 
 msgid "Google Calendar & Google Meet"
 msgstr "Google Kalendár a Google Meet"
@@ -6115,7 +6097,7 @@ msgid "Google Meet setup"
 msgstr "Nastavenie Google Meet"
 
 msgid "Google calendar events"
-msgstr "Udalosti Google Kalendára"
+msgstr ""
 
 msgid "Google reCAPTCHA v2 secret key"
 msgstr "Google reCAPTCHA v2 tajný kľúč"
@@ -6901,13 +6883,6 @@ msgstr ""
 "časový interval sa uzavrie po prvej rezervácii."
 
 msgid ""
-"If disabled, the price will remain the same regardless of how many people "
-"are included in the group appointment."
-msgstr ""
-"Ak je deaktivované, cena zostane rovnaká bez ohľadu na počet osôb zahrnutých "
-"v skupinovom stretnutí."
-
-msgid ""
 "If enabled, customers can book with Pending status even after maximum "
 "capacity is reached."
 msgstr ""
@@ -7049,6 +7024,9 @@ msgstr "Miniatúry obrázkov"
 msgid "Import"
 msgstr "Importovať"
 
+msgid "Import/Export"
+msgstr ""
+
 msgid "Import Failed"
 msgstr "Import zlyhal"
 
@@ -7078,6 +7056,9 @@ msgstr "Import zlyhal"
 
 msgid "Import failed. Review the details below."
 msgstr "Import zlyhal. Skontrolujte podrobnosti nižšie."
+
+msgid "Import or export your Amelia data."
+msgstr ""
 
 msgid "Import progress"
 msgstr "Postup importu"
@@ -8043,7 +8024,7 @@ msgid "Max Capacity Asc"
 msgstr "Max. kapacita vzostupne"
 
 msgid "Max Capacity Desc"
-msgstr "Popis maximálnej kapacity"
+msgstr "Max. kapacita Zostupne"
 
 msgid "Maximum"
 msgstr ""
@@ -8386,7 +8367,7 @@ msgid "No-show"
 msgstr "Neprítomný"
 
 msgid "No-show tag"
-msgstr "Značka „no-show“"
+msgstr "Značka neprítomnosti"
 
 msgid "No Employees Assigned to This Location"
 msgstr "K tejto lokalite nie sú priradení žiadni zamestnanci"
@@ -8404,7 +8385,7 @@ msgid "No Show (2)"
 msgstr "Neprítomný (2)"
 
 msgid "No Show (3+)"
-msgstr "Nezobrazené (3+)"
+msgstr "Neprítomný (3+)"
 
 msgid "No Tags. Create a new one."
 msgstr "Žiadne štítky. Vytvorte nový."
@@ -8610,13 +8591,13 @@ msgid "Notify selected employees about empty package purchases"
 msgstr "Informovať vybraných zamestnancov o nákupe prázdnych balíkov"
 
 msgid "Notify the attendee(s)"
-msgstr "Informovať zákazníka(kov)"
+msgstr "Informovať účastníkov"
 
 msgid "Notify the attendees"
 msgstr "Informujte účastníkov"
 
 msgid "Notify the customer(s)"
-msgstr "Informovať zákazníka(kov)"
+msgstr "Informovať zákazníkov"
 
 msgid "Number of Additional People"
 msgstr "Počet ďalších osôb"
@@ -8952,7 +8933,7 @@ msgid "Outlook Calendar setup"
 msgstr "Nastavenie kalendára Outlook"
 
 msgid "Outlook Mailer"
-msgstr ""
+msgstr "Poštová služba Outlook"
 
 msgid ""
 "Outlook Mailer is not fully configured. Please complete the account setup in "
@@ -8962,7 +8943,7 @@ msgstr ""
 "nastaveniach integrácie Outlook."
 
 msgid "Outlook calendar events"
-msgstr "Udalosti v kalendári Outlook"
+msgstr ""
 
 msgid "Outside of working hours"
 msgstr "Mimo pracovných hodín"
@@ -9007,7 +8988,7 @@ msgid "Package Canceled"
 msgstr "Balík zrušený"
 
 msgid "Package Desc"
-msgstr "Popis balíka"
+msgstr "Balík Zostupne"
 
 msgid "Package ID"
 msgstr "ID balíka"
@@ -9408,7 +9389,7 @@ msgid "Period available for booking in advance"
 msgstr "Časová lehota na rezerváciu vopred"
 
 msgid "Periods"
-msgstr "Dátumy a časy udalosti s odkazmi na pridanie sa k Zoom stretnutiam"
+msgstr "Obdobia"
 
 msgid "Permanent access token"
 msgstr "Trvalý prístupový token"
@@ -10093,6 +10074,11 @@ msgstr "Nákup bol zrušený"
 msgid "Purchased"
 msgstr "Zakúpené"
 
+msgid ""
+"Purchasing doesn't upgrade this plugin automatically. Follow our step-by-"
+"step guide to switch to the full version."
+msgstr ""
+
 msgid "Purple"
 msgstr "Fialová"
 
@@ -10232,7 +10218,7 @@ msgid "Redirect"
 msgstr "Presmerovať"
 
 msgid "Redirect URI"
-msgstr "Presmerovanie URI"
+msgstr "URI presmerovania"
 
 msgid "Redirect URL After Booking"
 msgstr "Presmerovať URL po rezervácii"
@@ -10262,7 +10248,7 @@ msgid "Redirect URL for unsuccessfully rejected booking"
 msgstr "Presmerovanie URL pre neúspešne zamietnutú rezerváciu"
 
 msgid "Redirect URLs"
-msgstr "Presmerovanie URI"
+msgstr "Adresy URL presmerovania"
 
 msgid "Redirect page"
 msgstr "Presmerovanie stránky"
@@ -10300,10 +10286,6 @@ msgstr "Zvyšok celkovej sumy bude zaplatený na mieste."
 
 msgid "Remind me when my SMS balance is low"
 msgstr "Pripomeň mi, keď je môj zostatok SMS nízky"
-
-#, php-format
-msgid "Reminder: %1$s is scheduled for %2$s."
-msgstr "Pripomienka: %1$s je naplánované na %2$s."
 
 msgid "Remove Apple Calendar event slots"
 msgstr "Odstrániť časové sloty udalostí z Apple Calendar"
@@ -10698,6 +10680,9 @@ msgstr "Akcia"
 
 msgid "Securely process payments using Stripe."
 msgstr "Bezpečne spracujte platby pomocou Stripe."
+
+msgid "See upgrade guide."
+msgstr ""
 
 msgid "Segment"
 msgstr ""
@@ -11520,7 +11505,7 @@ msgid "Show specific packages"
 msgstr "Zobraziť konkrétne kategórie"
 
 msgid "Show specific service"
-msgstr "Zobraziť konkrétne služby"
+msgstr "Zobraziť konkrétnu službu"
 
 msgid "Show specific services"
 msgstr "Zobraziť konkrétne služby"
@@ -11576,6 +11561,9 @@ msgstr "Prihláste sa pomocou Microsoft"
 
 msgid "Sign in with Outlook"
 msgstr "Prihlásiť sa cez Outlook"
+
+msgid "Sign out and use a customer account"
+msgstr ""
 
 msgid "Sign out from Google"
 msgstr "Odhlásiť sa z Google"
@@ -11960,7 +11948,7 @@ msgid "Summary segment"
 msgstr "Súhrnný segment"
 
 msgid "Sun"
-msgstr "Slnko"
+msgstr "Ne"
 
 msgid "Sunday"
 msgstr "Nedeľa"
@@ -11988,7 +11976,7 @@ msgid "Switch Camera"
 msgstr "Prepnúť kameru"
 
 msgid "Sync Google Events"
-msgstr "Synchronizovať Google udalosti"
+msgstr ""
 
 msgid "Sync with"
 msgstr "Synchronizovať s"
@@ -12509,6 +12497,12 @@ msgstr ""
 "cron konfigurácie."
 
 msgid ""
+"This option applies only to people added through \"Bringing anyone with "
+"you\". If disabled, the service price is charged once for the entire "
+"booking, regardless of how many additional people are included."
+msgstr ""
+
+msgid ""
 "This option requires adding the payment link placeholder to your message "
 "templates."
 msgstr ""
@@ -12606,7 +12600,7 @@ msgstr ""
 "rozsahu."
 
 msgid "Thu"
-msgstr "Štv"
+msgstr "Št"
 
 msgid "Thursday"
 msgstr "Štvrtok"
@@ -13699,6 +13693,11 @@ msgstr "Vaše heslo bolo úspešne obnovené"
 
 msgid "Your password has been reset successfully."
 msgstr "Vaše heslo bolo úspešne resetované."
+
+msgid ""
+"Your payment is still processing. You will receive a confirmation as soon as "
+"it is completed."
+msgstr ""
 
 msgid "Your postal code is incomplete"
 msgstr "Vaše poštové smerovacie číslo je neúplné"

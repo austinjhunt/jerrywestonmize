@@ -37,6 +37,35 @@ class Html_Processing_Helper {
  }
  return trim( $classes );
  }
+ public static function remove_wrapper_handled_classes( \WP_HTML_Tag_Processor $html ): void {
+ $class_attribute = $html->get_attribute( 'class' );
+ if ( ! is_string( $class_attribute ) ) {
+ return;
+ }
+ $class_names = preg_split( '/\s+/', trim( $class_attribute ) );
+ if ( ! is_array( $class_names ) ) {
+ return;
+ }
+ // Whole class names are compared and removed, so a class that merely contains one of these
+ // names as a substring is left intact instead of being reduced to a fragment.
+ foreach ( $class_names as $class_name ) {
+ if ( '' !== $class_name && self::is_wrapper_handled_class( $class_name ) ) {
+ $html->remove_class( $class_name );
+ }
+ }
+ }
+ private static function is_wrapper_handled_class( string $class_name ): bool {
+ // `has-background` is added for any background. Preset palette backgrounds add
+ // `has-<slug>-background-color` on top of it, which is why matching the bare name is not enough.
+ if ( 'has-background' === $class_name ) {
+ return true;
+ }
+ if ( str_starts_with( $class_name, 'has-' ) && str_ends_with( $class_name, '-background-color' ) ) {
+ return true;
+ }
+ // Border classes, e.g. `has-border-color`, `has-<slug>-border-color`.
+ return false !== strpos( $class_name, '-border-' );
+ }
  public static function sanitize_css_value( string $value ): string {
  // Remove dangerous script injection characters (angle brackets) but preserve quotes for CSS strings.
  $result = preg_replace( '/[<>]/', '', $value );

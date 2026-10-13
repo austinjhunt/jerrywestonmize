@@ -63,7 +63,7 @@ class Email_Editor {
  $request_uri = sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) );
  }
  if ( strstr( $request_uri, 'site-editor.php' ) === false ) {
- $post_types = array_column( $this->get_post_types(), 'name' );
+ $post_types = array_column( self::get_post_types(), 'name' );
  $this->templates->initialize( $post_types );
  }
  }
@@ -71,7 +71,7 @@ class Email_Editor {
  $this->patterns->initialize();
  }
  private function register_email_post_types(): void {
- foreach ( $this->get_post_types() as $post_type ) {
+ foreach ( self::get_post_types() as $post_type ) {
  register_post_type(
  $post_type['name'],
  array_merge( $this->get_default_email_post_args(), $post_type['args'] )
@@ -81,9 +81,10 @@ class Email_Editor {
  private function register_personalization_tags(): void {
  $this->personalization_tags_registry->initialize();
  }
- private function get_post_types(): array {
- $post_types = array();
- return apply_filters( 'woocommerce_email_editor_post_types', $post_types );
+ private static function get_post_types(): array {
+ $post_types = apply_filters( 'woocommerce_email_editor_post_types', array() );
+ $post_types = is_array( $post_types ) ? $post_types : array();
+ return $post_types;
  }
  private function get_default_email_post_args(): array {
  return array(
@@ -121,7 +122,7 @@ class Email_Editor {
  );
  }
  public function extend_email_post_api() {
- $email_post_types = array_column( $this->get_post_types(), 'name' );
+ $email_post_types = array_column( self::get_post_types(), 'name' );
  register_rest_field(
  $email_post_types,
  'email_data',
@@ -145,7 +146,7 @@ class Email_Editor {
  }
  $post_id = $request->get_param( 'postId' );
  if ( is_numeric( $post_id ) && (int) $post_id > 0 ) {
- return current_user_can( 'edit_post', (int) $post_id );
+ return self::is_email_post_type( get_post_type( (int) $post_id ) ) && current_user_can( 'edit_post', (int) $post_id );
  }
  return (bool) apply_filters( 'woocommerce_email_editor_send_preview_email_without_post_permission', false, $request );
  },
@@ -201,19 +202,19 @@ class Email_Editor {
  }
  return $current_post;
  }
- private function current_post_is_email_post_type( $current_post_type ): bool {
- if ( ! $current_post_type ) {
+ public static function is_email_post_type( $post_type ): bool {
+ if ( ! $post_type ) {
  return false;
  }
- $email_post_types = array_column( $this->get_post_types(), 'name' );
- return in_array( $current_post_type, $email_post_types, true );
+ $email_post_types = array_column( self::get_post_types(), 'name' );
+ return in_array( $post_type, $email_post_types, true );
  }
  public function load_email_preview_template( $template ) {
  $post = $this->get_current_post();
  if ( ! $post instanceof \WP_Post ) {
  return $template;
  }
- if ( ! $this->current_post_is_email_post_type( $post->post_type ) ) {
+ if ( ! self::is_email_post_type( $post->post_type ) ) {
  return $template;
  }
  // Anyone can see a published email. For other statuses the user must be able to read the post.
@@ -233,7 +234,7 @@ class Email_Editor {
  if ( ! $post instanceof \WP_Post ) {
  return $preview_link;
  }
- if ( ! $this->current_post_is_email_post_type( $post->post_type ) ) {
+ if ( ! self::is_email_post_type( $post->post_type ) ) {
  return $preview_link;
  }
  // Remove preview_nonce from the link.

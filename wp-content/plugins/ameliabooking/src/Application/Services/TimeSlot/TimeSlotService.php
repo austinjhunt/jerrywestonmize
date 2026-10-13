@@ -260,7 +260,7 @@ class TimeSlotService
      * @throws ContainerException
      * @throws Exception
      */
-    public function setBlockerAppointments($providers, $props)
+    public function setBlockerAppointments($providers, $props): void
     {
         /** @var AbstractGoogleCalendarService $googleCalendarService */
         $googleCalendarService = $this->container->get('infrastructure.google.calendar.service');

@@ -21,7 +21,7 @@ class OutlookCalendarFactory
      * @return OutlookCalendar
      * @throws InvalidArgumentException
      */
-    public static function create($data)
+    public static function create($data): OutlookCalendar
     {
         $outlookCalendar = new OutlookCalendar(
             new Token($data['token']),
@@ -45,6 +45,14 @@ class OutlookCalendarFactory
 
         if (isset($data['description'])) {
             $outlookCalendar->setDescription($data['description']);
+        }
+
+        if (!empty($data['accountId'])) {
+            $outlookCalendar->setAccountId((string)$data['accountId']);
+        }
+
+        if (!empty($data['syncId'])) {
+            $outlookCalendar->setSyncId(new Id($data['syncId']));
         }
 
         return $outlookCalendar;

@@ -14,22 +14,20 @@
             "email": "mark.sagikazar@gmail.com"
         }
     ],
+    "require": {
+        "php" : "^7.1 || ^8.0"
+    },
     "require-dev": {
-        "phpspec/phpspec": "^2.4",
-        "henrikbjorn/phpspec-code-coverage" : "^1.0"
+        "friends-of-phpspec/phpspec-code-coverage" : "^4.3.2 || ^6.3",
+        "phpspec/phpspec": "^5.1.2 || ^6.2 || ^7.4"
     },
     "autoload": {
         "psr-4": {
-            "Http\\Promise\\": "src/"
+            "AmeliaHttp\\Promise\\": "src/"
         }
     },
     "scripts": {
         "test": "vendor/bin/phpspec run",
         "test-ci": "vendor/bin/phpspec run -c phpspec.yml.ci"
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.1-dev"
-        }
     }
 }

@@ -24,6 +24,13 @@ $entries['request'] = function (Container $c) {
         $queryWithPlaceholderFixes
     );
 
+    // fix endpoint url for Stripe webhooks
+    $queryWithPlaceholderFixes = str_replace(
+        '__payment__stripe__webhook',
+        '/payment/stripe/webhook',
+        $queryWithPlaceholderFixes
+    );
+
     // fix callback url for whatsapp webhooks
     $queryWithPlaceholderFixes = str_replace(
         '__notifications__whatsapp__webhook',
@@ -41,6 +48,11 @@ $entries['request'] = function (Container $c) {
             $callPath = str_replace(
                 '__payment__stripe__callback',
                 '/payment/stripe/callback',
+                $callPath
+            );
+            $callPath = str_replace(
+                '__payment__stripe__webhook',
+                '/payment/stripe/webhook',
                 $callPath
             );
             $callPath = str_replace(

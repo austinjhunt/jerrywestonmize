@@ -123,14 +123,19 @@ class GetEventBookingsCommandHandler extends CommandHandler
                 $row[BackendStrings::get('event_name')] = $booking['event']['name'];
             }
 
+            $periodStart = null;
+            if (in_array('date', $fields, true) || in_array('time', $fields, true)) {
+                $periodStart = DateTimeService::getCustomDateTimeObjectFromUtc(
+                    array_values($booking['event']['periods'])[0]['periodStart']
+                );
+            }
+
             if (in_array('date', $fields, true)) {
-                $dateString = explode(' ', array_values($booking['event']['periods'])[0]['periodStart'])[0];
-                $row[BackendStrings::get('date')] = DateTimeService::getCustomDateTimeObject($dateString)->format($dateFormat);
+                $row[BackendStrings::get('date')] = $periodStart->format($dateFormat);
             }
 
             if (in_array('time', $fields, true)) {
-                $timeString = explode(' ', array_values($booking['event']['periods'])[0]['periodStart'])[1];
-                $row[BackendStrings::get('time')] = DateTimeService::getCustomDateTimeObject($timeString)->format($timeFormat);
+                $row[BackendStrings::get('time')] = $periodStart->format($timeFormat);
             }
 
             if (in_array('status', $fields, true)) {

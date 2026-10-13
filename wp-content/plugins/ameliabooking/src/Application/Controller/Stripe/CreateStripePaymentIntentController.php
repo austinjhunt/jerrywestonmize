@@ -37,6 +37,9 @@ class CreateStripePaymentIntentController extends Controller
         'deposit',
         'componentProps',
         'returnUrl',
+        // Identifies a reservation this request supersedes, so returning to the payment step reuses the
+        // hold it already has instead of releasing it and taking a new one.
+        'cacheName',
     ];
 
     /**

@@ -11,4 +11,11 @@ use AmeliaBooking\Application\Commands\Command;
  */
 class LoginCabinetCommand extends Command
 {
+    /**
+     * @return bool
+     */
+    public function skipsRecaptcha(): bool
+    {
+        return false;
+    }
 }

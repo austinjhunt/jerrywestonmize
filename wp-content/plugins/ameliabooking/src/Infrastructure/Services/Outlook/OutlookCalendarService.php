@@ -2,10 +2,13 @@
 
 namespace AmeliaBooking\Infrastructure\Services\Outlook;
 
+use AmeliaBooking\Application\Commands\CommandResult;
+use AmeliaBooking\Application\Services\Calendar\CalendarApplicationService;
 use AmeliaBooking\Application\Services\CustomField\AbstractCustomFieldApplicationService;
 use AmeliaBooking\Application\Services\Placeholder\PlaceholderService;
 use AmeliaBooking\Application\Services\User\ProviderApplicationService;
 use AmeliaBooking\Domain\Collection\Collection;
+use AmeliaBooking\Domain\Entity\Calendar\CalendarSync;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
@@ -18,14 +21,18 @@ use AmeliaBooking\Domain\Factory\User\ProviderFactory;
 use AmeliaBooking\Domain\Services\DateTime\DateTimeService;
 use AmeliaBooking\Domain\Services\Logger\LoggerInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
+use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\String\Label;
 use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
+use AmeliaBooking\Infrastructure\Repository\Calendar\CalendarSyncLockRepository;
+use AmeliaBooking\Infrastructure\Repository\Calendar\CalendarSyncRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventPeriodsRepository;
 use AmeliaBooking\Infrastructure\Repository\Booking\Event\EventRepository;
 use AmeliaBooking\Infrastructure\Repository\Location\LocationRepository;
+use AmeliaBooking\Infrastructure\Repository\Outlook\OutlookCalendarRepository;
 use AmeliaBooking\Infrastructure\Repository\User\CustomerRepository;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\AppointmentAddedEventHandler;
@@ -40,25 +47,26 @@ use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Appointment\BookingRe
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Event\EventAddedEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Event\EventEditedEventHandler;
 use AmeliaBooking\Infrastructure\WP\EventListeners\Booking\Event\EventStatusUpdatedEventHandler;
+use DateInvalidTimeZoneException;
+use DateTime;
 use Exception;
 use Interop\Container\Exception\ContainerException;
-use Microsoft\Graph\Exception\GraphException;
-use Microsoft\Graph\Graph;
-use Microsoft\Graph\Model\Attendee;
-use Microsoft\Graph\Model\BodyType;
-use Microsoft\Graph\Model\Calendar;
-use Microsoft\Graph\Model\DateTimeTimeZone;
-use Microsoft\Graph\Model\Event;
-use Microsoft\Graph\Model\FileAttachment;
-use Microsoft\Graph\Model\FreeBusyStatus;
-use Microsoft\Graph\Model\Message;
-use Microsoft\Graph\Model\ItemBody;
-use Microsoft\Graph\Model\Location;
-use Microsoft\Graph\Model\OnlineMeetingProviderType;
-use Microsoft\Graph\Model\OutlookGeoCoordinates;
-use Microsoft\Graph\Model\PhysicalAddress;
-use Microsoft\Graph\Model\SingleValueLegacyExtendedProperty;
-use Microsoft\Graph\Model\User;
+use Microsoft\Kiota\Abstractions\ApiException as GraphException;
+use Microsoft\Graph\Generated\Models\Attendee;
+use Microsoft\Graph\Generated\Models\BodyType;
+use Microsoft\Graph\Generated\Models\Calendar;
+use Microsoft\Graph\Generated\Models\DateTimeTimeZone;
+use Microsoft\Graph\Generated\Models\Event;
+use Microsoft\Graph\Generated\Models\FreeBusyStatus;
+use Microsoft\Graph\Generated\Models\ItemBody;
+use Microsoft\Graph\Generated\Models\Location;
+use Microsoft\Graph\Generated\Models\OnlineMeetingProviderType;
+use Microsoft\Graph\Generated\Models\OutlookGeoCoordinates;
+use Microsoft\Graph\Generated\Models\PatternedRecurrence;
+use Microsoft\Graph\Generated\Models\PhysicalAddress;
+use Microsoft\Graph\Generated\Models\SingleValueLegacyExtendedProperty;
+use Microsoft\Graph\Generated\Models\Subscription;
+use Microsoft\Graph\Generated\Models\User;
 use WP_Error;
 
 /**
@@ -68,13 +76,24 @@ use WP_Error;
  */
 class OutlookCalendarService extends AbstractOutlookCalendarService
 {
-    /** @var Graph */
+    /** @var OutlookGraphClient */
     private $graph;
+
+    /**
+     * Whether $graph currently carries a usable access token.
+     *
+     * The client object itself is built in the constructor and never replaced with null, so its presence
+     * says nothing about authorization - this is what remote calls have to consult.
+     *
+     * @var bool
+     */
+    private $graphAuthorized = false;
 
     /** @var mixed */
     private $outlookCalendarSettings;
 
-    public const GUID = '{66f5a359-4659-4830-9070-00049ec6ac6e}';
+    /** Renew a subscription once it is inside this window of expiring, in seconds. */
+    private const SUBSCRIPTION_RENEW_MARGIN = 86400;
 
     /** @var SettingsService */
     private $settings;
@@ -94,7 +113,51 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
         $this->logger = $this->container->getLoggerService()->channel(LoggerInterface::CHANNEL_SYNC);
         $this->outlookCalendarSettings = $this->settings->getCategorySettings('outlookCalendar');
 
-        $this->graph = new Graph();
+        $this->graph = new OutlookGraphClient();
+    }
+
+    /**
+     * @return void
+     */
+    public function getOutlookAction(): void
+    {
+        add_action('init', function () {
+            $path = isset($_SERVER['REQUEST_URI'])
+                ? (string)wp_parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)
+                : '';
+
+            // The notification URL is built from the home URL, so on a subdirectory
+            // install the path arrives prefixed (e.g. /ameliaDev/wpamelia/...).
+            // Accept the root-relative form too, in case a filter overrides the URL.
+            $homePath = (string)wp_parse_url(AMELIA_HOME_URL, PHP_URL_PATH);
+
+            $accepted = array_unique(
+                [
+                    rtrim($homePath, '/') . '/wpamelia/outlook/notification',
+                    '/wpamelia/outlook/notification',
+                ]
+            );
+
+            if (!in_array(untrailingslashit($path), $accepted, true)) {
+                return;
+            }
+
+            if (isset($_GET['validationToken'])) {
+                header('Content-Type: text/plain; charset=utf-8');
+                echo (string)$_GET['validationToken'];
+                exit;
+            }
+
+            $_GET['action'] = 'wpamelia_api';
+            $_GET['call'] = '/outlook/notification';
+            $_REQUEST['action'] = 'wpamelia_api';
+            $_REQUEST['call'] = '/outlook/notification';
+            $_SERVER['QUERY_STRING'] = AMELIA_ACTION_SLUG . '/outlook/notification';
+
+            do_action('wp_ajax_wpamelia_api');
+            do_action('wp_ajax_nopriv_wpamelia_api');
+            exit;
+        });
     }
 
     /**
@@ -106,7 +169,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      *
      * @throws ContainerException
      */
-    public function createAuthUrl($providerId)
+    public function createAuthUrl($providerId): string
     {
         $params = [
             'client_id'     => $this->outlookCalendarSettings['clientID'],
@@ -131,7 +194,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
     /**
      * @return void
      */
-    public static function handleCallback()
+    public static function handleCallback(): void
     {
         if (isset($_REQUEST['code'], $_REQUEST['state']) && !isset($_REQUEST['scope']) && !isset($_REQUEST['type']) && !isset($_REQUEST['response_type'])) {
             $id = (int)substr($_REQUEST['state'], strrpos($_REQUEST['state'], '-') + 1);
@@ -156,9 +219,9 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      * @param $redirectUri
      * @param $providerId
      *
-     * @return array|bool
+     * @return array
      */
-    public function fetchAccessTokenWithAuthCode($authCode, $redirectUri, $providerId)
+    public function fetchAccessTokenWithAuthCode($authCode, $redirectUri, $providerId): array
     {
         $redirectUrl = empty($redirectUri) ? $this->outlookCalendarSettings['redirectURI'] : explode('?', $redirectUri)[0];
 
@@ -182,7 +245,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
         );
 
         if ($response instanceof WP_Error) {
-            return false;
+            return [];
         }
 
         if ($response['response']['code'] !== 200) {
@@ -200,7 +263,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
         return ['outcome' => true, 'result' => json_encode($decodedToken)];
     }
 
-    private function isAccessTokenSet()
+    private function isAccessTokenSet(): bool
     {
         return (
             array_key_exists('accessToken', $this->outlookCalendarSettings) &&
@@ -215,7 +278,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      * @throws ContainerException
      * @throws Exception
      */
-    private function authorize($token)
+    private function authorize($token): string
     {
         try {
             if (empty($token)) {
@@ -247,6 +310,8 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
 
             $this->graph->setAccessToken($tokenArray['access_token']);
 
+            $this->graphAuthorized = true;
+
             return $expiredToken ? $token : '';
         } catch (\Exception $e) {
             $this->logger->error(
@@ -264,7 +329,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      * @throws ContainerException
      * @throws Exception
      */
-    private function authorizeAdmin()
+    private function authorizeAdmin(): void
     {
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
@@ -290,6 +355,10 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      */
     private function authorizeProvider(Provider $provider): bool
     {
+        // Any exit from here decides whether remote calls may run, so the flag is reset up front rather
+        // than left holding the previous mailbox's outcome.
+        $this->graphAuthorized = false;
+
         if ($this->isAccessTokenSet()) {
             /** @var OutlookCalendarMiddlewareService $outlookCalendarMiddlewareService */
             $outlookCalendarMiddlewareService = $this->container->get(
@@ -301,10 +370,14 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
             $graph = $outlookCalendarMiddlewareService->getGraph($providerOutlookCalendar);
 
             if ($graph === null) {
+                $this->graphAuthorized = false;
+
                 return false;
             }
 
             $this->graph = $graph;
+            $this->graphAuthorized = true;
+
             return true;
         }
 
@@ -335,7 +408,11 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
 
                     $providerApplicationService->updateProviderOutlookCalendar($provider);
                 }
-                return true;
+
+                // authorize() returns '' both when it succeeds without needing a refresh and when it
+                // fails, so its return value cannot be tested for success. The flag is the only thing
+                // that distinguishes them, and callers must agree with what remote calls will see.
+                return $this->graphAuthorized;
             } catch (\Exception $e) {
                 $this->logger->error(
                     'OutlookCalendar: Failed to authorize provider',
@@ -357,7 +434,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      * @param Provider $provider
      * @return bool
      */
-    private function getInsertPendingAppointments($provider)
+    private function getInsertPendingAppointments($provider): bool
     {
         if ($provider && $provider->getOutlookCalendar()) {
             return (bool)$provider->getOutlookCalendar()->getInsertPendingAppointments();
@@ -372,7 +449,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      * @param Provider $provider
      * @return bool
      */
-    private function getIncludeBufferTime($provider)
+    private function getIncludeBufferTime($provider): bool
     {
         if ($provider && $provider->getOutlookCalendar()) {
             return (bool)$provider->getOutlookCalendar()->getIncludeBufferTime();
@@ -406,11 +483,12 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
 
             /** @var Calendar $outlookCalendar */
             foreach ($outlookCalendars as $outlookCalendar) {
-                if ($outlookCalendar->getCanEdit()) {
+                if ($outlookCalendar->getCanEdit() !== false) {
                     $calendars[] = [
-                        'id'   => $outlookCalendar->getId(),
-                        'name' => $outlookCalendar->getName(),
-                        'owner' => $outlookCalendar->getOwner()->getName(),
+                        'id'        => $outlookCalendar->getId(),
+                        'name'      => $outlookCalendar->getName(),
+                        'owner'     => $outlookCalendar->getOwner() ? $outlookCalendar->getOwner()->getName() : '',
+                        'isDefault' => $outlookCalendar->getIsDefaultCalendar() === true,
                     ];
                 }
             }
@@ -424,38 +502,102 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      *
      * @param Provider $provider
      *
-     * @return array|null
-     * @throws GraphException
+     * @return array
+     * @throws Exception
      */
-    public function getUserInfo($provider)
+    public function getUserInfo($provider): array
     {
         if (!$provider || !$provider->getOutlookCalendar()) {
-            return null;
+            return [];
         }
 
         if (!$this->authorizeProvider($provider)) {
-            return null;
+            return [];
         }
 
+        ['name' => $name, 'email' => $email] = $this->fetchMailboxIdentity();
+
+        if (!$name && !$email) {
+            return [];
+        }
+
+        // Keep the same shape as OutlookCalendarMiddlewareService::getUserInfo(),
+        // whose callers read a "picture" key
+        return [
+            'name'    => $name,
+            'email'   => $email,
+            'picture' => null,
+        ];
+    }
+
+    /**
+     * Name and address of the mailbox the current Graph credential belongs to.
+     *
+     * Kept separate from getUserInfo() because that one is about a provider's own connection, while the
+     * mailbox behind a token also has to be resolvable for employees who have no connection row at all.
+     * Requires an already authorized $this->graph.
+     *
+     * @return array{name: string|null, email: string|null}
+     */
+    private function fetchMailboxIdentity(): array
+    {
+        $name  = null;
+        $email = null;
+
+        // Attempt 1: /me — lightweight, but requires the User.Read scope, which the
+        // connect flow does not request (see createAuthUrl), so this usually fails.
         try {
             $user = $this->graph->createRequest('GET', '/me')
                 ->setReturnType(User::class)
                 ->execute();
 
-            return [
-                'name'    => $user->getDisplayName(),
-                'email'   => $user->getMail() ?? $user->getUserPrincipalName(),
-            ];
+            $name  = $user->getDisplayName();
+            $email = $user->getMail() ?? $user->getUserPrincipalName();
         } catch (GraphException $e) {
-            $this->logger->error(
-                'OutlookCalendar: Failed to fetch user info',
-                [
-                    'exception'  => $e,
-                    'providerId' => $provider->getId()->getValue(),
-                ]
+            $this->logger->warning(
+                'OutlookCalendar: /me failed (token may lack User.Read), falling back to /me/calendars',
+                ['exception' => $e]
             );
-            return null;
         }
+
+        // Attempt 2: /me/calendars — works with the Calendars.ReadWrite scope alone.
+        if (!$name || !$email) {
+            try {
+                $outlookCalendars = $this->graph
+                    ->createCollectionRequest('GET', '/me/calendars')
+                    ->setReturnType(Calendar::class)
+                    ->setPageSize(10)
+                    ->getPage();
+
+                /** @var Calendar $outlookCalendar */
+                foreach ($outlookCalendars as $outlookCalendar) {
+                    $owner = $outlookCalendar->getOwner();
+
+                    if (!$owner) {
+                        continue;
+                    }
+
+                    if (!$name && $owner->getName()) {
+                        $name = $owner->getName();
+                    }
+
+                    if (!$email && $owner->getAddress()) {
+                        $email = $owner->getAddress();
+                    }
+
+                    if ($name && $email) {
+                        break;
+                    }
+                }
+            } catch (GraphException $e) {
+                $this->logger->error(
+                    'OutlookCalendar: Failed to fetch user info',
+                    ['exception' => $e]
+                );
+            }
+        }
+
+        return ['name' => $name, 'email' => $email];
     }
 
     /**
@@ -467,7 +609,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      * @throws GraphException|ContainerException|QueryExecutionException
      * @throws InvalidArgumentException
      */
-    public function getProviderOutlookCalendarId($provider)
+    public function getProviderOutlookCalendarId($provider): ?string
     {
         if (!$this->isCalendarEnabled()) {
             return null;
@@ -506,7 +648,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      * @throws QueryExecutionException
      * @throws ContainerException
      */
-    public function handleEvent($appointment, $commandSlug, $oldStatus = null)
+    public function handleEvent($appointment, $commandSlug, $oldStatus = null): void
     {
         if (!$this->isCalendarEnabled() && !$this->isAccessTokenSet()) {
             return;
@@ -536,7 +678,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      * @throws QueryExecutionException
      * @throws ContainerException
      */
-    public function handleEventPeriod($event, $commandSlug, $periods, $newProviders = null, $removeProviders = null)
+    public function handleEventPeriod($event, $commandSlug, $periods, $newProviders = null, $removeProviders = null): void
     {
         if (!$this->isCalendarEnabled() && !$this->isAccessTokenSet()) {
             return;
@@ -563,7 +705,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      */
-    private function handleEventAction($appointment, $commandSlug, $oldStatus = null)
+    private function handleEventAction($appointment, $commandSlug, $oldStatus = null): void
     {
         /** @var ProviderRepository $providerRepository */
         $providerRepository = $this->container->get('domain.users.providers.repository');
@@ -644,7 +786,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      */
-    private function handleEventPeriodAction($event, $commandSlug, $periods, $newProviders = null, $removeProviders = null)
+    private function handleEventPeriodAction($event, $commandSlug, $periods, $newProviders = null, $removeProviders = null): void
     {
         /** @var ProviderRepository $providerRepository */
         $providerRepository = $this->container->get('domain.users.providers.repository');
@@ -718,11 +860,13 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      * @throws GraphException
      * @throws Exception
      */
-    public function getEvents($providerArr, $dateStart, $dateStartEnd, $dateEnd, $eventIds)
+    public function getEvents($providerArr, $dateStart, $dateStartEnd, $dateEnd, $eventIds): array
     {
         if (!$this->isCalendarEnabled() && !$this->isAccessTokenSet()) {
             return [];
         }
+
+        $eventIds = is_array($eventIds) ? $eventIds : [];
 
         $finalEvents = [];
         $provider    = ProviderFactory::create($providerArr);
@@ -735,9 +879,8 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
             if (!$this->authorizeProvider($provider)) {
                 return $finalEvents;
             }
-            $startDate    = DateTimeService::getCustomDateTimeObject($dateStart);
-            $startDateEnd = DateTimeService::getCustomDateTimeObject($dateStartEnd);
-            $endDate      = DateTimeService::getCustomDateTimeObject($dateEnd);
+            $startDate = DateTimeService::getCustomDateTimeObject($dateStart);
+            $endDate   = DateTimeService::getCustomDateTimeObject($dateEnd);
 
             $outlookCalendarId = $provider->getOutlookCalendar() ?
                 $provider->getOutlookCalendar()->getCalendarId()->getValue() :
@@ -762,18 +905,38 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
 
             $events = $request->getPage();
 
+            $ameliaAppointmentPropertyId = 'Integer ' . self::GUID . ' Name appointmentId';
+            $ignoreAmeliaEvents          = !empty($this->outlookCalendarSettings['ignoreAmeliaEvents']);
+
             /** @var Event $event */
             foreach ($events as $event) {
-                if ($event->getShowAs()->value() === 'free') {
+                $showAs = $event->getShowAs();
+                if ($showAs !== null && $showAs->value() === 'free') {
                     continue;
                 }
                 $extendedProperties = $event->getSingleValueExtendedProperties();
-                if ($extendedProperties !== null && !$this->outlookCalendarSettings['ignoreAmeliaEvents']) {
+                if ($extendedProperties !== null && !$ignoreAmeliaEvents) {
                     foreach ($extendedProperties as $extendedProperty) {
-                        if (
-                            $extendedProperty['id'] === 'Integer ' . self::GUID . ' Name appointmentId' &&
-                            in_array((int)$extendedProperty['value'], $eventIds)
-                        ) {
+                        $propId    = null;
+                        $propValue = null;
+                        if (is_array($extendedProperty)) {
+                            $propId    = $extendedProperty['id'] ?? null;
+                            $propValue = $extendedProperty['value'] ?? null;
+                        } elseif (is_object($extendedProperty)) {
+                            if (method_exists($extendedProperty, 'getId')) {
+                                $propId = $extendedProperty->getId();
+                            }
+                            if (method_exists($extendedProperty, 'getValue')) {
+                                $propValue = $extendedProperty->getValue();
+                            }
+                        }
+                        if ($propId !== $ameliaAppointmentPropertyId) {
+                            continue;
+                        }
+                        if ($eventIds === []) {
+                            break;
+                        }
+                        if (in_array((int)$propValue, $eventIds, true)) {
                             continue 2;
                         }
                     }
@@ -781,10 +944,8 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                 $eventStart = DateTimeService::getCustomDateTimeObject($event->getStart()->getDateTime());
                 $eventEnd   = DateTimeService::getCustomDateTimeObject($event->getEnd()->getDateTime());
 
-                $eventDateStart = DateTimeService::getCustomDateTimeObject($eventStart->format('Y-m-d') . ' ' . $startDate->format('H:i:s'));
-                $eventDateEnd   = DateTimeService::getCustomDateTimeObject($eventEnd->format('Y-m-d') . ' ' . $startDateEnd->format('H:i:s'));
-
-                if ($eventDateEnd <= $eventStart || $eventDateStart >= $eventEnd) {
+                // calendarView already bounds by startDateTime/endDateTime; overlap with the requested range only.
+                if ($eventEnd <= $startDate || $eventStart >= $endDate) {
                     continue;
                 }
                 $finalEvents[] = $event;
@@ -800,8 +961,8 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      *
      * @param Collection $providers
      * @param int        $excludeAppointmentId
-     * @param \DateTime  $startDateTime
-     * @param \DateTime  $endDateTime
+     * @param DateTime  $startDateTime
+     * @param DateTime  $endDateTime
      *
      * @return void
      * @throws InvalidArgumentException
@@ -813,7 +974,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
         $excludeAppointmentId,
         $startDateTime,
         $endDateTime
-    ) {
+    ): void {
         if (!$this->isCalendarEnabled() && !$this->isAccessTokenSet()) {
             return;
         }
@@ -915,8 +1076,8 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      *
      * @param Provider           $provider
      * @param ProviderRepository $providerRepository
-     * @param \DateTime          $startDateTime
-     * @param \DateTime          $endDateTime
+     * @param DateTime          $startDateTime
+     * @param DateTime          $endDateTime
      * @param int|null           $excludeAppointmentId
      *
      * @throws QueryExecutionException
@@ -928,7 +1089,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
         $startDateTime,
         $endDateTime,
         $excludeAppointmentId
-    ) {
+    ): void {
         $providerId = $provider->getId()->getValue();
         $cacheKey = $providerId . '_blocked';
 
@@ -953,8 +1114,8 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      * Fetch events from blocked calendars for each account
      *
      * @param array     $accounts
-     * @param \DateTime $startDateTime
-     * @param \DateTime $endDateTime
+     * @param DateTime $startDateTime
+     * @param DateTime $endDateTime
      * @param Provider  $provider
      * @param int|null  $excludeAppointmentId
      *
@@ -966,7 +1127,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
         $endDateTime,
         $provider,
         $excludeAppointmentId
-    ) {
+    ): void {
         foreach ($accounts as $account) {
             if (empty($account['blockedCalendars']) || empty($account['token'])) {
                 continue;
@@ -1018,9 +1179,9 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      *
      * @param array $account
      *
-     * @return Graph|null
+     * @return OutlookGraphClient|null
      */
-    private function createGraphForAccount($account)
+    private function createGraphForAccount($account): ?OutlookGraphClient
     {
         try {
             $token = $account['token'];
@@ -1041,7 +1202,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
 
             $tokenArray = json_decode($token, true);
 
-            $graph = new Graph();
+            $graph = new OutlookGraphClient();
             $graph->setAccessToken($tokenArray['access_token']);
 
             return $graph;
@@ -1065,7 +1226,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      *
      * @return string|null
      */
-    private function refreshTokenForAccount($token, $accountId)
+    private function refreshTokenForAccount($token, $accountId): ?string
     {
         try {
             if ($this->isAccessTokenSet()) {
@@ -1117,7 +1278,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      *
      * @throws InvalidArgumentException
      */
-    private function processOutlookCalendarEvents($events, $provider, $excludeAppointmentId)
+    private function processOutlookCalendarEvents($events, $provider, $excludeAppointmentId): void
     {
         /** @var Event $event */
         foreach ($events as $event) {
@@ -1129,8 +1290,8 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
             if ($extendedProperties !== null && !$this->outlookCalendarSettings['ignoreAmeliaEvents']) {
                 foreach ($extendedProperties as $extendedProperty) {
                     if (
-                        $extendedProperty['id'] === 'Integer ' . self::GUID . ' Name appointmentId' &&
-                        $excludeAppointmentId && (int)$extendedProperty['value'] === $excludeAppointmentId
+                        $this->getGraphPropertyId($extendedProperty) === 'Integer ' . self::GUID . ' Name appointmentId' &&
+                        $excludeAppointmentId && (int)$this->getGraphPropertyValue($extendedProperty) === $excludeAppointmentId
                     ) {
                         continue 2;
                     }
@@ -1168,7 +1329,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      * @throws InvalidArgumentException
      * @throws NotFoundException
      */
-    private function insertEvent($appointment, $provider, $period = null, $newProviders = null, $removeProviders = null)
+    private function insertEvent($appointment, $provider, $period = null, $newProviders = null, $removeProviders = null): bool
     {
         $event = $this->getEventPreview($appointment, $provider, $period);
 
@@ -1178,11 +1339,8 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
 
         $location = $event->getLocation();
         if ($location && !$location->getDisplayName()) {
-            $newLocation = [
-                'displayName' => $location->getDisplayName(),
-                'locationType' => 'default',
-                'uniqueIdType' => 'private'
-            ];
+            $newLocation = new Location();
+            $newLocation->setDisplayName($location->getDisplayName());
             $event->setLocation($newLocation);
         }
 
@@ -1196,8 +1354,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
 
         $eventId = $event->getId();
 
-        $outlookAttendees = new Attendee($this->getAttendees($appointment, $provider, $newProviders, $removeProviders));
-        $event->setAttendees($outlookAttendees);
+        $event->setAttendees($this->createGraphAttendees($this->getAttendees($appointment, $provider, $newProviders, $removeProviders)));
 
         $eventType = $period ? 'event' : 'appointment';
 
@@ -1212,10 +1369,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
             ) {
                 $descriptionSettings = $providerDescription;
             } else {
-                $descriptionSettings = [
-                    'appointment' => '',
-                    'event' => ''
-                ];
+                $descriptionSettings = $this->outlookCalendarSettings['description'];
             }
         } else {
             $descriptionSettings = $this->outlookCalendarSettings['description'];
@@ -1283,7 +1437,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      * @throws ContainerException
      * @throws QueryExecutionException
      */
-    private function updateEvent($appointment, $provider, $period = null, $newProviders = null, $removeProviders = null)
+    private function updateEvent($appointment, $provider, $period = null, $newProviders = null, $removeProviders = null): bool
     {
         $entity = $period ?: $appointment;
         if ($entity->getOutlookCalendarEventId()) {
@@ -1305,8 +1459,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
 
             $eventId = $entity->getOutlookCalendarEventId()->getValue();
 
-            $outlookAttendees = new Attendee($this->getAttendees($appointment, $provider, $newProviders, $removeProviders));
-            $event->setAttendees($outlookAttendees);
+            $event->setAttendees($this->createGraphAttendees($this->getAttendees($appointment, $provider, $newProviders, $removeProviders)));
 
             $type = $period ? Entities::EVENT : Entities::APPOINTMENT;
             /** @var PlaceholderService $placeholderService */
@@ -1329,10 +1482,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                 ) {
                     $descriptionSettings = $providerDescription;
                 } else {
-                    $descriptionSettings = [
-                        'appointment' => '',
-                        'event' => ''
-                    ];
+                    $descriptionSettings = $this->outlookCalendarSettings['description'];
                 }
             } else {
                 $descriptionSettings = $this->outlookCalendarSettings['description'];
@@ -1458,7 +1608,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      * @throws GraphException
      * @throws QueryExecutionException
      */
-    private function deleteEvent($appointment, $provider)
+    private function deleteEvent($appointment, $provider): void
     {
         if ($appointment->getOutlookCalendarEventId()) {
             do_action('amelia_before_outlook_calendar_event_deleted', $appointment->toArray(), $provider->toArray());
@@ -1467,14 +1617,21 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                 $provider->getOutlookCalendar()->getCalendarId()->getValue() :
                 $provider->getOutlookCalendarId()->getValue();
 
-            $this->graph->createRequest(
-                'DELETE',
-                sprintf(
-                    '/me/calendars/%s/events/%s',
-                    $outlookCalendarId,
-                    $appointment->getOutlookCalendarEventId()->getValue()
-                )
-            )->execute();
+            try {
+                $this->graph->createRequest(
+                    'DELETE',
+                    sprintf(
+                        '/me/calendars/%s/events/%s',
+                        $outlookCalendarId,
+                        $appointment->getOutlookCalendarEventId()->getValue()
+                    )
+                )->execute();
+            } catch (\Throwable $e) {
+                // The event is already gone from Outlook (e.g. deleted there), so only the local reference is left to clear.
+                if (!$this->isGraphEventMissingError($e)) {
+                    throw $e;
+                }
+            }
 
             $appointment->setOutlookCalendarEventId(null);
             $appointment->setMicrosoftTeamsUrl(null);
@@ -1524,7 +1681,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
 
         if ($enabledForEntity) {
             $body->setContent('');
-            $event->setAttendees(new Attendee([]));
+            $event->setAttendees([]);
             $event->setIsOnlineMeeting(true);
             $event->setOnlineMeetingProvider(new OnlineMeetingProviderType('teamsForBusiness'));
         }
@@ -1564,7 +1721,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      * @throws ContainerException
      * @throws Exception
      */
-    private function createEvent($appointment, $provider, $period = null)
+    private function createEvent($appointment, $provider, $period = null): Event
     {
         /** @var LocationRepository $locationRepository */
         $locationRepository = $this->container->get('domain.locations.repository');
@@ -1624,19 +1781,20 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
             ) {
                 $titleSettings = $providerTitle;
             } else {
-                $titleSettings = [
-                    'appointment' => '%service_name%',
-                    'event' => '%event_name%'
-                ];
+                $titleSettings = $this->outlookCalendarSettings['title'];
             }
         } else {
             $titleSettings = $this->outlookCalendarSettings['title'];
         }
 
+        $timeZone = DateTimeService::getTimeZone()->getName();
+
         $startDateTime = new DateTimeTimeZone();
-        $startDateTime->setDateTime($start)->setTimeZone('UTC');
+        $startDateTime->setDateTime($start->format('Y-m-d\TH:i:s'));
+        $startDateTime->setTimeZone($timeZone);
         $endDateTime = new DateTimeTimeZone();
-        $endDateTime->setDateTime($end)->setTimeZone('UTC');
+        $endDateTime->setDateTime($end->format('Y-m-d\TH:i:s'));
+        $endDateTime->setTimeZone($timeZone);
 
         $event = new Event();
 
@@ -1689,13 +1847,13 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                     "recurrenceTimeZone" => $period->getPeriodStart()->getValue()->getTimezone()->getName()
                 ]
             ];
-            $event->setRecurrence($recData);
+            $event->setRecurrence(OutlookGraphClient::modelFromArray(PatternedRecurrence::class, $recData));
         }
 
         return $event;
     }
 
-    private function getDescription($placeholderService, $placeholderData, $type, $descriptionSettings = null)
+    private function getDescription($placeholderService, $placeholderData, $type, $descriptionSettings = null): string
     {
         if ($descriptionSettings === null) {
             $descriptionSettings = $this->outlookCalendarSettings['description'];
@@ -1727,9 +1885,12 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
     private function getBodyForInsert($eventId, $description)
     {
         $event = $this->getEvent($eventId);
-        $body  = $event->getBody();
 
-        $joinUrl     = $event->getOnlineMeeting() ? $event->getOnlineMeeting()->getJoinUrl() : null;
+        // The event is only read to keep its Join link, so a new body serves when it cannot be read:
+        // the id belongs to another organizer's mailbox, or the event is gone from this one.
+        $body = $event && $event->getBody() ? $event->getBody() : new ItemBody();
+
+        $joinUrl     = $event && $event->getOnlineMeeting() ? $event->getOnlineMeeting()->getJoinUrl() : null;
         $bodyContent = ($joinUrl)
             ? '<a href="' . $joinUrl . '">Join Meeting</a><br><br>' .  $description . '<br><br>'
             : $description;
@@ -1769,7 +1930,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      * @throws ContainerException
      * @throws NotFoundException
      */
-    private function getAttendees($appointment, $provider, $newProviders = null, $removeProviders = null)
+    private function getAttendees($appointment, $provider, $newProviders = null, $removeProviders = null): array
     {
         $attendees = [];
 
@@ -1803,7 +1964,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                         'type'            => 'required',
                         'status'  => [
                             'response' => 'accepted',
-                            'time' => (new \DateTime('now'))->format(DATE_ATOM)
+                            'time' => (new DateTime('now'))->format(DATE_ATOM)
                         ]
                     ];
                 }
@@ -1834,7 +1995,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                             'type'         => 'required',
                             'status'  => [
                                 'response' => 'accepted',
-                                'time' => (new \DateTime('now'))->format(DATE_ATOM)
+                                'time' => (new DateTime('now'))->format(DATE_ATOM)
                             ]
                         ];
                     }
@@ -1843,6 +2004,49 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
         }
 
         return $attendees;
+    }
+
+    /**
+     * @param array $attendees
+     *
+     * @return Attendee[]
+     */
+    private function createGraphAttendees(array $attendees): array
+    {
+        return array_map(
+            function ($attendee) {
+                return OutlookGraphClient::modelFromArray(Attendee::class, $attendee);
+            },
+            $attendees
+        );
+    }
+
+    /**
+     * @param mixed $property
+     *
+     * @return string|null
+     */
+    private function getGraphPropertyId($property): ?string
+    {
+        if (is_object($property) && method_exists($property, 'getId')) {
+            return $property->getId();
+        }
+
+        return is_array($property) ? ($property['id'] ?? null) : null;
+    }
+
+    /**
+     * @param mixed $property
+     *
+     * @return string|null
+     */
+    private function getGraphPropertyValue($property): ?string
+    {
+        if (is_object($property) && method_exists($property, 'getValue')) {
+            return $property->getValue();
+        }
+
+        return is_array($property) ? ($property['value'] ?? null) : null;
     }
 
     /**
@@ -1855,7 +2059,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      * @throws ContainerException
      * @throws Exception
      */
-    private function refreshToken($token)
+    private function refreshToken($token): string
     {
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
@@ -1886,6 +2090,10 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
             throw new \Exception($response->get_error_message());
         }
 
+        if (!is_array($response)) {
+            throw new \Exception('Invalid response from Microsoft');
+        }
+
         if ($response['response']['code'] !== 200) {
             $responseBody = json_decode($response['body'], true);
 
@@ -1903,7 +2111,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
      *
      * @return bool
      */
-    private function isAccessTokenExpired($token)
+    private function isAccessTokenExpired($token): bool
     {
         $decodedToken = json_decode($token, true);
 
@@ -1958,7 +2166,7 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
     /**
      * @return bool
      */
-    private function isCalendarEnabled()
+    private function isCalendarEnabled(): bool
     {
         return $this->settings->isFeatureEnabled('outlookCalendar') &&
             $this->outlookCalendarSettings['clientID'] &&
@@ -1990,21 +2198,19 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
         $body,
         $bccEmails = [],
         $attachments = []
-    ) {
+    ): void {
         $this->authorizeAdmin();
 
         $attachmentList = [];
 
         foreach ($attachments as $attachment) {
-            $attachmentObject = new FileAttachment();
-
-            $attachmentObject->setODataType("#microsoft.graph.fileAttachment");
-            $attachmentObject->setName($attachment['fileName']);
-            $attachmentObject->setContentType(mime_content_type($attachment['filePath']));
-            $attachmentObject->setContentBytes(base64_encode(file_get_contents($attachment['filePath'])));
-            $attachmentObject->setIsInline(false);
-
-            $attachmentList[] = $attachmentObject;
+            $attachmentList[] = [
+                '@odata.type'  => '#microsoft.graph.fileAttachment',
+                'name'         => $attachment['fileName'],
+                'contentType'  => mime_content_type($attachment['filePath']),
+                'contentBytes' => base64_encode(file_get_contents($attachment['filePath'])),
+                'isInline'     => false,
+            ];
         }
 
         $bccList = [];
@@ -2017,36 +2223,34 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
             ];
         }
 
-        $message = new Message(
-            [
-                'from'          => [
+        $message = [
+            'from'          => [
+                'emailAddress' => [
+                    'name' => mb_convert_encoding($fromName, 'UTF-8'),
+                ]
+            ],
+            'subject'       => mb_convert_encoding($subject, 'UTF-8'),
+            'body'          => [
+                'contentType' => 'HTML',
+                'content'     => mb_convert_encoding($body, 'UTF-8'),
+            ],
+            'toRecipients'  => [
+                [
                     'emailAddress' => [
-                        'name' => mb_convert_encoding($fromName, 'UTF-8'),
-                    ]
-                ],
-                'subject'       => mb_convert_encoding($subject, 'UTF-8'),
-                'body'          => [
-                    'contentType' => 'HTML',
-                    'content'     => mb_convert_encoding($body, 'UTF-8'),
-                ],
-                'toRecipients'  => [
-                    [
-                        'emailAddress' => [
-                            'address' => trim($to),
-                        ],
-                    ]
-                ],
-                'replyTo'       => trim($replyTo) ? [
-                    [
-                        'emailAddress' => [
-                            'address' => trim($replyTo),
-                        ],
-                    ]
-                ] : [],
-                'bccRecipients' => $bccList,
-                'attachments'   => $attachmentList,
-            ]
-        );
+                        'address' => trim($to),
+                    ],
+                ]
+            ],
+            'replyTo'       => trim($replyTo) ? [
+                [
+                    'emailAddress' => [
+                        'address' => trim($replyTo),
+                    ],
+                ]
+            ] : [],
+            'bccRecipients' => $bccList,
+            'attachments'   => $attachmentList,
+        ];
 
         try {
             $this->graph
@@ -2083,11 +2287,12 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
                     $calendarList = [];
                     /** @var Calendar $outlookCalendar */
                     foreach ($outlookCalendars as $outlookCalendar) {
-                        if ($outlookCalendar->getCanEdit()) {
+                        if ($outlookCalendar->getCanEdit() !== false) {
                             $calendarList[] = [
-                                'id'    => $outlookCalendar->getId(),
-                                'name'  => $outlookCalendar->getName(),
-                                'owner' => $outlookCalendar->getOwner() ? $outlookCalendar->getOwner()->getName() : '',
+                                'id'        => $outlookCalendar->getId(),
+                                'name'      => $outlookCalendar->getName(),
+                                'owner'     => $outlookCalendar->getOwner() ? $outlookCalendar->getOwner()->getName() : '',
+                                'isDefault' => $outlookCalendar->getIsDefaultCalendar() === true,
                             ];
                         }
                     }
@@ -2109,5 +2314,1580 @@ class OutlookCalendarService extends AbstractOutlookCalendarService
         }
 
         return $accounts;
+    }
+
+    /**
+     * Public webhook URL for Microsoft Graph calendar notifications.
+     *
+     * @return string
+     */
+    private function getOutlookCalendarWebhookAddress(): string
+    {
+        $host = AMELIA_HOME_URL;
+        $homeUrl = preg_match('/^https?:\/\//', $host) ? $host : 'https://' . $host;
+        $homeHost = parse_url($homeUrl, PHP_URL_HOST);
+        $homeScheme = parse_url($homeUrl, PHP_URL_SCHEME);
+
+        $base = rtrim($homeUrl, '/');
+
+        if (
+            AMELIA_NGROK_URL &&
+            (
+                (defined('AMELIA_DEV') && AMELIA_DEV) ||
+                $homeScheme !== 'https' ||
+                in_array($homeHost, ['localhost', '127.0.0.1'], true)
+            )
+        ) {
+            $ngrok = preg_match('/^https?:\/\//', AMELIA_NGROK_URL)
+                ? AMELIA_NGROK_URL
+                : 'https://' . AMELIA_NGROK_URL;
+
+            // Swap only the scheme + host, so a WordPress install served from a
+            // subdirectory (e.g. http://localhost/ameliaDev) keeps its base path
+            $base = preg_replace('#^https?://[^/]+#', rtrim($ngrok, '/'), $base);
+        }
+
+        $webhookUrl = apply_filters(
+            'amelia_outlook_calendar_notification_url',
+            rtrim($base, '/') . '/wpamelia/outlook/notification'
+        );
+
+        return preg_replace('/^http:\/\//', 'https://', (string)$webhookUrl);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function ensureTwoWaySyncForProvider($providerId): void
+    {
+        $providerId = (int)$providerId;
+        if ($providerId <= 0) {
+            return;
+        }
+
+        if (!$this->settings->isFeatureEnabled('outlookCalendar')) {
+            return;
+        }
+
+        /** @var OutlookCalendarRepository $outlookCalendarRepository */
+        $outlookCalendarRepository = $this->container->get('domain.outlook.calendar.repository');
+        /** @var ProviderRepository $providerRepository */
+        $providerRepository = $this->container->get('domain.users.providers.repository');
+
+        try {
+            $calendars = $outlookCalendarRepository->getByEntityId($providerId, 'userId');
+        } catch (\Throwable $e) {
+            $this->logger->error(
+                'OutlookCalendar: ensureTwoWaySync load calendars',
+                [
+                    'exception'  => $e,
+                    'providerId' => $providerId,
+                ]
+            );
+            return;
+        }
+
+        if (!$calendars->length()) {
+            // No connection row: the employee is on the global Settings page connection, where the calendar
+            // selection lives on the user row and the credentials come from the plugin settings.
+            $this->ensureTwoWaySyncForGlobalProvider($providerId);
+
+            return;
+        }
+
+        foreach ($calendars->getItems() as $outlookCalendar) {
+            try {
+                $provider = $providerRepository->getById($providerId);
+                $provider->setOutlookCalendar($outlookCalendar);
+                if (!$this->authorizeProvider($provider)) {
+                    continue;
+                }
+
+                if (!$outlookCalendar->getCalendarId() || !$outlookCalendar->getCalendarId()->getValue()) {
+                    $calendarId = $this->pickPrimaryCalendarId($this->listCalendarList($provider));
+                    if (!$calendarId || !$outlookCalendar->getId()) {
+                        continue;
+                    }
+
+                    $outlookCalendar->setCalendarId(new Label($calendarId));
+                    $outlookCalendarRepository->update($outlookCalendar, $outlookCalendar->getId()->getValue());
+                    $provider->setOutlookCalendar($outlookCalendar);
+                }
+
+                $this->createOrRefreshGraphSubscription($outlookCalendar, $provider);
+            } catch (\Throwable $e) {
+                $this->logger->error(
+                    'OutlookCalendar: ensureTwoWaySync failed',
+                    [
+                        'exception'  => $e,
+                        'providerId' => $providerId,
+                    ]
+                );
+            }
+        }
+    }
+
+    /**
+     * Watch the calendar an employee selected on the global connection.
+     *
+     * These employees have no connection row, so the registry row carries no owner and the watch runs on
+     * the access token from the plugin settings. Employees are found back from it through their user row.
+     *
+     * @param int $providerId
+     *
+     * @return void
+     */
+    private function ensureTwoWaySyncForGlobalProvider($providerId): void
+    {
+        if (!$this->isAccessTokenSet()) {
+            return;
+        }
+
+        /** @var ProviderRepository $providerRepository */
+        $providerRepository = $this->container->get('domain.users.providers.repository');
+
+        /** @var CalendarSyncRepository $calendarSyncRepository */
+        $calendarSyncRepository = $this->container->get('domain.calendar.sync.repository');
+
+        try {
+            $provider = $providerRepository->getById($providerId);
+        } catch (\Throwable $e) {
+            return;
+        }
+
+        $calendarId = $provider->getOutlookCalendarId() && $provider->getOutlookCalendarId()->getValue()
+            ? $provider->getOutlookCalendarId()->getValue()
+            : null;
+
+        // Selection cleared: release whatever this employee was attached to.
+        if (!$calendarId) {
+            $this->releaseUnusedGlobalCalendarSyncRows();
+
+            return;
+        }
+
+        if (!$this->authorizeProvider($provider)) {
+            return;
+        }
+
+        $accountId = $this->resolveGlobalAccountId($provider);
+
+        if ($accountId === '') {
+            return;
+        }
+
+        $calendarSync = $calendarSyncRepository->getOrCreate(
+            CalendarSync::TYPE_OUTLOOK,
+            $accountId,
+            $calendarId,
+            null
+        );
+
+        if (!$calendarSync || !$calendarSync->getId()) {
+            return;
+        }
+
+        // Anything this employee used to point at may now be unused.
+        $this->releaseUnusedGlobalCalendarSyncRows();
+
+        if ($calendarSync->hasLiveSubscription(self::SUBSCRIPTION_RENEW_MARGIN)) {
+            return;
+        }
+
+        try {
+            $this->registerGraphSubscription($calendarSync, null);
+        } catch (\Throwable $e) {
+            $this->logger->error(
+                'OutlookCalendar: global subscription create failed',
+                [
+                    'exception'  => $e,
+                    'providerId' => $providerId,
+                    'calendarId' => $calendarId,
+                ]
+            );
+        }
+    }
+
+    /**
+     * The mailbox behind the global access token. There is no connection row to cache it on, so it is kept
+     * in the plugin settings next to the token it belongs to.
+     *
+     * @param Provider $provider
+     *
+     * @return string
+     */
+    private function resolveGlobalAccountId(Provider $provider): string
+    {
+        $stored = !empty($this->outlookCalendarSettings['accountId'])
+            ? (string)$this->outlookCalendarSettings['accountId']
+            : '';
+
+        if ($stored !== '') {
+            return $stored;
+        }
+
+        try {
+            $identity = $this->fetchMailboxIdentity();
+
+            $accountId = !empty($identity['email']) ? strtolower(trim((string)$identity['email'])) : '';
+        } catch (\Throwable $e) {
+            $this->logger->warning(
+                'OutlookCalendar: could not resolve global account for calendar sync',
+                ['exception' => $e]
+            );
+
+            return '';
+        }
+
+        if ($accountId === '') {
+            return '';
+        }
+
+        $this->settings->setSetting('outlookCalendar', 'accountId', $accountId);
+        $this->outlookCalendarSettings['accountId'] = $accountId;
+
+        return $accountId;
+    }
+
+    /**
+     * Drop global watches nothing points at any more, which is how a cleared or changed calendar selection
+     * gets cleaned up - there is no connection row whose removal would signal it.
+     *
+     * @return void
+     */
+    private function releaseUnusedGlobalCalendarSyncRows(): void
+    {
+        /** @var CalendarSyncRepository $calendarSyncRepository */
+        $calendarSyncRepository = $this->container->get('domain.calendar.sync.repository');
+
+        /** @var ProviderRepository $providerRepository */
+        $providerRepository = $this->container->get('domain.users.providers.repository');
+
+        /** @var OutlookCalendarRepository $outlookCalendarRepository */
+        $outlookCalendarRepository = $this->container->get('domain.outlook.calendar.repository');
+
+        try {
+            $rows = $calendarSyncRepository->getAllByType(CalendarSync::TYPE_OUTLOOK);
+        } catch (\Throwable $e) {
+            return;
+        }
+
+        /** @var CalendarSync $calendarSync */
+        foreach ($rows->getItems() as $calendarSync) {
+            if ($calendarSync->getOwnerConnectionId() || !$calendarSync->getId()) {
+                continue;
+            }
+
+            $syncId = (int)$calendarSync->getId()->getValue();
+
+            try {
+                $employees = $this->globalEmployeesForCalendarSync($calendarSync);
+
+                if ($employees || $outlookCalendarRepository->getConnectionsBySyncId($syncId)) {
+                    continue;
+                }
+
+                // Authorize per row rather than relying on the caller: this runs before any authorization
+                // when a calendar selection is cleared, and the rows in this loop can belong to different
+                // mailboxes, so an ambient credential would be missing or the wrong one.
+                if ($calendarSync->getSubscriptionId() && $this->authorizeForTeardown($calendarSync)) {
+                    $this->deleteGraphSubscriptionRemote($calendarSync->getSubscriptionId());
+                }
+
+                $calendarSyncRepository->delete($syncId);
+            } catch (\Throwable $e) {
+                $this->logger->error(
+                    'OutlookCalendar: releasing unused global watch failed',
+                    [
+                        'exception' => $e,
+                        'syncId'    => $syncId,
+                    ]
+                );
+            }
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * Iterates watched calendars rather than connections, so a calendar shared by several employees is
+     * renewed once instead of once per employee attached to it.
+     */
+    public function renewSubscriptions(): void
+    {
+        if (!$this->settings->isFeatureEnabled('outlookCalendar')) {
+            return;
+        }
+
+        /** @var CalendarSyncRepository $calendarSyncRepository */
+        $calendarSyncRepository = $this->container->get('domain.calendar.sync.repository');
+
+        /** @var OutlookCalendarRepository $outlookCalendarRepository */
+        $outlookCalendarRepository = $this->container->get('domain.outlook.calendar.repository');
+
+        try {
+            $calendarSyncRows = $calendarSyncRepository->getAllByType(CalendarSync::TYPE_OUTLOOK);
+        } catch (\Throwable $e) {
+            $this->logger->error(
+                'OutlookCalendar: renew subscriptions load calendars',
+                ['exception' => $e]
+            );
+            return;
+        }
+
+        /** @var CalendarSync $calendarSync */
+        foreach ($calendarSyncRows->getItems() as $calendarSync) {
+            $syncId = $calendarSync->getId() ? (int)$calendarSync->getId()->getValue() : null;
+
+            if (!$syncId) {
+                continue;
+            }
+
+            try {
+                $connections = $outlookCalendarRepository->getConnectionsBySyncId($syncId);
+
+                // Employees on the global connection reach a calendar through their user row rather than
+                // a connection row, so they are counted before anything is torn down. Asking only when
+                // ownerConnectionId is null would miss the row whose owning connection has been deleted:
+                // it looks unused although those employees still rely on it.
+                if (!$connections) {
+                    $globalEmployees = $this->globalEmployeesForCalendarSync($calendarSync);
+
+                    if (!$globalEmployees) {
+                        // Nothing points at this calendar any more. Authorize before the remote delete: at
+                        // this point in the loop $this->graph is either unset or still pointing at the
+                        // previous calendar's mailbox.
+                        if ($calendarSync->getSubscriptionId() && $this->authorizeForTeardown($calendarSync)) {
+                            $this->deleteGraphSubscriptionRemote($calendarSync->getSubscriptionId());
+                        }
+
+                        $calendarSyncRepository->delete($syncId);
+
+                        continue;
+                    }
+
+                    // The row outlives the last connection and reverts to being owned by the global
+                    // token, which is also what lets authorizeForCalendarSync() renew it below.
+                    if ($calendarSync->getOwnerConnectionId() !== null) {
+                        $calendarSyncRepository->updateOwnerConnectionId($syncId, null);
+                        $calendarSync->setOwnerConnectionId(null);
+                    }
+                }
+
+                // Checked after the orphan case, so a watch nobody uses is released promptly rather
+                // than lingering until it comes up for renewal.
+                if ($calendarSync->hasLiveSubscription(self::SUBSCRIPTION_RENEW_MARGIN)) {
+                    continue;
+                }
+
+                // Hand the watch to a connection that is still around, in case the owner has gone.
+                if ($connections) {
+                    $owner = $this->pickOwnerConnection($calendarSync, $connections);
+
+                    if ($owner && (int)$owner['id'] !== (int)$calendarSync->getOwnerConnectionId()) {
+                        $calendarSyncRepository->updateOwnerConnectionId($syncId, $owner['id']);
+                        $calendarSync->setOwnerConnectionId($owner['id']);
+                    }
+                }
+
+                $outlookCalendar = $this->authorizeForCalendarSync($calendarSync);
+
+                if ($outlookCalendar === false) {
+                    continue;
+                }
+
+                $this->registerGraphSubscription($calendarSync, $outlookCalendar);
+            } catch (\Throwable $e) {
+                $this->logger->error(
+                    'OutlookCalendar: renew subscription failed',
+                    [
+                        'exception' => $e,
+                        'syncId'    => $syncId,
+                    ]
+                );
+            }
+        }
+    }
+
+    /**
+     * Prefer the connection that already drives the watch, falling back to any other still attached.
+     *
+     * @param CalendarSync $calendarSync
+     * @param array        $connections list of ['id' => int, 'userId' => int]
+     *
+     * @return array|null
+     */
+    private function pickOwnerConnection(CalendarSync $calendarSync, array $connections): ?array
+    {
+        $ownerConnectionId = $calendarSync->getOwnerConnectionId();
+
+        if ($ownerConnectionId) {
+            foreach ($connections as $connection) {
+                if ((int)$connection['id'] === (int)$ownerConnectionId) {
+                    return $connection;
+                }
+            }
+        }
+
+        return $connections ? $connections[0] : null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeTwoWaySyncForProvider($providerId): void
+    {
+        $providerId = (int)$providerId;
+        if ($providerId <= 0) {
+            return;
+        }
+
+        /** @var OutlookCalendarRepository $outlookCalendarRepository */
+        $outlookCalendarRepository = $this->container->get('domain.outlook.calendar.repository');
+
+        try {
+            $calendars = $outlookCalendarRepository->getByEntityId($providerId, 'userId');
+        } catch (\Throwable $e) {
+            return;
+        }
+
+        foreach ($calendars->getItems() as $outlookCalendar) {
+            if (!$outlookCalendar->getId()) {
+                continue;
+            }
+            $this->removeTwoWaySyncForCalendarRow($outlookCalendar->getId()->getValue());
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeTwoWaySyncForCalendarRow($calendarRowId): void
+    {
+        $calendarRowId = (int)$calendarRowId;
+        if ($calendarRowId <= 0) {
+            return;
+        }
+
+        /** @var OutlookCalendarRepository $outlookCalendarRepository */
+        $outlookCalendarRepository = $this->container->get('domain.outlook.calendar.repository');
+        /** @var ProviderRepository $providerRepository */
+        $providerRepository = $this->container->get('domain.users.providers.repository');
+
+        try {
+            $outlookCalendar = $outlookCalendarRepository->getById($calendarRowId);
+        } catch (\Throwable $e) {
+            return;
+        }
+
+        if (!$outlookCalendar->getSyncId()) {
+            return;
+        }
+
+        $syncId = (int)$outlookCalendar->getSyncId()->getValue();
+
+        // Authorizing first means the remote subscription can actually be deleted when this is the last
+        // connection using it. Without a usable token only the local rows can be cleaned up.
+        $providerId = $outlookCalendarRepository->getUserIdByOutlookCalendarRowId($calendarRowId);
+
+        if ($providerId) {
+            try {
+                $provider = $providerRepository->getById($providerId);
+                $provider->setOutlookCalendar($outlookCalendar);
+
+                // Best effort: a failure only means the remote subscription cannot be deleted, which
+                // deleteGraphSubscriptionRemote() detects through the authorization flag.
+                $this->authorizeProvider($provider);
+            } catch (\Throwable $e) {
+                $this->logger->error(
+                    'OutlookCalendar: removeTwoWaySync authorize',
+                    [
+                        'exception'     => $e,
+                        'calendarRowId' => $calendarRowId,
+                        'providerId'    => $providerId,
+                    ]
+                );
+            }
+        }
+
+        try {
+            $outlookCalendarRepository->updateSyncId($calendarRowId, null);
+
+            $this->detachConnectionFromCalendarSync($calendarRowId, $syncId);
+        } catch (\Throwable $e) {
+            $this->logger->error(
+                'OutlookCalendar: removeTwoWaySync detach',
+                [
+                    'exception'     => $e,
+                    'calendarRowId' => $calendarRowId,
+                    'syncId'        => $syncId,
+                ]
+            );
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function processGraphCalendarNotifications(
+        $subscriptionId,
+        $clientStateFromNotification,
+        array $notifications
+    ): void {
+        if (!$subscriptionId || !$notifications) {
+            return;
+        }
+
+        /** @var CalendarSyncRepository $calendarSyncRepository */
+        $calendarSyncRepository = $this->container->get('domain.calendar.sync.repository');
+
+        /** @var OutlookCalendarRepository $outlookCalendarRepository */
+        $outlookCalendarRepository = $this->container->get('domain.outlook.calendar.repository');
+
+        $calendarSync = $calendarSyncRepository->getBySubscriptionId(
+            CalendarSync::TYPE_OUTLOOK,
+            $subscriptionId
+        );
+
+        if (!$calendarSync) {
+            return;
+        }
+
+        $storedClientState   = (string)$calendarSync->getClientState();
+        $incomingClientState = (string)$clientStateFromNotification;
+
+        // The webhook endpoint carries neither a nonce nor a logged in user, so the client state is the only proof
+        // that a notification really comes from Graph. A missing stored value cannot be verified, so it is rejected
+        // instead of trusted - the subscription is recreated with a fresh client state the next time the provider is
+        // saved or reconnected (ensureTwoWaySyncForProvider).
+        if ($storedClientState === '' || !hash_equals($storedClientState, $incomingClientState)) {
+            return;
+        }
+
+        $outlookCalendar = $this->authorizeForCalendarSync($calendarSync);
+
+        if ($outlookCalendar === false) {
+            $this->logger->error(
+                'OutlookCalendar: notification authorize failed',
+                [
+                    'subscriptionId' => $subscriptionId,
+                    'syncId'         => $calendarSync->getId() ? $calendarSync->getId()->getValue() : null,
+                ]
+            );
+
+            return;
+        }
+
+        $this->renewGraphSubscription($calendarSync, $outlookCalendar);
+
+        /** @var CalendarSyncLockRepository $syncLockRepository */
+        $syncLockRepository = $this->container->get('domain.calendar.sync.lock.repository');
+
+        foreach ($notifications as $notification) {
+            $changeType = isset($notification['changeType']) ? (string)$notification['changeType'] : '';
+            $eventId = $this->extractGraphEventIdFromNotification($notification);
+            if ($eventId === '') {
+                $this->logger->warning(
+                    'OutlookCalendar: notification missing event id',
+                    [
+                        'notification'   => $notification,
+                        'subscriptionId' => $subscriptionId,
+                    ]
+                );
+                continue;
+            }
+
+            // Graph delivers at least once, so a second copy of this change can already be in flight. Taking the
+            // lock before fetching the event means the winner works from the current calendar state and whoever
+            // follows re-reads the appointment it just updated and applies nothing.
+            $lockKey = 'outlook:event:' . $eventId;
+
+            $lock = $syncLockRepository->acquire($lockKey);
+
+            if ($lock === CalendarSyncLockRepository::RESULT_CONTENDED) {
+                // Two notifications for one event id within the wait window are the same change arriving
+                // twice, and the holder fetches the event fresh, so it already sees whatever this delivery
+                // was going to apply.
+                $this->logger->info(
+                    'OutlookCalendar: skipped notification, another delivery holds the event',
+                    [
+                        'eventId'        => $eventId,
+                        'subscriptionId' => $subscriptionId,
+                    ]
+                );
+
+                continue;
+            }
+
+            try {
+                if (stripos($changeType, 'deleted') !== false) {
+                    $this->applyOutlookTwoWayDeletion($eventId, $calendarSync);
+                    continue;
+                }
+
+                try {
+                    $graphEvent = $this->fetchGraphEventForTwoWay(
+                        $calendarSync->getCalendarId(),
+                        $eventId
+                    );
+                } catch (\Throwable $e) {
+                    if ($this->isGraphEventMissingError($e)) {
+                        $this->applyOutlookTwoWayDeletion($eventId, $calendarSync);
+                        continue;
+                    }
+
+                    $this->logger->error(
+                        'OutlookCalendar: fetch event for two-way failed',
+                        [
+                            'exception' => $e,
+                            'eventId'   => $eventId,
+                        ]
+                    );
+                    continue;
+                }
+
+                if (!$graphEvent) {
+                    continue;
+                }
+
+                $this->applyOutlookTwoWayUpsert($graphEvent, $eventId, $calendarSync);
+            } finally {
+                if ($lock === CalendarSyncLockRepository::RESULT_ACQUIRED) {
+                    $syncLockRepository->release($lockKey);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param array $notification
+     *
+     * @return string
+     */
+    private function extractGraphEventIdFromNotification(array $notification): string
+    {
+        $resourceData = isset($notification['resourceData']) && is_array($notification['resourceData'])
+            ? $notification['resourceData']
+            : [];
+
+        foreach (['id', '@odata.id', 'odata.id'] as $key) {
+            if (!empty($resourceData[$key])) {
+                return rawurldecode(basename((string)$resourceData[$key]));
+            }
+        }
+
+        if (!empty($notification['resource'])) {
+            return rawurldecode(basename((string)$notification['resource']));
+        }
+
+        return '';
+    }
+
+    /**
+     * @param \Throwable $e
+     *
+     * @return bool
+     */
+    private function isGraphEventMissingError(\Throwable $e): bool
+    {
+        if ((int)$e->getCode() === 404) {
+            return true;
+        }
+
+        if (method_exists($e, 'getResponseStatusCode') && (int)$e->getResponseStatusCode() === 404) {
+            return true;
+        }
+
+        return (bool)preg_match('/\\b(404|NotFound|ErrorItemNotFound|ResourceNotFound)\\b/i', $e->getMessage());
+    }
+
+    /**
+     * Attach a connection to the watch for its calendar, creating both if they do not exist yet.
+     *
+     * Several connections can point at one calendar - two employees sharing a mailbox, or one employee
+     * with the calendar connected twice - and Graph would happily hand out a subscription per connection,
+     * delivering every change as many times as there are connections. The registry row is what makes them
+     * share one.
+     *
+     * @param \AmeliaBooking\Domain\Entity\Outlook\OutlookCalendar $outlookCalendar
+     * @param Provider                                             $provider
+     *
+     * @return void
+     */
+    private function createOrRefreshGraphSubscription($outlookCalendar, Provider $provider): void
+    {
+        $calendarSync = $this->attachConnectionToCalendarSync($outlookCalendar, $provider);
+
+        if (!$calendarSync) {
+            return;
+        }
+
+        // Someone else's connection already holds a live watch on this calendar, and its notifications
+        // cover this connection too.
+        if ($calendarSync->hasLiveSubscription(self::SUBSCRIPTION_RENEW_MARGIN)) {
+            return;
+        }
+
+        $this->registerGraphSubscription($calendarSync, $outlookCalendar);
+    }
+
+    /**
+     * Resolve the registry row for a connection's calendar and point the connection at it.
+     *
+     * @param \AmeliaBooking\Domain\Entity\Outlook\OutlookCalendar $outlookCalendar
+     * @param Provider                                             $provider
+     *
+     * @return CalendarSync|null
+     */
+    private function attachConnectionToCalendarSync($outlookCalendar, Provider $provider): ?CalendarSync
+    {
+        if (
+            !$outlookCalendar->getId() ||
+            !$outlookCalendar->getCalendarId() ||
+            !$outlookCalendar->getCalendarId()->getValue()
+        ) {
+            return null;
+        }
+
+        /** @var CalendarSyncRepository $calendarSyncRepository */
+        $calendarSyncRepository = $this->container->get('domain.calendar.sync.repository');
+
+        /** @var OutlookCalendarRepository $outlookCalendarRepository */
+        $outlookCalendarRepository = $this->container->get('domain.outlook.calendar.repository');
+
+        $connectionId = (int)$outlookCalendar->getId()->getValue();
+        $calendarId   = $outlookCalendar->getCalendarId()->getValue();
+        $accountId    = $this->resolveAccountId($outlookCalendar, $provider);
+
+        $calendarSync = $calendarSyncRepository->getOrCreate(
+            CalendarSync::TYPE_OUTLOOK,
+            $accountId,
+            $calendarId,
+            $connectionId
+        );
+
+        if (!$calendarSync || !$calendarSync->getId()) {
+            return null;
+        }
+
+        $currentSyncId = $outlookCalendar->getSyncId() ? (int)$outlookCalendar->getSyncId()->getValue() : null;
+        $syncId        = (int)$calendarSync->getId()->getValue();
+
+        if ($currentSyncId !== $syncId) {
+            // The connection may have been watching a different calendar until now, in which case the old
+            // watch has to be released before the new one is taken up.
+            if ($currentSyncId) {
+                $this->detachConnectionFromCalendarSync($connectionId, $currentSyncId);
+            }
+
+            $outlookCalendarRepository->updateSyncId($connectionId, $syncId);
+            $outlookCalendar->setSyncId(new Id($syncId));
+        }
+
+        return $calendarSync;
+    }
+
+    /**
+     * The mailbox a calendar id belongs to. Graph calendar ids are only meaningful inside their mailbox,
+     * so two employees on the same shared calendar in different mailboxes hold different ids for it and
+     * must not be merged.
+     *
+     * When the address cannot be read, the connection gets an identity of its own rather than being merged
+     * into someone else's - that degrades to a subscription per connection, which is what happened before
+     * the registry existed, instead of pointing two mailboxes at one watch.
+     *
+     * @param \AmeliaBooking\Domain\Entity\Outlook\OutlookCalendar $outlookCalendar
+     * @param Provider                                             $provider
+     *
+     * @return string
+     */
+    private function resolveAccountId($outlookCalendar, Provider $provider): string
+    {
+        if ($outlookCalendar->getAccountId()) {
+            return $outlookCalendar->getAccountId();
+        }
+
+        $connectionId = (int)$outlookCalendar->getId()->getValue();
+
+        $accountId = '';
+
+        try {
+            $identity = $this->fetchMailboxIdentity();
+
+            $accountId = !empty($identity['email']) ? strtolower(trim((string)$identity['email'])) : '';
+        } catch (\Throwable $e) {
+            $this->logger->warning(
+                'OutlookCalendar: could not resolve account for calendar sync',
+                [
+                    'exception'    => $e,
+                    'connectionId' => $connectionId,
+                ]
+            );
+        }
+
+        if ($accountId === '') {
+            $accountId = 'connection:' . $connectionId;
+        }
+
+        /** @var OutlookCalendarRepository $outlookCalendarRepository */
+        $outlookCalendarRepository = $this->container->get('domain.outlook.calendar.repository');
+
+        $outlookCalendarRepository->updateAccountId($connectionId, $accountId);
+        $outlookCalendar->setAccountId($accountId);
+
+        return $accountId;
+    }
+
+    /**
+     * Register a Graph subscription for a calendar and record it on the registry row.
+     *
+     * @param CalendarSync                                              $calendarSync
+     * @param \AmeliaBooking\Domain\Entity\Outlook\OutlookCalendar|null $outlookCalendar connection driving
+     *                                                                                   it, null for a
+     *                                                                                   watch on the global
+     *                                                                                   token
+     *
+     * @return void
+     */
+    private function registerGraphSubscription(CalendarSync $calendarSync, $outlookCalendar): void
+    {
+        /** @var CalendarSyncRepository $calendarSyncRepository */
+        $calendarSyncRepository = $this->container->get('domain.calendar.sync.repository');
+
+        if ($calendarSync->getSubscriptionId()) {
+            $this->deleteGraphSubscriptionRemote($calendarSync->getSubscriptionId());
+
+            // The remote subscription is gone, so the stored state describes something that no longer
+            // exists. Persisting the clear now matters because the create below can throw: callers only
+            // log, and a row still holding a future expiresAt reads as live to hasLiveSubscription(),
+            // which would make every renewal path skip it until that stale expiry aged into the margin.
+            $calendarSync->setSubscriptionId(null);
+            $calendarSync->setExpiresAt(null);
+            $calendarSync->setClientState(null);
+
+            $calendarSyncRepository->clearSubscriptionState($calendarSync->getId()->getValue());
+        }
+
+        $clientState = bin2hex(random_bytes(16));
+
+        $expiration = (new DateTime('now', new \DateTimeZone('UTC')));
+        $expiration->add(new \DateInterval('P2DT12H'));
+
+        $body = [
+            'changeType'         => 'created,updated,deleted',
+            'notificationUrl'    => $this->getOutlookCalendarWebhookAddress(),
+            'resource'           => '/me/calendars/' . $calendarSync->getCalendarId() . '/events',
+            'expirationDateTime' => $expiration->format('Y-m-d\TH:i:s.000\Z'),
+            'clientState'        => $clientState,
+        ];
+
+        $subscription = $this->graph->createRequest('POST', '/subscriptions')
+            ->attachBody($body)
+            ->setReturnType(Subscription::class)
+            ->execute();
+
+        $expiresRaw = $subscription->getExpirationDateTime();
+        if ($expiresRaw instanceof \DateTimeInterface) {
+            $expiresAt = gmdate('Y-m-d H:i:s', $expiresRaw->getTimestamp());
+        } else {
+            $expiresAt = $expiresRaw ? gmdate('Y-m-d H:i:s', strtotime((string)$expiresRaw)) : null;
+        }
+
+        $calendarSync->setSubscriptionId($subscription->getId());
+        $calendarSync->setExpiresAt($expiresAt);
+        $calendarSync->setClientState($clientState);
+
+        // Whoever registered the watch is the connection whose token renews and deletes it. A null owner
+        // means it runs on the global token instead.
+        $ownerConnectionId = $outlookCalendar && $outlookCalendar->getId()
+            ? (int)$outlookCalendar->getId()->getValue()
+            : null;
+
+        $calendarSync->setOwnerConnectionId($ownerConnectionId);
+
+        $calendarSyncRepository->updateSubscriptionState(
+            $calendarSync->getId()->getValue(),
+            $calendarSync->getSubscriptionId(),
+            $calendarSync->getExpiresAt(),
+            $calendarSync->getClientState()
+        );
+
+        $calendarSyncRepository->updateOwnerConnectionId(
+            $calendarSync->getId()->getValue(),
+            $ownerConnectionId
+        );
+    }
+
+    /**
+     * Release a connection's claim on a watch, tearing the watch down only when nothing else needs it.
+     *
+     * @param int $connectionId
+     * @param int $syncId
+     *
+     * @return void
+     */
+    private function detachConnectionFromCalendarSync($connectionId, $syncId): void
+    {
+        /** @var CalendarSyncRepository $calendarSyncRepository */
+        $calendarSyncRepository = $this->container->get('domain.calendar.sync.repository');
+
+        /** @var OutlookCalendarRepository $outlookCalendarRepository */
+        $outlookCalendarRepository = $this->container->get('domain.outlook.calendar.repository');
+
+        try {
+            /** @var CalendarSync|null $calendarSync */
+            $calendarSync = $calendarSyncRepository->getById($syncId);
+        } catch (\Throwable $e) {
+            return;
+        }
+
+        if (!$calendarSync) {
+            return;
+        }
+
+        $remaining = $outlookCalendarRepository->getConnectionsBySyncId($syncId, $connectionId);
+
+        if ($remaining) {
+            // Still in use. Hand the watch over if the connection leaving was the one driving it - the
+            // subscription itself stays valid, since a token for the same mailbox addresses it too.
+            if ((int)$calendarSync->getOwnerConnectionId() === (int)$connectionId) {
+                $calendarSyncRepository->updateOwnerConnectionId($syncId, $remaining[0]['id']);
+            }
+
+            return;
+        }
+
+        // Employees on the global connection reach a calendar through their user row rather than a
+        // connection row, so counting connections alone would tear down a subscription they still rely
+        // on. Drop the owner first and ask as the owner-less row this is about to become: while an owner
+        // is set, the account check short circuits, and it is the part that matters here because Outlook
+        // calendar ids are mailbox scoped and only mean this calendar within the global account.
+        $calendarSync->setOwnerConnectionId(null);
+
+        if ($this->globalEmployeesForCalendarSync($calendarSync)) {
+            $calendarSyncRepository->updateOwnerConnectionId($syncId, null);
+
+            return;
+        }
+
+        if ($calendarSync->getSubscriptionId()) {
+            $this->deleteGraphSubscriptionRemote($calendarSync->getSubscriptionId());
+        }
+
+        $calendarSyncRepository->delete($syncId);
+    }
+
+    /**
+     * @param array $calendarList
+     *
+     * @return string|null
+     */
+    private function pickPrimaryCalendarId(array $calendarList): ?string
+    {
+        foreach ($calendarList as $calendar) {
+            if (!empty($calendar['isDefault']) && !empty($calendar['id'])) {
+                return $calendar['id'];
+            }
+        }
+
+        foreach ($calendarList as $calendar) {
+            if (!empty($calendar['owner']) && !empty($calendar['id'])) {
+                return $calendar['id'];
+            }
+        }
+
+        return !empty($calendarList[0]['id']) ? $calendarList[0]['id'] : null;
+    }
+
+    /**
+     * @param string $subscriptionId
+     *
+     * @return void
+     */
+    private function deleteGraphSubscriptionRemote($subscriptionId): void
+    {
+        if (!$subscriptionId) {
+            return;
+        }
+
+        // Callers are responsible for authorizing the right mailbox first. The client object is always
+        // present, so authorization is tracked separately.
+        if (!$this->graphAuthorized) {
+            $this->logger->warning(
+                'OutlookCalendar: cannot delete subscription without an authorized client, leaving it to expire',
+                ['subscriptionId' => $subscriptionId]
+            );
+
+            return;
+        }
+
+        try {
+            $this->graph->createRequest('DELETE', '/subscriptions/' . rawurlencode($subscriptionId))->execute();
+        } catch (\Throwable $e) {
+            $this->logger->error(
+                'OutlookCalendar: DELETE subscription failed',
+                [
+                    'exception'      => $e,
+                    'subscriptionId' => $subscriptionId,
+                ]
+            );
+        }
+    }
+
+    /**
+     * Whether an unowned watch still belongs to the account the global connection currently uses.
+     *
+     * A Graph calendar id is only meaningful inside its mailbox, and the user row records the employee's
+     * selection without recording which mailbox it came from - there is no per employee account to carry,
+     * because a site has one global connection at a time. So the account on the watch is compared against
+     * the one the settings hold now: if the global connection has since been pointed at another mailbox,
+     * selections left over from the previous one must not keep that watch alive or authorize changes
+     * through it.
+     *
+     * @param CalendarSync $calendarSync
+     *
+     * @return bool
+     */
+    private function isGlobalAccountCurrent(CalendarSync $calendarSync): bool
+    {
+        // An owned watch runs on its connection's token, so the global account says nothing about it.
+        if ($calendarSync->getOwnerConnectionId()) {
+            return true;
+        }
+
+        $currentAccountId = !empty($this->outlookCalendarSettings['accountId'])
+            ? (string)$this->outlookCalendarSettings['accountId']
+            : '';
+
+        // No account recorded yet - a watch from before it was resolved. Matching on the calendar id
+        // alone is what happened before, and is better than refusing every global watch.
+        if ($currentAccountId === '') {
+            return true;
+        }
+
+        return $calendarSync->getAccountId() === $currentAccountId;
+    }
+
+    /**
+     * Employees whose user row selects the calendar this watch is for, empty when the watch belongs to a
+     * superseded account.
+     *
+     * @param CalendarSync $calendarSync
+     *
+     * @return int[]
+     * @throws QueryExecutionException
+     */
+    private function globalEmployeesForCalendarSync(CalendarSync $calendarSync): array
+    {
+        if (!$this->isGlobalAccountCurrent($calendarSync)) {
+            return [];
+        }
+
+        /** @var ProviderRepository $providerRepository */
+        $providerRepository = $this->container->get('domain.users.providers.repository');
+
+        return $providerRepository->getProviderIdsByCalendarId(
+            $calendarSync->getCalendarId(),
+            'outlookCalendarId'
+        );
+    }
+
+    /**
+     * Authorize Graph with the access token from the plugin settings, independent of any employee.
+     *
+     * @return bool
+     */
+    private function authorizeWithGlobalToken(): bool
+    {
+        if (!$this->isAccessTokenSet()) {
+            $this->graphAuthorized = false;
+
+            return false;
+        }
+
+        /** @var OutlookCalendarMiddlewareService $outlookCalendarMiddlewareService */
+        $outlookCalendarMiddlewareService = $this->container->get(
+            'infrastructure.outlook.calendar.middleware.service'
+        );
+
+        // Passing no calendar is what selects the settings token rather than a connection's own.
+        $graph = $outlookCalendarMiddlewareService->getGraph(null);
+
+        if ($graph === null) {
+            $this->graphAuthorized = false;
+
+            return false;
+        }
+
+        $this->graph = $graph;
+        $this->graphAuthorized = true;
+
+        return true;
+    }
+
+    /**
+     * Authorize purely in order to tear a subscription down.
+     *
+     * A subscription being removed has nobody left using it, so authorizeForCalendarSync() would refuse
+     * it. Any credential for the right mailbox will do to send the delete - the owning connection if its
+     * row still exists, otherwise the global token.
+     *
+     * @param CalendarSync $calendarSync
+     *
+     * @return bool whether Graph is now authorized
+     */
+    private function authorizeForTeardown(CalendarSync $calendarSync): bool
+    {
+        /** @var OutlookCalendarRepository $outlookCalendarRepository */
+        $outlookCalendarRepository = $this->container->get('domain.outlook.calendar.repository');
+
+        /** @var ProviderRepository $providerRepository */
+        $providerRepository = $this->container->get('domain.users.providers.repository');
+
+        try {
+            $ownerConnectionId = $calendarSync->getOwnerConnectionId();
+
+            if ($ownerConnectionId) {
+                $providerId = $outlookCalendarRepository->getUserIdByOutlookCalendarRowId($ownerConnectionId);
+
+                if ($providerId) {
+                    $provider = $providerRepository->getById($providerId);
+                    $provider->setOutlookCalendar($outlookCalendarRepository->getById($ownerConnectionId));
+
+                    return $this->authorizeProvider($provider);
+                }
+            }
+
+            // No connection left to borrow, so the watch belongs to the global connection and the token
+            // for it comes from the settings. Going through an employee would be both wasteful - a remote
+            // call each, for every orphaned row - and wrong, since an employee who happens to have a
+            // connection of their own would authorize their mailbox instead of the global one.
+            return $this->authorizeWithGlobalToken();
+        } catch (\Throwable $e) {
+            $this->logger->warning(
+                'OutlookCalendar: could not authorize to delete a subscription',
+                [
+                    'exception' => $e,
+                    'syncId'    => $calendarSync->getId() ? $calendarSync->getId()->getValue() : null,
+                ]
+            );
+
+            return false;
+        }
+    }
+
+    /**
+     * Authorize Graph with whatever credential drives a watch.
+     *
+     * An owned watch uses that connection's token. An unowned one belongs to the global Settings page
+     * connection, so it uses the token from the plugin settings and only needs some employee attached to
+     * the calendar to hang the request on.
+     *
+     * @param CalendarSync $calendarSync
+     *
+     * @return \AmeliaBooking\Domain\Entity\Outlook\OutlookCalendar|null|false the connection driving the
+     *                                                                        watch, null when it runs on
+     *                                                                        the global token, false when
+     *                                                                        authorization failed
+     */
+    private function authorizeForCalendarSync(CalendarSync $calendarSync)
+    {
+        /** @var OutlookCalendarRepository $outlookCalendarRepository */
+        $outlookCalendarRepository = $this->container->get('domain.outlook.calendar.repository');
+
+        /** @var ProviderRepository $providerRepository */
+        $providerRepository = $this->container->get('domain.users.providers.repository');
+
+        $ownerConnectionId = $calendarSync->getOwnerConnectionId();
+
+        try {
+            if ($ownerConnectionId) {
+                $providerId = $outlookCalendarRepository->getUserIdByOutlookCalendarRowId($ownerConnectionId);
+
+                // The owning connection may be gone - a disconnect that removed the row without releasing
+                // the watch. Hand it to another connection still attached before giving up.
+                if (!$providerId && $calendarSync->getId()) {
+                    $syncId = (int)$calendarSync->getId()->getValue();
+
+                    $remaining = $outlookCalendarRepository->getConnectionsBySyncId($syncId);
+
+                    if ($remaining) {
+                        $calendarSyncRepository = $this->container->get('domain.calendar.sync.repository');
+
+                        $calendarSyncRepository->updateOwnerConnectionId($syncId, $remaining[0]['id']);
+                        $calendarSync->setOwnerConnectionId($remaining[0]['id']);
+
+                        $ownerConnectionId = $remaining[0]['id'];
+                        $providerId        = $remaining[0]['userId'];
+                    }
+                }
+
+                if (!$providerId) {
+                    return false;
+                }
+
+                $outlookCalendar = $outlookCalendarRepository->getById($ownerConnectionId);
+
+                $provider = $providerRepository->getById($providerId);
+                $provider->setOutlookCalendar($outlookCalendar);
+
+                return $this->authorizeProvider($provider) ? $outlookCalendar : false;
+            }
+
+            if (!$this->isAccessTokenSet()) {
+                return false;
+            }
+
+            $employees = $this->globalEmployeesForCalendarSync($calendarSync);
+
+            if (!$employees) {
+                return false;
+            }
+
+            $provider = $providerRepository->getById($employees[0]);
+
+            return $this->authorizeProvider($provider) ? null : false;
+        } catch (\Throwable $e) {
+            $this->logger->error(
+                'OutlookCalendar: authorize for calendar sync failed',
+                [
+                    'exception' => $e,
+                    'syncId'    => $calendarSync->getId() ? $calendarSync->getId()->getValue() : null,
+                ]
+            );
+
+            return false;
+        }
+    }
+
+    /**
+     * @param CalendarSync                                         $calendarSync
+     * @param \AmeliaBooking\Domain\Entity\Outlook\OutlookCalendar $outlookCalendar connection driving it
+     *
+     * @return void
+     */
+    private function renewGraphSubscription(CalendarSync $calendarSync, $outlookCalendar): void
+    {
+        if ($calendarSync->hasLiveSubscription(self::SUBSCRIPTION_RENEW_MARGIN)) {
+            return;
+        }
+
+        try {
+            $this->registerGraphSubscription($calendarSync, $outlookCalendar);
+        } catch (\Throwable $e) {
+            $this->logger->error(
+                'OutlookCalendar: subscription renew failed',
+                [
+                    'exception' => $e,
+                    'syncId'    => $calendarSync->getId() ? $calendarSync->getId()->getValue() : null,
+                ]
+            );
+        }
+    }
+
+    /**
+     * @param string $calendarId
+     * @param string $eventId
+     *
+     * @return Event|null
+     */
+    private function fetchGraphEventForTwoWay($calendarId, $eventId): ?Event
+    {
+        $expand = rawurlencode(
+            "singleValueExtendedProperties(\$filter=id eq 'Integer " . self::GUID . " Name appointmentId')"
+        );
+
+        return $this->graph->createRequest(
+            'GET',
+            sprintf(
+                '/me/calendars/%s/events/%s?$expand=%s',
+                rawurlencode($calendarId),
+                rawurlencode($eventId),
+                $expand
+            )
+        )
+            ->setHeader('Prefer', 'outlook.timezone="' . DateTimeService::getTimeZone()->getName() . '"')
+            ->setReturnType(Event::class)
+            ->execute();
+    }
+
+    /**
+     * @param Event        $graphEvent
+     * @param string       $graphEventId
+     * @param CalendarSync $calendarSync calendar the notification arrived for
+     *
+     * @return void
+     */
+    private function applyOutlookTwoWayUpsert(Event $graphEvent, $graphEventId, CalendarSync $calendarSync): void
+    {
+        $ameliaNumericId = $this->readAmeliaNumericIdFromGraphEvent($graphEvent);
+        if (!$ameliaNumericId) {
+            return;
+        }
+
+        /** @var AppointmentRepository $appointmentRepository */
+        $appointmentRepository = $this->container->get('domain.booking.appointment.repository');
+        /** @var EventPeriodsRepository $eventPeriodsRepository */
+        $eventPeriodsRepository = $this->container->get('domain.booking.event.period.repository');
+        /** @var CalendarApplicationService $calendarApplicationService */
+        $calendarApplicationService = $this->container->get('application.calendar.service');
+
+        $appointments = $appointmentRepository->getByFieldValue('outlookCalendarEventId', $graphEventId);
+        if ($appointments->length()) {
+            $appointmentKeys = $appointments->keys();
+            /** @var Appointment $appointment */
+            $appointment = $appointments->getItem($appointmentKeys[0]);
+            if ((int)$appointment->getId()->getValue() !== $ameliaNumericId) {
+                return;
+            }
+
+            if (!$this->isChangeAllowedForCalendar($calendarSync, $appointment->getProviderId())) {
+                return;
+            }
+
+            $appointment = $appointmentRepository->getById($appointment->getId()->getValue());
+
+            if ($this->isGraphEventCancelled($graphEvent)) {
+                $calendarApplicationService->handleAppointmentReject($appointment, 'outlookCalendar');
+                return;
+            }
+
+            [$startString, $endString] = $this->graphEventTimesToSiteStrings($graphEvent);
+            $calendarApplicationService->handleAppointmentReschedule(
+                $appointment,
+                $startString,
+                $endString,
+                'outlookCalendar'
+            );
+            return;
+        }
+
+        $periods = $eventPeriodsRepository->getByFieldValue('outlookCalendarEventId', $graphEventId);
+        if (!$periods->length()) {
+            return;
+        }
+
+        $periodKeys = $periods->keys();
+        /** @var EventPeriod $eventPeriod */
+        $eventPeriod = $periods->getItem($periodKeys[0]);
+        if ((int)$eventPeriod->getEventId()->getValue() !== $ameliaNumericId) {
+            return;
+        }
+
+        $event = $calendarApplicationService->getChangedEvent($eventPeriod);
+
+        if (!$event || !$this->isChangeAllowedForCalendar($calendarSync, $event->getOrganizerId())) {
+            return;
+        }
+
+        if ($this->isGraphEventCancelled($graphEvent)) {
+            $calendarApplicationService->handleEventPeriodDelete($event, $eventPeriod, 'outlookCalendar');
+            return;
+        }
+
+        [$startString, $endString] = $this->graphEventTimesToSiteStrings($graphEvent);
+        $calendarApplicationService->handleEventPeriodReschedule(
+            $event,
+            $eventPeriod,
+            $startString,
+            $endString,
+            'outlookCalendar'
+        );
+    }
+
+    /**
+     * @param string       $graphEventId
+     * @param CalendarSync $calendarSync calendar the notification arrived for
+     *
+     * @return void
+     */
+    private function applyOutlookTwoWayDeletion(string $graphEventId, CalendarSync $calendarSync): void
+    {
+        /** @var AppointmentRepository $appointmentRepository */
+        $appointmentRepository = $this->container->get('domain.booking.appointment.repository');
+        /** @var EventPeriodsRepository $eventPeriodsRepository */
+        $eventPeriodsRepository = $this->container->get('domain.booking.event.period.repository');
+        /** @var CalendarApplicationService $calendarApplicationService */
+        $calendarApplicationService = $this->container->get('application.calendar.service');
+
+        /** @var Collection $appointments */
+        $appointments = $appointmentRepository->getByFieldValue('outlookCalendarEventId', $graphEventId);
+
+        if ($appointments->length()) {
+            $keys = $appointments->keys();
+
+            /** @var Appointment $appointment */
+            $appointment = $appointments->getItem($keys[0]);
+
+            if (!$this->isChangeAllowedForCalendar($calendarSync, $appointment->getProviderId())) {
+                return;
+            }
+
+            $appointment = $appointmentRepository->getById($appointment->getId()->getValue());
+            $calendarApplicationService->handleAppointmentReject($appointment, 'outlookCalendar');
+            return;
+        }
+
+        /** @var Collection $periods */
+        $periods = $eventPeriodsRepository->getByFieldValue('outlookCalendarEventId', $graphEventId);
+
+        if ($periods->length()) {
+            $pKeys = $periods->keys();
+
+            /** @var EventPeriod $eventPeriod */
+            $eventPeriod = $periods->getItem($pKeys[0]);
+            $event = $calendarApplicationService->getChangedEvent($eventPeriod);
+
+            if (!$event || !$this->isChangeAllowedForCalendar($calendarSync, $event->getOrganizerId())) {
+                return;
+            }
+
+            $calendarApplicationService->handleEventPeriodDelete($event, $eventPeriod, 'outlookCalendar');
+        }
+    }
+
+    /**
+     * The calendar scoped guard: a change may only be applied to a booking whose employee is actually
+     * connected to the calendar the notification came from.
+     *
+     * An event id is not scoped to a calendar, so matching one is not on its own proof that the change
+     * belongs to this calendar. Ownership cannot be a single employee either - several employees can share
+     * one calendar and one watch, so any of them is a legitimate target.
+     *
+     * The connection rows are the source of truth here. Once the calendar an event was written to is
+     * recorded on the booking itself, this becomes a direct comparison instead.
+     *
+     * @param CalendarSync $calendarSync
+     * @param Id|null      $providerId
+     *
+     * @return bool
+     */
+    private function isChangeAllowedForCalendar(CalendarSync $calendarSync, $providerId): bool
+    {
+        if (!$providerId || !$calendarSync->getId()) {
+            return false;
+        }
+
+        /** @var OutlookCalendarRepository $outlookCalendarRepository */
+        $outlookCalendarRepository = $this->container->get('domain.outlook.calendar.repository');
+
+        /** @var ProviderRepository $providerRepository */
+        $providerRepository = $this->container->get('domain.users.providers.repository');
+
+        try {
+            $attached = $outlookCalendarRepository->isProviderAttachedToSync(
+                (int)$calendarSync->getId()->getValue(),
+                (int)$providerId->getValue()
+            );
+
+            if ($attached) {
+                return true;
+            }
+
+            // Employees on the global connection have no connection row; their selection is the user row,
+            // which only counts while the watch still belongs to the account that connection uses.
+            return $this->isGlobalAccountCurrent($calendarSync)
+                && $providerRepository->isProviderUsingCalendarId(
+                    (int)$providerId->getValue(),
+                    $calendarSync->getCalendarId(),
+                    'outlookCalendarId'
+                );
+        } catch (\Throwable $e) {
+            $this->logger->error(
+                'OutlookCalendar: could not verify calendar ownership for change',
+                [
+                    'exception'  => $e,
+                    'providerId' => $providerId->getValue(),
+                ]
+            );
+
+            return false;
+        }
+    }
+
+    /**
+     * @param Event $graphEvent
+     *
+     * @return int|null
+     */
+    private function readAmeliaNumericIdFromGraphEvent(Event $graphEvent): ?int
+    {
+        $props = $graphEvent->getSingleValueExtendedProperties();
+        if (!$props) {
+            return null;
+        }
+
+        $needle = 'Integer ' . self::GUID . ' Name appointmentId';
+        foreach ($props as $prop) {
+            if ($this->getGraphPropertyId($prop) === $needle) {
+                $value = (int)$this->getGraphPropertyValue($prop);
+                return $value > 0 ? $value : null;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param Event $graphEvent
+     *
+     * @return bool
+     */
+    private function isGraphEventCancelled(Event $graphEvent): bool
+    {
+        $cancelled = $graphEvent->getIsCancelled();
+
+        return $cancelled === true || $cancelled === 1 || $cancelled === '1';
+    }
+
+    /**
+     * @param Event $graphEvent
+     *
+     * @return array
+     * @throws DateInvalidTimeZoneException
+     * @throws Exception
+     */
+    private function graphEventTimesToSiteStrings(Event $graphEvent): array
+    {
+        $start = $graphEvent->getStart();
+        $end = $graphEvent->getEnd();
+
+        $startTz = $start && $start->getTimeZone() ? $start->getTimeZone() : 'UTC';
+        $endTz = $end && $end->getTimeZone() ? $end->getTimeZone() : 'UTC';
+
+        $startDt = new DateTime($start->getDateTime(), new \DateTimeZone($startTz));
+        $endDt = new DateTime($end->getDateTime(), new \DateTimeZone($endTz));
+
+        $startDt->setTimezone(DateTimeService::getTimeZone());
+        $endDt->setTimezone(DateTimeService::getTimeZone());
+
+        return [
+            $startDt->format('Y-m-d H:i:s'),
+            $endDt->format('Y-m-d H:i:s'),
+        ];
+    }
+
+    /**
+     * @param array $outlookSettings
+     * @param array $savedOutlookSettings
+     *
+     * @return CommandResult
+     */
+    public function validateCredentials(array $outlookSettings, array $savedOutlookSettings): CommandResult
+    {
+        $validateResult = OutlookCredentialsValidatorService::validateCredentials(
+            $outlookSettings,
+            $savedOutlookSettings
+        );
+
+        if ($validateResult instanceof CommandResult) {
+            return $validateResult;
+        }
+
+        $result = new CommandResult();
+        $result->setResult(CommandResult::RESULT_SUCCESS);
+        $result->setData($validateResult);
+
+        return $result;
     }
 }

@@ -3,6 +3,7 @@
 namespace AmeliaBooking\Application\Commands\Settings;
 
 use AmeliaBooking\Application\Commands\CommandHandler;
+use AmeliaBooking\Application\Services\Payment\StripeWebhookRegistrationService;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Location\AbstractCurrentLocation;
@@ -17,7 +18,7 @@ use AmeliaBooking\Infrastructure\Services\Apple\AbstractAppleCalendarService;
 use AmeliaBooking\Infrastructure\Licence\Licence;
 use AmeliaBooking\Infrastructure\Licence\LicenceConstants;
 use AmeliaBooking\Infrastructure\Services\LessonSpace\AbstractLessonSpaceService;
-use AmeliaBooking\Infrastructure\Services\Outlook\OutlookCredentialsValidatorService;
+use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 use AmeliaBooking\Infrastructure\WP\Integrations\WooCommerce\WooCommerceService;
 use AmeliaBooking\Infrastructure\WP\UserRoles\SuperAdminRoleService;
 use AmeliaBooking\Infrastructure\WP\UserRoles\UserRoles;
@@ -43,7 +44,7 @@ class UpdateSettingsCommandHandler extends CommandHandler
      * @throws ContainerException
      * @throws Exception
      */
-    public function handle(UpdateSettingsCommand $command)
+    public function handle(UpdateSettingsCommand $command): CommandResult
     {
         $result = new CommandResult();
 
@@ -64,7 +65,7 @@ class UpdateSettingsCommandHandler extends CommandHandler
         /** @var SettingsService $settingsService */
         $settingsService = $this->getContainer()->get('domain.settings.service');
 
-        $superAdminService = new SuperAdminRoleService();
+        $superAdminService = new SuperAdminRoleService($settingsService);
 
         /** @var AbstractCurrentLocation $locationService */
         $locationService = $this->getContainer()->get('application.currentLocation.service');
@@ -132,17 +133,20 @@ class UpdateSettingsCommandHandler extends CommandHandler
 
             unset($outlookSettings['token']);
 
+            /** @var AbstractOutlookCalendarService $outlookCalendarService */
+            $outlookCalendarService = $this->getContainer()->get('infrastructure.outlook.calendar.service');
+
             $savedOutlookSettings = $settingsService->getCategorySettings('outlookCalendar');
-            $validateResult          = OutlookCredentialsValidatorService::validateCredentials(
+            $validateResult = $outlookCalendarService->validateCredentials(
                 $outlookSettings,
                 $savedOutlookSettings
             );
 
-            if ($validateResult instanceof CommandResult) {
+            if ($validateResult->getResult() === CommandResult::RESULT_ERROR) {
                 return $validateResult;
             }
 
-            $settingsFields['outlookCalendar'] = $validateResult;
+            $settingsFields['outlookCalendar'] = $validateResult->getData();
         }
 
         if ($command->getField('providerBadges') !== null) {
@@ -393,7 +397,26 @@ class UpdateSettingsCommandHandler extends CommandHandler
 
         do_action('amelia_before_settings_updated', $settingsFields);
 
+        // The Stripe webhook fields are written by the server when the endpoint is registered
+        // and are not editable anywhere, so whatever the settings form sends back for them is
+        // a copy from page load; the stored values are put back before the save.
+        /** @var StripeWebhookRegistrationService $stripeWebhookRegistrationService */
+        $stripeWebhookRegistrationService = $this->container->get('application.stripe.webhook.registration.service');
+
+        $stripeSettingsSubmitted = isset($settingsFields['payments']['stripe']);
+
+        $settingsFields = $stripeWebhookRegistrationService->withServerOwnedSettings($settingsFields);
+
         $settingsService->setAllSettings($settingsFields);
+
+        // Armed with the keys the admin just entered, rather than on the first payment that
+        // needs it - a customer mid-checkout should not wait for Stripe's webhook API. Runs
+        // before the settings this response carries are read, so what the admin gets back
+        // already holds the registered endpoint. It never throws, and does nothing at all
+        // when the webhook is already in place.
+        if ($stripeSettingsSubmitted) {
+            $stripeWebhookRegistrationService->ensureRegisteredAfterSettingsSave();
+        }
 
         if (
             array_key_exists('whiteLabel', $settingsFields) ||

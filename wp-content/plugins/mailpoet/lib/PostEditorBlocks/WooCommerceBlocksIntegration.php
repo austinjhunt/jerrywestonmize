@@ -103,7 +103,7 @@ class WooCommerceBlocksIntegration {
   public function registerCheckoutFrontendBlocks($integration_registry) {
     $integration_registry->register(new MarketingOptinBlock(
       [
-      'defaultText' => $this->settings->get('woocommerce.optin_on_checkout.message', ''),
+      'defaultText' => $this->wp->wpKsesPost((string)$this->settings->get('woocommerce.optin_on_checkout.message', '')),
       'optinEnabled' => $this->settings->get('woocommerce.optin_on_checkout.enabled', false),
       'trackingConsentEnabled' => $this->trackingConsentCapture->isCaptureEnabled(),
       'trackingConsentText' => $this->trackingConsentCapture->getCopy(
@@ -178,9 +178,10 @@ class WooCommerceBlocksIntegration {
 
   public function processCheckoutBlockOptin(\WC_Order $order, $request) {
     $checkoutOptin = isset($request['extensions']['mailpoet']['optin']) ? (bool)$request['extensions']['mailpoet']['optin'] : false;
-    $trackingConsent = isset($request['extensions']['mailpoet']['tracking_consent'])
-      ? (bool)$request['extensions']['mailpoet']['tracking_consent']
-      : false;
+    // The block sends this key as soon as it shows the consent box, ticked or not,
+    // so a request without it comes from a checkout that never asked.
+    $consentFieldRendered = isset($request['extensions']['mailpoet']['tracking_consent']);
+    $trackingConsent = $consentFieldRendered && (bool)$request['extensions']['mailpoet']['tracking_consent'];
 
     // Emulate checkout opt-in triggering for AutomateWoo
     if ($checkoutOptin) {
@@ -213,6 +214,6 @@ class WooCommerceBlocksIntegration {
       return null;
     }
 
-    $this->woocommerceSubscription->handleSubscriberOptin($subscriber, $checkoutOptin, $trackingConsent, $isNewSubscriber);
+    $this->woocommerceSubscription->handleSubscriberOptin($subscriber, $checkoutOptin, $trackingConsent, $isNewSubscriber, $consentFieldRendered);
   }
 }

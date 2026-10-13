@@ -35,6 +35,12 @@ class OutlookCalendar
     /** @var array */
     private $description;
 
+    /** @var string|null Mailbox this calendar id belongs to; part of the calendar's identity */
+    private $accountId;
+
+    /** @var Id|null calendar_sync row that owns the watch for this calendar */
+    private $syncId;
+
     /**
      * OutlookCalendar constructor.
      *
@@ -166,6 +172,38 @@ class OutlookCalendar
     }
 
     /**
+     * @return string|null
+     */
+    public function getAccountId()
+    {
+        return $this->accountId;
+    }
+
+    /**
+     * @param string|null $accountId
+     */
+    public function setAccountId($accountId)
+    {
+        $this->accountId = $accountId;
+    }
+
+    /**
+     * @return Id|null
+     */
+    public function getSyncId()
+    {
+        return $this->syncId;
+    }
+
+    /**
+     * @param Id|null $syncId
+     */
+    public function setSyncId($syncId)
+    {
+        $this->syncId = $syncId;
+    }
+
+    /**
      * @return array
      */
     public function toArray()
@@ -178,6 +216,8 @@ class OutlookCalendar
             'includeBufferTime'          => $this->getIncludeBufferTime(),
             'title'                      => $this->getTitle(),
             'description'                => $this->getDescription(),
+            'accountId'                  => $this->getAccountId(),
+            'syncId'                     => null !== $this->getSyncId() ? $this->getSyncId()->getValue() : null,
         ];
     }
 }

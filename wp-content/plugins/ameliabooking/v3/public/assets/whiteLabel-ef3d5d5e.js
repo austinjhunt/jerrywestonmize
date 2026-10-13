@@ -1,0 +1,1 @@
+import{aX as o}from"./stepForm-bce58d1d.js";const n="support@wpamelia.com";function i(e=o){const a=!!e?.featuresIntegrations?.whiteLabel?.enabled,t=e?.whiteLabel?.pluginName?.trim();return a&&t?`support@${t}.com`:n}export{i as g};

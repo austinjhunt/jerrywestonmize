@@ -334,6 +334,8 @@ class DataTransferService
                 'tableClass' => DB\User\Provider\ProvidersOutlookCalendarTable::class],
             ['key' => 'providersGoogleCalendar', 'group' => 'schedules', 'file' => 'providers-google-calendar.json',
                 'tableClass' => DB\User\Provider\ProvidersGoogleCalendarTable::class],
+            ['key' => 'calendarSync', 'group' => 'schedules', 'file' => 'calendar-sync.json',
+                'optional' => true, 'tableClass' => DB\Calendar\CalendarSyncTable::class],
             ['key' => 'providersLocations', 'group' => 'schedules', 'file' => 'providers-locations.json',
                 'tableClass' => DB\User\Provider\ProvidersLocationTable::class],
             ['key' => 'providersWeekDays', 'group' => 'schedules', 'file' => 'providers-week-days.json',
@@ -560,6 +562,14 @@ class DataTransferService
         $steps = [];
 
         foreach ($this->getDatasetDefinitions() as $datasetDefinition) {
+            if (!isset($metadataIndex[$datasetDefinition['key']])) {
+                if (!empty($datasetDefinition['optional'])) {
+                    continue;
+                }
+
+                throw new RuntimeException('The Amelia archive is missing one or more JSON datasets.');
+            }
+
             $datasetMetadata = $metadataIndex[$datasetDefinition['key']];
             $datasetPath = $datasetMetadata['path'];
             $datasetData = $this->readJsonData($extractDirectory . '/' . ltrim($datasetPath, '/'));
@@ -626,7 +636,9 @@ class DataTransferService
     {
         $keys = array_map(function ($dataset) {
             return $dataset['key'];
-        }, $this->getDatasetDefinitions());
+        }, array_filter($this->getDatasetDefinitions(), function ($dataset) {
+            return empty($dataset['optional']);
+        }));
 
         $keys[] = 'settings';
 

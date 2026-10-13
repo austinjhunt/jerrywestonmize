@@ -30,6 +30,7 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking\EventsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking\EventsTagsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Booking\EventsTicketsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Cache\CacheTable;
+use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Calendar\CalendarSyncTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Coupon\CouponsToEventsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Coupon\CouponsToPackagesTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\CustomField\CustomFieldsEventsTable;
@@ -41,6 +42,9 @@ use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Coupon\CouponsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Coupon\CouponsToServicesTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Location\LocationsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Location\LocationsViewsTable;
+use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Mobile\MobileDevicesTable;
+use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Mobile\MobileNotificationPrefsTable;
+use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Mobile\MobilePushReminderLogsTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Notification\NotificationsLogTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Notification\NotificationsSMSHistoryTable;
 use AmeliaBooking\Infrastructure\WP\InstallActions\DB\Notification\NotificationsTable;
@@ -76,7 +80,7 @@ class ActivationDatabaseHook
     /**
      * Initialize the plugin
      */
-    public static function init()
+    public static function init(): void
     {
         UsersTable::init();
 
@@ -109,6 +113,8 @@ class ActivationDatabaseHook
         ProvidersGoogleCalendarTable::init();
 
         ProvidersOutlookCalendarTable::init();
+
+        CalendarSyncTable::init();
 
         CategoriesTable::init();
 
@@ -195,5 +201,11 @@ class ActivationDatabaseHook
         TaxesToEntitiesTable::init();
 
         CacheTable::init();
+
+        MobileDevicesTable::init();
+
+        MobileNotificationPrefsTable::init();
+
+        MobilePushReminderLogsTable::init();
     }
 }

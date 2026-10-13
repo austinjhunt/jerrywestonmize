@@ -22,6 +22,7 @@ use AmeliaBooking\Domain\ValueObjects\String\PaymentType;
 use AmeliaBooking\Domain\ValueObjects\String\Token;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Cache\CacheRepository;
+use AmeliaBooking\Infrastructure\WP\HelperService\HelperService;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
 use Exception;
 
@@ -45,7 +46,7 @@ class MolliePaymentCommandHandler extends CommandHandler
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    public function handle(MolliePaymentCommand $command)
+    public function handle(MolliePaymentCommand $command): CommandResult
     {
         $result = new CommandResult();
 
@@ -75,7 +76,7 @@ class MolliePaymentCommandHandler extends CommandHandler
         do_action('amelia_before_mollie_redirect', $bookingData);
 
         /** @var Reservation $reservation */
-        $reservation = $reservationService->getNew(true, true, true);
+        $reservation = $reservationService->getNew(true, true, false);
 
         $reservationService->processBooking(
             $result,
@@ -154,7 +155,7 @@ class MolliePaymentCommandHandler extends CommandHandler
                         $returnUrl[0] . (strpos($returnUrl[0], '?') ? '&' : '?') . 'ameliaCache=' . $identifier .
                         (!empty($returnUrl[1]) ? '#' . $returnUrl[1] : ''),
                     'notifyUrl'   =>
-                        (AMELIA_DEV ? str_replace('localhost', AMELIA_NGROK_URL, AMELIA_ACTION_URL) : AMELIA_ACTION_URL) .
+                        HelperService::getPublicCallbackUrl(AMELIA_ACTION_URL) .
                         '/payment/mollie/notify&name=' . $identifier,
                     'amount'      => $paymentAmount,
                     'locale'      => str_replace('-', '_', $reservation->getLocale()->getValue()),

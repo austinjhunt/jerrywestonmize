@@ -14,6 +14,7 @@ use AmeliaBooking\Application\Controller\Outlook\FetchOutlookMiddlewareAccessTok
 use AmeliaBooking\Application\Controller\Outlook\GetOutlookAuthURLController;
 use AmeliaBooking\Application\Controller\Outlook\GetOutlookMiddlewareAuthURLController;
 use AmeliaBooking\Application\Controller\Outlook\ValidateOutlookCredentialsController;
+use AmeliaBooking\Application\Controller\Outlook\OutlookCalendarNotificationController;
 use Slim\App;
 
 /**
@@ -28,6 +29,10 @@ class Outlook
      */
     public static function routes(App $app)
     {
+        $app->get('/outlook/notification', OutlookCalendarNotificationController::class);
+
+        $app->post('/outlook/notification', OutlookCalendarNotificationController::class);
+
         $app->get('/outlook/authorization/url/{id:[0-9]+}', GetOutlookAuthURLController::class);
 
         $app->post('/outlook/disconnect/{id:[0-9]+}', DisconnectFromOutlookAccountController::class);

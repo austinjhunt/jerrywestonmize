@@ -4,16 +4,19 @@ namespace AmeliaBooking\Application\Commands;
 
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Commands\Booking\Appointment\AddBookingCommand;
+use AmeliaBooking\Application\Commands\Booking\Appointment\CancelBookingRemotelyCommand;
 use AmeliaBooking\Application\Commands\Booking\Appointment\DeleteBookingRemotelyCommand;
 use AmeliaBooking\Application\Commands\Booking\Appointment\SuccessfulBookingCommand;
 use AmeliaBooking\Application\Commands\Coupon\GetValidCouponCommand;
 use AmeliaBooking\Application\Commands\Google\FetchAccessTokenWithAuthCodeCommand;
 use AmeliaBooking\Application\Commands\Google\GetGoogleAuthURLCommand;
+use AmeliaBooking\Application\Commands\Google\WatchGoogleEventCommand;
 use AmeliaBooking\Application\Commands\Notification\SendUndeliveredNotificationsCommand;
 use AmeliaBooking\Application\Commands\Notification\UpdateSMSNotificationHistoryCommand;
 use AmeliaBooking\Application\Commands\Notification\WhatsAppWebhookCommand;
 use AmeliaBooking\Application\Commands\Notification\WhatsAppWebhookRegisterCommand;
 use AmeliaBooking\Application\Commands\Outlook\FetchAccessTokenWithAuthCodeOutlookCommand;
+use AmeliaBooking\Application\Commands\Outlook\WatchOutlookCalendarNotificationCommand;
 use AmeliaBooking\Application\Commands\Payment\CalculatePaymentAmountCommand;
 use AmeliaBooking\Application\Commands\Payment\PaymentCallbackCommand;
 use AmeliaBooking\Application\Commands\Payment\PaymentLinkCommand;
@@ -32,6 +35,7 @@ use AmeliaBooking\Application\Commands\Stripe\CancelStripePaymentIntentCommand;
 use AmeliaBooking\Application\Commands\Stripe\CompleteStripePaymentIntentCommand;
 use AmeliaBooking\Application\Commands\Stripe\CreateStripePaymentIntentCommand;
 use AmeliaBooking\Application\Commands\Stripe\StripePaymentCallbackCommand;
+use AmeliaBooking\Application\Commands\Stripe\StripePaymentWebhookCommand;
 use AmeliaBooking\Application\Commands\User\Customer\ReauthorizeCommand;
 use AmeliaBooking\Application\Commands\User\LoginCabinetCommand;
 use AmeliaBooking\Application\Commands\User\LogoutCabinetCommand;
@@ -67,6 +71,8 @@ abstract class Command
     private $permissionService;
 
     private $userApplicationService;
+
+    private $validApiCall = false;
 
     /**
      * Command constructor.
@@ -145,29 +151,40 @@ abstract class Command
      */
     public function setToken($request): void
     {
-        $token = null;
+        $this->token = self::getCabinetToken(
+            $request->getHeaderLine('Authorization'),
+            $request->getCookieParams()
+        );
+    }
 
+    /**
+     * Cabinet/mobile JWT from a Bearer header or the ameliaToken cookie.
+     *
+     * @param string $authorization
+     * @param array  $cookies
+     *
+     * @return string|null
+     */
+    public static function getCabinetToken($authorization = '', $cookies = []): ?string
+    {
         /** @var SettingsService $settingsService */
         $settingsService = new SettingsService(new SettingsStorage());
-
-        $authorization = $request->getHeaderLine('Authorization');
 
         if (
             $authorization !== '' &&
             ($values = explode(' ', $authorization)) &&
-            sizeof($values) === 2 &&
+            count($values) === 2 &&
             strcasecmp($values[0], 'Bearer') === 0 &&
             $settingsService->getSetting('roles', 'enabledHttpAuthorization')
         ) {
-            $token = $values[1];
-        } else {
-            $cookies = $request->getCookieParams();
-            if (!empty($cookies['ameliaToken'])) {
-                $token = $cookies['ameliaToken'];
-            }
+            return $values[1];
         }
 
-        $this->token = $token;
+        if (!empty($cookies['ameliaToken']) && is_string($cookies['ameliaToken'])) {
+            return $cookies['ameliaToken'];
+        }
+
+        return null;
     }
 
     /**
@@ -178,6 +195,24 @@ abstract class Command
     public function getToken()
     {
         return $this->token;
+    }
+
+    /**
+     * Whether the request that created this command was authenticated with an Amelia API key.
+     *
+     * @param bool $validApiCall
+     */
+    public function setValidApiCall($validApiCall): void
+    {
+        $this->validApiCall = (bool)$validApiCall;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isValidApiCall(): bool
+    {
+        return $this->validApiCall;
     }
 
     /**
@@ -216,6 +251,7 @@ abstract class Command
             !($this instanceof LoginCabinetCommand) &&
             !($this instanceof LogoutCabinetCommand) &&
             !($this instanceof AddBookingCommand) &&
+            !($this instanceof CancelBookingRemotelyCommand) &&
             !($this instanceof DeleteBookingRemotelyCommand) &&
             !($this instanceof SuccessfulBookingCommand) &&
             !($this instanceof GetValidCouponCommand) &&
@@ -230,6 +266,8 @@ abstract class Command
             !($this instanceof SquareRefundWebhookCommand) &&
             !($this instanceof DisconnectFromSquareAccountCommand) &&
             !($this instanceof WooCommercePaymentCommand) &&
+            !($this instanceof WatchGoogleEventCommand) &&
+            !($this instanceof WatchOutlookCalendarNotificationCommand) &&
             !($this instanceof PaymentCallbackCommand) &&
             !($this instanceof GetGoogleAuthURLCommand) &&
             !($this instanceof FetchAccessTokenWithAuthCodeOutlookCommand) &&
@@ -242,6 +280,7 @@ abstract class Command
             !($this instanceof CancelStripePaymentIntentCommand) &&
             !($this instanceof CompleteStripePaymentIntentCommand) &&
             !($this instanceof StripePaymentCallbackCommand) &&
+            !($this instanceof StripePaymentWebhookCommand) &&
             !($this instanceof UpdateSMSNotificationHistoryCommand)
         ) {
             $queryParams = $request->getQueryParams();

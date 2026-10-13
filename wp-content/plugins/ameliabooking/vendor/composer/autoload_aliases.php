@@ -3301,6 +3301,17 @@ namespace AmeliaVendor {
       0 => 'Melograno\\UsageTracker\\Collectors\\ConsentNoticeCollectorInterface',
     ),
   ),
+  'Melograno\\UsageTracker\\Collectors\\Plugin\\AmeliaFeatureTelemetry' => 
+  array (
+    'type' => 'class',
+    'classname' => 'AmeliaFeatureTelemetry',
+    'isabstract' => false,
+    'namespace' => 'Melograno\\UsageTracker\\Collectors\\Plugin',
+    'extends' => 'AmeliaVendor\\Melograno\\UsageTracker\\Collectors\\Plugin\\AmeliaFeatureTelemetry',
+    'implements' => 
+    array (
+    ),
+  ),
   'Melograno\\UsageTracker\\Collectors\\Plugin\\IvyFormsCollector' => 
   array (
     'type' => 'class',
@@ -3310,6 +3321,7 @@ namespace AmeliaVendor {
     'extends' => 'AmeliaVendor\\Melograno\\UsageTracker\\Collectors\\Plugin\\IvyFormsCollector',
     'implements' => 
     array (
+      0 => 'Melograno\\UsageTracker\\Collectors\\ConsentNoticeCollectorInterface',
     ),
   ),
   'Melograno\\UsageTracker\\Collectors\\Plugin\\WpDataTablesCollector' => 
@@ -3319,6 +3331,18 @@ namespace AmeliaVendor {
     'isabstract' => false,
     'namespace' => 'Melograno\\UsageTracker\\Collectors\\Plugin',
     'extends' => 'AmeliaVendor\\Melograno\\UsageTracker\\Collectors\\Plugin\\WpDataTablesCollector',
+    'implements' => 
+    array (
+      0 => 'Melograno\\UsageTracker\\Collectors\\ConsentNoticeCollectorInterface',
+    ),
+  ),
+  'Melograno\\UsageTracker\\Collectors\\Plugin\\WpDataTablesFeatureTelemetry' => 
+  array (
+    'type' => 'class',
+    'classname' => 'WpDataTablesFeatureTelemetry',
+    'isabstract' => false,
+    'namespace' => 'Melograno\\UsageTracker\\Collectors\\Plugin',
+    'extends' => 'AmeliaVendor\\Melograno\\UsageTracker\\Collectors\\Plugin\\WpDataTablesFeatureTelemetry',
     'implements' => 
     array (
     ),
@@ -14259,6 +14283,29 @@ namespace AmeliaVendor {
     array (
     ),
   ),
+  'Symfony\\Polyfill\\Php80\\Php80' => 
+  array (
+    'type' => 'class',
+    'classname' => 'Php80',
+    'isabstract' => false,
+    'namespace' => 'Symfony\\Polyfill\\Php80',
+    'extends' => 'AmeliaVendor\\Symfony\\Polyfill\\Php80\\Php80',
+    'implements' => 
+    array (
+    ),
+  ),
+  'Symfony\\Polyfill\\Php80\\PhpToken' => 
+  array (
+    'type' => 'class',
+    'classname' => 'PhpToken',
+    'isabstract' => false,
+    'namespace' => 'Symfony\\Polyfill\\Php80',
+    'extends' => 'AmeliaVendor\\Symfony\\Polyfill\\Php80\\PhpToken',
+    'implements' => 
+    array (
+      0 => 'Stringable',
+    ),
+  ),
   'WpOrg\\Requests\\Auth' => 
   array (
     'type' => 'interface',
@@ -15167,6 +15214,16 @@ namespace AmeliaVendor {
     'extends' => 
     array (
       0 => 'AmeliaVendor\\Stripe\\Util\\LoggerInterface',
+    ),
+  ),
+  'Stringable' => 
+  array (
+    'type' => 'interface',
+    'interfacename' => 'Stringable',
+    'namespace' => '\\',
+    'extends' => 
+    array (
+      0 => 'AmeliaVendor_Stringable',
     ),
   ),
 );

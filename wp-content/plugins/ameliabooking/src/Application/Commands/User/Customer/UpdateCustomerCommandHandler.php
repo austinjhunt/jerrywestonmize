@@ -232,7 +232,7 @@ class UpdateCustomerCommandHandler extends CommandHandler
         // Provider cabinet sessions must use the provider as caller, not null (which would
         // look like own-profile). Customer cabinet leaves $provider null so null = self.
         $callerForWpCredentials = $provider !== null ? $provider : $currentUser;
-        $canWriteWpCredentials  = $userAS->canWriteLinkedWpCredentials($callerForWpCredentials, $oldUser);
+        $canWriteWpCredentials  = $userAS->canWriteWpCredentials($callerForWpCredentials, $oldUser);
 
         $emailChanged = $oldUser->getEmail()->getValue() !== $newUser->getEmail()->getValue();
         $linkedWpId   = $newUser->getExternalId() ? $newUser->getExternalId()->getValue() : null;

@@ -10,6 +10,7 @@ use MailPoet\Entities\SendingQueueEntity;
 use MailPoet\Entities\StatisticsOpenEntity;
 use MailPoet\Entities\SubscriberEntity;
 use MailPoet\Entities\UserAgentEntity;
+use MailPoet\Statistics\StatisticsNewslettersRepository;
 use MailPoet\Statistics\StatisticsOpensRepository;
 use MailPoet\Statistics\UserAgentsRepository;
 use MailPoet\Subscribers\SubscribersRepository;
@@ -18,6 +19,9 @@ use MailPoet\Subscribers\TrackingConsentController;
 class Opens {
   /** @var StatisticsOpensRepository */
   private $statisticsOpensRepository;
+
+  /** @var StatisticsNewslettersRepository */
+  private $statisticsNewslettersRepository;
 
   /** @var UserAgentsRepository */
   private $userAgentsRepository;
@@ -30,11 +34,13 @@ class Opens {
 
   public function __construct(
     StatisticsOpensRepository $statisticsOpensRepository,
+    StatisticsNewslettersRepository $statisticsNewslettersRepository,
     UserAgentsRepository $userAgentsRepository,
     SubscribersRepository $subscribersRepository,
     TrackingConsentController $trackingConsentController
   ) {
     $this->statisticsOpensRepository = $statisticsOpensRepository;
+    $this->statisticsNewslettersRepository = $statisticsNewslettersRepository;
     $this->userAgentsRepository = $userAgentsRepository;
     $this->subscribersRepository = $subscribersRepository;
     $this->trackingConsentController = $trackingConsentController;
@@ -68,16 +74,11 @@ class Opens {
       ]);
       // Open was already tracked
       if ($oldStatistics) {
-        if (!empty($data->userAgent)) {
+        if ($this->shouldUpgradeToHumanOpen($oldStatistics, $data->userAgent ?? null)) {
           $userAgent = $this->userAgentsRepository->findOrCreate($data->userAgent);
-          if (
-            $userAgent->getUserAgentType() === UserAgentEntity::USER_AGENT_TYPE_HUMAN
-            || $oldStatistics->getUserAgentType() === UserAgentEntity::USER_AGENT_TYPE_MACHINE
-          ) {
-            $oldStatistics->setUserAgent($userAgent);
-            $oldStatistics->setUserAgentType($userAgent->getUserAgentType());
-            $this->statisticsOpensRepository->flush();
-          }
+          $oldStatistics->setUserAgent($userAgent);
+          $oldStatistics->setUserAgentType($userAgent->getUserAgentType());
+          $this->statisticsOpensRepository->flush();
         }
         $this->subscribersRepository->maybeUpdateLastOpenAt($subscriber);
         return $this->returnResponse($displayImage);
@@ -90,10 +91,19 @@ class Opens {
       }
       $this->statisticsOpensRepository->persist($statistics);
       $this->statisticsOpensRepository->flush();
+      $this->statisticsNewslettersRepository->markSentWithTracking($newsletter, $queue, $subscriber);
       $this->subscribersRepository->maybeUpdateLastOpenAt($subscriber);
       $this->statisticsOpensRepository->recalculateSubscriberScore($subscriber);
     }
     return $this->returnResponse($displayImage);
+  }
+
+  private function shouldUpgradeToHumanOpen(StatisticsOpenEntity $open, $userAgent): bool {
+    if (empty($userAgent) || $open->getUserAgentType() !== UserAgentEntity::USER_AGENT_TYPE_MACHINE) {
+      return false;
+    }
+    $newUserAgent = new UserAgentEntity($userAgent);
+    return $newUserAgent->getUserAgentType() === UserAgentEntity::USER_AGENT_TYPE_HUMAN;
   }
 
   public function returnResponse($displayImage) {

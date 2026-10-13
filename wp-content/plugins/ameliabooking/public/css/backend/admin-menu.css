@@ -1,4 +1,5 @@
-#adminmenu #toplevel_page_amelia a[href="admin.php?page=wpamelia-upgrade"] {
+#adminmenu #toplevel_page_amelia a[href="admin.php?page=wpamelia-upgrade"],
+#adminmenu #toplevel_page_amelia a[href="admin.php?page=wpamelia-settings#/activation"] {
     font-weight: 600;
     background-color: #9663FF;
     color: #ffffff;
@@ -10,7 +11,9 @@
 }
 
 #adminmenu #toplevel_page_amelia a[href="admin.php?page=wpamelia-upgrade"]:hover,
-#adminmenu #toplevel_page_amelia a[href="admin.php?page=wpamelia-upgrade"]:focus {
+#adminmenu #toplevel_page_amelia a[href="admin.php?page=wpamelia-upgrade"]:focus,
+#adminmenu #toplevel_page_amelia a[href="admin.php?page=wpamelia-settings#/activation"]:hover,
+#adminmenu #toplevel_page_amelia a[href="admin.php?page=wpamelia-settings#/activation"]:focus {
     background-color: #7b4fd9;
     color: #ffffff;
     box-shadow: none;

@@ -56,5 +56,9 @@ class MonologChannelLogger implements LoggerInterface
         } catch (\Throwable $e) {
             // Telemetry must never break application flow after side effects.
         }
+
+        if ($level === 'error') {
+            \AmeliaBooking\Infrastructure\Services\ErrorTracking\SentryReporter::report($message, $context);
+        }
     }
 }

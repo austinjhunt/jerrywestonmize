@@ -190,7 +190,7 @@ abstract class AbstractReservationService implements ReservationServiceInterface
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      */
-    protected function rollbackReservation($reservation, $save)
+    public function rollbackReservation($reservation, $save): void
     {
         try {
             if ($save) {
@@ -298,9 +298,12 @@ abstract class AbstractReservationService implements ReservationServiceInterface
                 return $result;
             }
 
+            // an appointment booked against a purchased package was paid for with the package, so it has
+            // nothing to charge - the flag is set while the booking is processed, once a package service
+            // of the booking customer was actually found, and never read off the request: package keys in
+            // the payload would otherwise be enough to have any booking skip its payment
             $paymentCompleted =
-                !empty($data['bookings'][0]['packageCustomerService']['id']) ||
-                !empty($data['bookings'][0]['packageCustomerService']['packageCustomer']['id']) ||
+                ($reservation->isPackageAppointment() && $reservation->isPackageAppointment()->getValue()) ||
                 $paymentAS->processPayment(
                     $result,
                     $data['payment'],
@@ -419,9 +422,7 @@ abstract class AbstractReservationService implements ReservationServiceInterface
             $result,
             $reservation,
             new BookingType($type),
-            isset($data['isCart']) && is_string($data['isCart']) ?
-                filter_var($data['isCart'], FILTER_VALIDATE_BOOLEAN) :
-                !empty($data['isCart'])
+            $this->isCartBooking($data)
         );
 
         $paymentAS->setPaymentTransactionId(
@@ -450,6 +451,26 @@ abstract class AbstractReservationService implements ReservationServiceInterface
             FILTER_VALIDATE_BOOLEAN,
             FILTER_NULL_ON_FAILURE
         ) === true;
+    }
+
+    /**
+     * The command handlers normalize this flag in getAppointmentData(), but WooCommerce passes stored item
+     * data straight to processBooking() and processRequest(), where a stored "false" or "no" would pass
+     * !empty() and book the reservation as a cart.
+     *
+     * @param array $data
+     *
+     * @return bool
+     */
+    protected function isCartBooking($data)
+    {
+        if (!isset($data['isCart'])) {
+            return false;
+        }
+
+        return is_string($data['isCart'])
+            ? filter_var($data['isCart'], FILTER_VALIDATE_BOOLEAN)
+            : !empty($data['isCart']);
     }
 
     /**
@@ -695,7 +716,10 @@ abstract class AbstractReservationService implements ReservationServiceInterface
         /** @var AbstractCustomFieldApplicationService $customFieldService */
         $customFieldService = $this->container->get('application.customField.service');
 
-        if ($reservation->hasCustomFieldsValidation()->getValue()) {
+        if (
+            $reservation->hasCustomFieldsValidation()->getValue() &&
+            !array_key_exists('uploadedCustomFieldFilesInfo', $appointmentData)
+        ) {
             $appointmentData['uploadedCustomFieldFilesInfo'] = [];
 
             if (isset($appointmentData['bookings'][0]['customFields'])) {
@@ -713,9 +737,11 @@ abstract class AbstractReservationService implements ReservationServiceInterface
         ) {
             $customerCustomFields = json_decode($appointmentData['bookings'][0]['customer']['customFields'], true);
 
-            $appointmentData['uploadedCustomerCustomFieldFilesInfo'] = $customFieldService->processCustomFields(
-                $customerCustomFields
-            );
+            if (!array_key_exists('uploadedCustomerCustomFieldFilesInfo', $appointmentData)) {
+                $appointmentData['uploadedCustomerCustomFieldFilesInfo'] = $customFieldService->processCustomFields(
+                    $customerCustomFields
+                );
+            }
         }
 
         if (
@@ -726,6 +752,8 @@ abstract class AbstractReservationService implements ReservationServiceInterface
                 $appointmentData['bookings'][0]['customFields']
             );
         }
+
+        $appointmentData['isCart'] = $this->isCartBooking($appointmentData);
 
         // set before booking, so that a throwable raised while saving can be rolled back completely -
         // the caught exceptions below clean the new customer up through manageException instead
@@ -1097,7 +1125,7 @@ abstract class AbstractReservationService implements ReservationServiceInterface
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
      */
-    public function addPayment($bookingId, $packageCustomerId, $paymentData, $amount, $dateTime, $entityType)
+    public function addPayment($bookingId, $packageCustomerId, $paymentData, $amount, $dateTime, $entityType): Payment
     {
         /** @var PaymentRepository $paymentRepository */
         $paymentRepository = $this->container->get('domain.payment.repository');
@@ -1109,12 +1137,15 @@ abstract class AbstractReservationService implements ReservationServiceInterface
                 $paymentStatus = $paymentData['status'] ?? PaymentStatus::PENDING;
                 break;
             case (PaymentType::MOLLIE):
-            case (PaymentType::SQUARE):
             case (PaymentType::PAY_PAL):
             case (PaymentType::STRIPE):
             case (PaymentType::RAZORPAY):
             case (PaymentType::BARION):
                 $paymentStatus = PaymentStatus::PAID;
+                break;
+            case (PaymentType::SQUARE):
+                // Marked paid only after CreatePayment returns COMPLETED with an allowed source type
+                $paymentStatus = PaymentStatus::PENDING;
                 break;
         }
 
@@ -1360,16 +1391,13 @@ abstract class AbstractReservationService implements ReservationServiceInterface
             $paymentRepository = $this->container->get('domain.payment.repository');
 
             if (!empty($result->getData()['paymentId'])) {
-                /** @var Payment $payment */
-                $payment = $paymentRepository->getById($result->getData()['paymentId']);
-
-                if (
-                    $payment && $payment->getActionsCompleted() && $payment->getActionsCompleted()->getValue() ||
-                    $payment && $payment->getTriggeredActions() && $payment->getTriggeredActions()->getValue()
-                ) {
+                // Claimed in one statement rather than read and then written. A Stripe checkout
+                // has several callers racing to run these actions for the same payment - the
+                // browser after the Congrats page, the PaymentIntent webhook, and the
+                // reconciliation cron - and reading the flag before writing it leaves a window
+                // in which two of them both see it unset and both notify the customer.
+                if (!$paymentRepository->claimTriggeredActions($result->getData()['paymentId'])) {
                     return;
-                } elseif ($payment && !$payment->getTriggeredActions()) {
-                    $paymentRepository->updateFieldById($payment->getId()->getValue(), 1, 'triggeredActions');
                 }
             }
 
@@ -1420,7 +1448,11 @@ abstract class AbstractReservationService implements ReservationServiceInterface
                 $bookingId,
                 $result->getData()['type'],
                 $recurring,
-                $result->getData()['isCart'],
+                // Not every caller builds a cart-shaped result: a Stripe finalization arrives from
+                // updateAppointmentAndCache(), which has no 'isCart' to report. Absent means "not a
+                // cart", which is what the unguarded read already evaluated to - minus the warning
+                // it wrote to the log on every Stripe booking.
+                !empty($result->getData()['isCart']),
                 $appointmentStatusChanged,
                 $result->getData()['packageId'],
                 $result->getData()['customer'],
@@ -1450,7 +1482,7 @@ abstract class AbstractReservationService implements ReservationServiceInterface
      *
      * @return Reservation
      */
-    public function getNew($couponValidation, $customFieldsValidation, $availabilityValidation)
+    public function getNew($couponValidation, $customFieldsValidation, $availabilityValidation): Reservation
     {
         /** @var Reservation $entity */
         $entity = new Reservation();
@@ -1460,6 +1492,8 @@ abstract class AbstractReservationService implements ReservationServiceInterface
         $entity->setCustomFieldsValidation(new BooleanValueObject($customFieldsValidation));
 
         $entity->setAvailabilityValidation(new BooleanValueObject($availabilityValidation));
+
+        $entity->setIsPackageAppointment(new BooleanValueObject(false));
 
         return $entity;
     }
@@ -1480,9 +1514,28 @@ abstract class AbstractReservationService implements ReservationServiceInterface
         $wcSettings = $settingsService->getSetting('payments', 'wc');
 
         if (!empty($wcSettings['rules'][$type])) {
+            $hasExplicitOrderRule = false;
+
             foreach ($wcSettings['rules'][$type] as $rule) {
-                if ($rule['order'] === $orderStatus && ($isUpdate ? $rule['update'] : true)) {
-                    return $rule[$statusTarget] !== 'default' ? $rule[$statusTarget] : null;
+                if ($rule['order'] === $orderStatus) {
+                    $hasExplicitOrderRule = true;
+
+                    if (!$isUpdate || !empty($rule['update'])) {
+                        return $rule[$statusTarget] !== 'default' ? $rule[$statusTarget] : null;
+                    }
+                }
+            }
+
+            if (
+                !$hasExplicitOrderRule &&
+                $isUpdate &&
+                $statusTarget === 'booking' &&
+                in_array($orderStatus, ['on-hold', 'pending', 'completed'], true)
+            ) {
+                foreach ($wcSettings['rules'][$type] as $rule) {
+                    if ($rule['order'] === 'processing' && !empty($rule['update'])) {
+                        return $rule[$statusTarget] !== 'default' ? $rule[$statusTarget] : null;
+                    }
                 }
             }
         }
@@ -1520,6 +1573,50 @@ abstract class AbstractReservationService implements ReservationServiceInterface
     }
 
     /**
+     * The payments covered by the amount getReservationPaymentAmount asks the gateway for.
+     *
+     * A gateway charge may cover several payments at once - the items of a cart, or the first few
+     * appointments of a recurring series - and only those may be promoted once the gateway confirms
+     * the charge. Payments the charge leaves out have to stay pending even though parentId links
+     * them to a charged one, so they cannot be found by that relation.
+     *
+     * @param Reservation $reservation
+     *
+     * @return Payment[]
+     */
+    public function getChargedPayments($reservation): array
+    {
+        return $this->getReservationPayments($reservation);
+    }
+
+    /**
+     * The payments of a single reservation, without the ones of the reservations it is charged with.
+     *
+     * @param Reservation $reservation
+     *
+     * @return Payment[]
+     */
+    protected function getReservationPayments($reservation): array
+    {
+        $booking = $reservation->getBooking();
+
+        if (!$booking || !$booking->getPayments()) {
+            return [];
+        }
+
+        $payments = [];
+
+        /** @var Payment $payment */
+        foreach ($booking->getPayments()->getItems() as $payment) {
+            if ($payment->getId()) {
+                $payments[] = $payment;
+            }
+        }
+
+        return $payments;
+    }
+
+    /**
      * @param AbstractBookable $bookable
      * @param bool             $applyDeposit
      *
@@ -1537,6 +1634,26 @@ abstract class AbstractReservationService implements ReservationServiceInterface
             $bookable->getFullPayment()->getValue();
 
         return $applyDeposit ? $depositPaymentEnabled : $depositPaymentEnabled && !$fullPaymentEnabled;
+    }
+
+    /**
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    public static function parseDepositFlag($value)
+    {
+        if ($value === null || $value === '') {
+            return false;
+        }
+
+        $parsed = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+
+        if ($parsed !== null) {
+            return $parsed;
+        }
+
+        return !empty($value);
     }
 
     /**

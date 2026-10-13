@@ -147,10 +147,20 @@ class AppointmentEditedEventHandler
             $commandSlug = self::TIME_UPDATED;
         }
 
+        // handleAppointmentEmployeeChange right below is this handler's only calendar pass: it moves the
+        // event when the employee changed, and syncs it in place with the very same appointmentEdited slug
+        // when it did not, so leaving the calendars to handleAppointment as well is not a second chance but
+        // a second write. With an employee change it is a harmful one - it writes the appointment into the
+        // new employee's calendar first, and the move that follows then adds the event there a second time.
         $applicationIntegrationService->handleAppointment(
             $reservationObject,
             $appointment,
-            $commandSlug
+            $commandSlug,
+            [
+                ApplicationIntegrationService::SKIP_GOOGLE_CALENDAR  => true,
+                ApplicationIntegrationService::SKIP_OUTLOOK_CALENDAR => true,
+                ApplicationIntegrationService::SKIP_APPLE_CALENDAR   => true,
+            ]
         );
 
         $applicationIntegrationService->handleAppointmentEmployeeChange(

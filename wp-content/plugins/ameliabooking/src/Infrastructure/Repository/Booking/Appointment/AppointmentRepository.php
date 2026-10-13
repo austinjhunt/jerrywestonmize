@@ -3,8 +3,10 @@
 namespace AmeliaBooking\Infrastructure\Repository\Booking\Appointment;
 
 use AmeliaBooking\Domain\Collection\Collection;
+use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
+use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Factory\Booking\Appointment\AppointmentFactory;
 use AmeliaBooking\Domain\Factory\Booking\Appointment\CustomerBookingFactory;
 use AmeliaBooking\Domain\Repository\Booking\Appointment\AppointmentRepositoryInterface;
@@ -247,6 +249,167 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
             $rows = $statement->fetchAll();
         } catch (\Exception $e) {
             throw new QueryExecutionException('Unable to find appointment by id in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
+        }
+
+        return call_user_func([static::FACTORY, 'createCollection'], $rows)->getItem($id);
+    }
+
+    /**
+     * Same hydration as getById() but LEFT JOINs customer bookings so appointments with zero
+     * booking rows still load (e.g. calendar push sync). Prefer getById() everywhere else.
+     *
+     * @param int $id
+     *
+     * @return Appointment|null null when no appointment row exists
+     *
+     * @throws QueryExecutionException
+     * @throws \AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException
+     */
+    public function getByIdWithoutBookings($id)
+    {
+        $locationsTable = LocationsTable::getTableName();
+
+        try {
+            $statement = $this->connection->prepare(
+                "SELECT
+                    a.id AS appointment_id,
+                    a.bookingStart AS appointment_bookingStart,
+                    a.bookingEnd AS appointment_bookingEnd,
+                    a.notifyParticipants AS appointment_notifyParticipants,
+                    a.createPaymentLinks AS appointment_createPaymentLinks,
+                    a.internalNotes AS appointment_internalNotes,
+                    a.status AS appointment_status,
+                    a.serviceId AS appointment_serviceId,
+                    a.providerId AS appointment_providerId,
+                    a.locationId AS appointment_locationId,
+                    a.googleCalendarEventId AS appointment_google_calendar_event_id,
+                    a.googleMeetUrl AS appointment_google_meet_url,
+                    a.outlookCalendarEventId AS appointment_outlook_calendar_event_id,
+                    a.microsoftTeamsUrl AS appointment_microsoft_teams_url,
+                    a.appleCalendarEventId AS appointment_apple_calendar_event_id,
+                    a.zoomMeeting AS appointment_zoom_meeting,
+                    a.lessonSpace AS appointment_lesson_space,
+                    a.parentId AS appointment_parentId,
+                    
+                    cb.id AS booking_id,
+                    cb.customerId AS booking_customerId,
+                    cb.status AS booking_status,
+                    cb.price AS booking_price,
+                    cb.persons AS booking_persons,
+                    cb.customFields AS booking_customFields,
+                    cb.info AS booking_info,
+                    cb.aggregatedPrice AS booking_aggregatedPrice,
+                    cb.utcOffset AS booking_utcOffset,
+                    cb.packageCustomerServiceId AS booking_packageCustomerServiceId,
+                    cb.duration AS booking_duration,
+                    cb.created AS booking_created,
+                    cb.tax AS booking_tax,
+                    
+                    cbe.id AS bookingExtra_id,
+                    cbe.extraId AS bookingExtra_extraId,
+                    cbe.customerBookingId AS bookingExtra_customerBookingId,
+                    cbe.quantity AS bookingExtra_quantity,
+                    cbe.price AS bookingExtra_price,
+                    cbe.aggregatedPrice AS bookingExtra_aggregatedPrice,
+                    cbe.tax AS bookingExtra_tax,
+                    
+                    p.id AS payment_id,
+                    p.packageCustomerId AS payment_packageCustomerId,
+                    p.amount AS payment_amount,
+                    p.created AS payment_created,
+                    p.invoiceNumber AS payment_invoiceNumber,
+                    p.dateTime AS payment_dateTime,
+                    p.status AS payment_status,
+                    p.parentId AS payment_parentId,
+                    p.gateway AS payment_gateway,
+                    p.gatewayTitle AS payment_gatewayTitle,
+                    p.transactionId AS payment_transactionId,
+                    p.data AS payment_data,
+                    p.wcOrderId AS payment_wcOrderId,
+                    p.wcOrderItemId AS payment_wcOrderItemId,
+                    
+                    c.id AS coupon_id,
+                    c.code AS coupon_code,
+                    c.discount AS coupon_discount,
+                    c.deduction AS coupon_deduction,
+                    c.expirationDate AS coupon_expirationDate,
+                    c.startDate AS coupon_startDate,
+                    c.limit AS coupon_limit,
+                    c.customerLimit AS coupon_customerLimit,
+                    c.status AS coupon_status,
+
+                    pc.id AS package_customer_id,
+                    pc.packageId AS package_customer_packageId,
+                    pc.tax AS package_customer_tax,
+                    pc.price AS package_customer_price,
+                    pc.couponId AS package_customer_couponId,
+                    
+                    s.id AS service_id,
+                    s.name AS service_name,
+                    s.color AS service_color,
+                    s.price AS service_price,
+                    s.timeBefore AS service_timeBefore,
+                    s.timeAfter AS service_timeAfter,
+                    s.aggregatedPrice AS service_aggregatedPrice,
+                    s.pictureFullPath AS service_pictureFullPath,
+                    s.pictureThumbPath AS service_pictureThumbPath,
+                    s.categoryId AS service_categoryId,
+                    
+                    pu.id AS provider_id,
+                    pu.firstname AS provider_firstName,
+                    pu.lastname AS provider_lastName,
+                    pu.email AS provider_email,
+                    pu.pictureFullPath AS provider_pictureFullPath,
+                    pu.pictureThumbPath AS provider_pictureThumbPath,
+                    pu.zoomUserId AS provider_zoomUserId,
+                    
+                    cu.id AS customer_id,
+                    cu.firstname AS customer_firstName,
+                    cu.lastname AS customer_lastName,
+                    cu.email AS customer_email,
+                    cu.note AS customer_note,
+                    cu.phone AS customer_phone,
+                    cu.countryPhoneIso AS customer_countryPhoneIso,
+                    cu.gender AS customer_gender,
+                    cu.status AS customer_status,
+                    cu.birthday AS customer_birthday,
+                    
+                    l.id AS location_id,
+                    l.name AS location_name
+
+                FROM {$this->table} a
+                LEFT JOIN {$this->bookingsTable} cb ON cb.appointmentId = a.id
+                LEFT JOIN {$this->packagesCustomersServicesTable} pcs ON pcs.id = cb.packageCustomerServiceId
+                LEFT JOIN {$this->packagesCustomersTable} pc ON pcs.packageCustomerId = pc.id
+                LEFT JOIN {$this->paymentsTable} p ON (
+                    (p.customerBookingId = cb.id AND cb.packageCustomerServiceId IS NULL) OR 
+                    (p.packageCustomerId = pc.id AND cb.packageCustomerServiceId IS NOT NULL AND cb.packageCustomerServiceId = pcs.id)
+                    )
+                LEFT JOIN {$this->customerBookingsExtrasTable} cbe ON cbe.customerBookingId = cb.id
+                LEFT JOIN {$this->couponsTable} c ON (pc.couponId IS NOT NULL AND c.id = pc.couponId) OR (c.id = cb.couponId)
+                LEFT JOIN {$this->servicesTable} s ON s.id = a.serviceId
+                LEFT JOIN {$this->usersTable} pu ON pu.id = a.providerId
+                LEFT JOIN {$this->usersTable} cu ON cu.id = cb.customerId
+                LEFT JOIN {$locationsTable} l ON l.id = a.locationId
+                WHERE a.id = :appointmentId
+                ORDER BY cb.id, p.id"
+            );
+
+            $statement->bindParam(':appointmentId', $id);
+
+            $statement->execute();
+
+            $rows = $statement->fetchAll();
+        } catch (\Exception $e) {
+            throw new QueryExecutionException(
+                'Unable to find appointment by id (without bookings join) in ' . __CLASS__ . '. ' . $e->getMessage(),
+                $e->getCode(),
+                $e
+            );
+        }
+
+        if (!$rows) {
+            return null;
         }
 
         return call_user_func([static::FACTORY, 'createCollection'], $rows)->getItem($id);
@@ -746,6 +909,125 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
         } catch (\Exception $e) {
             throw new QueryExecutionException('Unable to find appointments in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
+    }
+
+    /**
+     * @param int[]    $providerIds
+     * @param string   $startDateTimeUtc
+     * @param string   $endDateTimeUtc
+     * @param string[] $statuses
+     *
+     * @return array<int, array<string, mixed>>
+     * @throws QueryExecutionException
+     */
+    public function getUpcomingForPushReminders(
+        array $providerIds,
+        string $startDateTimeUtc,
+        string $endDateTimeUtc,
+        array $statuses
+    ): array {
+        if (empty($providerIds) || empty($statuses)) {
+            return [];
+        }
+
+        $allowedStatuses = [
+            BookingStatus::APPROVED,
+            BookingStatus::PENDING,
+        ];
+
+        $statusList = [];
+
+        foreach ($statuses as $status) {
+            if (in_array($status, $allowedStatuses, true)) {
+                $statusList[] = "'" . $status . "'";
+            }
+        }
+
+        if (empty($statusList)) {
+            return [];
+        }
+
+        $params = [
+            ':startDateTime' => $startDateTimeUtc,
+            ':endDateTime'   => $endDateTimeUtc,
+        ];
+        $providerPlaceholders = [];
+
+        foreach (array_values($providerIds) as $index => $providerId) {
+            $param = ':providerId' . $index;
+            $providerPlaceholders[] = $param;
+            $params[$param] = (int) $providerId;
+        }
+
+        $statusSql = implode(', ', $statusList);
+
+        try {
+            $statement = $this->connection->prepare(
+                "SELECT
+                    a.id AS appointment_id,
+                    a.bookingStart AS appointment_bookingStart,
+                    a.providerId AS appointment_providerId,
+                    a.status AS appointment_status,
+                    s.name AS service_name,
+                    cb.id AS booking_id,
+                    cb.status AS booking_status,
+                    cb.created AS booking_created,
+                    cu.firstName AS customer_firstName,
+                    cu.lastName AS customer_lastName
+                FROM {$this->table} a
+                INNER JOIN {$this->servicesTable} s ON s.id = a.serviceId
+                INNER JOIN {$this->bookingsTable} cb ON cb.appointmentId = a.id
+                INNER JOIN {$this->usersTable} cu ON cu.id = cb.customerId
+                WHERE a.providerId IN (" . implode(', ', $providerPlaceholders) . ")
+                AND a.status IN ({$statusSql})
+                AND cb.status IN ({$statusSql})
+                AND a.bookingStart >= STR_TO_DATE(:startDateTime, '%Y-%m-%d %H:%i:%s')
+                AND a.bookingStart <= STR_TO_DATE(:endDateTime, '%Y-%m-%d %H:%i:%s')
+                ORDER BY a.bookingStart, cb.id"
+            );
+
+            $statement->execute($params);
+
+            $rows = $statement->fetchAll();
+        } catch (\Exception $e) {
+            throw new QueryExecutionException(
+                'Unable to find upcoming appointments for push reminders in ' . __CLASS__ . '. ' . $e->getMessage(),
+                $e->getCode(),
+                $e
+            );
+        }
+
+        $appointments = [];
+
+        foreach ($rows as $row) {
+            $appointmentId = (int) $row['appointment_id'];
+
+            if (!isset($appointments[$appointmentId])) {
+                $appointments[$appointmentId] = [
+                    'id'           => $appointmentId,
+                    'type'         => Entities::APPOINTMENT,
+                    'bookingStart' => DateTimeService::getCustomDateTimeFromUtc($row['appointment_bookingStart']),
+                    'providerId'   => (int) $row['appointment_providerId'],
+                    'status'       => $row['appointment_status'],
+                    'service'      => [
+                        'name' => $row['service_name'],
+                    ],
+                    'bookings'     => [],
+                ];
+            }
+
+            $appointments[$appointmentId]['bookings'][] = [
+                'id'       => (int) $row['booking_id'],
+                'status'   => $row['booking_status'],
+                'created'  => $row['booking_created'],
+                'customer' => [
+                    'firstName' => $row['customer_firstName'],
+                    'lastName'  => $row['customer_lastName'],
+                ],
+            ];
+        }
+
+        return array_values($appointments);
     }
 
     /**
@@ -2006,5 +2288,137 @@ class AppointmentRepository extends AbstractRepository implements AppointmentRep
         }
 
         return !empty($rows) ? $rows[0] : $providerIds[0];
+    }
+
+    /**
+     * @param string $field
+     * @param mixed  $value
+     *
+     * @return Collection
+     * @throws QueryExecutionException
+     */
+    public function getByFieldValue($field, $value)
+    {
+        if (
+            !in_array(
+                $field,
+                [
+                    'googleCalendarEventId',
+                    'outlookCalendarEventId',
+                ],
+                true
+            )
+        ) {
+            throw new QueryExecutionException("Invalid field $field for " . __CLASS__);
+        }
+
+        try {
+            $statement = $this->connection->prepare(
+                "SELECT
+                    a.id AS appointment_id,
+                    a.bookingStart AS appointment_bookingStart,
+                    a.bookingEnd AS appointment_bookingEnd,
+                    a.notifyParticipants AS appointment_notifyParticipants,
+                    a.createPaymentLinks AS appointment_createPaymentLinks,
+                    a.internalNotes AS appointment_internalNotes,
+                    a.status AS appointment_status,
+                    a.serviceId AS appointment_serviceId,
+                    a.providerId AS appointment_providerId,
+                    a.locationId AS appointment_locationId,
+                    a.googleCalendarEventId AS appointment_google_calendar_event_id,
+                    a.googleMeetUrl AS appointment_google_meet_url,
+                    a.outlookCalendarEventId AS appointment_outlook_calendar_event_id,
+                    a.microsoftTeamsUrl AS appointment_microsoft_teams_url,
+                    a.appleCalendarEventId AS appointment_apple_calendar_event_id,
+                    a.zoomMeeting AS appointment_zoom_meeting,
+                    a.lessonSpace AS appointment_lesson_space,
+                    a.parentId AS appointment_parentId,
+                    
+                    cb.id AS booking_id,
+                    cb.customerId AS booking_customerId,
+                    cb.status AS booking_status,
+                    cb.price AS booking_price,
+                    cb.persons AS booking_persons,
+                    cb.customFields AS booking_customFields,
+                    cb.info AS booking_info,
+                    cb.aggregatedPrice AS booking_aggregatedPrice,
+                    cb.utcOffset AS booking_utcOffset,
+                    cb.packageCustomerServiceId AS booking_packageCustomerServiceId,
+                    cb.duration AS booking_duration,
+                    cb.created AS booking_created,
+                    cb.tax AS booking_tax,
+                    
+                    cbe.id AS bookingExtra_id,
+                    cbe.extraId AS bookingExtra_extraId,
+                    cbe.customerBookingId AS bookingExtra_customerBookingId,
+                    cbe.quantity AS bookingExtra_quantity,
+                    cbe.price AS bookingExtra_price,
+                    cbe.aggregatedPrice AS bookingExtra_aggregatedPrice,
+                    cbe.tax AS bookingExtra_tax,
+                    
+                    p.id AS payment_id,
+                    p.packageCustomerId AS payment_packageCustomerId,
+                    p.amount AS payment_amount,
+                    p.created AS payment_created,
+                    p.invoiceNumber AS payment_invoiceNumber,
+                    p.dateTime AS payment_dateTime,
+                    p.status AS payment_status,
+                    p.parentId AS payment_parentId,
+                    p.gateway AS payment_gateway,
+                    p.gatewayTitle AS payment_gatewayTitle,
+                    p.transactionId AS payment_transactionId,
+                    p.data AS payment_data,
+                    p.wcOrderId AS payment_wcOrderId,
+                    p.wcOrderItemId AS payment_wcOrderItemId
+                FROM {$this->table} a
+                INNER JOIN {$this->bookingsTable} cb ON cb.appointmentId = a.id
+                LEFT JOIN {$this->paymentsTable} p ON p.customerBookingId = cb.id
+                LEFT JOIN {$this->customerBookingsExtrasTable} cbe ON cbe.customerBookingId = cb.id
+                WHERE a.{$field} = :id
+                ORDER BY cb.id, p.id"
+            );
+
+            $statement->bindParam(':id', $value);
+
+            $statement->execute();
+
+            $rows = $statement->fetchAll();
+        } catch (\Exception $e) {
+            throw new QueryExecutionException("Unable to find appointments by $field in " . __CLASS__, $e->getCode(), $e);
+        }
+
+        // The factory already converts appointment_bookingStart/End out of UTC, so converting here as well
+        // shifted every row by the site offset and made calendar pushes look like a reschedule.
+        return call_user_func([static::FACTORY, 'createCollection'], $rows);
+    }
+
+    /**
+     * Load appointment by Google event id without requiring booking rows (used for calendar push sync).
+     *
+     * @param string $googleEventId
+     *
+     * @return Appointment|null
+     *
+     * @throws QueryExecutionException
+     * @throws \AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException
+     */
+    public function getByGoogleCalendarEventId($googleEventId)
+    {
+        try {
+            $statement = $this->connection->prepare(
+                "SELECT id FROM {$this->table} WHERE googleCalendarEventId = :eid LIMIT 1"
+            );
+            $statement->bindParam(':eid', $googleEventId);
+            $statement->execute();
+            $row = $statement->fetch();
+        } catch (\Exception $e) {
+            throw new QueryExecutionException('Unable to find by googleCalendarEventId in ' . __CLASS__, $e->getCode(), $e);
+        }
+
+        if (!$row || empty($row['id'])) {
+            return null;
+        }
+
+        return $this->getByIdWithoutBookings((int)$row['id']);
     }
 }

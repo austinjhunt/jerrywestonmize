@@ -33,26 +33,6 @@ msgid "# of bookings"
 msgstr "預訂數量"
 
 #, php-format
-msgid "%1$s, %2$s, was canceled."
-msgstr "%1$s, %2$s, 已取消."
-
-#, php-format
-msgid "%1$s, %2$s, was rejected."
-msgstr "%1$s, %2$s, 已被拒絕."
-
-#, php-format
-msgid "%1$s booked %2$s at %3$s."
-msgstr "%1$s 已在 %3$s 預約 %2$s."
-
-#, php-format
-msgid "%1$s on %2$s had a status change."
-msgstr "%1$s 於 %2$s 的狀態已變更."
-
-#, php-format
-msgid "%1$s on %2$s was updated."
-msgstr "%1$s 於 %2$s 已更新."
-
-#, php-format
 msgid "%event_name% Event Booked"
 msgstr "%event_name% 活動已報名"
 
@@ -453,8 +433,14 @@ msgstr "動作"
 msgid "Activate"
 msgstr "啟用設定"
 
+msgid "Activate now"
+msgstr ""
+
 msgid "Activate with Envato"
 msgstr "用Envato激活"
+
+msgid "Activate your license to unlock the features included in your plan."
+msgstr ""
 
 msgid "Activated with Envato"
 msgstr "已用Envato激活"
@@ -847,6 +833,9 @@ msgstr "已付款"
 msgid "Already have an account?"
 msgstr "已經有賬戶了嗎?"
 
+msgid "Already purchased Amelia?"
+msgstr ""
+
 msgid "Also cancel and delete future events"
 msgstr "同時取消並刪除未來事件"
 
@@ -905,7 +894,7 @@ msgid "Apple Calendar setup"
 msgstr "Apple 日曆設定"
 
 msgid "Apple calendar events"
-msgstr "Apple 行事曆行程"
+msgstr ""
 
 msgid "Application (client) ID"
 msgstr "應用程式(客戶端)識別"
@@ -1048,9 +1037,6 @@ msgstr "任命筆記"
 msgid "Appointment price"
 msgstr "約定的價格"
 
-msgid "Appointment reminder"
-msgstr "預約提醒"
-
 msgid "Appointment repeats"
 msgstr "預約重複"
 
@@ -1063,9 +1049,6 @@ msgstr "預約開始時間"
 msgid "Appointment status"
 msgstr "預約狀態"
 
-msgid "Appointment status changed"
-msgstr "預約狀態變更"
-
 msgid "Appointment status has been changed to "
 msgstr "預約狀態已更改爲"
 
@@ -1074,9 +1057,6 @@ msgstr "預約狀態已更新。"
 
 msgid "Appointment title"
 msgstr "預約標題"
-
-msgid "Appointment updated"
-msgstr "預約已更新"
 
 msgid "Appointments"
 msgstr "預約"
@@ -1116,6 +1096,10 @@ msgstr "您確定要取消並刪除此活動嗎？"
 
 msgid "Are you sure you want to cancel this appointment?"
 msgstr "您確定要取消這次預約嗎?"
+
+msgid ""
+"Are you sure you want to cancel this booking? This action cannot be undone."
+msgstr ""
 
 msgid "Are you sure you want to cancel this event?"
 msgstr "您確定要取消此活動嗎?"
@@ -2189,6 +2173,9 @@ msgstr "選擇重複結束的時間"
 msgid "Choose whether you want to manage services, events, or both."
 msgstr "選擇您要管理服務、活動，或兩者皆管理。"
 
+msgid "Choose which tab users see first when they log in"
+msgstr ""
+
 msgid "Choosing layout of first step in step by step form"
 msgstr "選擇逐步表單中第一步驟的佈局"
 
@@ -2368,6 +2355,9 @@ msgstr "設定預約候補名單"
 
 msgid "Confirm"
 msgstr "確認"
+
+msgid "Confirm Cancellation"
+msgstr ""
 
 msgid "Confirm My Appointment"
 msgstr "確認我的預約"
@@ -2960,9 +2950,6 @@ msgstr "保持不變的資料："
 
 msgid "Data to be updated:"
 msgstr "待更新資料："
-
-msgid "Data transfer"
-msgstr "資料移轉"
 
 msgid "Date"
 msgstr "天"
@@ -3941,6 +3928,9 @@ msgstr "預設預約狀態"
 msgid "Default back end page"
 msgstr "預設後台頁面"
 
+msgid "Default landing tab"
+msgstr ""
+
 msgid "Default language"
 msgstr "默認的語言"
 
@@ -4425,7 +4415,7 @@ msgstr "編輯預約"
 msgid ""
 "Edit appointments/events when connected Google Calendar Events are "
 "rescheduled or deleted"
-msgstr "當已連結的 Google Calendar 事件改期或刪除時，自動更新預約/活動"
+msgstr ""
 
 msgid "Edit block time"
 msgstr "編輯封鎖時段"
@@ -5471,9 +5461,6 @@ msgstr "失敗"
 msgid "Failed to access camera. Please try again."
 msgstr "無法存取相機。請嘗試再次操作。"
 
-msgid "Failed to initialize payment. Please try again."
-msgstr "無法初始化付款。請再試一次。"
-
 msgid "Failed to load appointment details. Please try again later."
 msgstr "無法載入預約詳情。請稍後再試。"
 
@@ -5833,7 +5820,7 @@ msgid "Google Meet setup"
 msgstr "Google Meet 設定"
 
 msgid "Google calendar events"
-msgstr "Google 日曆活動"
+msgstr ""
 
 msgid "Google reCAPTCHA v2 secret key"
 msgstr "Google reCAPTCHA v2 密鑰"
@@ -6594,11 +6581,6 @@ msgid ""
 msgstr "若此功能停用，預約須達到最低人數門檻，且時段在首筆預約完成後即關閉。"
 
 msgid ""
-"If disabled, the price will remain the same regardless of how many people "
-"are included in the group appointment."
-msgstr "若此功能停用，無論團體預約包含多少人，價格皆維持不變。"
-
-msgid ""
 "If enabled, customers can book with Pending status even after maximum "
 "capacity is reached."
 msgstr "若啟用此功能，即使達到最大容量上限，客戶仍可預訂並維持「待處理」狀態。"
@@ -6715,6 +6697,9 @@ msgstr "圖片縮略圖"
 msgid "Import"
 msgstr "輸入"
 
+msgid "Import/Export"
+msgstr ""
+
 msgid "Import Failed"
 msgstr "匯入失敗"
 
@@ -6744,6 +6729,9 @@ msgstr "匯入失敗"
 
 msgid "Import failed. Review the details below."
 msgstr "匯入失敗。請檢視下方詳細資訊。"
+
+msgid "Import or export your Amelia data."
+msgstr ""
 
 msgid "Import progress"
 msgstr "匯入進度"
@@ -8549,7 +8537,7 @@ msgid ""
 msgstr "Outlook Mailer 尚未完成設定。請至 Outlook 整合設定中完成帳戶設定。"
 
 msgid "Outlook calendar events"
-msgstr "Outlook 行事曆事件"
+msgstr ""
 
 msgid "Outside of working hours"
 msgstr "非營業時間"
@@ -9656,6 +9644,11 @@ msgstr "取消購買"
 msgid "Purchased"
 msgstr "購買"
 
+msgid ""
+"Purchasing doesn't upgrade this plugin automatically. Follow our step-by-"
+"step guide to switch to the full version."
+msgstr ""
+
 msgid "Purple"
 msgstr "紫色"
 
@@ -9860,10 +9853,6 @@ msgstr "剩余金額將在現場支付。"
 
 msgid "Remind me when my SMS balance is low"
 msgstr "提醒我當我的簡訊余額低"
-
-#, php-format
-msgid "Reminder: %1$s is scheduled for %2$s."
-msgstr "Reminder: %1$s 已排定於 %2$s。"
 
 msgid "Remove Apple Calendar event slots"
 msgstr "移除 Apple 行事曆事件的時段"
@@ -10252,6 +10241,9 @@ msgstr "部分"
 
 msgid "Securely process payments using Stripe."
 msgstr "使用 Stripe 安全處理付款。"
+
+msgid "See upgrade guide."
+msgstr ""
 
 msgid "Segment"
 msgstr "分段"
@@ -11091,6 +11083,9 @@ msgstr "使用 Microsoft 登入"
 msgid "Sign in with Outlook"
 msgstr "使用Outlook登錄"
 
+msgid "Sign out and use a customer account"
+msgstr ""
+
 msgid "Sign out from Google"
 msgstr "從Google退出"
 
@@ -11468,7 +11463,7 @@ msgid "Switch Camera"
 msgstr "切換相機"
 
 msgid "Sync Google Events"
-msgstr "同步 Google 活動"
+msgstr ""
 
 msgid "Sync with"
 msgstr "與"
@@ -11941,6 +11936,12 @@ msgid ""
 "This notification requires a cron job. Add the line below to your cron "
 "configuration."
 msgstr "此通知需要設定 cron 排程任務。請將以下內容加入您的 cron 設定檔："
+
+msgid ""
+"This option applies only to people added through \"Bringing anyone with "
+"you\". If disabled, the service price is charged once for the entire "
+"booking, regardless of how many additional people are included."
+msgstr ""
 
 msgid ""
 "This option requires adding the payment link placeholder to your message "
@@ -13057,6 +13058,11 @@ msgstr "您的密碼重置成功"
 
 msgid "Your password has been reset successfully."
 msgstr "您的密碼已成功重設。"
+
+msgid ""
+"Your payment is still processing. You will receive a confirmation as soon as "
+"it is completed."
+msgstr ""
 
 msgid "Your postal code is incomplete"
 msgstr "您的郵政編碼不完整"

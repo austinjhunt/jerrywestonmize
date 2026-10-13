@@ -33,26 +33,6 @@ msgid "# of bookings"
 msgstr "Aantal boekingen"
 
 #, php-format
-msgid "%1$s, %2$s, was canceled."
-msgstr "%1$s, %2$s, werd geannuleerd."
-
-#, php-format
-msgid "%1$s, %2$s, was rejected."
-msgstr "%1$s, %2$s, werd afgewezen."
-
-#, php-format
-msgid "%1$s booked %2$s at %3$s."
-msgstr "%1$s boekte %2$s om %3$s."
-
-#, php-format
-msgid "%1$s on %2$s had a status change."
-msgstr "%1$s op %2$s had een statuswijziging."
-
-#, php-format
-msgid "%1$s on %2$s was updated."
-msgstr "%1$s op %2$s werd bijgewerkt."
-
-#, php-format
 msgid "%event_name% Event Booked"
 msgstr "%event_name% Event geboekt"
 
@@ -458,8 +438,14 @@ msgstr "Acties"
 msgid "Activate"
 msgstr "Activeren"
 
+msgid "Activate now"
+msgstr ""
+
 msgid "Activate with Envato"
 msgstr "Activeer met Envato"
+
+msgid "Activate your license to unlock the features included in your plan."
+msgstr ""
 
 msgid "Activated with Envato"
 msgstr "Geactiveerd met Envato"
@@ -872,6 +858,9 @@ msgstr "Al betaald"
 msgid "Already have an account?"
 msgstr "Heeft u een reeds een account?"
 
+msgid "Already purchased Amelia?"
+msgstr ""
+
 msgid "Also cancel and delete future events"
 msgstr "Ook toekomstige evenementen annuleren en verwijderen"
 
@@ -921,7 +910,7 @@ msgid "Apple"
 msgstr ""
 
 msgid "Apple Calendar"
-msgstr "Google Kalender"
+msgstr "Apple-agenda"
 
 msgid "Apple Calendar (Personal)"
 msgstr "Apple-agenda (persoonlijk)"
@@ -930,7 +919,7 @@ msgid "Apple Calendar setup"
 msgstr "Apple Agenda instellen"
 
 msgid "Apple calendar events"
-msgstr "Apple Calendar-evenementen"
+msgstr ""
 
 msgid "Application (client) ID"
 msgstr "Applicatie-ID (client)"
@@ -1077,9 +1066,6 @@ msgstr "Aantekeningen bij afspraak"
 msgid "Appointment price"
 msgstr "Afspraak prijs"
 
-msgid "Appointment reminder"
-msgstr "Afspraakherinnering"
-
 msgid "Appointment repeats"
 msgstr "Afspraak herhalingen"
 
@@ -1092,9 +1078,6 @@ msgstr "Starttijd afspraak"
 msgid "Appointment status"
 msgstr "Status van de afspraak"
 
-msgid "Appointment status changed"
-msgstr "Afspraakstatus gewijzigd"
-
 msgid "Appointment status has been changed to "
 msgstr "De status van de afspraak is gewijzigd in "
 
@@ -1103,9 +1086,6 @@ msgstr "De status van de afspraak is bijgewerkt."
 
 msgid "Appointment title"
 msgstr "Titel van de afspraak"
-
-msgid "Appointment updated"
-msgstr "Afspraak bijgewerkt"
 
 msgid "Appointments"
 msgstr "Afspraken"
@@ -1145,6 +1125,10 @@ msgstr "Weet u zeker dat u deze gebeurtenis wilt annuleren en verwijderen?"
 
 msgid "Are you sure you want to cancel this appointment?"
 msgstr "Weet je zeker dat je deze afspraak wilt annuleren?"
+
+msgid ""
+"Are you sure you want to cancel this booking? This action cannot be undone."
+msgstr ""
 
 msgid "Are you sure you want to cancel this event?"
 msgstr "Weet je zeker dat je dit event wilt annuleren?"
@@ -1330,16 +1314,16 @@ msgid "Attachment upload path"
 msgstr "Bijlage uploadlocatie"
 
 msgid "Attendee"
-msgstr "Event geannuleerd door deelnemer"
+msgstr "Deelnemer"
 
 msgid "Attendee Asc"
-msgstr "Deelnemer Asc"
+msgstr "Deelnemer Oplopend"
 
 msgid "Attendee Desc"
-msgstr "Deelnemer Desc"
+msgstr "Deelnemer Aflopend"
 
 msgid "Attendee code"
-msgstr "Deelnemercode"
+msgstr "Deelnemerscode"
 
 msgid "Attendee has been saved"
 msgstr "Deelnemer is opgeslagen"
@@ -1354,7 +1338,7 @@ msgid "Attendees"
 msgstr "Deelnemers"
 
 msgid "Attendees Allowed"
-msgstr "Deelnemercode"
+msgstr "Toegestane deelnemers"
 
 msgid "Attendees Export Format"
 msgstr "Exportformaat deelnemers"
@@ -1443,13 +1427,13 @@ msgid "Available date text"
 msgstr "Beschikbare datumtekst"
 
 msgid "Available from Pro license"
-msgstr "Beschikbare afbeeldingen"
+msgstr "Beschikbaar vanaf de Pro-licentie"
 
 msgid "Available from Standard license"
-msgstr "Beschikbare afbeeldingen"
+msgstr "Beschikbaar vanaf de Standard-licentie"
 
 msgid "Available from Starter license"
-msgstr "Beschikbare afbeeldingen"
+msgstr "Beschikbaar vanaf de Starter-licentie"
 
 msgid "Available in Elite licence"
 msgstr "Beschikbaar in pakket"
@@ -1681,10 +1665,10 @@ msgid "Booking Closes"
 msgstr "Reservering sluit"
 
 msgid "Booking Closes Asc"
-msgstr "Boeking sluit Asc"
+msgstr "Boeking sluit Oplopend"
 
 msgid "Booking Closes Desc"
-msgstr "Boeking gesloten Desc"
+msgstr "Boeking sluit Aflopend"
 
 msgid "Booking Confirmed"
 msgstr "Boeking bevestigd"
@@ -1711,10 +1695,10 @@ msgid "Booking Opens"
 msgstr "Reservering geopend"
 
 msgid "Booking Opens Asc"
-msgstr "Boeking geopend Asc"
+msgstr "Boeking geopend Oplopend"
 
 msgid "Booking Opens Desc"
-msgstr "Boeking geopend Desc"
+msgstr "Boeking geopend Aflopend"
 
 msgid "Booking Overview"
 msgstr "Afspraken overzicht"
@@ -2048,7 +2032,7 @@ msgid "Cart appointments details"
 msgstr "Groepsafspraak"
 
 msgid "Cart description"
-msgstr "Event beschrijving"
+msgstr "Winkelwagenbeschrijving"
 
 msgid "Cart purchased"
 msgstr "Winkelwagen gekocht"
@@ -2285,6 +2269,9 @@ msgstr "Kies wanneer het herhalen eindigt"
 msgid "Choose whether you want to manage services, events, or both."
 msgstr "Kies of u diensten, evenementen of beide wilt beheren."
 
+msgid "Choose which tab users see first when they log in"
+msgstr ""
+
 msgid "Choosing layout of first step in step by step form"
 msgstr "Lay-out kiezen voor de eerste stap in het stapsgewijze formulier"
 
@@ -2473,6 +2460,9 @@ msgstr "Wachtlijst voor afspraken configureren"
 
 msgid "Confirm"
 msgstr "Bevestigen"
+
+msgid "Confirm Cancellation"
+msgstr ""
 
 msgid "Confirm My Appointment"
 msgstr "Bevestig mijn afspraak"
@@ -2942,10 +2932,10 @@ msgid "Customer(s)"
 msgstr "Patiënt(en)"
 
 msgid "Customer Asc"
-msgstr "Klant Asc"
+msgstr "Klant Oplopend"
 
 msgid "Customer Desc"
-msgstr "Klantbeschrijving"
+msgstr "Klant Aflopend"
 
 msgid "Customer Panel"
 msgstr "Klantenpanel"
@@ -3125,9 +3115,6 @@ msgstr "Gegevens die ongewijzigd blijven:"
 msgid "Data to be updated:"
 msgstr "Te updaten gegevens:"
 
-msgid "Data transfer"
-msgstr "Gegevensoverdracht"
-
 msgid "Date"
 msgstr "Datum"
 
@@ -3147,16 +3134,16 @@ msgid "Date Asc"
 msgstr "Datum oplopend"
 
 msgid "Date Desc"
-msgstr "Datum Beschrijving"
+msgstr "Datum Aflopend"
 
 msgid "Date Picker"
 msgstr "Datumkiezer"
 
 msgid "Date Purchased Asc"
-msgstr "Aankoopdatum Asc"
+msgstr "Aankoopdatum Oplopend"
 
 msgid "Date Purchased Desc"
-msgstr "Aankoopdatum Beschrijving"
+msgstr "Aankoopdatum Aflopend"
 
 msgid ""
 "Date Ranges that are not defined will use default price from ticket category."
@@ -3219,7 +3206,7 @@ msgid "Day Off name"
 msgstr "Naam verlofdag"
 
 msgid "Day of the Week"
-msgstr "Datum event"
+msgstr "Dag van de week"
 
 msgid "Day of the week"
 msgstr "Dag van de week"
@@ -4124,10 +4111,10 @@ msgid "Deduction"
 msgstr "Korting"
 
 msgid "Deduction Asc"
-msgstr "Aftrek Asc"
+msgstr "Aftrek Oplopend"
 
 msgid "Deduction Desc"
-msgstr "Aftrek Beschrijving"
+msgstr "Aftrek Aflopend"
 
 msgid "Default Label"
 msgstr "Standaard Label"
@@ -4140,6 +4127,9 @@ msgstr "Standaardafspraakstatus"
 
 msgid "Default back end page"
 msgstr "Standaard back-endpagina"
+
+msgid "Default landing tab"
+msgstr ""
 
 msgid "Default language"
 msgstr "Standaard taal"
@@ -4380,10 +4370,10 @@ msgid "Discount"
 msgstr "Korting"
 
 msgid "Discount Asc"
-msgstr "Korting Asc"
+msgstr "Korting Oplopend"
 
 msgid "Discount Desc"
-msgstr "Korting Beschrijving"
+msgstr "Korting Aflopend"
 
 msgid "Discount (%)"
 msgstr "Korting (%)"
@@ -4562,10 +4552,10 @@ msgid "Duration:"
 msgstr "Duurtijd:"
 
 msgid "Duration Asc"
-msgstr "Duur Asc"
+msgstr "Duur Oplopend"
 
 msgid "Duration Desc"
-msgstr "Duur Beschrijving"
+msgstr "Duur Aflopend"
 
 msgid "E-Ticket Scanner"
 msgstr "Naam ticket"
@@ -4652,8 +4642,6 @@ msgid ""
 "Edit appointments/events when connected Google Calendar Events are "
 "rescheduled or deleted"
 msgstr ""
-"Afspraken/evenementen bijwerken als gekoppelde Google Kalender-events worden "
-"verzet of verwijderd"
 
 msgid "Edit block time"
 msgstr "Geblokkeerde tijd bewerken"
@@ -5326,7 +5314,7 @@ msgid "Event"
 msgstr "Evenement"
 
 msgid "Event Asc"
-msgstr "Evenement Asc"
+msgstr "Evenement Oplopend"
 
 msgid "Event Available"
 msgstr "Beschikbaar"
@@ -5365,7 +5353,7 @@ msgid "Event Day"
 msgstr "Eventdatum"
 
 msgid "Event Desc"
-msgstr "Evenementbeschrijving"
+msgstr "Evenement Aflopend"
 
 msgid "Event Employee"
 msgstr "Event medewerker"
@@ -5778,9 +5766,6 @@ msgstr "Mislukt"
 msgid "Failed to access camera. Please try again."
 msgstr "Toegang tot camera mislukt. Probeer het opnieuw."
 
-msgid "Failed to initialize payment. Please try again."
-msgstr "De betaling kon niet worden opgestart. Probeer het opnieuw."
-
 msgid "Failed to load appointment details. Please try again later."
 msgstr ""
 "Het laden van de afspraakgegevens is mislukt. Probeer het later nog eens."
@@ -5856,7 +5841,7 @@ msgid "Filters"
 msgstr ""
 
 msgid "Filters block"
-msgstr "Filters blokkeren"
+msgstr "Filterblok"
 
 msgid "Finance"
 msgstr "Financiën"
@@ -5977,7 +5962,7 @@ msgid "Free"
 msgstr "Gratis"
 
 msgid "Fri"
-msgstr "Vrijdag"
+msgstr "Vr"
 
 msgid "Friday"
 msgstr "Vrijdag"
@@ -6129,10 +6114,10 @@ msgid "Google Analytics setup"
 msgstr "Google Analytics instellen"
 
 msgid "Google Calendar"
-msgstr "Google Kalender"
+msgstr "Google-agenda"
 
 msgid "Google Calendar & Google Meet"
-msgstr "Google Agenda &amp; Google Meet"
+msgstr "Google Agenda & Google Meet"
 
 msgid "Google Calendar setup"
 msgstr "Google Agenda instellen"
@@ -6161,7 +6146,7 @@ msgid "Google Meet setup"
 msgstr "Google Meet instellen"
 
 msgid "Google calendar events"
-msgstr "Google Calendar-gebeurtenissen"
+msgstr ""
 
 msgid "Google reCAPTCHA v2 secret key"
 msgstr "Google reCAPTCHA v2 geheime sleutel"
@@ -6866,7 +6851,7 @@ msgid "Hide package"
 msgstr "Pakket verbergen"
 
 msgid "Hide resource"
-msgstr ""
+msgstr "Bron verbergen"
 
 msgid "Hide service"
 msgstr "Service verbergen"
@@ -6917,10 +6902,10 @@ msgid "ID"
 msgstr ""
 
 msgid "ID Asc"
-msgstr ""
+msgstr "ID Oplopend"
 
 msgid "ID Desc"
-msgstr "ID Beschrijving"
+msgstr "ID Aflopend"
 
 msgid "I understand this import will replace all current data permanently."
 msgstr ""
@@ -6948,13 +6933,6 @@ msgid ""
 msgstr ""
 "Indien uitgeschakeld, moet de boeking voldoen aan de minimale capaciteit en "
 "wordt het tijdslot gesloten na de eerste boeking."
-
-msgid ""
-"If disabled, the price will remain the same regardless of how many people "
-"are included in the group appointment."
-msgstr ""
-"Als deze optie is uitgeschakeld, blijft de prijs hetzelfde, ongeacht hoeveel "
-"personen er bij de groepsafspraak betrokken zijn."
 
 msgid ""
 "If enabled, customers can book with Pending status even after maximum "
@@ -7104,6 +7082,9 @@ msgstr "Afbeelding miniaturen"
 msgid "Import"
 msgstr "Importeren"
 
+msgid "Import/Export"
+msgstr ""
+
 msgid "Import Failed"
 msgstr "Importeren mislukt"
 
@@ -7133,6 +7114,9 @@ msgstr "Import mislukt"
 
 msgid "Import failed. Review the details below."
 msgstr "Import mislukt. Controleer de details hieronder."
+
+msgid "Import or export your Amelia data."
+msgstr ""
 
 msgid "Import progress"
 msgstr "Importvoortgang"
@@ -7554,7 +7538,7 @@ msgid "Invoice Number Asc"
 msgstr "Factuurnummer oplopend"
 
 msgid "Invoice Number Desc"
-msgstr "Factuurnummer Beschrijving"
+msgstr "Factuurnummer Aflopend"
 
 msgid "Invoice date"
 msgstr "Factuurdatum"
@@ -7724,10 +7708,10 @@ msgid "Last"
 msgstr "Achternaam"
 
 msgid "Last Booking Asc"
-msgstr "Laatste boeking Asc"
+msgstr "Laatste boeking Oplopend"
 
 msgid "Last Booking Desc"
-msgstr "Laatste boeking Desc"
+msgstr "Laatste boeking Aflopend"
 
 msgid "Last Name:"
 msgstr "Achternaam:"
@@ -8100,10 +8084,10 @@ msgid "Max. Capacity"
 msgstr "Max. Capaciteit"
 
 msgid "Max Capacity Asc"
-msgstr "Maximale capaciteit Asc"
+msgstr "Maximale capaciteit Oplopend"
 
 msgid "Max Capacity Desc"
-msgstr "Maximale capaciteit Beschrijving"
+msgstr "Maximale capaciteit Aflopend"
 
 msgid "Maximum"
 msgstr ""
@@ -8322,13 +8306,13 @@ msgid "Name:"
 msgstr "Naam:"
 
 msgid "Name Asc"
-msgstr "Naam Asc"
+msgstr "Naam Oplopend"
 
 msgid "Name Ascending"
 msgstr "Naam Oplopend"
 
 msgid "Name Desc"
-msgstr "Naam Beschrijving"
+msgstr "Naam Aflopend"
 
 msgid "Name Descending"
 msgstr "Naam Aflopend"
@@ -8445,10 +8429,10 @@ msgid "No, just this one"
 msgstr "Nee, alleen deze"
 
 msgid "No-show"
-msgstr ""
+msgstr "Niet verschenen"
 
 msgid "No-show tag"
-msgstr "No-show-tag"
+msgstr "Niet verschenen-tag"
 
 msgid "No Employees Assigned to This Location"
 msgstr "Er zijn geen werknemers toegewezen aan deze locatie"
@@ -8457,16 +8441,16 @@ msgid "No Packages"
 msgstr "Geen pakketten"
 
 msgid "No Show"
-msgstr ""
+msgstr "Niet verschenen"
 
 msgid "No Show (1)"
-msgstr ""
+msgstr "Niet verschenen (1)"
 
 msgid "No Show (2)"
-msgstr ""
+msgstr "Niet verschenen (2)"
 
 msgid "No Show (3+)"
-msgstr ""
+msgstr "Niet verschenen (3+)"
 
 msgid "No Tags. Create a new one."
 msgstr "Geen tags. Maak een nieuwe."
@@ -8672,13 +8656,13 @@ msgid "Notify selected employees about empty package purchases"
 msgstr "Geselecteerde medewerkers informeren over aankopen van lege pakketten"
 
 msgid "Notify the attendee(s)"
-msgstr "Informeer de klant(en)"
+msgstr "Deelnemers op de hoogte brengen"
 
 msgid "Notify the attendees"
 msgstr "Breng de deelnemers op de hoogte"
 
 msgid "Notify the customer(s)"
-msgstr "Informeer de klant(en)"
+msgstr "Klanten op de hoogte brengen"
 
 msgid "Number of Additional People"
 msgstr "Aantal extra personen"
@@ -9003,7 +8987,7 @@ msgid "Outline"
 msgstr "Overzicht"
 
 msgid "Outlook Calendar"
-msgstr "Outlook Agenda"
+msgstr "Outlook-agenda"
 
 msgid "Outlook Calendar & Microsoft Teams"
 msgstr "Outlook-agenda en Microsoft Teams"
@@ -9015,7 +8999,7 @@ msgid "Outlook Calendar setup"
 msgstr "Outlook-agenda instellen"
 
 msgid "Outlook Mailer"
-msgstr "Outlook Agenda"
+msgstr "Outlook e-maildienst"
 
 msgid ""
 "Outlook Mailer is not fully configured. Please complete the account setup in "
@@ -9025,7 +9009,7 @@ msgstr ""
 "accountinstellingen in de Outlook-integratie-instellingen."
 
 msgid "Outlook calendar events"
-msgstr "Outlook-agenda-events"
+msgstr ""
 
 msgid "Outside of working hours"
 msgstr "Buiten de werkuren"
@@ -9064,13 +9048,13 @@ msgid "Package %package_name% purchased"
 msgstr "Pakket %package_name% aangekocht"
 
 msgid "Package Asc"
-msgstr "Pakket Asc"
+msgstr "Pakket Oplopend"
 
 msgid "Package Canceled"
 msgstr "Pakket geannuleerd"
 
 msgid "Package Desc"
-msgstr "Pakketbeschrijving"
+msgstr "Pakket Aflopend"
 
 msgid "Package ID"
 msgstr "Pakket-ID"
@@ -10036,7 +10020,7 @@ msgid "Price Ascending"
 msgstr "Prijs Oplopend"
 
 msgid "Price Desc"
-msgstr "Prijs Beschrijving"
+msgstr "Prijs Aflopend"
 
 msgid "Price Descending"
 msgstr "Prijs Aflopend"
@@ -10156,6 +10140,11 @@ msgstr "Aankoop is geannuleerd"
 msgid "Purchased"
 msgstr "Aangeschaft"
 
+msgid ""
+"Purchasing doesn't upgrade this plugin automatically. Follow our step-by-"
+"step guide to switch to the full version."
+msgstr ""
+
 msgid "Purple"
 msgstr "Paars"
 
@@ -10169,10 +10158,10 @@ msgid "Quantity"
 msgstr "Maximum aantal"
 
 msgid "Quantity Asc"
-msgstr "Aantal Asc"
+msgstr "Aantal Oplopend"
 
 msgid "Quantity Desc"
-msgstr "Aantal Beschrijving"
+msgstr "Aantal Aflopend"
 
 msgid "Quantity is shared"
 msgstr "Hoeveelheid wordt gedeeld"
@@ -10295,7 +10284,7 @@ msgid "Redirect"
 msgstr "Omleiden"
 
 msgid "Redirect URI"
-msgstr "URI omLeiden"
+msgstr "Omleidings-URI"
 
 msgid "Redirect URL After Booking"
 msgstr "URL omleiding na boeking"
@@ -10325,7 +10314,7 @@ msgid "Redirect URL for unsuccessfully rejected booking"
 msgstr "Omleidings-URL voor niet-geslaagde afgewezen boeking"
 
 msgid "Redirect URLs"
-msgstr "URI omLeiden"
+msgstr "Omleidings-URL's"
 
 msgid "Redirect page"
 msgstr "Pagina omleiden"
@@ -10364,10 +10353,6 @@ msgstr "Het restant van het totaalbedrag wordt ter plaatse betaald."
 
 msgid "Remind me when my SMS balance is low"
 msgstr "Herinner me wanneer mijn sms-tegoed bijna op is"
-
-#, php-format
-msgid "Reminder: %1$s is scheduled for %2$s."
-msgstr "Herinnering: %1$s is gepland voor %2$s."
 
 msgid "Remove Apple Calendar event slots"
 msgstr "Verwijder tijdsloten van Apple Calendar-evenementen"
@@ -10584,7 +10569,7 @@ msgid "Sandbox secret key (POSKey)"
 msgstr "Sandbox geheime sleutel (POSKey)"
 
 msgid "Sat"
-msgstr "Zaterdag"
+msgstr "Za"
 
 msgid "Saturday"
 msgstr "Zaterdag"
@@ -10763,6 +10748,9 @@ msgstr "Actie"
 
 msgid "Securely process payments using Stripe."
 msgstr "Verwerk betalingen veilig met Stripe."
+
+msgid "See upgrade guide."
+msgstr ""
 
 msgid "Segment"
 msgstr ""
@@ -11101,7 +11089,7 @@ msgid "Service/Event"
 msgstr "Service/Evenement"
 
 msgid "Service Asc"
-msgstr ""
+msgstr "Dienst oplopend"
 
 msgid "Service Categories"
 msgstr "Servicecategorieën"
@@ -11110,7 +11098,7 @@ msgid "Service Category"
 msgstr "Service categorie"
 
 msgid "Service Desc"
-msgstr ""
+msgstr "Dienst aflopend"
 
 msgid "Service ID"
 msgstr "Service-ID"
@@ -11209,10 +11197,10 @@ msgid "Services & categories setup"
 msgstr "Instellingen voor diensten en categorieën"
 
 msgid "Services Asc"
-msgstr "Diensten Asc"
+msgstr "Diensten Oplopend"
 
 msgid "Services Desc"
-msgstr ""
+msgstr "Diensten aflopend"
 
 msgid "Services and packages overview"
 msgstr "Overzicht van diensten en pakketten"
@@ -11373,7 +11361,7 @@ msgid "Set up Employees selection options"
 msgstr "Diensten, locaties, keuzemogelijkheden voor werknemers"
 
 msgid "Set up Labels and Buttons"
-msgstr "Kaarten en buttons"
+msgstr "Labels en knoppen instellen"
 
 msgid ""
 "Set up Location, Images, Filters, Capacity, Price, and Status visibility "
@@ -11593,7 +11581,7 @@ msgid "Show specific service"
 msgstr "Specifieke dienst weergeven"
 
 msgid "Show specific services"
-msgstr "Specifieke dienst weergeven"
+msgstr "Specifieke diensten weergeven"
 
 msgid "Show tag"
 msgstr "Toon tag"
@@ -11646,6 +11634,9 @@ msgstr "Aanmelden met Microsoft"
 
 msgid "Sign in with Outlook"
 msgstr "Aanmelden met Outlook"
+
+msgid "Sign out and use a customer account"
+msgstr ""
 
 msgid "Sign out from Google"
 msgstr "Afmelden bij Google"
@@ -11852,10 +11843,10 @@ msgid "Status"
 msgstr ""
 
 msgid "Status Asc"
-msgstr ""
+msgstr "Status oplopend"
 
 msgid "Status Desc"
-msgstr ""
+msgstr "Status aflopend"
 
 msgid ""
 "Stay compliant with ease through consistent, reliable tax handling across "
@@ -12031,7 +12022,7 @@ msgid "Summary segment"
 msgstr "Samenvattingssegment"
 
 msgid "Sun"
-msgstr "Zon"
+msgstr "Zo"
 
 msgid "Sunday"
 msgstr "Zondag"
@@ -12059,7 +12050,7 @@ msgid "Switch Camera"
 msgstr "Camera wisselen"
 
 msgid "Sync Google Events"
-msgstr "Google-evenementen synchroniseren"
+msgstr ""
 
 msgid "Sync with"
 msgstr "Synchroniseren met"
@@ -12442,7 +12433,7 @@ msgid "Third {day}"
 msgstr "Derde {day}"
 
 msgid "This & Future"
-msgstr "Dit &amp; Toekomst"
+msgstr "Dit & Toekomst"
 
 msgid "This Only"
 msgstr "Dit alleen"
@@ -12595,6 +12586,12 @@ msgstr ""
 "uw cron-configuratie."
 
 msgid ""
+"This option applies only to people added through \"Bringing anyone with "
+"you\". If disabled, the service price is charged once for the entire "
+"booking, regardless of how many additional people are included."
+msgstr ""
+
+msgid ""
 "This option requires adding the payment link placeholder to your message "
 "templates."
 msgstr ""
@@ -12696,7 +12693,7 @@ msgstr ""
 "datumbereik te gebruiken."
 
 msgid "Thu"
-msgstr ""
+msgstr "Do"
 
 msgid "Thursday"
 msgstr "Donderdag"
@@ -12759,10 +12756,10 @@ msgid "Time Range:"
 msgstr "Tijdbereik:"
 
 msgid "Time Used Asc"
-msgstr "Gebruikte tijd Asc"
+msgstr "Gebruikte tijd Oplopend"
 
 msgid "Time Used Desc"
-msgstr "Gebruikte tijd Beschrijving"
+msgstr "Gebruikte tijd Aflopend"
 
 msgid "Time frame"
 msgstr "Tijdbereik:"
@@ -12812,7 +12809,7 @@ msgid "Timezone"
 msgstr "Tijdzone"
 
 msgid "Tips & suggestions"
-msgstr "Tips &amp; suggesties"
+msgstr "Tips & suggesties"
 
 msgid "Title section"
 msgstr "Titelgedeelte"
@@ -12877,7 +12874,7 @@ msgid "Tomorrow"
 msgstr "Morgen"
 
 msgid "Top trends"
-msgstr ""
+msgstr "Belangrijkste trends"
 
 msgid "Torch off"
 msgstr "Zaklamp uit"
@@ -13017,10 +13014,10 @@ msgid "Type"
 msgstr ""
 
 msgid "Type Asc"
-msgstr ""
+msgstr "Type oplopend"
 
 msgid "Type Desc"
-msgstr "Type Beschrijving"
+msgstr "Type Aflopend"
 
 msgid "URL"
 msgstr ""
@@ -13108,7 +13105,7 @@ msgid "Upcoming events section"
 msgstr "Aankomende evenementen sectie"
 
 msgid "Update"
-msgstr ""
+msgstr "Bijwerken"
 
 msgid "Update Service Settings"
 msgstr "Service-instellingen bijwerken"
@@ -13213,10 +13210,7 @@ msgid "Verification expired. Please try again."
 msgstr "Verificatie verlopen. Gelieve opnieuw te proberen."
 
 msgid "Version "
-msgstr ""
-"Kies een formulier dat u wilt aanpassen. Het Step-by-Step 2.0 formulier is "
-"de nieuwe en verbeterde versie die u een beter ontwerp en een betere "
-"gebruikerservaring biedt, evenals een hogere snelheid."
+msgstr "Versie "
 
 msgid "Video tutorials"
 msgstr "Video-instructies"
@@ -13805,6 +13799,11 @@ msgstr "Uw wachtwoord is met succes hersteld"
 msgid "Your password has been reset successfully."
 msgstr "Je wachtwoord is succesvol gereset."
 
+msgid ""
+"Your payment is still processing. You will receive a confirmation as soon as "
+"it is completed."
+msgstr ""
+
 msgid "Your postal code is incomplete"
 msgstr "Uw postcode is onvolledig"
 
@@ -14097,7 +14096,7 @@ msgid "{count} Selected"
 msgstr "{count} Geselecteerd"
 
 msgid "{count} Service | {count} Services"
-msgstr ""
+msgstr "{count} dienst | {count} diensten"
 
 msgid "{count} Spots"
 msgstr "{count} Plekken"
@@ -14106,7 +14105,7 @@ msgid "{count} Total"
 msgstr "{count} Totaal"
 
 msgid "{count} Week | {count} Weeks"
-msgstr ""
+msgstr "{count} week | {count} weken"
 
 msgid ""
 "{count} appointment has been deleted. | {count} appointments have been "
@@ -14209,7 +14208,7 @@ msgstr ""
 "locaties zijn niet verwijderd vanwege toekomstige boekingen."
 
 msgid "{count} minute | {count} minutes"
-msgstr ""
+msgstr "{count} minuut | {count} minuten"
 
 msgid "{count} month | {count} months"
 msgstr "{count} maand | {count} maanden"

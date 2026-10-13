@@ -36,11 +36,15 @@ class TrustedLogin extends Controller {
 	 * @return void
 	 */
 	public function initiate_trustedlogin() {
+		$license     = $this->container->get( 'license' );
+		$license_key = is_object( $license ) && method_exists( $license, 'get_license_key' )
+			? $license->get_license_key()
+			: '';
 
 		$config = [
 			'auth'        => [
 				'api_key'     => 'f97f5be6e02d1565',
-				'license_key' => $this->container->get( 'license' )->get_license_key(),
+				'license_key' => $license_key,
 			],
 			'vendor'      => [
 				'namespace'    => 'content-control',
@@ -97,10 +101,11 @@ class TrustedLogin extends Controller {
 	 * @return void
 	 */
 	public function admin_menu() {
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		if ( ! isset( $_GET['page'] ) || 'grant-content-control-access' !== $_GET['page'] ) {
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Read-only routing check.
+		if ( ! isset( $_GET['page'] ) || ! is_string( $_GET['page'] ) || 'grant-content-control-access' !== sanitize_key( wp_unslash( $_GET['page'] ) ) ) {
 			return;
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		add_options_page(
 			__( 'Content Control Support Access', 'content-control' ),

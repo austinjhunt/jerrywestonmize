@@ -39,7 +39,7 @@ class GetSettingsCommandHandler extends CommandHandler
 
         $settings = $settingsService->getAllSettingsCategorized();
 
-        $superAdminService = new SuperAdminRoleService();
+        $superAdminService = new SuperAdminRoleService($settingsService);
         $settings['isSuperAdmin'] = $superAdminService->isCurrentUserSuperAdmin();
         $settings['isSuperAdminRoleAvailable'] = SuperAdminRoleService::isAvailable();
         $settings['superAdminCount'] = $superAdminService->countSuperAdmins();

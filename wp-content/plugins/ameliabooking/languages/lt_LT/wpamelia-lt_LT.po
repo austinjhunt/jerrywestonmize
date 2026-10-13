@@ -34,26 +34,6 @@ msgid "# of bookings"
 msgstr "Užsakymų skaičius"
 
 #, php-format
-msgid "%1$s, %2$s, was canceled."
-msgstr "%1$s, %2$s, buvo atšaukta."
-
-#, php-format
-msgid "%1$s, %2$s, was rejected."
-msgstr "%1$s, %2$s, buvo atmesta."
-
-#, php-format
-msgid "%1$s booked %2$s at %3$s."
-msgstr "%1$s užsakė %2$s %3$s."
-
-#, php-format
-msgid "%1$s on %2$s had a status change."
-msgstr "%1$s %2$s pasikeitė būsena."
-
-#, php-format
-msgid "%1$s on %2$s was updated."
-msgstr "%1$s %2$s buvo atnaujinta."
-
-#, php-format
 msgid "%event_name% Event Booked"
 msgstr "%event_name% Renginys užregistruotas"
 
@@ -459,8 +439,14 @@ msgstr "Veiksmai"
 msgid "Activate"
 msgstr "Aktyvuoti"
 
+msgid "Activate now"
+msgstr ""
+
 msgid "Activate with Envato"
 msgstr "Aktyvuokite su Envato"
+
+msgid "Activate your license to unlock the features included in your plan."
+msgstr ""
 
 msgid "Activated with Envato"
 msgstr "Aktyvuota su Envato"
@@ -875,6 +861,9 @@ msgstr "Jau apmokėta"
 msgid "Already have an account?"
 msgstr "Jau turite paskyrą?"
 
+msgid "Already purchased Amelia?"
+msgstr ""
+
 msgid "Also cancel and delete future events"
 msgstr "Taip pat atšaukti ir ištrinti būsimus renginius"
 
@@ -924,7 +913,7 @@ msgid "Apple"
 msgstr ""
 
 msgid "Apple Calendar"
-msgstr "Pasirinkite kalendorių"
+msgstr "Apple kalendorius"
 
 msgid "Apple Calendar (Personal)"
 msgstr "„Apple“ kalendorius (asmeninis)"
@@ -933,7 +922,7 @@ msgid "Apple Calendar setup"
 msgstr "„Apple“ kalendoriaus nustatymas"
 
 msgid "Apple calendar events"
-msgstr "Apple kalendoriaus įvykiai"
+msgstr ""
 
 msgid "Application (client) ID"
 msgstr "Programos (kliento) ID"
@@ -1080,9 +1069,6 @@ msgstr "Susitikimų užrašai"
 msgid "Appointment price"
 msgstr "Paskyrimo kaina"
 
-msgid "Appointment reminder"
-msgstr "Vizito priminimas"
-
 msgid "Appointment repeats"
 msgstr "Paskyrimų kartojimas"
 
@@ -1095,9 +1081,6 @@ msgstr "Susitikimo pradžios laikas"
 msgid "Appointment status"
 msgstr "Susitikimo statusas"
 
-msgid "Appointment status changed"
-msgstr "Vizito būsena pakeista"
-
 msgid "Appointment status has been changed to "
 msgstr "Rezervacijos būsena pakeista į "
 
@@ -1106,9 +1089,6 @@ msgstr "Susitikimo statusas buvo atnaujintas."
 
 msgid "Appointment title"
 msgstr "Susitikimo pavadinimas"
-
-msgid "Appointment updated"
-msgstr "Paskyrimas atnaujintas"
 
 msgid "Appointments"
 msgstr "Rezervacijos"
@@ -1148,6 +1128,10 @@ msgstr "Ar tikrai norite atšaukti ir ištrinti šį renginį?"
 
 msgid "Are you sure you want to cancel this appointment?"
 msgstr "Ar tikrai norite atšaukti šį susitikimą?"
+
+msgid ""
+"Are you sure you want to cancel this booking? This action cannot be undone."
+msgstr ""
 
 msgid "Are you sure you want to cancel this event?"
 msgstr "Ar tikrai norite atšaukti šį renginį?"
@@ -1335,10 +1319,10 @@ msgid "Attendee"
 msgstr "Dalyvis"
 
 msgid "Attendee Asc"
-msgstr "Dalyvis Asc"
+msgstr "Dalyvis (didėjimo tvarka)"
 
 msgid "Attendee Desc"
-msgstr "Dalyvio aprašymas"
+msgstr "Dalyvis (mažėjimo tvarka)"
 
 msgid "Attendee code"
 msgstr "Dalyvio kodas"
@@ -1445,13 +1429,13 @@ msgid "Available date text"
 msgstr "Galima data tekstas"
 
 msgid "Available from Pro license"
-msgstr "Nuotraukos"
+msgstr "Galima nuo Pro licencijos"
 
 msgid "Available from Standard license"
-msgstr "Nuotraukos"
+msgstr "Galima nuo Standard licencijos"
 
 msgid "Available from Starter license"
-msgstr "Nuotraukos"
+msgstr "Galima nuo Starter licencijos"
 
 msgid "Available in Elite licence"
 msgstr "Galima naudoti su „Elite“ licencija"
@@ -1683,10 +1667,10 @@ msgid "Booking Closes"
 msgstr "Užsakymų priėmimas baigtas"
 
 msgid "Booking Closes Asc"
-msgstr "Užsakymų priėmimas baigiamas Asc"
+msgstr "Užsakymų priėmimas baigiamas (didėjimo tvarka)"
 
 msgid "Booking Closes Desc"
-msgstr "Užsakymų priėmimas baigtas Aprašymas"
+msgstr "Užsakymų priėmimas baigiamas (mažėjimo tvarka)"
 
 msgid "Booking Confirmed"
 msgstr "Užsakymas patvirtintas"
@@ -1713,10 +1697,10 @@ msgid "Booking Opens"
 msgstr "Rezervacijos pradžia"
 
 msgid "Booking Opens Asc"
-msgstr "Rezervacijos pradžia Asc"
+msgstr "Rezervacijos pradžia (didėjimo tvarka)"
 
 msgid "Booking Opens Desc"
-msgstr "Rezervacijos pradžia Aprašymas"
+msgstr "Rezervacijos pradžia (mažėjimo tvarka)"
 
 msgid "Booking Overview"
 msgstr "Užsakymų apžvalga"
@@ -2282,6 +2266,9 @@ msgstr "Pasirinkite, kada pasikartojimas baigsis"
 msgid "Choose whether you want to manage services, events, or both."
 msgstr "Pasirinkite, ar norite valdyti paslaugas, renginius, ar abu."
 
+msgid "Choose which tab users see first when they log in"
+msgstr ""
+
 msgid "Choosing layout of first step in step by step form"
 msgstr "Pirmojo žingsnio išdėstymo pasirinkimas žingsnis po žingsnio formoje"
 
@@ -2433,10 +2420,7 @@ msgid "Complete booking without payment"
 msgstr "Užbaigti užsakymą be mokėjimo"
 
 msgid "Completed"
-msgstr ""
-"Dėkojame, Jūsų rezervacija gauta ir laukia patvirtinimo. Rezervacijos "
-"informaciją Jums išsiuntėme el. paštu. Apie rezervacijos patvirtinimą "
-"informuosime atskiru laišku."
+msgstr "Įvykdyta"
 
 msgid "Configuration"
 msgstr "Konfigūracija"
@@ -2470,6 +2454,9 @@ msgstr "Konfigūruoti laukimo sąrašą susitikimams"
 
 msgid "Confirm"
 msgstr "Patvirtinti"
+
+msgid "Confirm Cancellation"
+msgstr ""
 
 msgid "Confirm My Appointment"
 msgstr "Patvirtinkite mano vizitą"
@@ -2940,10 +2927,10 @@ msgid "Customer(s)"
 msgstr "Klientai"
 
 msgid "Customer Asc"
-msgstr "Klientas Asc"
+msgstr "Klientas (didėjimo tvarka)"
 
 msgid "Customer Desc"
-msgstr "Kliento aprašymas"
+msgstr "Klientas (mažėjimo tvarka)"
 
 msgid "Customer Panel"
 msgstr "Klientų panelė"
@@ -3118,9 +3105,6 @@ msgstr "Duomenys, kurie lieka nepakitę:"
 msgid "Data to be updated:"
 msgstr "Atnaujinami duomenys:"
 
-msgid "Data transfer"
-msgstr "Duomenų perkėlimas"
-
 msgid "Date"
 msgstr "Data"
 
@@ -3137,19 +3121,19 @@ msgid "Date & time periods of the event with Lesson Space join links"
 msgstr "Renginio data ir laikas su nuorodomis į „Lesson Space“"
 
 msgid "Date Asc"
-msgstr "Data Asc"
+msgstr "Data (didėjimo tvarka)"
 
 msgid "Date Desc"
-msgstr "Data Aprašymas"
+msgstr "Data (mažėjimo tvarka)"
 
 msgid "Date Picker"
 msgstr "Datos pasirinkiklis"
 
 msgid "Date Purchased Asc"
-msgstr "Pirkimo data Asc"
+msgstr "Pirkimo data (didėjimo tvarka)"
 
 msgid "Date Purchased Desc"
-msgstr "Pirkimo data Aprašymas"
+msgstr "Pirkimo data (mažėjimo tvarka)"
 
 msgid ""
 "Date Ranges that are not defined will use default price from ticket category."
@@ -4116,10 +4100,10 @@ msgid "Deduction"
 msgstr "Atmetimas"
 
 msgid "Deduction Asc"
-msgstr "Atimimas Asc"
+msgstr "Atimimas (didėjimo tvarka)"
 
 msgid "Deduction Desc"
-msgstr "Išskaitymas Aprašymas"
+msgstr "Atimimas (mažėjimo tvarka)"
 
 msgid "Default Label"
 msgstr "Numatytasis pavadinimas"
@@ -4132,6 +4116,9 @@ msgstr "Numatytasis susitikimo statusas"
 
 msgid "Default back end page"
 msgstr "Numatytasis galinis puslapis"
+
+msgid "Default landing tab"
+msgstr ""
 
 msgid "Default language"
 msgstr "Numatytasis kalba"
@@ -4372,10 +4359,10 @@ msgid "Discount"
 msgstr "Nuolaida"
 
 msgid "Discount Asc"
-msgstr "Nuolaida Asc"
+msgstr "Nuolaida (didėjimo tvarka)"
 
 msgid "Discount Desc"
-msgstr "Nuolaidos aprašymas"
+msgstr "Nuolaida (mažėjimo tvarka)"
 
 msgid "Discount (%)"
 msgstr "Nuolaida (%)"
@@ -4554,10 +4541,10 @@ msgid "Duration:"
 msgstr "Trukmė:"
 
 msgid "Duration Asc"
-msgstr "Trukmė Asc"
+msgstr "Trukmė (didėjimo tvarka)"
 
 msgid "Duration Desc"
-msgstr "Trukmė Aprašymas"
+msgstr "Trukmė (mažėjimo tvarka)"
 
 msgid "E-Ticket Scanner"
 msgstr "E-bilietų skaitytuvas"
@@ -4644,8 +4631,6 @@ msgid ""
 "Edit appointments/events when connected Google Calendar Events are "
 "rescheduled or deleted"
 msgstr ""
-"Redaguoti susitikimus/renginius, kai susieti Google kalendoriaus įvykiai "
-"perplanuojami arba ištrinami"
 
 msgid "Edit block time"
 msgstr "Redaguoti blokuotą laiką"
@@ -5320,7 +5305,7 @@ msgid "Event"
 msgstr "Renginys"
 
 msgid "Event Asc"
-msgstr "Renginio Asc"
+msgstr "Renginio (didėjimo tvarka)"
 
 msgid "Event Available"
 msgstr "Dirba"
@@ -5359,7 +5344,7 @@ msgid "Event Day"
 msgstr "Renginio data"
 
 msgid "Event Desc"
-msgstr "Renginio aprašymas"
+msgstr "Renginio (mažėjimo tvarka)"
 
 msgid "Event Employee"
 msgstr "Renginio darbuotojas"
@@ -5771,9 +5756,6 @@ msgstr "Nepavyko"
 msgid "Failed to access camera. Please try again."
 msgstr "Nepavyko prisijungti prie kameros. Bandykite dar kartą."
 
-msgid "Failed to initialize payment. Please try again."
-msgstr "Nepavyko inicijuoti mokėjimo proceso. Pabandykite dar kartą."
-
 msgid "Failed to load appointment details. Please try again later."
 msgstr "Nepavyko įkelti susitikimo duomenų. Prašome pabandyti vėliau."
 
@@ -5967,7 +5949,7 @@ msgid "Free"
 msgstr "Nemokama"
 
 msgid "Fri"
-msgstr "Pen"
+msgstr "Pn"
 
 msgid "Friday"
 msgstr "Penktadienis"
@@ -6118,7 +6100,7 @@ msgid "Google Analytics setup"
 msgstr "„Google Analytics“ nustatymas"
 
 msgid "Google Calendar"
-msgstr "„Google“ kalendorius"
+msgstr "Google kalendorius"
 
 msgid "Google Calendar & Google Meet"
 msgstr "„Google“ kalendorius ir „Google Meet“"
@@ -6149,7 +6131,7 @@ msgid "Google Meet setup"
 msgstr "„Google Meet“ nustatymas"
 
 msgid "Google calendar events"
-msgstr "Google Kalendoriaus įvykiai"
+msgstr ""
 
 msgid "Google reCAPTCHA v2 secret key"
 msgstr "„Google reCAPTCHA v2“ slaptas raktas"
@@ -6905,10 +6887,10 @@ msgid "ID"
 msgstr "Pakeisti Alpha Sender ID"
 
 msgid "ID Asc"
-msgstr ""
+msgstr "Pakeisti Alpha Sender ID (didėjimo tvarka)"
 
 msgid "ID Desc"
-msgstr "ID Aprašymas"
+msgstr "Pakeisti Alpha Sender ID (mažėjimo tvarka)"
 
 msgid "I understand this import will replace all current data permanently."
 msgstr "Suprantu, kad šis importas negrįžtamai perrašys visus esamus duomenis."
@@ -6935,13 +6917,6 @@ msgid ""
 msgstr ""
 "Jei išjungta, užsakymas turi atitikti minimalų pajėgumą, o laiko tarpas "
 "uždaromas po pirmojo užsakymo."
-
-msgid ""
-"If disabled, the price will remain the same regardless of how many people "
-"are included in the group appointment."
-msgstr ""
-"Jei ši funkcija išjungta, kaina išliks ta pati, nepriklausomai nuo to, kiek "
-"žmonių yra įtraukti į grupės susitikimą."
 
 msgid ""
 "If enabled, customers can book with Pending status even after maximum "
@@ -7085,6 +7060,9 @@ msgstr "Vaizdų miniatiūros"
 msgid "Import"
 msgstr "Importuoti"
 
+msgid "Import/Export"
+msgstr ""
+
 msgid "Import Failed"
 msgstr "Importavimas nepavyko"
 
@@ -7114,6 +7092,9 @@ msgstr "Importavimas nepavyko"
 
 msgid "Import failed. Review the details below."
 msgstr "Importavimas nepavyko. Peržiūrėkite toliau pateiktą informaciją."
+
+msgid "Import or export your Amelia data."
+msgstr ""
 
 msgid "Import progress"
 msgstr "Importo eiga"
@@ -7528,10 +7509,10 @@ msgid "Invoice Format"
 msgstr "Pasirinkite vietą"
 
 msgid "Invoice Number Asc"
-msgstr "Sąskaitos numeris Asc"
+msgstr "Sąskaitos numeris (didėjimo tvarka)"
 
 msgid "Invoice Number Desc"
-msgstr "Sąskaitos numeris Aprašymas"
+msgstr "Sąskaitos numeris (mažėjimo tvarka)"
 
 msgid "Invoice date"
 msgstr "Sąskaitos faktūros data"
@@ -7698,10 +7679,10 @@ msgid "Last"
 msgstr "Pavardė"
 
 msgid "Last Booking Asc"
-msgstr "Paskutinis užsakymas Asc"
+msgstr "Paskutinis užsakymas (didėjimo tvarka)"
 
 msgid "Last Booking Desc"
-msgstr "Paskutinis užsakymas Desc"
+msgstr "Paskutinis užsakymas (mažėjimo tvarka)"
 
 msgid "Last Name:"
 msgstr "Pavardė:"
@@ -8075,10 +8056,10 @@ msgid "Max. Capacity"
 msgstr "Maks. talpa"
 
 msgid "Max Capacity Asc"
-msgstr "Maksimali talpa Asc"
+msgstr "Maksimali talpa (didėjimo tvarka)"
 
 msgid "Max Capacity Desc"
-msgstr "Maksimali talpa Aprašymas"
+msgstr "Maksimali talpa (mažėjimo tvarka)"
 
 msgid "Maximum"
 msgstr "Maksimumas"
@@ -8232,7 +8213,7 @@ msgid "Mollie payment link"
 msgstr "Mollie mokėjimo nuoroda"
 
 msgid "Mon"
-msgstr "Pirmadienis"
+msgstr "Pr"
 
 msgid "Monday"
 msgstr "Pirmadienis"
@@ -8298,13 +8279,13 @@ msgid "Name:"
 msgstr "Pavadinimas"
 
 msgid "Name Asc"
-msgstr "Vardas Asc"
+msgstr "Vardas (didėjimo tvarka)"
 
 msgid "Name Ascending"
 msgstr "Pavadinimas (didėjimo tvarka)"
 
 msgid "Name Desc"
-msgstr "Pavadinimas Aprašymas"
+msgstr "Vardas (mažėjimo tvarka)"
 
 msgid "Name Descending"
 msgstr "Pavadinimas (mažėjimo tvarka)"
@@ -8433,16 +8414,16 @@ msgid "No Packages"
 msgstr "Nėra paketų"
 
 msgid "No Show"
-msgstr "Nerodoma"
+msgstr "Neatvykimas"
 
 msgid "No Show (1)"
-msgstr "Nerodoma (1)"
+msgstr "Neatvykimas (1)"
 
 msgid "No Show (2)"
-msgstr "Nerodoma (2)"
+msgstr "Neatvykimas (2)"
 
 msgid "No Show (3+)"
-msgstr "Nerodoma (3+)"
+msgstr "Neatvykimas (3+)"
 
 msgid "No Tags. Create a new one."
 msgstr "Nėra žymių. Sukurkite naują."
@@ -8644,13 +8625,13 @@ msgid "Notify selected employees about empty package purchases"
 msgstr "Pranešti pasirinktiems darbuotojams apie tuščių pakuočių pirkimus"
 
 msgid "Notify the attendee(s)"
-msgstr "Pranešti klientui(ams)"
+msgstr "Informuoti dalyvius"
 
 msgid "Notify the attendees"
 msgstr "Pranešti dalyviams"
 
 msgid "Notify the customer(s)"
-msgstr "Pranešti klientui(ams)"
+msgstr "Informuoti klientus"
 
 msgid "Number of Additional People"
 msgstr "Papildomų žmonių skaičius"
@@ -8952,7 +8933,7 @@ msgid "Or pay with card"
 msgstr "Arba sumokėkite kortele"
 
 msgid "Orange"
-msgstr ""
+msgstr "Oranžinė"
 
 msgid "Order"
 msgstr "Užsakymas"
@@ -8976,7 +8957,7 @@ msgid "Outline"
 msgstr "Apibendrinimas"
 
 msgid "Outlook Calendar"
-msgstr "„Outlook“ kalendorius"
+msgstr "Outlook kalendorius"
 
 msgid "Outlook Calendar & Microsoft Teams"
 msgstr "„Outlook“ kalendorius ir „Microsoft Teams“"
@@ -8988,7 +8969,7 @@ msgid "Outlook Calendar setup"
 msgstr "„Outlook“ kalendoriaus nustatymas"
 
 msgid "Outlook Mailer"
-msgstr "„Outlook“ pašto programa"
+msgstr "Outlook pašto paslauga"
 
 msgid ""
 "Outlook Mailer is not fully configured. Please complete the account setup in "
@@ -8998,7 +8979,7 @@ msgstr ""
 "„Outlook“ integracijos nustatymuose."
 
 msgid "Outlook calendar events"
-msgstr "Outlook kalendoriaus įvykiai"
+msgstr ""
 
 msgid "Outside of working hours"
 msgstr "Ne darbo valandomis"
@@ -9037,13 +9018,13 @@ msgid "Package %package_name% purchased"
 msgstr "Paketas %package_name% įsigytas"
 
 msgid "Package Asc"
-msgstr "Paketas Asc"
+msgstr "Paketas (didėjimo tvarka)"
 
 msgid "Package Canceled"
 msgstr "Paketas atšauktas"
 
 msgid "Package Desc"
-msgstr "Paketo aprašymas"
+msgstr "Paketas (mažėjimo tvarka)"
 
 msgid "Package ID"
 msgstr "Paketo ID"
@@ -10001,13 +9982,13 @@ msgid "Price:"
 msgstr "Kaina:"
 
 msgid "Price Asc"
-msgstr "Kaina Asc"
+msgstr "Kaina (didėjimo tvarka)"
 
 msgid "Price Ascending"
 msgstr "Kaina (didėjimo tvarka)"
 
 msgid "Price Desc"
-msgstr "Kaina Aprašymas"
+msgstr "Kaina (mažėjimo tvarka)"
 
 msgid "Price Descending"
 msgstr "Kaina (mažėjimo tvarka)"
@@ -10127,8 +10108,13 @@ msgstr "Pirkimas atšauktas"
 msgid "Purchased"
 msgstr "Įsigyta"
 
-msgid "Purple"
+msgid ""
+"Purchasing doesn't upgrade this plugin automatically. Follow our step-by-"
+"step guide to switch to the full version."
 msgstr ""
+
+msgid "Purple"
+msgstr "Violetinė"
 
 msgid "Qty"
 msgstr "Kiekis:"
@@ -10140,10 +10126,10 @@ msgid "Quantity"
 msgstr "Max kiekis"
 
 msgid "Quantity Asc"
-msgstr "Kiekis Asc"
+msgstr "Kiekis (didėjimo tvarka)"
 
 msgid "Quantity Desc"
-msgstr "Kiekis Aprašymas"
+msgstr "Kiekis (mažėjimo tvarka)"
 
 msgid "Quantity is shared"
 msgstr "Kiekis yra bendras"
@@ -10297,7 +10283,7 @@ msgid "Redirect URL for unsuccessfully rejected booking"
 msgstr "Peradresavimo URL, jei užsakymas buvo atmestas"
 
 msgid "Redirect URLs"
-msgstr "Peradresavimo URL"
+msgstr "Peradresavimo URL adresai"
 
 msgid "Redirect page"
 msgstr "Peradresuoti puslapį"
@@ -10335,10 +10321,6 @@ msgstr "Likusi suma bus sumokėta vietoje."
 
 msgid "Remind me when my SMS balance is low"
 msgstr "Priminti, kai mano SMS balansas bus mažas"
-
-#, php-format
-msgid "Reminder: %1$s is scheduled for %2$s."
-msgstr "Priminimas: %1$s vyks %2$s."
 
 msgid "Remove Apple Calendar event slots"
 msgstr "Pašalinti Apple Calendar įvykių laiko tarpus"
@@ -10553,7 +10535,7 @@ msgid "Sandbox secret key (POSKey)"
 msgstr "Sandbox slaptasis raktas (POSKey)"
 
 msgid "Sat"
-msgstr "Šeštadienis"
+msgstr "Št"
 
 msgid "Saturday"
 msgstr "Šeštadienis"
@@ -10734,6 +10716,9 @@ msgstr "Aprašymas"
 
 msgid "Securely process payments using Stripe."
 msgstr "Saugiai apdorokite mokėjimus naudodami „Stripe“."
+
+msgid "See upgrade guide."
+msgstr ""
 
 msgid "Segment"
 msgstr "Segmentas"
@@ -11069,7 +11054,7 @@ msgid "Service/Event"
 msgstr "Paslauga/Renginys"
 
 msgid "Service Asc"
-msgstr "Paslauga Asc"
+msgstr "Paslauga (didėjimo tvarka)"
 
 msgid "Service Categories"
 msgstr "Paslaugų kategorijos"
@@ -11078,7 +11063,7 @@ msgid "Service Category"
 msgstr "Paslaugos kategorija"
 
 msgid "Service Desc"
-msgstr "Paslaugos aprašymas"
+msgstr "Paslauga (mažėjimo tvarka)"
 
 msgid "Service ID"
 msgstr "Paslaugos ID"
@@ -11177,10 +11162,10 @@ msgid "Services & categories setup"
 msgstr "Paslaugų ir kategorijų nustatymas"
 
 msgid "Services Asc"
-msgstr "Paslaugos Asc"
+msgstr "Paslaugos (didėjimo tvarka)"
 
 msgid "Services Desc"
-msgstr "Paslaugų aprašymas"
+msgstr "Paslaugos (mažėjimo tvarka)"
 
 msgid "Services and packages overview"
 msgstr "Paslaugų ir paketų apžvalga"
@@ -11562,7 +11547,7 @@ msgid "Show specific service"
 msgstr "Rodyti konkrečią paslaugą"
 
 msgid "Show specific services"
-msgstr "Rodyti svetainėje"
+msgstr "Rodyti konkrečias paslaugas"
 
 msgid "Show tag"
 msgstr "Rodyti žymę"
@@ -11616,6 +11601,9 @@ msgstr "Prisijunkite naudodami „Microsoft“"
 
 msgid "Sign in with Outlook"
 msgstr "Prisijunkite naudodami „Outlook“"
+
+msgid "Sign out and use a customer account"
+msgstr ""
 
 msgid "Sign out from Google"
 msgstr "Atsijungti iš „Google“"
@@ -11760,7 +11748,7 @@ msgid "Specific date & time"
 msgstr "Konkreti data ir laikas"
 
 msgid "Spot"
-msgstr ""
+msgstr "Vieta"
 
 msgid "Spots"
 msgstr "Vietos"
@@ -11817,10 +11805,10 @@ msgid "Status"
 msgstr "Būsena"
 
 msgid "Status Asc"
-msgstr "Būklė Asc"
+msgstr "Būklė (didėjimo tvarka)"
 
 msgid "Status Desc"
-msgstr "Būklė Aprašymas"
+msgstr "Būklė (mažėjimo tvarka)"
 
 msgid ""
 "Stay compliant with ease through consistent, reliable tax handling across "
@@ -11996,7 +11984,7 @@ msgid "Summary segment"
 msgstr "Santrauka"
 
 msgid "Sun"
-msgstr ""
+msgstr "Sk"
 
 msgid "Sunday"
 msgstr "Sekmadienis"
@@ -12024,7 +12012,7 @@ msgid "Switch Camera"
 msgstr "Pereiti prie kameros"
 
 msgid "Sync Google Events"
-msgstr "Sinchronizuoti Google įvykius"
+msgstr ""
 
 msgid "Sync with"
 msgstr "Sinchronizuoti su"
@@ -12550,6 +12538,12 @@ msgstr ""
 "savo cron konfigūraciją."
 
 msgid ""
+"This option applies only to people added through \"Bringing anyone with "
+"you\". If disabled, the service price is charged once for the entire "
+"booking, regardless of how many additional people are included."
+msgstr ""
+
+msgid ""
 "This option requires adding the payment link placeholder to your message "
 "templates."
 msgstr ""
@@ -12645,7 +12639,7 @@ msgid "This widget shows monthly data instead of using the global date range."
 msgstr "Šis valdiklis rodo mėnesinius duomenis, o ne bendrą datų intervalą."
 
 msgid "Thu"
-msgstr "Ket"
+msgstr "Kt"
 
 msgid "Thursday"
 msgstr "Ketvirtadienis"
@@ -12709,10 +12703,10 @@ msgid "Time Range:"
 msgstr "Laikas:"
 
 msgid "Time Used Asc"
-msgstr "Naudotas laikas Asc"
+msgstr "Naudotas laikas (didėjimo tvarka)"
 
 msgid "Time Used Desc"
-msgstr "Naudotas laikas Aprašymas"
+msgstr "Naudotas laikas (mažėjimo tvarka)"
 
 msgid "Time frame"
 msgstr "Laikas:"
@@ -12949,7 +12943,7 @@ msgid "Try adjusting your search to find what you are looking for."
 msgstr "Pabandykite pakoreguoti paiešką, kad rastumėte tai, ko ieškote."
 
 msgid "Tue"
-msgstr "Antradienis"
+msgstr "An"
 
 msgid "Tuesday"
 msgstr "Antradienis"
@@ -12967,10 +12961,10 @@ msgid "Type"
 msgstr "Tipas:"
 
 msgid "Type Asc"
-msgstr "Tipas Asc"
+msgstr "Tipas (didėjimo tvarka)"
 
 msgid "Type Desc"
-msgstr "Tipas Aprašymas"
+msgstr "Tipas (mažėjimo tvarka)"
 
 msgid "URL"
 msgstr ""
@@ -13334,7 +13328,7 @@ msgid "Website"
 msgstr "Svetainė"
 
 msgid "Wed"
-msgstr "Tre"
+msgstr "Tr"
 
 msgid "Wednesday"
 msgstr "Trečiadienis"
@@ -13743,6 +13737,11 @@ msgstr "Slaptažodis pakeistas sėkmingai"
 msgid "Your password has been reset successfully."
 msgstr "Jūsų slaptažodis buvo sėkmingai atstatytas."
 
+msgid ""
+"Your payment is still processing. You will receive a confirmation as soon as "
+"it is completed."
+msgstr ""
+
 msgid "Your postal code is incomplete"
 msgstr "Jūsų pašto kodas yra neišsamus"
 
@@ -13816,7 +13815,7 @@ msgid "at"
 msgstr "Data"
 
 msgid "at {time}"
-msgstr ""
+msgstr "{time} val."
 
 msgid "book appointments before the deal expires!"
 msgstr "Rezervacija išsaugota"
@@ -14144,7 +14143,7 @@ msgstr ""
 "ištrintos dėl būsimų užsakymų."
 
 msgid "{count} minute | {count} minutes"
-msgstr ""
+msgstr "{count} minutė | {count} minutės | {count} minučių"
 
 msgid "{count} month | {count} months"
 msgstr "{count} mėnuo | {count} mėnesiai"

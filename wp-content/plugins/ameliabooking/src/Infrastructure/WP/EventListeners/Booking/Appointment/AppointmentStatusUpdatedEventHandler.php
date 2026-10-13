@@ -23,7 +23,6 @@ use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Common\Exceptions\NotFoundException;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use Exception;
-use Slim\Exception\ContainerValueNotFoundException;
 
 /**
  * Class AppointmentStatusUpdatedEventHandler
@@ -42,7 +41,6 @@ class AppointmentStatusUpdatedEventHandler
      * @param CommandResult $commandResult
      * @param Container     $container
      *
-     * @throws ContainerValueNotFoundException
      * @throws InvalidArgumentException
      * @throws NotFoundException
      * @throws QueryExecutionException
@@ -59,7 +57,9 @@ class AppointmentStatusUpdatedEventHandler
         /** @var BookingApplicationService $bookingApplicationService */
         $bookingApplicationService = $container->get('application.booking.booking.service');
 
-        $appointment = $commandResult->getData()[Entities::APPOINTMENT];
+        $data = $commandResult->getData();
+
+        $appointment = $data[Entities::APPOINTMENT];
 
         /** @var Appointment|Event $reservationObject */
         $reservationObject = AppointmentFactory::create($appointment);
@@ -71,13 +71,19 @@ class AppointmentStatusUpdatedEventHandler
             $appointment,
             ApplicationIntegrationService::APPOINTMENT_STATUS_UPDATED,
             [
-                ApplicationIntegrationService::SKIP_GOOGLE_CALENDAR  => $appointment['status'] === BookingStatus::NO_SHOW,
-                ApplicationIntegrationService::SKIP_OUTLOOK_CALENDAR => $appointment['status'] === BookingStatus::NO_SHOW,
-                ApplicationIntegrationService::SKIP_APPLE_CALENDAR   => $appointment['status'] === BookingStatus::NO_SHOW,
+                ApplicationIntegrationService::SKIP_GOOGLE_CALENDAR  =>
+                    $appointment['status'] === BookingStatus::NO_SHOW ||
+                    !empty($data[ApplicationIntegrationService::SKIP_GOOGLE_CALENDAR]),
+                ApplicationIntegrationService::SKIP_OUTLOOK_CALENDAR =>
+                    $appointment['status'] === BookingStatus::NO_SHOW ||
+                    !empty($data[ApplicationIntegrationService::SKIP_OUTLOOK_CALENDAR]),
+                ApplicationIntegrationService::SKIP_APPLE_CALENDAR   =>
+                    $appointment['status'] === BookingStatus::NO_SHOW ||
+                    !empty($data[ApplicationIntegrationService::SKIP_APPLE_CALENDAR]),
             ]
         );
 
-        $bookings = $commandResult->getData()['bookingsWithChangedStatus'];
+        $bookings = $data['bookingsWithChangedStatus'];
 
         // If appointment status is approved/pending, attach ICS files to changed bookings before notifications.
         if ($appointment['status'] === BookingStatus::APPROVED || $appointment['status'] === BookingStatus::PENDING) {

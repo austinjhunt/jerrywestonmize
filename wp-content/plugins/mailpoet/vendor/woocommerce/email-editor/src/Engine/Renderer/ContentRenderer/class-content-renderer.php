@@ -83,6 +83,7 @@ class Content_Renderer {
  $rendered_html = get_the_block_template_html();
  } finally {
  $this->reset();
+ do_action( 'woocommerce_email_editor_render_end' );
  }
  return array(
  'html' => $rendered_html,

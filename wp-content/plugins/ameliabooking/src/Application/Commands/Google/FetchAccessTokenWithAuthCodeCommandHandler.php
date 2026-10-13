@@ -4,11 +4,14 @@ namespace AmeliaBooking\Application\Commands\Google;
 
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
+use AmeliaBooking\Domain\Entity\Google\GoogleCalendar;
 use AmeliaBooking\Domain\Factory\Google\GoogleCalendarFactory;
+use AmeliaBooking\Domain\Services\Logger\LoggerInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
 use AmeliaBooking\Infrastructure\Repository\Google\GoogleCalendarRepository;
+use Throwable;
 
 /**
  * Class FetchAccessTokenWithAuthCodeCommandHandler
@@ -30,7 +33,7 @@ class FetchAccessTokenWithAuthCodeCommandHandler extends CommandHandler
      * @throws \AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException
      */
-    public function handle(FetchAccessTokenWithAuthCodeCommand $command)
+    public function handle(FetchAccessTokenWithAuthCodeCommand $command): CommandResult
     {
         $result = new CommandResult();
 
@@ -70,7 +73,13 @@ class FetchAccessTokenWithAuthCodeCommandHandler extends CommandHandler
             $googleCalendarRepository->getByProviderId($providerId);
             $hasExistingCalendar = true;
         } catch (\Exception $e) {
-            error_log('GoogleCalendar: No existing calendar found, this is the first account. ' . $e->getMessage());
+            $this->container->getLoggerService()->channel(LoggerInterface::CHANNEL_SYNC)->info(
+                'GoogleCalendar: No existing calendar found, this is the first account',
+                [
+                    'exception'  => $e,
+                    'providerId' => $providerId,
+                ]
+            );
         }
 
         $primaryCalendarId = null;
@@ -92,7 +101,13 @@ class FetchAccessTokenWithAuthCodeCommandHandler extends CommandHandler
                     }
                 }
             } catch (\Exception $e) {
-                error_log('GoogleCalendar: Unable to fetch primary calendar - ' . $e->getMessage());
+                $this->container->getLoggerService()->channel(LoggerInterface::CHANNEL_SYNC)->warning(
+                    'GoogleCalendar: Unable to fetch primary calendar',
+                    [
+                        'exception'  => $e,
+                        'providerId' => $providerId,
+                    ]
+                );
             }
         }
 
@@ -130,7 +145,9 @@ class FetchAccessTokenWithAuthCodeCommandHandler extends CommandHandler
             }
         }
 
-        if (!$googleCalendarRepository->add($googleCalendar, $providerId, $additionalSettings)) {
+        $calendarId = $googleCalendarRepository->add($googleCalendar, $providerId, $additionalSettings);
+
+        if (!$calendarId) {
             $googleCalendarRepository->rollback();
         }
 
@@ -140,6 +157,29 @@ class FetchAccessTokenWithAuthCodeCommandHandler extends CommandHandler
 
         if (!$hasExistingCalendar) {
             $providerRepository->updateFieldById($providerId, null, 'googleCalendarId');
+        }
+
+        if ($accessToken) {
+            /** @var SettingsService $settingsService */
+            $settingsService = $this->container->get('domain.settings.service');
+
+            if ($settingsService->isFeatureEnabled('googleCalendar')) {
+                try {
+                    /** @var GoogleCalendar $savedCalendar */
+                    $savedCalendar = $googleCalendarRepository->getById($calendarId);
+
+                    $googleCalService->manageChannel($savedCalendar);
+                } catch (Throwable $e) {
+                    $this->container->getLoggerService()->channel(LoggerInterface::CHANNEL_SYNC)->error(
+                        'GoogleCalendar: manageChannel after OAuth failed',
+                        [
+                            'exception'  => $e,
+                            'providerId' => $providerId,
+                            'calendarId' => $calendarId,
+                        ]
+                    );
+                }
+            }
         }
 
         $result->setResult(CommandResult::RESULT_SUCCESS);

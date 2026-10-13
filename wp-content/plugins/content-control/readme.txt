@@ -1,14 +1,14 @@
-=== Content Control - The Ultimate Content Restriction Plugin! Restrict Content, Create Conditional Blocks & More ===
+=== Content Control - The Ultimate Content Restriction Solution! Restrict Content, Create Conditional Blocks & More ===
 Contributors: codeatlantic, danieliser
 Plugin URI: https://code-atlantic.com/?utm_campaign=upgrade-to-pro&utm_source=plugins-page&utm_medium=plugin-ui&utm_content=action-links-upgrade-text
 Author URI: https://contentcontrolplugin.com/?utm_campaign=plugin-info&utm_source=readme-header&utm_medium=plugin-ui&utm_content=author-uri
 Donate link: https://code-atlantic.com/donate/?utm_campaign=donations&utm_source=readme-header&utm_medium=plugin-ui&utm_content=donate-link
 Tags: membership, access control, members only, content restriction, maintenance mode
 Requires at least: 6.2
-Tested up to: 6.8.1
-Stable tag: 2.6.5
+Tested up to: 7.1
+Stable tag: 2.7.4
 Requires PHP: 7.4
-License: GPLv3 (or later)
+License: GPL-2.0-or-later
 
 Restrict content based on login status, user roles, device type & more. Monetize your content with a paywall or members-only content.
 
@@ -74,6 +74,20 @@ Dive into some of our renowned plugins:
 [popupmaker]: https://wppopupmaker.com "#1 Popup & Marketing Plugin for WordPress"
 [usermenus]: https://wordpress.org/plugins/user-menus/ "Show, Hide & Customize Menu Items For Different Users"
 
+== External services ==
+
+= Legacy Content Control Pro licensing =
+
+Content Control's free features do not require an external service. When an active Content Control Pro version older than 1.3.0 is installed, a temporary compatibility layer connects to Content Control's licensing service so the existing Pro license can be activated, deactivated, and checked while Pro is being upgraded.
+
+These requests send the license key, site URL, Content Control Pro product identifier, requested licensing action, and WordPress environment type. License-status checks also send the product name "Content Control Pro"; deactivation requests send "Content Control." Requests occur only for these legacy Pro installations during license actions and daily license-status checks.
+
+This service is provided by Code Atlantic LLC:
+
+- Service endpoint: https://contentcontrolplugin.com/edd-sl-api/
+- Terms: https://contentcontrolplugin.com/docs/policies/terms-conditions/
+- Privacy Policy: https://code-atlantic.com/privacy-policy/
+
 == Installation ==
 
 - Install Content Control either via the WordPress.org plugin repository or by uploading the files to your server.
@@ -109,6 +123,34 @@ Bugs can be reported either in our support forum or we are happy to accept PRs o
 8. Restrict widgets as well.
 
 == Changelog ==
+
+= v2.7.4 - 09/20/2026 =
+
+* Maintenance: Removed legacy APIs deprecated since version 2.0.
+
+= v2.7.3 - 09/01/2026 =
+
+* Fix: Direct Content Control Pro customers to the appropriate product review form.
+
+= v2.7.2 - 08/26/2026 =
+
+* Improvement: Refined request-scoped upgrade stream initialization for broader hosting compatibility.
+
+= v2.7.1 - 08/20/2026 =
+
+* Security: Hardened administrative REST endpoints and request validation.
+* Fix: Corrected handling of encoded query parameters in restriction return URLs.
+* Compatibility: Improved BetterDocs searches and filtered block-control styles.
+
+= v2.7.0 - 08/20/2026 =
+
+* Feature: Added child and ancestor conditions for hierarchical taxonomies.
+* Feature: Added an inline option to the `[content_control]` shortcode.
+* Fix: Prevented a PHP warning on the Plugins screen when update metadata omits the plugin slug.
+
+= v2.6.6 - 08/13/2026 =
+
+* Security: Restricted REST API access to global plugin settings to authorized administrators.
 
 = v2.6.5 - 05/27/2025 =
 

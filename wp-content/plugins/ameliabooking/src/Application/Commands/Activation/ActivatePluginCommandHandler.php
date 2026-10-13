@@ -32,14 +32,14 @@ class ActivatePluginCommandHandler extends CommandHandler
     {
         $result = new CommandResult();
 
-        $superAdminService = new SuperAdminRoleService();
+        /** @var SettingsService $settingsService */
+        $settingsService = $this->container->get('domain.settings.service');
+
+        $superAdminService = new SuperAdminRoleService($settingsService);
 
         if (!$superAdminService->canAccessActivationSettings()) {
             throw new AccessDeniedException('You are not allowed to manage activation settings.');
         }
-
-        /** @var SettingsService $settingsService */
-        $settingsService = $this->container->get('domain.settings.service');
 
         // Get the purchase code from query string
         $purchaseCode = trim($command->getField('params')['purchaseCodeStore']);

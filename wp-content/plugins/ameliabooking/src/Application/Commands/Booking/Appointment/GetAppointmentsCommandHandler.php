@@ -298,8 +298,6 @@ class GetAppointmentsCommandHandler extends CommandHandler
                 continue;
             }
 
-            $appointmentAS->calculateAndSetAppointmentEnd($appointment, $service);
-
             $minimumCancelTimeInSeconds = $settingsDS
                 ->getEntitySettings($service->getSettings())
                 ->getGeneralSettings()

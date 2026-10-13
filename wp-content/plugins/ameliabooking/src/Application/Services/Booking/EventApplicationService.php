@@ -5,6 +5,7 @@ namespace AmeliaBooking\Application\Services\Booking;
 use AmeliaBooking\Application\Services\Gallery\GalleryApplicationService;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
 use AmeliaBooking\Application\Services\Reservation\EventReservationService;
+use AmeliaBooking\Application\Services\WaitingList\WaitingListService;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
@@ -1589,11 +1590,8 @@ class EventApplicationService
 
             /** @var Event $event */
             foreach ($events->getItems() as $event) {
-                if ($event->getCustomPricing() && $event->getCustomPricing()->getValue()) {
-                    $ticketsIds[] = $event->getId()->getValue();
-                } else {
-                    $spotsEventsIds[] = $event->getId()->getValue();
-                }
+                $spotsEventsIds[] = $event->getId()->getValue();
+                $ticketsIds[] = $event->getId()->getValue();
             }
 
             $spots = $spotsEventsIds ? $eventRepository->getEventsSpotsCount($spotsEventsIds) : [];
@@ -1852,6 +1850,8 @@ class EventApplicationService
         $reservationService = $this->container->get('application.reservation.service')->get(Entities::EVENT);
         /** @var SettingsService $settingsDS */
         $settingsDS = $this->container->get('domain.settings.service');
+        /** @var WaitingListService $waitingListService */
+        $waitingListService = $this->container->get('application.waitingList.service');
 
         $persons = $this->getEventPersonsAndSetCapacity($event);
 
@@ -1908,7 +1908,10 @@ class EventApplicationService
         }
 
         $info = [
-            'bookable'   => $reservationService->isBookable($event, null, $currentDateTime) && !$minimumReached,
+            'bookable'   =>
+                $reservationService->isBookable($event, $currentDateTime) &&
+                ($reservationService->hasFreePlaces($event, null) || $waitingListService->isAllowedWaitingForEventBooking($event, null)) &&
+                !$minimumReached,
             'upcoming'   => $currentDateTime < $bookingOpens,
             'full'       => ($event->getMaxCapacity()->getValue() <= $persons['booked']
                     && $currentDateTime < $event->getPeriods()->getItem(0)->getPeriodStart()->getValue())
@@ -2009,23 +2012,29 @@ class EventApplicationService
         $persons = 0;
         $waiting = 0;
 
-        if ($event->getCustomPricing()->getValue()) {
-            if ($event->getBookings()->length()) {
-                /** @var EventTicket $ticket */
-                foreach ($event->getCustomTickets()->getItems() as $ticket) {
-                    $ticket->setSold(new IntegerValue(0));
+        if (!$event->getBookings()->length()) {
+            $persons += $event->getSpotsSold() ? $event->getSpotsSold()->getValue() : 0;
+            $waiting += $event->getSpotsWaiting() ? $event->getSpotsWaiting()->getValue() : 0;
+        }
 
-                    $ticket->setWaiting(new IntegerValue(0));
-                }
+        if ($event->getBookings()->length()) {
+            /** @var EventTicket $ticket */
+            foreach ($event->getCustomTickets()->getItems() as $ticket) {
+                $ticket->setSold(new IntegerValue(0));
+
+                $ticket->setWaiting(new IntegerValue(0));
             }
+        }
 
-            /** @var CustomerBooking $booking */
-            foreach ($event->getBookings()->getItems() as $booking) {
+        /** @var CustomerBooking $booking */
+        foreach ($event->getBookings()->getItems() as $booking) {
+            $hasTicketMapping = $booking->getTicketsBooking() && $booking->getTicketsBooking()->length();
+
+            if ($hasTicketMapping) {
                 /** @var CustomerBookingEventTicket $bookedTicket */
                 foreach ($booking->getTicketsBooking()->getItems() as $bookedTicket) {
                     /** @var EventTicket $ticket */
                     $ticket = $event->getCustomTickets()->getItem($bookedTicket->getEventTicketId()->getValue());
-
 
                     $ticket->setSold(
                         new IntegerValue(
@@ -2043,37 +2052,31 @@ class EventApplicationService
                         )
                     );
                 }
+            } elseif (
+                $booking->getStatus()->getValue() === BookingStatus::APPROVED ||
+                $booking->getStatus()->getValue() === BookingStatus::PENDING
+            ) {
+                $persons += $booking->getPersons()->getValue();
+            } elseif ($booking->getStatus()->getValue() === BookingStatus::WAITING) {
+                $waiting += $booking->getPersons()->getValue();
             }
+        }
 
-            $maxCapacity = 0;
+        $this->getTicketsPriceByDateRange($event->getCustomTickets());
 
-            $event->setCustomTickets($this->getTicketsPriceByDateRange($event->getCustomTickets()));
+        $ticketsMaxCapacity = 0;
 
-            /** @var EventTicket $ticket */
-            foreach ($event->getCustomTickets()->getItems() as $ticket) {
-                $maxCapacity += $ticket->getSpots()->getValue();
+        /** @var EventTicket $ticket */
+        foreach ($event->getCustomTickets()->getItems() as $ticket) {
+            $ticketsMaxCapacity += $ticket->getSpots()->getValue();
 
-                $persons += ($ticket->getSold() ? $ticket->getSold()->getValue() : 0);
+            $persons += ($ticket->getSold() ? $ticket->getSold()->getValue() : 0);
 
-                $waiting += ($ticket->getWaiting() ? $ticket->getWaiting()->getValue() : 0);
-            }
+            $waiting += ($ticket->getWaiting() ? $ticket->getWaiting()->getValue() : 0);
+        }
 
-            $event->setMaxCapacity($event->getMaxCustomCapacity() ?: new IntegerValue($maxCapacity));
-        } else {
-            if (!$event->getBookings()->length()) {
-                $persons = $event->getSpotsSold() ? $event->getSpotsSold()->getValue() : 0;
-
-                $waiting = $event->getSpotsWaiting() ? $event->getSpotsWaiting()->getValue() : 0;
-            }
-
-            /** @var CustomerBooking $booking */
-            foreach ($event->getBookings()->getItems() as $booking) {
-                if ($booking->getStatus()->getValue() === BookingStatus::APPROVED || $booking->getStatus()->getValue() === BookingStatus::PENDING) {
-                    $persons += $booking->getPersons()->getValue();
-                } elseif ($booking->getStatus()->getValue() === BookingStatus::WAITING) {
-                    $waiting += $booking->getPersons()->getValue();
-                }
-            }
+        if ($event->getCustomPricing()->getValue()) {
+            $event->setMaxCapacity($event->getMaxCustomCapacity() ?: new IntegerValue($ticketsMaxCapacity));
         }
 
         return ['booked' => $persons, 'waiting' => $waiting];

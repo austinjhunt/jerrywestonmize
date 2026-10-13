@@ -3,7 +3,7 @@ Contributors: mailpoet, woocommerce, automattic
 Tags: email marketing, post notification, woocommerce emails, email automation, newsletter
 Requires at least: 7.0
 Tested up to: 7.1
-Stable tag: 5.37.0
+Stable tag: 5.41.0
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -227,24 +227,25 @@ Check our [Knowledge Base](https://kb.mailpoet.com) or contact us through our [s
 
 == Changelog ==
 
-= 5.37.0 - 2026-09-01 =
-* Added: Admins can now see and set a subscriber's email-tracking-consent state on the edit-subscriber page: what it is, when it changed, and how it was recorded;
-* Improved: When you ask subscribers for tracking consent, the email editors now check that your email has a tracking opt-out link and the form editor checks that your form has the consent checkbox, each with a one-click way to add what is missing;
-* Improved: The public PHP API can now record tracking consent, so integrations and headless stores can pass their own consent checkbox result to `addSubscriber` or `updateSubscriber`;
-* Improved: Personalization tag links in block editor emails now record clicks and resolve to the correct per-recipient URL;
-* Improved: Subscriber import and export now carry tracking consent: the state, when it changed, how it was collected, and the wording the subscriber saw;
-* Fixed: Three places where a subscriber's tracking choice was lost or ignored: guest checkout, registration and comment forms, and the opt-out link in an email footer;
-* Fixed: One invalid tracking consent value in the database no longer breaks the plugin;
-* Fixed: Stopped logging the expected "Sending frequency limit has been reached" state as a cron error;
-* Fixed: Blocks from other plugins missing in the WordPress post editor when MailPoet is active;
-* Fixed: Shortcodes showing as raw text in emails that use the Post Content block;
-* Fixed: Harden the internal API request dispatch and redirect handling;
-* Fixed: Review & send panel position under the WordPress admin bar in the email editor;
-* Fixed: Other plugins may break navigation on MailPoet admin pages;
-* Fixed: Form editor crashing when closing the Custom CSS panel;
-* Fixed: New block email editor loading in a broken, unclickable state when Yoast SEO Premium is active;
-* Fixed: Keep HTML entities escaped in headings inside quotes when rendering post content in emails;
-* Fixed: Hardened internal JSON API dispatch to require the exact declared method name;
-* Fixed: On an email with no footer, the one-click way to add a tracking opt-out link now adds a footer the sent email actually keeps.
+= 5.41.0 - 2026-10-05 =
+* Improved: Google Analytics tracking parameters are now added to personalization tag links in block editor emails;
+* Improved: Validation of newsletter style settings;
+* Improved: Handling of shortcodes in image alt text and link titles;
+* Improved: Cron daemon request token generation;
+* Improved: User-agent handling for repeated email opens and clicks;
+* Improved: Automation templates now let you choose the email editor before the email is created;
+* Improved: Handling of formatting in form previews and the checkout opt-in message;
+* Improved: Reliability of subscriber links in emails;
+* Improved: Cron requests now respect the https_local_ssl_verify filter;
+* Improved: Email editor save notice is now translated, has no link to view the post, and uses the same wording when saving from the email or its template;
+* Fixed: Inactive and trashed forms accepting new subscriptions;
+* Fixed: Premium update being hidden while the newest free release is still on hold on WordPress.org;
+* Fixed: Registration failing with CAPTCHA enabled when the MailPoet page was deleted, trashed, or unpublished;
+* Fixed: Vertical alignment of text in Tags fields;
+* Fixed: Cut-off “Nice job! Check back in…” badge text in the Newsletters listing;
+* Fixed: Font sizes in the email editor’s Styles sidebar now use pixels, so the chosen sizes show correctly in email clients;
+* Fixed: Missing gap between the Color option and the warning in the email editor’s Background panel;
+* Fixed: Button placed after a Media & Text block painting its background across that block in sent emails;
+* Removed: Content section from the Email tab of the email editor sidebar.
 
 [See the changelog for all versions.](https://github.com/mailpoet/mailpoet/blob/trunk/mailpoet/changelog.txt)

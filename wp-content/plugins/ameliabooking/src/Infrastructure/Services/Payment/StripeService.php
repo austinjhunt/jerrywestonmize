@@ -21,20 +21,37 @@ use AmeliaVendor\Stripe\Customer;
 use AmeliaVendor\Stripe\ErrorObject;
 use AmeliaVendor\Stripe\Exception\ApiErrorException;
 use AmeliaVendor\Stripe\Exception\AuthenticationException;
+use AmeliaVendor\Stripe\Exception\InvalidRequestException;
 use AmeliaVendor\Stripe\PaymentMethod;
 use AmeliaVendor\Stripe\Stripe;
 use AmeliaVendor\Stripe\StripeClient;
 use AmeliaVendor\Stripe\Account;
 use AmeliaVendor\Stripe\AccountLink;
 use AmeliaVendor\Stripe\Transfer;
+use AmeliaVendor\Stripe\Event;
 use AmeliaVendor\Stripe\PaymentIntent;
+use AmeliaVendor\Stripe\Exception\SignatureVerificationException;
+use AmeliaVendor\Stripe\Util\ApiVersion;
+use AmeliaVendor\Stripe\Webhook;
+use AmeliaVendor\Stripe\WebhookEndpoint;
 use Exception;
+use UnexpectedValueException;
 
 /**
  * Class StripeService
  */
 class StripeService extends AbstractPaymentService implements PaymentServiceInterface
 {
+    /**
+     * Events the webhook endpoints subscribe to. Kept in sync with what
+     * StripePaymentWebhookCommandHandler acts on - subscribing to more would only
+     * produce deliveries that are acknowledged and dropped.
+     */
+    public const WEBHOOK_EVENTS = [
+        'payment_intent.succeeded',
+        'payment_intent.amount_capturable_updated',
+    ];
+
     /**
      * @param array $data
      * @param array $transfers
@@ -123,11 +140,8 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
                     $stripeData['metadata'] = $data['metaData'];
                 }
 
-                // begin mods with fallback values
                 if ($data['description']) {
                     $stripeData['description'] = $data['description'];
-                } else if (!empty($data['metaData']['Customer Name'])) {
-                    $stripeData['description'] = 'Payment for ' . $data['metaData']['Customer Name'] . ' - ' . $data['metaData']['Customer Email'] . ' - ' . $data['metaData']['Service'] . '';
                 }
 
                 $customerId = $this->createCustomer($data, $additionalStripeData);
@@ -138,10 +152,7 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
 
                 if (!empty($data['customerData']) && !empty($data['customerData']['email'])) {
                     $stripeData['receipt_email'] = $data['customerData']['email'];
-                } else if (!empty($data['metaData']['Customer Email'])) {
-                    $stripeData['receipt_email'] = $data['metaData']['Customer Email'];
                 }
-                // end mods with fallback values
 
                 $stripeData = apply_filters(
                     'amelia_before_stripe_payment',
@@ -245,7 +256,7 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
      * @return array
      * @throws \AmeliaVendor\Stripe\Exception\ApiErrorException
      */
-    public function getPaymentLink($data)
+    public function getPaymentLink($data): array
     {
         try {
             $stripeSettings = $this->settingsService->getSetting('payments', 'stripe');
@@ -290,9 +301,9 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
                     $paymentLinkData['metadata'] = $data['metaData'];
                 }
 
-                if (!empty($data['transfer'])) {
-                    $method = '';
+                $method = '';
 
+                if (!empty($data['transfer'])) {
                     $transferData = [];
 
                     if ($stripeSettings['connect']['method'] === 'direct') {
@@ -316,6 +327,28 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
                     }
 
                     $redirectUrl .= '&accountId=' . $data['transfer']['accountId'] . '&method=' . $method;
+                }
+
+                // payment_intent.succeeded carries the PaymentIntent, and Stripe copies neither the
+                // link's nor the session's metadata onto it. These keys repeat what the redirect URL
+                // tells the callback, so the webhook can record a charge whose customer never came
+                // back to that URL - without them it was taken by Stripe and never recorded.
+                if (!empty($data['paymentAmeliaId'])) {
+                    $paymentLinkData['payment_intent_data'] = array_merge(
+                        !empty($paymentLinkData['payment_intent_data']) ? $paymentLinkData['payment_intent_data'] : [],
+                        [
+                            'metadata' => array_merge(
+                                [
+                                    'amelia_link_payment_id'     => (string)$data['paymentAmeliaId'],
+                                    'amelia_link_charged_amount' => (string)$data['chargedAmount'],
+                                ],
+                                !empty($data['transfer']) ? [
+                                    'amelia_link_account_id'      => (string)$data['transfer']['accountId'],
+                                    'amelia_link_transfer_method' => $method,
+                                ] : []
+                            ),
+                        ]
+                    );
                 }
 
                 if (!empty($stripeSettings['address'])) {
@@ -467,6 +500,32 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
     }
 
     /**
+     * The Checkout Session a payment link charge was paid through - what the payment link
+     * callback verifies a charge by, and what Stripe appends to the redirect URL.
+     *
+     * @param string      $paymentIntentId
+     * @param string|null $accountId Connected account that owns the charge, for direct charges
+     *
+     * @return string|null
+     * @throws ApiErrorException
+     */
+    public function getCheckoutSessionIdByPaymentIntent(string $paymentIntentId, ?string $accountId): ?string
+    {
+        $stripeSettings = $this->settingsService->getSetting('payments', 'stripe');
+
+        $stripe = new StripeClient(
+            $stripeSettings['testMode'] === true ? $stripeSettings['testSecretKey'] : $stripeSettings['liveSecretKey']
+        );
+
+        $sessions = $stripe->checkout->sessions->all(
+            ['payment_intent' => $paymentIntentId, 'limit' => 1],
+            $accountId ? ['stripe_account' => $accountId] : []
+        );
+
+        return !empty($sessions->data[0]->id) ? (string)$sessions->data[0]->id : null;
+    }
+
+    /**
      * @param string $id
      * @param array|null $transfers
      *
@@ -492,15 +551,73 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
     }
 
     /**
+     * Payment method types Stripe can authorize now and capture later.
+     *
+     * Every other type it offers (bancontact, eps, ideal, p24, mb_way, ...) settles the moment the
+     * customer confirms and cannot hold funds at all - Stripe rejects
+     * payment_method_options[<type>][capture_method] for them outright.
+     */
+    private static $authorizablePaymentMethods = [
+        'card',
+        'link',
+        'klarna',
+        'paypal',
+        'revolut_pay',
+        'amazon_pay',
+        'affirm',
+        'afterpay_clearpay',
+        'cashapp',
+        'mobilepay',
+    ];
+
+    /**
+     * Ask Stripe to authorize instead of charge, so a booking that fails validation after the customer
+     * confirms releases a hold instead of taking money and giving it back.
+     *
+     * The hold is requested per payment method type on purpose. A top level capture_method of "manual"
+     * makes Stripe drop every method that cannot authorize from the returned payment_method_types, which
+     * silently removes bank redirects (bancontact, eps, ideal, p24, mb_way, ...) from the Payment
+     * Element. Per type options keep the full method list and still authorize the ones that can.
+     *
+     * @param array $params
+     * @param array $stripeSettings
+     *
+     * @return array
+     */
+    public static function addAuthorizationParams($params, $stripeSettings): array
+    {
+        // "Authorize now, capture later" is the admin's own choice: capture is never automatic then, so
+        // restricting the offered methods to the ones that can hold funds is the intended behaviour.
+        if (!empty($stripeSettings['manualCapture'])) {
+            $params['capture_method'] = 'manual';
+
+            return $params;
+        }
+
+        $paymentMethodOptions = !empty($params['payment_method_options']) ? $params['payment_method_options'] : [];
+
+        foreach (self::$authorizablePaymentMethods as $paymentMethod) {
+            $paymentMethodOptions[$paymentMethod] = array_merge(
+                !empty($paymentMethodOptions[$paymentMethod]) ? $paymentMethodOptions[$paymentMethod] : [],
+                ['capture_method' => 'manual']
+            );
+        }
+
+        $params['payment_method_options'] = $paymentMethodOptions;
+
+        return $params;
+    }
+
+    /**
      * Create a PaymentIntent for Stripe Payment Element / Express Checkout.
      *
      * @param array  $data
      * @param array  $transfers
      *
-     * @return array|null
+     * @return array
      * @throws ApiErrorException
      */
-    public function createPaymentIntent($data, &$transfers)
+    public function createPaymentIntent($data, &$transfers): array
     {
         $stripeSettings = $this->settingsService->getSetting('payments', 'stripe');
 
@@ -538,9 +655,7 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
             $params['receipt_email'] = $data['receiptEmail'];
         }
 
-        if (!empty($stripeSettings['manualCapture'])) {
-            $params['capture_method'] = 'manual';
-        }
+        $params = self::addAuthorizationParams($params, $stripeSettings);
 
         if (
             !empty($stripeConnectSettings['enabled']) &&
@@ -584,14 +699,73 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
             $additionalStripeData = ['stripe_account' => array_keys($transfers['accounts'])[0]];
         }
 
+        $stripeCustomerId = null;
+
+        $hasCustomerDetails =
+            !empty($data['customerId']) ||
+            !empty($data['customerData']['email']) ||
+            !empty($data['customerData']['name']);
+
+        if ($hasCustomerDetails) {
+            try {
+                $stripeCustomerId = $this->createCustomer(
+                    [
+                        'customerId'   => !empty($data['customerId']) ? $data['customerId'] : null,
+                        'customerData' => !empty($data['customerData']) ? $data['customerData'] : null,
+                        'address'      => !empty($data['address']) ? $data['address'] : null,
+                    ],
+                    $additionalStripeData
+                );
+            } catch (Exception $e) {
+                $this->logger->error(
+                    'Stripe customer creation failed',
+                    [
+                        'exception' => $e,
+                        'gateway'   => 'stripe',
+                    ]
+                );
+            }
+        }
+
+        if ($stripeCustomerId) {
+            $params['customer'] = $stripeCustomerId;
+        }
+
         $params = apply_filters('amelia_before_stripe_payment_intent', $params);
 
-        $paymentIntent = $stripe->paymentIntents->create($params, $additionalStripeData);
+        try {
+            $paymentIntent = $stripe->paymentIntents->create($params, $additionalStripeData);
+        } catch (InvalidRequestException $e) {
+            // Stripe rejects the whole request when one of the per type holds above is not valid for the
+            // account or API version in use. Checkout matters more than the hold, so retry without them:
+            // a booking that then fails validation is refunded instead of released, as it was before.
+            // Stripe names the offending parameter (payment_method_options[<type>][capture_method]) in
+            // getStripeParam(), which is a stabler signal than the message text; the message is still
+            // checked because older API versions do not always set the param.
+            $rejectedParam = (string)$e->getStripeParam();
+
+            $rejectedTheHold = strpos($rejectedParam, 'payment_method_options') !== false
+                || strpos((string)$e->getMessage(), 'payment_method_options') !== false;
+
+            if (empty($params['payment_method_options']) || !$rejectedTheHold) {
+                throw $e;
+            }
+
+            $this->logger->error(
+                'Stripe rejected per payment method authorization, creating PaymentIntent without it',
+                ['message' => $e->getMessage()]
+            );
+
+            unset($params['payment_method_options']);
+
+            $paymentIntent = $stripe->paymentIntents->create($params, $additionalStripeData);
+        }
 
         return [
             'clientSecret'    => $paymentIntent->client_secret,
             'paymentIntentId' => $paymentIntent->id,
             'connectAccountId' => !empty($additionalStripeData['stripe_account']) ? $additionalStripeData['stripe_account'] : null,
+            'stripeCustomerId' => $stripeCustomerId,
         ];
     }
 
@@ -662,7 +836,13 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
                         $transfers['accounts'][$accountId][$paymentId]['transferId'] = $transfer->id;
                         $transfers['accounts'][$accountId][$paymentId]['transferStatus'] = 'succeeded';
                     } catch (Exception $e) {
-                        error_log('Amelia Stripe: failed to create Connect transfer: ' . $e->getMessage());
+                        $this->logger->error(
+                            'Amelia Stripe: failed to create Connect transfer',
+                            [
+                                'exception' => $e,
+                                'gateway'   => 'stripe',
+                            ]
+                        );
 
                         $transfers['accounts'][$accountId][$paymentId]['transferStatus'] = 'failed';
                         $transfers['accounts'][$accountId][$paymentId]['transferError'] = $e->getMessage();
@@ -683,6 +863,93 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
             'status'  => $status,
             'message' => $message,
         ];
+    }
+
+    /**
+     * Reads back a PaymentIntent the browser can still confirm, so a customer returning to the payment
+     * step continues with the one their reservation already holds.
+     *
+     * @param string $paymentIntentId
+     * @param array  $transfers
+     *
+     * @return array{status: string|null, clientSecret: string|null, connectAccountId: string|null}
+     */
+    public function getConfirmablePaymentIntent($paymentIntentId, $transfers = []): array
+    {
+        $empty = ['status' => null, 'clientSecret' => null, 'connectAccountId' => null];
+
+        if (empty($paymentIntentId)) {
+            return $empty;
+        }
+
+        $stripeSettings = $this->settingsService->getSetting('payments', 'stripe');
+
+        $stripe = new StripeClient(
+            $stripeSettings['testMode'] === true ? $stripeSettings['testSecretKey'] : $stripeSettings['liveSecretKey']
+        );
+
+        $connectAccountId = !empty($transfers['method']) && !empty($transfers['accounts']) &&
+            $transfers['method'] === 'direct' && count($transfers['accounts']) === 1
+                ? array_keys($transfers['accounts'])[0] : null;
+
+        try {
+            $paymentIntent = $stripe->paymentIntents->retrieve(
+                $paymentIntentId,
+                [],
+                $connectAccountId ? ['stripe_account' => $connectAccountId] : []
+            );
+        } catch (ApiErrorException $e) {
+            $this->logger->error(
+                'Stripe: failed to retrieve PaymentIntent for reuse',
+                ['paymentIntentId' => $paymentIntentId, 'message' => $e->getMessage()]
+            );
+
+            return $empty;
+        }
+
+        // Anything further along than this has money attached to it and must be completed, not handed
+        // back to the browser as a fresh payment form.
+        if (
+            !in_array(
+                $paymentIntent->status,
+                ['requires_payment_method', 'requires_confirmation', 'requires_action'],
+                true
+            )
+        ) {
+            return ['status' => $paymentIntent->status, 'clientSecret' => null, 'connectAccountId' => $connectAccountId];
+        }
+
+        return [
+            'status'           => $paymentIntent->status,
+            'clientSecret'     => $paymentIntent->client_secret,
+            'connectAccountId' => $connectAccountId,
+        ];
+    }
+
+    /**
+     * @param string $paymentIntentId
+     * @param array  $transfers
+     *
+     * @return array{status: string, message: string|null}
+     * @throws ApiErrorException
+     */
+    public function capturePaymentIntent($paymentIntentId, &$transfers): array
+    {
+        $stripeSettings = $this->settingsService->getSetting('payments', 'stripe');
+
+        $stripe = new StripeClient(
+            $stripeSettings['testMode'] === true ? $stripeSettings['testSecretKey'] : $stripeSettings['liveSecretKey']
+        );
+
+        $stripe->paymentIntents->capture(
+            $paymentIntentId,
+            [],
+            !empty($transfers['method']) && !empty($transfers['accounts']) &&
+            $transfers['method'] === 'direct' && count($transfers['accounts']) === 1
+                ? ['stripe_account' => array_keys($transfers['accounts'])[0]] : []
+        );
+
+        return $this->completePaymentIntent($paymentIntentId, $transfers);
     }
 
     /**
@@ -751,7 +1018,13 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
 
             return $paymentIntent->status;
         } catch (ApiErrorException $e) {
-            error_log('Amelia Stripe: failed to cancel PaymentIntent: ' . $e->getMessage());
+            $this->logger->error(
+                'Amelia Stripe: failed to cancel PaymentIntent',
+                [
+                    'exception' => $e,
+                    'gateway'   => 'stripe',
+                ]
+            );
 
             return null;
         }
@@ -1095,5 +1368,474 @@ class StripeService extends AbstractPaymentService implements PaymentServiceInte
                 'invalidFields' => ['publishableKey', 'secretKey'],
             ];
         }
+    }
+
+    /**
+     * @param string $payload
+     * @param string $signature
+     *
+     * @return Event
+     * @throws SignatureVerificationException
+     * @throws UnexpectedValueException
+     */
+    public function constructWebhookEvent($payload, $signature): Event
+    {
+        // Only the secrets of the currently active mode may sign incoming events, so that
+        // events from the other environment are never accepted.
+        $secrets = $this->getWebhookSecrets();
+
+        if ($secrets === []) {
+            throw new UnexpectedValueException('Stripe webhook secret is not configured');
+        }
+
+        // Two endpoints can legitimately deliver here: the account endpoint signs with its
+        // own secret, and the Connect endpoint - which is the only one that carries events
+        // for direct charges made on a connected account - signs with a different one. The
+        // payload does not say which, so both are tried before the delivery is refused. An
+        // invalid payload throws UnexpectedValueException on the first attempt and is not
+        // retried, since no secret could rescue it.
+        $signatureException = null;
+
+        foreach ($secrets as $secret) {
+            try {
+                return Webhook::constructEvent($payload, $signature, $secret);
+            } catch (SignatureVerificationException $e) {
+                $signatureException = $e;
+            }
+        }
+
+        throw $signatureException;
+    }
+
+    /**
+     * Webhook signing secrets of the active mode: the account endpoint first, since it
+     * signs every delivery that is not a connected account's direct charge.
+     *
+     * @return array
+     */
+    private function getWebhookSecrets(): array
+    {
+        $stripeSettings = $this->settingsService->getSetting('payments', 'stripe');
+
+        $prefix = !empty($stripeSettings['testMode']) ? 'test' : 'live';
+
+        $secrets = [];
+
+        foreach (['WebhookSecret', 'ConnectWebhookSecret'] as $suffix) {
+            $key = $prefix . $suffix;
+
+            if (!empty($stripeSettings[$key])) {
+                $secrets[] = (string)$stripeSettings[$key];
+            }
+        }
+
+        return $secrets;
+    }
+
+    /**
+     * The URL Stripe delivers events to.
+     *
+     * An account endpoint and a Connect endpoint are indistinguishable in the endpoint list
+     * response (it carries no `connect` flag), so they are registered under distinct URLs.
+     * That keeps "replace the endpoint registered earlier" an exact URL match rather than a
+     * guess, and the extra query parameter is ignored while the request is routed.
+     *
+     * @param bool $connect
+     *
+     * @return string
+     */
+    public function getWebhookUrl($connect = false): string
+    {
+        $url = (defined('AMELIA_ACTION_URL') ? AMELIA_ACTION_URL : '') . '__payment__stripe__webhook';
+
+        if ($connect) {
+            $url .= '&amelia_connect=1';
+        }
+
+        // Escape hatch for installs where admin_url() is not the address Stripe can reach:
+        // admin-ajax behind a reverse proxy, or served under a different public host.
+        return function_exists('apply_filters')
+            ? (string)apply_filters('amelia_stripe_webhook_url', $url, $connect)
+            : $url;
+    }
+
+    /**
+     * Whether Stripe could reach this site's webhook URL at all.
+     *
+     * Registration is refused up front for hosts Stripe can never deliver to, so that a
+     * local or staging install does not end up with an endpoint that only produces failed
+     * deliveries - and with a stored secret that hides the fact that nothing arrives.
+     *
+     * @param bool $testMode
+     *
+     * @return string|null Error code, or null when the URL is registrable
+     */
+    public function getWebhookUrlError($testMode): ?string
+    {
+        return $this->getUrlWebhookError($this->getWebhookUrl(), $testMode);
+    }
+
+    /**
+     * @param string $url
+     * @param bool   $testMode
+     *
+     * @return string|null
+     */
+    private function getUrlWebhookError($url, $testMode): ?string
+    {
+        $parts = parse_url($url);
+
+        if (empty($parts['host'])) {
+            return 'invalidUrl';
+        }
+
+        $scheme = !empty($parts['scheme']) ? strtolower($parts['scheme']) : '';
+
+        if (empty($testMode) && $scheme !== 'https') {
+            return 'httpsRequired';
+        }
+
+        $host = $this->normalizeWebhookHost($parts['host']);
+
+        if ($host === '') {
+            return 'invalidUrl';
+        }
+
+        return $this->isLocalWebhookHost($host) ? 'localUrl' : null;
+    }
+
+    /**
+     * Strips what belongs to the URL rather than to the host itself.
+     *
+     * The brackets around an IPv6 literal keep FILTER_VALIDATE_IP from recognising the
+     * address, and the trailing dot of a fully qualified name keeps both the exact match and
+     * the suffix match from firing - so "[fd00::1]" and "localhost." would otherwise be
+     * handed to Stripe as public hosts.
+     *
+     * @param string $host
+     *
+     * @return string
+     */
+    private function normalizeWebhookHost($host): string
+    {
+        $host = strtolower(trim((string)$host));
+
+        if (strlen($host) > 1 && $host[0] === '[' && substr($host, -1) === ']') {
+            $host = substr($host, 1, -1);
+        }
+
+        if (substr($host, -1) === '.') {
+            $host = substr($host, 0, -1);
+        }
+
+        return $host;
+    }
+
+    /**
+     * @param string $host Already normalized by normalizeWebhookHost()
+     *
+     * @return bool
+     */
+    private function isLocalWebhookHost($host): bool
+    {
+        if (in_array($host, ['localhost', '127.0.0.1', '::1'], true)) {
+            return true;
+        }
+
+        foreach (['.test', '.local', '.localhost', '.invalid', '.example', '.internal'] as $suffix) {
+            if (substr($host, -strlen($suffix)) === $suffix) {
+                return true;
+            }
+        }
+
+        return filter_var($host, FILTER_VALIDATE_IP)
+            && !filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE);
+    }
+
+    /**
+     * Creates (or replaces) this site's Stripe webhook endpoints and returns their signing
+     * secrets, so the customer never has to copy one out of the Stripe Dashboard.
+     *
+     * Both scopes are registered in one pass: the account endpoint, and the Connect endpoint
+     * that carries events for direct charges made on connected accounts. The Connect one is
+     * reported as skipped rather than failed when the account is not a Connect platform.
+     *
+     * @param string $secretKey
+     * @param bool   $testMode
+     *
+     * @return array
+     */
+    public function registerWebhookEndpoints(string $secretKey, bool $testMode): array
+    {
+        if (strpos($secretKey, $testMode ? 'sk_test_' : 'sk_live_') !== 0) {
+            return ['error' => 'invalidSecretKey'];
+        }
+
+        $urlError = $this->getWebhookUrlError($testMode);
+
+        if ($urlError !== null) {
+            return ['error' => $urlError];
+        }
+
+        try {
+            $stripe = new StripeClient($secretKey);
+
+            // Listed once for both scopes. The two endpoints are told apart by their URL, so
+            // one pass over the account's endpoints answers for both - and the second scope
+            // asking Stripe the same question again is a round trip the customer waits for.
+            // The snapshot stays valid across the account pass: whatever it creates or
+            // removes carries the account URL, which the Connect pass never looks at.
+            $endpointIdsByUrl = $this->getWebhookEndpointIdsByUrl($stripe);
+
+            return [
+                'url'        => $this->getWebhookUrl(),
+                'connectUrl' => $this->getWebhookUrl(true),
+                'account'    => $this->registerWebhookEndpoint($stripe, false, $testMode, $endpointIdsByUrl),
+                'connect'    => $this->registerWebhookEndpoint($stripe, true, $testMode, $endpointIdsByUrl),
+            ];
+        } catch (Exception $e) {
+            return [
+                'error'      => 'requestFailed',
+                'message'    => $e->getMessage(),
+                // Tells a key Stripe refuses apart from a Stripe that is briefly unreachable,
+                // so the caller knows whether retrying can ever change the outcome.
+                'httpStatus' => $e instanceof ApiErrorException ? (int)$e->getHttpStatus() : 0,
+            ];
+        }
+    }
+
+    /**
+     * @param StripeClient $stripe
+     * @param bool         $connect
+     * @param bool         $testMode
+     * @param array        $endpointIdsByUrl Endpoint ids of the whole account, keyed by URL
+     *
+     * @return array
+     */
+    private function registerWebhookEndpoint($stripe, bool $connect, bool $testMode, array $endpointIdsByUrl): array
+    {
+        $url = $this->getWebhookUrl($connect);
+
+        // The filter rewrites the two URLs independently, so the one being registered here is
+        // the one that has to pass the check - the caller only validated the account URL.
+        $urlError = $this->getUrlWebhookError($url, $testMode);
+
+        if ($urlError !== null) {
+            return ['status' => 'failed', 'error' => $urlError];
+        }
+
+        // The two scopes are told apart by their URL alone. A filter that drops the query
+        // marker collapses them into one, and registering the second would then delete the
+        // endpoint the first one just created.
+        if ($connect && $url === $this->getWebhookUrl()) {
+            return ['status' => 'skipped', 'message' => 'connectUrlNotDistinct'];
+        }
+
+        // Read from the caller's snapshot rather than asked for again. A blind create is what
+        // has to be avoided here - that is how duplicate endpoints accumulate against the
+        // per-account endpoint limit - and the snapshot answers that just as well.
+        $stale = !empty($endpointIdsByUrl[$url]) ? $endpointIdsByUrl[$url] : [];
+
+        // Counted before anything is deleted, so a cleanup that only partly succeeds is still
+        // reported for what it was.
+        $staleTotal     = count($stale);
+        $staleRemaining = 0;
+
+        try {
+            $endpoint = $this->createWebhookEndpoint($stripe, $url, $connect);
+        } catch (ApiErrorException $e) {
+            // The previous endpoint is removed only once it is established that it blocks
+            // the replacement. Deleting first would leave the site with no endpoint at all
+            // whenever the create that follows fails, and deleting because the create was
+            // rate limited, unauthorized or simply down would take away a working endpoint
+            // over something that has nothing to do with it - after which the stored secret
+            // and endpoint id still look registered, so nothing tries again.
+            if (!$this->isEndpointLimitError($e)) {
+                // An account that is not a Connect platform cannot have a Connect endpoint,
+                // and that is not a fault of this site's setup - it is the one Connect
+                // outcome the caller is meant to pass over rather than report. Every other
+                // rejection leaves Connect events unverifiable for a reason worth hearing.
+                if ($connect && $this->isConnectUnavailableError($e)) {
+                    return ['status' => 'skipped', 'message' => $e->getMessage()];
+                }
+
+                return $this->failedEndpoint($e);
+            }
+
+            if ($stale === []) {
+                return $this->failedEndpoint($e);
+            }
+
+            $staleRemaining = $this->deleteWebhookEndpoints($stripe, $stale);
+            $stale          = [];
+
+            try {
+                $endpoint = $this->createWebhookEndpoint($stripe, $url, $connect);
+            } catch (ApiErrorException $retryException) {
+                return [
+                    'status'         => 'failed',
+                    'message'        => $retryException->getMessage(),
+                    'httpStatus'     => (int)$retryException->getHttpStatus(),
+                    // Room was made and nothing took the place of what was removed, so the
+                    // secret and endpoint id the caller has stored describe an endpoint that
+                    // no longer exists. Left in place they read as "already registered" and
+                    // no later attempt would ever repair this.
+                    'deleted'        => $staleTotal - $staleRemaining,
+                    'staleRemaining' => $staleRemaining,
+                ];
+            }
+        }
+
+        // Whatever survives here still delivers to this URL, but signed with a secret that
+        // is no longer stored, so it can only produce refused deliveries.
+        $staleRemaining += $this->deleteWebhookEndpoints($stripe, $stale);
+
+        return [
+            'status'         => 'registered',
+            'id'             => (string)$endpoint->id,
+            'secret'         => !empty($endpoint->secret) ? (string)$endpoint->secret : '',
+            'replaced'       => $staleTotal - $staleRemaining,
+            'staleRemaining' => $staleRemaining,
+        ];
+    }
+
+    /**
+     * Whether the Connect endpoint was refused because the account is not a Connect platform.
+     *
+     * Stripe rejects that as an ordinary invalid_request_error without a dedicated error
+     * code, so the rejected parameter - or, when the response carries no error object, the
+     * message - is what separates it from a Connect create that failed for a reason the site
+     * owner has to hear about.
+     *
+     * @param ApiErrorException $e
+     *
+     * @return bool
+     */
+    private function isConnectUnavailableError($e): bool
+    {
+        if ((int)$e->getHttpStatus() !== 400) {
+            return false;
+        }
+
+        $error = $e->getError();
+
+        if ($error !== null && !empty($error->param)) {
+            return $error->param === 'connect';
+        }
+
+        return strpos(strtolower((string)$e->getMessage()), 'connect') !== false;
+    }
+
+    /**
+     * Whether the create failed because the account has no room for another endpoint, which
+     * is the only failure an existing endpoint at this URL can be responsible for.
+     *
+     * Stripe reports the per-account endpoint limit as an ordinary invalid_request_error
+     * without a dedicated error code, so the message is what separates it from every other
+     * rejected request.
+     *
+     * @param ApiErrorException $e
+     *
+     * @return bool
+     */
+    private function isEndpointLimitError($e): bool
+    {
+        if ((int)$e->getHttpStatus() !== 400) {
+            return false;
+        }
+
+        $message = strtolower((string)$e->getMessage());
+
+        return strpos($message, 'maximum') !== false || strpos($message, 'limit') !== false;
+    }
+
+    /**
+     * @param StripeClient $stripe
+     * @param string       $url
+     * @param bool         $connect
+     *
+     * @return \AmeliaVendor\Stripe\WebhookEndpoint
+     * @throws ApiErrorException
+     */
+    private function createWebhookEndpoint($stripe, string $url, bool $connect): WebhookEndpoint
+    {
+        $params = [
+            'url'            => $url,
+            'enabled_events' => self::WEBHOOK_EVENTS,
+            // Pinned to the version this SDK deserializes, so the payload shape does not
+            // change with the account's default API version.
+            'api_version'    => ApiVersion::CURRENT,
+            'description'    => 'Amelia booking' . ($connect ? ' (connected accounts)' : ''),
+            'metadata'       => [
+                'amelia'       => 'webhook',
+                'amelia_scope' => $connect ? 'connect' : 'account',
+                'amelia_site'  => substr((string)get_site_url(), 0, 500),
+            ],
+        ];
+
+        if ($connect) {
+            $params['connect'] = true;
+        }
+
+        return $stripe->webhookEndpoints->create($params);
+    }
+
+    /**
+     * How a create that Stripe rejected is reported, with the status code the caller needs
+     * to tell a rejection an admin has to fix from one that may pass on the next attempt.
+     *
+     * @param ApiErrorException $e
+     *
+     * @return array
+     */
+    private function failedEndpoint($e): array
+    {
+        return [
+            'status'     => 'failed',
+            'message'    => $e->getMessage(),
+            'httpStatus' => (int)$e->getHttpStatus(),
+        ];
+    }
+
+    /**
+     * Every webhook endpoint on the account, its ids grouped by the URL they deliver to.
+     *
+     * @param StripeClient $stripe
+     *
+     * @return array
+     * @throws ApiErrorException
+     */
+    private function getWebhookEndpointIdsByUrl($stripe): array
+    {
+        $ids = [];
+
+        foreach ($stripe->webhookEndpoints->all(['limit' => 100])->autoPagingIterator() as $endpoint) {
+            if (!empty($endpoint->url)) {
+                $ids[(string)$endpoint->url][] = (string)$endpoint->id;
+            }
+        }
+
+        return $ids;
+    }
+
+    /**
+     * @param StripeClient $stripe
+     * @param array        $ids
+     *
+     * @return int Number of endpoints that could not be deleted
+     */
+    private function deleteWebhookEndpoints($stripe, array $ids): int
+    {
+        $failed = 0;
+
+        foreach ($ids as $id) {
+            try {
+                $stripe->webhookEndpoints->delete($id);
+            } catch (Exception $e) {
+                $failed++;
+            }
+        }
+
+        return $failed;
     }
 }

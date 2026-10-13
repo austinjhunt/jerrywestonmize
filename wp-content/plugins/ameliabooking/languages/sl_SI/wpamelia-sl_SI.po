@@ -34,26 +34,6 @@ msgid "# of bookings"
 msgstr "Število rezervacij"
 
 #, php-format
-msgid "%1$s, %2$s, was canceled."
-msgstr "Rezervacija %1$s, %2$s, je bila preklicana."
-
-#, php-format
-msgid "%1$s, %2$s, was rejected."
-msgstr "Rezervacija %1$s, %2$s, je bila zavrnjena."
-
-#, php-format
-msgid "%1$s booked %2$s at %3$s."
-msgstr "Za %1$s je bila rezervirana storitev %2$s ob %3$s."
-
-#, php-format
-msgid "%1$s on %2$s had a status change."
-msgstr "Rezervaciji %1$s dne %2$s se je spremenil status."
-
-#, php-format
-msgid "%1$s on %2$s was updated."
-msgstr "Rezervacija %1$s dne %2$s je bila posodobljena."
-
-#, php-format
 msgid "%event_name% Event Booked"
 msgstr "%event_name% Dogodek rezerviran"
 
@@ -459,8 +439,14 @@ msgstr "Dejanja"
 msgid "Activate"
 msgstr "Aktiviraj"
 
+msgid "Activate now"
+msgstr ""
+
 msgid "Activate with Envato"
 msgstr "Aktivirajte z Envato"
+
+msgid "Activate your license to unlock the features included in your plan."
+msgstr ""
 
 msgid "Activated with Envato"
 msgstr "Aktivirano z Envato"
@@ -871,6 +857,9 @@ msgstr "Predhodno plačano"
 msgid "Already have an account?"
 msgstr "Že imate račun?"
 
+msgid "Already purchased Amelia?"
+msgstr ""
+
 msgid "Also cancel and delete future events"
 msgstr "Prav tako prekličite in izbrišite prihodnje dogodke."
 
@@ -920,7 +909,7 @@ msgid "Apple"
 msgstr ""
 
 msgid "Apple Calendar"
-msgstr "Apple koledar"
+msgstr "Koledar Apple"
 
 msgid "Apple Calendar (Personal)"
 msgstr "Apple koledar (osebni)"
@@ -929,7 +918,7 @@ msgid "Apple Calendar setup"
 msgstr "Nastavitev koledarja Apple"
 
 msgid "Apple calendar events"
-msgstr "Dogodki Apple koledarja"
+msgstr ""
 
 msgid "Application (client) ID"
 msgstr "ID aplikacije (odjemalca)"
@@ -1074,9 +1063,6 @@ msgstr "Opombe o sestankih"
 msgid "Appointment price"
 msgstr "Cena sestanka"
 
-msgid "Appointment reminder"
-msgstr "Opomnik termina"
-
 msgid "Appointment repeats"
 msgstr "Ponovitve sestankov"
 
@@ -1089,9 +1075,6 @@ msgstr "Čas začetka sestanka"
 msgid "Appointment status"
 msgstr "Status sestanka"
 
-msgid "Appointment status changed"
-msgstr "Spremenjen status termina"
-
 msgid "Appointment status has been changed to "
 msgstr "Status sestanka je bil spremenjen v "
 
@@ -1100,9 +1083,6 @@ msgstr "Status sestanka je bil posodobljen."
 
 msgid "Appointment title"
 msgstr "Naslov sestanka"
-
-msgid "Appointment updated"
-msgstr "Termin spremenjen"
 
 msgid "Appointments"
 msgstr "Sestanki"
@@ -1142,6 +1122,10 @@ msgstr "Ali ste prepričani, da želite preklicati in izbrisati ta dogodek?"
 
 msgid "Are you sure you want to cancel this appointment?"
 msgstr "Ali ste prepričani, da želite preklicati ta termin?"
+
+msgid ""
+"Are you sure you want to cancel this booking? This action cannot be undone."
+msgstr ""
 
 msgid "Are you sure you want to cancel this event?"
 msgstr "Ali ste prepričani, da želite preklicati ta dogodek?"
@@ -1330,10 +1314,10 @@ msgid "Attendee"
 msgstr "Udeleženec"
 
 msgid "Attendee Asc"
-msgstr "Udeleženec Asc"
+msgstr "Udeleženec naraščajoče"
 
 msgid "Attendee Desc"
-msgstr "Opis udeleženca"
+msgstr "Udeleženec padajoče"
 
 msgid "Attendee code"
 msgstr "Koda udeleženca"
@@ -1440,13 +1424,13 @@ msgid "Available date text"
 msgstr "Besedilo o razpoložljivem datumu"
 
 msgid "Available from Pro license"
-msgstr "Na voljo z licenco Pro"
+msgstr "Na voljo od licence Pro"
 
 msgid "Available from Standard license"
-msgstr "Na voljo s standardno licenco"
+msgstr "Na voljo od licence Standard"
 
 msgid "Available from Starter license"
-msgstr "Na voljo z licenco Starter"
+msgstr "Na voljo od licence Starter"
 
 msgid "Available in Elite licence"
 msgstr "Na voljo v licenci Elite"
@@ -1678,10 +1662,10 @@ msgid "Booking Closes"
 msgstr "Rezervacije so zaključene"
 
 msgid "Booking Closes Asc"
-msgstr "Rezervacije se zaključijo Asc"
+msgstr "Rezervacije se zaključijo naraščajoče"
 
 msgid "Booking Closes Desc"
-msgstr "Zaključek rezervacij Desc"
+msgstr "Rezervacije se zaključijo padajoče"
 
 msgid "Booking Confirmed"
 msgstr "Rezervacija potrjena"
@@ -1708,10 +1692,10 @@ msgid "Booking Opens"
 msgstr "Rezervacije so odprte"
 
 msgid "Booking Opens Asc"
-msgstr "Rezervacije so odprte Asc"
+msgstr "Rezervacije so odprte naraščajoče"
 
 msgid "Booking Opens Desc"
-msgstr "Rezervacije so odprte Desc"
+msgstr "Rezervacije so odprte padajoče"
 
 msgid "Booking Overview"
 msgstr "Pregled rezervacij"
@@ -2276,6 +2260,9 @@ msgstr "Izberite, kdaj se ponavljanje konča"
 msgid "Choose whether you want to manage services, events, or both."
 msgstr "Izberite, ali želite upravljati storitve, dogodke ali oboje."
 
+msgid "Choose which tab users see first when they log in"
+msgstr ""
+
 msgid "Choosing layout of first step in step by step form"
 msgstr "Izbira postavitve prvega koraka v obrazcu za postopno izpolnjevanje"
 
@@ -2461,6 +2448,9 @@ msgstr "Nastavite čakalni seznam za termine"
 
 msgid "Confirm"
 msgstr "Potrdi"
+
+msgid "Confirm Cancellation"
+msgstr ""
 
 msgid "Confirm My Appointment"
 msgstr "Potrdi moj termin"
@@ -2919,10 +2909,10 @@ msgid "Customer(s)"
 msgstr "Stranka(-e)"
 
 msgid "Customer Asc"
-msgstr "Stranka Asc"
+msgstr "Stranka naraščajoče"
 
 msgid "Customer Desc"
-msgstr "Opis stranke"
+msgstr "Stranka padajoče"
 
 msgid "Customer Panel"
 msgstr "Stranka Panel"
@@ -3092,9 +3082,6 @@ msgstr "Podatki, ki ostanejo nespremenjeni:"
 msgid "Data to be updated:"
 msgstr "Podatki, ki jih je treba posodobiti:"
 
-msgid "Data transfer"
-msgstr "Prenos podatkov"
-
 msgid "Date"
 msgstr "Datum"
 
@@ -3111,19 +3098,19 @@ msgid "Date & time periods of the event with Lesson Space join links"
 msgstr "Datum in čas dogodka s povezavami za pridružitev Lesson Space"
 
 msgid "Date Asc"
-msgstr "Datum Asc"
+msgstr "Datum naraščajoče"
 
 msgid "Date Desc"
-msgstr "Datum Opis"
+msgstr "Datum padajoče"
 
 msgid "Date Picker"
 msgstr "Izbira datuma"
 
 msgid "Date Purchased Asc"
-msgstr "Datum nakupa Asc"
+msgstr "Datum nakupa naraščajoče"
 
 msgid "Date Purchased Desc"
-msgstr "Datum nakupa Opis"
+msgstr "Datum nakupa padajoče"
 
 msgid ""
 "Date Ranges that are not defined will use default price from ticket category."
@@ -4093,10 +4080,10 @@ msgid "Deduction"
 msgstr "Odbitek"
 
 msgid "Deduction Asc"
-msgstr "Odbitek Asc"
+msgstr "Odbitek naraščajoče"
 
 msgid "Deduction Desc"
-msgstr "Odbitek Opis"
+msgstr "Odbitek padajoče"
 
 msgid "Default Label"
 msgstr "Privzeta oznaka"
@@ -4109,6 +4096,9 @@ msgstr "Privzeti status sestanka"
 
 msgid "Default back end page"
 msgstr "Privzeta stran za ozadje"
+
+msgid "Default landing tab"
+msgstr ""
 
 msgid "Default language"
 msgstr "Privzeti jezik"
@@ -4345,10 +4335,10 @@ msgid "Discount"
 msgstr "Popust"
 
 msgid "Discount Asc"
-msgstr "Popust Asc"
+msgstr "Popust naraščajoče"
 
 msgid "Discount Desc"
-msgstr "Popust Opis"
+msgstr "Popust padajoče"
 
 msgid "Discount (%)"
 msgstr "Popust (%)"
@@ -4487,7 +4477,7 @@ msgid "Due"
 msgstr "Zaradi"
 
 msgid "Duplicate"
-msgstr ""
+msgstr "Podvoji"
 
 msgid "Duplicate Event"
 msgstr "Podvojen dogodek"
@@ -4526,10 +4516,10 @@ msgid "Duration:"
 msgstr "Trajanje:"
 
 msgid "Duration Asc"
-msgstr "Trajanje Asc"
+msgstr "Trajanje naraščajoče"
 
 msgid "Duration Desc"
-msgstr "Trajanje Opis"
+msgstr "Trajanje padajoče"
 
 msgid "E-Ticket Scanner"
 msgstr "Skener e-vstopnic"
@@ -4616,8 +4606,6 @@ msgid ""
 "Edit appointments/events when connected Google Calendar Events are "
 "rescheduled or deleted"
 msgstr ""
-"Urejaj termine/dogodke, ko se povezani koledarski dogodki v Google "
-"Calendarju prestavijo ali izbrišejo"
 
 msgid "Edit block time"
 msgstr "Uredi blokirani termin"
@@ -5280,7 +5268,7 @@ msgid "Event"
 msgstr "Dogodek"
 
 msgid "Event Asc"
-msgstr "Dogodek Asc"
+msgstr "Dogodek naraščajoče"
 
 msgid "Event Available"
 msgstr "Dogodek na voljo"
@@ -5319,7 +5307,7 @@ msgid "Event Day"
 msgstr "Dan dogodka"
 
 msgid "Event Desc"
-msgstr "Opis dogodka"
+msgstr "Dogodek padajoče"
 
 msgid "Event Employee"
 msgstr "Dogodek Zaposleni"
@@ -5731,9 +5719,6 @@ msgstr "Neuspelo"
 msgid "Failed to access camera. Please try again."
 msgstr "Dostop do kamere ni uspel. Poskusite znova."
 
-msgid "Failed to initialize payment. Please try again."
-msgstr "Plačila ni bilo mogoče začeti. Poskusite znova."
-
 msgid "Failed to load appointment details. Please try again later."
 msgstr "Podrobnosti o sestanku se niso uspele naložiti. Poskusite pozneje."
 
@@ -5931,7 +5916,7 @@ msgid "Fri"
 msgstr "Pet"
 
 msgid "Friday"
-msgstr "Petek"
+msgstr "petek"
 
 msgid "From"
 msgstr "Iz"
@@ -6080,7 +6065,7 @@ msgid "Google Analytics setup"
 msgstr "Nastavitev Google Analytics"
 
 msgid "Google Calendar"
-msgstr "Google Koledar"
+msgstr "Koledar Google"
 
 msgid "Google Calendar & Google Meet"
 msgstr "Google Koledar in Google Meet"
@@ -6110,7 +6095,7 @@ msgid "Google Meet setup"
 msgstr "Nastavitev Google Meet"
 
 msgid "Google calendar events"
-msgstr "Dogodki v Google Calendarju"
+msgstr ""
 
 msgid "Google reCAPTCHA v2 secret key"
 msgstr "Google reCAPTCHA v2 skrivni ključ"
@@ -6866,10 +6851,10 @@ msgid "ID"
 msgstr ""
 
 msgid "ID Asc"
-msgstr ""
+msgstr "ID naraščajoče"
 
 msgid "ID Desc"
-msgstr "ID Opis"
+msgstr "ID padajoče"
 
 msgid "I understand this import will replace all current data permanently."
 msgstr "Razumem, da bo ta uvoz nepovratno prepisal vse trenutne podatke."
@@ -6896,13 +6881,6 @@ msgid ""
 msgstr ""
 "Če je onemogočeno, mora rezervacija izpolnjevati minimalno zmogljivost, "
 "časovni razpored pa se zapre po prvi rezervaciji."
-
-msgid ""
-"If disabled, the price will remain the same regardless of how many people "
-"are included in the group appointment."
-msgstr ""
-"Če je onemogočeno, cena ostane enaka ne glede na to, koliko oseb je "
-"vključenih v skupinski termin."
 
 msgid ""
 "If enabled, customers can book with Pending status even after maximum "
@@ -7044,6 +7022,9 @@ msgstr "Slike miniatur"
 msgid "Import"
 msgstr "Uvoz"
 
+msgid "Import/Export"
+msgstr ""
+
 msgid "Import Failed"
 msgstr "Uvoz ni uspel"
 
@@ -7073,6 +7054,9 @@ msgstr "Uvoz ni uspel"
 
 msgid "Import failed. Review the details below."
 msgstr "Uvoz ni uspel. Preglejte spodnje podrobnosti."
+
+msgid "Import or export your Amelia data."
+msgstr ""
 
 msgid "Import progress"
 msgstr "Napredek uvoza"
@@ -7487,10 +7471,10 @@ msgid "Invoice Format"
 msgstr "Oblika računa"
 
 msgid "Invoice Number Asc"
-msgstr "Številka računa Asc"
+msgstr "Številka računa naraščajoče"
 
 msgid "Invoice Number Desc"
-msgstr "Številka računa Opis"
+msgstr "Številka računa padajoče"
 
 msgid "Invoice date"
 msgstr "Datum računa"
@@ -7658,10 +7642,10 @@ msgid "Last"
 msgstr "Zadnji"
 
 msgid "Last Booking Asc"
-msgstr "Zadnja rezervacija Asc"
+msgstr "Zadnja rezervacija naraščajoče"
 
 msgid "Last Booking Desc"
-msgstr "Zadnja rezervacija Desc"
+msgstr "Zadnja rezervacija padajoče"
 
 msgid "Last Name:"
 msgstr "Priimek:"
@@ -8032,10 +8016,10 @@ msgid "Max. Capacity"
 msgstr "Največja zmogljivost"
 
 msgid "Max Capacity Asc"
-msgstr "Največja zmogljivost Asc"
+msgstr "Največja zmogljivost naraščajoče"
 
 msgid "Max Capacity Desc"
-msgstr "Največja zmogljivost Opis"
+msgstr "Največja zmogljivost padajoče"
 
 msgid "Maximum"
 msgstr "Največ"
@@ -8189,7 +8173,7 @@ msgid "Mollie payment link"
 msgstr "Povezava za plačilo Mollie"
 
 msgid "Mon"
-msgstr "pon"
+msgstr "Pon"
 
 msgid "Monday"
 msgstr "ponedeljek"
@@ -8252,13 +8236,13 @@ msgid "Name:"
 msgstr "Ime:"
 
 msgid "Name Asc"
-msgstr "Ime Asc"
+msgstr "Ime naraščajoče"
 
 msgid "Name Ascending"
 msgstr "Ime po vzponu"
 
 msgid "Name Desc"
-msgstr "Ime Opis"
+msgstr "Ime padajoče"
 
 msgid "Name Descending"
 msgstr "Ime po padajočem vrstnem redu"
@@ -8375,7 +8359,7 @@ msgid "No, just this one"
 msgstr "Ne, samo ta."
 
 msgid "No-show"
-msgstr "Neprikazano"
+msgstr "Neprihod"
 
 msgid "No-show tag"
 msgstr "Oznaka za neprihod"
@@ -8387,16 +8371,16 @@ msgid "No Packages"
 msgstr "Ni paketov"
 
 msgid "No Show"
-msgstr "Ni prikazano"
+msgstr "Neprihod"
 
 msgid "No Show (1)"
-msgstr "Ni prikazano (1)"
+msgstr "Neprihod (1)"
 
 msgid "No Show (2)"
-msgstr "Ni prikazano (2)"
+msgstr "Neprihod (2)"
 
 msgid "No Show (3+)"
-msgstr "Ni prikazano (3+)"
+msgstr "Neprihod (3+)"
 
 msgid "No Tags. Create a new one."
 msgstr "Ni oznak. Ustvarite novo."
@@ -8606,7 +8590,7 @@ msgid "Notify the attendees"
 msgstr "Obvesti udeležence"
 
 msgid "Notify the customer(s)"
-msgstr "Obvestite stranko(-e)"
+msgstr "Obvesti stranke"
 
 msgid "Number of Additional People"
 msgstr "Število dodatnih oseb"
@@ -8944,7 +8928,7 @@ msgid "Outlook Calendar setup"
 msgstr "Nastavitev koledarja Outlook"
 
 msgid "Outlook Mailer"
-msgstr ""
+msgstr "Poštna storitev Outlook"
 
 msgid ""
 "Outlook Mailer is not fully configured. Please complete the account setup in "
@@ -8954,7 +8938,7 @@ msgstr ""
 "nastavitvah integracije Outlooka."
 
 msgid "Outlook calendar events"
-msgstr "Dogodki koledarja Outlook"
+msgstr ""
 
 msgid "Outside of working hours"
 msgstr "Izven delovnega časa"
@@ -8993,13 +8977,13 @@ msgid "Package %package_name% purchased"
 msgstr "Paket %package_name% kupljen"
 
 msgid "Package Asc"
-msgstr "Paket Asc"
+msgstr "Paket naraščajoče"
 
 msgid "Package Canceled"
 msgstr "Paket preklican"
 
 msgid "Package Desc"
-msgstr "Opis paketa"
+msgstr "Paket padajoče"
 
 msgid "Package ID"
 msgstr "ID paketa"
@@ -9957,13 +9941,13 @@ msgid "Price:"
 msgstr "Cena:"
 
 msgid "Price Asc"
-msgstr "Cena Asc"
+msgstr "Cena naraščajoče"
 
 msgid "Price Ascending"
 msgstr "Cena po naraščajočem vrstnem redu"
 
 msgid "Price Desc"
-msgstr "Cena Opis"
+msgstr "Cena padajoče"
 
 msgid "Price Descending"
 msgstr "Cena po padajočem vrstnem redu"
@@ -10083,6 +10067,11 @@ msgstr "Nakup je preklican"
 msgid "Purchased"
 msgstr "Kupil"
 
+msgid ""
+"Purchasing doesn't upgrade this plugin automatically. Follow our step-by-"
+"step guide to switch to the full version."
+msgstr ""
+
 msgid "Purple"
 msgstr "Vijolična"
 
@@ -10096,10 +10085,10 @@ msgid "Quantity"
 msgstr "Količina"
 
 msgid "Quantity Asc"
-msgstr "Količina Asc"
+msgstr "Količina naraščajoče"
 
 msgid "Quantity Desc"
-msgstr "Količina Opis"
+msgstr "Količina padajoče"
 
 msgid "Quantity is shared"
 msgstr "Količina je skupna"
@@ -10222,7 +10211,7 @@ msgid "Redirect"
 msgstr "Preusmeritev"
 
 msgid "Redirect URI"
-msgstr "Preusmeri URI"
+msgstr "URI preusmeritve"
 
 msgid "Redirect URL After Booking"
 msgstr "Preusmeritveni URL po rezervaciji"
@@ -10252,7 +10241,7 @@ msgid "Redirect URL for unsuccessfully rejected booking"
 msgstr "Preusmeritveni URL za neuspešno zavrnjeno rezervacijo"
 
 msgid "Redirect URLs"
-msgstr "Preusmeritvene URL-je"
+msgstr "Naslovi URL za preusmeritev"
 
 msgid "Redirect page"
 msgstr "Preusmeri stran"
@@ -10291,10 +10280,6 @@ msgstr "Preostanek skupnega zneska bo plačan na kraju samem."
 
 msgid "Remind me when my SMS balance is low"
 msgstr "Opomni me, ko bo moje SMS dobroimetje nizko"
-
-#, php-format
-msgid "Reminder: %1$s is scheduled for %2$s."
-msgstr "Opomnik: %1$s je predvideno za %2$s."
 
 msgid "Remove Apple Calendar event slots"
 msgstr "Odstrani časovne termine dogodkov v Apple Calendar"
@@ -10691,6 +10676,9 @@ msgstr "Oddelek"
 msgid "Securely process payments using Stripe."
 msgstr "Varno obdelujte plačila s pomočjo Stripe."
 
+msgid "See upgrade guide."
+msgstr ""
+
 msgid "Segment"
 msgstr ""
 
@@ -11025,7 +11013,7 @@ msgid "Service/Event"
 msgstr "Storitev/Dogodek"
 
 msgid "Service Asc"
-msgstr "Storitev Asc"
+msgstr "Storitev naraščajoče"
 
 msgid "Service Categories"
 msgstr "Kategorije storitev"
@@ -11034,7 +11022,7 @@ msgid "Service Category"
 msgstr "Kategorija storitev"
 
 msgid "Service Desc"
-msgstr "Opis storitve"
+msgstr "Storitev padajoče"
 
 msgid "Service ID"
 msgstr "ID storitve"
@@ -11133,10 +11121,10 @@ msgid "Services & categories setup"
 msgstr "Nastavitev storitev in kategorij"
 
 msgid "Services Asc"
-msgstr "Storitve Asc"
+msgstr "Storitve naraščajoče"
 
 msgid "Services Desc"
-msgstr "Opis storitev"
+msgstr "Storitve padajoče"
 
 msgid "Services and packages overview"
 msgstr "Pregled storitev in paketov"
@@ -11504,10 +11492,10 @@ msgid "Show specific packages"
 msgstr "Pokaži določene pakete"
 
 msgid "Show specific service"
-msgstr "Pokaži določeno storitev"
+msgstr "Prikaži določeno storitev"
 
 msgid "Show specific services"
-msgstr "Pokaži določene storitve"
+msgstr "Prikaži določene storitve"
 
 msgid "Show tag"
 msgstr "Pokaži oznako"
@@ -11561,6 +11549,9 @@ msgstr "Prijavite se z Microsoftom"
 
 msgid "Sign in with Outlook"
 msgstr "Prijavi se z Outlookom"
+
+msgid "Sign out and use a customer account"
+msgstr ""
 
 msgid "Sign out from Google"
 msgstr "Odjavi se iz Googla"
@@ -11709,10 +11700,10 @@ msgid "Specific date & time"
 msgstr "Natančen datum in čas"
 
 msgid "Spot"
-msgstr ""
+msgstr "Mesto"
 
 msgid "Spots"
-msgstr ""
+msgstr "Mesta"
 
 msgid "Spots capacity"
 msgstr "Kapaciteta mest"
@@ -11766,10 +11757,10 @@ msgid "Status"
 msgstr ""
 
 msgid "Status Asc"
-msgstr ""
+msgstr "Stanje naraščajoče"
 
 msgid "Status Desc"
-msgstr ""
+msgstr "Stanje padajoče"
 
 msgid ""
 "Stay compliant with ease through consistent, reliable tax handling across "
@@ -11945,7 +11936,7 @@ msgid "Summary segment"
 msgstr "Povzetek segmenta"
 
 msgid "Sun"
-msgstr ""
+msgstr "Ned"
 
 msgid "Sunday"
 msgstr "nedelja"
@@ -11973,7 +11964,7 @@ msgid "Switch Camera"
 msgstr "Preklop kamere"
 
 msgid "Sync Google Events"
-msgstr "Sinhroniziraj Google dogodke"
+msgstr ""
 
 msgid "Sync with"
 msgstr "Sinhroniziraj z"
@@ -12492,6 +12483,12 @@ msgstr ""
 "konfiguracijo."
 
 msgid ""
+"This option applies only to people added through \"Bringing anyone with "
+"you\". If disabled, the service price is charged once for the entire "
+"booking, regardless of how many additional people are included."
+msgstr ""
+
+msgid ""
 "This option requires adding the payment link placeholder to your message "
 "templates."
 msgstr ""
@@ -12591,7 +12588,7 @@ msgid "Thu"
 msgstr "Čet"
 
 msgid "Thursday"
-msgstr "Četrtek"
+msgstr "četrtek"
 
 msgid "Ticket"
 msgstr "Vstopnica"
@@ -12651,10 +12648,10 @@ msgid "Time Range:"
 msgstr "Časovno obdobje:"
 
 msgid "Time Used Asc"
-msgstr "Porabljen čas Asc"
+msgstr "Porabljen čas naraščajoče"
 
 msgid "Time Used Desc"
-msgstr "Porabljen čas Opis"
+msgstr "Porabljen čas padajoče"
 
 msgid "Time frame"
 msgstr "Časovni okvir"
@@ -12908,10 +12905,10 @@ msgid "Type"
 msgstr "Tip"
 
 msgid "Type Asc"
-msgstr "Tip Asc"
+msgstr "Tip naraščajoče"
 
 msgid "Type Desc"
-msgstr "Tip Opis"
+msgstr "Tip padajoče"
 
 msgid "URL"
 msgstr ""
@@ -13279,7 +13276,7 @@ msgid "Wed"
 msgstr "Sre"
 
 msgid "Wednesday"
-msgstr "Sreda"
+msgstr "sreda"
 
 msgid "Week"
 msgstr "Teden"
@@ -13686,6 +13683,11 @@ msgstr ""
 msgid "Your password has been reset successfully."
 msgstr "Vaše geslo je bilo uspešno ponastavljeno."
 
+msgid ""
+"Your payment is still processing. You will receive a confirmation as soon as "
+"it is completed."
+msgstr ""
+
 msgid "Your postal code is incomplete"
 msgstr "Vaša poštna številka je nepopolna."
 
@@ -14086,7 +14088,7 @@ msgstr ""
 "lokacije niso bile izbrisane zaradi prihodnjih rezervacij."
 
 msgid "{count} minute | {count} minutes"
-msgstr ""
+msgstr "{count} minuta | {count} minuti | {count} minut"
 
 msgid "{count} month | {count} months"
 msgstr "{count} mesec | {count} mesecev"

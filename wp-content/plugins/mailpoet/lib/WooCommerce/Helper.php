@@ -218,6 +218,20 @@ class Helper {
     return wc_hex_is_light($color);
   }
 
+  public function wcGetStoreAddress(): string {
+    if (!class_exists(\WC_Emails::class)) {
+      return '';
+    }
+    return \WC_Emails::instance()->get_store_address();
+  }
+
+  public function wcGetStoreEmail(): string {
+    if (!class_exists(\WC_Emails::class)) {
+      return '';
+    }
+    return \WC_Emails::instance()->get_from_address();
+  }
+
   public function getOrdersCountCreatedBefore(string $dateTime): int {
     $ordersCount = $this->wcGetOrders([
       'status' => 'all',
@@ -232,7 +246,7 @@ class Helper {
 
   public function getRawPrice($price, array $args = []) {
     $htmlPrice = $this->wcPrice($price, $args);
-    return html_entity_decode(strip_tags($htmlPrice), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401);
+    return strip_tags(html_entity_decode($htmlPrice, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401));
   }
 
   public function getAllowedCountries(): array {

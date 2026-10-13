@@ -312,11 +312,13 @@ class PackageApplicationService extends AbstractPackageApplicationService
         /** @var PackageCustomerServiceRepository $packageCustomerServiceRepository */
         $packageCustomerServiceRepository = $this->container->get('domain.bookable.packageCustomerService.repository');
 
+        // "customerId" is not a criterion this repository knows, so the package of any other customer
+        // used to be accepted here - the booking must be paid for by the package its customer bought
         /** @var Collection $packageCustomerServices */
         $packageCustomerServices = $packageCustomerServiceRepository->getByCriteria(
             [
-                'ids'        => [$packageCustomerServiceId],
-                'customerId' => $customerId,
+                'ids'       => [$packageCustomerServiceId],
+                'customers' => [$customerId],
             ]
         );
 

@@ -17,6 +17,7 @@ use AmeliaBooking\Domain\ValueObjects\String\Token;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Cache\CacheRepository;
 use AmeliaBooking\Infrastructure\Services\Payment\BarionService;
+use AmeliaBooking\Infrastructure\WP\HelperService\HelperService;
 use AmeliaBooking\Infrastructure\WP\Translations\FrontendStrings;
 use Exception;
 
@@ -32,7 +33,7 @@ class BarionPaymentCommandHandler extends CommandHandler
      * @throws QueryExecutionException
      * @throws Exception
      */
-    public function handle(BarionPaymentCommand $command)
+    public function handle(BarionPaymentCommand $command): CommandResult
     {
         $result = new CommandResult();
 
@@ -59,7 +60,7 @@ class BarionPaymentCommandHandler extends CommandHandler
         do_action('amelia_before_barion_redirect', $bookingData);
 
         /** @var Reservation $reservation */
-        $reservation = $reservationService->getNew(true, true, true);
+        $reservation = $reservationService->getNew(true, true, false);
 
         $reservationService->processBooking(
             $result,
@@ -147,15 +148,8 @@ class BarionPaymentCommandHandler extends CommandHandler
             $bookingId = $reservation->getBooking()->getId()->getValue();
             $paymentId = $reservation->getBooking()->getPayments()->getItems()[0]->getId()->getValue();
         }
-        $callbackUrl = (
-            AMELIA_DEV
-                ? str_replace(
-                    'localhost',
-                    AMELIA_NGROK_URL,
-                    AMELIA_ACTION_URL
-                )
-                : AMELIA_ACTION_URL
-            ) . '/payment/barion/callback&name=' . $identifier . '&bookingId=' . $bookingId . '&type=' . $type;
+        $callbackUrl = HelperService::getPublicCallbackUrl(AMELIA_ACTION_URL) .
+            '/payment/barion/callback&name=' . $identifier . '&bookingId=' . $bookingId . '&type=' . $type;
 
         $orderData = [
             'amount'      => $paymentAmount,

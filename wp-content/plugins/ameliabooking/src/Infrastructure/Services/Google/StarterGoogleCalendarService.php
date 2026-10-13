@@ -2,9 +2,11 @@
 
 namespace AmeliaBooking\Infrastructure\Services\Google;
 
+use AmeliaBooking\Domain\Entity\Calendar\CalendarSync;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Event\Event;
+use AmeliaBooking\Domain\Entity\Google\GoogleCalendar;
 use AmeliaBooking\Domain\Entity\User\Provider;
 use AmeliaBooking\Infrastructure\Common\Container;
 use DateTime;
@@ -140,5 +142,52 @@ class StarterGoogleCalendarService extends AbstractGoogleCalendarService
     public function getCalendarListsForAccounts(array $accounts, Provider $provider): array
     {
         return [];
+    }
+
+    /**
+     * @param GoogleCalendar $googleCalendar
+     *
+     * @return void
+     * @throws ContainerException
+     * @throws QueryExecutionException
+     * @throws Exception
+     */
+    public function disconnect($googleCalendar)
+    {
+    }
+
+    /**
+     * @param GoogleCalendar $newGoogleCalendar
+     *
+     * @return void
+     */
+    public function manageChannel($newGoogleCalendar): void
+    {
+    }
+
+    /**
+     * @return void
+     */
+    public function renewChannels(): void
+    {
+    }
+
+    /**
+     * @param CalendarSync $calendarSync
+     * @param string       $resourceId
+     *
+     * @return void
+     */
+    public function manageChangedEvents($calendarSync, $resourceId): void
+    {
+    }
+
+    /**
+     * @param int $providerId
+     *
+     * @return void
+     */
+    public function ensureTwoWaySyncForGlobalProvider($providerId): void
+    {
     }
 }

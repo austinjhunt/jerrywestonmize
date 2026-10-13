@@ -45,7 +45,7 @@ class RazorpayPaymentCommandHandler extends CommandHandler
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    public function handle(RazorpayPaymentCommand $command)
+    public function handle(RazorpayPaymentCommand $command): CommandResult
     {
         $result = new CommandResult();
 
@@ -72,7 +72,7 @@ class RazorpayPaymentCommandHandler extends CommandHandler
         do_action('amelia_before_razorpay_redirect', $bookingData);
 
         /** @var Reservation $reservation */
-        $reservation = $reservationService->getNew(true, true, true);
+        $reservation = $reservationService->getNew(true, true, false);
 
         $reservationService->processBooking(
             $result,

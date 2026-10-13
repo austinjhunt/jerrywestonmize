@@ -282,11 +282,11 @@ class GetEventBookingCommandHandler extends CommandHandler
                 'wcTax' => $wcTax,
                 'discount' => $bookingPaymentAmount['discount'] + $bookingPaymentAmount['deduction'],
                 'wcDiscount' => $wcDiscount,
-                'eventPrice' => $bookingPaymentAmount['subtotal'],
+                'price' => $bookingPaymentAmount['subtotal'],
                 'subtotal' => $bookingPaymentAmount['subtotal'],
                 'paid' => $bookingPaidPrice,
                 'due' => max($total - $bookingPaidPrice, 0),
-                'id' => !empty($booking['payments']) ? array_key_first($booking['payments']) : null,
+                'id' => !empty($booking['payments']) ? $booking['payments'][0]['id'] : null,
             ],
             'customFields' =>
             !empty($booking['customFields']) ?

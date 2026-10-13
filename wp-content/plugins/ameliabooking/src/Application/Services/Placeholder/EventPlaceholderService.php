@@ -1160,16 +1160,18 @@ class EventPlaceholderService extends PlaceholderService
 
         $ticketsPriceByDateRange = null;
 
-        if ($entity['customPricing']) {
+        if (!empty($entity['customPricing'])) {
             /** @var EventApplicationService $eventApplicationService */
             $eventApplicationService = $this->container->get('application.booking.event.service');
-            $ticketsPriceByDateRange = $eventApplicationService->getTicketsPriceByDateRange($entity['customTickets']);
+            $ticketsPriceByDateRange = $eventApplicationService->getTicketsPriceByDateRange(
+                !empty($entity['customTickets']) ? $entity['customTickets'] : []
+            );
             $ticketsPriceByDateRange = $ticketsPriceByDateRange->length() ? $ticketsPriceByDateRange : null;
         }
 
         $eventCustomPricing = [];
 
-        foreach ($entity['customTickets'] as $key => $customTicket) {
+        foreach ((!empty($entity['customTickets']) ? $entity['customTickets'] : []) as $key => $customTicket) {
             $eventCustomPricing[$customTicket['id']] = [
                 'dateRanges' => '[]',
                 'price'      => $ticketsPriceByDateRange && $ticketsPriceByDateRange->getItem($key)->getDateRangePrice() ?
@@ -1196,6 +1198,17 @@ class EventPlaceholderService extends PlaceholderService
             ]
         );
 
-        return $reservationService->getPaymentAmount($booking, $bookable, $invoice);
+        $amountData = $reservationService->getPaymentAmount($booking, $bookable, $invoice);
+
+        // Reminder/scheduled payloads may omit ticket rows; fall back to stored booking price.
+        if (
+            (empty($amountData['price']) || (float)$amountData['price'] === 0.0) &&
+            !empty($bookingArray['price']) &&
+            (float)$bookingArray['price'] > 0
+        ) {
+            $amountData['price'] = (float)$bookingArray['price'];
+        }
+
+        return $amountData;
     }
 }

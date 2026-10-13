@@ -8,7 +8,6 @@
 
 namespace LLAR\Core;
 
-use LLAR\Core\Digest\DigestDispatcher;
 use LLAR\Core\Interfaces\OptionsPageUriProvider;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -107,73 +106,34 @@ class LockoutNotificationService {
 			$admin_email = get_site_option( 'admin_email' );
 		}
 
-		$admin_name = '';
-
-		global $wpdb;
-
-		$res = $wpdb->get_col(
-			$wpdb->prepare(
-				"
-                SELECT u.display_name
-                FROM $wpdb->users AS u
-                LEFT JOIN $wpdb->usermeta AS m ON u.ID = m.user_id
-                WHERE u.user_email = %s
-                AND m.meta_key LIKE 'wp_capabilities'
-                AND m.meta_value LIKE '%administrator%'",
-				$admin_email
-			)
-		);
-
-		if ( $res ) {
-			$admin_name = $res[0];
-		}
-
 		$site_domain = str_replace( array( 'http://', 'https://' ), '', home_url() );
-		$blogname    = Helpers::use_local_options() ? get_option( 'blogname' ) : get_site_option( 'site_name' );
-		$blogname    = htmlspecialchars_decode( $blogname, ENT_QUOTES );
-
-		$plugin_data = get_plugin_data( LLA_PLUGIN_DIR . 'limit-login-attempts-reloaded.php' );
 
 		$subject = sprintf(
-			__( 'Failed login by IP %1$s %2$s', 'limit-login-attempts-reloaded' ),
-			esc_html( $ip ),
-			esc_html( $site_domain )
+			/* translators: 1: site domain, 2: IP address */
+			__( '%1$s - Login blocked from %2$s', 'limit-login-attempts-reloaded' ),
+			esc_html( $site_domain ),
+			esc_html( $ip )
 		);
 
-		$unsubscribe_url = $this->options_page_provider->get_options_page_uri( 'settings' );
-		$unsubscribe_footer_text = DigestDispatcher::build_unsubscribe_footer_text(
-			array( 'unsubscribe_text' => LLA_DIGEST_DEFINITIONS['daily']['unsubscribe_text'] ),
-			$unsubscribe_url
+		/* All copy, URLs and inline styles come from the presenter; this
+		 * method only resolves the business facts and sends. */
+		$view = LockoutEmailPresenter::get_view_vars(
+			array(
+				'ip'                  => $ip,
+				'user'                => $user,
+				'count'               => $count,
+				'when'                => $when,
+				'site_domain'         => $site_domain,
+				'dashboard_url'       => $this->options_page_provider->get_options_page_uri(),
+				'manage_settings_url' => $this->options_page_provider->get_options_page_uri( 'settings' ),
+			)
 		);
+		$preview_text = $view['preview_text'];
 
 		ob_start();
+		include LLA_PLUGIN_DIR . 'views/emails/email-preview-text.php';
 		include LLA_PLUGIN_DIR . 'views/emails/failed-login-content.php';
 		$email_body = ob_get_clean();
-
-		$current_url_label = Helpers::get_current_url_label();
-		$current_url = Helpers::get_current_url();
-
-		$placeholders = array(
-			'{name}'                => esc_html( (string) $admin_name ),
-			'{domain}'              => esc_html( (string) $site_domain ),
-			'{attempts_count}'      => (int) $count,
-			'{lockouts_count}'      => (int) $lockouts,
-			'{ip_address}'          => esc_html( $ip ),
-			'{ip_address_link}'     => esc_url( 'https://www.limitloginattempts.com/location/?ip=' . $ip ),
-			'{username}'            => esc_html( (string) $user ),
-			'{blocked_duration}'    => esc_html( (string) $when ),
-			'{dashboard_url}'       => $this->options_page_provider->get_options_page_uri(),
-			'{premium_url}'         => 'https://www.limitloginattempts.com/info.php?from=plugin-lockout-email&v=' . $plugin_data['Version'],
-			'{llar_url}'            => 'https://www.limitloginattempts.com/?from=plugin-lockout-email&v=' . $plugin_data['Version'],
-			'{current_url}'         => esc_url( $current_url ),
-			'{current_url_label}'   => esc_html( (string) $current_url_label ),
-		);
-
-		$email_body = str_replace(
-			array_keys( $placeholders ),
-			array_values( $placeholders ),
-			$email_body
-		);
 
 		Helpers::send_mail_with_logo( $admin_email, $subject, $email_body );
 	}

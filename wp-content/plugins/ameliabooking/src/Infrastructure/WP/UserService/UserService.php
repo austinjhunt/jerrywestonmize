@@ -40,6 +40,14 @@ class UserService
     /**
      * Return the user entity for currently logged in user
      *
+     * if user is null it is a guest user
+     * if user is not null it is WordPress logged in user:
+     *   if type is admin or manager, it is admin or manager
+     *   if type is provider and ID is NOT null, it is connected to amelia provider
+     *   if type is provider and ID is null, it is WP user with wpamelia-provider role and not connected to amelia user
+     *   if type is customer and ID is NOT null, it is connected to amelia customer
+     *   if type is customer and ID is null, it is WP user with or without wpamelia-customer role and not connected to amelia user
+     *
      * @return AbstractUser|bool|null
      * @throws InvalidArgumentException
      * @throws QueryExecutionException
@@ -219,9 +227,23 @@ class UserService
     /**
      * logout user
      *
+     * @param bool $inspectIfWpUser
+     *
+     * @return void
      */
-    public static function logoutAmeliaUser()
+    public static function logoutAmeliaUser(bool $inspectIfWpUser = true): void
     {
+        if ($inspectIfWpUser) {
+            /** @var Container $container */
+            $container = require AMELIA_PATH . '/src/Infrastructure/ContainerConfig/container.php';
+
+            $user = $container->get('logged.in.user');
+
+            if (!$user || $user->getId() === null) {
+                return;
+            }
+        }
+
         $secureCookie = HelperService::isSSL();
 
         setcookie('ameliaToken', '', [

@@ -39,4 +39,21 @@ interface AppointmentRepositoryInterface extends BaseRepositoryInterface
      * @return mixed
      */
     public function getFiltered($criteria);
+
+    /**
+     * Upcoming appointments for provider push reminders.
+     *
+     * @param int[]    $providerIds
+     * @param string   $startDateTimeUtc
+     * @param string   $endDateTimeUtc
+     * @param string[] $statuses
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function getUpcomingForPushReminders(
+        array $providerIds,
+        string $startDateTimeUtc,
+        string $endDateTimeUtc,
+        array $statuses
+    ): array;
 }

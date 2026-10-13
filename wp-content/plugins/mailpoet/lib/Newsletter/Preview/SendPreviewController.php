@@ -73,20 +73,20 @@ class SendPreviewController {
 
   public function sendPreview(NewsletterEntity $newsletter, string $emailAddress) {
     $renderedNewsletter = $this->renderer->renderAsPreview($newsletter);
-    $divider = '***MailPoet***';
-    $dataForShortcodes = array_merge(
-      [$newsletter->getSubject()],
-      $renderedNewsletter
-    );
-
-    $body = implode($divider, $dataForShortcodes);
-
     $subscriber = $this->subscribersRepository->getCurrentWPUser();
     $this->shortcodes->setNewsletter($newsletter);
     if ($subscriber instanceof SubscriberEntity) {
       $this->shortcodes->setSubscriber($subscriber);
     }
     $this->shortcodes->setWpUserPreview(true);
+
+    $divider = '***MailPoet***';
+    $dataForShortcodes = array_merge(
+      [$this->shortcodes->replace($newsletter->getSubject(), $renderedNewsletter['html'], null, $isPlainText = true)],
+      $renderedNewsletter
+    );
+
+    $body = implode($divider, $dataForShortcodes);
 
     [
       $renderedNewsletter['subject'],
@@ -112,9 +112,9 @@ class SendPreviewController {
       }
 
       $this->personalizer->set_context($context);
-      $renderedNewsletter['subject'] = $this->personalizer->personalize_content($renderedNewsletter['subject']);
-      $renderedNewsletter['body']['html'] = $this->personalizer->personalize_content($renderedNewsletter['body']['html']);
-      $renderedNewsletter['body']['text'] = $this->personalizer->personalize_content($renderedNewsletter['body']['text']);
+      $renderedNewsletter['subject'] = $this->personalizer->personalize_content($renderedNewsletter['subject'], Personalizer::RENDERING_CONTEXT_TEXT);
+      $renderedNewsletter['body']['html'] = $this->personalizer->personalize_content($renderedNewsletter['body']['html'], Personalizer::RENDERING_CONTEXT_HTML);
+      $renderedNewsletter['body']['text'] = $this->personalizer->personalize_content($renderedNewsletter['body']['text'], Personalizer::RENDERING_CONTEXT_TEXT);
       $renderedNewsletter['body']['text'] = $this->personalizationTagLinkResolver->resolveMarkdownLinks($renderedNewsletter['body']['text'], $context);
     }
 

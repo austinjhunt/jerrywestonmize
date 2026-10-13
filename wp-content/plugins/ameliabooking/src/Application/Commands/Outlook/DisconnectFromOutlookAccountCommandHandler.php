@@ -7,10 +7,13 @@ use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\User\AbstractUser;
+use AmeliaBooking\Domain\Services\Logger\LoggerInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\Outlook\OutlookCalendarRepository;
+use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 use Interop\Container\Exception\ContainerException;
+use Throwable;
 
 /**
  * Class DisconnectFromOutlookAccountCommandHandler
@@ -42,6 +45,21 @@ class DisconnectFromOutlookAccountCommandHandler extends CommandHandler
 
         if ($accountId) {
             try {
+                /** @var AbstractOutlookCalendarService $outlookCalendarService */
+                $outlookCalendarService = $this->container->get('infrastructure.outlook.calendar.service');
+
+                try {
+                    $outlookCalendarService->removeTwoWaySyncForCalendarRow((int)$accountId);
+                } catch (Throwable $e) {
+                    $this->container->getLoggerService()->channel(LoggerInterface::CHANNEL_SYNC)->error(
+                        'OutlookCalendar: removeTwoWaySync before single disconnect',
+                        [
+                            'exception' => $e,
+                            'accountId' => $accountId,
+                        ]
+                    );
+                }
+
                 if ($outlookCalendarRepository->delete($accountId)) {
                     do_action('amelia_after_outlook_calendar_deleted', ['accountId' => $accountId], $command->getArg('id'));
 
@@ -78,6 +96,21 @@ class DisconnectFromOutlookAccountCommandHandler extends CommandHandler
         $providerId = $command->getArg('id');
 
         try {
+            /** @var AbstractOutlookCalendarService $outlookCalendarService */
+            $outlookCalendarService = $this->container->get('infrastructure.outlook.calendar.service');
+
+            try {
+                $outlookCalendarService->removeTwoWaySyncForProvider((int)$providerId);
+            } catch (Throwable $e) {
+                $this->container->getLoggerService()->channel(LoggerInterface::CHANNEL_SYNC)->error(
+                    'OutlookCalendar: removeTwoWaySync before provider disconnect',
+                    [
+                        'exception'  => $e,
+                        'providerId' => $providerId,
+                    ]
+                );
+            }
+
             $outlookCalendars = $outlookCalendarRepository->getByEntityId($providerId, 'userId');
 
             foreach ($outlookCalendars->getItems() as $outlookCalendar) {

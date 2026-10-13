@@ -33,26 +33,6 @@ msgid "# of bookings"
 msgstr "Varauksien määrä"
 
 #, php-format
-msgid "%1$s, %2$s, was canceled."
-msgstr "%1$s, %2$s, peruutettiin."
-
-#, php-format
-msgid "%1$s, %2$s, was rejected."
-msgstr "%1$s, %2$s, hylättiin."
-
-#, php-format
-msgid "%1$s booked %2$s at %3$s."
-msgstr "%1$s varasi %2$s (%3$s)."
-
-#, php-format
-msgid "%1$s on %2$s had a status change."
-msgstr "%1$s ajankohtana %2$s tila muuttui."
-
-#, php-format
-msgid "%1$s on %2$s was updated."
-msgstr "%1$s ajankohtana %2$s päivitettiin."
-
-#, php-format
 msgid "%event_name% Event Booked"
 msgstr "%event_name% Tapahtuma varattu"
 
@@ -460,8 +440,14 @@ msgstr "Toiminnot"
 msgid "Activate"
 msgstr "Aktivoi"
 
+msgid "Activate now"
+msgstr ""
+
 msgid "Activate with Envato"
 msgstr "Aktivoi Envatossa"
+
+msgid "Activate your license to unlock the features included in your plan."
+msgstr ""
 
 msgid "Activated with Envato"
 msgstr "Aktivoitu Envatossa"
@@ -875,6 +861,9 @@ msgstr "Maksettu"
 msgid "Already have an account?"
 msgstr "Oletko jo rekisteröitynyt?"
 
+msgid "Already purchased Amelia?"
+msgstr ""
+
 msgid "Also cancel and delete future events"
 msgstr "Peruuta ja poista myös tulevat tapahtumat"
 
@@ -924,7 +913,7 @@ msgid "Apple"
 msgstr ""
 
 msgid "Apple Calendar"
-msgstr "Google-kalenteri"
+msgstr "Apple-kalenteri"
 
 msgid "Apple Calendar (Personal)"
 msgstr "Apple-kalenteri (henkilökohtainen)"
@@ -933,7 +922,7 @@ msgid "Apple Calendar setup"
 msgstr "Apple-kalenterin asetukset"
 
 msgid "Apple calendar events"
-msgstr "Apple Calendarin tapahtumat"
+msgstr ""
 
 msgid "Application (client) ID"
 msgstr "Sovelluksen (asiakas) ID"
@@ -1077,9 +1066,6 @@ msgstr "Ajanvarauksen huomautukset"
 msgid "Appointment price"
 msgstr "Ajanvarauksen hinta"
 
-msgid "Appointment reminder"
-msgstr "Ajanvarausmuistutus"
-
 msgid "Appointment repeats"
 msgstr "Tapaamisten toistot"
 
@@ -1092,9 +1078,6 @@ msgstr "Tapaamisen alkamisaika"
 msgid "Appointment status"
 msgstr "Varauksen tila"
 
-msgid "Appointment status changed"
-msgstr "Ajanvarauksen tila muuttui"
-
 msgid "Appointment status has been changed to "
 msgstr "Ajanvarauksen tilaksi on muutettu "
 
@@ -1103,9 +1086,6 @@ msgstr "Tapaamisen tila on päivitetty."
 
 msgid "Appointment title"
 msgstr "Tapaamisen otsikko"
-
-msgid "Appointment updated"
-msgstr "Ajanvaraus päivitetty"
 
 msgid "Appointments"
 msgstr "Ajanvaraukset"
@@ -1145,6 +1125,10 @@ msgstr "Haluatko varmasti peruuttaa ja poistaa tämän tapahtuman?"
 
 msgid "Are you sure you want to cancel this appointment?"
 msgstr "Haluatko varmasti perua tämän ajanvarauksen?"
+
+msgid ""
+"Are you sure you want to cancel this booking? This action cannot be undone."
+msgstr ""
 
 msgid "Are you sure you want to cancel this event?"
 msgstr "Haluatko varmasti peruuttaa tämän tapahtuman?"
@@ -1330,16 +1314,16 @@ msgid "Attachment upload path"
 msgstr "Liitteiden latauspolku"
 
 msgid "Attendee"
-msgstr "Osallistuja peruutti tapahtuman"
+msgstr "Osallistuja"
 
 msgid "Attendee Asc"
-msgstr "Osallistuja Asc"
+msgstr "Osallistuja nouseva"
 
 msgid "Attendee Desc"
-msgstr "Osallistujan kuvaus"
+msgstr "Osallistuja laskeva"
 
 msgid "Attendee code"
-msgstr "Osallistujan koodi"
+msgstr "Osallistujakoodi"
 
 msgid "Attendee has been saved"
 msgstr "Osallistuja on tallennettu"
@@ -1354,7 +1338,7 @@ msgid "Attendees"
 msgstr "Osallistujat"
 
 msgid "Attendees Allowed"
-msgstr "Osallistujan koodi"
+msgstr "Sallitut osallistujat"
 
 msgid "Attendees Export Format"
 msgstr "Osallistujien vientimuoto"
@@ -1443,13 +1427,13 @@ msgid "Available date text"
 msgstr "Saatavilla oleva päivämääräteksti"
 
 msgid "Available from Pro license"
-msgstr "Käytettävissä olevat kuvat"
+msgstr "Saatavilla Pro-lisenssistä"
 
 msgid "Available from Standard license"
-msgstr "Käytettävissä olevat kuvat"
+msgstr "Saatavilla Standard-lisenssistä"
 
 msgid "Available from Starter license"
-msgstr "Käytettävissä olevat kuvat"
+msgstr "Saatavilla Starter-lisenssistä"
 
 msgid "Available in Elite licence"
 msgstr "Vapaana palvelupaketissa"
@@ -1681,10 +1665,10 @@ msgid "Booking Closes"
 msgstr "Varaaminen sulkeutuu"
 
 msgid "Booking Closes Asc"
-msgstr "Varaus sulkeutuu Asc"
+msgstr "Varaus sulkeutuu nouseva"
 
 msgid "Booking Closes Desc"
-msgstr "Varaus sulkeutuu Desc"
+msgstr "Varaus sulkeutuu laskeva"
 
 msgid "Booking Confirmed"
 msgstr "Varaus vahvistettu"
@@ -1711,10 +1695,10 @@ msgid "Booking Opens"
 msgstr "Varaaminen aukeaa"
 
 msgid "Booking Opens Asc"
-msgstr "Varaukset avataan Asc"
+msgstr "Varaukset avataan nouseva"
 
 msgid "Booking Opens Desc"
-msgstr "Varaukset avataan Desc"
+msgstr "Varaukset avataan laskeva"
 
 msgid "Booking Overview"
 msgstr "Ajanvarauksen Yleiskatsaus"
@@ -2270,6 +2254,9 @@ msgstr "Valitse milloin toistuvuus päättyy"
 msgid "Choose whether you want to manage services, events, or both."
 msgstr "Valitse, haluatko hallita palveluita, tapahtumia vai molempia."
 
+msgid "Choose which tab users see first when they log in"
+msgstr ""
+
 msgid "Choosing layout of first step in step by step form"
 msgstr "Ensimmäisen vaiheen asettelun valinta vaiheittaisessa lomakkeessa"
 
@@ -2455,6 +2442,9 @@ msgstr "Määritä ajanvarausjonotuslista"
 
 msgid "Confirm"
 msgstr "Vahvista"
+
+msgid "Confirm Cancellation"
+msgstr ""
 
 msgid "Confirm My Appointment"
 msgstr "Vahvista ajanvaraukseni"
@@ -2927,10 +2917,10 @@ msgid "Customer(s)"
 msgstr "Asiakkaat"
 
 msgid "Customer Asc"
-msgstr "Asiakas Asc"
+msgstr "Asiakas nouseva"
 
 msgid "Customer Desc"
-msgstr "Asiakkaan kuvaus"
+msgstr "Asiakas laskeva"
 
 msgid "Customer Panel"
 msgstr "Asiakaspaneeli"
@@ -3103,9 +3093,6 @@ msgstr "Muuttumattomat tiedot:"
 msgid "Data to be updated:"
 msgstr "Päivitettävät tiedot:"
 
-msgid "Data transfer"
-msgstr "Tietojen siirto"
-
 msgid "Date"
 msgstr "Päivämäärä"
 
@@ -3125,16 +3112,16 @@ msgid "Date Asc"
 msgstr "Päivämäärä nouseva"
 
 msgid "Date Desc"
-msgstr "Päivämäärä Kuvaus"
+msgstr "Päivämäärä laskeva"
 
 msgid "Date Picker"
 msgstr "Päivämäärävalitsin"
 
 msgid "Date Purchased Asc"
-msgstr "Ostopäivä Asc"
+msgstr "Ostopäivä nouseva"
 
 msgid "Date Purchased Desc"
-msgstr "Ostopäivä Kuvaus"
+msgstr "Ostopäivä laskeva"
 
 msgid ""
 "Date Ranges that are not defined will use default price from ticket category."
@@ -4106,10 +4093,10 @@ msgid "Deduction"
 msgstr "Vähennys"
 
 msgid "Deduction Asc"
-msgstr "Vähennys Asc"
+msgstr "Vähennys nouseva"
 
 msgid "Deduction Desc"
-msgstr "Vähennys Desc"
+msgstr "Vähennys laskeva"
 
 msgid "Default Label"
 msgstr "Oletusnimike"
@@ -4122,6 +4109,9 @@ msgstr "Oletusarvoinen tapaamisen tila"
 
 msgid "Default back end page"
 msgstr "Oletusarvoinen tausta-sivu"
+
+msgid "Default landing tab"
+msgstr ""
 
 msgid "Default language"
 msgstr "Oletuskieli"
@@ -4360,10 +4350,10 @@ msgid "Discount"
 msgstr "Alennus"
 
 msgid "Discount Asc"
-msgstr "Alennus Asc"
+msgstr "Alennus nouseva"
 
 msgid "Discount Desc"
-msgstr "Alennus Desc"
+msgstr "Alennus laskeva"
 
 msgid "Discount (%)"
 msgstr "Alennus (%)"
@@ -4543,10 +4533,10 @@ msgid "Duration:"
 msgstr "Kesto:"
 
 msgid "Duration Asc"
-msgstr "Kesto Asc"
+msgstr "Kesto nouseva"
 
 msgid "Duration Desc"
-msgstr "Kesto Desc"
+msgstr "Kesto laskeva"
 
 msgid "E-Ticket Scanner"
 msgstr "Lipun nimi"
@@ -4633,8 +4623,6 @@ msgid ""
 "Edit appointments/events when connected Google Calendar Events are "
 "rescheduled or deleted"
 msgstr ""
-"Päivitä ajanvaraukset/tapahtumat, kun linkitettyjä Google-kalenterin "
-"tapahtumia siirretään tai poistetaan"
 
 msgid "Edit block time"
 msgstr "Muokkaa varausestoa"
@@ -5302,7 +5290,7 @@ msgid "Event"
 msgstr "Tapahtuma"
 
 msgid "Event Asc"
-msgstr "Tapahtuma Asc"
+msgstr "Tapahtuma nouseva"
 
 msgid "Event Available"
 msgstr "Tavoitettavissa"
@@ -5341,7 +5329,7 @@ msgid "Event Day"
 msgstr "Tapahtuman päivämäärä"
 
 msgid "Event Desc"
-msgstr "Tapahtuman kuvaus"
+msgstr "Tapahtuma laskeva"
 
 msgid "Event Employee"
 msgstr "Tapahtuman Työntekijä"
@@ -5755,9 +5743,6 @@ msgstr "Epäonnistui"
 msgid "Failed to access camera. Please try again."
 msgstr "Kameran käyttö epäonnistui. Yritä uudelleen."
 
-msgid "Failed to initialize payment. Please try again."
-msgstr "Maksun käynnistäminen epäonnistui. Yritä uudelleen."
-
 msgid "Failed to load appointment details. Please try again later."
 msgstr "Tapaamisen tietojen lataaminen epäonnistui. Yritä myöhemmin uudelleen."
 
@@ -6134,7 +6119,7 @@ msgid "Google Meet setup"
 msgstr "Google Meet -asetukset"
 
 msgid "Google calendar events"
-msgstr "Google Calendar -tapahtumat"
+msgstr ""
 
 msgid "Google reCAPTCHA v2 secret key"
 msgstr "Google reCAPTCHA v2 salainen avain"
@@ -6889,10 +6874,10 @@ msgid "ID"
 msgstr ""
 
 msgid "ID Asc"
-msgstr ""
+msgstr "ID nouseva"
 
 msgid "ID Desc"
-msgstr "ID Kuvaus"
+msgstr "ID laskeva"
 
 msgid "I understand this import will replace all current data permanently."
 msgstr "Ymmärrän, että tämä tuonti korvaa lopullisesti kaikki nykyiset tiedot."
@@ -6919,13 +6904,6 @@ msgid ""
 msgstr ""
 "Jos tämä on poistettu käytöstä, varauksen on täytettävä "
 "vähimmäiskapasiteetti, ja aikaväli sulkeutuu ensimmäisen varauksen jälkeen."
-
-msgid ""
-"If disabled, the price will remain the same regardless of how many people "
-"are included in the group appointment."
-msgstr ""
-"Jos tämä on pois käytöstä, hinta pysyy samana riippumatta siitä, kuinka "
-"monta henkilöä ryhmävaraukseen sisältyy."
 
 msgid ""
 "If enabled, customers can book with Pending status even after maximum "
@@ -7068,6 +7046,9 @@ msgstr "Kuvien pikkukuvat"
 msgid "Import"
 msgstr "Tuo"
 
+msgid "Import/Export"
+msgstr ""
+
 msgid "Import Failed"
 msgstr "Tuonti epäonnistui"
 
@@ -7097,6 +7078,9 @@ msgstr "Tuonti epäonnistui"
 
 msgid "Import failed. Review the details below."
 msgstr "Tuonti epäonnistui. Tarkista alla olevat tiedot."
+
+msgid "Import or export your Amelia data."
+msgstr ""
 
 msgid "Import progress"
 msgstr "Tuonnin edistyminen"
@@ -7513,10 +7497,10 @@ msgid "Invoice Format"
 msgstr "Palvelun kesto"
 
 msgid "Invoice Number Asc"
-msgstr "Laskujen numerointi nousevassa järjestyksessä"
+msgstr "Laskujen numerointi nousevassa järjestyksessä nouseva"
 
 msgid "Invoice Number Desc"
-msgstr "Lasku numero Desc"
+msgstr "Laskujen numerointi nousevassa järjestyksessä laskeva"
 
 msgid "Invoice date"
 msgstr "Lasku päivämäärä"
@@ -7685,10 +7669,10 @@ msgid "Last"
 msgstr "Viimeinen"
 
 msgid "Last Booking Asc"
-msgstr "Viimeinen varaus Asc"
+msgstr "Viimeinen varaus nouseva"
 
 msgid "Last Booking Desc"
-msgstr "Viimeinen varaus Desc"
+msgstr "Viimeinen varaus laskeva"
 
 msgid "Last Name:"
 msgstr "Sukunimi:"
@@ -8062,10 +8046,10 @@ msgid "Max. Capacity"
 msgstr "Enimmäiskapasiteetti"
 
 msgid "Max Capacity Asc"
-msgstr "Enimmäiskapasiteetti Asc"
+msgstr "Enimmäiskapasiteetti nouseva"
 
 msgid "Max Capacity Desc"
-msgstr "Enimmäiskapasiteetti Desc"
+msgstr "Enimmäiskapasiteetti laskeva"
 
 msgid "Maximum"
 msgstr "Enimmäis"
@@ -8282,13 +8266,13 @@ msgid "Name:"
 msgstr "Nimi:"
 
 msgid "Name Asc"
-msgstr "Nimi Asc"
+msgstr "Nimi nouseva"
 
 msgid "Name Ascending"
 msgstr "Nimi nouseva"
 
 msgid "Name Desc"
-msgstr "Nimi Kuvaus"
+msgstr "Nimi laskeva"
 
 msgid "Name Descending"
 msgstr "Nimi laskeva"
@@ -8405,10 +8389,10 @@ msgid "No, just this one"
 msgstr "Ei, vain tämä"
 
 msgid "No-show"
-msgstr ""
+msgstr "Ei saapunut"
 
 msgid "No-show tag"
-msgstr "No-show-tunniste"
+msgstr "Ei saapunut -tunniste"
 
 msgid "No Employees Assigned to This Location"
 msgstr "Tähän sijaintiin ei ole osoitettu työntekijöitä"
@@ -8417,16 +8401,16 @@ msgid "No Packages"
 msgstr "Ei paketteja"
 
 msgid "No Show"
-msgstr "Ei näy"
+msgstr "Ei saapunut"
 
 msgid "No Show (1)"
-msgstr "Ei näy (1)"
+msgstr "Ei saapunut (1)"
 
 msgid "No Show (2)"
-msgstr "Ei näy (2)"
+msgstr "Ei saapunut (2)"
 
 msgid "No Show (3+)"
-msgstr "Ei näy (3+)"
+msgstr "Ei saapunut (3+)"
 
 msgid "No Tags. Create a new one."
 msgstr "Ei tunnisteita. Luo uusia tunnisteita."
@@ -8632,7 +8616,7 @@ msgid "Notify selected employees about empty package purchases"
 msgstr "Ilmoita valituille työntekijöille tyhjien pakkausten ostamisesta"
 
 msgid "Notify the attendee(s)"
-msgstr "Ilmoita asiakkaille"
+msgstr "Ilmoita osallistujille"
 
 msgid "Notify the attendees"
 msgstr "Ilmoita osallistujille"
@@ -8972,7 +8956,7 @@ msgid "Outlook Calendar setup"
 msgstr "Outlook-kalenterin asetukset"
 
 msgid "Outlook Mailer"
-msgstr "Outlook-kalenteri"
+msgstr "Outlook-sähköpostipalvelu"
 
 msgid ""
 "Outlook Mailer is not fully configured. Please complete the account setup in "
@@ -8982,7 +8966,7 @@ msgstr ""
 "määrittäminen Outlook-integraatioasetuksissa."
 
 msgid "Outlook calendar events"
-msgstr "Outlook-kalenteritapahtumat"
+msgstr ""
 
 msgid "Outside of working hours"
 msgstr "Työaikojen ulkopuolella"
@@ -9021,13 +9005,13 @@ msgid "Package %package_name% purchased"
 msgstr "Palvelupaketti %package_name% ostettu"
 
 msgid "Package Asc"
-msgstr "Paketti Asc"
+msgstr "Paketti nouseva"
 
 msgid "Package Canceled"
 msgstr "Palvelupaketti Peruttu"
 
 msgid "Package Desc"
-msgstr "Paketin kuvaus"
+msgstr "Paketti laskeva"
 
 msgid "Package ID"
 msgstr "Paketin tunnus"
@@ -9987,7 +9971,7 @@ msgid "Price Ascending"
 msgstr "Hinta nousevasti"
 
 msgid "Price Desc"
-msgstr "Hinta Kuvaus"
+msgstr "Hinta laskeva"
 
 msgid "Price Descending"
 msgstr "Hinta laskevasti"
@@ -10106,6 +10090,11 @@ msgstr "Tilaus on peruttu"
 msgid "Purchased"
 msgstr "Tilattu"
 
+msgid ""
+"Purchasing doesn't upgrade this plugin automatically. Follow our step-by-"
+"step guide to switch to the full version."
+msgstr ""
+
 msgid "Purple"
 msgstr "Violetti"
 
@@ -10119,10 +10108,10 @@ msgid "Quantity"
 msgstr "Enimmäismäärä"
 
 msgid "Quantity Asc"
-msgstr "Määrä Asc"
+msgstr "Määrä nouseva"
 
 msgid "Quantity Desc"
-msgstr "Määrä Kuvaus"
+msgstr "Määrä laskeva"
 
 msgid "Quantity is shared"
 msgstr "Määrä on jaettu"
@@ -10275,7 +10264,7 @@ msgid "Redirect URL for unsuccessfully rejected booking"
 msgstr "Uudelleenohjaus-URL epäonnistuneelle hylätylle varaukselle"
 
 msgid "Redirect URLs"
-msgstr "Uudelleenohjauksen URI"
+msgstr "Uudelleenohjauksen URL-osoitteet"
 
 msgid "Redirect page"
 msgstr "Uudelleenohjaus sivu"
@@ -10313,10 +10302,6 @@ msgstr "Loppusumma maksetaan paikan päällä."
 
 msgid "Remind me when my SMS balance is low"
 msgstr "Muistuta minua, kun tekstiviestien saldo on vähissä"
-
-#, php-format
-msgid "Reminder: %1$s is scheduled for %2$s."
-msgstr "Reminder: %1$s on varattu ajalle %2$s."
 
 msgid "Remove Apple Calendar event slots"
 msgstr "Poista Apple Calendarin tapahtuma-aikavälit"
@@ -10532,7 +10517,7 @@ msgid "Sandbox secret key (POSKey)"
 msgstr "Sandbox-salainen avain (POSKey)"
 
 msgid "Sat"
-msgstr ""
+msgstr "La"
 
 msgid "Saturday"
 msgstr "Lauantai"
@@ -10716,6 +10701,9 @@ msgstr "Osio"
 
 msgid "Securely process payments using Stripe."
 msgstr "Käsittele maksut turvallisesti Stripe-palvelun avulla."
+
+msgid "See upgrade guide."
+msgstr ""
 
 msgid "Segment"
 msgstr "Segmentti"
@@ -11049,7 +11037,7 @@ msgid "Service/Event"
 msgstr "Palvelu/Tapahtuma"
 
 msgid "Service Asc"
-msgstr "Palvelu Asc"
+msgstr "Palvelu nouseva"
 
 msgid "Service Categories"
 msgstr "Palveluluokat"
@@ -11058,7 +11046,7 @@ msgid "Service Category"
 msgstr "Palvelun kategoria"
 
 msgid "Service Desc"
-msgstr "Palvelun kuvaus"
+msgstr "Palvelu laskeva"
 
 msgid "Service ID"
 msgstr "Palvelun tunnus"
@@ -11157,10 +11145,10 @@ msgid "Services & categories setup"
 msgstr "Palvelut ja kategoriat -asetukset"
 
 msgid "Services Asc"
-msgstr "Palvelut Asc"
+msgstr "Palvelut nouseva"
 
 msgid "Services Desc"
-msgstr "Palvelujen kuvaus"
+msgstr "Palvelut laskeva"
 
 msgid "Services and packages overview"
 msgstr "Palveluiden ja pakettien yleiskatsaus"
@@ -11535,7 +11523,7 @@ msgid "Show specific service"
 msgstr "Näytä tietty palvelu"
 
 msgid "Show specific services"
-msgstr "Näytä tietty palvelu"
+msgstr "Näytä tietyt palvelut"
 
 msgid "Show tag"
 msgstr "Näytä tunniste"
@@ -11588,6 +11576,9 @@ msgstr "Kirjaudu sisään Microsoftilla"
 
 msgid "Sign in with Outlook"
 msgstr "Kirjaudu Outlook-tilillä"
+
+msgid "Sign out and use a customer account"
+msgstr ""
 
 msgid "Sign out from Google"
 msgstr "Kirjaudu ulos Google-tilistä"
@@ -11789,10 +11780,10 @@ msgid "Status"
 msgstr "Tila"
 
 msgid "Status Asc"
-msgstr "Tila Asc"
+msgstr "Tila nouseva"
 
 msgid "Status Desc"
-msgstr "Tila Desc"
+msgstr "Tila laskeva"
 
 msgid ""
 "Stay compliant with ease through consistent, reliable tax handling across "
@@ -11968,7 +11959,7 @@ msgid "Summary segment"
 msgstr "Yhteenveto-segmentti"
 
 msgid "Sun"
-msgstr ""
+msgstr "Su"
 
 msgid "Sunday"
 msgstr "Sunnuntai"
@@ -11996,7 +11987,7 @@ msgid "Switch Camera"
 msgstr "Vaihda kamera"
 
 msgid "Sync Google Events"
-msgstr "Synkronoi Googlen tapahtumat"
+msgstr ""
 
 msgid "Sync with"
 msgstr "Synkronoi"
@@ -12514,6 +12505,12 @@ msgstr ""
 "Tämä ilmoitus vaatii cron-tehtävän. Lisää alla oleva rivi cron-määritykseesi."
 
 msgid ""
+"This option applies only to people added through \"Bringing anyone with "
+"you\". If disabled, the service price is charged once for the entire "
+"booking, regardless of how many additional people are included."
+msgstr ""
+
+msgid ""
 "This option requires adding the payment link placeholder to your message "
 "templates."
 msgstr ""
@@ -12613,7 +12610,7 @@ msgstr ""
 "globaalia päivämääräaluetta."
 
 msgid "Thu"
-msgstr "Torstai"
+msgstr "To"
 
 msgid "Thursday"
 msgstr "Torstai"
@@ -12676,10 +12673,10 @@ msgid "Time Range:"
 msgstr "Aikaväli:"
 
 msgid "Time Used Asc"
-msgstr "Käytetty aika Asc"
+msgstr "Käytetty aika nouseva"
 
 msgid "Time Used Desc"
-msgstr "Käytetty aika Desc"
+msgstr "Käytetty aika laskeva"
 
 msgid "Time frame"
 msgstr "Aikaväli:"
@@ -12714,7 +12711,7 @@ msgid "Time zones"
 msgstr "Aikavyöhykkeet"
 
 msgid "Times"
-msgstr ""
+msgstr "Ajat"
 
 msgid "Times bought"
 msgstr "Kertaa ostettu"
@@ -12932,10 +12929,10 @@ msgid "Type"
 msgstr "Tyyppi"
 
 msgid "Type Asc"
-msgstr "Tyyppi Asc"
+msgstr "Tyyppi nouseva"
 
 msgid "Type Desc"
-msgstr "Tyyppi Kuvaus"
+msgstr "Tyyppi laskeva"
 
 msgid "URL"
 msgstr ""
@@ -13125,10 +13122,7 @@ msgid "Verification expired. Please try again."
 msgstr "Vahvistus on päättynyt. Yritä uudelleen."
 
 msgid "Version "
-msgstr ""
-"Valitse lomake, jota haluat muokata. Vaiheittainen 2.0 -lomake on uusi ja "
-"parannettu versio, joka tarjoaa paremman suunnittelun ja käyttökokemuksen "
-"sekä paremman nopeuden."
+msgstr "Versio "
 
 msgid "Video tutorials"
 msgstr "Video-oppaat"
@@ -13710,6 +13704,11 @@ msgstr "Salasanan palautus onnistui"
 msgid "Your password has been reset successfully."
 msgstr "Salasanasi on nollattu onnistuneesti."
 
+msgid ""
+"Your payment is still processing. You will receive a confirmation as soon as "
+"it is completed."
+msgstr ""
+
 msgid "Your postal code is incomplete"
 msgstr "Postinumero on virheellinen"
 
@@ -13783,7 +13782,7 @@ msgid "at"
 msgstr "joka"
 
 msgid "at {time}"
-msgstr ""
+msgstr "klo {time}"
 
 msgid "book appointments before the deal expires!"
 msgstr "Sinulla on varauksia tähän palveluun"

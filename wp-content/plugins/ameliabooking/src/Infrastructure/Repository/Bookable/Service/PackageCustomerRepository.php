@@ -409,6 +409,20 @@ class PackageCustomerRepository extends AbstractRepository
             $params[':couponId']    = (int)$criteria['couponId'];
         }
 
+        if (!empty($criteria['ids'])) {
+            $queryPackageCustomers = [];
+
+            foreach ($criteria['ids'] as $index => $value) {
+                $param = ':packageCustomer' . $index;
+
+                $queryPackageCustomers[] = $param;
+
+                $params[$param] = $value;
+            }
+
+            $where[] = '(pc.id IN (' . implode(', ', $queryPackageCustomers) . '))';
+        }
+
         $limit = $this->getLimit(
             !empty($criteria['page']) ? (int)$criteria['page'] : 0,
             !empty($itemsPerPage) ? (int)$itemsPerPage : 0
@@ -577,7 +591,8 @@ class PackageCustomerRepository extends AbstractRepository
             pc.tax AS package_customer_tax,
             pc.couponId AS package_customer_couponId,
             pc.token AS package_customer_token,
-            
+            pc.ivyEntryId AS package_customer_ivyEntryId,
+
             pcs.id AS package_customer_service_id,
             pcs.bookingsCount AS package_customer_service_bookingsCount,
             

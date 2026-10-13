@@ -35,6 +35,15 @@ class CacheRepository extends AbstractRepository
     public const FACTORY = CacheFactory::class;
 
     /**
+     * How long a paid-finalization claim is trusted before it is treated as abandoned.
+     *
+     * Long enough to outlast a slow booking (notifications, calendar sync, invoices) and
+     * short enough that a customer whose finalization died is booked by the next webhook
+     * delivery rather than left paid and unbooked.
+     */
+    public const PAID_CLAIM_STALE_SECONDS = 300;
+
+    /**
      * @param Cache $entity
      *
      * @return int
@@ -178,6 +187,8 @@ class CacheRepository extends AbstractRepository
     /**
      * Atomically claim an unpaid cache row for paid finalization.
      * Returns true only when this caller transitions the row away from unpaid.
+     * "captureFailed" counts as unpaid: the booking was stored but the authorized funds were never
+     * captured, so a later retry that does capture them has to be able to claim the row.
      *
      * @param int $id
      *
@@ -186,39 +197,15 @@ class CacheRepository extends AbstractRepository
      */
     public function claimPendingAsPaid($id)
     {
-        try {
-            $statement = $this->connection->prepare(
-                "UPDATE {$this->table}
-                SET `data` = JSON_SET(
-                    CASE
-                        WHEN JSON_VALID(`data`) THEN `data`
-                        ELSE '{}'
-                    END,
-                    '$.status',
-                    'paid'
-                )
-                WHERE id = :id
-                  AND (
-                    NOT JSON_VALID(`data`)
-                    OR JSON_EXTRACT(`data`, '$.status') IS NULL
-                    OR JSON_UNQUOTE(JSON_EXTRACT(`data`, '$.status')) IN ('', 'null', 'pending')
-                  )"
-            );
-
-            $statement->execute(
-                [
-                    ':id' => $id,
-                ]
-            );
-
-            return $statement->rowCount() > 0;
-        } catch (\Exception $e) {
-            throw new QueryExecutionException(
-                'Unable to claim unpaid cache in ' . __CLASS__ . '. ' . $e->getMessage(),
-                $e->getCode(),
-                $e
-            );
-        }
+        // 'captureFailed' is claimable too (AMR-2555): an authorization whose capture failed is
+        // still an unpaid row that a later delivery must be able to take over. The claim goes
+        // through claimAsPaid() so it is stamped with the time it was taken, which is what lets
+        // an abandoned finalization be told apart from one that is still running (AMR-2304).
+        return $this->claimAsPaid(
+            $id,
+            "JSON_UNQUOTE(JSON_EXTRACT(`data`, '$.status')) IN ('', 'null', 'pending', 'captureFailed')",
+            'Unable to claim unpaid cache in '
+        );
     }
 
     /**
@@ -261,5 +248,165 @@ class CacheRepository extends AbstractRepository
         }
 
         return $caches;
+    }
+
+    /**
+     * @param string $paymentIntentId
+     *
+     * @return Cache|null
+     * @throws QueryExecutionException
+     */
+    public function getByStripePaymentIntentId($paymentIntentId): ?Cache
+    {
+        try {
+            $statement = $this->connection->prepare(
+                $this->selectQuery() . " WHERE JSON_VALID(`data`)
+                AND JSON_UNQUOTE(JSON_EXTRACT(`data`, '$.stripePaymentIntentId')) = :paymentIntentId
+                ORDER BY id DESC
+                LIMIT 1"
+            );
+
+            $statement->execute(
+                [
+                    ':paymentIntentId' => $paymentIntentId,
+                ]
+            );
+
+            $row = $statement->fetch();
+        } catch (\Exception $e) {
+            throw new QueryExecutionException(
+                'Unable to find cache by Stripe PaymentIntent id in ' . __CLASS__ . '. ' . $e->getMessage(),
+                $e->getCode(),
+                $e
+            );
+        }
+
+        if (!$row) {
+            return null;
+        }
+
+        return call_user_func([static::FACTORY, 'create'], $row);
+    }
+
+    /**
+     * Atomically claim a cache row for paid finalization unless it is already paid.
+     * Allows failed/canceled rows so a succeeded PaymentIntent can still be booked.
+     *
+     * A claim that never produced a response is taken over once it is older than
+     * $staleAfterSeconds: the holder was killed mid-finalization (PHP timeout, OOM), and
+     * without a takeover the row would keep reading as "paid" while no booking exists -
+     * the money is captured and nothing ever retries.
+     *
+     * Only a claim this class stamped is taken over, which is what isPaidClaimAbandoned()
+     * reports on: a paid row with no stamp predates the stamp or was written by another flow,
+     * and re-running finalization on one of those could book a second time.
+     *
+     * @param int $id
+     * @param int $staleAfterSeconds
+     *
+     * @return bool
+     * @throws QueryExecutionException
+     */
+    public function claimForPaidFinalization($id, $staleAfterSeconds = self::PAID_CLAIM_STALE_SECONDS): bool
+    {
+        return $this->claimAsPaid(
+            $id,
+            "JSON_UNQUOTE(JSON_EXTRACT(`data`, '$.status')) <> 'paid'
+                    OR (
+                        JSON_EXTRACT(`data`, '$.response') IS NULL
+                        AND JSON_EXTRACT(`data`, '$.paidClaimedAt') IS NOT NULL
+                        AND CAST(
+                            JSON_UNQUOTE(JSON_EXTRACT(`data`, '$.paidClaimedAt')) AS UNSIGNED
+                        ) < :staleBefore
+                    )",
+            'Unable to claim cache for paid finalization in ',
+            [':staleBefore' => time() - max((int)$staleAfterSeconds, 0)]
+        );
+    }
+
+    /**
+     * Whether a row that reads as paid was left that way by a caller that died before it
+     * produced a booking.
+     *
+     * Only a claim this class stamped counts: a paid row with no stamp predates the stamp or
+     * was written by another flow, and re-running finalization on one of those could book a
+     * second time for a payment that was already booked.
+     *
+     * @param array $cacheData
+     * @param int   $staleAfterSeconds
+     *
+     * @return bool
+     */
+    public static function isPaidClaimAbandoned(
+        array $cacheData,
+        $staleAfterSeconds = self::PAID_CLAIM_STALE_SECONDS
+    ): bool {
+        if (!empty($cacheData['response'])) {
+            return false;
+        }
+
+        if (empty($cacheData['paidClaimedAt'])) {
+            return false;
+        }
+
+        return (time() - (int)$cacheData['paidClaimedAt']) >= max((int)$staleAfterSeconds, 0);
+    }
+
+    /**
+     * Atomically flips a cache row's status to "paid" when it still matches the given
+     * status predicate. Returns true only for the caller that performed the transition.
+     *
+     * The claim is stamped with the time it was taken, so a claim whose holder died can be
+     * told apart from one that is still running - see claimForPaidFinalization().
+     *
+     * @param int    $id
+     * @param string $statusPredicate SQL predicate the current status must satisfy
+     * @param string $errorMessage
+     * @param array  $extraParams     Additional bindings the predicate refers to
+     *
+     * @return bool
+     * @throws QueryExecutionException
+     */
+    private function claimAsPaid($id, $statusPredicate, $errorMessage, array $extraParams = []): bool
+    {
+        try {
+            $statement = $this->connection->prepare(
+                "UPDATE {$this->table}
+                SET `data` = JSON_SET(
+                    CASE
+                        WHEN JSON_VALID(`data`) THEN `data`
+                        ELSE '{}'
+                    END,
+                    '$.status',
+                    'paid',
+                    '$.paidClaimedAt',
+                    :claimedAt
+                )
+                WHERE id = :id
+                  AND (
+                    NOT JSON_VALID(`data`)
+                    OR JSON_EXTRACT(`data`, '$.status') IS NULL
+                    OR {$statusPredicate}
+                  )"
+            );
+
+            $statement->execute(
+                array_merge(
+                    [
+                        ':id'        => $id,
+                        ':claimedAt' => time(),
+                    ],
+                    $extraParams
+                )
+            );
+
+            return $statement->rowCount() > 0;
+        } catch (\Exception $e) {
+            throw new QueryExecutionException(
+                $errorMessage . __CLASS__ . '. ' . $e->getMessage(),
+                $e->getCode(),
+                $e
+            );
+        }
     }
 }

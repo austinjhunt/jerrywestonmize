@@ -5,6 +5,8 @@ namespace MailPoet\Util\Notices;
 if (!defined('ABSPATH')) exit;
 
 
+use MailPoet\Captcha\CaptchaDisabledNotice;
+use MailPoet\Config\AccessControl;
 use MailPoet\Config\Menu;
 use MailPoet\Config\ServicesChecker;
 use MailPoet\Cron\CronHelper;
@@ -16,6 +18,7 @@ use MailPoet\Settings\TrackingConfig;
 use MailPoet\Subscribers\SubscribersRepository;
 use MailPoet\Util\License\Features\Subscribers as SubscribersFeature;
 use MailPoet\WP\Functions as WPFunctions;
+use MailPoet\WP\Notice;
 use MailPoetVendor\Doctrine\ORM\EntityManager;
 
 class PermanentNotices {
@@ -83,6 +86,9 @@ class PermanentNotices {
   /** @var StuckPostNotificationNotice */
   private $stuckPostNotificationNotice;
 
+  /** @var CaptchaDisabledNotice */
+  private $captchaDisabledNotice;
+
   public function __construct(
     WPFunctions $wp,
     CronHelper $cronHelper,
@@ -95,10 +101,11 @@ class PermanentNotices {
     MailerFactory $mailerFactory,
     SenderDomainAuthenticationNotices $senderDomainAuthenticationNotices,
     AuthorizedSenderDomainController $senderDomainController,
-    NewslettersRepository $newslettersRepository
+    NewslettersRepository $newslettersRepository,
+    CaptchaDisabledNotice $captchaDisabledNotice
   ) {
     $this->wp = $wp;
-    $this->phpVersionWarnings = new PHPVersionWarnings();
+    $this->phpVersionWarnings = new PHPVersionWarnings($wp);
     $this->afterMigrationNotice = new AfterMigrationNotice();
     $this->unauthorizedEmailsNotice = new UnauthorizedEmailNotice($wp, $settings, $senderDomainController);
     $this->unauthorizedEmailsInNewslettersNotice = new UnauthorizedEmailInNewslettersNotice($settings, $wp, $senderDomainController);
@@ -118,6 +125,7 @@ class PermanentNotices {
     $this->sendingQueueBodyCleanupNotice = new SendingQueueBodyCleanupNotice($settings, $wp);
     $this->stuckPostNotificationNotice = new StuckPostNotificationNotice($wp, $newslettersRepository);
     $this->senderDomainAuthenticationNotices = $senderDomainAuthenticationNotices;
+    $this->captchaDisabledNotice = $captchaDisabledNotice;
   }
 
   public function init() {
@@ -189,6 +197,9 @@ class PermanentNotices {
     $this->stuckPostNotificationNotice->init(
       Menu::isOnMailPoetAdminPage($excludeSetupWizard)
     );
+    $this->captchaDisabledNotice->init(
+      Menu::isOnMailPoetAdminPage($excludeSetupWizard)
+    );
     $excludeDomainAuthenticationNotices = [
       'mailpoet-settings',
       'mailpoet-newsletter-editor',
@@ -200,8 +211,27 @@ class PermanentNotices {
   }
 
   public function ajaxDismissNoticeHandler() {
-    if (!isset($_POST['type'])) return;
-    switch ($_POST['type']) {
+    if (!$this->wp->currentUserCan(AccessControl::PERMISSION_ACCESS_PLUGIN_ADMIN)) {
+      $this->wp->wpDie(
+        esc_html__('You do not have permission to perform this action.', 'mailpoet'),
+        esc_html__('Unauthorized', 'mailpoet'),
+        ['response' => 403]
+      );
+      return;
+    }
+
+    $nonce = isset($_POST['nonce']) && is_string($_POST['nonce']) ? sanitize_text_field(wp_unslash($_POST['nonce'])) : '';
+    if (!$this->wp->wpVerifyNonce($nonce, Notice::DISMISS_NONCE_ACTION)) {
+      $this->wp->wpDie(
+        esc_html__('Security check failed.', 'mailpoet'),
+        esc_html__('Error', 'mailpoet'),
+        ['response' => 403]
+      );
+      return;
+    }
+
+    if (!isset($_POST['type']) || !is_string($_POST['type'])) return;
+    switch (sanitize_text_field(wp_unslash($_POST['type']))) {
       case (PHPVersionWarnings::OPTION_NAME):
         $this->phpVersionWarnings->disable();
         break;
@@ -243,6 +273,9 @@ class PermanentNotices {
         break;
       case (StuckPostNotificationNotice::OPTION_NAME):
         $this->stuckPostNotificationNotice->disable();
+        break;
+      case (CaptchaDisabledNotice::OPTION_NAME):
+        $this->captchaDisabledNotice->disable();
         break;
     }
   }

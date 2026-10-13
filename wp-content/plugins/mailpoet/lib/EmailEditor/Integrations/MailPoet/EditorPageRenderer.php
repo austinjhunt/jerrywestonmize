@@ -10,6 +10,7 @@ use Automattic\WooCommerce\EmailEditor\Engine\Settings_Controller;
 use Automattic\WooCommerce\EmailEditor\Engine\Theme_Controller;
 use Automattic\WooCommerce\EmailEditor\Engine\User_Theme;
 use MailPoet\Analytics\Analytics;
+use MailPoet\Config\AccessControl;
 use MailPoet\Config\Env;
 use MailPoet\Config\Installer;
 use MailPoet\Config\ServicesChecker;
@@ -136,7 +137,7 @@ class EditorPageRenderer {
     $this->wp->wpEnqueueStyle(
       'email_editor_integration',
       Env::$assetsUrl . '/dist/js/email_editor_integration/email_editor_integration.css',
-      [],
+      ['wp-components'],
       $editorIntegrationAssetsParams['version']
     );
 
@@ -210,7 +211,6 @@ class EditorPageRenderer {
     $inline_script_data = [
       'mailpoet_premium_plugin_installed' => Installer::isPluginInstalled(Installer::PREMIUM_PLUGIN_SLUG),
       'mailpoet_premium_active' => $this->servicesChecker->isPremiumPluginActive(),
-      'mailpoet_premium_plugin_download_url' => $this->subscribersFeature->hasValidPremiumKey() ? $installer->generatePluginDownloadUrl() : null,
       'mailpoet_premium_plugin_activation_url' => $installer->generatePluginActivationUrl(Installer::PREMIUM_PLUGIN_PATH),
       'mailpoet_has_valid_api_key' => $this->subscribersFeature->hasValidApiKey(),
       'mailpoet_has_valid_premium_key' => $this->subscribersFeature->hasValidPremiumKey(),
@@ -248,7 +248,8 @@ class EditorPageRenderer {
       'mailpoet_automation_id' => $automationId,
       'mailpoet_feature_flags' => $this->featuresController->getAllFlags(),
       'mailpoet_capabilities' => $this->capabilitiesManager->getCapabilities(),
-      'mailpoet_ai_text_generation_available' => function_exists('wp_ai_client_prompt')
+      'mailpoet_ai_text_generation_available' => $this->wp->currentUserCan(AccessControl::PERMISSION_MANAGE_EMAILS)
+        && function_exists('wp_ai_client_prompt')
         && wp_ai_client_prompt('test')->is_supported_for_text_generation(),
     ];
     if ($this->bridge->isMailpoetSendingServiceEnabled()) {

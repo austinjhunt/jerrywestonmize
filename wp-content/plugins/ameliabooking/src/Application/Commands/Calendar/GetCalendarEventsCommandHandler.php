@@ -12,6 +12,7 @@ use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Booking\EventApplicationService;
 use AmeliaBooking\Application\Services\Calendar\CalendarProviderService;
+use AmeliaBooking\Application\Services\Calendar\CalendarExternalIntegrationEventsService;
 use AmeliaBooking\Application\Services\User\ProviderApplicationService;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
@@ -28,6 +29,7 @@ use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepos
 use AmeliaBooking\Infrastructure\WP\Translations\BackendStrings;
 use AmeliaVendor\Psr\Container\ContainerExceptionInterface;
 use DateInvalidTimeZoneException;
+use DateTimeInterface;
 use DateTimeZone;
 
 class GetCalendarEventsCommandHandler extends CommandHandler
@@ -84,12 +86,16 @@ class GetCalendarEventsCommandHandler extends CommandHandler
             $this->getBlockTimes($queryParams, $timeZone, $currentUserType)
         );
 
+        /** @var CalendarExternalIntegrationEventsService $externalCalendarService */
+        $externalCalendarService = new CalendarExternalIntegrationEventsService($this->container);
+
+        $sortedItems = array_merge(
+            $sortedItems,
+            $externalCalendarService->collect($queryParams, $timeZone, $currentUser)
+        );
+
         usort($sortedItems, function ($a, $b) {
-            $startA = $a instanceof Appointment ? $a->getBookingStart()->getValue()
-                : ($a instanceof BlockTime ? $a->getStartDate()->getValue() : $a['eventPeriod']->getPeriodStart()->getValue());
-            $startB = $b instanceof Appointment ? $b->getBookingStart()->getValue()
-                : ($b instanceof BlockTime ? $b->getStartDate()->getValue() : $b['eventPeriod']->getPeriodStart()->getValue());
-            return $startA <=> $startB;
+            return $this->getExternalCalendarEventStart($a) <=> $this->getExternalCalendarEventStart($b);
         });
 
         $maxNumberOfEvents = $queryParams['view'] === 'dayGridMonth' ? 4
@@ -101,9 +107,13 @@ class GetCalendarEventsCommandHandler extends CommandHandler
             $isAppointment = $item instanceof Appointment;
             $isBlockTime = $item instanceof BlockTime;
 
+            $isExternalCalendarRow = is_array($item) && isset($item['type']) && is_string($item['type'])
+                && strpos($item['type'], 'external') === 0;
+
             $itemStartDate = $isAppointment ? $item->getBookingStart()->getValue()->format('Y-m-d')
                 : ($isBlockTime ? $item->getStartDate()->getValue()->format('Y-m-d')
-                    : $item['eventPeriod']->getPeriodStart()->getValue()->format('Y-m-d'));
+                    : ($isExternalCalendarRow ? substr((string)$item['startWithoutBuffer'], 0, 10)
+                        : $item['eventPeriod']->getPeriodStart()->getValue()->format('Y-m-d')));
 
             if (!isset($filledDays[$itemStartDate])) {
                 $filledDays[$itemStartDate] = ['events' => [], 'count' => 0, 'more' => 0];
@@ -124,6 +134,8 @@ class GetCalendarEventsCommandHandler extends CommandHandler
                     $queryParams,
                     $resourceTimeGridProviderIds
                 );
+            } elseif ($isExternalCalendarRow) {
+                $filledDays[$itemStartDate]['events'][] = $this->externalCalendarIntegrationFormatter($item, $queryParams);
             } else {
                 $filledDays[$itemStartDate]['events'][] = $this->eventFormatter($item['event'], $item['eventPeriod'], $queryParams);
             }
@@ -147,6 +159,10 @@ class GetCalendarEventsCommandHandler extends CommandHandler
     private function processEventDates(array &$filledDays, $item, string $counterKey): void
     {
         if ($item instanceof Appointment) {
+            return;
+        }
+
+        if (is_array($item) && isset($item['type']) && is_string($item['type']) && strpos($item['type'], 'external') === 0) {
             return;
         }
 
@@ -281,6 +297,54 @@ class GetCalendarEventsCommandHandler extends CommandHandler
         }
 
         return $blockTimes->getItems();
+    }
+
+    /**
+     * @param array $row
+     * @param array $queryParams
+     *
+     * @return array<string, mixed>
+     */
+    private function externalCalendarIntegrationFormatter(array $row, array $queryParams): array
+    {
+        $periodStartDate = DateTimeService::getCustomDateTimeObject($row['startWithoutBuffer']);
+        $periodEndDate   = DateTimeService::getCustomDateTimeObject($row['endWithoutBuffer']);
+
+        $event = $row;
+        $event['startWithoutBuffer'] = $periodStartDate->format('Y-m-d H:i:s');
+        $event['endWithoutBuffer'] = $periodEndDate->format('Y-m-d H:i:s');
+
+        if (in_array($queryParams['view'], ['dayGridMonthSevenDays', 'dayGridMonth', 'dayGridMonthMobile'], true)) {
+            $event['start'] = $periodStartDate->format('Y-m-d');
+            $event['end']   = (clone $periodEndDate)->modify('+1 day')->format('Y-m-d');
+        } else {
+            $event['start'] = $periodStartDate->format('Y-m-d H:i:s');
+            $event['end']   = $periodEndDate->format('Y-m-d H:i:s');
+        }
+
+        return $event;
+    }
+
+    /**
+     * @param array|Appointment|BlockTime $item
+     *
+     * @return DateTimeInterface
+     */
+    private function getExternalCalendarEventStart($item): DateTimeInterface
+    {
+        if ($item instanceof Appointment) {
+            return $item->getBookingStart()->getValue();
+        }
+
+        if ($item instanceof BlockTime) {
+            return $item->getStartDate()->getValue();
+        }
+
+        if (is_array($item) && isset($item['type']) && is_string($item['type']) && strpos($item['type'], 'external') === 0) {
+            return DateTimeService::getCustomDateTimeObject($item['startWithoutBuffer']);
+        }
+
+        return $item['eventPeriod']->getPeriodStart()->getValue();
     }
 
     private function appointmentFormatter(Appointment $appointment, AbstractUser $currentUser, array $queryParams): array

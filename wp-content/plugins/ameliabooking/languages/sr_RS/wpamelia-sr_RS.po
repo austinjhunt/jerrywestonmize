@@ -34,26 +34,6 @@ msgid "# of bookings"
 msgstr "Број резервација"
 
 #, php-format
-msgid "%1$s, %2$s, was canceled."
-msgstr "%1$s, %2$s, је отказано."
-
-#, php-format
-msgid "%1$s, %2$s, was rejected."
-msgstr "%1$s, %2$s, је одбијено."
-
-#, php-format
-msgid "%1$s booked %2$s at %3$s."
-msgstr "%1$s је заказало %2$s у %3$s."
-
-#, php-format
-msgid "%1$s on %2$s had a status change."
-msgstr "%1$s за %2$s има промену статуса."
-
-#, php-format
-msgid "%1$s on %2$s was updated."
-msgstr "%1$s за %2$s је ажурирано."
-
-#, php-format
 msgid "%event_name% Event Booked"
 msgstr "%event_name% Резервација потврђена"
 
@@ -458,8 +438,14 @@ msgstr "Акције"
 msgid "Activate"
 msgstr "Активирај"
 
+msgid "Activate now"
+msgstr ""
+
 msgid "Activate with Envato"
 msgstr "Активирај са Енвато-м"
+
+msgid "Activate your license to unlock the features included in your plan."
+msgstr ""
 
 msgid "Activated with Envato"
 msgstr "Активирано са Енвато-м"
@@ -873,6 +859,9 @@ msgstr "Већ плаћено"
 msgid "Already have an account?"
 msgstr "Већ имате налог?"
 
+msgid "Already purchased Amelia?"
+msgstr ""
+
 msgid "Also cancel and delete future events"
 msgstr "Такође откажи и избриши будуће догађаје"
 
@@ -922,7 +911,7 @@ msgid "Apple"
 msgstr "Аппле"
 
 msgid "Apple Calendar"
-msgstr "Гоогле Календар"
+msgstr "Календар Apple"
 
 msgid "Apple Calendar (Personal)"
 msgstr "Аппле Цалендар (Лични)"
@@ -931,7 +920,7 @@ msgid "Apple Calendar setup"
 msgstr "Подешавање за Аппле Цалендар"
 
 msgid "Apple calendar events"
-msgstr "Догађаји у Apple календару"
+msgstr ""
 
 msgid "Application (client) ID"
 msgstr "ИД апликације (клијента)"
@@ -1075,9 +1064,6 @@ msgstr "Забелешке о Термину"
 msgid "Appointment price"
 msgstr "Цена Термина"
 
-msgid "Appointment reminder"
-msgstr "Подсетник за термин"
-
 msgid "Appointment repeats"
 msgstr "Понављање термина"
 
@@ -1090,9 +1076,6 @@ msgstr "Време почетка термина"
 msgid "Appointment status"
 msgstr "Статус Термина"
 
-msgid "Appointment status changed"
-msgstr "Статус термина промењен"
-
 msgid "Appointment status has been changed to "
 msgstr "Статус термина је промењен на"
 
@@ -1101,9 +1084,6 @@ msgstr "Статус термина је ажуриран."
 
 msgid "Appointment title"
 msgstr "Наслов термина"
-
-msgid "Appointment updated"
-msgstr "Термин ажуриран"
 
 msgid "Appointments"
 msgstr "Термини"
@@ -1143,6 +1123,10 @@ msgstr "Да ли сте сигурни да желите да откажете 
 
 msgid "Are you sure you want to cancel this appointment?"
 msgstr "Да ли сте сигурни да желите да откажете овај термин?"
+
+msgid ""
+"Are you sure you want to cancel this booking? This action cannot be undone."
+msgstr ""
 
 msgid "Are you sure you want to cancel this event?"
 msgstr "Да ли сте сигурни да желите да откажете овај догађај?"
@@ -1328,7 +1312,7 @@ msgid "Attachment upload path"
 msgstr "Путања за учитавање прилога"
 
 msgid "Attendee"
-msgstr "Догађај Отказан од Стране Учесника"
+msgstr "Учесник"
 
 msgid "Attendee Asc"
 msgstr "Присутни (узлазно)"
@@ -1337,7 +1321,7 @@ msgid "Attendee Desc"
 msgstr "Присутни (силазно)"
 
 msgid "Attendee code"
-msgstr "Код Учесника"
+msgstr "Код учесника"
 
 msgid "Attendee has been saved"
 msgstr "Учесник је сачуван"
@@ -1352,7 +1336,7 @@ msgid "Attendees"
 msgstr "Учесници"
 
 msgid "Attendees Allowed"
-msgstr "Код Учесника"
+msgstr "Дозвољени учесници"
 
 msgid "Attendees Export Format"
 msgstr "Формат извоза присутних"
@@ -1441,13 +1425,13 @@ msgid "Available date text"
 msgstr "Текст доступног датума"
 
 msgid "Available from Pro license"
-msgstr "Доступне Слике"
+msgstr "Доступно од Pro лиценце"
 
 msgid "Available from Standard license"
-msgstr "Доступне Слике"
+msgstr "Доступно од Standard лиценце"
 
 msgid "Available from Starter license"
-msgstr "Доступне Слике"
+msgstr "Доступно од Starter лиценце"
 
 msgid "Available in Elite licence"
 msgstr "Доступно у пакету"
@@ -1709,10 +1693,10 @@ msgid "Booking Opens"
 msgstr "Резервација се отвара"
 
 msgid "Booking Opens Asc"
-msgstr "Отварање резервације растуће"
+msgstr "Отварање резервације (узлазно)"
 
 msgid "Booking Opens Desc"
-msgstr "Опис отварања резервација"
+msgstr "Отварање резервације (силазно)"
 
 msgid "Booking Overview"
 msgstr "Преглед Резервације"
@@ -2274,6 +2258,9 @@ msgstr "Изаберите када се понављање завршава"
 msgid "Choose whether you want to manage services, events, or both."
 msgstr "Изаберите да ли желите да управљате услугама, догађајима или обоје."
 
+msgid "Choose which tab users see first when they log in"
+msgstr ""
+
 msgid "Choosing layout of first step in step by step form"
 msgstr "Избор распореда првог корака у обрасцу „корак по корак“"
 
@@ -2457,6 +2444,9 @@ msgstr "Конфигуриши листу чекања за термине"
 
 msgid "Confirm"
 msgstr "Потврди"
+
+msgid "Confirm Cancellation"
+msgstr ""
 
 msgid "Confirm My Appointment"
 msgstr "Потврди мој термин"
@@ -3098,9 +3088,6 @@ msgstr "Подаци који остају непромењени:"
 msgid "Data to be updated:"
 msgstr "Подаци за ажурирање:"
 
-msgid "Data transfer"
-msgstr "Пренос података"
-
 msgid "Date"
 msgstr "Датум"
 
@@ -3119,19 +3106,19 @@ msgstr ""
 "придруживање"
 
 msgid "Date Asc"
-msgstr "Датум Асц"
+msgstr "Датум (узлазно)"
 
 msgid "Date Desc"
-msgstr "Датум Десц"
+msgstr "Датум (силазно)"
 
 msgid "Date Picker"
 msgstr "Избор датума"
 
 msgid "Date Purchased Asc"
-msgstr "Датум куповине Асц"
+msgstr "Датум куповине (узлазно)"
 
 msgid "Date Purchased Desc"
-msgstr "Датум куповине Десц"
+msgstr "Датум куповине (силазно)"
 
 msgid ""
 "Date Ranges that are not defined will use default price from ticket category."
@@ -4116,6 +4103,9 @@ msgstr "Подразумевани статус термина"
 msgid "Default back end page"
 msgstr "Подразумевана админ страница"
 
+msgid "Default landing tab"
+msgstr ""
+
 msgid "Default language"
 msgstr "Предефинисани Језик"
 
@@ -4358,7 +4348,7 @@ msgid "Discount Asc"
 msgstr "Попуст (узлазно)"
 
 msgid "Discount Desc"
-msgstr "Опис попуста"
+msgstr "Попуст (силазно)"
 
 msgid "Discount (%)"
 msgstr "Попуст (%)"
@@ -4536,10 +4526,10 @@ msgid "Duration:"
 msgstr "Трајање:"
 
 msgid "Duration Asc"
-msgstr "Трајање – растуће"
+msgstr "Трајање (узлазно)"
 
 msgid "Duration Desc"
-msgstr "Трајање – опадајуће"
+msgstr "Трајање (силазно)"
 
 msgid "E-Ticket Scanner"
 msgstr "Име Карте"
@@ -4626,8 +4616,6 @@ msgid ""
 "Edit appointments/events when connected Google Calendar Events are "
 "rescheduled or deleted"
 msgstr ""
-"Изменити термине/догађаје када се повезани догађаји у Google Calendar-у "
-"помере или обришу"
 
 msgid "Edit block time"
 msgstr "Измени блок времена"
@@ -5294,7 +5282,7 @@ msgid "Event"
 msgstr "Догађај"
 
 msgid "Event Asc"
-msgstr "Догађај (растуће)"
+msgstr "Догађај (узлазно)"
 
 msgid "Event Available"
 msgstr "Доступан"
@@ -5332,7 +5320,7 @@ msgid "Event Day"
 msgstr "Дан Догађаја"
 
 msgid "Event Desc"
-msgstr "Опис догађаја"
+msgstr "Догађај (силазно)"
 
 msgid "Event Employee"
 msgstr "Запослени Догађаја"
@@ -5747,9 +5735,6 @@ msgstr "Неуспешно"
 msgid "Failed to access camera. Please try again."
 msgstr "Није успело да се приступи камери. Покушајте поново."
 
-msgid "Failed to initialize payment. Please try again."
-msgstr "Није успело покретање процеса плаћања. Молимо, покушајте поново."
-
 msgid "Failed to load appointment details. Please try again later."
 msgstr ""
 "Учитавање детаља заказаног термина није успело. Покушајте поново касније."
@@ -6095,7 +6080,7 @@ msgid "Google Analytics setup"
 msgstr "Подешавање Гоогле Аналјтицс-а"
 
 msgid "Google Calendar"
-msgstr "Гоогле Календар"
+msgstr "Календар Google"
 
 msgid "Google Calendar & Google Meet"
 msgstr "Гоогле календар & Гоогле Меет"
@@ -6125,7 +6110,7 @@ msgid "Google Meet setup"
 msgstr "Гоогле Меет подешавања"
 
 msgid "Google calendar events"
-msgstr "Догађаји Google календара"
+msgstr ""
 
 msgid "Google reCAPTCHA v2 secret key"
 msgstr "Гоогле реЦАПТЦХА в2 тајни кључ"
@@ -6873,10 +6858,10 @@ msgid "ID"
 msgstr "ИД"
 
 msgid "ID Asc"
-msgstr "ИД растуће"
+msgstr "ИД (узлазно)"
 
 msgid "ID Desc"
-msgstr "ИД опадајуће"
+msgstr "ИД (силазно)"
 
 msgid "I understand this import will replace all current data permanently."
 msgstr "Разумем да ће овај увоз неповратно преписати све постојеће податке."
@@ -6903,13 +6888,6 @@ msgid ""
 msgstr ""
 "Ако је онемогућено, резервација мора да достигне минимални капацитет, а "
 "временски термин се затвара након прве резервације."
-
-msgid ""
-"If disabled, the price will remain the same regardless of how many people "
-"are included in the group appointment."
-msgstr ""
-"Ако је онемогућено, цена ће остати иста без обзира на то колико је људи "
-"укључено у групни термин."
 
 msgid ""
 "If enabled, customers can book with Pending status even after maximum "
@@ -7055,6 +7033,9 @@ msgstr "Сличице"
 msgid "Import"
 msgstr "Увези"
 
+msgid "Import/Export"
+msgstr ""
+
 msgid "Import Failed"
 msgstr "Увоз није успео"
 
@@ -7084,6 +7065,9 @@ msgstr "Увоз није успео"
 
 msgid "Import failed. Review the details below."
 msgstr "Увоз није успео. Прегледајте детаље испод."
+
+msgid "Import or export your Amelia data."
+msgstr ""
 
 msgid "Import progress"
 msgstr "Напредак увоза"
@@ -7496,10 +7480,10 @@ msgid "Invoice Format"
 msgstr "Локација Сервиса"
 
 msgid "Invoice Number Asc"
-msgstr "Број фактуре (растући)"
+msgstr "Број фактуре (узлазно)"
 
 msgid "Invoice Number Desc"
-msgstr "Број фактуре (опадајући)"
+msgstr "Број фактуре (силазно)"
 
 msgid "Invoice date"
 msgstr "Датум издавања фактуре"
@@ -7666,10 +7650,10 @@ msgid "Last"
 msgstr "Последњи"
 
 msgid "Last Booking Asc"
-msgstr "Последње заказивање (растуће)"
+msgstr "Последње заказивање (узлазно)"
 
 msgid "Last Booking Desc"
-msgstr "Последње заказивање (опадајуће)"
+msgstr "Последње заказивање (силазно)"
 
 msgid "Last Name:"
 msgstr "Презиме:"
@@ -8044,10 +8028,10 @@ msgid "Max. Capacity"
 msgstr "Макс. Капацитет"
 
 msgid "Max Capacity Asc"
-msgstr "Макс. капацитет – растуће"
+msgstr "Макс. капацитет (узлазно)"
 
 msgid "Max Capacity Desc"
-msgstr "Макс. капацитет – опадајуће"
+msgstr "Макс. капацитет (силазно)"
 
 msgid "Maximum"
 msgstr "Максимум"
@@ -8387,7 +8371,7 @@ msgid "No, just this one"
 msgstr "Не, само овај"
 
 msgid "No-show"
-msgstr "Није се појавио"
+msgstr "Недолазак"
 
 msgid "No-show tag"
 msgstr "Ознака недоласка"
@@ -8609,13 +8593,13 @@ msgid "Notify selected employees about empty package purchases"
 msgstr "Обавести изабране запослене о куповини празних пакета"
 
 msgid "Notify the attendee(s)"
-msgstr "Обавести муштерију/муштерије"
+msgstr "Обавести учеснике"
 
 msgid "Notify the attendees"
 msgstr "Обавести посетиоце"
 
 msgid "Notify the customer(s)"
-msgstr "Обавести муштерију/муштерије"
+msgstr "Обавести муштерије"
 
 msgid "Number of Additional People"
 msgstr "Број Додатних Особа"
@@ -8939,7 +8923,7 @@ msgid "Outline"
 msgstr "Преглед"
 
 msgid "Outlook Calendar"
-msgstr "Оутлоок Календар"
+msgstr "Календар Outlook"
 
 msgid "Outlook Calendar & Microsoft Teams"
 msgstr "Оутлоок Цалендар & Мицрософт Теамс"
@@ -8951,7 +8935,7 @@ msgid "Outlook Calendar setup"
 msgstr "Подешавање Оутлоок Цалендар-а"
 
 msgid "Outlook Mailer"
-msgstr "Оутлоок Календар"
+msgstr "Имејл услуга Outlook"
 
 msgid ""
 "Outlook Mailer is not fully configured. Please complete the account setup in "
@@ -8961,7 +8945,7 @@ msgstr ""
 "подешавање налога у подешавањима Оутлоок Интегратион."
 
 msgid "Outlook calendar events"
-msgstr "Догађаји из Outlook календара"
+msgstr ""
 
 msgid "Outside of working hours"
 msgstr "Ван радног времена"
@@ -9966,13 +9950,13 @@ msgid "Price:"
 msgstr "Цена:"
 
 msgid "Price Asc"
-msgstr "Цена (растуће)"
+msgstr "Цена (узлазно)"
 
 msgid "Price Ascending"
 msgstr "По Цени Растуће"
 
 msgid "Price Desc"
-msgstr "Опис цене"
+msgstr "Цена (силазно)"
 
 msgid "Price Descending"
 msgstr "По Цени Опадајуће"
@@ -10093,6 +10077,11 @@ msgstr "Куповина је отказана"
 msgid "Purchased"
 msgstr "Купљено"
 
+msgid ""
+"Purchasing doesn't upgrade this plugin automatically. Follow our step-by-"
+"step guide to switch to the full version."
+msgstr ""
+
 msgid "Purple"
 msgstr "Љубичаста"
 
@@ -10106,10 +10095,10 @@ msgid "Quantity"
 msgstr "Количина"
 
 msgid "Quantity Asc"
-msgstr "Количина (растуће)"
+msgstr "Количина (узлазно)"
 
 msgid "Quantity Desc"
-msgstr "Количина (опадајуће)"
+msgstr "Количина (силазно)"
 
 msgid "Quantity is shared"
 msgstr "Количина је заједничка"
@@ -10231,7 +10220,7 @@ msgid "Redirect"
 msgstr "Преусмери"
 
 msgid "Redirect URI"
-msgstr "УРИ за преусмеравање"
+msgstr "URI за преусмеравање"
 
 msgid "Redirect URL After Booking"
 msgstr "УРЛ за преусмеравање након резервације"
@@ -10261,7 +10250,7 @@ msgid "Redirect URL for unsuccessfully rejected booking"
 msgstr "УРЛ за преусмеравање након неуспешног одбијања резервације"
 
 msgid "Redirect URLs"
-msgstr "УРИ за преусмеравање"
+msgstr "URL адресе за преусмеравање"
 
 msgid "Redirect page"
 msgstr "Страница за преусмеравање"
@@ -10299,10 +10288,6 @@ msgstr "Остатак од укупне суме који ће се плати�
 
 msgid "Remind me when my SMS balance is low"
 msgstr "Подсети ме када ми је стање СМС кредита при крају"
-
-#, php-format
-msgid "Reminder: %1$s is scheduled for %2$s."
-msgstr "Подсетник: %1$s је на распореду за %2$s."
 
 msgid "Remove Apple Calendar event slots"
 msgstr "Уклони термине догађаја из Аппле календара"
@@ -10696,6 +10681,9 @@ msgstr "Секција"
 msgid "Securely process payments using Stripe."
 msgstr "Безбедно обрађујте плаћања помоћу Стрипе-а."
 
+msgid "See upgrade guide."
+msgstr ""
+
 msgid "Segment"
 msgstr "СМС сегмент"
 
@@ -11039,7 +11027,7 @@ msgid "Service Category"
 msgstr "Изаберите Категорију"
 
 msgid "Service Desc"
-msgstr "Опис услуге"
+msgstr "Услуга (силазно)"
 
 msgid "Service ID"
 msgstr "ИД услуге"
@@ -11513,10 +11501,10 @@ msgid "Show specific packages"
 msgstr "Прикажи одређени пакет"
 
 msgid "Show specific service"
-msgstr "Прикажи одређени сервис"
+msgstr "Прикажи одређену услугу"
 
 msgid "Show specific services"
-msgstr "Прикажи одређени сервис"
+msgstr "Прикажи одређене услуге"
 
 msgid "Show tag"
 msgstr "Прикажи таг"
@@ -11569,6 +11557,9 @@ msgstr "Пријави се помоћу Мицрософт-а"
 
 msgid "Sign in with Outlook"
 msgstr "Улогуј се са Оутлоок-ом"
+
+msgid "Sign out and use a customer account"
+msgstr ""
 
 msgid "Sign out from Google"
 msgstr "Излогуј се из Гоогле-а"
@@ -11774,10 +11765,10 @@ msgid "Status"
 msgstr "Статус"
 
 msgid "Status Asc"
-msgstr "Статус растуће"
+msgstr "Статус (узлазно)"
 
 msgid "Status Desc"
-msgstr "Статус опадајуће"
+msgstr "Статус (силазно)"
 
 msgid ""
 "Stay compliant with ease through consistent, reliable tax handling across "
@@ -11980,7 +11971,7 @@ msgid "Switch Camera"
 msgstr "Промени камеру"
 
 msgid "Sync Google Events"
-msgstr "Синхронизуј Google догађаје"
+msgstr ""
 
 msgid "Sync with"
 msgstr "Синхронизуј са"
@@ -12496,6 +12487,12 @@ msgstr ""
 "Ово обавештење захтева црон јоб. Додајте ред испод у вашу црон конфигурацију."
 
 msgid ""
+"This option applies only to people added through \"Bringing anyone with "
+"you\". If disabled, the service price is charged once for the entire "
+"booking, regardless of how many additional people are included."
+msgstr ""
+
+msgid ""
 "This option requires adding the payment link placeholder to your message "
 "templates."
 msgstr ""
@@ -12896,7 +12893,7 @@ msgid "Try adjusting your search to find what you are looking for."
 msgstr "Покушајте да прилагодите претрагу како бисте пронашли оно што тражите."
 
 msgid "Tue"
-msgstr "уто"
+msgstr "Уто"
 
 msgid "Tuesday"
 msgstr "Уторак"
@@ -13107,10 +13104,7 @@ msgid "Verification expired. Please try again."
 msgstr "Верификација истекла. Молимо покушајте поново."
 
 msgid "Version "
-msgstr ""
-"Изаберите форму коју желите да уредите. \"Корак по Корак 2.0\" форма је нова "
-"и побољшана верзија која вам доноси бољи дизајн и корисничко искуство, као и "
-"већу брзину."
+msgstr "Верзија "
 
 msgid "Video tutorials"
 msgstr "Видео туторијали"
@@ -13692,6 +13686,11 @@ msgstr "Ваша лозинка је успешно ресетована"
 
 msgid "Your password has been reset successfully."
 msgstr "Ваша лозинка је успешно ресетована."
+
+msgid ""
+"Your payment is still processing. You will receive a confirmation as soon as "
+"it is completed."
+msgstr ""
 
 msgid "Your postal code is incomplete"
 msgstr "Ваш поштански број је непотпун"

@@ -305,7 +305,7 @@ class GetAppointmentCommandHandler extends CommandHandler
                         'wcTax' => $wcTax,
                         'discount' => $bookingPaymentAmount['discount'] + $bookingPaymentAmount['deduction'],
                         'wcDiscount' => $wcDiscount,
-                        'service' => $bookingPaymentAmount['bookable'],
+                        'price' => $bookingPaymentAmount['bookable'],
                         'extras' => $bookingPaymentAmount['subtotal'] - $bookingPaymentAmount['bookable'],
                         'subtotal' => $bookingPaymentAmount['subtotal'],
                         'paid' => $bookingPaidPrice,

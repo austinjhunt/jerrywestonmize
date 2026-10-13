@@ -14,6 +14,7 @@ use AmeliaBooking\Application\Services\Booking\IcsApplicationService;
 use AmeliaBooking\Application\Services\Helper\HelperService;
 use AmeliaBooking\Application\Services\Integration\ApplicationIntegrationService;
 use AmeliaBooking\Application\Services\Invoice\AbstractInvoiceApplicationService;
+use AmeliaBooking\Application\Services\Mobile\PushNotificationService;
 use AmeliaBooking\Application\Services\Notification\ApplicationNotificationService;
 use AmeliaBooking\Application\Services\Notification\EmailNotificationService;
 use AmeliaBooking\Application\Services\Notification\SMSNotificationService;
@@ -30,6 +31,7 @@ use AmeliaBooking\Domain\Entity\Entities;
 use AmeliaBooking\Domain\Entity\User\Customer;
 use AmeliaBooking\Domain\Factory\Booking\Appointment\AppointmentFactory;
 use AmeliaBooking\Domain\Factory\Booking\Event\EventFactory;
+use AmeliaBooking\Domain\Services\Mobile\MobileNotificationPreferences;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Domain\ValueObjects\BooleanValueObject;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
@@ -68,7 +70,7 @@ class BookingAddedEventHandler
      * @throws ContainerException
      * @throws Exception
      */
-    public static function handle($commandResult, $container)
+    public static function handle($commandResult, $container): void
     {
         /** @var ApplicationIntegrationService $applicationIntegrationService */
         $applicationIntegrationService = $container->get('application.integration.service');
@@ -78,6 +80,10 @@ class BookingAddedEventHandler
         $smsNotificationService = $container->get('application.smsNotification.service');
         /** @var AbstractWhatsAppNotificationService $whatsAppNotificationService */
         $whatsAppNotificationService = $container->get('application.whatsAppNotification.service');
+        /** @var ApplicationNotificationService $applicationNotificationService */
+        $applicationNotificationService = $container->get('application.notification.service');
+        /** @var PushNotificationService $pushNotificationService */
+        $pushNotificationService = $container->get('application.mobile.pushNotification.service');
         /** @var SettingsService $settingsService */
         $settingsService = $container->get('domain.settings.service');
         /** @var AbstractWebHookApplicationService $webHookService */
@@ -394,6 +400,12 @@ class BookingAddedEventHandler
             if ($whatsAppNotificationService->checkRequiredFields()) {
                 $whatsAppNotificationService->sendAppointmentStatusNotifications($reservation, empty($commandResult->getData()['fromLink']), true);
             }
+
+            $pushNotificationService->sendFromArray(
+                $reservation,
+                MobileNotificationPreferences::CATEGORY_NEW_BOOKINGS,
+                $booking
+            );
         }
 
         if (!empty($commandResult->getData()['packageBookingFromBackend'])) {
@@ -407,9 +419,6 @@ class BookingAddedEventHandler
             !empty($booking['payments'][0]) &&
             ($booking['payments'][0]['status'] === 'paid' || $booking['payments'][0]['gateway'] === 'onSite')
         ) {
-            /** @var ApplicationNotificationService $applicationNotificationService */
-            $applicationNotificationService = $container->get('application.notification.service');
-
             $applicationNotificationService->sendEventQrNotification($reservationObject, $bookingKey);
         }
 
@@ -427,6 +436,12 @@ class BookingAddedEventHandler
             if ($whatsAppNotificationService->checkRequiredFields()) {
                 $whatsAppNotificationService->sendBookingAddedNotifications($reservation, $booking, true);
             }
+
+            $pushNotificationService->sendFromArray(
+                $reservation,
+                MobileNotificationPreferences::CATEGORY_NEW_BOOKINGS,
+                $booking
+            );
         }
 
         if ($commandResult->getData()['packageId']) {
@@ -553,6 +568,12 @@ class BookingAddedEventHandler
                         true
                     );
                 }
+
+                $pushNotificationService->sendFromArray(
+                    $recurringData[$key][$type],
+                    MobileNotificationPreferences::CATEGORY_NEW_BOOKINGS,
+                    $recurringReservationData['booking'] ?? null
+                );
             }
         }
 

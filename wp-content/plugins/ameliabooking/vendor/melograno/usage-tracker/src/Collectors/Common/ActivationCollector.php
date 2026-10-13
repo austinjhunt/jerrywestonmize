@@ -16,8 +16,11 @@ class ActivationCollector
             'theme' => null,
         ];
 
-        if (function_exists('get_plugins') && function_exists('is_plugin_active')) {
+        if (!function_exists('get_plugins') || !function_exists('is_plugin_active')) {
             require_once ABSPATH . 'wp-admin/includes/plugin.php';
+        }
+
+        if (function_exists('get_plugins') && function_exists('is_plugin_active')) {
             $plugins = get_plugins();
             $active = 0;
 

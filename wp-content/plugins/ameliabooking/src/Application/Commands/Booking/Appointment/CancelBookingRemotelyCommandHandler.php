@@ -58,6 +58,8 @@ class CancelBookingRemotelyCommandHandler extends CommandHandler
         $result = new CommandResult();
 
         $type = $command->getField('type') ?: Entities::APPOINTMENT;
+        $bookingId = (int)$command->getArg('id');
+        $requestToken = (string)$command->getField('token');
 
         /** @var CustomerApplicationService $customerAS */
         $customerAS = $this->container->get('application.user.customer.service');
@@ -68,7 +70,7 @@ class CancelBookingRemotelyCommandHandler extends CommandHandler
         $user = $this->container->get('logged.in.user');
 
         /** @var CustomerBooking $booking */
-        $booking = $bookingRepository->getById((int)$command->getArg('id'));
+        $booking = $bookingRepository->getById($bookingId);
 
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
@@ -84,7 +86,7 @@ class CancelBookingRemotelyCommandHandler extends CommandHandler
             return $result->setHtml(BookingFallbackService::getFallbackHtml('failed'));
         }
 
-        $token = $bookingRepository->getToken((int)$command->getArg('id'));
+        $token = $bookingRepository->getToken($bookingId);
 
         if (empty($token['token'])) {
             throw new AccessDeniedException('You are not allowed to update booking status');
@@ -92,7 +94,7 @@ class CancelBookingRemotelyCommandHandler extends CommandHandler
 
         $booking->setToken(new Token($token['token']));
 
-        if (!$customerAS->isCustomerBooking($booking, $user, $command->getField('token'))) {
+        if (!$customerAS->isCustomerBooking($booking, $user, $requestToken)) {
             throw new AccessDeniedException('You are not allowed to update booking status');
         }
 
@@ -108,6 +110,20 @@ class CancelBookingRemotelyCommandHandler extends CommandHandler
             }
 
             return $result->setHtml(BookingFallbackService::getFallbackHtml('canceled'));
+        }
+
+        // Cancel only after an intentional confirmation POST (form sends confirmed=1).
+        // GET with confirmed, bare POST, or fromForm alone must not cancel.
+        $shouldCancel = $command->getField('requestMethod') === 'POST'
+            && (int) $command->getField('confirmed') === 1;
+
+        if (!$shouldCancel) {
+            $actionUrl = AMELIA_ACTION_URL . '/bookings/cancel/remotely/' . $bookingId .
+                '&token=' . $requestToken . '&type=' . $type;
+
+            return $result->setHtml(
+                BookingFallbackService::getCancelConfirmationHtml($actionUrl, $type)
+            );
         }
 
         /** @var ReservationServiceInterface $reservationService */

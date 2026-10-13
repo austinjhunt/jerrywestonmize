@@ -9,10 +9,10 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n==0 || n==1) ? 0 : 1;\n"
 
 msgid "\"Book now\" Button Type"
-msgstr "نوع دکمه &quot;رزرو کن&quot;"
+msgstr "نوع دکمه \"رزرو کن\""
 
 msgid "\"Go back\" Button Type"
-msgstr "نوع دکمه &quot;بازگشت&quot;"
+msgstr "نوع دکمه \"بازگشت\""
 
 msgid "\"I'm not a robot\" checkbox"
 msgstr "کادر انتخاب «من ربات نیستم»"
@@ -31,26 +31,6 @@ msgstr "# قرار ملاقات"
 
 msgid "# of bookings"
 msgstr "تعداد رزروها"
-
-#, php-format
-msgid "%1$s, %2$s, was canceled."
-msgstr "%1$s, %2$s, لغو شد."
-
-#, php-format
-msgid "%1$s, %2$s, was rejected."
-msgstr "%1$s, %2$s, رد شد."
-
-#, php-format
-msgid "%1$s booked %2$s at %3$s."
-msgstr "%1$s %2$s را در %3$s رزرو کرد."
-
-#, php-format
-msgid "%1$s on %2$s had a status change."
-msgstr "%1$s در %2$s وضعیتش تغییر کرد."
-
-#, php-format
-msgid "%1$s on %2$s was updated."
-msgstr "%1$s در %2$s به‌روزرسانی شد."
 
 #, php-format
 msgid "%event_name% Event Booked"
@@ -456,8 +436,14 @@ msgstr "اقدامات"
 msgid "Activate"
 msgstr "فعال کنید"
 
+msgid "Activate now"
+msgstr ""
+
 msgid "Activate with Envato"
 msgstr "با Envato فعال کنید"
+
+msgid "Activate your license to unlock the features included in your plan."
+msgstr ""
 
 msgid "Activated with Envato"
 msgstr "با Envato فعال شد"
@@ -864,6 +850,9 @@ msgstr "قبلاً پرداخت‌شده"
 msgid "Already have an account?"
 msgstr "از قبل حساب کاربری دارید؟"
 
+msgid "Already purchased Amelia?"
+msgstr ""
+
 msgid "Also cancel and delete future events"
 msgstr "همچنین رویدادهای آینده را لغو و حذف کنید"
 
@@ -913,7 +902,7 @@ msgid "Apple"
 msgstr "اپل"
 
 msgid "Apple Calendar"
-msgstr "‫Google Calendar"
+msgstr "تقویم Apple"
 
 msgid "Apple Calendar (Personal)"
 msgstr "تقویم اپل (شخصی)"
@@ -922,7 +911,7 @@ msgid "Apple Calendar setup"
 msgstr "تنظیمات تقویم اپل"
 
 msgid "Apple calendar events"
-msgstr "رویدادهای تقویم اپل"
+msgstr ""
 
 msgid "Application (client) ID"
 msgstr "شناسه برنامه (مشتری)."
@@ -1066,9 +1055,6 @@ msgstr "یادداشت‌های قرار ملاقات"
 msgid "Appointment price"
 msgstr "هزینه قرار ملاقات"
 
-msgid "Appointment reminder"
-msgstr "یادآوری نوبت"
-
 msgid "Appointment repeats"
 msgstr "تکرار قرار ملاقات"
 
@@ -1081,9 +1067,6 @@ msgstr "زمان شروع قرار ملاقات"
 msgid "Appointment status"
 msgstr "وضعیت قرار ملاقات"
 
-msgid "Appointment status changed"
-msgstr "وضعیت نوبت تغییر کرد"
-
 msgid "Appointment status has been changed to "
 msgstr "وضعیت قرار ملاقات تغییر کرده است به "
 
@@ -1092,9 +1075,6 @@ msgstr "وضعیت نوبت‌دهی به‌روزرسانی شد."
 
 msgid "Appointment title"
 msgstr "عنوان انتصاب"
-
-msgid "Appointment updated"
-msgstr "نوبت به‌روزرسانی شد"
 
 msgid "Appointments"
 msgstr "قرار ملاقات ها"
@@ -1134,6 +1114,10 @@ msgstr "آیا مطمئن هستید که می‌خواهید این رویدا�
 
 msgid "Are you sure you want to cancel this appointment?"
 msgstr "آیا مطمئنید که می خواهید این قرار ملاقات را لغو کنید؟"
+
+msgid ""
+"Are you sure you want to cancel this booking? This action cannot be undone."
+msgstr ""
 
 msgid "Are you sure you want to cancel this event?"
 msgstr "آیا اطمینان دارید که می خواهید این رویداد را لغو کنید؟"
@@ -1319,7 +1303,7 @@ msgid "Attachment upload path"
 msgstr "مسیر آپلود پیوست"
 
 msgid "Attendee"
-msgstr "رویداد توسط شرکت کننده لغو شد"
+msgstr "شرکت‌کننده"
 
 msgid "Attendee Asc"
 msgstr "شرکت‌کننده به ترتیب صعودی"
@@ -1328,7 +1312,7 @@ msgid "Attendee Desc"
 msgstr "شرکت‌کننده به ترتیب نزولی"
 
 msgid "Attendee code"
-msgstr "کد شرکت کننده"
+msgstr "کد شرکت‌کننده"
 
 msgid "Attendee has been saved"
 msgstr "شرکت کننده ذخیره شده است"
@@ -1343,7 +1327,7 @@ msgid "Attendees"
 msgstr "شرکت کنندگان"
 
 msgid "Attendees Allowed"
-msgstr "کد شرکت کننده"
+msgstr "شرکت‌کنندگان مجاز"
 
 msgid "Attendees Export Format"
 msgstr "فرمت خروجی شرکت‌کنندگان"
@@ -1430,13 +1414,13 @@ msgid "Available date text"
 msgstr "متن تاریخ موجود"
 
 msgid "Available from Pro license"
-msgstr "عکس های در دسترس"
+msgstr "در دسترس از مجوز Pro"
 
 msgid "Available from Standard license"
-msgstr "عکس های در دسترس"
+msgstr "در دسترس از مجوز Standard"
 
 msgid "Available from Starter license"
-msgstr "عکس های در دسترس"
+msgstr "در دسترس از مجوز Starter"
 
 msgid "Available in Elite licence"
 msgstr "در پکیج در دسترس است"
@@ -2257,6 +2241,9 @@ msgstr "زمانی را انتخاب کنید که تکرار به پایان ب
 msgid "Choose whether you want to manage services, events, or both."
 msgstr "انتخاب کنید که آیا می‌خواهید سرویس‌ها، رویدادها یا هر دو را مدیریت کنید."
 
+msgid "Choose which tab users see first when they log in"
+msgstr ""
+
 msgid "Choosing layout of first step in step by step form"
 msgstr "انتخاب چیدمان مرحله اول در فرم مرحله به مرحله"
 
@@ -2442,6 +2429,9 @@ msgstr "پیکربندی لیست انتظار برای قرار ملاقات‌
 
 msgid "Confirm"
 msgstr "تایید"
+
+msgid "Confirm Cancellation"
+msgstr ""
 
 msgid "Confirm My Appointment"
 msgstr "نوبت من را تأیید کنید"
@@ -3062,9 +3052,6 @@ msgstr "داده‌هایی که بدون تغییر باقی می‌مانند:
 
 msgid "Data to be updated:"
 msgstr "داده‌هایی که باید به‌روزرسانی شوند:"
-
-msgid "Data transfer"
-msgstr "انتقال داده"
 
 msgid "Date"
 msgstr "روز"
@@ -4078,6 +4065,9 @@ msgstr "وضعیت پیش‌فرض نوبت"
 msgid "Default back end page"
 msgstr "صفحه پیش فرض بخش مدیریت"
 
+msgid "Default landing tab"
+msgstr ""
+
 msgid "Default language"
 msgstr "زبان پیش فرض"
 
@@ -4581,8 +4571,6 @@ msgid ""
 "Edit appointments/events when connected Google Calendar Events are "
 "rescheduled or deleted"
 msgstr ""
-"ویرایش نوبت‌ها و/یا رویدادها وقتی رویدادهای متصلِ تقویم Google به زمان/تاریخ "
-"جدید منتقل یا حذف می‌شوند"
 
 msgid "Edit block time"
 msgstr "ویرایش زمان مسدودشده"
@@ -5242,7 +5230,7 @@ msgid "Event"
 msgstr "رویداد"
 
 msgid "Event Asc"
-msgstr "صعود رویداد"
+msgstr "صعود رویداد صعودی"
 
 msgid "Event Available"
 msgstr "در دسترس"
@@ -5280,7 +5268,7 @@ msgid "Event Day"
 msgstr "تاریخ رویداد"
 
 msgid "Event Desc"
-msgstr "توضیحات رویداد"
+msgstr "صعود رویداد نزولی"
 
 msgid "Event Employee"
 msgstr "مشاور رویداد"
@@ -5692,9 +5680,6 @@ msgstr "ناموفق"
 msgid "Failed to access camera. Please try again."
 msgstr "دسترسی به دوربین با شکست مواجه شد. لطفاً دوباره تلاش کنید."
 
-msgid "Failed to initialize payment. Please try again."
-msgstr "راه‌اندازی فرایند پرداخت ناموفق بود. لطفاً دوباره تلاش کنید."
-
 msgid "Failed to load appointment details. Please try again later."
 msgstr ""
 "بارگذاری جزئیات قرار ملاقات با شکست مواجه شد. لطفاً بعداً دوباره تلاش کنید."
@@ -6039,7 +6024,7 @@ msgid "Google Analytics setup"
 msgstr "تنظیمات گوگل آنالیتیکس"
 
 msgid "Google Calendar"
-msgstr "‫Google Calendar"
+msgstr "تقویم Google"
 
 msgid "Google Calendar & Google Meet"
 msgstr "تقویم گوگل و گوگل میت"
@@ -6070,7 +6055,7 @@ msgid "Google Meet setup"
 msgstr "تنظیمات گوگل میت"
 
 msgid "Google calendar events"
-msgstr "رویدادهای Google Calendar"
+msgstr ""
 
 msgid "Google reCAPTCHA v2 secret key"
 msgstr "کلید محرمانه Google reCAPTCHA v2"
@@ -6857,12 +6842,6 @@ msgstr ""
 "اولین رزرو بسته می‌شود."
 
 msgid ""
-"If disabled, the price will remain the same regardless of how many people "
-"are included in the group appointment."
-msgstr ""
-"اگر غیرفعال شود، قیمت بدون توجه به تعداد افراد در قرار گروهی ثابت خواهد ماند."
-
-msgid ""
 "If enabled, customers can book with Pending status even after maximum "
 "capacity is reached."
 msgstr ""
@@ -6999,6 +6978,9 @@ msgstr "تصاویر بندانگشتی"
 msgid "Import"
 msgstr "درون‌ریزی"
 
+msgid "Import/Export"
+msgstr ""
+
 msgid "Import Failed"
 msgstr "وارد کردن ناموفق بود"
 
@@ -7028,6 +7010,9 @@ msgstr "درون‌ریزی ناموفق بود"
 
 msgid "Import failed. Review the details below."
 msgstr "درون‌ریزی ناموفق بود. جزئیات زیر را بررسی کنید."
+
+msgid "Import or export your Amelia data."
+msgstr ""
 
 msgid "Import progress"
 msgstr "پیشرفت درون‌ریزی"
@@ -7981,7 +7966,7 @@ msgid "Max Capacity Asc"
 msgstr "ظرفیت حداکثر به ترتیب صعودی"
 
 msgid "Max Capacity Desc"
-msgstr "توضیحات حداکثر ظرفیت"
+msgstr "ظرفیت حداکثر به ترتیب نزولی"
 
 msgid "Maximum"
 msgstr "حداکثر"
@@ -8321,10 +8306,10 @@ msgid "No, just this one"
 msgstr "نه، فقط همین"
 
 msgid "No-show"
-msgstr "عدم نمایش"
+msgstr "عدم حضور"
 
 msgid "No-show tag"
-msgstr "برچسب عدم نمایش"
+msgstr "برچسب عدم حضور"
 
 msgid "No Employees Assigned to This Location"
 msgstr "هیچ کارمندی به این مکان اختصاص داده نشده است"
@@ -8336,13 +8321,13 @@ msgid "No Show"
 msgstr "عدم حضور"
 
 msgid "No Show (1)"
-msgstr "عدم حضور (۱)"
+msgstr "عدم حضور (1)"
 
 msgid "No Show (2)"
-msgstr "عدم حضور (۲)"
+msgstr "عدم حضور (2)"
 
 msgid "No Show (3+)"
-msgstr "عدم حضور (۳+)"
+msgstr "عدم حضور (3+)"
 
 msgid "No Tags. Create a new one."
 msgstr "بدون برچسب. یک مورد جدید ایجاد کنید."
@@ -8544,13 +8529,13 @@ msgid "Notify selected employees about empty package purchases"
 msgstr "اطلاع‌رسانی به کارمندان منتخب درباره خرید بسته‌های خالی"
 
 msgid "Notify the attendee(s)"
-msgstr "اطلاع رسانی به مشتری (ها)"
+msgstr "اطلاع به شرکت‌کنندگان"
 
 msgid "Notify the attendees"
 msgstr "به شرکت کنندگان اطلاع دهید"
 
 msgid "Notify the customer(s)"
-msgstr "اطلاع رسانی به مشتری (ها)"
+msgstr "اطلاع به مشتریان"
 
 msgid "Number of Additional People"
 msgstr "تعداد افراد اضافی"
@@ -8875,7 +8860,7 @@ msgid "Outline"
 msgstr "طرح کلی"
 
 msgid "Outlook Calendar"
-msgstr "‫Outlook Calendar"
+msgstr "تقویم Outlook"
 
 msgid "Outlook Calendar & Microsoft Teams"
 msgstr "تقویم اوت‌لوک و مایکروسافت تیمز"
@@ -8887,7 +8872,7 @@ msgid "Outlook Calendar setup"
 msgstr "تنظیمات تقویم اوت‌لوک"
 
 msgid "Outlook Mailer"
-msgstr "‫Outlook Calendar"
+msgstr "سرویس پست Outlook"
 
 msgid ""
 "Outlook Mailer is not fully configured. Please complete the account setup in "
@@ -8897,7 +8882,7 @@ msgstr ""
 "یکپارچه‌سازی اوت‌لوک کامل کنید."
 
 msgid "Outlook calendar events"
-msgstr "رویدادهای تقویم Outlook"
+msgstr ""
 
 msgid "Outside of working hours"
 msgstr "خارج از ساعات اداری"
@@ -8936,13 +8921,13 @@ msgid "Package %package_name% purchased"
 msgstr "بسته %package_name% خریداری شد"
 
 msgid "Package Asc"
-msgstr "بسته Asc"
+msgstr "بسته صعودی"
 
 msgid "Package Canceled"
 msgstr "پکیج لغو شد"
 
 msgid "Package Desc"
-msgstr "توضیحات بسته"
+msgstr "بسته نزولی"
 
 msgid "Package ID"
 msgstr "شناسه بسته"
@@ -10022,6 +10007,11 @@ msgstr "خرید کنسل شده است"
 msgid "Purchased"
 msgstr "خریداری شده است"
 
+msgid ""
+"Purchasing doesn't upgrade this plugin automatically. Follow our step-by-"
+"step guide to switch to the full version."
+msgstr ""
+
 msgid "Purple"
 msgstr "بنفش"
 
@@ -10160,7 +10150,7 @@ msgid "Redirect"
 msgstr "تغییر مسیر"
 
 msgid "Redirect URI"
-msgstr "‫URL تغییر مسیر"
+msgstr "URI تغییر مسیر"
 
 msgid "Redirect URL After Booking"
 msgstr "‫URL تغییر مسیر پس از رزرو"
@@ -10190,7 +10180,7 @@ msgid "Redirect URL for unsuccessfully rejected booking"
 msgstr "آدرس URL هدایت برای رزرو ناموفق ردشده"
 
 msgid "Redirect URLs"
-msgstr "‫URL تغییر مسیر"
+msgstr "آدرس‌های URL تغییر مسیر"
 
 msgid "Redirect page"
 msgstr "تغییر مسیر صفحه"
@@ -10227,10 +10217,6 @@ msgstr "مابقی مبلغ در سایت پرداخت می شود."
 
 msgid "Remind me when my SMS balance is low"
 msgstr "به من یادآوری کن وقتی موجودی پیامک من کم است"
-
-#, php-format
-msgid "Reminder: %1$s is scheduled for %2$s."
-msgstr "یادآوری: %1$s برای %2$s زمان‌بندی شده است."
 
 msgid "Remove Apple Calendar event slots"
 msgstr "حذف بازه‌های زمانی رویدادهای Apple Calendar"
@@ -10624,6 +10610,9 @@ msgstr "بخش"
 
 msgid "Securely process payments using Stripe."
 msgstr "پرداخت‌ها را با استفاده از Stripe به‌صورت امن پردازش کنید."
+
+msgid "See upgrade guide."
+msgstr ""
 
 msgid "Segment"
 msgstr "بخش"
@@ -11432,10 +11421,10 @@ msgid "Show specific packages"
 msgstr "نمایش پکیج خاص"
 
 msgid "Show specific service"
-msgstr "نمایش سرویس خدمات خاص"
+msgstr "نمایش خدمت مشخص"
 
 msgid "Show specific services"
-msgstr "نمایش سرویس خدمات خاص"
+msgstr "نمایش خدمات مشخص"
 
 msgid "Show tag"
 msgstr "نمایش برچسب"
@@ -11488,6 +11477,9 @@ msgstr "با مایکروسافت وارد شوید"
 
 msgid "Sign in with Outlook"
 msgstr "ورود با Outlook"
+
+msgid "Sign out and use a customer account"
+msgstr ""
 
 msgid "Sign out from Google"
 msgstr "از اکانت Google خارج شوید"
@@ -11891,7 +11883,7 @@ msgid "Switch Camera"
 msgstr "تغییر دوربین"
 
 msgid "Sync Google Events"
-msgstr "همگام‌سازی رویدادهای Google"
+msgstr ""
 
 msgid "Sync with"
 msgstr "همگام‌سازی با"
@@ -12405,6 +12397,12 @@ msgid ""
 "configuration."
 msgstr ""
 "این اعلان نیاز به یک کرون جاب دارد. خط زیر را به تنظیمات کرون خود اضافه کنید."
+
+msgid ""
+"This option applies only to people added through \"Bringing anyone with "
+"you\". If disabled, the service price is charged once for the entire "
+"booking, regardless of how many additional people are included."
+msgstr ""
 
 msgid ""
 "This option requires adding the payment link placeholder to your message "
@@ -13011,10 +13009,7 @@ msgid "Verification expired. Please try again."
 msgstr "تأیید اعتبار منقضی شده است. لطفا دوباره تلاش کنید."
 
 msgid "Version "
-msgstr ""
-"فرمی را که می خواهید سفارشی سازی کنید انتخاب کنید. فرم مرحله ای 2.0 نسخه "
-"جدید و بهبود یافته ای است که طراحی و تجربه کاربری بهتر و همچنین سرعت بهتری "
-"را در اختیار شما قرار می دهد."
+msgstr "نسخه "
 
 msgid "Video tutorials"
 msgstr "آموزش‌های ویدیویی"
@@ -13594,6 +13589,11 @@ msgstr "رمز عبور شما با موفقیت بازنشانی شد"
 
 msgid "Your password has been reset successfully."
 msgstr "رمز عبور شما با موفقیت بازنشانی شده است."
+
+msgid ""
+"Your payment is still processing. You will receive a confirmation as soon as "
+"it is completed."
+msgstr ""
 
 msgid "Your postal code is incomplete"
 msgstr "کد پستی شما ناقص است"

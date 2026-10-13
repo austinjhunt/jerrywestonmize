@@ -78,7 +78,7 @@ class PackageReservationService extends AppointmentReservationService
      * @throws Throwable Rolling back a partially booked package rethrows whatever bookSingle() raised,
      *                   so errors propagate out of here as well as exceptions.
      */
-    public function book($appointmentData, $reservation, $save)
+    public function book($appointmentData, $reservation, $save): void
     {
         /** @var AbstractPackageApplicationService $packageApplicationService */
         $packageApplicationService = $this->container->get('application.bookable.package');
@@ -311,7 +311,8 @@ class PackageReservationService extends AppointmentReservationService
 
         $paymentAmount = $this->getPaymentAmount($packageCustomer, $package)['price'];
 
-        $applyDeposit = $appointmentData['deposit'] && $appointmentData['payment']['gateway'] !== PaymentType::ON_SITE;
+        $applyDeposit = AbstractReservationService::parseDepositFlag($appointmentData['deposit'] ?? false)
+            && $appointmentData['payment']['gateway'] !== PaymentType::ON_SITE;
 
         if ($applyDeposit) {
             $paymentDeposit = $depositAS->calculateDepositAmount(
@@ -642,6 +643,43 @@ class PackageReservationService extends AppointmentReservationService
         }
 
         return sizeof($amountData) > 1 ? [] : $amountData;
+    }
+
+    /**
+     * The payments covered by the amount getReservationPaymentAmount asks the gateway for.
+     *
+     * A package is paid as a whole, so the charge covers the payments of its package customer -
+     * the services of a package share them, hence the keyed collection.
+     *
+     * @param Reservation $reservation
+     *
+     * @return Payment[]
+     */
+    public function getChargedPayments($reservation): array
+    {
+        if (!$reservation->getPackageCustomerServices()) {
+            return [];
+        }
+
+        $payments = [];
+
+        /** @var PackageCustomerService $packageCustomerService */
+        foreach ($reservation->getPackageCustomerServices()->getItems() as $packageCustomerService) {
+            $packageCustomerPayments = $packageCustomerService->getPackageCustomer()->getPayments();
+
+            if (!$packageCustomerPayments) {
+                continue;
+            }
+
+            /** @var Payment $payment */
+            foreach ($packageCustomerPayments->getItems() as $payment) {
+                if ($payment->getId()) {
+                    $payments[$payment->getId()->getValue()] = $payment;
+                }
+            }
+        }
+
+        return array_values($payments);
     }
 
     /**

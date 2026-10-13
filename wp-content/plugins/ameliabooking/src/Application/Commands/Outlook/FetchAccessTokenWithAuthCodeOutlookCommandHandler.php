@@ -7,11 +7,13 @@ use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Domain\Common\Exceptions\InvalidArgumentException;
 use AmeliaBooking\Domain\Entity\Outlook\OutlookCalendar;
 use AmeliaBooking\Domain\Factory\Outlook\OutlookCalendarFactory;
+use AmeliaBooking\Domain\Services\Logger\LoggerInterface;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
 use AmeliaBooking\Infrastructure\Repository\User\ProviderRepository;
 use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 use AmeliaBooking\Infrastructure\Repository\Outlook\OutlookCalendarRepository;
+use Throwable;
 
 /**
  * Class FetchAccessTokenWithAuthCodeOutlookCommandHandler
@@ -98,7 +100,13 @@ class FetchAccessTokenWithAuthCodeOutlookCommandHandler extends CommandHandler
             $outlookCalendarRepository->getByProviderId($providerId);
             $hasExistingCalendar = true;
         } catch (\Exception $e) {
-            error_log('OutlookCalendar: No existing calendar found, this is the first account. ' . $e->getMessage());
+            $this->container->getLoggerService()->channel(LoggerInterface::CHANNEL_SYNC)->info(
+                'OutlookCalendar: No existing calendar found, this is the first account',
+                [
+                    'exception'  => $e,
+                    'providerId' => $providerId,
+                ]
+            );
         }
 
         $primaryCalendarId = null;
@@ -116,14 +124,15 @@ class FetchAccessTokenWithAuthCodeOutlookCommandHandler extends CommandHandler
                 $provider->setOutlookCalendar($tempOutlookCalendar);
 
                 $calendarList = $outlookCalendarService->listCalendarList($provider);
-                foreach ($calendarList as $calendar) {
-                    if (!empty($calendar['owner'])) {
-                        $primaryCalendarId = $calendar['id'];
-                        break;
-                    }
-                }
+                $primaryCalendarId = $this->getPrimaryCalendarId($calendarList);
             } catch (\Exception $e) {
-                error_log('OutlookCalendar: Unable to fetch primary calendar - ' . $e->getMessage());
+                $this->container->getLoggerService()->channel(LoggerInterface::CHANNEL_SYNC)->warning(
+                    'OutlookCalendar: Unable to fetch primary calendar',
+                    [
+                        'exception'  => $e,
+                        'providerId' => $providerId,
+                    ]
+                );
             }
         }
 
@@ -184,7 +193,13 @@ class FetchAccessTokenWithAuthCodeOutlookCommandHandler extends CommandHandler
             $provider = $providerRepository->getById($providerId);
             $outlookAccountData = $outlookCalendarService->getUserInfo($provider);
         } catch (\Exception $e) {
-            error_log('OutlookCalendar: Unable to fetch account data - ' . $e->getMessage());
+            $this->container->getLoggerService()->channel(LoggerInterface::CHANNEL_SYNC)->warning(
+                'OutlookCalendar: Unable to fetch account data',
+                [
+                    'exception'  => $e,
+                    'providerId' => $providerId,
+                ]
+            );
         }
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
@@ -200,6 +215,40 @@ class FetchAccessTokenWithAuthCodeOutlookCommandHandler extends CommandHandler
             ]);
         }
 
+        try {
+            $outlookCalendarService->ensureTwoWaySyncForProvider((int)$providerId);
+        } catch (Throwable $e) {
+            $this->container->getLoggerService()->channel(LoggerInterface::CHANNEL_SYNC)->error(
+                'OutlookCalendar: ensureTwoWaySync after OAuth failed',
+                [
+                    'exception'  => $e,
+                    'providerId' => $providerId,
+                ]
+            );
+        }
+
         return $result;
+    }
+
+    /**
+     * @param array $calendarList
+     *
+     * @return string|null
+     */
+    private function getPrimaryCalendarId(array $calendarList): ?string
+    {
+        foreach ($calendarList as $calendar) {
+            if (!empty($calendar['isDefault']) && !empty($calendar['id'])) {
+                return $calendar['id'];
+            }
+        }
+
+        foreach ($calendarList as $calendar) {
+            if (!empty($calendar['owner']) && !empty($calendar['id'])) {
+                return $calendar['id'];
+            }
+        }
+
+        return !empty($calendarList[0]['id']) ? $calendarList[0]['id'] : null;
     }
 }

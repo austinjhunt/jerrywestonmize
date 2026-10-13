@@ -4,6 +4,7 @@ namespace AmeliaBooking\Application\Commands\Notification;
 
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
+use AmeliaBooking\Application\Services\Mobile\PushNotificationService;
 use AmeliaBooking\Application\Services\Notification\EmailNotificationService;
 use AmeliaBooking\Application\Services\Notification\SMSNotificationService;
 use AmeliaBooking\Application\Services\Notification\AbstractWhatsAppNotificationService;
@@ -24,7 +25,7 @@ class SendScheduledNotificationsCommandHandler extends CommandHandler
      * @throws \AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException
      * @throws \Exception
      */
-    public function handle()
+    public function handle(): CommandResult
     {
         $result = new CommandResult();
 
@@ -34,6 +35,8 @@ class SendScheduledNotificationsCommandHandler extends CommandHandler
         $smsNotificationService = $this->getContainer()->get('application.smsNotification.service');
         /** @var AbstractWhatsAppNotificationService $whatsAppNotificationService */
         $whatsAppNotificationService = $this->getContainer()->get('application.whatsAppNotification.service');
+        /** @var PushNotificationService $pushNotificationService */
+        $pushNotificationService = $this->getContainer()->get('application.mobile.pushNotification.service');
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
 
@@ -65,6 +68,8 @@ class SendScheduledNotificationsCommandHandler extends CommandHandler
 
         $smsNotificationService->sendPreparedNotifications();
         $notificationService->sendPreparedNotifications();
+
+        $pushNotificationService->sendScheduledReminders();
 
         do_action('amelia_after_send_scheduled_notifications');
 

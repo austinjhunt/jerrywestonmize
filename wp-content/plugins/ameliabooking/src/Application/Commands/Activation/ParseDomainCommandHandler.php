@@ -10,6 +10,7 @@ namespace AmeliaBooking\Application\Commands\Activation;
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
+use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\WP\InstallActions\AutoUpdateHook;
 use AmeliaBooking\Infrastructure\WP\UserRoles\SuperAdminRoleService;
 
@@ -30,7 +31,10 @@ class ParseDomainCommandHandler extends CommandHandler
     {
         $result = new CommandResult();
 
-        if (!(new SuperAdminRoleService())->canAccessActivationSettings()) {
+        /** @var SettingsService $settingsService */
+        $settingsService = $this->container->get('domain.settings.service');
+
+        if (!(new SuperAdminRoleService($settingsService))->canAccessActivationSettings()) {
             throw new AccessDeniedException('You are not allowed to manage activation settings.');
         }
 

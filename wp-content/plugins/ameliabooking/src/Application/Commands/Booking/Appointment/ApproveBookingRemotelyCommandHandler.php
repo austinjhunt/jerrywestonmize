@@ -7,7 +7,9 @@ use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Application\Common\Exceptions\AccessDeniedException;
 use AmeliaBooking\Application\Services\Booking\BookingFallbackService;
 use AmeliaBooking\Application\Services\User\CustomerApplicationService;
+use AmeliaBooking\Application\Services\Reservation\AppointmentReservationService;
 use AmeliaBooking\Domain\Common\Exceptions\BookingCancellationException;
+use AmeliaBooking\Domain\Common\Exceptions\BookingUnavailableException;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Entities;
@@ -51,6 +53,7 @@ class ApproveBookingRemotelyCommandHandler extends CommandHandler
      * @throws AccessDeniedException
      * @throws NotFoundException
      * @throws BookingCancellationException
+     * @throws BookingUnavailableException
      */
     public function handle(ApproveBookingRemotelyCommand $command): CommandResult
     {
@@ -102,21 +105,7 @@ class ApproveBookingRemotelyCommandHandler extends CommandHandler
             try {
                 $this->validateWaitingListCapacity($booking);
             } catch (BookingCancellationException $e) {
-                $appointmentSettings = $settingsService->getCategorySettings('appointments');
-                $waitingListDeniedUrl = !empty($appointmentSettings['waitingListAppointments']['redirectUrlDenied']) ?
-                    $appointmentSettings['waitingListAppointments']['redirectUrlDenied'] : '';
-
-                if (!empty($waitingListDeniedUrl)) {
-                    $result->setUrl($waitingListDeniedUrl);
-                    return $result;
-                }
-
-                if (!empty($notificationSettings['approveErrorUrl'])) {
-                    $result->setUrl($notificationSettings['approveErrorUrl']);
-                    return $result;
-                }
-
-                return $result->setHtml(BookingFallbackService::getFallbackHtml('failed'));
+                return $this->buildWaitingListDeniedResult($result, $settingsService, $notificationSettings);
             }
         }
 
@@ -124,10 +113,21 @@ class ApproveBookingRemotelyCommandHandler extends CommandHandler
         $reservationService = $this->container->get('application.reservation.service')->get($type);
 
         $status = BookingStatus::APPROVED;
+        $oldBookingStatus = $booking->getStatus()->getValue();
 
         do_action('amelia_before_booking_approved_link', $booking ? $booking->toArray() : null);
 
-        $bookingData = $reservationService->updateStatus($booking, $status);
+        try {
+            $bookingData = $reservationService->updateStatus($booking, $status);
+        } catch (BookingUnavailableException $e) {
+            // updateStatus can throw for capacity on any booking; waitlist denied redirect
+            // is only appropriate when promoting a waiting-list booking.
+            if ($oldBookingStatus === BookingStatus::WAITING) {
+                return $this->buildWaitingListDeniedResult($result, $settingsService, $notificationSettings);
+            }
+
+            throw $e;
+        }
 
         $result->setResult(CommandResult::RESULT_SUCCESS);
         $result->setMessage('Successfully updated booking status');
@@ -162,12 +162,13 @@ class ApproveBookingRemotelyCommandHandler extends CommandHandler
     }
 
     /**
-     * Validates waiting list appointment capacity
+     * Validates waiting list appointment capacity and provider availability
      *
      * @throws ContainerValueNotFoundException
      * @throws ContainerException
      * @throws BookingCancellationException
      * @throws NotFoundException
+     * @throws QueryExecutionException
      */
     private function validateWaitingListCapacity(CustomerBooking $booking): void
     {
@@ -197,6 +198,15 @@ class ApproveBookingRemotelyCommandHandler extends CommandHandler
                 'This slot is already taken! Available capacity: ' . $availableCapacity . ', requested: ' . $booking->getPersons()->getValue()
             );
         }
+
+        /** @var AppointmentReservationService $reservationService */
+        $reservationService = $this->container->get('application.reservation.service')->get(Entities::APPOINTMENT);
+
+        // Capacity on this appointment can still look free after cancel, while another
+        // appointment already occupies the same provider/time (e.g. original customer rebooked).
+        if ($reservationService->isDoubleBooking($appointment, true)) {
+            throw new BookingCancellationException('This slot is already taken!');
+        }
     }
 
     /**
@@ -214,5 +224,30 @@ class ApproveBookingRemotelyCommandHandler extends CommandHandler
         }
 
         return $persons;
+    }
+
+    /**
+     * Redirects waitlist customers to the denied URL when the spot is no longer available.
+     */
+    private function buildWaitingListDeniedResult(
+        CommandResult $result,
+        SettingsService $settingsService,
+        array $notificationSettings
+    ): CommandResult {
+        $appointmentSettings = $settingsService->getCategorySettings('appointments');
+        $waitingListDeniedUrl = !empty($appointmentSettings['waitingListAppointments']['redirectUrlDenied']) ?
+            $appointmentSettings['waitingListAppointments']['redirectUrlDenied'] : '';
+
+        if (!empty($waitingListDeniedUrl)) {
+            $result->setUrl($waitingListDeniedUrl);
+            return $result;
+        }
+
+        if (!empty($notificationSettings['approveErrorUrl'])) {
+            $result->setUrl($notificationSettings['approveErrorUrl']);
+            return $result;
+        }
+
+        return $result->setHtml(BookingFallbackService::getFallbackHtml('failed'));
     }
 }

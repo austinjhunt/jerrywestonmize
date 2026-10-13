@@ -3,7 +3,7 @@
 Plugin Name: Amelia
 Plugin URI: https://wpamelia.com/
 Description: Amelia is a simple yet powerful automated booking specialist, working 24/7 to make sure your customers can make appointments and events even while you sleep!
-Version: 9.8.1
+Version: 9.9.1
 Author: Melograno Ventures
 Author URI: https://melograno.io/
 Text Domain: wpamelia
@@ -16,7 +16,10 @@ use AmeliaBooking\Domain\Services\Settings\SettingsService;
 use AmeliaBooking\Infrastructure\Common\Container;
 use AmeliaBooking\Infrastructure\Licence\LicenceConstants;
 use AmeliaBooking\Application\Services\Payment\PaymentApplicationService;
+use AmeliaBooking\Application\Services\Stripe\AbstractStripeApplicationService;
 use AmeliaBooking\Infrastructure\Routes\Routes;
+use AmeliaBooking\Infrastructure\Services\Google\AbstractGoogleCalendarService;
+use AmeliaBooking\Infrastructure\Services\Outlook\AbstractOutlookCalendarService;
 use AmeliaBooking\Infrastructure\Services\Payment\SquareService;
 use AmeliaBooking\Infrastructure\WP\ButtonService\ButtonService;
 use AmeliaBooking\Infrastructure\WP\config\Menu;
@@ -124,7 +127,7 @@ if (!defined('AMELIA_LOGIN_URL')) {
 
 // Const for Amelia version
 if (!defined('AMELIA_VERSION')) {
-    define('AMELIA_VERSION', '9.8.1');
+    define('AMELIA_VERSION', '9.9.1');
 }
 
 // Const for site URL
@@ -165,6 +168,16 @@ if (!defined('MELOGRANO_BI_GATE_URL')) {
 
 if (!defined('AMELIA_DEV')) {
     define('AMELIA_DEV', false);
+}
+
+// Sentry DSN for optional error reporting — never hardcoded; set via wp-config.php or env var.
+if (!defined('AMELIA_SENTRY_DSN')) {
+    define('AMELIA_SENTRY_DSN', getenv('AMELIA_SENTRY_DSN') ?: '');
+}
+
+// Lets local dev and staging show up as separate Sentry environments; set via wp-config.php or env var.
+if (!defined('AMELIA_SENTRY_ENVIRONMENT')) {
+    define('AMELIA_SENTRY_ENVIRONMENT', getenv('AMELIA_SENTRY_ENVIRONMENT') ?: '');
 }
 
 if (!defined('AMELIA_NGROK_URL')) {
@@ -289,6 +302,11 @@ class Plugin
 
             exit();
         } catch (Exception $e) {
+            \AmeliaBooking\Infrastructure\Services\ErrorTracking\SentryReporter::report(
+                $e->getMessage(),
+                ['exception' => $e]
+            );
+
             echo 'ERROR: ' . esc_html($e->getMessage());
         }
     }
@@ -301,10 +319,10 @@ class Plugin
         return $schedules;
     }
 
-    static function razorpay_reconciliation_schedule($schedules) {
+    static function payment_reconciliation_schedule($schedules) {
         $schedules['amelia_fifteen_minutes'] = array(
             'interval' => 900,
-            'display' => __('Every 15 minutes (Amelia Razorpay payment reconciliation)', AMELIA_DOMAIN)
+            'display' => __('Every 15 minutes (Amelia payment reconciliation)', AMELIA_DOMAIN)
         );
         return $schedules;
     }
@@ -363,8 +381,27 @@ class Plugin
             add_action( 'amelia_square_access_token_refresh', [$squareService, 'refreshAccessToken'] );
         }
 
+        if (!empty($settingsService->getCategorySettings('payments')['stripe']['enabled'])) {
+            add_filter( 'cron_schedules', [self::class, 'payment_reconciliation_schedule'] );
+
+            if (!wp_next_scheduled('amelia_stripe_reconcile_pending_payments')) {
+                wp_schedule_event( time(), 'amelia_fifteen_minutes', 'amelia_stripe_reconcile_pending_payments' );
+            }
+
+            /** @var Container $container */
+            $container = require AMELIA_PATH . '/src/Infrastructure/ContainerConfig/container.php';
+
+            /** @var AbstractStripeApplicationService $stripeApplicationService */
+            $stripeApplicationService = $container->get('application.stripe.service');
+
+            add_action(
+                'amelia_stripe_reconcile_pending_payments',
+                [$stripeApplicationService, 'reconcilePendingStripePayments']
+            );
+        }
+
         if (!empty($settingsService->getCategorySettings('payments')['razorpay']['enabled'])) {
-            add_filter( 'cron_schedules', [self::class, 'razorpay_reconciliation_schedule'] );
+            add_filter( 'cron_schedules', [self::class, 'payment_reconciliation_schedule'] );
 
             if (!wp_next_scheduled('amelia_razorpay_reconcile_pending_payments')) {
                 wp_schedule_event( time(), 'amelia_fifteen_minutes', 'amelia_razorpay_reconcile_pending_payments' );
@@ -380,6 +417,44 @@ class Plugin
                 'amelia_razorpay_reconcile_pending_payments',
                 [$paymentApplicationService, 'reconcilePendingRazorpayPayments']
             );
+        }
+
+        if ($settingsService->isFeatureEnabled('googleCalendar')) {
+            add_filter('cron_schedules', [self::class, 'google_calendar_channel_renew']);
+
+            if (!wp_next_scheduled('amelia_google_channel_renew')) {
+                wp_schedule_event(time(), 'amelia_daily', 'amelia_google_channel_renew');
+            }
+
+            /** @var Container $container */
+            $container = require AMELIA_PATH . '/src/Infrastructure/ContainerConfig/container.php';
+
+            /** @var AbstractGoogleCalendarService $googleCalendarService */
+            $googleCalendarService = $container->get('infrastructure.google.calendar.service');
+
+            add_action('amelia_google_channel_renew', [$googleCalendarService, 'renewChannels']);
+        } elseif (wp_next_scheduled('amelia_google_channel_renew')) {
+            wp_clear_scheduled_hook('amelia_google_channel_renew');
+        }
+
+        if ($settingsService->isFeatureEnabled('outlookCalendar')) {
+            /** @var Container $container */
+            $container = require AMELIA_PATH . '/src/Infrastructure/ContainerConfig/container.php';
+
+            /** @var AbstractOutlookCalendarService $outlookCalendarService */
+            $outlookCalendarService = $container->get('infrastructure.outlook.calendar.service');
+
+            $outlookCalendarService->getOutlookAction();
+
+            add_filter('cron_schedules', [self::class, 'outlook_calendar_subscription_renew']);
+
+            if (!wp_next_scheduled('amelia_outlook_subscription_renew')) {
+                wp_schedule_event(time(), 'amelia_daily', 'amelia_outlook_subscription_renew');
+            }
+
+            add_action('amelia_outlook_subscription_renew', [$outlookCalendarService, 'renewSubscriptions']);
+        } elseif (wp_next_scheduled('amelia_outlook_subscription_renew')) {
+            wp_clear_scheduled_hook('amelia_outlook_subscription_renew');
         }
 
         if (!wp_next_scheduled('amelia_log_retention_cleanup')) {
@@ -457,6 +532,24 @@ class Plugin
         }
 
         CustomPostTypesBootstrap::init();
+    }
+
+    static function google_calendar_channel_renew($schedules) {
+        $schedules['amelia_daily'] = array(
+            'interval' => 86400,
+            'display'  => __('Add daily cron to renew google calendar channel every day', 'wpamelia')
+        );
+
+        return $schedules;
+    }
+
+    static function outlook_calendar_subscription_renew($schedules) {
+        $schedules['amelia_daily'] = array(
+            'interval' => 86400,
+            'display'  => __('Add daily cron to renew outlook calendar subscriptions every day', 'wpamelia')
+        );
+
+        return $schedules;
     }
 
     /**
@@ -585,7 +678,8 @@ class Plugin
         // Init admin menu
         $wpMenu = new Submenu(
             new SubmenuPageHandler($settingsService),
-            $menuItems()
+            $menuItems(),
+            $settingsService
         );
 
         $wpMenu->addOptionsPages();
@@ -1227,7 +1321,15 @@ add_action('admin_head', array('AmeliaBooking\Plugin', 'hide_notices_on_amelia_p
 
 /** Redirect For Outlook Calendar */
 if (is_admin()) {
-    add_action('wp_loaded', array('AmeliaBooking\Infrastructure\Services\Outlook\OutlookCalendarService', 'handleCallback'));
+    add_action('wp_loaded', static function () {
+        /** @var Container $container */
+        $container = require AMELIA_PATH . '/src/Infrastructure/ContainerConfig/container.php';
+
+        /** @var AbstractOutlookCalendarService $outlookCalendarService */
+        $outlookCalendarService = $container->get('infrastructure.outlook.calendar.service');
+
+        $outlookCalendarService::handleCallback();
+    });
 }
 
 /** Isolate API calls */

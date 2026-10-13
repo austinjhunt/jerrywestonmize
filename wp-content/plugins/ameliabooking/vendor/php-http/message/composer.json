@@ -37,7 +37,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Http\\Message\\": "src/"
+            "AmeliaHttp\\Message\\": "src/"
         },
         "files": [
             "src/filters.php"

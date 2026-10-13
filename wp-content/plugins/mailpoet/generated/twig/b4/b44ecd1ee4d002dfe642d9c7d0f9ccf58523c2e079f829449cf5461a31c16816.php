@@ -493,8 +493,42 @@ class __TwigTemplate_dca57ced6841059bfa2e8b3dbebd25c20bdcb4ab3fe1554e70cfc14ded6
   </tr>
   ";
             // line 377
-            if ((($context["topLinkClicks"] ?? null) > 0)) {
+            if ((($context["notTracked"] ?? null) > 0)) {
                 // line 378
+                yield "    <tr>
+      <td class=\"mailpoet_content\" align=\"center\" style=\"border-collapse:collapse\">
+        <table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-spacing:0;mso-table-lspace:0;mso-table-rspace:0;border-collapse:collapse\">
+          <tbody>
+          <tr>
+            <td class=\"mailpoet_paragraph mailpoet_padded_side\" style=\"word-break:break-word;word-wrap:break-word;text-align:center;border-collapse:collapse;color:#7f7f7f;font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;font-size:13px;line-height:20px;padding-left:20px;padding-right:20px;padding-bottom:10px\">
+              ";
+                // line 384
+                if ((($context["trackedSent"] ?? null) > 0)) {
+                    // line 385
+                    yield "                ";
+                    yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(MailPoetVendor\Twig\Extension\CoreExtension::replace($this->extensions['MailPoet\Twig\I18n']->pluralize("%1\$s of your recipients is not tracked, so open and click rates are based on the other %2\$s.", "%1\$s of your recipients are not tracked, so open and click rates are based on the other %2\$s.", ($context["notTracked"] ?? null)), ["%1\$s" => ($context["notTracked"] ?? null), "%2\$s" => ($context["trackedSent"] ?? null)]), "html", null, true);
+                    yield "
+              ";
+                } else {
+                    // line 387
+                    yield "                ";
+                    yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(MailPoetVendor\Twig\Extension\CoreExtension::replace($this->extensions['MailPoet\Twig\I18n']->pluralize("Your %1\$s recipient is not tracked, so open and click rates cannot be measured.", "None of your %1\$s recipients are tracked, so open and click rates cannot be measured.", ($context["notTracked"] ?? null)), ["%1\$s" => ($context["notTracked"] ?? null)]), "html", null, true);
+                    yield "
+              ";
+                }
+                // line 389
+                yield "            </td>
+          </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  ";
+            }
+            // line 396
+            yield "  ";
+            if ((($context["topLinkClicks"] ?? null) > 0)) {
+                // line 397
                 yield "    <tr>
       <td class=\"mailpoet_content\" align=\"center\" style=\"border-collapse:collapse\">
         <table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-spacing:0;mso-table-lspace:0;mso-table-rspace:0;border-collapse:collapse\">
@@ -532,7 +566,7 @@ class __TwigTemplate_dca57ced6841059bfa2e8b3dbebd25c20bdcb4ab3fe1554e70cfc14ded6
                   <td class=\"mailpoet_header_footer_padded mailpoet_header\" style=\"line-height:38.4px;text-align:center ;color:#222222 ;font-family:'Trebuchet MS', 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Tahoma, sans-serif ;font-size:24px ;border-collapse:collapse;padding:10px 20px\">
                     <span style=\"font-weight: 600;\">
                       ";
-                // line 414
+                // line 433
                 yield $this->extensions['MailPoet\Twig\I18n']->translate("Most clicked link");
                 yield "
                     </span>
@@ -544,27 +578,27 @@ class __TwigTemplate_dca57ced6841059bfa2e8b3dbebd25c20bdcb4ab3fe1554e70cfc14ded6
                       <tr>
                         <td class=\"mailpoet_paragraph\" style=\"word-break:break-word;word-wrap:break-word;text-align:center;border-collapse:collapse;color:#000000;font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;font-size:16px;line-height:25.6px\">
                           ";
-                // line 423
+                // line 442
                 if ((is_string($__internal_compile_0 = ($context["topLink"] ?? null)) && is_string($__internal_compile_1 = "http") && str_starts_with($__internal_compile_0, $__internal_compile_1))) {
-                    // line 424
+                    // line 443
                     yield "                            <a href=\"";
                     yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(($context["topLink"] ?? null), "html", null, true);
                     yield "\" target=\"_blank\" rel=\"noopener noreferrer\"
                                style=\"color:#008282;text-decoration:underline\">
                               ";
-                    // line 426
+                    // line 445
                     yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(($context["topLink"] ?? null), "html", null, true);
                     yield "
                             </a>
                           ";
                 } else {
-                    // line 429
+                    // line 448
                     yield "                            ";
                     yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(($context["topLink"] ?? null), "html", null, true);
                     yield "
                           ";
                 }
-                // line 431
+                // line 450
                 yield "                        </td>
                       </tr>
                     </table>
@@ -573,7 +607,7 @@ class __TwigTemplate_dca57ced6841059bfa2e8b3dbebd25c20bdcb4ab3fe1554e70cfc14ded6
                         <td class=\"mailpoet_paragraph\" style=\"word-break:break-word;word-wrap:break-word;text-align:center;border-collapse:collapse;color:#000000;font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;font-size:16px;line-height:25.6px\">
                           <span style=\"color: #000000;\">
                             ";
-                // line 438
+                // line 457
                 yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(MailPoetVendor\Twig\Extension\CoreExtension::replace($this->extensions['MailPoet\Twig\I18n']->translate("%s unique clicks"), ["%s" => ($context["topLinkClicks"] ?? null)]), "html", null, true);
                 yield "
                           </span>
@@ -592,7 +626,7 @@ class __TwigTemplate_dca57ced6841059bfa2e8b3dbebd25c20bdcb4ab3fe1554e70cfc14ded6
     </tr>
   ";
             }
-            // line 454
+            // line 473
             yield "  <tr>
     <td class=\"mailpoet_content\" align=\"center\" style=\"border-collapse:collapse\">
       <table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-spacing:0;mso-table-lspace:0;mso-table-rspace:0;border-collapse:collapse\">
@@ -620,11 +654,11 @@ class __TwigTemplate_dca57ced6841059bfa2e8b3dbebd25c20bdcb4ab3fe1554e70cfc14ded6
                       <tr>
                         <td class=\"mailpoet_button-container\" style=\"text-align:center;border-collapse:collapse\">
                           <a class=\"mailpoet_button\" href=\"";
-            // line 480
+            // line 499
             yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(($context["linkStats"] ?? null), "html", null, true);
             yield "\" style=\"display:inline-block;-webkit-text-size-adjust:none;mso-hide:all;text-decoration:none;text-align:center;background-color:#fe5301 ;border-color:#0074a2 ;border-width:0px ;border-radius:3px ;border-style:solid ;width:288px ;line-height:50px ;color:#ffffff ;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif ;font-size:20px ;font-weight:normal \">
                             ";
-            // line 481
+            // line 500
             yield $this->extensions['MailPoet\Twig\I18n']->translate("View all stats");
             yield "
                           </a>
@@ -671,7 +705,7 @@ class __TwigTemplate_dca57ced6841059bfa2e8b3dbebd25c20bdcb4ab3fe1554e70cfc14ded6
      */
     public function getDebugInfo()
     {
-        return array (  625 => 481,  621 => 480,  593 => 454,  574 => 438,  565 => 431,  559 => 429,  553 => 426,  547 => 424,  545 => 423,  533 => 414,  495 => 378,  493 => 377,  468 => 355,  454 => 344,  430 => 323,  416 => 312,  372 => 271,  358 => 260,  334 => 239,  320 => 228,  276 => 187,  272 => 186,  259 => 176,  255 => 175,  241 => 164,  237 => 163,  213 => 141,  187 => 118,  153 => 87,  132 => 69,  113 => 52,  111 => 51,  93 => 36,  83 => 29,  71 => 20,  56 => 7,  53 => 5,  51 => 4,  47 => 3,  36 => 1,);
+        return array (  659 => 500,  655 => 499,  627 => 473,  608 => 457,  599 => 450,  593 => 448,  587 => 445,  581 => 443,  579 => 442,  567 => 433,  529 => 397,  526 => 396,  517 => 389,  511 => 387,  505 => 385,  503 => 384,  495 => 378,  493 => 377,  468 => 355,  454 => 344,  430 => 323,  416 => 312,  372 => 271,  358 => 260,  334 => 239,  320 => 228,  276 => 187,  272 => 186,  259 => 176,  255 => 175,  241 => 164,  237 => 163,  213 => 141,  187 => 118,  153 => 87,  132 => 69,  113 => 52,  111 => 51,  93 => 36,  83 => 29,  71 => 20,  56 => 7,  53 => 5,  51 => 4,  47 => 3,  36 => 1,);
     }
 
     public function getSourceContext()

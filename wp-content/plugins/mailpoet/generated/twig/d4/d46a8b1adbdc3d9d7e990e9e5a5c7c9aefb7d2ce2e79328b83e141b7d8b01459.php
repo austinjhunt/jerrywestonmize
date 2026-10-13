@@ -218,23 +218,31 @@ class __TwigTemplate_9641d7769a94575cd44aaeff4df310da82a8fe07490b66905fc1e575dba
         // line 52
         yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["block_email_editor_enabled"] ?? null));
         yield ";
-    ";
+      var mailpoet_editor_choice_modal_enabled = ";
+        // line 53
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["editor_choice_modal_enabled"] ?? null));
+        yield ";
+      var mailpoet_last_email_editor_choice = ";
         // line 54
+        yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["last_email_editor_choice"] ?? null));
+        yield ";
+    ";
+        // line 56
         yield "
     var mailpoet_newsletters_templates_recently_sent_count = ";
-        // line 55
+        // line 57
         yield json_decode(($context["newsletters_templates_recently_sent_count"] ?? null));
         yield ";
     var corrupt_newsletters = ";
-        // line 56
+        // line 58
         yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["corrupt_newsletters"] ?? null));
         yield ";
     var mailpoet_legacy_automatic_emails_count = ";
-        // line 57
+        // line 59
         yield $this->env->getRuntime('MailPoetVendor\Twig\Runtime\EscaperRuntime')->escape(($context["legacy_automatic_emails_count"] ?? null), "html", null, true);
         yield ";
     var mailpoet_legacy_automatic_emails_notice_dismissed = ";
-        // line 58
+        // line 60
         yield $this->extensions['MailPoet\Twig\Functions']->jsonEncode(($context["legacy_automatic_emails_notice_dismissed"] ?? null));
         yield ";
 
@@ -243,11 +251,11 @@ class __TwigTemplate_9641d7769a94575cd44aaeff4df310da82a8fe07490b66905fc1e575dba
         return; yield '';
     }
 
-    // line 63
+    // line 65
     public function block_after_translations($context, array $blocks = [])
     {
         $macros = $this->macros;
-        // line 64
+        // line 66
         yield "  ";
         yield do_action("mailpoet_newsletters_translations_after");
         yield "
@@ -276,7 +284,7 @@ class __TwigTemplate_9641d7769a94575cd44aaeff4df310da82a8fe07490b66905fc1e575dba
      */
     public function getDebugInfo()
     {
-        return array (  248 => 64,  244 => 63,  235 => 58,  231 => 57,  227 => 56,  223 => 55,  220 => 54,  216 => 52,  212 => 51,  208 => 50,  204 => 49,  200 => 48,  196 => 47,  192 => 46,  188 => 45,  184 => 44,  180 => 43,  176 => 42,  172 => 41,  168 => 40,  163 => 38,  159 => 37,  155 => 36,  151 => 35,  146 => 33,  142 => 32,  138 => 31,  134 => 30,  129 => 28,  125 => 27,  120 => 25,  115 => 23,  111 => 22,  106 => 20,  102 => 19,  98 => 18,  94 => 17,  90 => 16,  86 => 15,  82 => 14,  78 => 13,  74 => 12,  70 => 11,  66 => 10,  62 => 9,  57 => 8,  52 => 4,  48 => 3,  37 => 1,);
+        return array (  256 => 66,  252 => 65,  243 => 60,  239 => 59,  235 => 58,  231 => 57,  228 => 56,  224 => 54,  220 => 53,  216 => 52,  212 => 51,  208 => 50,  204 => 49,  200 => 48,  196 => 47,  192 => 46,  188 => 45,  184 => 44,  180 => 43,  176 => 42,  172 => 41,  168 => 40,  163 => 38,  159 => 37,  155 => 36,  151 => 35,  146 => 33,  142 => 32,  138 => 31,  134 => 30,  129 => 28,  125 => 27,  120 => 25,  115 => 23,  111 => 22,  106 => 20,  102 => 19,  98 => 18,  94 => 17,  90 => 16,  86 => 15,  82 => 14,  78 => 13,  74 => 12,  70 => 11,  66 => 10,  62 => 9,  57 => 8,  52 => 4,  48 => 3,  37 => 1,);
     }
 
     public function getSourceContext()

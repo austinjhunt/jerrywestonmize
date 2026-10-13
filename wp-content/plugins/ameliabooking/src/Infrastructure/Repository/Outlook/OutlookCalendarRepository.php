@@ -89,10 +89,10 @@ class OutlookCalendarRepository extends AbstractRepository
      * @param OutlookCalendar $outlookCalendar
      * @param int            $id
      *
-     * @return mixed
+     * @return bool
      * @throws QueryExecutionException
      */
-    public function update($outlookCalendar, $id)
+    public function update($outlookCalendar, $id): bool
     {
         $data = $outlookCalendar->toArray();
 
@@ -103,6 +103,10 @@ class OutlookCalendarRepository extends AbstractRepository
         ];
 
         try {
+            // accountId and syncId are deliberately left alone. They are registry bookkeeping rather than
+            // anything a provider form submits, and this method is handed entities built from request data
+            // that never carry them - writing them here would detach the connection from its watch on
+            // every save.
             $statement = $this->connection->prepare(
                 "UPDATE {$this->table}
                 SET `token` = :token, `calendarId` = :calendarId WHERE id = :id"
@@ -114,6 +118,140 @@ class OutlookCalendarRepository extends AbstractRepository
         } catch (Exception $e) {
             throw new QueryExecutionException('Unable to save data in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
         }
+    }
+
+    /**
+     * @param int      $id
+     * @param int|null $syncId
+     *
+     * @return bool
+     * @throws QueryExecutionException
+     */
+    public function updateSyncId($id, $syncId): bool
+    {
+        try {
+            $statement = $this->connection->prepare(
+                "UPDATE {$this->table} SET `syncId` = :syncId WHERE id = :id"
+            );
+
+            $statement->execute([':syncId' => $syncId, ':id' => $id]);
+
+            return true;
+        } catch (Exception $e) {
+            throw new QueryExecutionException('Unable to save sync id in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+    /**
+     * @param int    $id
+     * @param string $accountId
+     *
+     * @return bool
+     * @throws QueryExecutionException
+     */
+    public function updateAccountId($id, $accountId): bool
+    {
+        try {
+            $statement = $this->connection->prepare(
+                "UPDATE {$this->table} SET `accountId` = :accountId WHERE id = :id"
+            );
+
+            $statement->execute([':accountId' => $accountId, ':id' => $id]);
+
+            return true;
+        } catch (Exception $e) {
+            throw new QueryExecutionException('Unable to save account id in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+    /**
+     * Connections still attached to a watch, newest last, so a caller can hand ownership to another one.
+     *
+     * @param int      $syncId
+     * @param int|null $excludeId connection being removed
+     *
+     * @return array list of ['id' => int, 'userId' => int]
+     * @throws QueryExecutionException
+     */
+    public function getConnectionsBySyncId($syncId, $excludeId = null): array
+    {
+        $params = [':syncId' => $syncId];
+
+        $where = '';
+        if ($excludeId !== null) {
+            $where = ' AND id <> :excludeId';
+            $params[':excludeId'] = $excludeId;
+        }
+
+        try {
+            $statement = $this->connection->prepare(
+                "SELECT id, userId FROM {$this->table} WHERE `syncId` = :syncId{$where} ORDER BY id ASC"
+            );
+
+            $statement->execute($params);
+
+            $rows = $statement->fetchAll();
+        } catch (Exception $e) {
+            throw new QueryExecutionException('Unable to get connections in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
+        }
+
+        return array_map(
+            function ($row) {
+                return ['id' => (int)$row['id'], 'userId' => (int)$row['userId']];
+            },
+            $rows ?: []
+        );
+    }
+
+    /**
+     * Whether a provider is connected to the calendar this watch belongs to. This is the calendar scoped
+     * guard: an incoming change may only touch appointments of providers attached to the calendar the
+     * notification came from.
+     *
+     * @param int $syncId
+     * @param int $providerId
+     *
+     * @return bool
+     * @throws QueryExecutionException
+     */
+    public function isProviderAttachedToSync($syncId, $providerId): bool
+    {
+        try {
+            $statement = $this->connection->prepare(
+                "SELECT id FROM {$this->table} WHERE `syncId` = :syncId AND `userId` = :userId LIMIT 1"
+            );
+
+            $statement->execute([':syncId' => $syncId, ':userId' => $providerId]);
+
+            return (bool)$statement->fetch();
+        } catch (Exception $e) {
+            throw new QueryExecutionException('Unable to check connection in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+    /**
+     * @param int $rowId providers_to_outlook_calendar.id
+     *
+     * @return int|null
+     * @throws QueryExecutionException
+     */
+    public function getUserIdByOutlookCalendarRowId($rowId)
+    {
+        try {
+            $statement = $this->connection->prepare(
+                "SELECT userId FROM {$this->table} WHERE id = :id LIMIT 1"
+            );
+            $statement->execute([':id' => $rowId]);
+            $row = $statement->fetch();
+        } catch (Exception $e) {
+            throw new QueryExecutionException('Unable to lookup userId in ' . __CLASS__ . '. ' . $e->getMessage(), $e->getCode(), $e);
+        }
+
+        if (!$row || !isset($row['userId'])) {
+            return null;
+        }
+
+        return (int)$row['userId'];
     }
 
     /**

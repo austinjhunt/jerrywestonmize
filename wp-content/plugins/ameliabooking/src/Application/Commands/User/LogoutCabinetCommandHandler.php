@@ -4,6 +4,7 @@ namespace AmeliaBooking\Application\Commands\User;
 
 use AmeliaBooking\Application\Commands\CommandHandler;
 use AmeliaBooking\Application\Commands\CommandResult;
+use AmeliaBooking\Domain\Entity\User\AbstractUser;
 use AmeliaBooking\Infrastructure\WP\UserService\UserService;
 
 /**
@@ -27,9 +28,22 @@ class LogoutCabinetCommandHandler extends CommandHandler
 
         do_action('amelia_before_logout_user');
 
-        $userService->logoutWordPressUser();
+        /** @var AbstractUser $user */
+        $user = $this->container->get('logged.in.user');
 
-        $userService->logoutAmeliaUser();
+        // If user is WP user connected to Amelia user, admin or manager, logout WP user
+        if (
+            $user &&
+            (
+                $user->getId() !== null ||
+                $user->getType() === AbstractUser::USER_ROLE_ADMIN ||
+                $user->getType() === AbstractUser::USER_ROLE_MANAGER
+            )
+        ) {
+            $userService->logoutWordPressUser();
+        }
+
+        $userService->logoutAmeliaUser(false);
 
         do_action('amelia_after_logout_user');
 

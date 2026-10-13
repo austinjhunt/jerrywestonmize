@@ -16,6 +16,7 @@ use AmeliaBooking\Domain\ValueObjects\Json;
 use AmeliaBooking\Domain\ValueObjects\PositiveDuration;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\Id;
 use AmeliaBooking\Domain\ValueObjects\Number\Integer\IntegerValue;
+use AmeliaBooking\Domain\ValueObjects\Number\Integer\WholeNumber;
 use AmeliaBooking\Domain\ValueObjects\String\Token;
 
 /**
@@ -31,7 +32,7 @@ class CustomerBooking extends AbstractCustomerBooking
     /** @var  Collection */
     protected $extras;
 
-    /** @var IntegerValue */
+    /** @var WholeNumber */
     private $persons;
 
     /** @var Collection */
@@ -121,17 +122,17 @@ class CustomerBooking extends AbstractCustomerBooking
     }
 
     /**
-     * @return IntegerValue
+     * @return WholeNumber|null
      */
-    public function getPersons()
+    public function getPersons(): ?WholeNumber
     {
         return $this->persons;
     }
 
     /**
-     * @param IntegerValue $persons
+     * @param WholeNumber $persons
      */
-    public function setPersons(IntegerValue $persons)
+    public function setPersons(WholeNumber $persons): void
     {
         $this->persons = $persons;
     }

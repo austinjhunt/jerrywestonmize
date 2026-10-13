@@ -29,6 +29,13 @@ class AmeliaErrorHandler extends ErrorHandler
             $status = $exception->getCode();
         } else {
             $status = Controller::STATUS_INTERNAL_SERVER_ERROR;
+
+            // Only the unexpected-error branch — AccessDenied/NotFound/HttpException above are
+            // expected control flow, not plugin failures, and would just be noise in Sentry.
+            \AmeliaBooking\Infrastructure\Services\ErrorTracking\SentryReporter::report(
+                $exception->getMessage(),
+                ['exception' => $exception]
+            );
         }
 
         $responseMessage = ['message' => $exception->getMessage()];

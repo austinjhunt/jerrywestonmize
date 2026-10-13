@@ -246,4 +246,151 @@ HTML;
     {
         return self::getFallbackPage($statusType);
     }
+
+    /**
+     * Generate HTML confirmation page shown before remote cancellation
+     *
+     * @param string $actionUrl POST endpoint that performs the cancellation
+     * @param string $type      Reservation type (appointment|event)
+     */
+    public static function getCancelConfirmationHtml(string $actionUrl, string $type): string
+    {
+        $siteUrl = home_url();
+        $siteName = get_bloginfo('name');
+        $title = BackendStrings::get('fallback_cancel_confirm_title');
+        $description = BackendStrings::get('fallback_cancel_confirm_desc');
+        $returnHomeText = BackendStrings::get('fallback_return_to_home');
+        $color = '#dc3545';
+        $iconSvg = self::getIconSvg('warning');
+        $escapedActionUrl = htmlspecialchars($actionUrl, ENT_QUOTES, 'UTF-8');
+        $escapedType = htmlspecialchars($type, ENT_QUOTES, 'UTF-8');
+
+        return <<<HTML
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{$title} - {$siteName}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            max-width: 500px;
+            width: 100%;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: {$color};
+            opacity: 0.9;
+        }
+        .icon svg {
+            width: 45px;
+            height: 45px;
+            fill: white;
+        }
+        h1 {
+            color: #333;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        p {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        .actions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+        .btn {
+            display: inline-block;
+            background-color: {$color};
+            color: white;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            padding: 12px 30px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .btn-secondary {
+            background-color: transparent;
+            color: #666;
+            box-shadow: none;
+            transform: none;
+        }
+        .btn-secondary:hover {
+            opacity: 1;
+            transform: none;
+            box-shadow: none;
+            color: #333;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+            }
+            h1 {
+                font-size: 24px;
+            }
+            p {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">
+            {$iconSvg}
+        </div>
+        <h1>{$title}</h1>
+        <p>{$description}</p>
+        <div class="actions">
+            <form method="POST" action="{$escapedActionUrl}">
+                <input type="hidden" name="confirmed" value="1">
+                <input type="hidden" name="type" value="{$escapedType}">
+                <button type="submit" class="btn">{$title}</button>
+            </form>
+            <a href="{$siteUrl}" class="btn btn-secondary">{$returnHomeText}</a>
+        </div>
+    </div>
+</body>
+</html>
+HTML;
+    }
 }

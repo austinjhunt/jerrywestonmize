@@ -2,6 +2,7 @@
 
 namespace AmeliaBooking\Infrastructure\Services\Outlook;
 
+use AmeliaBooking\Application\Commands\CommandResult;
 use AmeliaBooking\Domain\Collection\Collection;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\Appointment;
 use AmeliaBooking\Domain\Entity\User\Provider;
@@ -35,7 +36,7 @@ class StarterOutlookCalendarService extends AbstractOutlookCalendarService
      *
      * @throws ContainerException
      */
-    public function createAuthUrl($providerId)
+    public function createAuthUrl($providerId): string
     {
         return '';
     }
@@ -54,7 +55,7 @@ class StarterOutlookCalendarService extends AbstractOutlookCalendarService
      *
      * @return array
      */
-    public function fetchAccessTokenWithAuthCode($authCode, $redirectUri, $providerId)
+    public function fetchAccessTokenWithAuthCode($authCode, $redirectUri, $providerId): array
     {
         return ['outcome' => true, 'result' => []];
     }
@@ -64,7 +65,7 @@ class StarterOutlookCalendarService extends AbstractOutlookCalendarService
      *
      * @return array
      */
-    public function listCalendarList($provider)
+    public function listCalendarList($provider): array
     {
         return [];
     }
@@ -76,7 +77,7 @@ class StarterOutlookCalendarService extends AbstractOutlookCalendarService
      *
      * @return null|string
      */
-    public function getProviderOutlookCalendarId($provider)
+    public function getProviderOutlookCalendarId($provider): ?string
     {
         return null;
     }
@@ -88,7 +89,7 @@ class StarterOutlookCalendarService extends AbstractOutlookCalendarService
      *
      * @return void
      */
-    public function handleEvent($appointment, $commandSlug, $oldStatus = null)
+    public function handleEvent($appointment, $commandSlug, $oldStatus = null): void
     {
     }
 
@@ -99,7 +100,7 @@ class StarterOutlookCalendarService extends AbstractOutlookCalendarService
      *
      * @return void
      */
-    public function handleEventPeriod($event, $commandSlug, $periods, $newProviders = null, $removeProviders = null)
+    public function handleEventPeriod($event, $commandSlug, $periods, $newProviders = null, $removeProviders = null): void
     {
     }
 
@@ -114,7 +115,7 @@ class StarterOutlookCalendarService extends AbstractOutlookCalendarService
      *
      * @return array
      */
-    public function getEvents($providerArr, $dateStart, $dateStartEnd, $dateEnd, $eventIds)
+    public function getEvents($providerArr, $dateStart, $dateStartEnd, $dateEnd, $eventIds): array
     {
         return [];
     }
@@ -135,7 +136,7 @@ class StarterOutlookCalendarService extends AbstractOutlookCalendarService
         $excludeAppointmentId,
         $startDateTime,
         $endDateTime
-    ) {
+    ): void {
     }
 
     /** @noinspection MoreThanThreeArgumentsInspection */
@@ -162,7 +163,7 @@ class StarterOutlookCalendarService extends AbstractOutlookCalendarService
         $body,
         $bccEmails = [],
         $attachments = []
-    ) {
+    ): void {
     }
 
     public function getCalendarListsForAccounts(array $accounts, Provider $provider): array
@@ -173,5 +174,49 @@ class StarterOutlookCalendarService extends AbstractOutlookCalendarService
     public function getUserInfo(Provider $provider): array
     {
         return [];
+    }
+
+    public function ensureTwoWaySyncForProvider($providerId): void
+    {
+    }
+
+    public function removeTwoWaySyncForProvider($providerId): void
+    {
+    }
+
+    public function removeTwoWaySyncForCalendarRow($calendarRowId): void
+    {
+    }
+
+    public function renewSubscriptions(): void
+    {
+    }
+
+    public function processGraphCalendarNotifications(
+        $subscriptionId,
+        $clientStateFromNotification,
+        array $notifications
+    ): void {
+    }
+
+    /**
+     * @param array $outlookSettings
+     * @param array $savedOutlookSettings
+     *
+     * @return CommandResult
+     */
+    public function validateCredentials(array $outlookSettings, array $savedOutlookSettings): CommandResult
+    {
+        unset($outlookSettings['token']);
+
+        foreach ($outlookSettings as $key => $value) {
+            $savedOutlookSettings[$key] = $value;
+        }
+
+        $result = new CommandResult();
+        $result->setResult(CommandResult::RESULT_SUCCESS);
+        $result->setData($savedOutlookSettings);
+
+        return $result;
     }
 }

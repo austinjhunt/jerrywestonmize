@@ -11,8 +11,9 @@ use MailPoet\Newsletter\Statistics\NewsletterStatistics;
 use MailPoet\Newsletter\Statistics\NewsletterStatisticsRepository;
 use MailPoet\Newsletter\Statistics\WooCommerceRevenue;
 use MailPoet\Router\Endpoints\ExportDownload;
+use MailPoet\Util\FormulaFreeXLSXWriter;
+use MailPoet\Util\SpreadsheetCellFormatter;
 use MailPoet\WP\Functions as WPFunctions;
-use MailPoetVendor\XLSXWriter;
 
 class StatisticsExporter {
   public const FORMAT_CSV = 'csv';
@@ -249,7 +250,7 @@ class StatisticsExporter {
    */
   private function writeCsvLine($handle, array $row): void {
     // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_fputcsv -- Export handles are created under Env::$tempPath, which is MailPoet's WordPress temp directory.
-    fputcsv($handle, array_map('strval', $row), ',', '"', '');
+    fputcsv($handle, array_map('strval', SpreadsheetCellFormatter::formatRow($row)), ',', '"', '');
   }
 
   /**
@@ -257,7 +258,7 @@ class StatisticsExporter {
    * @param array<array<int|string|float|null>> $rows
    */
   private function writeXlsx(string $filePath, array $headers, array $rows): void {
-    $writer = new XLSXWriter();
+    $writer = new FormulaFreeXLSXWriter();
     $sheetName = __('Statistics', 'mailpoet');
     $writer->writeSheetHeader($sheetName, array_fill_keys($headers, 'string'));
     foreach ($rows as $row) {

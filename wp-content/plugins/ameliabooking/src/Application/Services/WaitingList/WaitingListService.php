@@ -11,13 +11,12 @@ use AmeliaBooking\Domain\Entity\Bookable\Service\Service;
 use AmeliaBooking\Domain\Entity\Booking\Appointment\CustomerBooking;
 use AmeliaBooking\Domain\Entity\Booking\Event\Event;
 use AmeliaBooking\Domain\Entity\Booking\Event\EventTicket;
+use AmeliaBooking\Domain\Entity\Booking\Event\CustomerBookingEventTicket;
 use AmeliaBooking\Domain\Services\Settings\SettingsService;
+use AmeliaBooking\Domain\ValueObjects\Json;
 use AmeliaBooking\Domain\ValueObjects\String\BookingStatus;
 use AmeliaBooking\Infrastructure\Common\Container;
-use AmeliaBooking\Infrastructure\Repository\Booking\Appointment\AppointmentRepository;
 use AmeliaBooking\Infrastructure\Common\Exceptions\QueryExecutionException;
-use Interop\Container\Exception\ContainerException;
-use Slim\Exception\ContainerValueNotFoundException;
 
 /**
  * Class WaitingListService
@@ -46,8 +45,6 @@ class WaitingListService
      *
      * @param Appointment $appointment
      *
-     * @throws ContainerException
-     * @throws ContainerValueNotFoundException
      * @throws QueryExecutionException
      */
     public function sendAvailableSpotNotifications($appointment)
@@ -75,22 +72,20 @@ class WaitingListService
     * Determine if current booking qualifies as a waiting list booking.
      *
      * @param Service         $service
-     * @param array           $appointmentData (expects bookingStart, serviceId, providerId, bookings array)
-     * @param CustomerBooking $booking
+     * @param Appointment     $appointment
+     * @param CustomerBooking $newBooking
      *
      * @return bool  True if booking is legitimate waiting list booking (skip slot check), false otherwise.
-     * @throws ContainerValueNotFoundException
-     * @throws ContainerException
      * @throws QueryExecutionException
      */
-    public function isWaitingListBooking($service, $appointmentData, $booking)
+    public function isAllowedWaitingForAppointmentBooking($service, $appointment, $newBooking): bool
     {
-        if (empty($appointmentData['bookings'][0]['status']) || $appointmentData['bookings'][0]['status'] !== BookingStatus::WAITING) {
-            return false;
-        }
+        /** @var SettingsService $settingsDS */
+        $settingsDS = $this->container->get('domain.settings.service');
 
         // Extract waiting list settings from service settings JSON
         $rawSettings = null;
+
         if ($service->getSettings()) {
             $rawSettings = $service->getSettings()->getValue() ?? $service->getSettings();
         }
@@ -103,46 +98,153 @@ class WaitingListService
         }
 
         $waitingSettings = $decoded['waitingList'] ?? [];
-        $waitingEnabled = !empty($waitingSettings['enabled']);
+        $waitingEnabled = !empty($waitingSettings['enabled']) && $settingsDS->isFeatureEnabled('waitingList');
         $waitingCapacity = isset($waitingSettings['maxCapacity']) ? (int)$waitingSettings['maxCapacity'] : 0;
 
         if (!$waitingEnabled || $waitingCapacity <= 0) {
             return false; // feature not enabled / no capacity defined
         }
 
-        // Retrieve existing appointment(s) at same slot
-        /** @var AppointmentRepository $appointmentRepo */
-        $appointmentRepo = $this->container->get('domain.booking.appointment.repository');
-
-        $existingAppointments = $appointmentRepo->getFiltered([
-            'dates'         => [$appointmentData['bookingStart'], $appointmentData['bookingStart']],
-            'services'      => [$appointmentData['serviceId']],
-            'providers'     => [$appointmentData['providerId']],
-            'skipServices'  => true,
-            'skipProviders' => true,
-            'skipCustomers' => true,
-        ]);
-
-        if (!$existingAppointments->length()) {
-            return false;
-        }
-
         $currentWaitingPersons = 0;
-        foreach ($existingAppointments->getItems() as $existingAppointment) {
-            foreach ($existingAppointment->getBookings()->getItems() as $existingBooking) {
-                if ($existingBooking->getStatus()->getValue() === BookingStatus::WAITING) {
-                    $currentWaitingPersons += $existingBooking->getPersons()->getValue();
-                }
+
+        /** @var CustomerBooking $existingBooking */
+        foreach ($appointment->getBookings()->getItems() as $existingBooking) {
+            if ($existingBooking->getStatus()->getValue() === BookingStatus::WAITING) {
+                $currentWaitingPersons += $existingBooking->getPersons()->getValue();
             }
         }
 
-        $newPersons = $booking->getPersons() ? $booking->getPersons()->getValue() : 1;
+        $newPersons = $newBooking->getPersons() ? $newBooking->getPersons()->getValue() : 1;
 
         if ($currentWaitingPersons + $newPersons <= $waitingCapacity) {
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * @param Event                $reservation
+     * @param CustomerBooking|null $newBooking
+     *
+     * @return boolean
+     */
+    public function isAllowedWaitingForEventBooking($reservation, $newBooking)
+    {
+        $hasWaitingList = false;
+
+        $eventSettings = $reservation->getSettings() ? json_decode($reservation->getSettings()->getValue(), true) : null;
+
+        /** @var SettingsService $settingsDS */
+        $settingsDS = $this->container->get('domain.settings.service');
+
+        if (
+            $settingsDS->isFeatureEnabled('waitingList') && $eventSettings && !empty($eventSettings['waitingList']) &&
+            $eventSettings['waitingList']['enabled']
+        ) {
+            $waitingCustomers = 0;
+
+            $ticketsWaitingPersons = [];
+
+            if (!$reservation->getBookings()->length()) {
+                if ($reservation->getCustomPricing()->getValue()) {
+                    /** @var EventTicket $ticket */
+                    foreach ($reservation->getCustomTickets()->getItems() as $ticket) {
+                        $ticketsWaitingPersons[$ticket->getId()->getValue()] =
+                            $ticket->getWaiting() ? $ticket->getWaiting()->getValue() : 0;
+
+                        $waitingCustomers += $ticket->getWaiting() ? $ticket->getWaiting()->getValue() : 0;
+                    }
+                } else {
+                    $waitingCustomers += $reservation->getSpotsWaiting() ? $reservation->getSpotsWaiting()->getValue() : 0;
+                }
+            }
+
+            /** @var CustomerBooking $booking */
+            foreach ($reservation->getBookings()->getItems() as $booking) {
+                if ($booking->getStatus()->getValue() === BookingStatus::WAITING) {
+                    if ($reservation->getCustomPricing()->getValue()) {
+                        /** @var CustomerBookingEventTicket $item */
+                        foreach ($booking->getTicketsBooking()->getItems() as $item) {
+                            $waitingCustomers += $item->getPersons()->getValue();
+
+                            $bookedTicketId = $item->getEventTicketId()->getValue();
+
+                            if (!array_key_exists($bookedTicketId, $ticketsWaitingPersons)) {
+                                $ticketsWaitingPersons[$bookedTicketId] = 0;
+                            }
+
+                            $ticketsWaitingPersons[$bookedTicketId] += $item->getPersons()->getValue();
+                        }
+                    } else {
+                        $waitingCustomers += $booking->getPersons()->getValue();
+                    }
+                }
+            }
+
+            $newWaitingPersons = 0;
+
+            if ($newBooking) {
+                if ($reservation->getCustomPricing() && $reservation->getCustomPricing()->getValue()) {
+                    /** @var CustomerBookingEventTicket $item */
+                    foreach ($newBooking->getTicketsBooking()->getItems() as $item) {
+                        $newWaitingPersons += $item->getPersons() ? $item->getPersons()->getValue() : 0;
+                    }
+                } else {
+                    $newWaitingPersons = $newBooking->getPersons() ? $newBooking->getPersons()->getValue() : 0;
+                }
+            }
+
+            $hasSharedWaitingCapacity = $eventSettings['waitingList']['maxCapacity'] >=
+                $waitingCustomers + ($newBooking ? $newWaitingPersons : 1);
+
+            if ($newBooking && $reservation->getCustomPricing() && $reservation->getCustomPricing()->getValue()) {
+                if (!$reservation->getMaxCustomCapacity()) {
+                    $hasWaitingList = true;
+                    $hasSelectedTickets = false;
+
+                    /** @var CustomerBookingEventTicket $item */
+                    foreach ($newBooking->getTicketsBooking()->getItems() as $item) {
+                        $personsValue = $item->getPersons() ? $item->getPersons()->getValue() : 0;
+
+                        if (!$personsValue) {
+                            continue;
+                        }
+
+                        $hasSelectedTickets = true;
+
+                        $eventTicketId = $item->getEventTicketId()->getValue();
+
+                        /** @var EventTicket $ticketData */
+                        $ticketData = $reservation->getCustomTickets()->getItem($eventTicketId);
+
+                        $waitingListSpots = $ticketData->getWaitingListSpots() ? $ticketData->getWaitingListSpots()->getValue() : 0;
+                        $waitingValue = !empty($ticketsWaitingPersons[$eventTicketId]) ?
+                            $ticketsWaitingPersons[$eventTicketId] : 0;
+
+                        if ($waitingListSpots < ($personsValue + $waitingValue)) {
+                            $hasWaitingList = false;
+
+                            break;
+                        }
+                    }
+
+                    if (!$hasSelectedTickets) {
+                        $hasWaitingList = false;
+                    }
+                } else {
+                    $hasWaitingList = $hasSharedWaitingCapacity;
+                }
+            } else {
+                $hasWaitingList = $hasSharedWaitingCapacity;
+            }
+
+            $eventSettings['waitingList']['peopleWaiting'] = $waitingCustomers;
+
+            $reservation->setSettings(new Json(json_encode($eventSettings)));
+        }
+
+        return $hasWaitingList;
     }
 
     /**
@@ -162,8 +264,6 @@ class WaitingListService
      *     maxExtraPeople: int|null
      * }|null Null when waiting list feature/settings are unavailable.
      *
-     * @throws ContainerException
-     * @throws ContainerValueNotFoundException
      * @throws InvalidArgumentException
      */
     public function getEventWaitingListAvailability($event, $info = null)

@@ -28,16 +28,16 @@ class DeactivatePluginCommandHandler extends CommandHandler
      * @throws AccessDeniedException
      *
      */
-    public function handle(DeactivatePluginCommand $command)
+    public function handle(DeactivatePluginCommand $command): CommandResult
     {
         $result = new CommandResult();
 
-        if (!(new SuperAdminRoleService())->isCurrentUserSuperAdmin()) {
-            throw new AccessDeniedException('You are not allowed to manage activation settings.');
-        }
-
         /** @var SettingsService $settingsService */
         $settingsService = $this->container->get('domain.settings.service');
+
+        if (!(new SuperAdminRoleService($settingsService))->canAccessActivationSettings()) {
+            throw new AccessDeniedException('You are not allowed to manage activation settings.');
+        }
 
         $purchaseCode = trim(
             $settingsService->getSetting('activation', 'purchaseCodeStore')
