@@ -163,8 +163,23 @@ class Functions {
     return wp_timezone();
   }
 
+  public function registerAbilityCategory(string $slug, array $args): ?\WP_Ability_Category {
+    return wp_register_ability_category($slug, $args);
+  }
+
+  /**
+   * @param lowercase-string&non-falsy-string $name
+   */
+  public function registerAbility(string $name, array $args): ?\WP_Ability {
+    return wp_register_ability($name, $args);
+  }
+
   public function currentUserCan($capability) {
     return current_user_can($capability);
+  }
+
+  public function wpDoingCron(): bool {
+    return wp_doing_cron();
   }
 
   public function wpDoingAjax() {
@@ -416,6 +431,25 @@ class Functions {
     return get_userdata($userId);
   }
 
+  /**
+   * @return mixed
+   */
+  public function getUserOption(string $option, int $userId = 0) {
+    return get_user_option($option, $userId);
+  }
+
+  /**
+   * @param mixed $newValue
+   * @return int|bool
+   */
+  public function updateUserOption(int $userId, string $optionName, $newValue, bool $isGlobal = false) {
+    return update_user_option($userId, $optionName, $newValue, $isGlobal);
+  }
+
+  public function deleteUserOption(int $userId, string $optionName, bool $isGlobal = false): bool {
+    return delete_user_option($userId, $optionName, $isGlobal);
+  }
+
   public function getUserBy($field, $value) {
     return get_user_by($field, $value);
   }
@@ -448,8 +482,16 @@ class Functions {
     return parse_blocks($content);
   }
 
+  public function isSsl(): bool {
+    return is_ssl();
+  }
+
   public function isMultisite() {
     return is_multisite();
+  }
+
+  public function getCurrentBlogId(): int {
+    return get_current_blog_id();
   }
 
   public function isPluginActive($plugin) {
@@ -486,6 +528,14 @@ class Functions {
 
   public function pluginBasename($file) {
     return plugin_basename($file);
+  }
+
+  public function getStylesheetDirectory() {
+    return get_stylesheet_directory();
+  }
+
+  public function getTemplateDirectory() {
+    return get_template_directory();
   }
 
   public function pluginsUrl($path = '', $plugin = '') {
@@ -705,8 +755,17 @@ class Functions {
     return sanitize_email($email);
   }
 
+  /**
+   * @param string $url
+   * @param int<-1, 7> $component
+   * @return ($component is -1 ? array{scheme?: string, host?: string, port?: int<0, 65535>, user?: string, pass?: string, path?: string, query?: string, fragment?: string}|false : string|int|null|false)
+   */
   public function wpParseUrl($url, $component = -1) {
     return wp_parse_url($url, $component);
+  }
+
+  public function wpRegistrationUrl() {
+    return wp_registration_url();
   }
 
   public function wpSpecialcharsDecode($string, $quoteStyle = ENT_NOQUOTES) {
@@ -743,6 +802,10 @@ class Functions {
 
   public function wpSafeRedirect($location, $status = 302) {
     return wp_safe_redirect($location, $status);
+  }
+
+  public function wpSalt($scheme = 'auth') {
+    return wp_salt($scheme);
   }
 
   public function wpValidateRedirect($location, $fallbackUrl = '') {
@@ -783,13 +846,6 @@ class Functions {
    */
   public function hasBlocks($post = null): bool {
     return has_blocks($post);
-  }
-
-  /**
-   * @param int|\WP_Post|null $post
-   */
-  public function postPasswordRequired($post = null): bool {
-    return post_password_required($post);
   }
 
   public function stripShortcodes(string $content): string {
@@ -967,10 +1023,19 @@ class Functions {
     return wp_mkdir_p($dir);
   }
 
+  public function wpIsWritable(string $path): bool {
+    return wp_is_writable($path);
+  }
+
   public function wpGetImageEditor(string $path, $args = []) {
     return wp_get_image_editor($path, $args);
   }
 
+  /**
+   * @param non-empty-string $handle
+   * @param non-empty-string|false $src
+   * @param non-empty-string[] $deps
+   */
   public function wpRegisterScript(string $handle, $src, $deps = [], $ver = false, $in_footer = false): bool {
     return wp_register_script($handle, $src, $deps, $ver, $in_footer);
   }
@@ -1019,6 +1084,10 @@ class Functions {
     return rest_url($path, $scheme);
   }
 
+  /**
+   * @param non-falsy-string $namespace
+   * @param non-falsy-string $route
+   */
   public function registerRestRoute(string $namespace, string $route, array $args = [], bool $override = false): bool {
     return register_rest_route($namespace, $route, $args, $override);
   }
@@ -1142,6 +1211,10 @@ class Functions {
     return wp_strip_all_tags($string, $removeBreaks);
   }
 
+  public function wpDeleteFile(string $file): bool {
+    return wp_delete_file($file);
+  }
+
   public function getTheContent($more_link_text = null, $strip_teaser = false, $post = null) {
     return get_the_content($more_link_text, $strip_teaser, $post);
   }
@@ -1152,6 +1225,10 @@ class Functions {
 
   public function wpIsMaintenanceMode(): bool {
     return wp_is_maintenance_mode();
+  }
+
+  public function wpGetEnvironmentType(): string {
+    return wp_get_environment_type();
   }
 
   public function headersSent(): bool {

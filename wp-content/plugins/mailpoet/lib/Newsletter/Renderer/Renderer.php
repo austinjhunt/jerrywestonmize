@@ -180,13 +180,17 @@ class Renderer {
       $renderedBody = "";
       try {
         $content = $this->preprocessor->process($newsletter, $content, $preview, $sendingQueue);
+        if (is_array($content)) {
+          $content = StylesHelper::sanitizeBlockStyles($content);
+        }
         $renderedBody = $this->bodyRenderer->renderBody($newsletter, $content, $isRtl);
       } catch (NewsletterProcessingException $e) {
         $this->loggerFactory->getLogger(LoggerFactory::TOPIC_COUPONS)->error(
           $e->getMessage(),
           ['newsletter_id' => $newsletter->getId()]
         );
-        if (!$sendingQueue || !NewsletterReplayMetadata::isLatestNewsletterReplayMeta($sendingQueue->getMeta())) {
+        // only a render for sending changes the email's status; previews just log
+        if ($sendingQueue && !NewsletterReplayMetadata::isLatestNewsletterReplayMeta($sendingQueue->getMeta())) {
           $this->newslettersRepository->setAsCorrupt($newsletter);
         }
         if ($sendingQueue) {
@@ -250,7 +254,7 @@ class Renderer {
    */
   private function injectContentIntoTemplate($template, $content) {
     return preg_replace_callback('/{{\w+}}/', function($matches) use (&$content) {
-      return array_shift($content);
+      return array_shift($content) ?? '';
     }, $template);
   }
 
@@ -281,9 +285,15 @@ class Renderer {
   private function postProcessTemplate(DomNode $templateDom) {
     // replace spaces in image tag URLs
     foreach ($templateDom->query('img') as $image) {
+      if ($image->src === null) {
+        continue;
+      }
       $image->src = str_replace(' ', '%20', $image->src);
     }
     foreach ($templateDom->query('a') as $anchor) {
+      if ($anchor->href === null) {
+        continue;
+      }
       // Fix for a TinyMCE bug in smart paste which encodes & as &amp; which is then additionally encoded to &amp;amp;
       // when saving the text block content in the editor
       $href = str_replace('&amp;amp;', '&amp;', $anchor->href);

@@ -30,6 +30,7 @@ use MailPoet\Entities\NewsletterOptionFieldEntity;
 use MailPoet\Entities\ScheduledTaskSubscriberEntity;
 use MailPoet\Entities\SubscriberEntity;
 use MailPoet\InvalidStateException;
+use MailPoet\Mailer\SendingEnvironment;
 use MailPoet\Newsletter\NewsletterSaveController;
 use MailPoet\Newsletter\NewslettersRepository;
 use MailPoet\Newsletter\Options\NewsletterOptionFieldsRepository;
@@ -69,6 +70,10 @@ class SendEmailAction implements Action {
     12 * HOUR_IN_SECONDS, // ~12 hours
     1 * DAY_IN_SECONDS, // ~1 day
   ];
+  // While sending is paused (non-production site), poll at a steady interval
+  // without moving toward the timeout.
+  private const PAUSED_POLL_INTERVAL = 6 * HOUR_IN_SECONDS;
+  private const PAUSED_POLLS = 'paused_polls';
   private const WAIT_OPTIN = 'wait_optin';
   private const OPTIN_RETRIES = 'optin_retries';
   private const ORDER_REVIEW_URL_TOKEN = '[woocommerce/order-review-url]';
@@ -121,6 +126,7 @@ class SendEmailAction implements Action {
   private BlockEmailContentDetector $blockEmailContentDetector;
   private AutomationSendEmailSubjectResolver $subjectResolver;
   private OrderReviewUrl $orderReviewUrl;
+  private SendingEnvironment $sendingEnvironment;
 
   public function __construct(
     AutomationController $automationController,
@@ -136,7 +142,8 @@ class SendEmailAction implements Action {
     NewsletterSaveController $newsletterSaveController,
     BlockEmailContentDetector $blockEmailContentDetector,
     AutomationSendEmailSubjectResolver $subjectResolver,
-    OrderReviewUrl $orderReviewUrl
+    OrderReviewUrl $orderReviewUrl,
+    SendingEnvironment $sendingEnvironment
   ) {
     $this->automationController = $automationController;
     $this->settings = $settings;
@@ -152,6 +159,7 @@ class SendEmailAction implements Action {
     $this->blockEmailContentDetector = $blockEmailContentDetector;
     $this->subjectResolver = $subjectResolver;
     $this->orderReviewUrl = $orderReviewUrl;
+    $this->sendingEnvironment = $sendingEnvironment;
   }
 
   public function getKey(): string {
@@ -293,11 +301,12 @@ class SendEmailAction implements Action {
           self::WAIT_OPTIN => 0,
           self::OPTIN_RETRIES => $args->getRunNumber(),
         ]);
+        $state[self::OPTIN_RETRIES] = $args->getRunNumber();
         $this->scheduleEmail($args, $newsletter, $subscriber);
       }
 
       // Check/sync sending status with the automation step
-      $success = $this->checkSendingStatus($args, $newsletter, $subscriber);
+      $success = $this->checkSendingStatus($args, $newsletter, $subscriber, (int)($state[self::OPTIN_RETRIES] ?? 0) + (int)($state[self::PAUSED_POLLS] ?? 0));
       if ($success) {
         return;
       }
@@ -308,7 +317,17 @@ class SendEmailAction implements Action {
     $runNumber = $args->getRunNumber();
     $state = $state ?? $this->getRunLogData($controller);
     $optinRetryCount = $state[self::OPTIN_RETRIES] ?? 0;
-    $runNumber -= $optinRetryCount;
+    $pausedPolls = (int)($state[self::PAUSED_POLLS] ?? 0);
+
+    // Polls made while sending is paused don't count toward the timeout. The
+    // run number still advances, so they are subtracted like opt-in retries.
+    if (!$this->sendingEnvironment->isSendingAllowed() && !$this->isOptInRequired($newsletter, $subscriber)) {
+      $controller->getRunLog()->saveLogData([self::PAUSED_POLLS => $pausedPolls + 1]);
+      $controller->scheduleProgress(time() + self::PAUSED_POLL_INTERVAL);
+      return;
+    }
+
+    $runNumber -= $optinRetryCount + $pausedPolls;
     $this->rerunLater($runNumber, $controller, $newsletter, $subscriber);
   }
 
@@ -420,7 +439,7 @@ class SendEmailAction implements Action {
     $this->automationController->enqueueProgress($runId, $stepId);
   }
 
-  private function checkSendingStatus(StepRunArgs $args, NewsletterEntity $newsletter, SubscriberEntity $subscriber): bool {
+  private function checkSendingStatus(StepRunArgs $args, NewsletterEntity $newsletter, SubscriberEntity $subscriber, int $skippedRuns): bool {
     $scheduledTaskSubscriber = $this->automationEmailScheduler->getScheduledTaskSubscriber($newsletter, $subscriber, $args->getAutomationRun());
     if (!$scheduledTaskSubscriber) {
       throw InvalidStateException::create()->withMessage(__('Email failed to schedule.', 'mailpoet'));
@@ -435,10 +454,10 @@ class SendEmailAction implements Action {
     }
 
     $wasSent = $scheduledTaskSubscriber->getProcessed() === ScheduledTaskSubscriberEntity::STATUS_PROCESSED;
-    $isLastRun = $args->getRunNumber() >= 1 + count(self::POLL_INTERVALS);
+    $isLastRun = $args->getRunNumber() - $skippedRuns >= 1 + count(self::POLL_INTERVALS);
 
-    // email was never sent
-    if (!$wasSent && $isLastRun) {
+    // email was never sent (not while sending is paused)
+    if (!$wasSent && $isLastRun && $this->sendingEnvironment->isSendingAllowed()) {
       $error = __('Email sending process timed out.', 'mailpoet');
       $this->automationEmailScheduler->saveError($scheduledTaskSubscriber, $error);
       throw InvalidStateException::create()->withMessage($error);
@@ -541,7 +560,7 @@ class SendEmailAction implements Action {
     $email->setSenderAddress($args['sender_address'] ?? '');
     $email->setReplyToName($args['reply_to_name'] ?? '');
     $email->setReplyToAddress($args['reply_to_address'] ?? '');
-    $email->setGaCampaign($args['ga_campaign'] ?? '');
+    $email->setGaCampaign($this->wp->wpStripAllTags((string)($args['ga_campaign'] ?? ''), true));
     $this->storeNewsletterOption(
       $email,
       NewsletterOptionFieldEntity::NAME_GROUP,

@@ -1,7 +1,22 @@
 <?php
 namespace ExtendBuilder;
 
-function colibri_get_svg_kses_allowed_elements( $allowed_html = array() ) {
+/**
+ * Widens the 'post' kses list with the SVG markup the builder renders through wp_kses_post().
+ *
+ * wp_kses_allowed_html runs for every context, not only 'post': comments, user bios and explicit
+ * lists pass through here too. Those must keep WordPress' own list, otherwise an anonymous
+ * commenter can store these elements with arbitrary data-* attributes, which colibri.js reads.
+ *
+ * @param array  $allowed_html Elements, and the attributes allowed on them.
+ * @param string $context      Context the sanitisation is running in.
+ * @return array
+ */
+function colibri_get_svg_kses_allowed_elements( $allowed_html = array(), $context = '' ) {
+
+	if ( 'post' !== $context ) {
+		return $allowed_html;
+	}
 
 	$svg_elements = array(
 		'svg'     =>
@@ -79,4 +94,4 @@ function colibri_get_svg_kses_allowed_elements( $allowed_html = array() ) {
 
 }
 
-add_filter( 'wp_kses_allowed_html', '\ExtendBuilder\colibri_get_svg_kses_allowed_elements' );
+add_filter( 'wp_kses_allowed_html', '\ExtendBuilder\colibri_get_svg_kses_allowed_elements', 10, 2 );

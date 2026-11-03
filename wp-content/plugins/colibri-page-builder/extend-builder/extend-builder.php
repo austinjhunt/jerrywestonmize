@@ -276,7 +276,12 @@ add_action("colibri_importer_after_import", function() {
     ThemeDataAccess::getInstance()->moveFromOptionToFile();
 });
 
-function colibri_add_kss_allowed_elements($allowed_html = array()) {
+// Only the 'post' context; see colibri_get_svg_kses_allowed_elements() for why.
+function colibri_add_kss_allowed_elements($allowed_html = array(), $context = '') {
+
+    if ('post' !== $context) {
+        return $allowed_html;
+    }
 
     $svg_elements = array(
         'svg' =>
@@ -362,4 +367,4 @@ function colibri_add_kss_allowed_elements($allowed_html = array()) {
 
 }
 
-add_filter('wp_kses_allowed_html', '\ExtendBuilder\colibri_add_kss_allowed_elements');
+add_filter('wp_kses_allowed_html', '\ExtendBuilder\colibri_add_kss_allowed_elements', 10, 2);

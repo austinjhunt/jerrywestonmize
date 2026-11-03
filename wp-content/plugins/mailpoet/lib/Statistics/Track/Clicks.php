@@ -27,6 +27,18 @@ class Clicks {
   /** The link whose whole purpose is to switch tracking off. Its own click is never recorded. */
   const TRACKING_OPT_OUT_SHORTCODE = '[link:subscription_tracking_opt_out_url]';
 
+  /**
+   * Matches the start of a link whose destination is already fixed:
+   * - "https://example.com/", "//example.com#", "whatsapp://send?": an optional URI scheme (RFC 3986),
+   *   "//", a host, and the "/", "?" or "#" that ends it; whitespace is not a host, browsers drop tabs
+   *   and line breaks before they parse a URL;
+   * - "mailto:", "tel:", "sms:": schemes handed to an app, never to a web host;
+   * - "geo:0,0", "skype:echo": any other scheme except http(s) followed by anything but "/", "\" or
+   *   whitespace, so the link has no host part; browsers read "\" as "/" and drop tabs and line
+   *   breaks, so a value after one of them could add a host.
+   */
+  private const FIXED_DESTINATION_PATTERN = '~^(?:(?:[a-z][a-z0-9+.-]*:)?//[^/?#\\\\\s]+[/?#]|(?:mailto|tel|sms):|(?!https?:)[a-z][a-z0-9+.-]*:[^/\\\\\s])~i';
+
   const REVENUE_TRACKING_COOKIE_NAME = 'mailpoet_revenue_tracking';
   const REVENUE_TRACKING_COOKIE_EXPIRY = 60 * 60 * 24 * 14;
 
@@ -172,13 +184,14 @@ class Clicks {
   ) {
     if ($this->linkResolver->isTokenUrl($url)) {
       // A link stored as a personalization tag token; its destination only exists per recipient,
-      // so it gets the GA params ordinary links have baked in at send time only now.
+      // so it gets the GA params ordinary links have baked in at send time only now. The tag sets
+      // the whole URL, so it may only lead to the site's own host or allowed redirect hosts.
       $resolvedUrl = $this->linkResolver->resolve($url, $newsletter, $subscriber, $queue, $wpUserPreview);
       if ($resolvedUrl === null) {
         $this->abort();
         return $url;
       }
-      return $this->appendRequestMethod($this->gaTracking->addParamsToUrl($resolvedUrl, $newsletter));
+      return $this->appendRequestMethod($this->validateRedirect($this->gaTracking->addParamsToUrl($resolvedUrl, $newsletter)));
     }
     if (preg_match('/\[link:(?P<action>.*?)\]/', $url, $shortcode)) {
       if (empty($shortcode['action'])) $this->abort();
@@ -199,9 +212,39 @@ class Clicks {
       $this->shortcodes->setNewsletter($newsletter);
       $this->shortcodes->setSubscriber($subscriber);
       $this->shortcodes->setWpUserPreview($wpUserPreview);
-      $url = $this->shortcodes->replace($url);
+      $processedUrl = $this->shortcodes->replace($url, null, null, $isPlainText = true);
+      // Shortcodes first, then embedded personalization tags: the order the sending task uses for a
+      // link it cannot track.
+      $processedUrl = $this->linkResolver->resolveEmbeddedTokensForRecipient($processedUrl, $newsletter, $subscriber, $queue, $wpUserPreview);
+      if ($processedUrl !== $url && !$this->keepsStoredDestination($url, $processedUrl)) {
+        return $this->validateRedirect($processedUrl);
+      }
+      $url = $processedUrl;
     }
     return $url;
+  }
+
+  private function validateRedirect(string $url): string {
+    $wp = WPFunctions::get();
+    return $wp->wpValidateRedirect($url, $wp->homeUrl());
+  }
+
+  /**
+   * Shortcode and tag values (e.g. subscriber fields) may fill in the path or query of a link, but
+   * the destination host may only come from them when validateRedirect() accepts it (the site's
+   * own). So the URL the redirect sends has to start with the scheme and host of the stored URL. The
+   * stored URL counts as stored and in its decoded form, because the resolver rebuilds a URL from the
+   * decoded form when a tag is stored URL-encoded or as an HTML entity. The prefix comes from the
+   * stored URL alone and the sent URL is compared as it is, so a value that decodes together with
+   * stored text ("&#" plus "64;" to "@") changes the prefix and fails the check.
+   */
+  private function keepsStoredDestination(string $storedUrl, string $url): bool {
+    foreach ([$storedUrl, PersonalizationTagLinkResolver::decodeUrl($storedUrl)] as $storedForm) {
+      if (preg_match(self::FIXED_DESTINATION_PATTERN, $storedForm, $destination) && strpos($url, $destination[0]) === 0) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
@@ -217,7 +260,7 @@ class Clicks {
       $fragment = substr($url, $hashPosition);
       $url = substr($url, 0, $hashPosition);
     }
-    return $url . (parse_url($url, PHP_URL_QUERY) ? '&' : '?') . 'request_method=POST' . $fragment;
+    return $url . (WPFunctions::get()->wpParseUrl($url, PHP_URL_QUERY) ? '&' : '?') . 'request_method=POST' . $fragment;
   }
 
   public function abort() {

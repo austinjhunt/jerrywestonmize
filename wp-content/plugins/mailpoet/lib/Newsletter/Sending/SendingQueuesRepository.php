@@ -227,11 +227,12 @@ class SendingQueuesRepository extends Repository {
       ->getQuery();
   }
 
-  public function pause(SendingQueueEntity $queue): void {
+  public function pause(SendingQueueEntity $queue, ?string $reason = null): void {
     if ($queue->getCountProcessed() !== $queue->getCountTotal()) {
       $task = $queue->getTask();
       if ($task instanceof ScheduledTaskEntity) {
         $task->setStatus(ScheduledTaskEntity::STATUS_PAUSED);
+        $task->setPauseReason($reason);
         $this->flush();
       }
     }
@@ -291,6 +292,13 @@ class SendingQueuesRepository extends Repository {
     $this->flush();
   }
 
+  public function disableTemplatedSending(SendingQueueEntity $queue): void {
+    $meta = $queue->getMeta() ?? [];
+    $meta[SendingQueueEntity::META_TEMPLATED_SENDING_DISABLED] = true;
+    $queue->setMeta($meta);
+    $this->flush();
+  }
+
   public function saveFilterSegmentMeta(SendingQueueEntity $queue, SegmentEntity $filterSegmentEntity): void {
     $meta = $queue->getMeta() ?? [];
     $meta['filterSegment'] = [
@@ -309,7 +317,7 @@ class SendingQueuesRepository extends Repository {
         try {
           $filterData['lookupData'] = $filter->getLookupData($data);
         } catch (\Throwable $e) {
-          $this->loggerFactory->getLogger(LoggerFactory::TOPIC_SEGMENTS)->error("Failed to save lookup data for filter {$filterEntity->getId()}: {$e->getMessage()}");
+          $this->loggerFactory->getLogger(LoggerFactory::TOPIC_SEGMENTS)->error("Failed to save lookup data for filter {$filterEntity->getId()}: {$e->getMessage()}. The sending task keeps no lookup data for this filter.");
         }
         return $filterData;
       }, $filterSegmentEntity->getDynamicFilters()->toArray()),

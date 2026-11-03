@@ -9,6 +9,7 @@ use Automattic\WooCommerce\EmailEditor\Bootstrap as EmailEditorBootstrap;
 use Automattic\WooCommerce\EmailEditor\Email_Editor_Container;
 use Automattic\WooCommerce\EmailEditor\Engine\Logger\Email_Editor_Logger;
 use MailPoet\Abilities\Abilities;
+use MailPoet\Abilities\AbilitiesRegistrar;
 use MailPoet\API\JSON\API;
 use MailPoet\API\REST\API as RestApi;
 use MailPoet\AutomaticEmails\AutomaticEmails;
@@ -185,6 +186,10 @@ class Initializer {
 
   private MailPoetPageResolver $mailPoetPageResolver;
 
+  private UpdateFailureNotifier $updateFailureNotifier;
+
+  private AbilitiesRegistrar $abilitiesRegistrar;
+
   const INITIALIZED = 'MAILPOET_INITIALIZED';
 
   const PLUGIN_ACTIVATED = 'mailpoet_plugin_activated';
@@ -232,7 +237,9 @@ class Initializer {
     NewslettersRestApi $newslettersRestApi,
     LogsDownload $logsDownload,
     PublicEmailRoute $publicEmailRoute,
-    MailPoetPageResolver $mailPoetPageResolver
+    MailPoetPageResolver $mailPoetPageResolver,
+    UpdateFailureNotifier $updateFailureNotifier,
+    AbilitiesRegistrar $abilitiesRegistrar
   ) {
     $this->rendererFactory = $rendererFactory;
     $this->accessControl = $accessControl;
@@ -277,6 +284,8 @@ class Initializer {
     $this->logsDownload = $logsDownload;
     $this->publicEmailRoute = $publicEmailRoute;
     $this->mailPoetPageResolver = $mailPoetPageResolver;
+    $this->updateFailureNotifier = $updateFailureNotifier;
+    $this->abilitiesRegistrar = $abilitiesRegistrar;
 
     $emailEditorContainer = Email_Editor_Container::container();
     $this->emailEditorBootstrap = $emailEditorContainer->get(EmailEditorBootstrap::class);
@@ -365,11 +374,6 @@ class Initializer {
       'setupEmailEditorIntegrations',
     ]);
 
-    $this->wpFunctions->addAction('woocommerce_init', [
-      $this,
-      'setupMarketingConfirmationEmail',
-    ]);
-
     WPFunctions::get()->addAction(AutomationHooks::INITIALIZE, [
       $this->automationMailPoetIntegration,
       'register',
@@ -390,13 +394,14 @@ class Initializer {
   private function setupAbilities(): void {
     require_once __DIR__ . '/../Abilities/Abilities.php';
     Abilities::init();
+    $this->abilitiesRegistrar->init();
   }
 
   public function runActivator() {
     try {
       $this->wpFunctions->addOption(self::PLUGIN_ACTIVATED, true); // used in afterPluginActivation
       $this->activator->activate();
-    } catch (InvalidStateException $e) {
+    } catch (ActivationInProgressException $e) {
       return $this->handleRunningMigration($e);
     } catch (\Exception $e) {
       return $this->handleFailedInitialization($e);
@@ -481,8 +486,6 @@ class Initializer {
       $this->logsDownload->initialize();
       $this->blockTypesController->initialize();
       $this->wpFunctions->doAction('mailpoet_initialized', MAILPOET_VERSION);
-    } catch (InvalidStateException $e) {
-      return $this->handleRunningMigration($e);
     } catch (\Exception $e) {
       return $this->handleFailedInitialization($e);
     }
@@ -499,6 +502,11 @@ class Initializer {
    */
   public function afterPluginActivation() {
     if (!$this->wpFunctions->isAdmin() || !defined(self::INITIALIZED) || !$this->wpFunctions->getOption(self::PLUGIN_ACTIVATED)) return;
+
+    // Background AJAX requests (heartbeat, Action Scheduler) must not consume the flag before the redirected page load
+    if ($this->wpFunctions->wpDoingAjax()) {
+      return;
+    }
 
     $currentUrl = $this->urlHelper->getCurrentUrl();
 
@@ -520,27 +528,42 @@ class Initializer {
    * will run the database migrations and update the db version among a few other things.
    *
    * @return void
-   * @throws InvalidStateException
    */
   public function maybeRunActivator() {
-    try {
-      $currentDbVersion = $this->settings->get('db_version');
-    } catch (\Exception $e) {
-      $currentDbVersion = null;
-    }
-
-    if (version_compare((string)$currentDbVersion, Env::$version) === 0) {
+    if ($this->activator->isDbUpToDate()) {
       return;
     }
 
-    // if current db version and plugin version differ
+    // The request may be the post-update loopback, which disconnects at once; a migration
+    // must not be cut off halfway when the client goes away.
+    if (function_exists('ignore_user_abort')) {
+      ignore_user_abort(true);
+    }
     try {
       $this->activator->activate();
-    } catch (InvalidStateException $e) {
+    } catch (ActivationInProgressException $e) {
+      // The request holding the lock may have finished by now; re-read db_version before warning.
+      $this->activator->refreshDbVersion();
+      if ($this->activator->isDbUpToDate()) {
+        return;
+      }
+      // A migration that died on a fatal error leaves the lock behind until it expires;
+      // the error it recorded says more than "in progress".
+      if ($this->updateFailureNotifier->hasRecordedFailures()) {
+        $this->handleFailedDatabaseUpdate($e);
+        return;
+      }
       $this->handleRunningMigration($e);
-    } catch (\Exception $e) {
-      $this->handleFailedInitialization($e);
+    } catch (\Throwable $e) {
+      $this->handleFailedDatabaseUpdate($e);
     }
+  }
+
+  private function handleFailedDatabaseUpdate(\Throwable $failure): void {
+    if (function_exists('wp_get_current_user')) {
+      Menu::addErrorPage($this->accessControl);
+    }
+    $this->updateFailureNotifier->notify($failure);
   }
 
   public function setupInstaller() {
@@ -633,12 +656,12 @@ class Initializer {
     $this->permanentNotices->init();
   }
 
-  public function handleFailedInitialization($exception) {
+  public function handleFailedInitialization(\Throwable $exception) {
     // check if we are able to add pages at this point
     if (function_exists('wp_get_current_user')) {
       Menu::addErrorPage($this->accessControl);
     }
-    return WPNotice::displayError($exception);
+    return WPNotice::displayError($this->updateFailureNotifier->renderStartupFailure($exception), '', '', false, false);
   }
 
   private function handleRunningMigration(InvalidStateException $exception) {
@@ -679,14 +702,6 @@ class Initializer {
     if ($wcEnabled && $optInEnabled) {
       $this->wcTransactionalEmails->overrideStylesForWooEmails();
       $this->wcTransactionalEmails->useTemplateForWoocommerceEmails();
-    }
-  }
-
-  public function setupMarketingConfirmationEmail() {
-    $wcEnabled = $this->wcHelper->isWooCommerceActive();
-    if ($wcEnabled) {
-      $emails = new \MailPoet\WooCommerce\Emails();
-      $emails->init();
     }
   }
 

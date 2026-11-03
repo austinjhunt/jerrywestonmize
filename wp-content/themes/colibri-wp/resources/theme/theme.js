@@ -2148,7 +2148,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
       var elementData = this.$element.data();
 
       this.opts = $.extend(true, {}, this.defaults, $.fn[lib_prefix + this.namespace].options, elementData, instanceData, options);
-      this.$target = typeof this.opts.target === 'string' ? $(this.opts.target) : null;
+      this.$target = typeof this.opts.target === 'string' ? _Colibri.findBySelector(this.opts.target) : null;
+    };
+
+    // Selectors read from data-* attributes come from stored markup. $(string) builds a string
+    // starting with '<' as HTML (running its inline handlers); .find() only evaluates it as a
+    // selector, and an invalid one yields an empty set instead of throwing.
+    _Colibri.findBySelector = function (selector) {
+      try {
+        return $(document).find(selector);
+      } catch (e) {
+        return $();
+      }
     };
 
     _Colibri.getData = function (id) {

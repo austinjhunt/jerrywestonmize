@@ -190,7 +190,7 @@ class MailerLog {
     self::updateMailerLog($mailerLog);
     if ($pauseSending) {
       LoggerFactory::getInstance()->getLogger(LoggerFactory::TOPIC_SENDING)->error(
-        'Email sending was paused due an error',
+        'Email sending was paused due an error. The error message and code are in the log details.',
         [
           'error_message' => $errorMessage,
           'error_code' => $errorCode,
@@ -226,7 +226,7 @@ class MailerLog {
     self::updateMailerLog($mailerLog);
     if ($mailerLog['transactional_email_error_count'] >= self::RETRY_ATTEMPTS_LIMIT) {
       LoggerFactory::getInstance()->getLogger(LoggerFactory::TOPIC_SENDING)->error(
-        'Email sending was paused due a transactional email error',
+        'Email sending was paused due a transactional email error. The error message and code are in the log details.',
         [
           'error_message' => $errorMessage,
           'error_code' => $errorCode,
@@ -348,7 +348,7 @@ class MailerLog {
       }
       $sinceSeconds = (int)$mailerConfig['frequency']['interval'] * Mailer::SENDING_LIMIT_INTERVAL_MULTIPLIER;
     }
-    $sinceDate = date('Y-m-d H:i:s', time() - $sinceSeconds);
+    $sinceDate = gmdate('Y-m-d H:i:s', time() - $sinceSeconds);
     $mailerLog = self::getMailerLog($mailerLog);
 
     return (int)array_sum(
@@ -392,7 +392,7 @@ class MailerLog {
    */
   private static function sentEntriesDate(?int $timestamp = null): string {
 
-    return date('Y-m-d H:i:s', $timestamp ?? time());
+    return gmdate('Y-m-d H:i:s', $timestamp ?? time());
   }
 
   /**

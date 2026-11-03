@@ -85,39 +85,38 @@ class AssetsController {
   }
 
   public function setupDynamicSegmentsDependencies(): void {
-    $this->wp->wpEnqueueStyle('mailpoet_templates', $this->getCssUrl('mailpoet-templates.css'));
+    $this->enqueueWooCommerceComponentsStyle();
+    $this->wp->wpEnqueueStyle('mailpoet_templates', $this->getCssUrl('mailpoet-templates.css'), ['mailpoet_woocommerce_components']);
     $this->wp->wpEnqueueStyle('mailpoet_dynamic_segments', $this->getCssUrl('mailpoet-dynamic-segments.css'));
   }
 
   public function setupAutomationListingDependencies(): void {
     $this->enqueueJsEntrypoint('automation');
     $this->setupDataViewsDependencies();
-    $this->wp->wpEnqueueStyle('mailpoet_automation', $this->getCssUrl('mailpoet-automation.css'));
+    $this->enqueueWooCommerceComponentsStyle();
+    $this->wp->wpEnqueueStyle('mailpoet_automation', $this->getCssUrl('mailpoet-automation.css'), ['mailpoet_woocommerce_components']);
   }
 
   public function setupAutomationTemplatesDependencies(): void {
     $this->enqueueJsEntrypoint('automation_templates');
-    $this->wp->wpEnqueueStyle('mailpoet_automation_templates', $this->getCssUrl('mailpoet-automation-templates.css'));
+    $this->enqueueWooCommerceComponentsStyle();
+    $this->wp->wpEnqueueStyle('mailpoet_automation_templates', $this->getCssUrl('mailpoet-automation-templates.css'), ['mailpoet_woocommerce_components']);
   }
 
   public function setupAutomationEditorDependencies(): void {
     $this->enqueueJsEntrypoint('automation_editor', ['wp-date']);
-    $this->wp->wpEnqueueStyle('mailpoet_automation_editor', $this->getCssUrl('mailpoet-automation-editor.css'));
+    $this->enqueueWooCommerceComponentsStyle();
+    $this->wp->wpEnqueueStyle('mailpoet_automation_editor', $this->getCssUrl('mailpoet-automation-editor.css'), ['mailpoet_woocommerce_components']);
   }
 
   public function setupAutomationAnalyticsDependencies(): void {
     $this->enqueueJsEntrypoint('automation_analytics');
-    $this->wp->wpEnqueueStyle('mailpoet_automation_analytics', $this->getCssUrl('mailpoet-automation-analytics.css'));
+    $this->enqueueWooCommerceComponentsStyle();
+    $this->wp->wpEnqueueStyle('mailpoet_automation_analytics', $this->getCssUrl('mailpoet-automation-analytics.css'), ['mailpoet_woocommerce_components']);
   }
 
-  public function setupAutomationPreviewEmbedDependencies(): void {
-    $this->enqueueJsEntrypoint('automation_preview_embed');
-    $this->wp->wpEnqueueStyle('mailpoet_automation_templates', $this->getCssUrl('mailpoet-automation-templates.css'));
-  }
-
-  public function setupAutomationFlowEmbedDependencies(): void {
-    $this->enqueueJsEntrypoint('automation_flow_embed');
-    $this->wp->wpEnqueueStyle('mailpoet_automation_analytics', $this->getCssUrl('mailpoet-automation-analytics.css'));
+  private function enqueueWooCommerceComponentsStyle(): void {
+    $this->wp->wpEnqueueStyle('mailpoet_woocommerce_components', $this->getCssUrl('mailpoet-woocommerce-components.css'));
   }
 
   private function enqueueJsEntrypoint(string $asset, array $dependencies = [], bool $withAdminDeps = true): void {
@@ -287,6 +286,9 @@ JAVASCRIPT,
     return is_array($preferences) ? (object)$preferences : new \stdClass();
   }
 
+  /**
+   * @return non-empty-string
+   */
   private function getScriptUrl(string $name): string {
     return Env::$assetsUrl . '/dist/js/' . $this->renderer->getJsAsset($name);
   }
@@ -295,6 +297,11 @@ JAVASCRIPT,
     return Env::$assetsUrl . '/dist/css/' . $this->renderer->getCssAsset($name);
   }
 
+  /**
+   * @param non-empty-string $handle
+   * @param non-empty-string $src
+   * @param non-empty-string[] $deps
+   */
   private function registerFooterScript(string $handle, string $src, array $deps = []): void {
     $this->wp->wpRegisterScript($handle, $src, $deps, Env::$version, true);
   }

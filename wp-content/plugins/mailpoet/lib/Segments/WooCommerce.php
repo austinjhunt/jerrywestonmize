@@ -16,6 +16,7 @@ use MailPoet\Subscribers\Source;
 use MailPoet\Subscribers\SubscriberSaveController;
 use MailPoet\Subscribers\SubscriberSegmentRepository;
 use MailPoet\Subscribers\SubscribersRepository;
+use MailPoet\Subscribers\WPUserSubscriberLink;
 use MailPoet\WooCommerce\Helper as WCHelper;
 use MailPoet\WooCommerce\Subscription;
 use MailPoet\WP\Functions as WPFunctions;
@@ -83,6 +84,9 @@ class WooCommerce {
   /** @var SegmentsCountRecalculator */
   private $segmentsCountRecalculator;
 
+  /** @var WPUserSubscriberLink */
+  private $wpUserSubscriberLink;
+
   public function __construct(
     SettingsController $settings,
     WPFunctions $wp,
@@ -96,7 +100,8 @@ class WooCommerce {
     Connection $connection,
     SubscriberChangesNotifier $subscriberChangesNotifier,
     Validator $validator,
-    SegmentsCountRecalculator $segmentsCountRecalculator
+    SegmentsCountRecalculator $segmentsCountRecalculator,
+    WPUserSubscriberLink $wpUserSubscriberLink
   ) {
     $this->settings = $settings;
     $this->wp = $wp;
@@ -111,6 +116,7 @@ class WooCommerce {
     $this->subscriberChangesNotifier = $subscriberChangesNotifier;
     $this->validator = $validator;
     $this->segmentsCountRecalculator = $segmentsCountRecalculator;
+    $this->wpUserSubscriberLink = $wpUserSubscriberLink;
   }
 
   public function shouldShowWooCommerceSegment(): bool {
@@ -144,14 +150,16 @@ class WooCommerce {
         $data = [
           'is_woocommerce_user' => 1,
         ];
-        if (!empty($newCustomer)) {
+        // Until the account confirms the address, keep the subscriber's own source and name.
+        $isLinkUnconfirmed = $this->wpUserSubscriberLink->isUnconfirmed($wpUserId);
+        if (!empty($newCustomer) && !$isLinkUnconfirmed) {
           $data['source'] = Source::WOOCOMMERCE_USER;
         }
         $data['id'] = $subscriber->getId();
-        if ($wpUser->first_name) { // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+        if ($wpUser->first_name && !$isLinkUnconfirmed) { // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
           $data['first_name'] = $wpUser->first_name; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
         }
-        if ($wpUser->last_name) { // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+        if ($wpUser->last_name && !$isLinkUnconfirmed) { // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
           $data['last_name'] = $wpUser->last_name; // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
         }
         $subscriber = $this->subscriberSaveController->createOrUpdate($data, $subscriber);
@@ -214,10 +222,11 @@ class WooCommerce {
     if ($subscriber) {
       $firstName = $wcOrder->get_billing_first_name(); // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
       $lastName = $wcOrder->get_billing_last_name(); // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
-      if ($firstName) {
+      // Use only names that pass the character check the subscription form also runs in the browser
+      if ($firstName && strpbrk($firstName, '<>') === false) {
         $subscriber->setFirstName($firstName);
       }
-      if ($lastName) {
+      if ($lastName && strpbrk($lastName, '<>') === false) {
         $subscriber->setLastName($lastName);
       }
       if ($firstName || $lastName) {
@@ -295,13 +304,19 @@ class WooCommerce {
     // Mark WP users having a customer role as WooCommerce subscribers
     global $wpdb;
     $subscribersTable = $this->entityManager->getClassMetadata(SubscriberEntity::class)->getTableName();
+    // Users who haven't confirmed the address of their linked subscriber keep its source
     $this->connection->executeQuery("
       UPDATE LOW_PRIORITY {$subscribersTable} mps
         JOIN {$wpdb->users} wu ON mps.wp_user_id = wu.id
         JOIN {$wpdb->usermeta} wpum ON wu.id = wpum.user_id AND wpum.meta_key = :capabilities
-      SET is_woocommerce_user = 1, source = :source
+        LEFT JOIN {$wpdb->usermeta} linkMark ON wu.id = linkMark.user_id AND linkMark.meta_key = :unconfirmedLinkMetaKey
+      SET is_woocommerce_user = 1, source = IF(linkMark.umeta_id IS NULL, :source, mps.source)
         WHERE wpum.meta_value LIKE '%\"customer\"%'
-    ", ['capabilities' => $wpdb->prefix . 'capabilities', 'source' => Source::WOOCOMMERCE_USER]);
+    ", [
+      'capabilities' => $wpdb->prefix . 'capabilities',
+      'unconfirmedLinkMetaKey' => $this->wpUserSubscriberLink->getUnconfirmedMetaKey(),
+      'source' => Source::WOOCOMMERCE_USER,
+    ]);
   }
 
   private function insertSubscriberFromOrder(\WC_Order $wcOrder, string $status, bool &$wasNewlyCreated = false): ?string {
@@ -454,6 +469,10 @@ class WooCommerce {
 
     foreach ($metaData as $row) {
       if (!$row['meta_value']) {
+        continue;
+      }
+      // Use only names that pass the character check the subscription form also runs in the browser
+      if (is_string($row['meta_value']) && strpbrk($row['meta_value'], '<>') !== false) {
         continue;
       }
       $postId = is_numeric($row['post_id']) ? (int)$row['post_id'] : 0;

@@ -105,7 +105,7 @@ class GATracking {
   }
 
   private function getInternalDomain($internalHost = null) {
-    $internalHost = $internalHost ?: parse_url($this->wp->homeUrl(), PHP_URL_HOST);
+    $internalHost = $internalHost ?: $this->wp->wpParseUrl($this->wp->homeUrl(), PHP_URL_HOST);
     return $this->secondLevelDomainNames->get($internalHost);
   }
 
@@ -124,7 +124,7 @@ class GATracking {
    *   mailpoet_ga_tracking_link callback returned a non-string to keep it undecorated
    */
   private function addParamsToInternalUrl(string $link, $gaCampaign, $internalDomain): ?string {
-    if (!$this->isInternalHost((string)parse_url($link, PHP_URL_HOST), (string)$internalDomain)) {
+    if (!$this->isInternalHost((string)$this->wp->wpParseUrl($link, PHP_URL_HOST), (string)$internalDomain)) {
       return null;
     }
 
@@ -139,14 +139,14 @@ class GATracking {
 
     // Do not overwrite existing query parameters. Hrefs from the rendered HTML may still
     // carry encoded ampersands ("&amp;"), which would hide the parameter names.
-    parse_str((string)parse_url(html_entity_decode($link, ENT_QUOTES), PHP_URL_QUERY), $existingParams);
+    parse_str((string)$this->wp->wpParseUrl(html_entity_decode($link, ENT_QUOTES), PHP_URL_QUERY), $existingParams);
     $params = array_diff_key($params, $existingParams);
 
     // Extract shortcodes from query parameters to preserve them
     list($linkWithPlaceholders, $shortcodeMap) = $this->extractShortcodes($link);
 
-    // Add GA parameters to the link with placeholders
-    $linkWithGAParams = $this->wp->addQueryArg($params, $linkWithPlaceholders);
+    // Add GA parameters to the link with placeholders; add_query_arg() does not encode values
+    $linkWithGAParams = $this->wp->addQueryArg(array_map('rawurlencode', $params), $linkWithPlaceholders);
 
     // Restore the original shortcodes
     $linkWithGAParams = $this->restoreShortcodes($linkWithGAParams, $shortcodeMap);
@@ -169,7 +169,7 @@ class GATracking {
    * @return array [$urlWithPlaceholders, $shortcodeMap]
    */
   private function extractShortcodes(string $url): array {
-    $parsedUrl = parse_url($url);
+    $parsedUrl = $this->wp->wpParseUrl($url);
     if (!isset($parsedUrl['query'])) {
       return [$url, []];
     }

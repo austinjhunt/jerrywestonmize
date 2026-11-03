@@ -185,15 +185,24 @@ abstract class Forminator_Render_Form {
 	 *
 	 * @since 1.0
 	 *
-	 * @param array $atts Attributes.
+	 * @param array|string $atts    Attributes.
+	 * @param string|null  $content Enclosed content.
+	 * @param string       $tag     Shortcode tag, empty for direct calls.
 	 *
 	 * @return string
 	 */
-	public function render_shortcode( $atts = array() ) {
+	public function render_shortcode( $atts = array(), $content = null, $tag = '' ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundBeforeLastUsed -- Shortcode callback signature.
 		// Divi 5 VB strips scripts from harvested shortcodes, so a rendered
 		// form would be inert. Show a notice instead.
 		if ( forminator_is_divi5_vb_shortcode_request() ) {
 			return self::divi5_vb_preview_notice( static::$module_slug );
+		}
+
+		$atts = is_array( $atts ) ? $atts : array();
+
+		// Only form managers may set preview attributes via shortcode text.
+		if ( '' !== $tag && ! current_user_can( forminator_get_permission( 'forminator-cform' ) ) ) {
+			unset( $atts['is_preview'], $atts['preview_data'], $atts['is_block_editor'] );
 		}
 
 		// use already created instance if already available.
@@ -960,6 +969,70 @@ abstract class Forminator_Render_Form {
 	}
 
 	/**
+	 * Print the javascript that initiates `forminatorFront` for a single rendered module
+	 *
+	 * Elementor popups drop their markup on init and rebuild it from a stored copy on every
+	 * opening, so a module inside one skips the direct init and is initialized on the live
+	 * copy instead, otherwise its handlers stay bound to nodes no longer in the page.
+	 *
+	 * @since 1.58.2
+	 *
+	 * @param int|string $id        Module id.
+	 * @param int|string $render_id Render id.
+	 * @param array      $options   Front init options.
+	 */
+	protected function print_front_init_script( $id, $render_id, $options ) {
+		$selector = '#forminator-module-' . $id . '[data-forminator-render="' . $render_id . '"]';
+		?>
+		(function () {
+			var selector = <?php echo wp_json_encode( $selector ); ?>,
+				options  = <?php echo wp_json_encode( $options ); ?>;
+
+			var initForminatorModule = function ( isElementorCall ) {
+				var $module = jQuery( selector ).not( '.forminator-initialized' );
+
+				if ( ! isElementorCall ) {
+					// Copies inside a popup are initialized on popup show instead. Filtered per
+					// element since the selector can match a copy in the page and one in a popup.
+					$module = $module.filter( function () {
+						return ! jQuery( this ).closest( '[data-elementor-type="popup"]' ).length;
+					} );
+				}
+
+				if ( ! $module.length ) {
+					return;
+				}
+
+				$module.addClass( 'forminator-initialized' ).forminatorFront( options );
+			};
+
+			// Small delay to ensure the markup Elementor inserted is ready.
+			var initFromElementor = function () {
+				setTimeout( function () {
+					initForminatorModule( true );
+				}, 100 );
+			};
+
+			if ( window.elementorFrontend ) {
+				// Every opening builds a fresh copy that has to be initialized again.
+				jQuery( document ).on( 'elementor/popup/show', initFromElementor );
+
+				// `hooks` only exists once Elementor has run its own ready callback.
+				if ( typeof elementorFrontend.hooks !== 'undefined' ) {
+					elementorFrontend.hooks.addAction( 'frontend/element_ready/global', function ( $scope ) {
+						if ( $scope.find( selector ).length ) {
+							initFromElementor();
+						}
+					} );
+				}
+			}
+
+			initForminatorModule( false );
+		})();
+		<?php
+	}
+
+	/**
 	 * Initiate `forminatorFront` front javascript for rendered module(s)
 	 *
 	 * @since 1.0
@@ -973,10 +1046,7 @@ abstract class Forminator_Render_Form {
 					foreach ( $this->forms_properties as $form_properties ) {
 						if ( ! empty( $form_properties['rendered'] ) ) {
 							$options = $this->get_front_init_options( $form_properties );
-							?>
-							jQuery('#forminator-module-<?php echo esc_attr( $form_properties['id'] ); ?>[data-forminator-render="<?php echo esc_attr( $form_properties['render_id'] ); ?>"]')
-								.forminatorFront(<?php echo wp_json_encode( $options ); ?>);
-							<?php
+							$this->print_front_init_script( $form_properties['id'], $form_properties['render_id'], $options );
 						}
 					}
 				}

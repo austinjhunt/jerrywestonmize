@@ -2,7 +2,12 @@
 namespace ExtendBuilder;
 use ColibriWP\PageBuilder\Utils\Utils;
 
-function colibri_get_extra_kses_elements( $allowed_html = array() ) {
+// Only the 'post' context; see colibri_get_svg_kses_allowed_elements() for why.
+function colibri_get_extra_kses_elements( $allowed_html = array(), $context = '' ) {
+
+    if ( 'post' !== $context ) {
+        return $allowed_html;
+    }
 
     $extra_elements = [
         'input' => [
@@ -37,4 +42,4 @@ function colibri_get_extra_kses_elements( $allowed_html = array() ) {
 
 }
 
-add_filter( 'wp_kses_allowed_html', '\ExtendBuilder\colibri_get_extra_kses_elements', PHP_INT_MAX );
+add_filter( 'wp_kses_allowed_html', '\ExtendBuilder\colibri_get_extra_kses_elements', PHP_INT_MAX, 2 );

@@ -12,7 +12,7 @@
 */
 
 /*!
-  react-datepicker v6.9.0
+  react-datepicker v9.1.0
   https://github.com/Hacker0x01/react-datepicker
   Released under the MIT License.
 */
@@ -23,13 +23,6 @@
  *
  * Released under the MIT license
  * https://github.com/select2/select2/blob/master/LICENSE.md
- */
-
-/*!
- * The buffer module from node.js, for the browser.
- *
- * @author   Feross Aboukhadijeh <https://feross.org>
- * @license  MIT
  */
 
 /*!
@@ -62,11 +55,6 @@
 * MIT Licensed
 */
 
-/*!
-* tabbable 6.2.0
-* @license MIT, https://github.com/focus-trap/tabbable/blob/master/LICENSE
-*/
-
 /*! *****************************************************************************
     Copyright (c) Microsoft Corporation.
 
@@ -81,10 +69,6 @@
     OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
     PERFORMANCE OF THIS SOFTWARE.
     ***************************************************************************** */
-
-/*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
-
-/*! safe-buffer. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
 
 /**
  * @license
@@ -172,6 +156,16 @@
  */
 
 /**
+ * @license React
+ * use-sync-external-store-with-selector.production.js
+ *
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/**
  * @license almond 0.3.3 Copyright jQuery Foundation and other contributors.
  * Released under MIT license, http://github.com/requirejs/almond/LICENSE
  */
@@ -218,19 +212,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/** @license React v17.0.2
- * react-is.production.min.js
- *
- * Copyright (c) Facebook, Inc. and its affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
 /**!
 
  @license
- handlebars v4.7.9
+ handlebars v4.7.10
 
 Copyright (C) 2011-2019 by Yehuda Katz
 
@@ -265,7 +250,5 @@ THE SOFTWARE.
 //! moment-timezone.js
 
 //! moment.js
-
-//! moment.js locale configuration
 
 //! version : 0.5.48

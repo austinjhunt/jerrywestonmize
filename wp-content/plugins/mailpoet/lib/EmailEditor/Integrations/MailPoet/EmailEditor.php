@@ -6,12 +6,12 @@ if (!defined('ABSPATH')) exit;
 
 
 use MailPoet\API\REST\API;
+use MailPoet\Config\AccessControl;
 use MailPoet\EmailEditor\Integrations\MailPoet\Endpoints\GenerateSubjectSuggestionsEndpoint;
 use MailPoet\EmailEditor\Integrations\MailPoet\Patterns\PatternsController;
 use MailPoet\EmailEditor\Integrations\MailPoet\Templates\TemplatesController;
 use MailPoet\Newsletter\NewslettersRepository;
 use MailPoet\WP\Functions as WPFunctions;
-use MailPoet\WPCOM\DotcomHelperFunctions;
 
 class EmailEditor {
   const MAILPOET_EMAIL_POST_TYPE = 'mailpoet_email';
@@ -32,8 +32,6 @@ class EmailEditor {
 
   private TemplatesController $templatesController;
 
-  private DotcomHelperFunctions $dotcomHelperFunctions;
-
   private NewslettersRepository $newslettersRepository;
 
   private bool $editorAlreadyRendered = false;
@@ -46,7 +44,6 @@ class EmailEditor {
     PatternsController $patternsController,
     TemplatesController $templatesController,
     Cli $cli,
-    DotcomHelperFunctions $dotcomHelperFunctions,
     PersonalizationTagManager $personalizationTagManager,
     NewslettersRepository $newslettersRepository
   ) {
@@ -56,7 +53,6 @@ class EmailEditor {
     $this->patternsController = $patternsController;
     $this->templatesController = $templatesController;
     $this->cli = $cli;
-    $this->dotcomHelperFunctions = $dotcomHelperFunctions;
     $this->emailEditorPreviewEmail = $emailEditorPreviewEmail;
     $this->personalizationTagManager = $personalizationTagManager;
     $this->newslettersRepository = $newslettersRepository;
@@ -66,16 +62,14 @@ class EmailEditor {
     $this->cli->initialize();
     $this->wp->addFilter('woocommerce_email_editor_post_types', [$this, 'addEmailPostType']);
     $this->wp->addAction('rest_delete_mailpoet_email', [$this->emailApiController, 'trashEmail'], 10, 1);
+    $this->wp->addAction('rest_after_insert_mailpoet_email', [$this->emailApiController, 'markNewsletterAsUpdated'], 10, 1);
     $this->wp->addFilter('woocommerce_is_email_editor_page', [$this, 'isEditorPage'], 10, 1);
     $this->wp->addFilter('replace_editor', [$this, 'replaceEditor'], 10, 2);
     $this->wp->addFilter('woocommerce_email_editor_send_preview_email', [$this->emailEditorPreviewEmail, 'sendPreviewEmail'], 10, 1);
     $this->wp->addFilter('woocommerce_email_editor_send_preview_email_personalizer_context', [$this, 'extendPreviewPersonalizerContext'], 10, 1);
     $this->wp->addFilter('rest_pre_insert_mailpoet_email', [$this, 'preserveAutomationEmailStatus'], 10, 2);
     $this->patternsController->registerPatterns();
-    // Skip classic templates in Garden environment.
-    if (!$this->dotcomHelperFunctions->isGarden()) {
-      $this->templatesController->initialize();
-    }
+    $this->templatesController->initialize();
     $this->extendEmailPostApi();
     $this->registerApiRoutes();
     $this->personalizationTagManager->initialize();
@@ -90,6 +84,21 @@ class EmailEditor {
           'singular_name' => __('Email', 'mailpoet'),
         ],
         'rewrite' => ['slug' => self::MAILPOET_EMAIL_POST_TYPE],
+        'map_meta_cap' => true,
+        'capabilities' => [
+          'read' => AccessControl::PERMISSION_MANAGE_EMAILS,
+          'edit_posts' => AccessControl::PERMISSION_MANAGE_EMAILS,
+          'edit_others_posts' => AccessControl::PERMISSION_MANAGE_EMAILS,
+          'edit_published_posts' => AccessControl::PERMISSION_MANAGE_EMAILS,
+          'edit_private_posts' => AccessControl::PERMISSION_MANAGE_EMAILS,
+          'publish_posts' => AccessControl::PERMISSION_MANAGE_EMAILS,
+          'read_private_posts' => AccessControl::PERMISSION_MANAGE_EMAILS,
+          'delete_posts' => AccessControl::PERMISSION_MANAGE_EMAILS,
+          'delete_others_posts' => AccessControl::PERMISSION_MANAGE_EMAILS,
+          'delete_published_posts' => AccessControl::PERMISSION_MANAGE_EMAILS,
+          'delete_private_posts' => AccessControl::PERMISSION_MANAGE_EMAILS,
+          'create_posts' => AccessControl::PERMISSION_MANAGE_EMAILS,
+        ],
       ],
     ];
     return $postTypes;

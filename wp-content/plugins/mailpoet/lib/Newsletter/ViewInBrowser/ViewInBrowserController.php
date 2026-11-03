@@ -5,7 +5,10 @@ namespace MailPoet\Newsletter\ViewInBrowser;
 if (!defined('ABSPATH')) exit;
 
 
+use MailPoet\Config\AccessControl;
 use MailPoet\EmailEditor\Integrations\MailPoet\DependencyNotice;
+use MailPoet\Entities\NewsletterEntity;
+use MailPoet\Entities\SendingQueueEntity;
 use MailPoet\Entities\SubscriberEntity;
 use MailPoet\Newsletter\NewslettersRepository;
 use MailPoet\Newsletter\Sending\SendingQueuesRepository;
@@ -14,8 +17,16 @@ use MailPoet\Newsletter\Sharing\ShareVisibility;
 use MailPoet\Newsletter\Url as NewsletterUrl;
 use MailPoet\Subscribers\LinkTokens;
 use MailPoet\Subscribers\SubscribersRepository;
+use MailPoet\WP\Functions as WPFunctions;
 
 class ViewInBrowserController {
+  // every recipient of these types gets the same rendered body
+  private const SHARED_QUEUE_BODY_TYPES = [
+    NewsletterEntity::TYPE_STANDARD,
+    NewsletterEntity::TYPE_NOTIFICATION_HISTORY,
+    NewsletterEntity::TYPE_RE_ENGAGEMENT,
+  ];
+
   /** @var LinkTokens */
   private $linkTokens;
 
@@ -43,6 +54,9 @@ class ViewInBrowserController {
   /** @var ShareMetadataBuilder */
   private $shareMetadataBuilder;
 
+  /** @var WPFunctions */
+  private $wp;
+
   public function __construct(
     LinkTokens $linkTokens,
     NewsletterUrl $newsletterUrl,
@@ -52,7 +66,8 @@ class ViewInBrowserController {
     DependencyNotice $dependencyNotice,
     SubscribersRepository $subscribersRepository,
     ShareVisibility $shareVisibility,
-    ShareMetadataBuilder $shareMetadataBuilder
+    ShareMetadataBuilder $shareMetadataBuilder,
+    WPFunctions $wp
   ) {
     $this->linkTokens = $linkTokens;
     $this->viewInBrowserRenderer = $viewInBrowserRenderer;
@@ -63,6 +78,7 @@ class ViewInBrowserController {
     $this->newslettersRepository = $newslettersRepository;
     $this->shareVisibility = $shareVisibility;
     $this->shareMetadataBuilder = $shareMetadataBuilder;
+    $this->wp = $wp;
   }
 
   public function view(array $data) {
@@ -86,6 +102,11 @@ class ViewInBrowserController {
       throw new \InvalidArgumentException("Subscriber did not receive the newsletter yet");
     }
 
+    // other types store one recipient's rendered body per queue
+    if ($queue && !in_array($newsletter->getType(), self::SHARED_QUEUE_BODY_TYPES, true) && !$this->canViewRecipientQueue($queue, $subscriber)) {
+      $queue = null;
+    }
+
     $html = $this->viewInBrowserRenderer->render($isPreview, $newsletter, $subscriber, $queue);
     if (!empty($data['embed_hide_background'])) {
       // Public embed URLs may request this cosmetic-only presentation variant.
@@ -98,6 +119,13 @@ class ViewInBrowserController {
       return $this->shareMetadataBuilder->injectShareToolbar($html, $newsletter, $publicUrl, $publicUrl);
     }
     return $html;
+  }
+
+  private function canViewRecipientQueue(SendingQueueEntity $queue, SubscriberEntity $subscriber): bool {
+    if ($this->wp->currentUserCan(AccessControl::PERMISSION_MANAGE_EMAILS)) {
+      return true;
+    }
+    return $subscriber->getId() && $this->sendingQueuesRepository->isSubscriberProcessed($queue, $subscriber);
   }
 
   private function hideEmbedBackground(string $html): string {

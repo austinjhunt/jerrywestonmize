@@ -26,9 +26,12 @@ use MailPoet\Mailer\MailerLog;
 use MailPoet\Newsletter\Links\Links as NewsletterLinks;
 use MailPoet\Newsletter\NewsletterDeleteController;
 use MailPoet\Newsletter\NewslettersRepository;
+use MailPoet\Newsletter\Renderer\EscapeHelper;
 use MailPoet\Newsletter\Renderer\PostProcess\OpenTracking;
 use MailPoet\Newsletter\Renderer\Renderer;
 use MailPoet\Newsletter\Sending\NewsletterReplayMetadata;
+use MailPoet\Newsletter\Sending\Placeholders\PlaceholderCollector;
+use MailPoet\Newsletter\Sending\Placeholders\TemplatePersonalizer;
 use MailPoet\Newsletter\Sending\ScheduledTasksRepository;
 use MailPoet\Newsletter\Sending\SendingQueuesRepository;
 use MailPoet\Newsletter\Shortcodes\Categories\Link as LinkShortcodeCategory;
@@ -45,6 +48,10 @@ use MailPoet\WP\Functions as WPFunctions;
 use MailPoetVendor\Carbon\Carbon;
 
 class Newsletter {
+  private const AUTOMATION_EMAIL_PERSONALIZE_HTML_AFTER_FILTER = 'mailpoet_automation_email_personalize_html_after';
+  private const AUTOMATION_EMAIL_PERSONALIZE_TEXT_AFTER_FILTER = 'mailpoet_automation_email_personalize_text_after';
+  private const DEPRECATED_AUTOMATION_PERSONALIZATION_FILTERS_VERSION = '5.40.0';
+
   public $trackingEnabled;
   public $trackingImageInserted;
 
@@ -95,9 +102,13 @@ class Newsletter {
   private PersonalizationContextBuilder $personalizationContextBuilder;
   private PersonalizationTagLinkResolver $personalizationTagLinkResolver;
   private NewsletterLinkRepository $newsletterLinkRepository;
+  private TemplatePersonalizer $templatePersonalizer;
 
   /** @var array<int, bool> queue id => whether the queue tracks an order review URL link */
   private array $orderReviewUrlLinkByQueue = [];
+
+  /** @var array<int, array<string, string>> queue id => stored link URL by hash */
+  private array $storedLinkUrlsByQueue = [];
 
   private TrackingConsentController $trackingConsentController;
 
@@ -140,6 +151,7 @@ class Newsletter {
     $this->personalizationContextBuilder = ContainerWrapper::getInstance()->get(PersonalizationContextBuilder::class);
     $this->personalizationTagLinkResolver = ContainerWrapper::getInstance()->get(PersonalizationTagLinkResolver::class);
     $this->newsletterLinkRepository = ContainerWrapper::getInstance()->get(NewsletterLinkRepository::class);
+    $this->templatePersonalizer = ContainerWrapper::getInstance()->get(TemplatePersonalizer::class);
     $this->couponBlockDetector = ContainerWrapper::getInstance()->get(CouponBlockDetector::class);
     $this->orderReviewUrl = ContainerWrapper::getInstance()->get(OrderReviewUrl::class);
     $this->trackingConsentController = ContainerWrapper::getInstance()->get(TrackingConsentController::class);
@@ -149,20 +161,18 @@ class Newsletter {
   /**
    * Put real destinations back for a recipient we may not track.
    *
-   * Restoring the saved link turns a plain URL back into itself, but a link
-   * shortcode back into raw `[link:...]` text: the shortcode pass deliberately
-   * leaves those alone while site tracking is on, because the click redirect is
-   * normally what resolves them. Since these recipients get no redirect, we
-   * resolve the shortcodes here with the same call the redirect would have
-   * made, so they land on exactly the same page.
-   *
-   * A restored URL may also carry a non-link shortcode of its own, such as
-   * `http://example.com/?email=[subscriber:email]`. Clicks::processUrl() runs a
-   * full shortcode pass over those at click time, so this does the same at send
-   * time (STOMAIL-8340).
-   *
-   * Links of block emails whose URL is a personalization tag token are stored
-   * symbolically too and resolved here with the same resolver the redirect uses.
+   * Restoring the saved link turns a plain URL back into itself, but a link shortcode back
+   * into raw `[link:...]` text: the shortcode pass deliberately leaves those alone while site
+   * tracking is on, because the click redirect is normally what resolves them. Since these
+   * recipients get no redirect, they are resolved here with the same call the redirect would
+   * have made. A restored URL may also carry a non-link shortcode of its own, such as
+   * `http://example.com/?email=[subscriber:email]`, or a personalization tag embedded the same way.
+   * The click redirect resolves both; for these recipients the shortcodes are resolved here
+   * (STOMAIL-8340) and the embedded tags later, by the Personalizer in the HTML part and by
+   * resolveMarkdownLinks() in the text part. Links of block emails whose URL is a personalization
+   * tag token are resolved with the resolver the redirect uses. A token link or shortcode that
+   * cannot be resolved becomes empty rather than shipping as literal text; an embedded tag that
+   * cannot be resolved stays literal.
    *
    * @param array<string, mixed>|null $personalizationContext
    */
@@ -173,59 +183,93 @@ class Newsletter {
     SendingQueueEntity $queue,
     ?array $personalizationContext
   ): string {
-    $resolveTokenUrl = function (string $url) use ($newsletter, $personalizationContext): string {
-      if ($personalizationContext === null || !$this->personalizationTagLinkResolver->isTokenUrl($url)) {
-        return $url;
-      }
-      $resolvedUrl = $this->personalizationTagLinkResolver->resolveWithContext($url, $personalizationContext);
-      // An unresolvable token would otherwise ship as literal text.
-      if ($resolvedUrl === null) {
-        return '';
-      }
-      // Restored ordinary links carry the GA params baked in at send time; match them.
-      return $this->gaTracking->addParamsToUrl($resolvedUrl, $newsletter);
-    };
     // true = convert every hashed link, not only the shortcode ones.
     $content = $this->newsletterLinks->convertHashedLinksToShortcodesAndUrls(
       $content,
       $queue->getId(),
       true,
-      $resolveTokenUrl
+      function (string $url) use ($newsletter, $personalizationContext): string {
+        return $this->resolveTokenUrl($url, $newsletter, $personalizationContext);
+      }
     );
+    $content = $this->resolveLinkShortcodes($content, $newsletter, $subscriber, $queue);
+    // Only the restored URLs can still carry shortcodes: the pass in prepareNewsletterForSending()
+    // ran while every link was a hashed tag.
+    [$subject, $html, $text] = Helpers::splitObject($content);
+    $html = (string)ShortcodesTask::process($html, $content, $newsletter, $subscriber, $queue);
+    $text = (string)ShortcodesTask::process($text, $content, $newsletter, $subscriber, $queue, $isPlainText = true);
+    return Helpers::joinObject([$subject, $html, $text]);
+  }
 
-    // Matches the whole shortcode, arguments included, because a link shortcode
-    // may carry one: [link:action | name:value]. The (?!\/\/) guard mirrors the
-    // extractor in Shortcodes::extract() so text like [link://example.com] is
-    // left alone rather than resolved to nothing and dropped. Case-insensitive
-    // for the same reason: that extractor is too, so [LINK:...] gets stored.
-    $content = (string)preg_replace_callback(
+  /**
+   * The destination a recipient we may not track gets for one stored link; see untrackLinks().
+   *
+   * A personalization tag embedded in a stored URL (https://example.com/?ref=[acme/url]) is resolved
+   * here too. On the rendered path the Personalizer does that for the HTML href while it runs over
+   * the restored content, writing it through esc_url(), and resolveMarkdownLinks() does it for the
+   * text body's link targets; on the templated path the URL leaves as a substitution value, so it
+   * has to be complete and, in the HTML part, escaped the same way.
+   *
+   * @param string $part The PlaceholderCollector::PART_* constant the URL is for
+   * @param string $shortcodeLookupSource Content that shortcodes such as [newsletter:post_title] look their value up in
+   * @param array<string, mixed>|null $personalizationContext
+   */
+  private function resolveUntrackedUrl(
+    string $url,
+    string $part,
+    string $shortcodeLookupSource,
+    NewsletterEntity $newsletter,
+    SubscriberEntity $subscriber,
+    SendingQueueEntity $queue,
+    ?array $personalizationContext
+  ): string {
+    if ($this->personalizationTagLinkResolver->isTokenUrl($url)) {
+      return $this->resolveTokenUrl($url, $newsletter, $personalizationContext);
+    }
+    $url = $this->resolveLinkShortcodes($url, $newsletter, $subscriber, $queue);
+    $url = (string)ShortcodesTask::process($url, $shortcodeLookupSource, $newsletter, $subscriber, $queue, $part !== PlaceholderCollector::PART_HTML);
+    if (EscapeHelper::hasDisallowedScheme($url)) {
+      return '';
+    }
+    if ($personalizationContext === null) {
+      return $url;
+    }
+    $resolvedUrl = $this->personalizationTagLinkResolver->resolveEmbeddedTokens($url, $personalizationContext);
+    if ($resolvedUrl === $url || $part !== PlaceholderCollector::PART_HTML) {
+      return $resolvedUrl;
+    }
+    return $this->wp->escUrl($resolvedUrl);
+  }
+
+  /**
+   * @param array<string, mixed>|null $personalizationContext
+   */
+  private function resolveTokenUrl(string $url, NewsletterEntity $newsletter, ?array $personalizationContext): string {
+    if ($personalizationContext === null || !$this->personalizationTagLinkResolver->isTokenUrl($url)) {
+      return $url;
+    }
+    $resolvedUrl = $this->personalizationTagLinkResolver->resolveWithContext($url, $personalizationContext);
+    // An unresolvable token would otherwise ship as literal text.
+    if ($resolvedUrl === null) {
+      return '';
+    }
+    // Restored ordinary links carry the GA params baked in at send time; match them.
+    return $this->gaTracking->addParamsToUrl($resolvedUrl, $newsletter);
+  }
+
+  /**
+   * Resolves link shortcodes with the call the click redirect makes. The whole shortcode is
+   * passed, arguments included ([link:action | name:value]), because processShortcodeAction()
+   * parses the brackets itself. The (?!\/\/) guard and the /i flag mirror the extractor in
+   * Shortcodes::extract(), so [link://example.com] stays a URL and [LINK:...] is still resolved.
+   */
+  private function resolveLinkShortcodes(string $content, NewsletterEntity $newsletter, SubscriberEntity $subscriber, SendingQueueEntity $queue): string {
+    return (string)preg_replace_callback(
       '/\[link:(?!\/\/)(?<action>[^\]]+)\]/i',
       function (array $matches) use ($newsletter, $subscriber, $queue): string {
-        // Pass the full shortcode, as Statistics\Track\Clicks::processUrl() does:
-        // processShortcodeAction() parses the brackets itself, and only sees the
-        // arguments when they are still attached.
-        $url = $this->linkShortcodeCategory->processShortcodeAction(
-          $matches[0],
-          $newsletter,
-          $subscriber,
-          $queue
-        );
-        // An unresolvable shortcode would otherwise ship as literal text.
-        return $url ?? '';
+        return $this->linkShortcodeCategory->processShortcodeAction($matches[0], $newsletter, $subscriber, $queue) ?? '';
       },
       $content
-    );
-
-    // Anything still unresolved was reintroduced by the restore above: the pass
-    // in prepareNewsletterForSending() already ran, and at that point every link
-    // was a hashed tag, so URL-embedded shortcodes were not in the content to be
-    // seen. Running it again therefore only touches the restored URLs.
-    return ShortcodesTask::process(
-      $content,
-      null,
-      $newsletter,
-      $subscriber,
-      $queue
     );
   }
 
@@ -290,7 +334,7 @@ class Newsletter {
       return $newsletter;
     }
     $this->loggerFactory->getLogger(LoggerFactory::TOPIC_NEWSLETTERS)->info(
-      'pre-processing newsletter',
+      'Preparing the email for sending (pre-processing newsletter).',
       ['newsletter_id' => $newsletter->getId(), 'task_id' => $task->getId()]
     );
 
@@ -335,7 +379,7 @@ class Newsletter {
     ) {
       // delete notification history record since it will never be sent
       $this->loggerFactory->getLogger(LoggerFactory::TOPIC_POST_NOTIFICATIONS)->info(
-        'no posts in post notification, deleting it',
+        'The post notification has no posts, so MailPoet deletes it (no posts in post notification, deleting it).',
         ['newsletter_id' => $newsletter->getId(), 'task_id' => $task->getId()]
       );
       $this->newsletterDeleteController->bulkDelete([(int)$newsletter->getId()]);
@@ -466,21 +510,25 @@ class Newsletter {
   public function prepareNewsletterForSending(NewsletterEntity $newsletter, SubscriberEntity $subscriber, SendingQueueEntity $queue): array {
     $renderedNewsletter = $queue->getNewsletterRenderedBody();
     $renderedNewsletter = $this->emoji->decodeEmojisInBody($renderedNewsletter);
-    $preparedNewsletter = Helpers::joinObject(
-      [
-        $queue->getNewsletterRenderedSubject(),
-        $renderedNewsletter['html'],
-        $renderedNewsletter['text'],
-      ]
-    );
-
-    $preparedNewsletter = ShortcodesTask::process(
-      $preparedNewsletter,
-      null,
+    // The subject and the text body are plain text, so their shortcodes are replaced on their own
+    $subject = ShortcodesTask::process(
+      (string)$queue->getNewsletterRenderedSubject(),
+      $renderedNewsletter['html'],
       $newsletter,
       $subscriber,
-      $queue
+      $queue,
+      $isPlainText = true
     );
+    $html = ShortcodesTask::process($renderedNewsletter['html'], null, $newsletter, $subscriber, $queue);
+    $text = ShortcodesTask::process(
+      $renderedNewsletter['text'],
+      $renderedNewsletter['html'],
+      $newsletter,
+      $subscriber,
+      $queue,
+      $isPlainText = true
+    );
+    $preparedNewsletter = Helpers::joinObject([$subject, $html, $text]);
     $context = $newsletter->getWpPostId() !== null
       ? $this->personalizationContextBuilder->build($newsletter, $subscriber, $queue)
       : null;
@@ -506,16 +554,11 @@ class Newsletter {
       $subject = $this->personalizer->personalize_content($subject, Personalizer::RENDERING_CONTEXT_TEXT);
       $html = $this->personalizer->personalize_content($html, Personalizer::RENDERING_CONTEXT_HTML);
       $text = $this->personalizer->personalize_content($text, Personalizer::RENDERING_CONTEXT_TEXT);
-      // Token links that were not hashed (tracking disabled) are still literal in the text body.
+      // The Personalizer does not touch markdown link targets: token links that were not hashed (tracking
+      // disabled) and tags embedded in restored links (no consent) are still literal in the text body.
       $text = $this->personalizationTagLinkResolver->resolveMarkdownLinks($text, $context);
-      $personalizedHtml = $this->wp->applyFilters('mailpoet_automation_email_personalize_html_after', $html, $context);
-      if (is_string($personalizedHtml)) {
-        $html = $personalizedHtml;
-      }
-      $personalizedText = $this->wp->applyFilters('mailpoet_automation_email_personalize_text_after', $text, $context);
-      if (is_string($personalizedText)) {
-        $text = $personalizedText;
-      }
+      $html = $this->applyDeprecatedAutomationPersonalizationFilter(self::AUTOMATION_EMAIL_PERSONALIZE_HTML_AFTER_FILTER, $html, $context);
+      $text = $this->applyDeprecatedAutomationPersonalizationFilter(self::AUTOMATION_EMAIL_PERSONALIZE_TEXT_AFTER_FILTER, $text, $context);
     }
     return [
       'id' => $newsletter->getId(),
@@ -525,6 +568,107 @@ class Newsletter {
         'text' => $text,
       ],
     ];
+  }
+
+  public function hasDeprecatedAutomationPersonalizationFilters(): bool {
+    return $this->hasAutomationPersonalizationFilter(self::AUTOMATION_EMAIL_PERSONALIZE_HTML_AFTER_FILTER)
+      || $this->hasAutomationPersonalizationFilter(self::AUTOMATION_EMAIL_PERSONALIZE_TEXT_AFTER_FILTER);
+  }
+
+  /**
+   * The same email as prepareNewsletterForSending() produces, but with every per-recipient value
+   * replaced by a placeholder and returned separately, so a batch can share one template.
+   *
+   * @return array{newsletter: array{id: int|null, subject: string, body: array{html: string, text: string}}, substitutions: array{subject: array<string, string>, html: array<string, string>, text: array<string, string>}}
+   */
+  public function prepareNewsletterForTemplatedSending(
+    NewsletterEntity $newsletter,
+    SubscriberEntity $subscriber,
+    SendingQueueEntity $queue,
+    ?string $placeholderNamespace = null
+  ): array {
+    $collector = new PlaceholderCollector($placeholderNamespace);
+    $renderedNewsletter = $this->emoji->decodeEmojisInBody($queue->getNewsletterRenderedBody());
+    $parts = [
+      PlaceholderCollector::PART_SUBJECT => $queue->getNewsletterRenderedSubject() ?? '',
+      PlaceholderCollector::PART_HTML => $renderedNewsletter['html'],
+      PlaceholderCollector::PART_TEXT => $renderedNewsletter['text'],
+    ];
+    // Some shortcodes, e.g. [newsletter:post_title], look their value up in the whole email. Each
+    // part is processed on its own, but with the whole email as the lookup source, as in
+    // prepareNewsletterForSending().
+    $shortcodeLookupSource = Helpers::joinObject(array_values($parts));
+    foreach ($parts as $part => $partContent) {
+      $parts[$part] = (string)ShortcodesTask::processWithPlaceholders($partContent, $shortcodeLookupSource, $newsletter, $subscriber, $queue, $collector, $part);
+    }
+
+    $context = $newsletter->getWpPostId() !== null
+      ? $this->personalizationContextBuilder->build($newsletter, $subscriber, $queue)
+      : null;
+    if ($this->isSentWithTracking($subscriber)) {
+      foreach ($parts as $part => $content) {
+        $parts[$part] = $this->newsletterLinks->replaceSubscriberDataWithPlaceholders($subscriber->getId(), $queue->getId(), $content, $collector, $part);
+      }
+    } elseif ($this->trackingEnabled) {
+      // Same rule as in prepareNewsletterForSending(): withdrawn consent stops the reading operation itself.
+      $resolveUntrackedUrl = function (string $url, string $part) use ($shortcodeLookupSource, $newsletter, $subscriber, $queue, $context): string {
+        return $this->resolveUntrackedUrl($url, $part, $shortcodeLookupSource, $newsletter, $subscriber, $queue, $context);
+      };
+      $parts = $this->newsletterLinks->replaceHashedLinksWithUntrackedPlaceholders($this->getStoredLinkUrlsByHash($queue), $parts, $collector, $resolveUntrackedUrl);
+    }
+
+    if ($context !== null) {
+      $this->guardOrderReviewUrlPersonalization($newsletter, $queue, array_values($parts), $context);
+      foreach ($parts as $part => $content) {
+        $parts[$part] = $this->templatePersonalizer->personalize($content, $context, $collector, $part);
+      }
+      // The Personalizer does not touch markdown link targets: token links and embedded tags that were not
+      // hashed (tracking disabled) are still literal in the text body.
+      $parts[PlaceholderCollector::PART_TEXT] = $this->personalizationTagLinkResolver->resolveMarkdownLinks(
+        $parts[PlaceholderCollector::PART_TEXT],
+        $context,
+        function (string $url, string $token) use ($collector): string {
+          return $collector->addTextUrl($url, $token);
+        }
+      );
+    }
+
+    return [
+      'newsletter' => [
+        'id' => $newsletter->getId(),
+        'subject' => $parts[PlaceholderCollector::PART_SUBJECT],
+        'body' => [
+          'html' => $parts[PlaceholderCollector::PART_HTML],
+          'text' => $parts[PlaceholderCollector::PART_TEXT],
+        ],
+      ],
+      'substitutions' => $collector->getValues(),
+    ];
+  }
+
+  /**
+   * @param array<string, mixed> $context
+   */
+  private function applyDeprecatedAutomationPersonalizationFilter(string $hookName, string $content, array $context): string {
+    if (!$this->hasAutomationPersonalizationFilter($hookName)) {
+      return $content;
+    }
+
+    $this->wp->deprecatedHook(
+      $hookName,
+      self::DEPRECATED_AUTOMATION_PERSONALIZATION_FILTERS_VERSION,
+      '',
+      'This filter is deprecated and will be removed in a future MailPoet release. '
+        . 'Migrate custom personalization to email editor personalization tags. '
+        . 'Use mailpoet_automation_email_personalization_context if you need to extend the personalization context.'
+    );
+
+    $filtered = $this->wp->applyFilters($hookName, $content, $context);
+    return is_string($filtered) ? $filtered : $content;
+  }
+
+  private function hasAutomationPersonalizationFilter(string $hookName): bool {
+    return $this->wp->hasFilter($hookName) !== false;
   }
 
   /**
@@ -570,6 +714,20 @@ class Newsletter {
 
     $normalizedContent = rawurldecode(str_replace('\\/', '/', $content));
     return strpos($normalizedContent, '[woocommerce/order-review-url]') !== false;
+  }
+
+  /**
+   * A queue's links do not change while it is sending, so they are loaded once per queue
+   * instead of once per recipient.
+   *
+   * @return array<string, string>
+   */
+  private function getStoredLinkUrlsByHash(SendingQueueEntity $queue): array {
+    $queueId = (int)$queue->getId();
+    if (!isset($this->storedLinkUrlsByQueue[$queueId])) {
+      $this->storedLinkUrlsByQueue[$queueId] = $this->newsletterLinks->getUrlsByHash($queueId);
+    }
+    return $this->storedLinkUrlsByQueue[$queueId];
   }
 
   private function queueTracksOrderReviewUrlLink(SendingQueueEntity $queue): bool {

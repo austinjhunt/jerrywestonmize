@@ -45,13 +45,19 @@ function assetsUrl()
 
 function devUrl($file, $path = "")
 {
-    if (defined('COLIBRI_LOCALHOST')) {
-        $ip = COLIBRI_LOCALHOST;
+    if (defined('EXTEND_BUILDER_DEV_URL')) {
+        $base = rtrim(EXTEND_BUILDER_DEV_URL, "/");
     } else {
-        $ip = "localhost";
+        if (defined('COLIBRI_LOCALHOST')) {
+            $ip = COLIBRI_LOCALHOST;
+        } else {
+            $ip = "localhost";
+        }
+
+        $base = "http://$ip:8080";
     }
 
-    return "http://$ip:8080" . ($path ? "/" . $path : "") . "/" . $file;
+    return $base . ($path ? "/" . $path : "") . "/" . $file;
 }
 
 function builderAssetPath($file, $path = "")

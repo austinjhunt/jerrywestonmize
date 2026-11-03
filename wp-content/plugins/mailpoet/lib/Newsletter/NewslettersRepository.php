@@ -19,6 +19,7 @@ use MailPoet\Entities\ScheduledTaskEntity;
 use MailPoet\Entities\SendingQueueEntity;
 use MailPoet\Logging\LoggerFactory;
 use MailPoet\Newsletter\Sending\NewsletterReplayMetadata;
+use MailPoet\Newsletter\Sending\ScheduledTasksRepository;
 use MailPoet\Util\Helpers;
 use MailPoetVendor\Carbon\Carbon;
 use MailPoetVendor\Doctrine\DBAL\ArrayParameterType;
@@ -184,6 +185,23 @@ class NewslettersRepository extends Repository {
       ->setParameter('since', $since)
       ->getQuery()
       ->getSingleScalarResult() ?: 0;
+  }
+
+  /**
+   * @return NewsletterEntity[]
+   */
+  public function findLatestSentStandard(int $limit): array {
+    return $this->doctrineRepository->createQueryBuilder('n')
+      ->andWhere('n.type = :type')
+      ->andWhere('n.status = :status')
+      ->andWhere('n.deletedAt IS NULL')
+      ->orderBy('n.sentAt', 'DESC')
+      ->addOrderBy('n.id', 'DESC')
+      ->setParameter('type', NewsletterEntity::TYPE_STANDARD)
+      ->setParameter('status', NewsletterEntity::STATUS_SENT)
+      ->setMaxResults($limit)
+      ->getQuery()
+      ->getResult();
   }
 
   public function getGutenbergNewsletterSentCount(): int {
@@ -525,7 +543,7 @@ class NewslettersRepository extends Repository {
       return 0;
     }
     $this->loggerFactory->getLogger(LoggerFactory::TOPIC_NEWSLETTERS, $attachProcessors = true)->info(
-      'trashing newsletters',
+      'MailPoet is moving emails to the trash (trashing newsletters).',
       ['id' => $ids]
     );
     // Fetch children id for trashing
@@ -658,6 +676,10 @@ class NewslettersRepository extends Repository {
       ->andWhere('p.deletedAt IS NULL')
       ->andWhere('n.deletedAt IS NULL')
       ->andWhere('t.status IN (:stuckStatuses)')
+      ->andWhere('t.status != :pausedStatus OR t.meta IS NULL OR t.meta NOT LIKE :overdueMarker')
+      ->setParameter('pausedStatus', ScheduledTaskEntity::STATUS_PAUSED)
+      // Held issues have their own notice.
+      ->setParameter('overdueMarker', ScheduledTasksRepository::getMetaMarker(ScheduledTaskEntity::META_PAUSE_REASON, ScheduledTaskEntity::PAUSE_REASON_OVERDUE))
       ->setParameter('parentType', NewsletterEntity::TYPE_NOTIFICATION)
       ->setParameter('historyType', NewsletterEntity::TYPE_NOTIFICATION_HISTORY)
       ->setParameter('sendingStatus', NewsletterEntity::STATUS_SENDING)

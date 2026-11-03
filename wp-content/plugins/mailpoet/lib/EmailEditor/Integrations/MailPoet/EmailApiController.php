@@ -5,6 +5,8 @@ namespace MailPoet\EmailEditor\Integrations\MailPoet;
 if (!defined('ABSPATH')) exit;
 
 
+use MailPoet\AccessDeniedException;
+use MailPoet\Config\AccessControl;
 use MailPoet\Entities\NewsletterEntity;
 use MailPoet\Entities\NewsletterOptionEntity;
 use MailPoet\Entities\NewsletterOptionFieldEntity;
@@ -21,6 +23,7 @@ use MailPoet\NotFoundException;
 use MailPoet\UnexpectedValueException;
 use MailPoet\Validator\Builder;
 use MailPoet\WP\Functions as WPFunctions;
+use MailPoetVendor\Carbon\Carbon;
 use MailPoetVendor\Doctrine\ORM\EntityManager;
 
 class EmailApiController {
@@ -114,6 +117,9 @@ class EmailApiController {
    * Update MailPoet specific data we store with Emails.
    */
   public function saveEmailData(array $data, \WP_Post $emailPost): void {
+    if (!$this->wp->currentUserCan(AccessControl::PERMISSION_MANAGE_EMAILS)) {
+      throw new AccessDeniedException('You do not have permission to perform this action.');
+    }
     $newsletter = $this->newsletterRepository->findOneById($data['id']);
     if (!$newsletter) {
       throw new NotFoundException('Newsletter was not found');
@@ -142,7 +148,7 @@ class EmailApiController {
     }
 
     if (isset($data['utm_campaign'])) {
-      $newsletter->setGaCampaign($data['utm_campaign']);
+      $newsletter->setGaCampaign($this->wp->wpStripAllTags((string)$data['utm_campaign'], true));
     }
 
     if (isset($data['deleted_at'])) {
@@ -378,6 +384,19 @@ class EmailApiController {
       }
     }
     $this->entityManager->flush();
+  }
+
+  /**
+   * Content saved in the email editor lives in the post, so the newsletter row
+   * does not change on its own and its updated_at would stay old.
+   */
+  public function markNewsletterAsUpdated(\WP_Post $wpPost): void {
+    $newsletter = $this->newsletterRepository->findOneBy(['wpPost' => $wpPost->ID]);
+    if (!$newsletter) {
+      return;
+    }
+    $newsletter->setUpdatedAt(Carbon::now()->millisecond(0));
+    $this->newsletterRepository->flush();
   }
 
   public function trashEmail(\WP_Post $wpPost) {

@@ -770,8 +770,8 @@ if ( ! class_exists( 'BNFW_Engine', false ) ) {
 				$message = str_replace( '[global_user_lastname]', $email, $message );
 				$message = str_replace( '[global_user_username]', $email, $message );
 			} else {
-				$message = str_replace( '[global_user_firstname]', $user->first_name, $message );
-				$message = str_replace( '[global_user_lastname]', $user->last_name, $message );
+				$message = str_replace( '[global_user_firstname]', $this->neutralize_shortcodes( $user->first_name ), $message );
+				$message = str_replace( '[global_user_lastname]', $this->neutralize_shortcodes( $user->last_name ), $message );
 				$message = str_replace( '[global_user_username]', $user->user_login, $message );
 
 				$message = $this->user_shortcodes( $message, $user->ID, 'email_' );
@@ -801,13 +801,13 @@ if ( ! class_exists( 'BNFW_Engine', false ) ) {
 			$message          = str_replace( '[media_date]', bnfw_format_date( $post->post_date ), $message );
 			$message          = str_replace( '[media_date_gmt]', bnfw_format_date( $post->post_date_gmt ), $message );
 			$message          = str_replace( '[media_description]', $post_content, $message );
-			$message          = str_replace( '[media_title]', $post->post_title, $message );
-			$message          = str_replace( '[media_alt_text]', get_post_meta( $post->ID, '_wp_attachment_image_alt', true ), $message );
+			$message          = str_replace( '[media_title]', $this->neutralize_shortcodes( $post->post_title ), $message );
+			$message          = str_replace( '[media_alt_text]', $this->neutralize_shortcodes( get_post_meta( $post->ID, '_wp_attachment_image_alt', true ) ), $message );
 			$message          = str_replace( '[media_caption]', $this->may_be_strip_shortcode( get_the_excerpt( $post ) ), $message );
 			$message          = str_replace( '[media_status]', $post->post_status, $message );
 			$message          = str_replace( '[media_modified]', bnfw_format_date( $post->post_modified ), $message );
 			$message          = str_replace( '[media_modified_gmt]', bnfw_format_date( $post->post_modified_gmt ), $message );
-			$message          = str_replace( '[media_content_filtered]', $post->post_content_filtered, $message );
+			$message          = str_replace( '[media_content_filtered]', $this->may_be_strip_shortcode( $post->post_content_filtered ), $message );
 			$message          = str_replace( '[media_type]', $post->post_type, $message );
 			$message          = str_replace( '[media_mime_type]', $post->post_mime_type, $message );
 			$message          = str_replace( '[media_slug]', $post->post_name, $message );
@@ -815,7 +815,7 @@ if ( ! class_exists( 'BNFW_Engine', false ) ) {
 			$media_dimensions = $dimensions['width'] . ' x ' . $dimensions['height'];
 			$message          = str_replace( '[media_dimensions]', $media_dimensions, $message );
 			$user_info        = get_userdata( $post->post_author );
-			$message          = str_replace( '[media_author]', $user_info->display_name, $message );
+			$message          = str_replace( '[media_author]', $this->neutralize_shortcodes( $user_info->display_name ), $message );
 
 			return $message;
 		}
@@ -848,7 +848,7 @@ if ( ! class_exists( 'BNFW_Engine', false ) ) {
 			$message = str_replace( '[post_date]', bnfw_format_date( $post->post_date ), $message );
 			$message = str_replace( '[post_date_gmt]', bnfw_format_date( $post->post_date_gmt ), $message );
 			$message = str_replace( '[post_content]', $post_content, $message );
-			$message = str_replace( '[post_title]', $post->post_title, $message );
+			$message = str_replace( '[post_title]', $this->neutralize_shortcodes( $post->post_title ), $message );
 			$message = str_replace( '[post_excerpt]', $this->may_be_strip_shortcode( get_the_excerpt( $post ) ), $message );
 			$message = str_replace( '[post_status]', $post->post_status, $message );
 			$message = str_replace( '[comment_status]', $post->comment_status, $message );
@@ -860,7 +860,7 @@ if ( ! class_exists( 'BNFW_Engine', false ) ) {
 			$message = str_replace( '[pinged]', $post->pinged, $message );
 			$message = str_replace( '[post_modified]', bnfw_format_date( $post->post_modified ), $message );
 			$message = str_replace( '[post_modified_gmt]', bnfw_format_date( $post->post_modified_gmt ), $message );
-			$message = str_replace( '[post_content_filtered]', $post->post_content_filtered, $message );
+			$message = str_replace( '[post_content_filtered]', $this->may_be_strip_shortcode( $post->post_content_filtered ), $message );
 			$message = str_replace( '[post_parent]', $post->post_parent, $message );
 			$message = str_replace( '[post_parent_permalink]', get_permalink( $post->post_parent ), $message );
 			$message = str_replace( '[guid]', $post->guid, $message );
@@ -894,7 +894,7 @@ if ( ! class_exists( 'BNFW_Engine', false ) ) {
 
 			$categories = wp_get_post_categories( $post_id, array( 'fields' => 'all' ) );
 
-			$message = str_replace( '[post_category]', implode( ', ', wp_list_pluck( $categories, 'name' ) ), $message );
+			$message = str_replace( '[post_category]', $this->neutralize_shortcodes( implode( ', ', wp_list_pluck( $categories, 'name' ) ) ), $message );
 
 			if ( ! is_wp_error( $categories ) && count( $categories ) > 0 ) {
 				$message = str_replace(
@@ -903,18 +903,18 @@ if ( ! class_exists( 'BNFW_Engine', false ) ) {
 						'[post_category_description]',
 					),
 					array(
-						$categories[0]->slug,
-						$categories[0]->description,
+						$this->neutralize_shortcodes( $categories[0]->slug ),
+						$this->neutralize_shortcodes( $categories[0]->description ),
 					),
 					$message
 				);
 			}
 
 			$tag_list = implode( ', ', wp_get_post_tags( $post_id, array( 'fields' => 'names' ) ) );
-			$message  = str_replace( '[post_tag]', $tag_list, $message );
+			$message  = str_replace( '[post_tag]', $this->neutralize_shortcodes( $tag_list ), $message );
 
 			$user_info = get_userdata( $post->post_author );
-			$message   = str_replace( '[post_author]', $user_info->display_name, $message );
+			$message   = str_replace( '[post_author]', $this->neutralize_shortcodes( $user_info->display_name ), $message );
 
 			$message = str_replace( '[author_link]', get_author_posts_url( $post->post_author ), $message );
 			$last_id = get_post_meta( $post->ID, '_edit_lock', true );
@@ -930,13 +930,27 @@ if ( ! class_exists( 'BNFW_Engine', false ) ) {
 					$last_user_info = $user_info;
 				}
 
-				$message = str_replace( '[post_update_author]', $last_user_info->display_name, $message );
+				$message = str_replace( '[post_update_author]', $this->neutralize_shortcodes( $last_user_info->display_name ), $message );
 			}
 
 			$message = str_replace( '[post_term', '[post_term id="' . $post_id . '"', $message );
-			add_shortcode( 'post_term', array( $this, 'post_term_shortcode_handler' ) );
-			$message = do_shortcode( $message );
-			remove_shortcode( 'post_term', array( $this, 'post_term_shortcode_handler' ) );
+
+			/*
+			 * Process ONLY the plugin's own [post_term] shortcode here. By this point
+			 * the message already contains user-supplied values (comment fields, post
+			 * title, term and category names, etc.), so running the full shortcode
+			 * registry over it — as do_shortcode() does by default — would execute any
+			 * shortcode an attacker had managed to embed in one of those fields. Those
+			 * fields are individually neutralised above (see neutralize_shortcodes()),
+			 * and restricting the registry to [post_term] for the duration of this one
+			 * call is the structural backstop: no other registered shortcode can fire
+			 * here even if a future field is added without being neutralised.
+			 */
+			global $shortcode_tags;
+			$bnfw_saved_shortcode_tags = $shortcode_tags;
+			$shortcode_tags            = array( 'post_term' => array( $this, 'post_term_shortcode_handler' ) );
+			$message                   = do_shortcode( $message );
+			$shortcode_tags            = $bnfw_saved_shortcode_tags;
 
 			return apply_filters( 'bnfw_shortcodes_post', $message, $post_id );
 		}
@@ -1013,7 +1027,10 @@ if ( ! class_exists( 'BNFW_Engine', false ) ) {
 			$terms = wp_get_post_terms( $atts['id'], $atts['taxonomy'], array( 'fields' => 'names' ) );
 
 			if ( ! is_wp_error( $terms ) ) {
-				return implode( ', ', $terms );
+				// Term names can be created by Contributors; neutralise their brackets
+				// so a later do_shortcode() pass (e.g. the Custom Fields add-on's) can
+				// never execute a shortcode an attacker embedded in a term name.
+				return $this->neutralize_shortcodes( implode( ', ', $terms ) );
 			}
 
 			return '';
@@ -1037,6 +1054,29 @@ if ( ! class_exists( 'BNFW_Engine', false ) ) {
 		}
 
 		/**
+		 * Neutralise shortcodes in an untrusted value.
+		 *
+		 * Visitor- and user-supplied fields (comment data, author names, user
+		 * profile fields, post/media titles, and term, tag and category names,
+		 * slugs and descriptions) must never execute shortcodes when the assembled
+		 * message is later passed through do_shortcode() — whether by this engine or
+		 * by an add-on such as Custom Fields that runs its own pass over the whole
+		 * message. Escaping the square brackets stops the shortcode parser from
+		 * matching, regardless of which shortcodes happen to be registered
+		 * (including the plugin's own [post_term]) and independently of the "Enable
+		 * Content Shortcodes" setting, which only governs trusted post content. The
+		 * escaped brackets render as literal "[" / "]" in the email, mirroring
+		 * WordPress's own moderation notifications.
+		 *
+		 * @param string $value Untrusted value.
+		 *
+		 * @return string Value with shortcode brackets neutralised.
+		 */
+		private function neutralize_shortcodes( $value ) {
+			return str_replace( array( '[', ']' ), array( '&#91;', '&#93;' ), (string) $value );
+		}
+
+		/**
 		 * Handle comment shortcodes.
 		 *
 		 * @param string $message String to be processed.
@@ -1051,20 +1091,20 @@ if ( ! class_exists( 'BNFW_Engine', false ) ) {
 
 			$message = str_replace( '[comment_ID]', $comment->comment_ID, $message );
 			$message = str_replace( '[comment_post_ID]', $comment->comment_post_ID, $message );
-			$message = str_replace( '[comment_author]', $comment->comment_author, $message );
-			$message = str_replace( '[comment_author_email]', $comment->comment_author_email, $message );
-			$message = str_replace( '[comment_author_url]', $comment->comment_author_url, $message );
-			$message = str_replace( '[comment_author_IP]', $comment->comment_author_IP, $message );
+			$message = str_replace( '[comment_author]', $this->neutralize_shortcodes( $comment->comment_author ), $message );
+			$message = str_replace( '[comment_author_email]', $this->neutralize_shortcodes( $comment->comment_author_email ), $message );
+			$message = str_replace( '[comment_author_url]', $this->neutralize_shortcodes( $comment->comment_author_url ), $message );
+			$message = str_replace( '[comment_author_IP]', $this->neutralize_shortcodes( $comment->comment_author_IP ), $message );
 			$message = str_replace( '[comment_date]', bnfw_format_date( $comment->comment_date ), $message );
 			$message = str_replace( '[comment_date_gmt]', bnfw_format_date( $comment->comment_date_gmt ), $message );
-			$message = str_replace( '[comment_content]', get_comment_text( $comment->comment_ID ), $message );
+			$message = str_replace( '[comment_content]', $this->neutralize_shortcodes( get_comment_text( $comment->comment_ID ) ), $message );
 			$message = str_replace( '[comment_karma]', $comment->comment_karma, $message );
 			$message = str_replace( '[comment_approved]', str_replace( array(
 				'0',
 				'1',
 				'spam'
 			), array( 'Awaiting Moderation', 'Approved', 'Spam' ), $comment->comment_approved ), $message );
-			$message = str_replace( '[comment_agent]', $comment->comment_agent, $message );
+			$message = str_replace( '[comment_agent]', $this->neutralize_shortcodes( $comment->comment_agent ), $message );
 			$message = str_replace( '[comment_type]', $comment->comment_type, $message );
 			$message = str_replace( '[comment_parent]', $comment->comment_parent, $message );
 			$message = str_replace( '[user_id]', $comment->user_id, $message );
@@ -1076,7 +1116,7 @@ if ( ! class_exists( 'BNFW_Engine', false ) ) {
 
 			$parent_comment = get_comment( $comment->comment_parent );
 			if ( $parent_comment instanceof WP_Comment ) {
-				$message = str_replace( '[comment_parent_content]', $parent_comment->comment_content, $message );
+				$message = str_replace( '[comment_parent_content]', $this->neutralize_shortcodes( $parent_comment->comment_content ), $message );
 			}
 
 			return $message;
@@ -1104,21 +1144,21 @@ if ( ! class_exists( 'BNFW_Engine', false ) ) {
 
 			// deprecated.
 			$message = str_replace( '[ID]', $user_info->ID, $message );
-			$message = str_replace( '[display_name]', $user_info->display_name, $message );
-			$message = str_replace( '[nickname]', $user_info->nickname, $message );
+			$message = str_replace( '[display_name]', $this->neutralize_shortcodes( $user_info->display_name ), $message );
+			$message = str_replace( '[nickname]', $this->neutralize_shortcodes( $user_info->nickname ), $message );
 			$message = str_replace( '[commenter_avatar]', get_avatar_url( $user_id ), $message );
 
 			$message = str_replace( '[' . $prefix . 'user_id]', $user_info->ID, $message );
 			$message = str_replace( '[' . $prefix . 'user_login]', $user_info->user_login, $message );
-			$message = str_replace( '[' . $prefix . 'user_nicename]', $user_info->user_nicename, $message );
+			$message = str_replace( '[' . $prefix . 'user_nicename]', $this->neutralize_shortcodes( $user_info->user_nicename ), $message );
 			$message = str_replace( '[' . $prefix . 'user_email]', $user_info->user_email, $message );
-			$message = str_replace( '[' . $prefix . 'user_url]', $user_info->user_url, $message );
+			$message = str_replace( '[' . $prefix . 'user_url]', $this->neutralize_shortcodes( $user_info->user_url ), $message );
 			$message = str_replace( '[' . $prefix . 'user_registered]', $user_info->user_registered, $message );
-			$message = str_replace( '[' . $prefix . 'user_display_name]', $user_info->display_name, $message );
-			$message = str_replace( '[' . $prefix . 'user_firstname]', $user_info->user_firstname, $message );
-			$message = str_replace( '[' . $prefix . 'user_lastname]', $user_info->user_lastname, $message );
-			$message = str_replace( '[' . $prefix . 'user_nickname]', $user_info->nickname, $message );
-			$message = str_replace( '[' . $prefix . 'user_description]', $user_info->user_description, $message );
+			$message = str_replace( '[' . $prefix . 'user_display_name]', $this->neutralize_shortcodes( $user_info->display_name ), $message );
+			$message = str_replace( '[' . $prefix . 'user_firstname]', $this->neutralize_shortcodes( $user_info->user_firstname ), $message );
+			$message = str_replace( '[' . $prefix . 'user_lastname]', $this->neutralize_shortcodes( $user_info->user_lastname ), $message );
+			$message = str_replace( '[' . $prefix . 'user_nickname]', $this->neutralize_shortcodes( $user_info->nickname ), $message );
+			$message = str_replace( '[' . $prefix . 'user_description]', $this->neutralize_shortcodes( $user_info->user_description ), $message );
 			$message = str_replace( '[' . $prefix . 'user_avatar]', get_avatar_url( $user_id ), $message );
 
 			$roles   = array_map( array( $this, 'get_role_label_by_name' ), $user_info->roles );
@@ -1152,8 +1192,8 @@ if ( ! class_exists( 'BNFW_Engine', false ) ) {
 			$term_info = get_term( $term_id, $taxonomy );
 
 			$message = str_replace( '[slug]', $term_info->slug, $message );
-			$message = str_replace( '[name]', $term_info->name, $message );
-			$message = str_replace( '[description]', $term_info->description, $message );
+			$message = str_replace( '[name]', $this->neutralize_shortcodes( $term_info->name ), $message );
+			$message = str_replace( '[description]', $this->neutralize_shortcodes( $term_info->description ), $message );
 
 			return apply_filters( 'bnfw_shortcodes_taxonomy', $message, $taxonomy, $term_id );
 		}
@@ -1421,7 +1461,9 @@ if ( ! class_exists( 'BNFW_Engine', false ) ) {
 
 				foreach ( $users as $user ) {
 					if ( null !== $exclude ) {
-						if ( $user->ID === $exclude ) {
+						// get_users() returns the ID as a string, while $exclude
+						// is an int, so cast both to compare reliably.
+						if ( (int) $user->ID === (int) $exclude ) {
 							continue;
 						}
 					}
@@ -1767,8 +1809,8 @@ if ( ! class_exists( 'BNFW_Engine', false ) ) {
 			}
 
 			global $wpdb;
-			$table      = $wpdb->prefix . 'posts';
-			$query      = 'SELECT ID FROM ' . $table . ' WHERE  `post_type` =  "user_request" AND `ID` = ' . $request_id;
+			$request_id = absint( $request_id );
+			$query      = $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE `post_type` = 'user_request' AND `ID` = %d", $request_id );
 			$query      = apply_filters( 'export_downloadable_url_query', $query, $request_id );
 			$get_id     = $wpdb->get_var( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
 			$file       = get_post_meta( $get_id, '_export_file_name', true );
@@ -1779,7 +1821,7 @@ if ( ! class_exists( 'BNFW_Engine', false ) ) {
 			if ( $dl_url ) {
 				return $dl_url;
 			} else {
-				return __( 'Error: Download link is not available please contact support' );
+				return __( 'Error: Download link is not available please contact support', 'bnfw' );
 			}
 		}
 		/**

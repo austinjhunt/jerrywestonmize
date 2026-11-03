@@ -2,10 +2,10 @@
 Contributors: voltronik
 Donate link: https://betternotificationsforwp.com/donate/
 Tags: notification, email, alert, message, notify
-Requires at least: 4.8
-Tested up to: 7.0
+Requires at least: 6.0
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: "1.9.9.2"
+Stable tag: 1.10.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Update URI: https://wordpress.org/plugins/bnfw/
@@ -213,7 +213,7 @@ Not using BNFW. If you want to let users create their own email notifications/su
 
 First of all, follow [this article](https://betternotificationsforwp.com/how-can-i-receive-the-best-support/) about how to find out what might be causing the problem. Additionally, please take a look at [this help document](https://betternotificationsforwp.com/documentation/getting-started/how-to-improve-email-delivery/) to see how you might improve email delivery when using Better Notifications for WP.
 
-Many hosts place a limit on the number of emails that can be sent out within an hour so this may also cause some delay in emails arriving. [This article](https://support.mailpoet.com/knowledgebase/lists-of-hosts-and-their-sending-limits/) has a fairly extensive list of hosts and their corresponding email rate limits that's worth checking out. Alternatively, please check with your host directly to find out what your limit is.
+Many hosts place a limit on the number of emails that can be sent out within an hour so this may also cause some delay in emails arriving. [This article](https://kb.mailpoet.com/article/150-lists-of-hosts-and-their-email-sending-limits) has a fairly extensive list of hosts and their corresponding email rate limits that's worth checking out. Alternatively, please check with your host directly to find out what your limit is.
 
 If you're still having problems, please drop me a line in the [Free Support Forums](https://wordpress.org/support/plugin/bnfw) and I'll do my best to help.
 
@@ -235,7 +235,7 @@ Yes, of course! The plugin is completely translation-friendly and if you send me
 
 = Where do I report security bugs found in this plugin? =
 
-Please report security bugs found in the source code of the Better Notification for WP plugin through the [Patchstack Vulnerability Disclosure Program](https://patchstack.com/database/vdp/bnfw). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
+Please report security bugs found in the source code of the Better Notification for WP plugin through the [Patchstack Vulnerability Disclosure Program](https://patchstack.com/database/wordpress/plugin/bnfw/vulnerabilities). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
 
 
 
@@ -248,6 +248,21 @@ Please report security bugs found in the source code of the Better Notification 
 
 
 == Changelog ==
+
+= 1.10.2 - 30th October 2026 =
+* Fixed: Completed the 1.10.1 shortcode hardening. Post and media titles, category/tag/term names, slugs and descriptions, and user name fields can no longer trigger shortcode execution in notifications. Reported by mroccon via Patchstack.
+* Changed: For security, notification templates now only run the plugin's own merge tags and post-content shortcodes. Other shortcodes placed directly in an email template are no longer executed.
+
+= 1.10.1 - 30th October 2026 =
+* Fixed: Security hardening for notification emails. Visitor- and user-supplied values (comment content and author details, post titles, and user profile fields) can no longer cause shortcodes to run on the server when a notification is generated, regardless of the "Enable Content Shortcodes" setting. Reported by mroccon via Patchstack.
+
+= 1.10 - 14th October 2026 =
+* Required: Add-ons now require Better Notifications for WP 1.10 (this version) or higher.
+* Fixed: Various security issues to better harden the plugin.
+* Fixed: A few minor bugs relating to plugin operation.
+* Updated: Various 3rd party libraries that the plugin uses.
+* Updated: The translation files are now up-to-date.
+* Removed: Unused bundled library files.
 
 = 1.9.9.2 - 30th July 2026 =
 * Updated: 3rd party select2 library to latest stable version.

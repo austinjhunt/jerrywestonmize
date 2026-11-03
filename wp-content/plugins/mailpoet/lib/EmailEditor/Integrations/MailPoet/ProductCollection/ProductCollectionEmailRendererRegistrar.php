@@ -113,9 +113,8 @@ class ProductCollectionEmailRendererRegistrar {
       return;
     }
 
-    // register_blocks_has_run() ships with WC 11.1, the version that started skipping registration; older WC always registers.
-    // @phpstan-ignore function.impossibleType (WC stub predates this method)
-    if (!method_exists($blockTypesController, 'register_blocks_has_run') || $blockTypesController->register_blocks_has_run()) {
+    // WC 11.1+ skips block registration in some requests (e.g. cron), so register them when they have not run.
+    if ($blockTypesController->register_blocks_has_run()) {
       return;
     }
 
@@ -143,7 +142,7 @@ class ProductCollectionEmailRendererRegistrar {
       $blockTypesController->register_blocks();
     } catch (\Throwable $e) {
       $this->loggerFactory->getLogger(LoggerFactory::TOPIC_EMAIL_EDITOR)->error(
-        'Registering WooCommerce blocks for email rendering failed: {message}',
+        'Registering WooCommerce blocks for email rendering failed: ' . $e->getMessage(),
         ['message' => $e->getMessage()]
       );
     }
